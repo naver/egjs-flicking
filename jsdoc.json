@@ -1,0 +1,53 @@
+{
+	"tags": {
+		"allowUnknownTags" : true,
+		"dictionaries": ["jsdoc","closure"]
+	},
+	"source": {
+		"include": ["src", "README.md"],
+		"includePattern": ".+\\.js(doc|x)?$",
+		"excludePattern": "(^|\\/|\\\\)_"
+	},
+	"opts": {
+		"template": "node_modules/egjs-jsdoc-template",
+		"destination": "./doc/"
+	},
+	"plugins": [
+		"plugins/markdown",
+		"node_modules/egjs-jsdoc-template/jsdoc-plugin/ko", 
+		"node_modules/egjs-jsdoc-template/jsdoc-plugin/group",
+		"node_modules/egjs-jsdoc-template/jsdoc-plugin/codepen",
+		"node_modules/egjs-jsdoc-template/jsdoc-plugin/support"
+	],
+	"templates": {
+		"cleverLinks": true,
+		"monospaceLinks": true,
+		"default": {
+			"outputSourceFiles" : true
+		},
+		"applicationName": "eg.MovableCoord",
+		"disqus": "egjs",
+		"googleAnalytics": "",
+		"openGraph": {
+			"title": "",
+			"type": "website",
+			"image": "",
+			"site_name": "",
+			"url": ""
+		},
+		"meta": {
+			"title": "eg.movableCoord - API",
+			"description": "A module used to change the information of user action entered by various input devices such as touch screen or mouse into logical coordinates within the virtual coordinate system. The coordinate information sorted by time events occurred is provided if animations are made by user actions. You can implement a user interface by applying the logical coordinates provided. For more information on the eg.MovableCoord module, see demos.",
+			"keyword": "UI Component, egjs, movableCoord"
+		},
+		"linenums": true,
+		"link": {
+			"canonical": "http://naver.github.io/egjs/latest/doc/eg.MovableCoord.html"
+		}
+	},
+	"markdown": {
+		"parser": "gfm",
+		"hardwrap": true,
+		"tags": ["examples", "ko"]
+	}
+}
