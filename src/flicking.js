@@ -1,5 +1,5 @@
 import Component from "@egjs/component";
-import MovableCoord from "@egjs/movablecoord/dist/movablecoord.pkgd";
+import MovableCoord from "@egjs/movablecoord";
 import {utils, Mixin} from "./utils";
 import * as consts from "./consts";
 import {CONFIG, OPTIONS} from "./config";
