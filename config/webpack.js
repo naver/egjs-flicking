@@ -19,7 +19,7 @@ module.exports = {
 			amd: "eg.component",
 			root: ["eg", "Component"]
 		},
-		"@egjs/movablecoord/dist/movablecoord.pkgd": {
+		"@egjs/movablecoord": {
 			commonjs: "eg.movablecoord",
 			commonjs2: "eg.movablecoord",
 			amd: "eg.movablecoord",

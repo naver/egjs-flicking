@@ -555,7 +555,6 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 	 * @param {Number} direction
 	 */
 	_setAdaptiveHeight(direction) {
-		const dataName = "data-height";
 		const conf = this._conf;
 		const indexToMove = conf.indexToMove;
 		let $children;
@@ -576,15 +575,15 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 
 		const $first = $panel.querySelector(":first-child");
 
-		height = $first.getAttribute(dataName);
+		height = $first.getAttribute(consts.DATA_HEIGHT);
 
 		if (!height) {
 			$children = $panel.children;
 			height = utils.outerHeight(
-				$children.length > 1 ? $panel.forEach(v => (v.style.height = "auto")) : $first
+				$children.length > 1 ? ($panel.style.height = "auto", $panel) : $first
 			);
 
-			$first.setAttribute(dataName, height);
+			$first.setAttribute(consts.DATA_HEIGHT, height);
 		}
 
 		this.$wrapper.style.height = `${height}px`;
@@ -1187,7 +1186,7 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 			this._checkPadding();
 			panelSize = panel.size;
 		} else if (horizontal) {
-			panelSize = panel.size = utils.css(this.$wrapper, "width");
+			panelSize = panel.size = utils.css(this.$wrapper, "width", true);
 		}
 
 		const maxCoords = this._getDataByDirection(
@@ -1199,6 +1198,16 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 		utils.css(panel.$list, {
 			[horizontal ? "width" : "height"]: panelSize
 		});
+
+		// remove data-height attribute and re-evaluate panel's height
+		if (options.adaptiveHeight) {
+			const $panel = this.$container.querySelectorAll(`[${consts.DATA_HEIGHT}]`);
+
+			if ($panel.length) {
+				$panel.forEach(v => v.removeAttribute(consts.DATA_HEIGHT));
+				this._setAdaptiveHeight();
+			}
+		}
 
 		this._mcInst.options.max = maxCoords;
 		this._setMovableCoord("setTo", [panelSize * panel.index, 0], true, 0);
