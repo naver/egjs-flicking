@@ -1196,7 +1196,7 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 		// resize elements
 		horizontal && utils.css(this.$container, {width: `${maxCoords[0] + panelSize}px`});
 		utils.css(panel.$list, {
-			[horizontal ? "width" : "height"]: panelSize
+			[horizontal ? "width" : "height"]: utils.getUnitValue(panelSize)
 		});
 
 		// remove data-height attribute and re-evaluate panel's height
