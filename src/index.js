@@ -1,3 +1,3 @@
-import flicking from "./flicking";
+import Flicking from "./flicking";
 
-module.exports = flicking;
+module.exports = Flicking;
