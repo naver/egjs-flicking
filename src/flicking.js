@@ -41,10 +41,6 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 		this._adjustContainerCss("end");
 	}
 
-	_events() {
-		return consts.EVENTS;
-	}
-
 	/**
 	 * Set options values
 	 * @param {Object} options
@@ -56,7 +52,7 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 			bounce: [10, 10]
 		};
 
-		this.options = Object.assign(OPTIONS, arrVal, options);
+		this.options = utils.extend(OPTIONS, arrVal, options);
 
 		for (const key in arrVal) {
 			let val = this.options[key];
@@ -285,23 +281,21 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 				no: index,
 				currNo: index
 			});
-		} else {
-			// if defaultIndex option is given, then move to that index panel
-			if (index > 0 && index <= lastIndex) {
-				this._setPanelNo({
-					index,
-					no: index,
-					currIndex: index,
-					currNo: index
-				});
+		// if defaultIndex option is given, then move to that index panel
+		} else if (index > 0 && index <= lastIndex) {
+			this._setPanelNo({
+				index,
+				no: index,
+				currIndex: index,
+				currNo: index
+			});
 
-				coords = [-(panel.size * index), 0];
+			coords = [-(panel.size * index), 0];
 
-				this._setTranslate(coords);
-				this._setMovableCoord("setTo", [
-					Math.abs(coords[0]), Math.abs(coords[1])
-				], true, 0);
-			}
+			this._setTranslate(coords);
+			this._setMovableCoord("setTo", [
+				Math.abs(coords[0]), Math.abs(coords[1])
+			], true, 0);
 		}
 	}
 
@@ -564,8 +558,8 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 
 			// panel moved by 1
 			this[`get${
-				direction === MovableCoord.DIRECTION_LEFT && "Next" ||
-				direction === MovableCoord.DIRECTION_RIGHT && "Prev" || ""
+				(direction === MovableCoord.DIRECTION_LEFT && "Next") ||
+				(direction === MovableCoord.DIRECTION_RIGHT && "Prev") || ""
 			}Element`]() :
 
 			// panel moved by .moveTo()
@@ -808,17 +802,6 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 		const coords = this._getCoordsValue(coordsValue);
 
 		this._setMoveStyle(this.$container, [coords.x, coords.y]);
-	}
-
-	/**
-	 * Return unit formatted value
-	 * @param {Number|String} val
-	 * @return {String} val Value formatted with unit
-	 */
-	_getUnitValue(val) {
-		const rx = /(?:[a-z]{2,}|%)$/;
-
-		return (parseInt(val, 10) || 0) + (String(val).match(rx) || "px");
 	}
 
 	/**
@@ -1151,8 +1134,7 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 			.map(v => parseInt(v, 10));
 
 		// update padding when current and given are different
-		if (previewPadding.length === 2 &&
-			previewPadding[0] !== padding[0] ||
+		if ((previewPadding.length === 2 && previewPadding[0] !== padding[0]) ||
 			previewPadding[1] !== padding[1]) {
 			this._setPadding(previewPadding);
 		}

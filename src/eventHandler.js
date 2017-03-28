@@ -1,6 +1,7 @@
 import * as consts from "./consts";
 
 export default superclass => class extends superclass {
+
 	/**
 	 * 'hold' event handler
 	 */

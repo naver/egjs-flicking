@@ -95,9 +95,9 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-/* eslint-disable no-new-func */
+/* eslint-disable no-new-func, no-nested-ternary */
 var win = typeof window !== "undefined" && window.Math === Math ? window : typeof self !== "undefined" && self.Math === Math ? self : Function("return this")();
-/* eslint-enable no-new-func */
+/* eslint-enable no-new-func, no-nested-ternary */
 
 var document = win.document;
 
@@ -114,7 +114,7 @@ exports.document = document;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.IS_ANDROID2 = exports.SUPPORT_WILLCHANGE = exports.SUPPORT_TRANSFORM = exports.EVENTS = undefined;
+exports.DATA_HEIGHT = exports.IS_ANDROID2 = exports.SUPPORT_WILLCHANGE = exports.SUPPORT_TRANSFORM = exports.EVENTS = undefined;
 
 var _browser = __webpack_require__(0);
 
@@ -141,10 +141,14 @@ var SUPPORT_WILLCHANGE = _browser.window.CSS && _browser.window.CSS.supports && 
 // check for Android 2.x
 var IS_ANDROID2 = /Android 5\./.test(navigator.userAgent);
 
+// data-height attribute's name for adaptiveHeight option
+var DATA_HEIGHT = "data-height";
+
 exports.EVENTS = EVENTS;
 exports.SUPPORT_TRANSFORM = SUPPORT_TRANSFORM;
 exports.SUPPORT_WILLCHANGE = SUPPORT_WILLCHANGE;
 exports.IS_ANDROID2 = IS_ANDROID2;
+exports.DATA_HEIGHT = DATA_HEIGHT;
 
 /***/ }),
 /* 2 */
@@ -228,10 +232,6 @@ var Flicking = function (_Mixin$with) {
 		return _this;
 	}
 
-	Flicking.prototype._events = function _events() {
-		return consts.EVENTS;
-	};
-
 	/**
   * Set options values
   * @param {Object} options
@@ -245,7 +245,7 @@ var Flicking = function (_Mixin$with) {
 			bounce: [10, 10]
 		};
 
-		this.options = Object.assign(_config.OPTIONS, arrVal, options);
+		this.options = _utils.utils.extend(_config.OPTIONS, arrVal, options);
 
 		for (var key in arrVal) {
 			var val = this.options[key];
@@ -487,21 +487,19 @@ var Flicking = function (_Mixin$with) {
 				no: index,
 				currNo: index
 			});
-		} else {
 			// if defaultIndex option is given, then move to that index panel
-			if (index > 0 && index <= lastIndex) {
-				this._setPanelNo({
-					index: index,
-					no: index,
-					currIndex: index,
-					currNo: index
-				});
+		} else if (index > 0 && index <= lastIndex) {
+			this._setPanelNo({
+				index: index,
+				no: index,
+				currIndex: index,
+				currNo: index
+			});
 
-				coords = [-(panel.size * index), 0];
+			coords = [-(panel.size * index), 0];
 
-				this._setTranslate(coords);
-				this._setMovableCoord("setTo", [Math.abs(coords[0]), Math.abs(coords[1])], true, 0);
-			}
+			this._setTranslate(coords);
+			this._setMovableCoord("setTo", [Math.abs(coords[0]), Math.abs(coords[1])], true, 0);
 		}
 	};
 
@@ -765,7 +763,6 @@ var Flicking = function (_Mixin$with) {
 
 
 	Flicking.prototype._setAdaptiveHeight = function _setAdaptiveHeight(direction) {
-		var dataName = "data-height";
 		var conf = this._conf;
 		var indexToMove = conf.indexToMove;
 		var $children = void 0;
@@ -781,15 +778,13 @@ var Flicking = function (_Mixin$with) {
 
 		var $first = $panel.querySelector(":first-child");
 
-		height = $first.getAttribute(dataName);
+		height = $first.getAttribute(consts.DATA_HEIGHT);
 
 		if (!height) {
 			$children = $panel.children;
-			height = _utils.utils.outerHeight($children.length > 1 ? $panel.forEach(function (v) {
-				return v.style.height = "auto";
-			}) : $first);
+			height = _utils.utils.outerHeight($children.length > 1 ? ($panel.style.height = "auto", $panel) : $first);
 
-			$first.setAttribute(dataName, height);
+			$first.setAttribute(consts.DATA_HEIGHT, height);
 		}
 
 		this.$wrapper.style.height = height + "px";
@@ -1029,19 +1024,6 @@ var Flicking = function (_Mixin$with) {
 		var coords = this._getCoordsValue(coordsValue);
 
 		this._setMoveStyle(this.$container, [coords.x, coords.y]);
-	};
-
-	/**
-  * Return unit formatted value
-  * @param {Number|String} val
-  * @return {String} val Value formatted with unit
-  */
-
-
-	Flicking.prototype._getUnitValue = function _getUnitValue(val) {
-		var rx = /(?:[a-z]{2,}|%)$/;
-
-		return (parseInt(val, 10) || 0) + (String(val).match(rx) || "px");
 	};
 
 	/**
@@ -1436,14 +1418,26 @@ var Flicking = function (_Mixin$with) {
 			this._checkPadding();
 			panelSize = panel.size;
 		} else if (horizontal) {
-			panelSize = panel.size = _utils.utils.css(this.$wrapper, "width");
+			panelSize = panel.size = _utils.utils.css(this.$wrapper, "width", true);
 		}
 
 		var maxCoords = this._getDataByDirection([panelSize * (panel.count - 1), 0]);
 
 		// resize elements
 		horizontal && _utils.utils.css(this.$container, { width: maxCoords[0] + panelSize + "px" });
-		_utils.utils.css(panel.$list, (_utils$css = {}, _utils$css[horizontal ? "width" : "height"] = panelSize, _utils$css));
+		_utils.utils.css(panel.$list, (_utils$css = {}, _utils$css[horizontal ? "width" : "height"] = _utils.utils.getUnitValue(panelSize), _utils$css));
+
+		// remove data-height attribute and re-evaluate panel's height
+		if (options.adaptiveHeight) {
+			var $panel = this.$container.querySelectorAll("[" + consts.DATA_HEIGHT + "]");
+
+			if ($panel.length) {
+				$panel.forEach(function (v) {
+					return v.removeAttribute(consts.DATA_HEIGHT);
+				});
+				this._setAdaptiveHeight();
+			}
+		}
 
 		this._mcInst.options.max = maxCoords;
 		this._setMovableCoord("setTo", [panelSize * panel.index, 0], true, 0);
@@ -1882,36 +1876,52 @@ var utils = {
   * @returns {Boolean}
   */
 	isObject: function isObject(obj) {
-		return (typeof obj === "undefined" ? "undefined" : _typeof(obj)) === "object" && !Array.isArray(obj) && obj !== null;
+		return obj && (typeof obj === "undefined" ? "undefined" : _typeof(obj)) === "object" && !Array.isArray(obj);
 	},
 
 
 	/**
   * Merge object
   * @param {Object} target
-  * @param {Object} source
+  * @param {Object} objectN
   * @returns {Object} merged target object
   * @example
   *  var target = { a: 1 };
-  *  c3p.extend(target, { b: 2, c: 3 });
+  *  utils.extend(target, { b: 2, c: 3 });
   *  target;  // { a: 1, b: 2, c: 3 };
   */
-	extend: function extend(target, source) {
+	extend: function extend(target) {
+		var _this = this;
+
+		for (var _len = arguments.length, objectN = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+			objectN[_key - 1] = arguments[_key];
+		}
+
+		if (!objectN.length) {
+			return target;
+		}
+
+		var source = objectN.shift();
+		var output = void 0;
+
 		if (this.isObject(target) && this.isObject(source)) {
-			for (var key in source) {
-				if (this.isObject(source[key])) {
+			output = Object.assign({}, target);
+
+			Object.keys(source).forEach(function (key) {
+				if (_this.isObject(source[key])) {
 					var _Object$assign;
 
-					!target[key] && Object.assign(target, (_Object$assign = {}, _Object$assign[key] = {}, _Object$assign));
-					this.extend(target[key], source[key]);
+					!output[key] && Object.assign(output, (_Object$assign = {}, _Object$assign[key] = {}, _Object$assign));
+					output[key] = _this.extend(target[key], source[key]);
 				} else {
 					var _Object$assign2;
 
-					Object.assign(target, (_Object$assign2 = {}, _Object$assign2[key] = source[key], _Object$assign2));
+					Object.assign(output, (_Object$assign2 = {}, _Object$assign2[key] = source[key], _Object$assign2));
 				}
-			}
+			});
 		}
-		return target;
+
+		return this.extend.apply(this, [output].concat(objectN));
 	},
 
 
@@ -1965,17 +1975,36 @@ var utils = {
 
 
 	/**
+  * Get element's outer value
+  * @param {HTMLElement} el
+  * @param {String} type - [outerWidth|outerHeight]
+  * @returns {Number} outer's value
+  */
+	getOuter: function getOuter(el, type) {
+		var style = getComputedStyle(el);
+		var margin = type === "outerWidth" ? ["marginLeft", "marginRight"] : ["marginTop", "marginBottom"];
+
+		return this.getNumValue(style[type.replace("outer", "").toLocaleLowerCase()]) + this.getNumValue(style[margin[0]]) + this.getNumValue(style[margin[1]]);
+	},
+
+
+	/**
+  * Get element's outerWidth value with margin
+  * @param {HTMLElement} el
+  * @returns {Number}
+  */
+	outerWidth: function outerWidth(el) {
+		return this.getOuter(el, "outerWidth");
+	},
+
+
+	/**
   * Get element's outerHeight value with margin
   * @param {HTMLElement} el
-  * @returns {number}
+  * @returns {Number}
   */
 	outerHeight: function outerHeight(el) {
-		var height = el.offsetHeight;
-		var style = getComputedStyle(el);
-
-		height += parseInt(style.marginTop, 10) + parseInt(style.marginBottom, 10);
-
-		return height;
+		return this.getOuter(el, "outerHeight");
 	},
 
 
@@ -2072,8 +2101,8 @@ var MixinBuilder = function () {
 	}
 
 	MixinBuilder.prototype.with = function _with() {
-		for (var _len = arguments.length, mixins = Array(_len), _key = 0; _key < _len; _key++) {
-			mixins[_key] = arguments[_key];
+		for (var _len2 = arguments.length, mixins = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+			mixins[_key2] = arguments[_key2];
 		}
 
 		return mixins.reduce(function (c, m) {

@@ -1,10 +1,12 @@
 {
     // Airbnb en https://github.com/airbnb/javascript
     // Airbnb ko https://github.com/tipjs/javascript-style-guide
-    // Naver https://oss.navercorp.com/engineering/coding-convention
-    // Naver http://docs.navercorp.com/coding-convention/js.html
+    // Naver https://github.com/naver/eslint-config-naver
     "extends": "eslint-config-naver",
     "rules": {
-        "linebreak-style": 0
+        "linebreak-style": 0,
+        "comma-dangle": ["error", "never"],
+        "no-multi-assign": 0,
+        "no-lonely-if": 0
     }
 }

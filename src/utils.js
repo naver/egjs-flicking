@@ -43,32 +43,41 @@ const utils = {
 	 * @returns {Boolean}
 	 */
 	isObject(obj) {
-		return typeof obj === "object" &&
-			!Array.isArray(obj) && obj !== null;
+		return obj && typeof obj === "object" && !Array.isArray(obj);
 	},
 
 	/**
 	 * Merge object
 	 * @param {Object} target
-	 * @param {Object} source
+	 * @param {Object} objectN
 	 * @returns {Object} merged target object
 	 * @example
 	 *  var target = { a: 1 };
-	 *  c3p.extend(target, { b: 2, c: 3 });
+	 *  utils.extend(target, { b: 2, c: 3 });
 	 *  target;  // { a: 1, b: 2, c: 3 };
 	 */
-	extend(target, source) {
-		if (this.isObject(target) && this.isObject(source)) {
-			for (const key in source) {
-				if (this.isObject(source[key])) {
-					!target[key] && Object.assign(target, {[key]: {}});
-					this.extend(target[key], source[key]);
-				} else {
-					Object.assign(target, {[key]: source[key]});
-				}
-			}
+	extend(target, ...objectN) {
+		if (!objectN.length) {
+			return target;
 		}
-		return target;
+
+		const source = objectN.shift();
+		let output;
+
+		if (this.isObject(target) && this.isObject(source)) {
+			output = Object.assign({}, target);
+
+			Object.keys(source).forEach(key => {
+				if (this.isObject(source[key])) {
+					!output[key] && Object.assign(output, {[key]: {}});
+					output[key] = this.extend(target[key], source[key]);
+				} else {
+					Object.assign(output, {[key]: source[key]});
+				}
+			});
+		}
+
+		return this.extend(output, ...objectN);
 	},
 
 	/**
@@ -118,17 +127,37 @@ const utils = {
 	},
 
 	/**
+	 * Get element's outer value
+	 * @param {HTMLElement} el
+	 * @param {String} type - [outerWidth|outerHeight]
+	 * @returns {Number} outer's value
+	 */
+	getOuter(el, type) {
+		const style = getComputedStyle(el);
+		const margin = type === "outerWidth" ?
+			["marginLeft", "marginRight"] : ["marginTop", "marginBottom"];
+
+		return this.getNumValue(style[type.replace("outer", "").toLocaleLowerCase()]) +
+			this.getNumValue(style[margin[0]]) +
+			this.getNumValue(style[margin[1]]);
+	},
+
+	/**
+	 * Get element's outerWidth value with margin
+	 * @param {HTMLElement} el
+	 * @returns {Number}
+	 */
+	outerWidth(el) {
+		return this.getOuter(el, "outerWidth");
+	},
+
+	/**
 	 * Get element's outerHeight value with margin
 	 * @param {HTMLElement} el
-	 * @returns {number}
+	 * @returns {Number}
 	 */
 	outerHeight(el) {
-		let height = el.offsetHeight;
-		const style = getComputedStyle(el);
-
-		height += parseInt(style.marginTop, 10) + parseInt(style.marginBottom, 10);
-
-		return height;
+		return this.getOuter(el, "outerHeight");
 	},
 
 	/**
@@ -169,10 +198,12 @@ return defaultVal;
 			// android 4.1+ blacklist
 			// EK-GN120 : Galaxy Camera, SM-G386F : Galaxy Core LTE
 			// SHW-M420 : Galaxy Nexus , SHW-M200 : NexusS , GT-S7562 : Galaxy S duos
-			result = version >= "4.1.0" && !/EK-GN120|SM-G386F/.test(useragent) ||
-				version >= "4.0.3" &&
-				/SHW-|SHV-|GT-|SCH-|SGH-|SPH-|LG-F160|LG-F100|LG-F180|LG-F200|EK-|IM-A|LG-F240|LG-F260/.test(useragent) &&
-				!/SHW-M420|SHW-M200|GT-S7562/.test(useragent);
+			result = (version >= "4.1.0" && !/EK-GN120|SM-G386F/.test(useragent)) ||
+				(
+					version >= "4.0.3" &&
+					/SHW-|SHV-|GT-|SCH-|SGH-|SPH-|LG-F160|LG-F100|LG-F180|LG-F200|EK-|IM-A|LG-F240|LG-F260/.test(useragent) &&
+					!/SHW-M420|SHW-M200|GT-S7562/.test(useragent)
+				);
 		}
 
 		this.isHWAccelerable = () => result;
