@@ -13,18 +13,14 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.5/es5-shim.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.5/es5-sham.js"></script>
 	<script src="../node_modules/@egjs/movablecoord/dist/movablecoord.pkgd.js"></script>
+	<script src="../node_modules/@egjs/component/dist/component.js"></script>
 	<script src="../dist/flicking.js"></script>
+
+	<!--<script src="../dist/flicking.pkgd.min.js"></script>-->
 
 	<!-- user css start -->
 	<style type="text/css">
-		.flicking-root{
-			height: 200px;
-			background: blanchedalmond;
-			width: 50%;
-			margin: auto;
-		}
-
-		.flick{height:94px;background-color:grey}
+		.flick{height:50px;background-color:grey}
 		.eg-flick-container > div {height:100%;float:left;display:block}
 		.eg-flick-panel p {margin:0;text-align:center;font-size:2.0em}
 		.eg-flick-panel p img {vertical-align:middle}
@@ -32,30 +28,47 @@
 <!-- user css end -->
 </head>
 <body>
+	<div id="mflick" class="flick" style="border:solid 1px red">
+			<div style="background-color:#CC66CC;">
+				<p>Layer 0</p>
+			</div>
+			<div style="background-color:#66cccc;">
+				<p>
+					Layer 1<br>
+					Layer 1<br>
+					Layer 1<br>
+					Layer 1<br>
+					Layer 1<br>
+				</p>
+				<p>
+					Layer 1
+				</p>
+			</div>
+			<div style="background-color:#ffc000;">
+				<p>Layer 2</p>
+				<br>
+				<p>Multiple elements on one panel also supported</p>
+			</div>
+	</div>
 
-<div id="mflick" class="flick">
-		<div style="background-color:#CC66CC">1</div>
-		<div style="background-color:#66cccc">2</div>
-		<div style="background-color:#ffc000">3</div>
-</div>
+	<script>
+		var handler = function(e) {
+			console.log(e.eventType);
+		}
 
-<script>
-	var handler = function(e) {
-		//console.log(e);
-	}
-
-	var f = new eg.Flicking("#mflick", {
-		//horizontal: false,
-		circular:true,
-		//previewPadding: 20,
-		defaultIndex: 1
-	}).on({
-		beforeFlickStart: handler,
-		flick: handler,
-		flickEnd: handler,
-		beforeRestore: handler,
-		restore: handler
-	});
-</script>
+		var f = new eg.Flicking("#mflick", {
+			//horizontal: false,
+			circular:true,
+			//previewPadding: 20,
+			defaultIndex: 1,
+			adaptiveHeight: true
+		}).on({
+			beforeFlickStart: handler,
+			flick: handler,
+			flickEnd: handler,
+			beforeRestore: handler,
+			restore: handler
+		});
+	</script>
 </body>
 </html>

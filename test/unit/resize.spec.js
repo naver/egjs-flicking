@@ -1,0 +1,134 @@
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+/*eslint-disable */
+import {utils} from "../../src/utils";
+import tutils from "./assets/utils";
+
+describe("resize() method", function() {
+	describe("Check for panel resize", function() {
+		tutils.hooks.run();
+
+		// Given
+		it("Panel size", () => {
+			const $el = tutils.createFixture("#mflick1");
+			const width = utils.css($el, "width", true);
+
+			const inst = tutils.create($el, {
+				defaultIndex: 2
+			});
+
+			let panel = inst._conf.panel;
+			let oldCoordMax = inst._mcInst.options.max;
+
+			// When
+			$el.style.width = `${width + 50}px`;
+
+			// The panel width is less than the current wrapper size
+			expect(panel.size < utils.css($el, "width", true)).to.be.true;
+
+			// When
+			inst.resize();
+			const maxPosX = panel.size * ( panel.count - 1 );
+
+			// Current container element is in right position?
+			expect(~~tutils.$getTransformValue(inst.$container, true)).to.equal(maxPosX);
+
+			// Max coord value has been set correctly?
+			expect(maxPosX).to.deep.equal(inst._mcInst.options.max[0]);
+
+			// The panel width should be same as current wrapper element
+			expect(panel.size).to.deep.equal(utils.css($el, "width", true));
+
+			// The panel container width should be same as current panels element total width
+			expect(utils.css(inst.$container, "width", true)).to.deep.equal(panel.count * panel.size);
+
+			// Should be updated MovableCoord's 'max' options value
+			expect(oldCoordMax).to.not.deep.equal(inst._mcInst.options.max);
+		});
+	});
+
+	describe("When change padding option", function() {
+		tutils.hooks.run();
+
+		let padding;
+
+		var setCondition = function (inst, val) {
+			inst.options.previewPadding = val;
+			inst.resize();
+
+			padding = inst.$wrapper.style.padding.split(" ").map(v => parseInt(v));
+
+			// get current padding value
+			if (inst.options.horizontal) {
+				padding = padding.length === 2 ?
+					[padding[1], padding[1]] : [padding[3], padding[1]];
+			} else {
+				padding = padding.length === 2 ?
+					[padding[0], padding[0]] : [padding[0], padding[2]];
+			}
+		};
+
+		let runTest = function (inst, val, horizontal) {
+			expect(padding).to.deep.equal(val);  // Padding value changed?
+
+			let panel = inst._conf.panel;
+			let max, panelSize, coord, top;
+
+			if (horizontal) {
+				max = inst._mcInst.options.max[0];
+				panelSize = utils.css(panel.$list[0], "width", true);
+				coord = inst._mcInst.get()[0];
+			} else {
+				max = inst._mcInst.options.max[1];
+				panelSize = utils.css(panel.$list[0], "height", true);
+				coord = inst._mcInst.get()[1];
+				top = parseInt(utils.css(inst.$container, "top", true));
+			}
+
+			// Max coord value has been set correctly?
+			expect(max).to.equal(panel.size * (panel.count - 1));
+
+			// The panel width should be same as current wrapper element
+			expect(panelSize).to.equal(panel.size);
+
+			// Current MovableCoord's value has been set correctly?
+			expect(coord).to.equal(panel.size * panel.index);
+
+			// Container's top value has been set correctly?
+			top && expect(val[0]).to.equal(top);
+		};
+
+		// When
+		it("Padding #1", () => {
+			const inst = tutils.create("#mflick1", {
+				circular: true,
+				previewPadding: [10, 10]
+			});
+
+			setCondition(inst, [20, 20]);
+			runTest(inst, [20, 20], true);
+
+			setCondition(inst, [20,30]);
+			runTest(inst, [20,30], true);
+		});
+
+		// Given
+        it("Padding #2", () => {
+			const inst = tutils.create("#mflick2", {
+					circular: true,
+					previewPadding: [10, 10],
+					horizontal: false
+				});
+
+			// When
+			setCondition(inst, [20,20]);
+			runTest(inst, [20,20]);
+
+			// When
+			setCondition(inst, [10,20]);
+			runTest(inst, [10,20]);
+		 });
+	});
+});

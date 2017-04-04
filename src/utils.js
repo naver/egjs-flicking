@@ -24,7 +24,7 @@ const utils = {
 					match[2].split(" ").forEach(v => {
 						const attr = v.split("=");
 
-						el.setAttribute(attr[0], attr[1]);
+						el.setAttribute(attr[0], attr[1].trim().replace(/(^["']|["']$)/g, ""));
 					});
 			} else {
 				el = document.querySelectorAll(param);
@@ -43,11 +43,11 @@ const utils = {
 	 * @returns {Boolean}
 	 */
 	isObject(obj) {
-		return obj && typeof obj === "object" && !Array.isArray(obj);
+		return obj && !obj.nodeType && typeof obj === "object" && !Array.isArray(obj);
 	},
 
 	/**
-	 * Merge object
+	 * Merge object returning new object
 	 * @param {Object} target
 	 * @param {Object} objectN
 	 * @returns {Object} merged target object
@@ -68,11 +68,19 @@ const utils = {
 			output = Object.assign({}, target);
 
 			Object.keys(source).forEach(key => {
-				if (this.isObject(source[key])) {
-					!output[key] && Object.assign(output, {[key]: {}});
-					output[key] = this.extend(target[key], source[key]);
+				const value = source[key];
+
+				if (this.isObject(value)) {
+					!output[key] && Object.assign(output, {
+						[key]: {}
+					});
+
+					output[key] = this.extend(output[key], value);
 				} else {
-					Object.assign(output, {[key]: source[key]});
+					Object.assign(output, {
+						[key]: Array.isArray(value) ?
+							value.concat() : value
+					});
 				}
 			});
 		}
@@ -81,7 +89,7 @@ const utils = {
 	},
 
 	/**
-	 * Get the style value or apply
+	 * Get or set the style value or apply
 	 * @param {HTMLElement} el
 	 * @param {String|Object} style
 	 *  String: return style property value
@@ -91,7 +99,7 @@ const utils = {
 	 */
 	css(el, style, getAsNumber) {
 		if (typeof(style) === "string") {
-			const value = getComputedStyle(el)[style];
+			const value = window.getComputedStyle(el)[style];
 
 			return getAsNumber ? this.getNumValue(value) : value;
 		} else {
@@ -133,7 +141,7 @@ const utils = {
 	 * @returns {Number} outer's value
 	 */
 	getOuter(el, type) {
-		const style = getComputedStyle(el);
+		const style = window.getComputedStyle(el);
 		const margin = type === "outerWidth" ?
 			["marginLeft", "marginRight"] : ["marginTop", "marginBottom"];
 

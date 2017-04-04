@@ -3,6 +3,7 @@ import MovableCoord from "@egjs/movablecoord";
 import {utils, Mixin} from "./utils";
 import * as consts from "./consts";
 import {CONFIG, OPTIONS} from "./config";
+import {window, document} from "./browser";
 import EventHandler from "./eventHandler";
 
 export default class Flicking extends Mixin(Component).with(EventHandler) {
@@ -52,12 +53,12 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 			bounce: [10, 10]
 		};
 
-		this.options = utils.extend(OPTIONS, arrVal, options);
+		this.options = utils.extend(utils.extend({}, OPTIONS), arrVal, options);
 
 		for (const key in arrVal) {
 			let val = this.options[key];
 
-			if (Number.isInteger(val)) {
+			if (typeof(val) === "number") {
 				val = [val, val];
 			} else if (!Array.isArray(val)) {
 				val = arrVal[key];
@@ -88,7 +89,7 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 		$nodes = [].slice.call($nodes);
 
 		// config value
-		const conf = this._conf = utils.extend(CONFIG, {
+		const conf = this._conf = utils.extend(utils.extend({}, CONFIG), {
 			panel: {
 				$list: $nodes,
 				minCount: padding[0] + padding[1] > 0 ? 5 : 3  // minimum panel count
@@ -99,6 +100,10 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 					className: this.$wrapper.getAttribute("class") || null,
 					style: this.$wrapper.getAttribute("style") || null
 				},
+				container: {
+					className: (this.$container && this.$container.getAttribute("class")) || null,
+					style: (this.$container && this.$container.getAttribute("style")) || null
+				},
 				list: $nodes.map(v => ({
 					className: v.getAttribute("class") || null,
 					style: v.getAttribute("style") || null
@@ -108,8 +113,13 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 			eventPrefix: _prefix || ""
 		});
 
+		//if (conf.dirData.length > 2)
+			///console.warn("-->",conf.dirData.length);
+
 		[["LEFT", "RIGHT"], ["UP", "DOWN"]][+!options.horizontal]
 			.forEach(v => conf.dirData.push(MovableCoord[`DIRECTION_${v}`]));
+
+		//console.warn("=>", conf.dirData);
 	}
 
 	/**
@@ -128,17 +138,25 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 		this._setPadding(padding, true);
 		const sizeValue = this._getDataByDirection([panel.size, "100%"]);
 
-		// create container element
-		const cssValue = `position:relative;z-index:2000;width:100%;height:100%;${horizontal ? "" : "top:0;"}`;
+		// container element style
+		const cssValue = {
+			position: "relative",
+			zIndex: 2000,
+			width: "100%",
+			height: "100%"
+		};
+
+		horizontal && (cssValue.top = "0px");
 
 		if (this.$container) {
-			this.$container.setAttribute("style", cssValue);
+			utils.css(this.$container, cssValue);
 		} else {
 			const $parent = $children[0].parentNode;
 			const $container = document.createElement("div");
 
 			$container.className = `${prefix}-container`;
-			$container.setAttribute("style", cssValue);
+			utils.css($container, cssValue);
+
 			$children.forEach(v => $container.appendChild(v));
 
 			$parent.appendChild($container);
@@ -202,7 +220,7 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 		}
 
 		Object.keys(cssValue).length &&
-			utils.css(this.$wrapper, cssValue);
+		utils.css(this.$wrapper, cssValue);
 
 		const wrapperStyle = getComputedStyle(this.$wrapper);
 		const paddingType = horizontal ? ["Left", "Right"] : ["Top", "Bottom"];
@@ -281,7 +299,7 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 				no: index,
 				currNo: index
 			});
-		// if defaultIndex option is given, then move to that index panel
+			// if defaultIndex option is given, then move to that index panel
 		} else if (index > 0 && index <= lastIndex) {
 			this._setPanelNo({
 				index,
@@ -378,11 +396,8 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 		if (consts.IS_ANDROID2) {
 			conf.$dummyAnchor = utils.$(`.${dummyAnchorClassName}`);
 
-			!conf.$dummyAnchor.length &&
-				this.$wrapper.appendChild(
-					conf.$dummyAnchor = utils.$(`<a href="javascript:void(0)"
-						class="${dummyAnchorClassName}"
-						style="position:absolute;height:0px;width:0px">`)
+			!conf.$dummyAnchor.length && this.$wrapper.appendChild(
+					conf.$dummyAnchor = utils.$(`<a href="javascript:void(0)" class="${dummyAnchorClassName}" style="position:absolute;height:0px;width:0px">`)
 				);
 
 			this._applyPanelsCss = function applyCss(v, i) {
@@ -432,11 +447,11 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 			}
 
 			if (phase === "start") {
-				container = container[0].style;
+				container = container.style;
 				value = parseInt(container[horizontal ? "left" : "top"], 10);
 
 				if (horizontal) {
-					value && (container.left = 0);
+					value && (container.left = "0px");
 				} else {
 					value !== paddingTop && (container.top = "0px");
 				}
@@ -451,7 +466,7 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 					transform: utils.translate(0, 0, conf.useLayerHack)
 				});
 
-				conf.$dummyAnchor[0].focus();
+				conf.$dummyAnchor.focus();
 			}
 		}
 	}
@@ -592,6 +607,12 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 		const touch = conf.touch;
 
 		// reverse direction value when restore
+		let dir = ~~conf.dirData.join("").replace(touch.direction, "");
+
+		if (dir === 424) {
+			debugger;
+		}
+
 		touch.direction = ~~conf.dirData.join("").replace(touch.direction, "");
 
 		/**
@@ -1129,9 +1150,10 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 		options.horizontal && padding.reverse();
 
 		// get current padding value
-		padding = [padding[0]]
-			.push(padding[padding.length === 2 ? 0 : 2])
-			.map(v => parseInt(v, 10));
+		padding = [padding[0]];
+		padding.push(padding[padding.length === 2 ? 0 : 2]);
+
+		padding = padding.map(Number);
 
 		// update padding when current and given are different
 		if ((previewPadding.length === 2 && previewPadding[0] !== padding[0]) ||
@@ -1186,7 +1208,9 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 			const $panel = this.$container.querySelectorAll(`[${consts.DATA_HEIGHT}]`);
 
 			if ($panel.length) {
-				$panel.forEach(v => v.removeAttribute(consts.DATA_HEIGHT));
+				[].slice.call($panel)
+					.forEach(v => v.removeAttribute(consts.DATA_HEIGHT));
+
 				this._setAdaptiveHeight();
 			}
 		}
@@ -1281,22 +1305,40 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 		const conf = this._conf;
 		const origPanelStyle = conf.origPanelStyle;
 		const wrapper = origPanelStyle.wrapper;
+		const container = origPanelStyle.container;
 		const list = origPanelStyle.list;
 
 		// unwrap container element and restore original inline style
-		this.$wrapper.setAttribute("class", wrapper.className);
-		this.$wrapper.setAttribute("style", wrapper.style);
+		// restore wrapper style
+		const $wrapper = this.$wrapper;
 
-		const $children = [].slice.call(this.$container.children);
+		$wrapper.setAttribute("class", wrapper.className);
+		$wrapper[wrapper.style ? "setAttribute" : "removeAttribute"]("style", wrapper.style);
 
-		for (let i = 0, el; (el = $children[i]); i++) {
+		// restore container style
+		const $container = this.$container;
+		const $children = []
+			.slice.call($container.children);
+
+		if (origPanelStyle.container.className) {
+			$container.setAttribute("class", container.className);
+			$container[container.style ? "setAttribute" : "removeAttribute"]("style", container.style);
+		} else {
+			$children.forEach(v => $wrapper.appendChild(v));
+			$container.parentNode.removeChild($container);
+		}
+
+		for (let i = 0, $el; ($el = $children[i]); i++) {
 			if (i > list.length - 1) {
-				el.parentNode.removeChild(el);
+				$el.parentNode.removeChild($el);
 				break;
 			}
 
-			el.setAttribute("class", list[i].className);
-			el.setAttribute("style", list[i].style);
+			const className = list[i].className;
+			const style = list[i].style;
+
+			$el[className ? "setAttribute" : "removeAttribute"]("class", className);
+			$el[style ? "setAttribute" : "removeAttribute"]("style", style);
 		}
 
 		// unbind events

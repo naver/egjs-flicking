@@ -1,0 +1,3 @@
+.flick{height:50px;background-color:grey}
+.eg-flick-container > div { height:100%;float:left;display:block }
+.eg-flick-panel p {margin:0;font-size:2.0em;text-align:center}

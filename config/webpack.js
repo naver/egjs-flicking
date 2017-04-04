@@ -14,15 +14,15 @@ module.exports = {
 	},
 	externals: [{
 		"@egjs/component": {
-			commonjs: "eg.component",
-			commonjs2: "eg.component",
-			amd: "eg.component",
+			commonjs: "@egjs/component",
+			commonjs2: "@egjs/component",
+			amd: "@egjs/component",
 			root: ["eg", "Component"]
 		},
 		"@egjs/movablecoord": {
-			commonjs: "eg.movablecoord",
-			commonjs2: "eg.movablecoord",
-			amd: "eg.movablecoord",
+			commonjs: "@egjs/movablecoord",
+			commonjs2: "@egjs/movablecoord",
+			amd: "@egjs/movablecoord",
 			root: ["eg", "MovableCoord"]
 		}
 	}],
@@ -65,8 +65,5 @@ module.exports = {
 	],
 	resolveLoader: {
 		moduleExtensions: ["-loader"]
-	}/*,
-	resolve: {
-		modules: [path.resolve(__dirname, "src"), "node_modules"]
-	}*/
+	}
 };
