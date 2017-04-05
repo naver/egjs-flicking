@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 import * as consts from "./consts";
 
 export default superclass => class extends superclass {

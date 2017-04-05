@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 import {window, document} from "./browser";
 
 const utils = {
@@ -174,20 +178,6 @@ const utils = {
 	 * @ko 하드웨어 가속을 사용할 수 있는 환경인지 확인한다
 	 * @method eg#isHWAccelerable
 	 * @return {Boolean} Indicates whether hardware acceleration is enabled. <ko>하드웨어 가속 사용 가능 여부</ko>
-	 * @example
-	 eg.isHWAccelerable();  // Returns 'true' when hardware acceleration is supported
-
-	 // also, you can control return value
-	 eg.hook.isHWAccelerable = function(defalutVal,agent) {
-if(agent.os.name === "ios") {
-	// if os is 'ios', return value is 'false'
-	return false;
-} else if(agent.browser.name === "chrome" ) {
-	// if browser is 'chrome', return value is 'true'
-	return true;
-}
-return defaultVal;
-}
 	 */
 	isHWAccelerable() {
 		const ua = window.navigator.userAgent;
@@ -227,9 +217,6 @@ return defaultVal;
 	 * @param {String} y Distance to move along the Y axis <ko>y축을 따라 이동할 거리</ko>
 	 * @param {Boolean} [isHA] Force hardware acceleration <ko>하드웨어 가속 사용 여부</ko>
 	 * @return {String} Syntax of the translate style <ko>translate 스타일 구문</ko>
-	 * @example
-	 eg.translate('10px', '200%');  // translate(10px,200%);
-	 eg.translate('10px', '200%', true);  // translate3d(10px,200%,0);
 	 */
 	translate(x, y, isHA) {
 		return isHA || false ?

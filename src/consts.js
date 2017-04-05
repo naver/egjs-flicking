@@ -1,4 +1,7 @@
-// doc, global import
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 import {window as global, document as doc} from "./browser";
 
 // define custom events name

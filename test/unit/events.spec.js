@@ -3,7 +3,6 @@
  * egjs projects are licensed under the MIT license
  */
 /*eslint-disable */
-import {utils} from "../../src/utils";
 import tutils from "./assets/utils";
 import MovableCoord from "@egjs/movablecoord";
 

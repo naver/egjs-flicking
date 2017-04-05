@@ -3,7 +3,6 @@
  * egjs projects are licensed under the MIT license
  */
 /*eslint-disable */
-import {utils} from "../../src/utils";
 import tutils from "./assets/utils";
 import MovableCoord from "@egjs/movablecoord";
 
@@ -167,7 +166,7 @@ describe("moveTo() method", function() {
 			inst.moveTo(count - 1);  // move to last
 		});
 
-		it("Specified value", (done) => {
+		it("Specified value", done => {
 			const inst = tutils.create("#mflick2", null, customEvt);
 			const count = inst._conf.panel.count;
 			asyncFn = done;

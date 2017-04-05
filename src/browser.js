@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 /* eslint-disable no-new-func, no-nested-ternary */
 const win = typeof window !== "undefined" &&
 	window.Math === Math ?
