@@ -606,12 +606,6 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 		const touch = conf.touch;
 
 		// reverse direction value when restore
-		let dir = ~~conf.dirData.join("").replace(touch.direction, "");
-
-		if (dir === 424) {
-			debugger;
-		}
-
 		touch.direction = ~~conf.dirData.join("").replace(touch.direction, "");
 
 		/**

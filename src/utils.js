@@ -115,7 +115,7 @@ const utils = {
 			const applyStyle = (target, source) =>
 				Object.keys(source).forEach(v => {
 					target[v] = source[v];
-			});
+				});
 
 			this.isArray(el) ?
 				el.forEach(v => applyStyle(v.style, style)) :
