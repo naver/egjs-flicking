@@ -317,18 +317,18 @@
         }
     }
 
-    function methodLog(el, v) {
+    function methodLog(element, v) {
         var arr = [];
 
-        if(v.constructor === Array) {
-        	for (var i = 0; el = v[i]; i++) {
+        if(v && v.constructor === Array) {
+        	for (var i = 0, el; el = v[i]; i++) {
         		arr.push(el.querySelector("p").innerHTML);
             }
         } else {
             arr = [ v ];
         }
 
-        elLog1.html(el.innerHTML +" ==> "+ arr.join(", "));
+        elLog1.innerHTML = element.innerHTML +" ==> "+ arr.join(", ");
     }
 
     function getDirection(dir) {

@@ -42,6 +42,15 @@ const utils = {
 	},
 
 	/**
+	 * Check if is array
+	 * @param arr
+	 * @returns {Boolean}
+	 */
+	isArray(arr) {
+		return arr && arr.constructor === Array;
+	},
+
+	/**
 	 * Check if is object
 	 * @param {Object} obj
 	 * @returns {Boolean}
@@ -61,7 +70,7 @@ const utils = {
 	 *  target;  // { a: 1, b: 2, c: 3 };
 	 */
 	extend(target, ...objectN) {
-		if (!objectN.length) {
+		if (!objectN.length || (objectN.length === 1 && !objectN[0])) {
 			return target;
 		}
 
@@ -69,22 +78,18 @@ const utils = {
 		let output;
 
 		if (this.isObject(target) && this.isObject(source)) {
-			output = Object.assign({}, target);
+			output = target;
 
 			Object.keys(source).forEach(key => {
 				const value = source[key];
 
 				if (this.isObject(value)) {
-					!output[key] && Object.assign(output, {
-						[key]: {}
-					});
+					!output[key] && (output[key] = {});
 
 					output[key] = this.extend(output[key], value);
 				} else {
-					Object.assign(output, {
-						[key]: Array.isArray(value) ?
-							value.concat() : value
-					});
+					output[key] = this.isArray(value) ?
+						value.concat() : value;
 				}
 			});
 		}
@@ -107,9 +112,14 @@ const utils = {
 
 			return getAsNumber ? this.getNumValue(value) : value;
 		} else {
-			Array.isArray(el) ?
-				el.forEach(v => Object.assign(v.style, style)) :
-				Object.assign(el.style, style);
+			const applyStyle = (target, source) =>
+				Object.keys(source).forEach(v => {
+					target[v] = source[v];
+			});
+
+			this.isArray(el) ?
+				el.forEach(v => applyStyle(v.style, style)) :
+				applyStyle(el.style, style);
 		}
 
 		return el;

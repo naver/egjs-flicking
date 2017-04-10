@@ -7,7 +7,7 @@ import MovableCoord from "@egjs/movablecoord";
 import {utils, Mixin} from "./utils";
 import * as consts from "./consts";
 import {CONFIG, OPTIONS} from "./config";
-import {window, document} from "./browser";
+import {document} from "./browser";
 import EventHandler from "./eventHandler";
 
 export default class Flicking extends Mixin(Component).with(EventHandler) {
@@ -64,7 +64,7 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 
 			if (typeof(val) === "number") {
 				val = [val, val];
-			} else if (!Array.isArray(val)) {
+			} else if (!utils.isArray(val)) {
 				val = arrVal[key];
 			}
 
@@ -117,13 +117,8 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 			eventPrefix: _prefix || ""
 		});
 
-		//if (conf.dirData.length > 2)
-			///console.warn("-->",conf.dirData.length);
-
 		[["LEFT", "RIGHT"], ["UP", "DOWN"]][+!options.horizontal]
 			.forEach(v => conf.dirData.push(MovableCoord[`DIRECTION_${v}`]));
-
-		//console.warn("=>", conf.dirData);
 	}
 
 	/**
@@ -868,7 +863,7 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 			panel.currIndex = panel.index;
 		}
 
-		return this.trigger(conf.eventPrefix + name, Object.assign({
+		return this.trigger(conf.eventPrefix + name, utils.extend({
 			eventType: name,
 			index: panel.currIndex,
 			no: panel.currNo,
