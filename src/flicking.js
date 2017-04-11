@@ -395,7 +395,7 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 		if (consts.IS_ANDROID2) {
 			conf.$dummyAnchor = utils.$(`.${dummyAnchorClassName}`);
 
-			!conf.$dummyAnchor.length && this.$wrapper.appendChild(
+			!conf.$dummyAnchor && this.$wrapper.appendChild(
 					conf.$dummyAnchor = utils.$(`<a href="javascript:void(0)" class="${dummyAnchorClassName}" style="position:absolute;height:0px;width:0px">`)
 				);
 

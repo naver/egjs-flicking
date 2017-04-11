@@ -78,7 +78,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -89,8 +89,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 /* eslint-disable no-new-func, no-nested-ternary */
 var win = typeof window !== "undefined" && window.Math === Math ? window : typeof self !== "undefined" && self.Math === Math ? self : Function("return this")();
 /* eslint-enable no-new-func, no-nested-ternary */
@@ -124,7 +128,10 @@ var EVENTS = {
 };
 
 // check for css transform support
-// doc, global import
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 var SUPPORT_TRANSFORM = function () {
 	var style = _browser.document.documentElement.style;
 
@@ -135,7 +142,7 @@ var SUPPORT_TRANSFORM = function () {
 var SUPPORT_WILLCHANGE = _browser.window.CSS && _browser.window.CSS.supports && _browser.window.CSS.supports("will-change", "transform");
 
 // check for Android 2.x
-var IS_ANDROID2 = /Android 5\./.test(navigator.userAgent);
+var IS_ANDROID2 = /Android 2\./.test(navigator.userAgent);
 
 // data-height attribute's name for adaptiveHeight option
 var DATA_HEIGHT = "data-height";
@@ -573,17 +580,19 @@ var _component = __webpack_require__(2);
 
 var _component2 = _interopRequireDefault(_component);
 
-var _movablecoord = __webpack_require__(7);
+var _movablecoord = __webpack_require__(8);
 
 var _movablecoord2 = _interopRequireDefault(_movablecoord);
 
-var _utils = __webpack_require__(6);
+var _utils = __webpack_require__(7);
 
 var _consts = __webpack_require__(1);
 
 var consts = _interopRequireWildcard(_consts);
 
 var _config = __webpack_require__(4);
+
+var _browser = __webpack_require__(0);
 
 var _eventHandler = __webpack_require__(5);
 
@@ -597,7 +606,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Copyright (c) 2015 NAVER Corp.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * egjs projects are licensed under the MIT license
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
 
 var Flicking = function (_Mixin$with) {
 	_inherits(Flicking, _Mixin$with);
@@ -653,14 +666,14 @@ var Flicking = function (_Mixin$with) {
 			bounce: [10, 10]
 		};
 
-		this.options = _utils.utils.extend(_config.OPTIONS, arrVal, options);
+		this.options = _utils.utils.extend(_utils.utils.extend({}, _config.OPTIONS), arrVal, options);
 
 		for (var key in arrVal) {
 			var val = this.options[key];
 
-			if (Number.isInteger(val)) {
+			if (typeof val === "number") {
 				val = [val, val];
-			} else if (!Array.isArray(val)) {
+			} else if (!_utils.utils.isArray(val)) {
 				val = arrVal[key];
 			}
 
@@ -691,7 +704,7 @@ var Flicking = function (_Mixin$with) {
 		$nodes = [].slice.call($nodes);
 
 		// config value
-		var conf = this._conf = _utils.utils.extend(_config.CONFIG, {
+		var conf = this._conf = _utils.utils.extend(_utils.utils.extend({}, _config.CONFIG), {
 			panel: {
 				$list: $nodes,
 				minCount: padding[0] + padding[1] > 0 ? 5 : 3 // minimum panel count
@@ -701,6 +714,10 @@ var Flicking = function (_Mixin$with) {
 				wrapper: {
 					className: this.$wrapper.getAttribute("class") || null,
 					style: this.$wrapper.getAttribute("style") || null
+				},
+				container: {
+					className: this.$container && this.$container.getAttribute("class") || null,
+					style: this.$container && this.$container.getAttribute("style") || null
 				},
 				list: $nodes.map(function (v) {
 					return {
@@ -736,17 +753,25 @@ var Flicking = function (_Mixin$with) {
 		this._setPadding(padding, true);
 		var sizeValue = this._getDataByDirection([panel.size, "100%"]);
 
-		// create container element
-		var cssValue = "position:relative;z-index:2000;width:100%;height:100%;" + (horizontal ? "" : "top:0;");
+		// container element style
+		var cssValue = {
+			position: "relative",
+			zIndex: 2000,
+			width: "100%",
+			height: "100%"
+		};
+
+		horizontal && (cssValue.top = "0px");
 
 		if (this.$container) {
-			this.$container.setAttribute("style", cssValue);
+			_utils.utils.css(this.$container, cssValue);
 		} else {
 			var $parent = $children[0].parentNode;
-			var $container = document.createElement("div");
+			var $container = _browser.document.createElement("div");
 
 			$container.className = prefix + "-container";
-			$container.setAttribute("style", cssValue);
+			_utils.utils.css($container, cssValue);
+
 			$children.forEach(function (v) {
 				return $container.appendChild(v);
 			});
@@ -995,7 +1020,7 @@ var Flicking = function (_Mixin$with) {
 		if (consts.IS_ANDROID2) {
 			conf.$dummyAnchor = _utils.utils.$("." + dummyAnchorClassName);
 
-			!conf.$dummyAnchor.length && this.$wrapper.appendChild(conf.$dummyAnchor = _utils.utils.$("<a href=\"javascript:void(0)\"\n\t\t\t\t\t\tclass=\"" + dummyAnchorClassName + "\"\n\t\t\t\t\t\tstyle=\"position:absolute;height:0px;width:0px\">"));
+			!conf.$dummyAnchor && this.$wrapper.appendChild(conf.$dummyAnchor = _utils.utils.$("<a href=\"javascript:void(0)\" class=\"" + dummyAnchorClassName + "\" style=\"position:absolute;height:0px;width:0px\">"));
 
 			this._applyPanelsCss = function applyCss(v, i) {
 				var coords = this._getDataByDirection([this._conf.panel.size * i + "px", 0]);
@@ -1040,11 +1065,11 @@ var Flicking = function (_Mixin$with) {
 			}
 
 			if (phase === "start") {
-				container = container[0].style;
+				container = container.style;
 				value = parseInt(container[horizontal ? "left" : "top"], 10);
 
 				if (horizontal) {
-					value && (container.left = 0);
+					value && (container.left = "0px");
 				} else {
 					value !== paddingTop && (container.top = "0px");
 				}
@@ -1059,7 +1084,7 @@ var Flicking = function (_Mixin$with) {
 					transform: _utils.utils.translate(0, 0, conf.useLayerHack)
 				});
 
-				conf.$dummyAnchor[0].focus();
+				conf.$dummyAnchor.focus();
 			}
 		}
 	};
@@ -1477,7 +1502,7 @@ var Flicking = function (_Mixin$with) {
 			panel.currIndex = panel.index;
 		}
 
-		return this.trigger(conf.eventPrefix + name, Object.assign({
+		return this.trigger(conf.eventPrefix + name, _utils.utils.extend({
 			eventType: name,
 			index: panel.currIndex,
 			no: panel.currNo,
@@ -1786,9 +1811,10 @@ var Flicking = function (_Mixin$with) {
 		options.horizontal && padding.reverse();
 
 		// get current padding value
-		padding = [padding[0]].push(padding[padding.length === 2 ? 0 : 2]).map(function (v) {
-			return parseInt(v, 10);
-		});
+		padding = [padding[0]];
+		padding.push(padding[padding.length === 2 ? 0 : 2]);
+
+		padding = padding.map(Number);
 
 		// update padding when current and given are different
 		if (previewPadding.length === 2 && previewPadding[0] !== padding[0] || previewPadding[1] !== padding[1]) {
@@ -1840,9 +1866,10 @@ var Flicking = function (_Mixin$with) {
 			var $panel = this.$container.querySelectorAll("[" + consts.DATA_HEIGHT + "]");
 
 			if ($panel.length) {
-				$panel.forEach(function (v) {
+				[].slice.call($panel).forEach(function (v) {
 					return v.removeAttribute(consts.DATA_HEIGHT);
 				});
+
 				this._setAdaptiveHeight();
 			}
 		}
@@ -1945,22 +1972,41 @@ var Flicking = function (_Mixin$with) {
 		var conf = this._conf;
 		var origPanelStyle = conf.origPanelStyle;
 		var wrapper = origPanelStyle.wrapper;
+		var container = origPanelStyle.container;
 		var list = origPanelStyle.list;
 
 		// unwrap container element and restore original inline style
-		this.$wrapper.setAttribute("class", wrapper.className);
-		this.$wrapper.setAttribute("style", wrapper.style);
+		// restore wrapper style
+		var $wrapper = this.$wrapper;
 
-		var $children = [].slice.call(this.$container.children);
+		$wrapper.setAttribute("class", wrapper.className);
+		$wrapper[wrapper.style ? "setAttribute" : "removeAttribute"]("style", wrapper.style);
 
-		for (var i = 0, el; el = $children[i]; i++) {
+		// restore container style
+		var $container = this.$container;
+		var $children = [].slice.call($container.children);
+
+		if (origPanelStyle.container.className) {
+			$container.setAttribute("class", container.className);
+			$container[container.style ? "setAttribute" : "removeAttribute"]("style", container.style);
+		} else {
+			$children.forEach(function (v) {
+				return $wrapper.appendChild(v);
+			});
+			$container.parentNode.removeChild($container);
+		}
+
+		for (var i = 0, $el; $el = $children[i]; i++) {
 			if (i > list.length - 1) {
-				el.parentNode.removeChild(el);
+				$el.parentNode.removeChild($el);
 				break;
 			}
 
-			el.setAttribute("class", list[i].className);
-			el.setAttribute("style", list[i].style);
+			var className = list[i].className;
+			var style = list[i].style;
+
+			$el[className ? "setAttribute" : "removeAttribute"]("class", className);
+			$el[style ? "setAttribute" : "removeAttribute"]("style", style);
 		}
 
 		// unbind events
@@ -1988,6 +2034,10 @@ exports.default = Flicking;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 // internal config values
 var CONFIG = {
 	panel: {
@@ -2066,7 +2116,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Copyright (c) 2015 NAVER Corp.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * egjs projects are licensed under the MIT license
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
 
 exports.default = function (superclass) {
 	return function (_superclass) {
@@ -2230,12 +2284,34 @@ exports.default = function (superclass) {
 "use strict";
 
 
+var _flicking = __webpack_require__(3);
+
+var _flicking2 = _interopRequireDefault(_flicking);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = _flicking2.default; /**
+                                      * Copyright (c) 2015 NAVER Corp.
+                                      * egjs projects are licensed under the MIT license
+                                      */
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.Mixin = exports.utils = undefined;
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
+                                                                                                                                                                                                                                                                               * Copyright (c) 2015 NAVER Corp.
+                                                                                                                                                                                                                                                                               * egjs projects are licensed under the MIT license
+                                                                                                                                                                                                                                                                               */
+
 
 var _browser = __webpack_require__(0);
 
@@ -2264,11 +2340,16 @@ var utils = {
 				match.length === 3 && match[2].split(" ").forEach(function (v) {
 					var attr = v.split("=");
 
-					el.setAttribute(attr[0], attr[1]);
+					el.setAttribute(attr[0], attr[1].trim().replace(/(^["']|["']$)/g, ""));
 				});
 			} else {
 				el = _browser.document.querySelectorAll(param);
-				el = el.length === 1 ? el[0] : el;
+
+				if (!el.length) {
+					el = null;
+				} else if (el.length === 1) {
+					el = el[0];
+				}
 			}
 		} else if (param.nodeName && param.nodeType === 1) {
 			el = param;
@@ -2279,17 +2360,27 @@ var utils = {
 
 
 	/**
+  * Check if is array
+  * @param arr
+  * @returns {Boolean}
+  */
+	isArray: function isArray(arr) {
+		return arr && arr.constructor === Array;
+	},
+
+
+	/**
   * Check if is object
   * @param {Object} obj
   * @returns {Boolean}
   */
 	isObject: function isObject(obj) {
-		return obj && (typeof obj === "undefined" ? "undefined" : _typeof(obj)) === "object" && !Array.isArray(obj);
+		return obj && !obj.nodeType && (typeof obj === "undefined" ? "undefined" : _typeof(obj)) === "object" && !Array.isArray(obj);
 	},
 
 
 	/**
-  * Merge object
+  * Merge object returning new object
   * @param {Object} target
   * @param {Object} objectN
   * @returns {Object} merged target object
@@ -2305,36 +2396,32 @@ var utils = {
 			objectN[_key - 1] = arguments[_key];
 		}
 
-		if (!objectN.length) {
+		if (!objectN.length || objectN.length === 1 && !objectN[0]) {
 			return target;
 		}
 
 		var source = objectN.shift();
-		var output = void 0;
 
 		if (this.isObject(target) && this.isObject(source)) {
-			output = Object.assign({}, target);
-
 			Object.keys(source).forEach(function (key) {
-				if (_this.isObject(source[key])) {
-					var _Object$assign;
+				var value = source[key];
 
-					!output[key] && Object.assign(output, (_Object$assign = {}, _Object$assign[key] = {}, _Object$assign));
-					output[key] = _this.extend(target[key], source[key]);
+				if (_this.isObject(value)) {
+					!target[key] && (target[key] = {});
+
+					target[key] = _this.extend(target[key], value);
 				} else {
-					var _Object$assign2;
-
-					Object.assign(output, (_Object$assign2 = {}, _Object$assign2[key] = source[key], _Object$assign2));
+					target[key] = _this.isArray(value) ? value.concat() : value;
 				}
 			});
 		}
 
-		return this.extend.apply(this, [output].concat(objectN));
+		return this.extend.apply(this, [target].concat(objectN));
 	},
 
 
 	/**
-  * Get the style value or apply
+  * Get or set the style value or apply
   * @param {HTMLElement} el
   * @param {String|Object} style
   *  String: return style property value
@@ -2344,13 +2431,19 @@ var utils = {
   */
 	css: function css(el, style, getAsNumber) {
 		if (typeof style === "string") {
-			var value = getComputedStyle(el)[style];
+			var value = _browser.window.getComputedStyle(el)[style];
 
 			return getAsNumber ? this.getNumValue(value) : value;
 		} else {
-			Array.isArray(el) ? el.forEach(function (v) {
-				return Object.assign(v.style, style);
-			}) : Object.assign(el.style, style);
+			var applyStyle = function applyStyle(target, source) {
+				return Object.keys(source).forEach(function (v) {
+					target[v] = source[v];
+				});
+			};
+
+			this.isArray(el) ? el.forEach(function (v) {
+				return applyStyle(v.style, style);
+			}) : applyStyle(el.style, style);
 		}
 
 		return el;
@@ -2389,7 +2482,7 @@ var utils = {
   * @returns {Number} outer's value
   */
 	getOuter: function getOuter(el, type) {
-		var style = getComputedStyle(el);
+		var style = _browser.window.getComputedStyle(el);
 		var margin = type === "outerWidth" ? ["marginLeft", "marginRight"] : ["marginTop", "marginBottom"];
 
 		return this.getNumValue(style[type.replace("outer", "").toLocaleLowerCase()]) + this.getNumValue(style[margin[0]]) + this.getNumValue(style[margin[1]]);
@@ -2422,19 +2515,6 @@ var utils = {
   * @ko 하드웨어 가속을 사용할 수 있는 환경인지 확인한다
   * @method eg#isHWAccelerable
   * @return {Boolean} Indicates whether hardware acceleration is enabled. <ko>하드웨어 가속 사용 가능 여부</ko>
-  * @example
-  eg.isHWAccelerable();  // Returns 'true' when hardware acceleration is supported
- 	 // also, you can control return value
-  eg.hook.isHWAccelerable = function(defalutVal,agent) {
- if(agent.os.name === "ios") {
- // if os is 'ios', return value is 'false'
- return false;
- } else if(agent.browser.name === "chrome" ) {
- // if browser is 'chrome', return value is 'true'
- return true;
- }
- return defaultVal;
- }
   */
 	isHWAccelerable: function isHWAccelerable() {
 		var ua = _browser.window.navigator.userAgent;
@@ -2472,9 +2552,6 @@ var utils = {
   * @param {String} y Distance to move along the Y axis <ko>y축을 따라 이동할 거리</ko>
   * @param {Boolean} [isHA] Force hardware acceleration <ko>하드웨어 가속 사용 여부</ko>
   * @return {String} Syntax of the translate style <ko>translate 스타일 구문</ko>
-  * @example
-  eg.translate('10px', '200%');  // translate(10px,200%);
-  eg.translate('10px', '200%', true);  // translate3d(10px,200%,0);
   */
 	translate: function translate(x, y, isHA) {
 		return isHA || false ? "translate3d(" + x + "," + y + ",0)" : "translate(" + x + "," + y + ")";
@@ -2529,7 +2606,7 @@ exports.utils = utils;
 exports.Mixin = Mixin;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -2543,7 +2620,7 @@ exports.Mixin = Mixin;
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(true)
-		module.exports = factory(__webpack_require__(2), __webpack_require__(8));
+		module.exports = factory(__webpack_require__(2), __webpack_require__(9));
 	else if(typeof define === 'function' && define.amd)
 		define("MovableCoord", ["@egjs/component", "hammerjs"], factory);
 	else if(typeof exports === 'object')
@@ -3875,7 +3952,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_10__;
 //# sourceMappingURL=movablecoord.js.map
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/*! Hammer.JS - v2.0.7 - 2016-04-22
@@ -6523,21 +6600,6 @@ if (true) {
 
 })(window, document, 'Hammer');
 
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _flicking = __webpack_require__(3);
-
-var _flicking2 = _interopRequireDefault(_flicking);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-module.exports = _flicking2.default;
 
 /***/ })
 /******/ ]);

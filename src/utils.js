@@ -32,7 +32,12 @@ const utils = {
 					});
 			} else {
 				el = document.querySelectorAll(param);
-				el = el.length === 1 ? el[0] : el;
+
+				if (!el.length) {
+					el = null;
+				} else if (el.length === 1) {
+					el = el[0];
+				}
 			}
 		} else if (param.nodeName && param.nodeType === 1) {
 			el = param;
@@ -75,26 +80,23 @@ const utils = {
 		}
 
 		const source = objectN.shift();
-		let output;
 
 		if (this.isObject(target) && this.isObject(source)) {
-			output = target;
-
 			Object.keys(source).forEach(key => {
 				const value = source[key];
 
 				if (this.isObject(value)) {
-					!output[key] && (output[key] = {});
+					!target[key] && (target[key] = {});
 
-					output[key] = this.extend(output[key], value);
+					target[key] = this.extend(target[key], value);
 				} else {
-					output[key] = this.isArray(value) ?
+					target[key] = this.isArray(value) ?
 						value.concat() : value;
 				}
 			});
 		}
 
-		return this.extend(output, ...objectN);
+		return this.extend(target, ...objectN);
 	},
 
 	/**
