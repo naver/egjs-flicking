@@ -939,7 +939,7 @@ var Flicking = function (_Mixin$with) {
 			panel.changed && this._triggerEvent(consts.EVENTS.flickEnd);
 		}
 
-		!(phase === "start" && pos === undefined) && this._adjustContainerCss(phase);
+		this._adjustContainerCss(phase);
 		return true;
 	};
 

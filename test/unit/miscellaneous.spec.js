@@ -38,7 +38,36 @@ describe("Miscellaneous", function() {
 	    });
 	});
 
-	describe("Check public methods return", function (assert) {
+	describe("Android 2.x panel move by API", function() {
+		tutils.hooks.run();
+
+		it("On panel move, container's left should be 0px and restored when moves end", done => {
+			// Given
+			const MockFlicking = FlickingInjector({
+				"./consts": utils.extend(utils.extend({}, consts), {
+					IS_ANDROID2: true
+				})
+			});
+
+			// When
+			const $el = tutils.createFixture("#mflick1");
+			const inst = new MockFlicking($el, {});
+			const $container = inst.$container;
+
+			inst.next(300);
+
+			// container's left should be 0px
+			expect(utils.css($container, "left")).to.equal("0px");
+
+			setTimeout(() => {
+				// after panel move container's left shouldn't be 0px
+				expect(utils.css($container, "left")).to.not.equal("0px");
+				done();
+			}, 500);
+		});
+	});
+
+	describe("Check public methods return", function() {
         tutils.hooks.run();
 
 		it("Methods are returning instance it self?", () => {

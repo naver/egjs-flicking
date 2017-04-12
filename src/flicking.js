@@ -715,7 +715,7 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 			panel.changed && this._triggerEvent(consts.EVENTS.flickEnd);
 		}
 
-		!(phase === "start" && pos === undefined) && this._adjustContainerCss(phase);
+		this._adjustContainerCss(phase);
 		return true;
 	}
 
