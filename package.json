@@ -8,7 +8,7 @@
     "test": "karma start",
     "test:chrome": "karma start --chrome",
     "lint": "eslint src",
-    "jsdoc": "jsdoc -c jsdoc.json",
+    "jsdoc": "rm -rf ./doc && jsdoc -c jsdoc.json",
     "coverage": "karma start --coverage",
     "prepush": "npm run lint",
     "commitmsg": "node config/validate-commit-msg.js"
@@ -29,7 +29,7 @@
     "babel-preset-es2015": "^6.24.0",
     "chai": "^3.5.0",
     "clean-webpack-plugin": "^0.1.16",
-    "egjs-jsdoc-template": "*",
+    "egjs-jsdoc-template": "^1.3.1",
     "eslint": "^3.18.0",
     "eslint-config-naver": "^1.0.0",
     "eslint-loader": "^1.7.0",

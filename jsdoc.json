@@ -10,7 +10,9 @@
 	},
 	"opts": {
 		"template": "node_modules/egjs-jsdoc-template",
-		"destination": "./doc/"
+		"destination": "./doc/",
+		"ignores": ["eg.Component"],
+		"expendsItemMembers": true
 	},
 	"plugins": [
 		"plugins/markdown",
@@ -25,7 +27,7 @@
 		"default": {
 			"outputSourceFiles" : true
 		},
-		"applicationName": "eg.MovableCoord",
+		"applicationName": "eg.Flicking",
 		"disqus": "egjs",
 		"googleAnalytics": "",
 		"openGraph": {
@@ -36,13 +38,13 @@
 			"url": ""
 		},
 		"meta": {
-			"title": "eg.movableCoord - API",
-			"description": "A module used to change the information of user action entered by various input devices such as touch screen or mouse into logical coordinates within the virtual coordinate system. The coordinate information sorted by time events occurred is provided if animations are made by user actions. You can implement a user interface by applying the logical coordinates provided. For more information on the eg.MovableCoord module, see demos.",
-			"keyword": "UI Component, egjs, movableCoord"
+			"title": "eg.Flicking - API",
+			"description": "A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.",
+			"keyword": "UI Component, egjs, flicking, carousel"
 		},
 		"linenums": true,
 		"link": {
-			"canonical": "http://naver.github.io/egjs/latest/doc/eg.MovableCoord.html"
+			"canonical": "http://naver.github.io/egjs/latest/doc/eg.Flicking.html"
 		}
 	},
 	"markdown": {
