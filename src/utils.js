@@ -61,7 +61,7 @@ const utils = {
 	 * @returns {Boolean}
 	 */
 	isObject(obj) {
-		return obj && !obj.nodeType && typeof obj === "object" && !Array.isArray(obj);
+		return obj && !obj.nodeType && typeof obj === "object" && !this.isArray(obj);
 	},
 
 	/**
