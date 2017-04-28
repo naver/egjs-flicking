@@ -1,6 +1,6 @@
 {
   "name": "@egjs/flicking",
-  "version": "2.0.0-rc.1",
+  "version": "2.0.0-rc.2",
   "main": "dist/flicking.js",
   "scripts": {
     "start": "webpack-dev-server --env.mode server",
@@ -19,8 +19,8 @@
   "homepage": "https://github.com/naver/egjs-flicking",
   "license": "MIT <https://naver.github.io/egjs/license.txt>",
   "dependencies": {
-    "@egjs/component": "naver/egjs-component",
-    "@egjs/movablecoord": "git+https://oss.navercorp.com/egjs/egjs-movablecoord.git"
+    "@egjs/component": "^2.0.0-rc.1",
+    "@egjs/movablecoord": "^2.0.0-rc.1"
   },
   "devDependencies": {
     "babel-core": "^6.24.0",
