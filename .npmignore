@@ -1,0 +1,25 @@
+#configs
+config
+bower.json
+
+#tests
+test
+karma.conf.js
+
+#build tools
+webpack.*.js
+.travis.yml
+.codeclimate.yml
+
+#linters
+.eslintrc*
+
+#docs
+doc
+demo
+jsdoc.json
+README.md
+
+#editor settings
+.idea
+.editorconfig

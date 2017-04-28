@@ -271,7 +271,7 @@ var Component = exports.Component = function () {
 		_classCallCheck(this, Component);
 
 		this._eventHandler = {};
-		this._options = {};
+		this.options = {};
 	}
 
 	/**
@@ -305,21 +305,21 @@ var Component = exports.Component = function () {
 			if (arguments.length >= 2) {
 				var _key = arguments.length <= 0 ? undefined : arguments[0];
 				var value = arguments.length <= 1 ? undefined : arguments[1];
-				this._options[_key] = value;
+				this.options[_key] = value;
 				return this;
 			}
 
 			var key = arguments.length <= 0 ? undefined : arguments[0];
 			if (typeof key === "string") {
-				return this._options[key];
+				return this.options[key];
 			}
 
 			if (arguments.length === 0) {
-				return this._options;
+				return this.options;
 			}
 
 			var options = key;
-			this._options = options;
+			this.options = options;
 
 			return this;
 		}
@@ -563,7 +563,6 @@ module.exports = _component.Component;
 /******/ ]);
 });
 //# sourceMappingURL=component.js.map
-
 
 /***/ }),
 /* 3 */
@@ -2426,7 +2425,7 @@ var utils = {
   * @returns {Boolean}
   */
 	isObject: function isObject(obj) {
-		return obj && !obj.nodeType && (typeof obj === "undefined" ? "undefined" : _typeof(obj)) === "object" && !Array.isArray(obj);
+		return obj && !obj.nodeType && (typeof obj === "undefined" ? "undefined" : _typeof(obj)) === "object" && !this.isArray(obj);
 	},
 
 
@@ -2909,22 +2908,23 @@ var Coordinate = {
 	},
 	getCircularPos: function getCircularPos(pos, min, max, circular) {
 		var toPos = pos.concat();
+		var length = [max[0] - min[0], max[1] - min[1]];
 
 		if (circular[0] && toPos[1] < min[1]) {
 			// up
-			toPos[1] = (toPos[1] - min[1]) % (max[1] - min[1] + 1) + max[1];
+			toPos[1] = (toPos[1] - min[1]) % length[1] + max[1];
 		}
 		if (circular[1] && toPos[0] > max[0]) {
 			// right
-			toPos[0] = (toPos[0] - min[0]) % (max[0] - min[0] + 1) + min[0];
+			toPos[0] = (toPos[0] - max[0]) % length[0] + min[0];
 		}
 		if (circular[2] && toPos[1] > max[1]) {
 			// down
-			toPos[1] = (toPos[1] - min[1]) % (max[1] - min[1] + 1) + min[1];
+			toPos[1] = (toPos[1] - max[1]) % length[1] + min[1];
 		}
 		if (circular[3] && toPos[0] < min[0]) {
 			// left
-			toPos[0] = (toPos[0] - min[0]) % (max[0] - min[0] + 1) + max[0];
+			toPos[0] = (toPos[0] - min[0]) % length[0] + max[0];
 		}
 
 		toPos[0] = +toPos[0].toFixed(5);
@@ -2944,24 +2944,54 @@ module.exports = exports["default"];
 
 
 exports.__esModule = true;
-exports.utils = exports.Mixin = undefined;
+exports.$ = exports.Mixin = undefined;
 
 var _browser = __webpack_require__(1);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var utils = {
-	getElement: function getElement(el) {
-		if (typeof el === "string") {
-			return _browser.document.querySelector(el);
-		} else if (_browser.window.jQuery && el instanceof jQuery) {
-			// if you were using jQuery
-			return el.length > 0 ? el[0] : null;
+/**
+ * Select or create element
+ * @param {String|HTMLElement|jQuery} param
+ *  when string given is as HTML tag, then create element
+ *  otherwise it returns selected elements
+ * @param {Boolean} multi
+ * @returns {HTMLElement}
+ */
+function $(param) {
+	var multi = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+	var el = void 0;
+
+	if (typeof param === "string") {
+		// String (HTML, Selector)
+		// check if string is HTML tag format
+		var match = param.match(/^<([a-z]+)\s*([^>]*)>/);
+
+		// creating element
+		if (match) {
+			// HTML
+			var dummy = _browser.document.createElement("div");
+
+			dummy.innerHTML = param;
+			el = Array.prototype.slice.call(dummy.childNodes);
 		} else {
-			return el;
+			// Selector
+			el = Array.prototype.slice.call(_browser.document.querySelectorAll(param));
 		}
+		if (!multi) {
+			el = el.length >= 1 ? el[0] : undefined;
+		}
+	} else if (param.nodeName && param.nodeType === 1) {
+		// HTMLElement
+		el = param;
+	} else if (_browser.window.jQuery && param instanceof jQuery) {
+		// jQuery
+		el = multi ? param.toArray() : param.get(0);
 	}
-};
+
+	return el;
+}
 
 var MixinBuilder = function () {
 	function MixinBuilder(superclass) {
@@ -2994,7 +3024,7 @@ var Mixin = function Mixin(superclass) {
 };
 
 exports.Mixin = Mixin;
-exports.utils = utils;
+exports.$ = $;
 
 /***/ }),
 /* 4 */
@@ -3880,7 +3910,7 @@ var HammerManager = function () {
 	};
 
 	HammerManager.prototype.add = function add(element, options, handler) {
-		var el = _utils.utils.getElement(element);
+		var el = (0, _utils.$)(element);
 		var keyValue = el.getAttribute(_consts.UNIQUEKEY);
 		var bindOptions = Object.assign({
 			direction: _consts.DIRECTION.DIRECTION_ALL,
@@ -3909,7 +3939,7 @@ var HammerManager = function () {
 	};
 
 	HammerManager.prototype.remove = function remove(element) {
-		var el = _utils.utils.getElement(element);
+		var el = (0, _utils.$)(element);
 		var key = el.getAttribute(_consts.UNIQUEKEY);
 
 		if (key) {
@@ -3929,7 +3959,7 @@ var HammerManager = function () {
 	};
 
 	HammerManager.prototype.get = function get(element) {
-		var el = _utils.utils.getElement(element);
+		var el = (0, _utils.$)(element);
 		var key = el ? el.getAttribute(_consts.UNIQUEKEY) : null;
 
 		if (key && this._hammers[key]) {

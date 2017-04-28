@@ -1,6 +1,6 @@
 {
   "name": "@egjs/flicking",
-  "version": "2.0.0-beta",
+  "version": "2.0.0-rc.1",
   "main": "dist/flicking.js",
   "scripts": {
     "start": "webpack-dev-server --env.mode server",
