@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 import {utils} from "../../../src/utils";
-import Flicking from "../../../src/flicking";
+import Flicking from "../../../src/Flicking";
 import FIXTURE from "./fixture";
 
 // Test utility

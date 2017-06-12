@@ -8,7 +8,7 @@ import {utils, Mixin} from "./utils";
 import * as consts from "./consts";
 import {CONFIG, OPTIONS} from "./config";
 import {document} from "./browser";
-import EventHandler from "./eventHandler";
+import eventHandler from "./eventHandler";
 
 /**
  * A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.
@@ -61,7 +61,7 @@ import EventHandler from "./eventHandler";
 			});
  </script>
  */
-export default class Flicking extends Mixin(Component).with(EventHandler) {
+export default class Flicking extends Mixin(Component).with(eventHandler) {
 	/**
 	 * Constructor
 	 * @param {HTMLElement|String} element - base element or selector
