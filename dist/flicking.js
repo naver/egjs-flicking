@@ -1927,16 +1927,18 @@ exports.default = function (superclass) {
 "use strict";
 
 
-var _flicking = __webpack_require__(2);
+var _Flicking = __webpack_require__(2);
 
-var _flicking2 = _interopRequireDefault(_flicking);
+var _Flicking2 = _interopRequireDefault(_Flicking);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-module.exports = _flicking2.default; /**
-                                      * Copyright (c) 2015 NAVER Corp.
-                                      * egjs projects are licensed under the MIT license
-                                      */
+_Flicking2.default.VERSION = "2.0.0-rc.2"; /**
+                                            * Copyright (c) 2015 NAVER Corp.
+                                            * egjs projects are licensed under the MIT license
+                                            */
+
+module.exports = _Flicking2.default;
 
 /***/ }),
 /* 6 */

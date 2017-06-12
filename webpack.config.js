@@ -1,7 +1,9 @@
 var webpack = require("webpack");
 var CleanWebpackPlugin = require("clean-webpack-plugin");
 var WriteFilePlugin = require("write-file-webpack-plugin");
+var StringReplacePlugin = require("string-replace-webpack-plugin");
 var banner = require("./config/banner");
+var uglifyConfig = require("./config/uglify");
 var config = require("./config/webpack");
 var path = require("path");
 
@@ -27,10 +29,7 @@ module.exports = function(env) {
 				verbose: true,
 				dry: false
 			}),
-			new webpack.optimize.UglifyJsPlugin({
-				include: /\.min\.js$/,
-				minimize: true
-			}),
+			new webpack.optimize.UglifyJsPlugin(uglifyConfig),
 			new webpack.BannerPlugin(banner.common)
 		);
 
@@ -42,10 +41,8 @@ module.exports = function(env) {
 		}
 
 		config.plugins.push(
-			new webpack.optimize.UglifyJsPlugin({
-				include: /\.min\.js$/,
-				minimize: true
-			}), new webpack.BannerPlugin(banner.pkgd)
+			new webpack.optimize.UglifyJsPlugin(uglifyConfig),
+			new webpack.BannerPlugin(banner.pkgd)
 		);
 
 		config.externals = [];

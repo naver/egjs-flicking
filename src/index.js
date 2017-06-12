@@ -4,4 +4,5 @@
  */
 import Flicking from "./Flicking";
 
+Flicking.VERSION = "#__VERSION__#";
 module.exports = Flicking;
