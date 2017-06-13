@@ -17,13 +17,13 @@ module.exports = {
 			commonjs: "@egjs/component",
 			commonjs2: "@egjs/component",
 			amd: "@egjs/component",
-			root: ["eg", "Component"]
+			root: [pkg.namespace.eg, "Component"]
 		},
 		"@egjs/movablecoord": {
 			commonjs: "@egjs/movablecoord",
 			commonjs2: "@egjs/movablecoord",
 			amd: "@egjs/movablecoord",
-			root: ["eg", "MovableCoord"]
+			root: [pkg.namespace.eg, "MovableCoord"]
 		}
 	}],
 	devtool: "source-map",

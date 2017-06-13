@@ -12,10 +12,16 @@
     "jsdoc": "rm -rf ./doc && jsdoc -c jsdoc.json",
     "coverage": "karma start --coverage",
     "prepush": "npm run lint",
-    "commitmsg": "node config/validate-commit-msg.js"
+    "commitmsg": "node config/validate-commit-msg.js",
+    "demo:start": "npm run demo:prebuild && jekyll serve -s demo",
+    "demo:build": "jekyll build -s demo",
+    "demo:prebuild": "cpx 'doc/**/*' demo/doc/ --clean && cpx 'dist/**/*' demo/dist --clean"
   },
   "author": {
     "name": "NAVER Corp."
+  },
+  "namespace" : {
+    "eg": "eg"
   },
   "homepage": "https://github.com/naver/egjs-flicking",
   "license": "MIT <https://naver.github.io/egjs/license.txt>",
@@ -24,7 +30,7 @@
     "@egjs/movablecoord": "^2.0.0-rc.2"
   },
   "devDependencies": {
-  "babel-core": "^6.25.0",
+    "babel-core": "^6.25.0",
     "babel-loader": "^7.0.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-object-assign": "^6.22.0",
