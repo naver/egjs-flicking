@@ -1184,29 +1184,6 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 	}
 
 	/**
-	 * Update panel's previewPadding size according options.previewPadding
-	 */
-	_checkPadding() {
-		const options = this.options;
-		const previewPadding = options.previewPadding.concat();
-		let padding = utils.css(this.$wrapper, "padding").split(" ");
-
-		options.horizontal && padding.reverse();
-
-		// get current padding value
-		padding = [padding[0]];
-		padding.push(padding[padding.length === 2 ? 0 : 2]);
-
-		padding = padding.map(Number);
-
-		// update padding when current and given are different
-		if ((previewPadding.length === 2 && previewPadding[0] !== padding[0]) ||
-			previewPadding[1] !== padding[1]) {
-			this._setPadding(previewPadding);
-		}
-	}
-
-	/**
 	 * Updates the size of the panel.
 	 * @ko 패널의 크기를 갱신한다
 	 * @method eg.Flicking#resize
@@ -1231,7 +1208,7 @@ export default class Flicking extends Mixin(Component).with(EventHandler) {
 		let panelSize;
 
 		if (~~options.previewPadding.join("")) {
-			this._checkPadding();
+			this._setPadding(options.previewPadding.concat());
 			panelSize = panel.size;
 		} else if (horizontal) {
 			panelSize = panel.size = utils.css(this.$wrapper, "width", true);
