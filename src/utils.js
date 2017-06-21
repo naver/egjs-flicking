@@ -105,7 +105,7 @@ const utils = {
 	 * @param {String|Object} style
 	 *  String: return style property value
 	 *  Object: set style value
-	 * @parma {Boolean} getAsNumber - get the value as number
+	 * @param {Boolean} getAsNumber Get the value as number
 	 * @returns {String|HTMLElement}
 	 */
 	css(el, style, getAsNumber) {
