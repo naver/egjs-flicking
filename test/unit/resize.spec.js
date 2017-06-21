@@ -112,6 +112,9 @@ describe("resize() method", function() {
 
 			setCondition(inst, [20,30]);
 			runTest(inst, [20,30], true);
+
+			setCondition(inst, [0,20]);
+			runTest(inst, [0,20], true);
 		});
 
 		// Given
