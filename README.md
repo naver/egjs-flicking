@@ -4,9 +4,48 @@ With this module, you can make flicking gestures, which are ways to navigate lef
 
 ## Documentation
 * API Documentation
-    - Latest: [http://naver.github.io/egjs/latest/doc/eg.Flicking.html](http://naver.github.io/egjs/latest/doc/eg.Flicking.html)
-    - Specific version: [http://naver.github.io/egjs/[VERSION]/doc/eg.Flicking.html](http://naver.github.io/egjs/[VERSION]/doc/eg.Flicking.html)
-* Variety of demos are available at [Codpen.io](http://codepen.io/collection/ArxyLK).
+    - Latest: [https://naver.github.io/egjs-flicking/release/latest/doc/](https://naver.github.io/egjs-flicking/release/latest/doc/)
+    - Specific version: [https://naver.github.io/egjs-flicking/release/[VERSION]/doc/](https://naver.github.io/egjs-flicking/release/[VERSION]/doc/)
+
+
+## Download and Installation
+
+Download dist files from repo directly or install it via npm. 
+
+### For development (Uncompressed)
+
+You can download the uncompressed files for development
+
+- Latest : https://naver.github.io/egjs-flicking/release/latest/dist/flicking.js
+- Specific version : https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.js
+
+### For production (Compressed)
+
+You can download the compressed files for production
+
+- Latest : https://naver.github.io/egjs-flicking/release/latest/dist/flicking.min.js
+- Specific version : https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.min.js
+
+### Packaged version (with eg.MovableCoord inclusion)
+> Packaged version is not an official distribution.
+> Is just to provide for ease use of 'egjs-flicking' with dependency.
+
+ - **Latest**
+    - https://naver.github.io/egjs-flicking/release/latest/dist/flicking.pkgd.js
+    - https://naver.github.io/egjs-flicking/release/latest/dist/flicking.pkgd.min.js
+
+ - **Specific version**
+    - https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.js
+    - https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.min.js
+
+
+### Installation with npm
+
+The following command shows how to install egjs-flicking using npm.
+
+```bash
+$ npm install @egjs/flicking
+```
 
 ## Supported Browsers
 The following are the supported browsers.
@@ -19,6 +58,9 @@ The following are the supported browsers.
 ## Dependency
 egjs-flicking has the dependencies for the following libraries:
 
+|[eg.Component](https://github.com/naver/egjs-component)|[eg.MovableCoord](https://github.com/naver/egjs-movablecoord)|
+|----|----|
+|2.0.0+|2.0.0+|
 
 ## Bug Report
 
