@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Source: src/eventHandler.js | egjs::Flicking - API</title>
+    
+    <meta name="description" content="A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side." />
+    
+        <meta name="keywords" content="UI Component, egjs, flicking, carousel" />
+        <meta name="keyword" content="UI Component, egjs, flicking, carousel" />
+    
+    
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    
+    <meta property="og:url" content=""/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <link rel="canonical" href="http://naver.github.io/egjs/latest/doc/eg.Flicking.html"/>
+    
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":true,"cleverLinks":true,"default":{"outputSourceFiles":true},"applicationName":"eg.Flicking","disqus":"egjs","googleAnalytics":"","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"egjs::Flicking - API","description":"A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.","keyword":"UI Component, egjs, flicking, carousel"},"linenums":true,"link":{"canonical":"http://naver.github.io/egjs/latest/doc/eg.Flicking.html"}};
+    </script>
+    
+
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName"><a href="http://naver.github.io/egjs/">eg.Flicking</a></h3>
+
+    <div class="search">
+        <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
+    </div>
+    <ul class="list">
+    
+        <!-- Non Grouping Version -->
+        
+            
+
+        
+            
+
+<li class="item" data-name="eg.Flicking">
+    <span class="title">
+        <a href="eg.Flicking.html">eg.Flicking</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    <span class="subtitle">Methods</span>
+    
+        <li data-name="eg.Flicking#destroy"><a href="eg.Flicking.html#destroy">destroy</a></li>
+    
+        <li data-name="eg.Flicking#disableInput"><a href="eg.Flicking.html#disableInput">disableInput</a></li>
+    
+        <li data-name="eg.Flicking#enableInput"><a href="eg.Flicking.html#enableInput">enableInput</a></li>
+    
+        <li data-name="eg.Flicking#getAllElements"><a href="eg.Flicking.html#getAllElements">getAllElements</a></li>
+    
+        <li data-name="eg.Flicking#getElement"><a href="eg.Flicking.html#getElement">getElement</a></li>
+    
+        <li data-name="eg.Flicking#getIndex"><a href="eg.Flicking.html#getIndex">getIndex</a></li>
+    
+        <li data-name="eg.Flicking#getNextElement"><a href="eg.Flicking.html#getNextElement">getNextElement</a></li>
+    
+        <li data-name="eg.Flicking#getNextIndex"><a href="eg.Flicking.html#getNextIndex">getNextIndex</a></li>
+    
+        <li data-name="eg.Flicking#getPrevElement"><a href="eg.Flicking.html#getPrevElement">getPrevElement</a></li>
+    
+        <li data-name="eg.Flicking#getPrevIndex"><a href="eg.Flicking.html#getPrevIndex">getPrevIndex</a></li>
+    
+        <li data-name="eg.Flicking#getTotalCount"><a href="eg.Flicking.html#getTotalCount">getTotalCount</a></li>
+    
+        <li data-name="eg.Flicking#hasOn"><a href="eg.Flicking.html#hasOn">hasOn</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#isPlaying"><a href="eg.Flicking.html#isPlaying">isPlaying</a></li>
+    
+        <li data-name="eg.Flicking#moveTo"><a href="eg.Flicking.html#moveTo">moveTo</a></li>
+    
+        <li data-name="eg.Flicking#next"><a href="eg.Flicking.html#next">next</a></li>
+    
+        <li data-name="eg.Flicking#off"><a href="eg.Flicking.html#off">off</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#on"><a href="eg.Flicking.html#on">on</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#once"><a href="eg.Flicking.html#once">once</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#option"><a href="eg.Flicking.html#option">option</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#prev"><a href="eg.Flicking.html#prev">prev</a></li>
+    
+        <li data-name="eg.Flicking#resize"><a href="eg.Flicking.html#resize">resize</a></li>
+    
+        <li data-name="eg.Flicking#restore"><a href="eg.Flicking.html#restore">restore</a></li>
+    
+        <li data-name="eg.Flicking#trigger"><a href="eg.Flicking.html#trigger">trigger</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    <span class="subtitle">Events</span>
+    
+        <li data-name="eg.Flicking#event:beforeFlickStart"><a href="eg.Flicking.html#event:beforeFlickStart">beforeFlickStart</a></li>
+    
+        <li data-name="eg.Flicking#event:beforeRestore"><a href="eg.Flicking.html#event:beforeRestore">beforeRestore</a></li>
+    
+        <li data-name="eg.Flicking#event:flick"><a href="eg.Flicking.html#event:flick">flick</a></li>
+    
+        <li data-name="eg.Flicking#event:flickEnd"><a href="eg.Flicking.html#event:flickEnd">flickEnd</a></li>
+    
+        <li data-name="eg.Flicking#event:restore"><a href="eg.Flicking.html#event:restore">restore</a></li>
+    
+    </ul>
+
+    
+    <span class="title" style="margin-top:10px"><a href="index.html">readme</a></span>
+
+</li>
+
+        
+    
+    </ul>
+</div>
+
+    <div class="main">
+        <h1 class="page-title" data-filename="src_eventHandler.js.html">Source: src/eventHandler.js</h1>
+        
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+import * as consts from "./consts";
+
+export default superclass => class extends superclass {
+
+	/**
+	 * 'hold' event handler
+	 */
+	_holdHandler(e) {
+		const conf = this._conf;
+
+		conf.touch.holdPos = e.pos;
+		conf.touch.holding = true;
+		conf.panel.changed = false;
+
+		this._adjustContainerCss("start", e.pos);
+	}
+
+	/**
+	 * 'change' event handler
+	 */
+	_changeHandler(e) {
+		const conf = this._conf;
+		const touch = conf.touch;
+		const posIndex = +!this.options.horizontal;
+		const pos = e.pos[posIndex];
+		const holdPos = touch.holdPos[posIndex];
+		let direction;
+		let eventRes = null;
+		let movedPx;
+
+		this._setPointerEvents(e);  // for "click" bug
+
+		/**
+		 * This event is fired when panel moves.
+		 * @ko 패널이 이동할 때 발생하는 이벤트
+		 * @name eg.Flicking#flick
+		 * @event
+		 * @param {Object} param The object of data to be sent to an event &lt;ko>이벤트에 전달되는 데이터 객체&lt;/ko>
+		 * @param {String} param.eventType The name of the event&lt;ko>이름명&lt;/ko>
+		 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM (@deprecated since 1.3.0)&lt;ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)&lt;/ko>
+		 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content &lt;ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다&lt;/ko>
+		 * @param {Number} param.direction Direction of the movement (see eg.MovableCoord.DIRECTION_* constant) &lt;ko>이동 방향(eg.MovableCoord.DIRECTION_* constant 참고)&lt;/ko>
+		 * @param {Array} param.pos Start coordinate &lt;ko>출발점 좌표&lt;/ko>
+		 * @param {Number} param.pos.0 x-coordinate &lt;ko>x 좌표&lt;/ko>
+		 * @param {Number} param.pos.1 y-coordinate &lt;ko>y 좌표&lt;/ko>
+		 * @param {Boolean} param.holding Indicates whether a user holds an element on the screen of the device. &lt;ko>사용자가 기기의 화면을 누르고 있는지 여부&lt;/ko>
+		 * @param {Number} param.distance Distance moved from then starting point. According the move direction, positive on eg.MovableCoord.DIRECTION_LEFT/UP and negative on eg.MovableCoord.DIRECTION_RIGHT/DOWN &lt;ko>시작점부터 이동된 거리의 값. 이동 방향에 따라 eg.MovableCoord.DIRECTION_LEFT/UP의 경우 양수를 eg.MovableCoord.DIRECTION_RIGHT/DOWN의 경우는 음수를 반환&lt;/ko>
+		 */
+		if (e.hammerEvent) {
+			direction = e.hammerEvent.direction;
+
+			// Adjust direction in case of diagonal touch move
+			movedPx = e.hammerEvent[this.options.horizontal ? "deltaX" : "deltaY"];
+
+			if (!~conf.dirData.indexOf(direction)) {
+				direction = conf.dirData[+(Math.abs(touch.lastPos) &lt;= movedPx)];
+			}
+
+			touch.lastPos = movedPx;
+		} else {
+			touch.lastPos = null;
+		}
+
+		conf.customEvent.flick &amp;&amp; (eventRes =
+			this._triggerEvent(consts.EVENTS.flick, {
+				pos: e.pos,
+				holding: e.holding,
+				direction: direction || touch.direction,
+				distance: pos - (holdPos || (touch.holdPos[posIndex] = pos))
+			}
+		));
+
+		(eventRes || eventRes === null) &amp;&amp; this._setTranslate([-pos, 0]);
+	}
+
+	/**
+	 * 'release' event handler
+	 */
+	_releaseHandler(e) {
+		const touch = this._conf.touch;
+		const pos = e.destPos;
+		const posIndex = +!this.options.horizontal;
+		const holdPos = touch.holdPos[posIndex];
+		const panelSize = this._conf.panel.size;
+
+		touch.distance = e.depaPos[posIndex] - touch.holdPos[posIndex];
+
+		touch.direction = this._conf.dirData[
+			+!(touch.holdPos[posIndex] &lt; e.depaPos[posIndex])
+		];
+
+		pos[posIndex] = Math.max(
+			holdPos - panelSize, Math.min(holdPos, pos[posIndex])
+		);
+
+		touch.destPos[posIndex] =
+			pos[posIndex] = Math.round(pos[posIndex] / panelSize) * panelSize;
+
+		touch.distance === 0 &amp;&amp; this._adjustContainerCss("end");
+		touch.holding = false;
+
+		this._setPointerEvents();  // for "click" bug
+	}
+
+	/**
+	 * 'animationStart' event handler
+	 */
+	_animationStartHandler(e) {
+		const conf = this._conf;
+		const panel = conf.panel;
+		const customEvent = conf.customEvent;
+
+		panel.animating = true;
+
+		if (!customEvent.restoreCall &amp;&amp; e.hammerEvent &amp;&amp;
+			this._setPhaseValue("start", {
+				depaPos: e.depaPos,
+				destPos: e.destPos
+			}) === false) {
+			e.stop();
+		}
+
+		if (e.hammerEvent) {
+			e.duration = this.options.duration;
+
+			e.destPos[+!this.options.horizontal] =
+				panel.size * (
+					panel.index + conf.indexToMove
+				);
+		}
+
+		if (this._isMovable()) {
+			!customEvent.restoreCall &amp;&amp; (customEvent.restore = false);
+		} else {
+			this._triggerBeforeRestore(e);
+		}
+	}
+
+	/**
+	 * 'animationEnd' event handler
+	 */
+	_animationEndHandler() {
+		this._setPhaseValue("end");
+
+		this._conf.panel.animating = false;
+		this._triggerRestore();
+	}
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+
+        
+        <!-- disqus code -->
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        <!-- // disqus code -->
+        
+
+        <footer>
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Jun 23 2017 14:56:01 GMT+0900 (KST)
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/main.js"></script>
+</body>
+</html>
