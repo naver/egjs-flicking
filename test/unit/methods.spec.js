@@ -354,6 +354,65 @@ describe("Methods call", function() {
 		});
 	});
 
+	describe("getStatus()", function() {
+		tutils.hooks.run();
+
+		// Given
+		const inst = tutils.create("#mflick2", {
+			circular : true
+		});
+
+		// Then
+		it("The method was invoked correctly?", () => {
+			const status = inst.getStatus();
+
+			expect(status.panel && status.$list).to.be.ok;
+		});
+
+		it("Returned stringified value?", () => {
+			const status = inst.getStatus(true);
+
+			expect(typeof status).to.be.equal("string");
+		});
+	});
+
+	describe("setStatus()", function() {
+		tutils.hooks.run();
+
+		const inst = tutils.create("#mflick2", {
+			circular : true
+		});
+
+		inst.next(0);
+		const status = inst.getStatus(true);
+		const panel = inst.getElement();
+		const currPanel = {
+			style: panel.style.cssText,
+			className: panel.className,
+			html: panel.innerHTML
+		};
+
+		it("Has been set status value correctly?", () => {
+			inst.next(0);
+			inst.setStatus(status);
+
+			expect(currPanel.className).to.be.equal(inst.getElement().className);
+			expect(currPanel.html).to.be.equal(inst.getElement().innerHTML);
+		});
+
+		it("Panel content is same as expected?", () => {
+			const el = inst.getElement();
+
+			expect(el.innerHTML).to.be.equal(currPanel.html);
+		});
+
+		it("Panel moved correctly after '.setStatus()' call?", () => {
+			inst.moveTo(2,0);
+
+			expect(inst.getElement().innerHTML.indexOf("Layer 2") > -1).to.be.ok;
+		});
+	});
+
 	describe("destroy()", function() {
 		tutils.hooks.run();
 

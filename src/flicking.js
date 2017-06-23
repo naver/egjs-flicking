@@ -608,18 +608,21 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 		const $first = $panel.querySelector(":first-child");
 
-		height = $first.getAttribute(consts.DATA_HEIGHT);
+		if ($first) {
+			height = $first.getAttribute(consts.DATA_HEIGHT);
 
-		if (!height) {
-			$children = $panel.children;
-			height = utils.outerHeight(
-				$children.length > 1 ? ($panel.style.height = "auto", $panel) : $first
-			);
+			if (!height) {
+				$children = $panel.children;
 
-			$first.setAttribute(consts.DATA_HEIGHT, height);
+				height = utils.outerHeight(
+					$children.length > 1 ? ($panel.style.height = "auto", $panel) : $first
+				);
+
+				height > 0 && $first.setAttribute(consts.DATA_HEIGHT, height);
+			}
+
+			height > 0 && (this.$wrapper.style.height = `${height}px`);
 		}
-
-		this.$wrapper.style.height = `${height}px`;
 	}
 
 	/**
@@ -1289,6 +1292,68 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	disableInput() {
 		this._mcInst.disableInput();
 		return this;
+	}
+
+	/**
+	 * Get current flicking status
+	 * @ko 현재의 상태 값을 반환한다.
+	 * @method eg.Flicking#getStatus
+	 * @param {Boolean} stringify Set true if want get stringified status value <ko>상태 값을 문자열로 전달받고자 하는지 여부</ko>
+	 * @return {{panel: {index: (*|number), no: (*|number), currIndex: number, currNo: number}, $list}}
+	 */
+	getStatus(stringify) {
+		const panel = this._conf.panel;
+		const rxStyle = /(transform|left|top|will-change|box-sizing|width):[^;]*;/g;
+		const status = {
+			// current panel position
+			panel: {
+				index: panel.index,
+				no: panel.no,
+				currIndex: panel.currIndex,
+				currNo: panel.currNo
+			},
+
+			// panel's html
+			$list: panel.$list.map(v => ({
+				style: v.style.cssText.replace(rxStyle, "").trim(),
+				className: v.className,
+				html: v.innerHTML
+			}))
+		};
+
+		return stringify ?
+			JSON.stringify(status) : status;
+	}
+
+	/**
+	 * Set flicking as given status
+	 * @method eg.Flicking#setStatus
+	 * @param {Object|String} statusValue status value to be restored <ko>복원할 상태 값</ko>
+	 */
+	setStatus(statusValue) {
+		const panel = this._conf.panel;
+		const isAdaptiveHeight = this.options.adaptiveHeight;
+		const status = typeof statusValue === "string" ?
+			JSON.parse(statusValue) : statusValue;
+
+		if (status) {
+			for (const x in status.panel) {
+				x in panel && (panel[x] = status.panel[x]);
+			}
+
+			panel.$list.forEach((v, i) => {
+				const data = status.$list[i];
+				const style = data.style;
+				const className = data.className;
+				const html = data.html;
+
+				style && (v.style.cssText += style);
+				className && (v.className = className);
+				html && (v.innerHTML = html);
+			});
+
+			isAdaptiveHeight && this._setAdaptiveHeight();
+		}
 	}
 
 	/**
