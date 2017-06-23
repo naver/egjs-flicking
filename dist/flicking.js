@@ -1,11 +1,11 @@
 /*!
  * Copyright (c) 2017 NAVER Corp.
- * @egjs/flicking projects are licensed under the MIT <https://naver.github.io/egjs/license.txt> license
+ * @egjs/flicking project is licensed under the MIT <https://naver.github.io/egjs/license.txt> license
  * 
  * @egjs/flicking JavaScript library
  * https://github.com/naver/egjs-flicking
  * 
- * @version 2.0.0-rc.2
+ * @version 2.0.0-rc.3
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -1933,7 +1933,7 @@ var _Flicking2 = _interopRequireDefault(_Flicking);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_Flicking2.default.VERSION = "2.0.0-rc.2"; /**
+_Flicking2.default.VERSION = "2.0.0-rc.3"; /**
                                             * Copyright (c) 2015 NAVER Corp.
                                             * egjs projects are licensed under the MIT license
                                             */

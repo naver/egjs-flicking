@@ -28,8 +28,7 @@ module.exports = {
 	}],
 	devtool: "source-map",
 	module: {
-		rules: [
-			{
+		rules: [{
 				test: /(\.js)$/,
 				exclude: /(node_modules)/,
 				loader: "babel",
@@ -48,16 +47,14 @@ module.exports = {
 			{
 				test: /(\.js)$/,
 				loader: StringReplacePlugin.replace({
-					replacements: [
-						{
-							pattern: /#__VERSION__#/ig,
-							replacement: function (match, p1, offset, string) {
-								return pkg.version;
-							}
+					replacements: [{
+						pattern: /#__VERSION__#/ig,
+						replacement: function (match, p1, offset, string) {
+							return pkg.version;
 						}
-					]}
-				)
-            }
+					}]
+				})
+			}
 		]
 	},
 	plugins: [

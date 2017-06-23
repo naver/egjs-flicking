@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include head.html %}
+{% for css in site.data.egjs.css %}
+	<link rel="stylesheet" href="{{ css }}">
+{% endfor %}
+{% for dist in site.data.egjs.dist %}
+	<script src="{{ dist }}"></script>
+{% endfor %}
+<script>
+	window.LIBLINK = [];
+	{% for dist in site.data.egjs.dist %}
+	window.LIBLINK.push(window.location.href.replace("/index.html", "/")
+            .replace("/gallery.html", "/") + "{{ dist }}");
+	{% endfor %}
+</script>
+<body>
+<link rel="stylesheet" href="./common/css/gallery.css">
+<div>
+	<section id="docs" class="docs section demos">
+		<div class="container">
+			<div class="docs-inner">
+				{% capture demo %}{% include_relative demo.md %}{% endcapture %}
+				{{ demo | markdownify }}
+			</div>
+		</div>
+	</section>
+</div>
+<script src="./common/js/jquery-2.2.4.js"></script>
+<script src="./common/js/jquery-2.2.4.js"></script>
+<script src="./common/js/bootstrap.min.js"></script>
+{% for js in site.data.egjs.js %}
+	<script src="{{ js }}"></script>
+{% endfor %}
+<script>
+$("h3[id]").append(function() {
+	return "<a href='./index.html#" + this.id + "' target='_blank' class='more'>" +
+		'<span class="moreBtn">more</span></a>';
+});
+</script>
+</body>
+</html>

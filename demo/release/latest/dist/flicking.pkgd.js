@@ -2340,7 +2340,7 @@ var _Flicking2 = _interopRequireDefault(_Flicking);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_Flicking2.default.VERSION = "2.0.0-rc.3"; /**
+_Flicking2.default.VERSION = "2.0.0-rc.2"; /**
                                             * Copyright (c) 2015 NAVER Corp.
                                             * egjs projects are licensed under the MIT license
                                             */

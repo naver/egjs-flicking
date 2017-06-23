@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include head.html %}
+{% for css in site.data.egjs.css %}
+	<link rel="stylesheet" href="{{ css }}">
+{% endfor %}
+{% for dist in site.data.egjs.dist %}
+	<script src="{{ dist }}"></script>
+{% endfor %}
+<script>
+	window.LIBLINK = [];
+	{% for dist in site.data.egjs.dist %}
+	window.LIBLINK.push(window.location.href.replace("/index.html", "/")
+            .replace("/gallery.html", "/") + "{{ dist }}");
+	{% endfor %}
+</script>
+<body>
+{% include facebook.html %}
+{% include header.html %}
+{% include promo.html %}
+<div>
+	<section id="about" class="docs section">
+		<div class="container">
+			<div class="docs-inner">
+				<h2 class="title text-center">Get Started</h2>
+				{% capture started %}{% include_relative started.md %}{% endcapture %}
+				{{ started | markdownify }}
+			</div>
+		</div>
+	</section>
+	<section id="docs" class="docs section demos">
+		<div class="container">
+			<div class="docs-inner">
+				<h2 class="title text-center">Demos</h2>
+				{% capture demo %}{% include_relative demo.md %}{% endcapture %}
+				{{ demo | markdownify }}
+			</div>
+		</div>
+	</section>
+</div>
+{% include footer.html %}
+{% for js in site.data.egjs.js %}
+	<script src="{{ js }}"></script>
+{% endfor %}
+</body>
+</html>
