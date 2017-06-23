@@ -17,19 +17,18 @@ module.exports = {
 			commonjs: "@egjs/component",
 			commonjs2: "@egjs/component",
 			amd: "@egjs/component",
-			root: ["eg", "Component"]
+			root: [pkg.namespace.eg, "Component"]
 		},
 		"@egjs/movablecoord": {
 			commonjs: "@egjs/movablecoord",
 			commonjs2: "@egjs/movablecoord",
 			amd: "@egjs/movablecoord",
-			root: ["eg", "MovableCoord"]
+			root: [pkg.namespace.eg, "MovableCoord"]
 		}
 	}],
 	devtool: "source-map",
 	module: {
-		rules: [
-			{
+		rules: [{
 				test: /(\.js)$/,
 				exclude: /(node_modules)/,
 				loader: "babel",
@@ -48,16 +47,14 @@ module.exports = {
 			{
 				test: /(\.js)$/,
 				loader: StringReplacePlugin.replace({
-					replacements: [
-						{
-							pattern: /#__VERSION__#/ig,
-							replacement: function (match, p1, offset, string) {
-								return pkg.version;
-							}
+					replacements: [{
+						pattern: /#__VERSION__#/ig,
+						replacement: function (match, p1, offset, string) {
+							return pkg.version;
 						}
-					]}
-				)
-            }
+					}]
+				})
+			}
 		]
 	},
 	plugins: [

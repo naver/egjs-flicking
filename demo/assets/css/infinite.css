@@ -1,0 +1,27 @@
+.flick {
+    height: 100px;
+    background-color: grey;
+    margin: 0 auto;
+}
+.f_btn {
+    border-radius: 20px;
+    margin: 3px;
+    height: 22px;
+    font-size: 10px;
+    border: 2px solid #B7B5B5;
+    background-color: #fff;
+    position: relative;
+    z-index: 2001;
+    top: -60px;
+    cursor: pointer;
+    color: #B7B5B5;
+}
+.f_right {
+    float: right;
+}
+.eg-flick-panel p {
+    vertical-align: middle;
+    font-size: 2em;
+    line-height: 100px;
+    text-align: center;
+}

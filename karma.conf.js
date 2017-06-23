@@ -1,5 +1,4 @@
-// Karma configuration
-// Generated on Thu Jan 05 2017 11:21:09 GMT+0900 (KST)
+const webpackConfig = require("./config/webpack");
 
 module.exports = function(config) {
 	var karmaConfig = {
@@ -28,27 +27,9 @@ module.exports = function(config) {
 		exclude: [],
 
 		webpack: {
-			devtool: "inline-source-map",
+			devtool: webpackConfig.module.devtool,
 			module: {
-				rules: [
-					{
-						test: /\.js$/,
-						exclude: /node_modules/,
-						loader: "babel-loader",
-						options: {
-							presets: [
-								[
-									"es2015",
-									{
-										"loose": true,
-										"modules": false
-									}
-								]
-							],
-							plugins: ["add-module-exports"]
-						}
-					}
-				]
+				rules: [webpackConfig.module.rules[0]]
 			}
 		},
 
