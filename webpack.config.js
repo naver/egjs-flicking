@@ -42,7 +42,7 @@ module.exports = function(env) {
 
 		config.plugins.push(
 			new UglifyJSPlugin(uglifyConfig),
-			new webpack.BannerPlugin(banner.pkgd)
+			new webpack.BannerPlugin([banner.common, "", banner.pkgd].join("\r\n"))
 		);
 
 		config.externals = [];

@@ -1,4 +1,12 @@
 /*!
+ * Copyright (c) 2017 NAVER Corp.
+ * @egjs/flicking project is licensed under the MIT <https://naver.github.io/egjs/license.txt> license
+ * 
+ * @egjs/flicking JavaScript library
+ * https://github.com/naver/egjs-flicking
+ * 
+ * @version 2.0.0-rc.3
+ * 
  * All-in-one packaged file for ease use of '@egjs/flicking' with below dependencies.
  * NOTE: This is not an official distribution file and is only for user convenience.
  * 
@@ -617,7 +625,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * @alias eg.Flicking
  * @extends eg.Component
  *
- * @param {HTMLElement|String|jQuery} element A base element for the eg.Flicking module <ko>eg.Flicking 모듈을 사용할 기준 엘리먼트</ko>
+ * @support {"ie": "10+", "ch" : "latest", "ff" : "latest",  "sf" : "latest" , "edge" : "latest", "ios" : "7+", "an" : "2.3+ (except 3.x)"}
+ */
+var Flicking = function (_Mixin$with) {
+	_inherits(Flicking, _Mixin$with);
+
+	/**
+  * Constructor
+  * @param {HTMLElement|String|jQuery} element A base element for the eg.Flicking module <ko>eg.Flicking 모듈을 사용할 기준 엘리먼트</ko>
  * @param {Object} options The option object of the eg.Flicking module<ko>eg.Flicking 모듈의 옵션 객체</ko>
  * @param {Boolean} [options.hwAccelerable=eg.isHWAccelerable()] Force hardware compositing <ko>하드웨어 가속 사용 여부</ko>
  * @param {String} [options.prefix=eg-flick] A prefix for class names of the panel elements <ko>패널 엘리먼트의 클래스 이름에 설정할 접두사</ko>
@@ -634,42 +649,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * @param {Number} [options.thresholdAngle=45] The threshold value that determines whether user action is horizontal or vertical (0~90) <ko>사용자의 동작이 가로 방향인지 세로 방향인지 판단하는 기준 각도(0~90)</ko>
  * @param {Boolean} [options.adaptiveHeight=false] Set container's height be adaptive according panel's height.<br>(Note: on Android 4.1.x stock browser, has rendering bug which not correctly render height value on panel with single node. To avoid just append another empty node at the end.)<ko>컨테이너 영역이 패널의 높이값에 따라 변경될지 여부<br>(참고: Android 4.1.x 스톡 브라우저에서 단일 노드로 구성된 패널의 높이값 변경이 제대로 렌더링 되지 않는 버그가 있음. 비어있는 노드를 추가하면 해결이 가능하다.)</ko>
  *
- * @codepen {"id":"rVOpPK", "ko":"플리킹 UI 기본 예제", "en":"Flicking UI default example", "collectionId":"ArxyLK", "height" : 403}
- * @support {"ie": "10+", "ch" : "latest", "ff" : "latest",  "sf" : "latest" , "edge" : "latest", "ios" : "7+", "an" : "2.3+ (except 3.x)"}
- *
  * @see Easing Functions Cheat Sheet {@link http://easings.net/}
  * @see If you want to try a different easing function, use the jQuery easing plugin ({@link http://gsgd.co.uk/sandbox/jquery/easing}) or the jQuery UI easing library ({@link https://jqueryui.com/easing}). <ko>다른 easing 함수를 사용하려면 jQuery easing 플러그인({@link http://gsgd.co.uk/sandbox/jquery/easing})이나, jQuery UI easing 라이브러리({@link https://jqueryui.com/easing})를 사용한다</ko>
- * @example
- <!-- HTML -->
- <div id="mflick">
- <div>
- <p>Layer 0</p>
- </div>
- <div>
- <p>Layer 1</p>
- </div>
- <div>
- <p>Layer 2</p>
- </div>
- </div>
- <script>
- var some = new eg.Flicking("#mflick", {
-				circular : true,
-				threshold : 50
-			}).on({
-				beforeRestore : function(e) { ... },
-				flickStart : function(e) { ... }
-			});
- </script>
  */
-var Flicking = function (_Mixin$with) {
-	_inherits(Flicking, _Mixin$with);
-
-	/**
-  * Constructor
-  * @param {HTMLElement|String} element - base element or selector
-  * @param {Object} options
-  */
 	function Flicking(element, options, _prefix) {
 		_classCallCheck(this, Flicking);
 

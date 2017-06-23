@@ -1,4 +1,12 @@
 /*!
+ * Copyright (c) 2017 NAVER Corp.
+ * @egjs/flicking project is licensed under the MIT <https://naver.github.io/egjs/license.txt> license
+ * 
+ * @egjs/flicking JavaScript library
+ * https://github.com/naver/egjs-flicking
+ * 
+ * @version 2.0.0-rc.3
+ * 
  * All-in-one packaged file for ease use of '@egjs/flicking' with below dependencies.
  * NOTE: This is not an official distribution file and is only for user convenience.
  * 
