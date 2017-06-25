@@ -1,4 +1,4 @@
-# egjs-flicking [![npm version](https://badge.fury.io/js/%40egjs%2Fflicking.svg)](https://badge.fury.io/js/%40egjs%2Fflicking) [![Build Status](https://travis-ci.org/naver/egjs-flicking.js.svg?branch=master)](https://travis-ci.org/naver/egjs-flicking.js) 
+# egjs-flicking [![npm version](https://badge.fury.io/js/%40egjs%2Fflicking.svg)](https://badge.fury.io/js/%40egjs%2Fflicking) [![Build Status](https://travis-ci.org/naver/egjs-flicking.svg?branch=master)](https://travis-ci.org/naver/egjs-flicking) 
 
 [![Issue Stats](http://issuestats.com/github/naver/egjs-flicking/badge/pr?style=flat)](http://issuestats.com/github/naver/egjs-flicking)
 [![Issue Stats](http://issuestats.com/github/naver/egjs-flicking/badge/issue?style=flat)](http://issuestats.com/github/naver/egjs-flicking)
