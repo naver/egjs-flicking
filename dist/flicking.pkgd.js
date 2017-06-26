@@ -15,7 +15,7 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define([], factory);
+		define("Flicking", [], factory);
 	else if(typeof exports === 'object')
 		exports["Flicking"] = factory();
 	else
@@ -96,9 +96,7 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+exports.__esModule = true;
 /**
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
@@ -119,9 +117,7 @@ exports.document = document;
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
+exports.__esModule = true;
 exports.DATA_HEIGHT = exports.IS_ANDROID2 = exports.SUPPORT_WILLCHANGE = exports.SUPPORT_TRANSFORM = exports.EVENTS = undefined;
 
 var _browser = __webpack_require__(0);
@@ -579,9 +575,7 @@ module.exports = _component.Component;
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
+exports.__esModule = true;
 
 var _component = __webpack_require__(2);
 
@@ -1243,16 +1237,19 @@ var Flicking = function (_Mixin$with) {
 
 		var $first = $panel.querySelector(":first-child");
 
-		height = $first.getAttribute(consts.DATA_HEIGHT);
+		if ($first) {
+			height = $first.getAttribute(consts.DATA_HEIGHT);
 
-		if (!height) {
-			$children = $panel.children;
-			height = _utils.utils.outerHeight($children.length > 1 ? ($panel.style.height = "auto", $panel) : $first);
+			if (!height) {
+				$children = $panel.children;
 
-			$first.setAttribute(consts.DATA_HEIGHT, height);
+				height = _utils.utils.outerHeight($children.length > 1 ? ($panel.style.height = "auto", $panel) : $first);
+
+				height > 0 && $first.setAttribute(consts.DATA_HEIGHT, height);
+			}
+
+			height > 0 && (this.$wrapper.style.height = height + "px");
 		}
-
-		this.$wrapper.style.height = height + "px";
 	};
 
 	/**
@@ -1831,30 +1828,6 @@ var Flicking = function (_Mixin$with) {
 	};
 
 	/**
-  * Update panel's previewPadding size according options.previewPadding
-  */
-
-
-	Flicking.prototype._checkPadding = function _checkPadding() {
-		var options = this.options;
-		var previewPadding = options.previewPadding.concat();
-		var padding = _utils.utils.css(this.$wrapper, "padding").split(" ");
-
-		options.horizontal && padding.reverse();
-
-		// get current padding value
-		padding = [padding[0]];
-		padding.push(padding[padding.length === 2 ? 0 : 2]);
-
-		padding = padding.map(Number);
-
-		// update padding when current and given are different
-		if (previewPadding.length === 2 && previewPadding[0] !== padding[0] || previewPadding[1] !== padding[1]) {
-			this._setPadding(previewPadding);
-		}
-	};
-
-	/**
   * Updates the size of the panel.
   * @ko 패널의 크기를 갱신한다
   * @method eg.Flicking#resize
@@ -1881,7 +1854,7 @@ var Flicking = function (_Mixin$with) {
 		var panelSize = void 0;
 
 		if (~~options.previewPadding.join("")) {
-			this._checkPadding();
+			this._setPadding(options.previewPadding.concat());
 			panelSize = panel.size;
 		} else if (horizontal) {
 			panelSize = panel.size = _utils.utils.css(this.$wrapper, "width", true);
@@ -1994,6 +1967,72 @@ var Flicking = function (_Mixin$with) {
 	};
 
 	/**
+  * Get current flicking status
+  * @ko 현재의 상태 값을 반환한다.
+  * @method eg.Flicking#getStatus
+  * @param {Boolean} stringify Set true if want get stringified status value <ko>상태 값을 문자열로 전달받고자 하는지 여부</ko>
+  * @return {{panel: {index: (*|number), no: (*|number), currIndex: number, currNo: number}, $list}}
+  */
+
+
+	Flicking.prototype.getStatus = function getStatus(stringify) {
+		var panel = this._conf.panel;
+		var rxStyle = /(transform|left|top|will-change|box-sizing|width):[^;]*;/g;
+		var status = {
+			// current panel position
+			panel: {
+				index: panel.index,
+				no: panel.no,
+				currIndex: panel.currIndex,
+				currNo: panel.currNo
+			},
+
+			// panel's html
+			$list: panel.$list.map(function (v) {
+				return {
+					style: v.style.cssText.replace(rxStyle, "").trim(),
+					className: v.className,
+					html: v.innerHTML
+				};
+			})
+		};
+
+		return stringify ? JSON.stringify(status) : status;
+	};
+
+	/**
+  * Set flicking as given status
+  * @method eg.Flicking#setStatus
+  * @param {Object|String} statusValue status value to be restored <ko>복원할 상태 값</ko>
+  */
+
+
+	Flicking.prototype.setStatus = function setStatus(statusValue) {
+		var panel = this._conf.panel;
+		var isAdaptiveHeight = this.options.adaptiveHeight;
+		var status = typeof statusValue === "string" ? JSON.parse(statusValue) : statusValue;
+
+		if (status) {
+			for (var x in status.panel) {
+				x in panel && (panel[x] = status.panel[x]);
+			}
+
+			panel.$list.forEach(function (v, i) {
+				var data = status.$list[i];
+				var style = data.style;
+				var className = data.className;
+				var html = data.html;
+
+				style && (v.style.cssText += style);
+				className && (v.className = className);
+				html && (v.innerHTML = html);
+			});
+
+			isAdaptiveHeight && this._setAdaptiveHeight();
+		}
+	};
+
+	/**
   * Destroys elements, properties, and events used in a panel.
   * @ko 패널에 사용한 엘리먼트와 속성, 이벤트를 해제한다
   * @method eg.Flicking#destroy
@@ -2055,6 +2094,7 @@ var Flicking = function (_Mixin$with) {
 }((0, _utils.Mixin)(_component2.default).with(_eventHandler2.default));
 
 exports.default = Flicking;
+module.exports = exports["default"];
 
 /***/ }),
 /* 4 */
@@ -2063,9 +2103,7 @@ exports.default = Flicking;
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
+exports.__esModule = true;
 /**
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
@@ -2134,9 +2172,7 @@ exports.OPTIONS = OPTIONS;
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
+exports.__esModule = true;
 
 var _consts = __webpack_require__(1);
 
@@ -2309,6 +2345,8 @@ exports.default = function (superclass) {
 	}(superclass);
 };
 
+module.exports = exports["default"];
+
 /***/ }),
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -2336,9 +2374,7 @@ module.exports = _Flicking2.default;
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
+exports.__esModule = true;
 exports.Mixin = exports.utils = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
@@ -2460,7 +2496,7 @@ var utils = {
   * @param {String|Object} style
   *  String: return style property value
   *  Object: set style value
-  * @parma {Boolean} getAsNumber - get the value as number
+  * @param {Boolean} getAsNumber Get the value as number
   * @returns {String|HTMLElement}
   */
 	css: function css(el, style, getAsNumber) {

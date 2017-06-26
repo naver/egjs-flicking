@@ -4,22 +4,22 @@
   "main": "dist/flicking.js",
   "es2015": "src/Flicking.js",
   "scripts": {
-    "start": "webpack-dev-server --env.mode server",
-    "build": "webpack --display-error-details --env.mode production && webpack --env.mode pkgd",
+    "start": "webpack-dev-server --open",
+    "build": "webpack --env production && webpack --env packaged",
     "test": "karma start",
     "test:chrome": "karma start --chrome",
     "lint": "eslint src",
     "jsdoc": "rm -rf ./doc && jsdoc -c jsdoc.json",
     "coverage": "karma start --coverage",
-    "prepush": "npm run lint",
-    "commitmsg": "node config/validate-commit-msg.js",
     "demo:start": "npm run demo:prebuild-latest && npm run demo:updateVersion && jekyll serve -s demo",
     "demo:build": "npm run demo:updateVersion && jekyll build -s demo",
     "demo:prebuild-version": "cpx 'dist/**/*' demo/release/$npm_package_version/dist --clean && cpx 'doc/**/*' demo/release/$npm_package_version/doc --clean",
     "demo:prebuild-latest": "cpx 'dist/**/*' demo/release/latest/dist --clean && cpx 'doc/**/*' demo/release/latest/doc --clean",
     "demo:deploy": "npm run build && npm run jsdoc && npm run demo:prebuild-version && npm run demo:prebuild-latest && npm run demo:build && gh-pages -d demo/_site",
-    "demo:setup": "cpx 'node_modules/@egjs/common-demo/**/*' 'demo/' && rm demo/package.json",
-    "demo:updateVersion": "echo $npm_package_version > demo/_data/version.yml"
+    "demo:setup": "cpx 'node_modules/@egjs/common-demo/**/*' 'demo/' && rm demo/package.json",    
+    "demo:updateVersion": "echo $npm_package_version > demo/_data/version.yml", 
+    "prepush": "npm run lint",
+    "commitmsg": "node config/validate-commit-msg.js"
   },
   "author": {
     "name": "NAVER Corp."
