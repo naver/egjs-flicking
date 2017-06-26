@@ -6,7 +6,7 @@
 import {utils} from "../../src/utils";
 import * as consts from "../../src/consts";
 import tutils from "./assets/utils";
-import FlickingInjector from "inject-loader!../../src/flicking";
+import FlickingInjector from "inject-loader!../../src/Flicking";
 
 describe("Miscellaneous", function() {
 	describe("Workaround for buggy link highlighting on android 2.x", function() {
