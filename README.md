@@ -29,7 +29,7 @@ You can download the compressed files for production
 - Latest : https://naver.github.io/egjs-flicking/release/latest/dist/flicking.min.js
 - Specific version : https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.min.js
 
-### Packaged version (with eg.MovableCoord inclusion)
+### Packaged version (with Dependencies)
 > Packaged version is not an official distribution.
 > Is just to provide for ease use of 'egjs-flicking' with dependency.
 
