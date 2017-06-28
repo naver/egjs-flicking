@@ -18,6 +18,7 @@
     "demo:deploy": "npm run build && npm run jsdoc && npm run demo:prebuild-version && npm run demo:prebuild-latest && npm run demo:build && gh-pages -d demo/_site",
     "demo:setup": "cpx 'node_modules/@egjs/common-demo/**/*' 'demo/' && rm demo/package.json",    
     "demo:updateVersion": "echo $npm_package_version > demo/_data/version.yml", 
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "prepush": "npm run lint",
     "commitmsg": "node config/validate-commit-msg.js"
   },
