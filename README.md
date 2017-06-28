@@ -1,15 +1,14 @@
-# egjs-flicking [![npm version](https://badge.fury.io/js/%40egjs%2Fflicking.svg)](https://badge.fury.io/js/%40egjs%2Fflicking) [![Build Status](https://travis-ci.org/naver/egjs-flicking.svg?branch=master)](https://travis-ci.org/naver/egjs-flicking) 
+# egjs-flicking [![npm version](https://badge.fury.io/js/%40egjs%2Fflicking.svg)](https://badge.fury.io/js/%40egjs%2Fflicking) [![Build Status](https://travis-ci.org/naver/egjs-flicking.svg?branch=master)](https://travis-ci.org/naver/egjs-flicking) [![Coverage Status](https://coveralls.io/repos/github/naver/egjs-flicking/badge.svg?branch=master)](https://coveralls.io/github/naver/egjs-flicking?branch=master)
 
-[![Issue Stats](http://issuestats.com/github/naver/egjs-flicking/badge/pr?style=flat)](http://issuestats.com/github/naver/egjs-flicking)
-[![Issue Stats](http://issuestats.com/github/naver/egjs-flicking/badge/issue?style=flat)](http://issuestats.com/github/naver/egjs-flicking)
+
+https://naver.github.io/egjs-flicking/
 
 A module used to implement flicking interactions.
 With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side. 
 
-## Documentation
-* API Documentation
-    - Latest: [https://naver.github.io/egjs-flicking/release/latest/doc/](https://naver.github.io/egjs-flicking/release/latest/doc/)
-    - Specific version: [https://naver.github.io/egjs-flicking/release/[VERSION]/doc/](https://naver.github.io/egjs-flicking/release/[VERSION]/doc/)
+## API Documentation
+- Latest: [https://naver.github.io/egjs-flicking/release/latest/doc/](https://naver.github.io/egjs-flicking/release/latest/doc/)
+- Specific version: [https://naver.github.io/egjs-flicking/release/[VERSION]/doc/](https://naver.github.io/egjs-flicking/release/[VERSION]/doc/)
 
 
 ## Download and Installation
