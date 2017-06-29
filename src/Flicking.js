@@ -1184,41 +1184,43 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		const horizontal = options.horizontal;
 		let panelSize;
 
-		if (~~options.previewPadding.join("")) {
-			this._setPadding(options.previewPadding.concat());
-			panelSize = panel.size;
-		} else if (horizontal) {
-			panelSize = panel.size = utils.css(this.$wrapper, "width", true);
-		}
-
-		const maxCoords = this._getDataByDirection(
-			[panelSize * (panel.count - 1), 0]
-		);
-
-		// resize elements
-		horizontal && utils.css(this.$container, {width: `${maxCoords[0] + panelSize}px`});
-		utils.css(panel.$list, {
-			[horizontal ? "width" : "height"]: utils.getUnitValue(panelSize)
-		});
-
-		// remove data-height attribute and re-evaluate panel's height
-		if (options.adaptiveHeight) {
-			const $panel = this.$container.querySelectorAll(`[${consts.DATA_HEIGHT}]`);
-
-			if ($panel.length) {
-				[].slice.call($panel)
-					.forEach(v => v.removeAttribute(consts.DATA_HEIGHT));
-
-				this._setAdaptiveHeight();
+		if (!this.isPlaying()) {
+			if (~~options.previewPadding.join("")) {
+				this._setPadding(options.previewPadding.concat());
+				panelSize = panel.size;
+			} else if (horizontal) {
+				panelSize = panel.size = utils.css(this.$wrapper, "width", true);
 			}
-		}
 
-		this._mcInst.options.max = maxCoords;
-		this._setMovableCoord("setTo", [panelSize * panel.index, 0], true, 0);
+			const maxCoords = this._getDataByDirection(
+				[panelSize * (panel.count - 1), 0]
+			);
 
-		if (consts.IS_ANDROID2) {
-			this._applyPanelsPos();
-			this._adjustContainerCss("end");
+			// resize elements
+			horizontal && utils.css(this.$container, {width: `${maxCoords[0] + panelSize}px`});
+			utils.css(panel.$list, {
+				[horizontal ? "width" : "height"]: utils.getUnitValue(panelSize)
+			});
+
+			// remove data-height attribute and re-evaluate panel's height
+			if (options.adaptiveHeight) {
+				const $panel = this.$container.querySelectorAll(`[${consts.DATA_HEIGHT}]`);
+
+				if ($panel.length) {
+					[].slice.call($panel)
+						.forEach(v => v.removeAttribute(consts.DATA_HEIGHT));
+
+					this._setAdaptiveHeight();
+				}
+			}
+
+			this._mcInst.options.max = maxCoords;
+			this._setMovableCoord("setTo", [panelSize * panel.index, 0], true, 0);
+
+			if (consts.IS_ANDROID2) {
+				this._applyPanelsPos();
+				this._adjustContainerCss("end");
+			}
 		}
 
 		return this;
