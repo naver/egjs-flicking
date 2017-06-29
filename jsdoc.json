@@ -29,7 +29,7 @@
 		},
 		"applicationName": "eg.Flicking",
 		"disqus": "egjs",
-		"googleAnalytics": "",
+		"googleAnalytics": "UA-70842526-17",
 		"openGraph": {
 			"title": "",
 			"type": "website",
@@ -44,7 +44,7 @@
 		},
 		"linenums": true,
 		"link": {
-			"canonical": "http://naver.github.io/egjs/latest/doc/eg.Flicking.html"
+			"canonical": "https://naver.github.io/egjs-flicking/release/latest/doc/"
 		}
 	},
 	"markdown": {
