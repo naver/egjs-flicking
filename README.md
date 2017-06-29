@@ -64,6 +64,70 @@ egjs-flicking has the dependencies for the following libraries:
 |----|----|
 |2.0.0+|2.0.0+|
 
+
+## How to start developing egjs-flicking?
+
+For anyone interested to develop egjs-flicking, follow the instructions below.
+
+### Development Environment
+
+#### 1. Clone the repository
+
+Clone the egjs-flicking repository and install the dependency modules.
+
+```bash
+# Clone the repository.
+$ git clone https://github.com/naver/egjs-flicking.git
+```
+
+#### 2. Install dependencies
+`npm` is supported.
+
+```
+# Install the dependency modules.
+$ npm install
+```
+
+#### 3. Build
+
+Use npm script to build billboard.js
+
+```bash
+# Run webpack-dev-server for development
+$ npm start
+
+# Build
+$ npm run build
+
+# Generate jsdoc
+$ npm run jsdoc
+```
+
+Two folders will be created after complete build is completed.
+
+- **dist** folder: Includes the **flicking.js** and **flicking.min.js** files.
+- **doc** folder: Includes API documentation. The home page for the documentation is **doc/index.html**.
+
+### Linting
+
+To keep the same code style, we adopted [ESLint](http://eslint.org/) to maintain our code quality. The [rules](https://github.com/naver/eslint-config-naver/tree/master/rules) are modified version based on [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript).
+Setup your editor for check or run below command for linting.
+
+```bash
+$ npm run lint
+```
+
+### Test
+
+Once you created a branch and done with development, you must perform a test running `npm run test` command before you push code to a remote repository.
+
+```bash
+$ npm run test
+```
+Running a `npm run test` command will start [Mocha](https://mochajs.org/) tests via [Karma-runner](https://karma-runner.github.io/).
+
+
+
 ## Bug Report
 
 If you find a bug, please report it to us using the [Issues](https://github.com/naver/egjs-flicking/issues) page on GitHub.
