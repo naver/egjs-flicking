@@ -134,4 +134,16 @@ describe("resize() method", function() {
 			runTest(inst, [10,20]);
 		 });
 	});
+
+	describe("Calling .resize() during panel moves", function(assert) {
+		// Given
+		const inst = tutils.create("#mflick1", {
+			circular: true
+		});
+
+		// When
+		inst.next();
+
+		expect(inst.resize()).to.not.throw;
+	});
 });
