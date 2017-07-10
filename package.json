@@ -19,7 +19,8 @@
     "demo:updateVersion": "echo $npm_package_version > demo/_data/version.yml",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "prepush": "npm run lint",
-    "commitmsg": "node config/validate-commit-msg.js"
+    "commitmsg": "node config/validate-commit-msg.js",
+    "changelog": "node ./config/changelog.js"
   },
   "author": {
     "name": "NAVER Corp."
@@ -72,6 +73,7 @@
     "webpack": "^2.6.1",
     "webpack-dev-server": "^2.5.0",
     "webpack-merge": "^4.1.0",
-    "write-file-webpack-plugin": "^4.1.0"
+    "write-file-webpack-plugin": "^4.1.0",
+    "xml2js": "^0.4.17"
   }
 }
