@@ -1,5 +1,7 @@
 # egjs-flicking [![npm version](https://badge.fury.io/js/%40egjs%2Fflicking.svg)](https://badge.fury.io/js/%40egjs%2Fflicking) [![Build Status](https://travis-ci.org/naver/egjs-flicking.svg?branch=master)](https://travis-ci.org/naver/egjs-flicking) [![Coverage Status](https://coveralls.io/repos/github/naver/egjs-flicking/badge.svg?branch=master)](https://coveralls.io/github/naver/egjs-flicking?branch=master)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/naver/egjs-flicking.svg)](https://greenkeeper.io/)
+
 
 
 A module used to implement flicking interactions.
