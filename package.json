@@ -1,6 +1,6 @@
 {
   "name": "@egjs/flicking",
-  "version": "2.0.0-rc.3",
+  "version": "2.0.0-rc",
   "main": "dist/flicking.js",
   "es2015": "src/Flicking.js",
   "scripts": {
@@ -31,8 +31,8 @@
   "homepage": "https://github.com/naver/egjs-flicking",
   "license": "MIT <https://naver.github.io/egjs/license.txt>",
   "dependencies": {
-    "@egjs/component": "^2.0.0-rc.1",
-    "@egjs/movablecoord": "^2.0.0-rc.2"
+    "@egjs/component": "^2.0.0-rc",
+    "@egjs/axes": "^2.0.0-rc"
   },
   "devDependencies": {
     "@egjs/common-demo": "github:naver/egjs#common-demo",

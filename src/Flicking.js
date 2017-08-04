@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 import Component from "@egjs/component";
-import MovableCoord from "@egjs/movablecoord";
+import Axes from "@egjs/axes";
 import {utils, Mixin} from "./utils";
 import * as consts from "./consts";
 import {CONFIG, OPTIONS} from "./config";
@@ -19,9 +19,9 @@ import eventHandler from "./eventHandler";
  * @support {"ie": "10+", "ch" : "latest", "ff" : "latest",  "sf" : "latest" , "edge" : "latest", "ios" : "7+", "an" : "2.3+ (except 3.x)"}
  */
 export default class Flicking extends Mixin(Component).with(eventHandler) {
-	/**
-	 * Constructor
-	 * @param {HTMLElement|String|jQuery} element A base element for the eg.Flicking module <ko>eg.Flicking 모듈을 사용할 기준 엘리먼트</ko>
+   /**
+	* Constructor
+	* @param {HTMLElement|String|jQuery} element A base element for the eg.Flicking module <ko>eg.Flicking 모듈을 사용할 기준 엘리먼트</ko>
 	* @param {Object} options The option object of the eg.Flicking module<ko>eg.Flicking 모듈의 옵션 객체</ko>
 	* @param {Boolean} [options.hwAccelerable=eg.isHWAccelerable()] Force hardware compositing <ko>하드웨어 가속 사용 여부</ko>
 	* @param {String} [options.prefix=eg-flick] A prefix for class names of the panel elements <ko>패널 엘리먼트의 클래스 이름에 설정할 접두사</ko>
@@ -38,8 +38,8 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	* @param {Number} [options.thresholdAngle=45] The threshold value that determines whether user action is horizontal or vertical (0~90) <ko>사용자의 동작이 가로 방향인지 세로 방향인지 판단하는 기준 각도(0~90)</ko>
 	* @param {Boolean} [options.adaptiveHeight=false] Set container's height be adaptive according panel's height.<br>(Note: on Android 4.1.x stock browser, has rendering bug which not correctly render height value on panel with single node. To avoid just append another empty node at the end.)<ko>컨테이너 영역이 패널의 높이값에 따라 변경될지 여부<br>(참고: Android 4.1.x 스톡 브라우저에서 단일 노드로 구성된 패널의 높이값 변경이 제대로 렌더링 되지 않는 버그가 있음. 비어있는 노드를 추가하면 해결이 가능하다.)</ko>
 	*
- * @see Easing Functions Cheat Sheet {@link http://easings.net/}
- * @see If you want to try a different easing function, use the jQuery easing plugin ({@link http://gsgd.co.uk/sandbox/jquery/easing}) or the jQuery UI easing library ({@link https://jqueryui.com/easing}). <ko>다른 easing 함수를 사용하려면 jQuery easing 플러그인({@link http://gsgd.co.uk/sandbox/jquery/easing})이나, jQuery UI easing 라이브러리({@link https://jqueryui.com/easing})를 사용한다</ko>
+    * @see Easing Functions Cheat Sheet {@link http://easings.net/}
+    * @see If you want to try a different easing function, use the jQuery easing plugin ({@link http://gsgd.co.uk/sandbox/jquery/easing}) or the jQuery UI easing library ({@link https://jqueryui.com/easing}). <ko>다른 easing 함수를 사용하려면 jQuery easing 플러그인({@link http://gsgd.co.uk/sandbox/jquery/easing})이나, jQuery UI easing 라이브러리({@link https://jqueryui.com/easing})를 사용한다</ko>
 	*/
 	constructor(element, options, _prefix) {
 		super();
@@ -87,7 +87,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		for (const key in arrVal) {
 			let val = this.options[key];
 
-			if (typeof(val) === "number") {
+			if (typeof val === "number") {
 				val = [val, val];
 			} else if (!utils.isArray(val)) {
 				val = arrVal[key];
@@ -143,7 +143,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		});
 
 		[["LEFT", "RIGHT"], ["UP", "DOWN"]][+!options.horizontal]
-			.forEach(v => conf.dirData.push(MovableCoord[`DIRECTION_${v}`]));
+			.forEach(v => conf.dirData.push(Axes[`DIRECTION_${v}`]));
 	}
 
 	/**
@@ -207,15 +207,16 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			).length;
 		}
 
-		// create MovableCoord instance
-		this._mcInst = new MovableCoord({
-			min: [0, 0],
-			max: this._getDataByDirection([panel.size * (panelCount - 1), 0]),
-			margin: 0,
-			circular: false,
+		// create Axes instance
+		this._axesInst = new Axes({
+			flick: {
+				range: [0, panel.size * (panelCount - 1)],
+				bounce
+			}
+		}, {
 			easing: options.panelEffect,
 			deceleration: options.deceleration,
-			bounce: this._getDataByDirection([0, bounce[1], 0, bounce[0]])
+			interruptable: false
 		});
 
 		this._setDefaultPanel(options.defaultIndex);
@@ -335,9 +336,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			coords = [-(panel.size * index), 0];
 
 			this._setTranslate(coords);
-			this._setMovableCoord("setTo", [
-				Math.abs(coords[0]), Math.abs(coords[1])
-			], true, 0);
+			this._setAxes("setTo", Math.abs(coords[0]), 0);
 		}
 	}
 
@@ -371,10 +370,8 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 				currIndex: baseIndex
 			});
 
-			// arrange MovableCoord's coord position
-			conf.customEvent.flick = !!this._setMovableCoord("setTo", [
-				panel.size * panel.index, 0
-			], true, 0);
+			// arrange Axes' coord position
+			conf.customEvent.flick = !!this._setAxes("setTo", panel.size * panel.index, 0);
 		}
 
 		this._applyPanelsPos();
@@ -392,8 +389,8 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 *
 	 * Initialize setting up checking if browser support transform css property.
 	 * If browser doesn't support transform, then use left/top properties instead.
-	 * @param {HTMLElement} $element
-	 * @param {Array} coords
+	 * @param {HTMLElement} $el
+	 * @param {Array} coordsValue
 	 */
 	_setMoveStyle($el, coordsValue) {
 		this._setMoveStyle = consts.SUPPORT_TRANSFORM ?
@@ -410,7 +407,6 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Callback function for applying CSS values to each panels
-	 *
 	 * Need to be initialized before use, to set up for Android 2.x browsers or others.
 	 */
 	_applyPanelsCss() {
@@ -449,25 +445,24 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Adjust container's css value to handle Android 2.x link highlighting bug
-	 *
 	 * @param {String} phase
 	 *    start - set left/top value to 0
 	 *    end - set translate value to 0
-	 * @param {Array} coordValue coordinate value
+	 * @param {Array} toValue coordinate value
 	 */
-	_adjustContainerCss(phase, coordValue) {
+	_adjustContainerCss(phase, toValue) {
 		const conf = this._conf;
 		const panel = conf.panel;
 		const options = this.options;
 		const horizontal = options.horizontal;
 		const paddingTop = options.previewPadding[0];
 		let container = this.$container;
-		let coords = coordValue;
+		let to = toValue;
 		let value;
 
 		if (consts.IS_ANDROID2) {
-			if (!coords) {
-				coords = [-panel.size * panel.index, 0];
+			if (!to) {
+				to = -panel.size * panel.index;
 			}
 
 			if (phase === "start") {
@@ -480,13 +475,13 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 					value !== paddingTop && (container.top = "0px");
 				}
 
-				this._setTranslate([-coords[+!options.horizontal], 0]);
+				this._setTranslate([-to, 0]);
 			} else if (phase === "end") {
-				coords = this._getCoordsValue(coords);
+				to = this._getCoordsValue([to, 0]);
 
 				utils.css(container, {
-					left: coords.x,
-					top: coords.y,
+					left: to.x,
+					top: to.y,
 					transform: utils.translate(0, 0, conf.useLayerHack)
 				});
 
@@ -496,21 +491,14 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	}
 
 	/**
-	 * Set MovableCoord coord value
+	 * Set Axes coord value
 	 * @param {String} method
-	 * @param {Array} coordValue
-	 * @param {Boolean} isDirVal
+	 * @param {Number} flick destination value
 	 * @param {Number} duration
-	 * @return {eg.MovableCoord} MovableCoord instance
+	 * @return {eg.Axes} Axes instance
 	 */
-	_setMovableCoord(method, coordValue, isDirVal, duration) {
-		let coord = coordValue;
-
-		if (isDirVal) {
-			coord = this._getDataByDirection(coord);
-		}
-
-		return this._mcInst[method](coord[0], coord[1], duration);
+	_setAxes(method, flick, duration) {
+		return this._axesInst[method]({flick}, duration);
 	}
 
 	/**
@@ -526,7 +514,6 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Get data according options.horizontal value
-	 *
 	 * @param {Array} value primary data to handle
 	 * @return {Array}
 	 */
@@ -562,24 +549,25 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	_bindEvents(bind) {
 		const options = this.options;
 		const $wrapper = this.$wrapper;
-		const mcInst = this._mcInst;
+		const axesInst = this._axesInst;
 
 		if (bind) {
-			mcInst.bind($wrapper, {
-				scale: this._getDataByDirection([-1, 0]),
-				direction: MovableCoord[`DIRECTION_${options.horizontal ? "HORIZONTAL" : "VERTICAL"}`],
-				interruptable: false,
+			this._panInput = new Axes.PanInput($wrapper, {
 				inputType: options.inputType,
-				thresholdAngle: options.thresholdAngle
-			}).on({
+				thresholdAngle: options.thresholdAngle,
+				scale: this._getDataByDirection([-1, 0])
+			});
+
+			axesInst.on({
 				hold: this._holdHandler.bind(this),
 				change: this._changeHandler.bind(this),
 				release: this._releaseHandler.bind(this),
 				animationStart: this._animationStartHandler.bind(this),
 				animationEnd: this._animationEndHandler.bind(this)
-			});
+			}).connect(this._getDataByDirection(["flick", ""]), this._panInput);
 		} else {
-			mcInst.unbind($wrapper).off();
+			this.disableInput();
+			axesInst.off();
 		}
 	}
 
@@ -597,8 +585,8 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 			// panel moved by 1
 			this[`get${
-				(direction === MovableCoord.DIRECTION_LEFT && "Next") ||
-				(direction === MovableCoord.DIRECTION_RIGHT && "Prev") || ""
+				(direction === Axes.DIRECTION_LEFT && "Next") ||
+				(direction === Axes.DIRECTION_RIGHT && "Prev") || ""
 			}Element`]() :
 
 			// panel moved by .moveTo()
@@ -634,7 +622,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		const touch = conf.touch;
 
 		// reverse direction value when restore
-		touch.direction = ~~conf.dirData.join("").replace(touch.direction, "");
+		touch.direction = +conf.dirData.join("").replace(touch.direction, "");
 
 		/**
 		 * This event is fired before an element is restored to its original position when user action is done while the element is not dragged until a certain distance threshold is reached
@@ -645,7 +633,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		 * @param {String} param.eventType The name of the event <ko>이름명</ko>
 		 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM. (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다. (@deprecated since 1.3.0)</ko>
 		 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content.<ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
-		 * @param {Number} param.direction Direction of the movement (see eg.MovableCoord.DIRECTION_* constant) <ko>이동 방향(eg.MovableCoord.DIRECTION_* constant 참고)</ko>
+		 * @param {Number} param.direction Direction of the movement (see eg.Axes.DIRECTION_* constant) <ko>이동 방향(eg.Axes.DIRECTION_* constant 참고)</ko>
 		 * @param {Array} param.depaPos Start coordinate <ko>출발점 좌표</ko>
 		 * @param {Number} param.depaPos.0 x-coordinate <ko>x 좌표</ko>
 		 * @param {Number} param.depaPos.1 y-coordinate <ko>y 좌표</ko>
@@ -679,7 +667,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		 * @param {String} param.eventType The name of the event <ko>이름명</ko>
 		 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM(@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
 		 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content. <ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
-		 * @param {Number} param.direction Direction of the panel move (see eg.MovableCoord.DIRECTION_* constant) <ko>이동 방향(eg.MovableCoord.DIRECTION_* constant 참고)</ko>
+		 * @param {Number} param.direction Direction of the panel move (see eg.Axes.DIRECTION_* constant) <ko>이동 방향(eg.Axes.DIRECTION_* constant 참고)</ko>
 		 */
 		customEvent.restore && this._triggerEvent(consts.EVENTS.restore);
 		customEvent.restoreCall = false;
@@ -705,7 +693,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			 * @param {String} param.eventType The name of the event <ko>이름명</ko>
 			 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM. (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
 			 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content.<ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
-			 * @param {Number} param.direction Direction of the movement (see eg.MovableCoord.DIRECTION_* constant) <ko>−	이동 방향(eg.MovableCoord.DIRECTION_* constant 참고)</ko>
+			 * @param {Number} param.direction Direction of the movement (see eg.Axes.DIRECTION_* constant) <ko>−	이동 방향(eg.Axes.DIRECTION_* constant 참고)</ko>
 			 * @param {Array} param.depaPos Start coordinate <ko>출발점 좌표</ko>
 			 * @param {Number} param.depaPos.0 x-coordinate <ko>x 좌표</ko>
 			 * @param {Number} param.depaPos.1 y-coordinate <ko>y 좌표</ko>
@@ -738,7 +726,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			 * @param {String} param.eventType The name of the event <ko>이름명</ko>
 			 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
 			 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content. <ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다.</ko>
-			 * @param {Number} param.direction Direction of the movemen (see eg.MovableCoord.DIRECTION_* constant) <ko>−	이동 방향(eg.MovableCoord.DIRECTION_* constant 참고</ko>
+			 * @param {Number} param.direction Direction of the movemen (see eg.Axes.DIRECTION_* constant) <ko>−	이동 방향(eg.Axes.DIRECTION_* constant 참고</ko>
 			 */
 			panel.changed && this._triggerEvent(consts.EVENTS.flickEnd);
 		}
@@ -810,7 +798,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		let val;
 
 		if (e && e.holding &&
-			e.hammerEvent && e.hammerEvent.preventSystemEvent &&
+			e.inputEvent && e.inputEvent.preventSystemEvent &&
 			pointer !== "none"
 		) {
 			val = "none";
@@ -823,7 +811,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Get coordinate value with unit
-	 * @param coords {Array} x,y numeric value
+	 * @param coordsValue {Array} x,y numeric value
 	 * @return {Object} x,y coordinate value with unit
 	 */
 	_getCoordsValue(coordsValue) {
@@ -838,7 +826,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Set translate property value
-	 * @param {Array} coords coordinate x,y value
+	 * @param {Array} coordsValue coordinate x,y value
 	 */
 	_setTranslate(coordsValue) {
 		const coords = this._getCoordsValue(coordsValue);
@@ -851,14 +839,14 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 */
 	_isMovable() {
 		const options = this.options;
-		const mcInst = this._mcInst;
+		const axesInst = this._axesInst;
 		const isMovable = Math.abs(this._conf.touch.distance) >= options.threshold;
 		let max;
 		let currPos;
 
 		if (!options.circular && isMovable) {
-			max = this._getDataByDirection(mcInst.options.max)[0];
-			currPos = this._getDataByDirection(mcInst.get())[0];
+			max = axesInst.axis.flick.range[1];
+			currPos = axesInst.get().flick;
 
 			// if current position out of range
 			if (currPos < 0 || currPos > max) {
@@ -1065,11 +1053,9 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		this._setValueToMove(next);
 
 		if (options.circular ||
-			this[next ? "getNextIndex" : "getPrevIndex"]() != null
+			this[`get${next ? "Next" : "Prev"}Index`]() !== null
 		) {
-			this._movePanelByPhase("setBy", [
-				panel.size * (next ? 1 : -1), 0
-			], duration);
+			this._movePanelByPhase("setBy", panel.size * (next ? 1 : -1), duration);
 		}
 
 		return this;
@@ -1077,15 +1063,15 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Move panel applying start/end phase value
-	 * @param {String} method movableCoord method name
-	 * @param {Object} coords coordinate array value
+	 * @param {String} method Axes' method name
+	 * @param {Number} to destination value
 	 * @param {Number} durationValue duration value
 	 */
-	_movePanelByPhase(method, coords, durationValue) {
+	_movePanelByPhase(method, to, durationValue) {
 		const duration = utils.getNumValue(durationValue, this.options.duration);
 
 		if (this._setPhaseValue("start") !== false) {
-			this._setMovableCoord(method, coords, true, duration);
+			this._setAxes(method, to, duration);
 			!duration && this._setPhaseValue("end");
 		}
 	}
@@ -1116,7 +1102,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * Moves an element to the indicated panel.
 	 * @ko 지정한 패널로 이동한다.
 	 * @method eg.Flicking#moveTo
-	 * @param {Number} no Logical index number of the target panel element, which is relative to the panel content. <ko>이동할 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
+	 * @param {Number} noValue Logical index number of the target panel element, which is relative to the panel content. <ko>이동할 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
 	 * @param {Number} [duration=options.duration] Duration of the panel movement (unit: ms) <ko>패널 이동 애니메이션 진행 시간(단위: ms)</ko>
 	 * @return {eg.Flicking} An instance of a module itself<ko>모듈 자신의 인스턴스</ko>
 	 */
@@ -1153,7 +1139,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 		this._movePanelByPhase(
 			circular ? "setBy" : "setTo",
-			[panel.size * (circular ? indexToMove : no), 0],
+			panel.size * (circular ? indexToMove : no),
 			duration
 		);
 
@@ -1185,16 +1171,15 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		let panelSize;
 
 		if (!this.isPlaying()) {
-			if (~~options.previewPadding.join("")) {
+			if (utils.isArray(options.previewPadding) && typeof +options.previewPadding.join("") === "number") {
 				this._setPadding(options.previewPadding.concat());
 				panelSize = panel.size;
 			} else if (horizontal) {
 				panelSize = panel.size = utils.css(this.$wrapper, "width", true);
 			}
 
-			const maxCoords = this._getDataByDirection(
-				[panelSize * (panel.count - 1), 0]
-			);
+			const max = panelSize * (panel.count - 1);
+			const maxCoords = this._getDataByDirection([max, 0]);
 
 			// resize elements
 			horizontal && utils.css(this.$container, {width: `${maxCoords[0] + panelSize}px`});
@@ -1214,8 +1199,8 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 				}
 			}
 
-			this._mcInst.options.max = maxCoords;
-			this._setMovableCoord("setTo", [panelSize * panel.index, 0], true, 0);
+			this._axesInst.axis.flick.range = [0, max];
+			this._setAxes("setTo", panelSize * panel.index, 0);
 
 			if (consts.IS_ANDROID2) {
 				this._applyPanelsPos();
@@ -1245,20 +1230,20 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	restore(durationValue) {
 		const conf = this._conf;
 		const panel = conf.panel;
-		const currPos = this._getDataByDirection(this._mcInst.get());
+		const currPos = this._axesInst.get().flick;
 		let duration = durationValue;
 		let destPos;
 
 		// check if the panel isn't in right position
-		if (currPos[0] !== panel.currIndex * panel.size) {
+		if (currPos !== panel.currIndex * panel.size) {
 			conf.customEvent.restoreCall = true;
 			duration = utils.getNumValue(duration, this.options.duration);
 
 			this._revertPanelNo();
-			destPos = this._getDataByDirection([panel.size * panel.index, 0]);
+			destPos = panel.size * panel.index;
 
 			this._triggerBeforeRestore({depaPos: currPos, destPos});
-			this._setMovableCoord("setTo", destPos, true, duration);
+			this._setAxes("setTo", destPos, duration);
 
 			if (!duration) {
 				this._adjustContainerCss("end");
@@ -1281,7 +1266,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * @return {eg.Flicking} An instance of a module itself <ko>모듈 자신의 인스턴스</ko>
 	 */
 	enableInput() {
-		this._mcInst.enableInput();
+		this._panInput.enable();
 		return this;
 	}
 
@@ -1292,7 +1277,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * @return {eg.Flicking} An instance of a module itself <ko>모듈 자신의 인스턴스</ko>
 	 */
 	disableInput() {
-		this._mcInst.disableInput();
+		this._panInput.disable();
 		return this;
 	}
 
@@ -1393,14 +1378,13 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		for (let i = 0, $el; ($el = $children[i]); i++) {
 			if (i > list.length - 1) {
 				$el.parentNode.removeChild($el);
-				break;
+			} else {
+				const className = list[i].className;
+				const style = list[i].style;
+
+				$el[className ? "setAttribute" : "removeAttribute"]("class", className);
+				$el[style ? "setAttribute" : "removeAttribute"]("style", style);
 			}
-
-			const className = list[i].className;
-			const style = list[i].style;
-
-			$el[className ? "setAttribute" : "removeAttribute"]("class", className);
-			$el[style ? "setAttribute" : "removeAttribute"]("style", style);
 		}
 
 		// unbind events

@@ -4,7 +4,7 @@
  */
 /*eslint-disable */
 import tutils from "./assets/utils";
-import MovableCoord from "@egjs/movablecoord";
+import Axes from "@egjs/Axes";
 
 describe("moveTo() method", function() {
 	describe("Check for functionality", function() {
@@ -101,8 +101,6 @@ describe("moveTo() method", function() {
 	describe("Check for the direction", () => {
 		tutils.hooks.run();
 
-		const MC = MovableCoord;
-
 		let setCondition = function (inst, no) {
 			const $el = inst.$wrapper;
 
@@ -120,10 +118,10 @@ describe("moveTo() method", function() {
 			// non-circular
 			const inst = tutils.create("#mflick1");
 			setCondition(inst, 1);
-			runTest(inst, MC.DIRECTION_LEFT);
+			runTest(inst, Axes.DIRECTION_LEFT);
 
 			setCondition(inst, 0);
-			runTest(inst, MC.DIRECTION_RIGHT);
+			runTest(inst, Axes.DIRECTION_RIGHT);
 		});
 
 		// circular
@@ -133,13 +131,13 @@ describe("moveTo() method", function() {
 			});
 
 			setCondition(inst, 2);
-			runTest(inst, MC.DIRECTION_RIGHT);
+			runTest(inst, Axes.DIRECTION_RIGHT);
 
 			setCondition(inst, 0);
-			runTest(inst, MC.DIRECTION_LEFT);
+			runTest(inst, Axes.DIRECTION_LEFT);
 
 			setCondition(inst, 1);
-			runTest(inst, MC.DIRECTION_LEFT);
+			runTest(inst, Axes.DIRECTION_LEFT);
 		});
 	});
 

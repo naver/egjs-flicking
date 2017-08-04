@@ -486,7 +486,7 @@ describe("Methods call", function() {
 		const $el2 = tutils.createFixture("#mflick2");
 		const panelCount = $el2.children.length;
 
-		const inst2 = tutils.create($el, {
+		const inst2 = tutils.create($el2, {
 			previewPadding: 10,
 			circular: true
 		});

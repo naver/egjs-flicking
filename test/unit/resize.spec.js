@@ -20,7 +20,7 @@ describe("resize() method", function() {
 			});
 
 			let panel = inst._conf.panel;
-			let oldCoordMax = inst._mcInst.options.max;
+			let oldCoordMax = inst._axesInst.axis.flick.range[1];
 
 			// When
 			$el.style.width = `${width + 50}px`;
@@ -33,10 +33,10 @@ describe("resize() method", function() {
 			const maxPosX = panel.size * ( panel.count - 1 );
 
 			// Current container element is in right position?
-			expect(~~tutils.$getTransformValue(inst.$container, true)).to.equal(maxPosX);
+			expect(+tutils.$getTransformValue(inst.$container, true)).to.equal(maxPosX);
 
 			// Max coord value has been set correctly?
-			expect(maxPosX).to.deep.equal(inst._mcInst.options.max[0]);
+			expect(maxPosX).to.deep.equal(inst._axesInst.axis.flick.range[1]);
 
 			// The panel width should be same as current wrapper element
 			expect(panel.size).to.deep.equal(utils.css($el, "width", true));
@@ -44,8 +44,8 @@ describe("resize() method", function() {
 			// The panel container width should be same as current panels element total width
 			expect(utils.css(inst.$container, "width", true)).to.deep.equal(panel.count * panel.size);
 
-			// Should be updated MovableCoord's 'max' options value
-			expect(oldCoordMax).to.not.deep.equal(inst._mcInst.options.max);
+			// Should be updated Axes' 'max' options value
+			expect(oldCoordMax).to.not.deep.equal(inst._axesInst.axis.flick.range[1]);
 		});
 	});
 
@@ -61,7 +61,9 @@ describe("resize() method", function() {
 			padding = inst.$wrapper.style.padding.split(" ").map(v => parseInt(v));
 
 			// get current padding value
-			if (inst.options.horizontal) {
+			if (padding.length === 1) {
+				padding = [padding[0],padding[0]];
+			} else if (inst.options.horizontal) {
 				padding = padding.length === 2 ?
 					[padding[1], padding[1]] : [padding[3], padding[1]];
 			} else {
@@ -74,16 +76,14 @@ describe("resize() method", function() {
 			expect(padding).to.deep.equal(val);  // Padding value changed?
 
 			let panel = inst._conf.panel;
-			let max, panelSize, coord, top;
+			let panelSize, top;
+			const max = inst._axesInst.axis.flick.range[1];
+			const coord = inst._axesInst.get().flick;
 
 			if (horizontal) {
-				max = inst._mcInst.options.max[0];
 				panelSize = utils.css(panel.$list[0], "width", true);
-				coord = inst._mcInst.get()[0];
 			} else {
-				max = inst._mcInst.options.max[1];
 				panelSize = utils.css(panel.$list[0], "height", true);
-				coord = inst._mcInst.get()[1];
 				top = parseInt(utils.css(inst.$container, "top", true));
 			}
 
@@ -93,14 +93,13 @@ describe("resize() method", function() {
 			// The panel width should be same as current wrapper element
 			expect(panelSize).to.equal(panel.size);
 
-			// Current MovableCoord's value has been set correctly?
+			// Current Axes's value has been set correctly?
 			expect(coord).to.equal(panel.size * panel.index);
 
 			// Container's top value has been set correctly?
 			top && expect(val[0]).to.equal(top);
 		};
 
-		// When
 		it("Padding #1", () => {
 			const inst = tutils.create("#mflick1", {
 				circular: true,
@@ -115,9 +114,11 @@ describe("resize() method", function() {
 
 			setCondition(inst, [0,20]);
 			runTest(inst, [0,20], true);
+
+			setCondition(inst, [0,0]);
+			runTest(inst, [0,0], true);
 		});
 
-		// Given
         it("Padding #2", () => {
 			const inst = tutils.create("#mflick2", {
 					circular: true,
@@ -125,11 +126,9 @@ describe("resize() method", function() {
 					horizontal: false
 				});
 
-			// When
 			setCondition(inst, [20,20]);
 			runTest(inst, [20,20]);
 
-			// When
 			setCondition(inst, [10,20]);
 			runTest(inst, [10,20]);
 		 });

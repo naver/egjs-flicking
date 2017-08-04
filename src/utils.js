@@ -211,8 +211,8 @@ const utils = {
 			result = (version >= "4.1.0" && !/EK-GN120|SM-G386F/.test(useragent)) ||
 				(
 					version >= "4.0.3" &&
-					/SHW-|SHV-|GT-|SCH-|SGH-|SPH-|LG-F160|LG-F100|LG-F180|LG-F200|EK-|IM-A|LG-F240|LG-F260/.test(useragent) &&
-					!/SHW-M420|SHW-M200|GT-S7562/.test(useragent)
+						/SHW-|SHV-|GT-|SCH-|SGH-|SPH-|LG-F160|LG-F100|LG-F180|LG-F200|EK-|IM-A|LG-F240|LG-F260/.test(useragent) &&
+							!/SHW-M420|SHW-M200|GT-S7562/.test(useragent)
 				);
 		}
 
