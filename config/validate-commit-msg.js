@@ -25,6 +25,7 @@ var TYPES = {
   style: true,
   refactor: true,
   test: true,
+  demo: true,
   chore: true
 };
 

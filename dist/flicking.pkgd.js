@@ -56,8 +56,114 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+/* eslint-disable no-new-func, no-nested-ternary */
+var win = typeof window !== "undefined" && window.Math === Math ? window : typeof self !== "undefined" && self.Math === Math ? self : Function("return this")();
+/* eslint-enable no-new-func, no-nested-ternary */
+
+var document = win.document;
+
+exports.window = win;
+exports.document = document;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * Copyright (c) 2017 NAVER Corp.
+ * @egjs/component project is licensed under the MIT license
+ * 
+ * @egjs/component JavaScript library
+ * http://naver.github.io/egjs/component
+ * 
+ * @version 2.0.0
+ */
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(true)
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["Component"] = factory();
+	else
+		root["eg"] = root["eg"] || {}, root["eg"]["Component"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
 /******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
@@ -86,7 +192,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -96,22 +202,279 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 
+var _Component = __webpack_require__(1);
+
+var _Component2 = _interopRequireDefault(_Component);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+_Component2["default"].VERSION = "2.0.0";
+module.exports = _Component2["default"];
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 exports.__esModule = true;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 /**
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-/* eslint-disable no-new-func, no-nested-ternary */
-var win = typeof window !== "undefined" && window.Math === Math ? window : typeof self !== "undefined" && self.Math === Math ? self : Function("return this")();
-/* eslint-enable no-new-func, no-nested-ternary */
 
-var document = win.document;
+/**
+ * A class used to manage events and options in a component
+ * @ko 컴포넌트의 이벤트와 옵션을 관리할 수 있게 하는 클래스
+ * @alias eg.Component
+ */
+var Component = function () {
+	/**
+  * @support {"ie": "7+", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "2.1+ (except 3.x)"}
+  */
+	function Component() {
+		_classCallCheck(this, Component);
 
-exports.window = win;
-exports.document = document;
+		this._eventHandler = {};
+		this.options = {};
+	}
+	/**
+  * Triggers a custom event.
+  * @ko 커스텀 이벤트를 발생시킨다
+  * @param {String} eventName The name of the custom event to be triggered <ko>발생할 커스텀 이벤트의 이름</ko>
+  * @param {Object} customEvent Event data to be sent when triggering a custom event <ko>커스텀 이벤트가 발생할 때 전달할 데이터</ko>
+  * @return {Boolean} Indicates whether the event has occurred. If the stop() method is called by a custom event handler, it will return false and prevent the event from occurring. <ko>이벤트 발생 여부. 커스텀 이벤트 핸들러에서 stop() 메서드를 호출하면 'false'를 반환하고 이벤트 발생을 중단한다.</ko>
+  * @example
+ class Some extends eg.Component {
+  some(){
+    this.trigger("hi");// fire hi event.
+  }
+ }
+  */
+
+
+	Component.prototype.trigger = function trigger(eventName) {
+		var customEvent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+		var handlerList = this._eventHandler[eventName] || [];
+		var hasHandlerList = handlerList.length > 0;
+
+		if (!hasHandlerList) {
+			return true;
+		}
+
+		// If detach method call in handler in first time then handeler list calls.
+		handlerList = handlerList.concat();
+
+		customEvent.eventType = eventName;
+
+		var isCanceled = false;
+		var arg = [customEvent];
+		var i = 0;
+
+		customEvent.stop = function () {
+			isCanceled = true;
+		};
+
+		for (var _len = arguments.length, restParam = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+			restParam[_key - 2] = arguments[_key];
+		}
+
+		if (restParam.length >= 1) {
+			arg = arg.concat(restParam);
+		}
+
+		for (i = 0; handlerList[i]; i++) {
+			handlerList[i].apply(this, arg);
+		}
+
+		return !isCanceled;
+	};
+	/**
+  * Executed event just one time.
+  * @ko 이벤트가 한번만 실행된다.
+  * @param {eventName} eventName The name of the event to be attached <ko>등록할 이벤트의 이름</ko>
+  * @param {Function} handlerToAttach The handler function of the event to be attached <ko>등록할 이벤트의 핸들러 함수</ko>
+  * @return {eg.Component} An instance of a component itself<ko>컴포넌트 자신의 인스턴스</ko>
+  * @example
+ class Some extends eg.Component {
+  hi() {
+    alert("hi");
+  }
+  thing() {
+    this.once("hi", this.hi);
+  }
+ }
+ var some = new Some();
+ some.thing();
+ some.trigger("hi");
+ // fire alert("hi");
+ some.trigger("hi");
+ // Nothing happens
+  */
+
+
+	Component.prototype.once = function once(eventName, handlerToAttach) {
+		if ((typeof eventName === "undefined" ? "undefined" : _typeof(eventName)) === "object" && typeof handlerToAttach === "undefined") {
+			var eventHash = eventName;
+			var i = void 0;
+
+			for (i in eventHash) {
+				this.once(i, eventHash[i]);
+			}
+			return this;
+		} else if (typeof eventName === "string" && typeof handlerToAttach === "function") {
+			var self = this;
+
+			this.on(eventName, function listener() {
+				for (var _len2 = arguments.length, arg = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+					arg[_key2] = arguments[_key2];
+				}
+
+				handlerToAttach.apply(self, arg);
+				self.off(eventName, listener);
+			});
+		}
+
+		return this;
+	};
+
+	/**
+  * Checks whether an event has been attached to a component.
+  * @ko 컴포넌트에 이벤트가 등록됐는지 확인한다.
+  * @param {String} eventName The name of the event to be attached <ko>등록 여부를 확인할 이벤트의 이름</ko>
+  * @return {Boolean} Indicates whether the event is attached. <ko>이벤트 등록 여부</ko>
+  * @example
+ class Some extends eg.Component {
+  some() {
+    this.hasOn("hi");// check hi event.
+  }
+ }
+  */
+
+
+	Component.prototype.hasOn = function hasOn(eventName) {
+		return !!this._eventHandler[eventName];
+	};
+
+	/**
+  * Attaches an event to a component.
+  * @ko 컴포넌트에 이벤트를 등록한다.
+  * @param {eventName} eventName The name of the event to be attached <ko>등록할 이벤트의 이름</ko>
+  * @param {Function} handlerToAttach The handler function of the event to be attached <ko>등록할 이벤트의 핸들러 함수</ko>
+  * @return {eg.Component} An instance of a component itself<ko>컴포넌트 자신의 인스턴스</ko>
+  * @example
+ class Some extends eg.Component {
+  hi() {
+    console.log("hi");
+  }
+  some() {
+    this.on("hi",this.hi); //attach event
+  }
+ }
+ */
+
+
+	Component.prototype.on = function on(eventName, handlerToAttach) {
+		if ((typeof eventName === "undefined" ? "undefined" : _typeof(eventName)) === "object" && typeof handlerToAttach === "undefined") {
+			var eventHash = eventName;
+			var name = void 0;
+
+			for (name in eventHash) {
+				this.on(name, eventHash[name]);
+			}
+			return this;
+		} else if (typeof eventName === "string" && typeof handlerToAttach === "function") {
+			var handlerList = this._eventHandler[eventName];
+
+			if (typeof handlerList === "undefined") {
+				this._eventHandler[eventName] = [];
+				handlerList = this._eventHandler[eventName];
+			}
+
+			handlerList.push(handlerToAttach);
+		}
+
+		return this;
+	};
+	/**
+  * Detaches an event from the component.
+  * @ko 컴포넌트에 등록된 이벤트를 해제한다
+  * @param {eventName} eventName The name of the event to be detached <ko>해제할 이벤트의 이름</ko>
+  * @param {Function} handlerToDetach The handler function of the event to be detached <ko>해제할 이벤트의 핸들러 함수</ko>
+  * @return {eg.Component} An instance of a component itself <ko>컴포넌트 자신의 인스턴스</ko>
+  * @example
+ class Some extends eg.Component {
+  hi() {
+    console.log("hi");
+  }
+  some() {
+    this.off("hi",this.hi); //detach event
+  }
+ }
+  */
+
+
+	Component.prototype.off = function off(eventName, handlerToDetach) {
+		// All event detach.
+		if (typeof eventName === "undefined") {
+			this._eventHandler = {};
+			return this;
+		}
+
+		// All handler of specific event detach.
+		if (typeof handlerToDetach === "undefined") {
+			if (typeof eventName === "string") {
+				this._eventHandler[eventName] = undefined;
+				return this;
+			} else {
+				var eventHash = eventName;
+				var name = void 0;
+
+				for (name in eventHash) {
+					this.off(name, eventHash[name]);
+				}
+				return this;
+			}
+		}
+
+		// The handler of specific event detach.
+		var handlerList = this._eventHandler[eventName];
+
+		if (handlerList) {
+			var k = void 0;
+			var handlerFunction = void 0;
+
+			for (k = 0; (handlerFunction = handlerList[k]) !== undefined; k++) {
+				if (handlerFunction === handlerToDetach) {
+					handlerList = handlerList.splice(k, 1);
+					break;
+				}
+			}
+		}
+
+		return this;
+	};
+
+	return Component;
+}();
+
+exports["default"] = Component;
+module.exports = exports["default"];
+
+/***/ })
+/******/ ]);
+});
+//# sourceMappingURL=component.js.map
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -158,419 +521,27 @@ exports.IS_ANDROID2 = IS_ANDROID2;
 exports.DATA_HEIGHT = DATA_HEIGHT;
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(true)
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else if(typeof exports === 'object')
-		exports["Component"] = factory();
-	else
-		root["eg"] = root["eg"] || {}, root["eg"]["Component"] = factory();
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-/******/
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Copyright (c) 2015 NAVER Corp.
- * egjs projects are licensed under the MIT license
- */
-
-/**
- * A class used to manage events and options in a component
- * @class
- * @group egjs
- * @name eg.Component
- * @ko 컴포넌트의 이벤트와 옵션을 관리할 수 있게 하는 클래스
- *
- * @support {"ie": "7+", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "2.1+ (except 3.x)"}
- */
-var Component = exports.Component = function () {
-	function Component() {
-		_classCallCheck(this, Component);
-
-		this._eventHandler = {};
-		this._options = {};
-	}
-
-	/**
-  * Sets options in a component or returns them.
-  * @ko 컴포넌트에 옵션을 설정하거나 옵션을 반환한다
-  * @method eg.Component#option
-  * @param {String} key The key of the option<ko>옵션의 키</ko>
-  * @param {Object} [value] The option value that corresponds to a given key <ko>키에 해당하는 옵션값</ko>
-  * @return {eg.Component|Object} An instance, an option value, or an option object of a component itself.<br>- If both key and value are used to set an option, it returns an instance of a component itself.<br>- If only a key is specified for the parameter, it returns the option value corresponding to a given key.<br>- If nothing is specified, it returns an option object. <ko>컴포넌트 자신의 인스턴스나 옵션값, 옵션 객체.<br>- 키와 값으로 옵션을 설정하면 컴포넌트 자신의 인스턴스를 반환한다.<br>- 파라미터에 키만 설정하면 키에 해당하는 옵션값을 반환한다.<br>- 파라미터에 아무것도 설정하지 않으면 옵션 객체를 반환한다.</ko>
-  * @example
- 	 class Some extends eg.Component{
- 		}
- 	 const some = new Some({
- 		"foo": 1,
- 		"bar": 2
- 	});
- 	 some.option("foo"); // return 1
-  some.option("foo",3); // return some instance
-  some.option(); // return options object.
-  some.option({
- 		"foo" : 10,
- 		"bar" : 20,
- 		"baz" : 30
- 	}); // return some instance.
-  */
-
-
-	_createClass(Component, [{
-		key: "option",
-		value: function option() {
-			if (arguments.length >= 2) {
-				var _key = arguments.length <= 0 ? undefined : arguments[0];
-				var value = arguments.length <= 1 ? undefined : arguments[1];
-				this._options[_key] = value;
-				return this;
-			}
-
-			var key = arguments.length <= 0 ? undefined : arguments[0];
-			if (typeof key === "string") {
-				return this._options[key];
-			}
-
-			if (arguments.length === 0) {
-				return this._options;
-			}
-
-			var options = key;
-			this._options = options;
-
-			return this;
-		}
-		/**
-   * Triggers a custom event.
-   * @ko 커스텀 이벤트를 발생시킨다
-   * @method eg.Component#trigger
-   * @param {String} eventName The name of the custom event to be triggered <ko>발생할 커스텀 이벤트의 이름</ko>
-   * @param {Object} customEvent Event data to be sent when triggering a custom event <ko>커스텀 이벤트가 발생할 때 전달할 데이터</ko>
-   * @return {Boolean} Indicates whether the event has occurred. If the stop() method is called by a custom event handler, it will return false and prevent the event from occurring. <ko>이벤트 발생 여부. 커스텀 이벤트 핸들러에서 stop() 메서드를 호출하면 'false'를 반환하고 이벤트 발생을 중단한다.</ko>
-   * @example
-   class Some extends eg.Component{
-  		some(){
-  			this.trigger("hi");// fire hi event.
-  		}
-  	}
-   */
-
-	}, {
-		key: "trigger",
-		value: function trigger(eventName) {
-			var customEvent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-			var handlerList = this._eventHandler[eventName] || [];
-			var hasHandlerList = handlerList.length > 0;
-
-			if (!hasHandlerList) {
-				return true;
-			}
-
-			// If detach method call in handler in first time then handeler list calls.
-			handlerList = handlerList.concat();
-
-			customEvent.eventType = eventName;
-
-			var isCanceled = false;
-			var arg = [customEvent];
-			var i = void 0;
-
-			customEvent.stop = function () {
-				return isCanceled = true;
-			};
-
-			for (var _len = arguments.length, restParam = Array(_len > 2 ? _len - 2 : 0), _key2 = 2; _key2 < _len; _key2++) {
-				restParam[_key2 - 2] = arguments[_key2];
-			}
-
-			if (restParam.length >= 1) {
-				arg = arg.concat(restParam);
-			}
-
-			for (i in handlerList) {
-				handlerList[i].apply(this, arg);
-			}
-
-			return !isCanceled;
-		}
-		/**
-   * Executed event just one time.
-   * @ko 이벤트가 한번만 실행된다.
-   * @method eg.Component#once
-   * @param {eventName} eventName The name of the event to be attached <ko>등록할 이벤트의 이름</ko>
-   * @param {Function} handlerToAttach The handler function of the event to be attached <ko>등록할 이벤트의 핸들러 함수</ko>
-   * @return {eg.Component} An instance of a component itself<ko>컴포넌트 자신의 인스턴스</ko>
-   * @example
-   class Some extends eg.Component{
-  		hi(){
-  			alert("hi");
-  		}
-  		thing(){
-  			this.once("hi", this.hi);
-  		}
-  	}
-  	 var some = new Some();
-   some.thing();
-   some.trigger("hi");
-   // fire alert("hi");
-   some.trigger("hi");
-   // Nothing happens
-   */
-
-	}, {
-		key: "once",
-		value: function once(eventName, handlerToAttach) {
-			if ((typeof eventName === "undefined" ? "undefined" : _typeof(eventName)) === "object" && typeof handlerToAttach === "undefined") {
-				var eventHash = eventName;
-				var i = void 0;
-				for (i in eventHash) {
-					this.once(i, eventHash[i]);
-				}
-				return this;
-			} else if (typeof eventName === "string" && typeof handlerToAttach === "function") {
-				var self = this;
-				this.on(eventName, function listener() {
-					for (var _len2 = arguments.length, arg = Array(_len2), _key3 = 0; _key3 < _len2; _key3++) {
-						arg[_key3] = arguments[_key3];
-					}
-
-					handlerToAttach.apply(self, arg);
-					self.off(eventName, listener);
-				});
-			}
-
-			return this;
-		}
-
-		/**
-   * Checks whether an event has been attached to a component.
-   * @ko 컴포넌트에 이벤트가 등록됐는지 확인한다.
-   * @method eg.Component#hasOn
-   * @param {String} eventName The name of the event to be attached <ko>등록 여부를 확인할 이벤트의 이름</ko>
-   * @return {Boolean} Indicates whether the event is attached. <ko>이벤트 등록 여부</ko>
-   * @example
-   class Some extends eg.Component{
-  		some(){
-  			this.hasOn("hi");// check hi event.
-  		}
-  	}
-   */
-
-	}, {
-		key: "hasOn",
-		value: function hasOn(eventName) {
-			return !!this._eventHandler[eventName];
-		}
-
-		/**
-   * Attaches an event to a component.
-   * @ko 컴포넌트에 이벤트를 등록한다.
-   * @method eg.Component#on
-   * @param {eventName} eventName The name of the event to be attached <ko>등록할 이벤트의 이름</ko>
-   * @param {Function} handlerToAttach The handler function of the event to be attached <ko>등록할 이벤트의 핸들러 함수</ko>
-   * @return {eg.Component} An instance of a component itself<ko>컴포넌트 자신의 인스턴스</ko>
-   * @example
-   class Some extends eg.Component{
-   		hi(){
-  			console.log("hi");
-   		}
-  		some(){
-  			this.on("hi",this.hi); //attach event
-  		}
-  	}
-   */
-
-	}, {
-		key: "on",
-		value: function on(eventName, handlerToAttach) {
-			if ((typeof eventName === "undefined" ? "undefined" : _typeof(eventName)) === "object" && typeof handlerToAttach === "undefined") {
-				var eventHash = eventName;
-				var name = void 0;
-				for (name in eventHash) {
-					this.on(name, eventHash[name]);
-				}
-				return this;
-			} else if (typeof eventName === "string" && typeof handlerToAttach === "function") {
-				var handlerList = this._eventHandler[eventName];
-
-				if (typeof handlerList === "undefined") {
-					handlerList = this._eventHandler[eventName] = [];
-				}
-
-				handlerList.push(handlerToAttach);
-			}
-
-			return this;
-		}
-		/**
-   * Detaches an event from the component.
-   * @ko 컴포넌트에 등록된 이벤트를 해제한다
-   * @method eg.Component#off
-   * @param {eventName} eventName The name of the event to be detached <ko>해제할 이벤트의 이름</ko>
-   * @param {Function} handlerToDetach The handler function of the event to be detached <ko>해제할 이벤트의 핸들러 함수</ko>
-   * @return {eg.Component} An instance of a component itself <ko>컴포넌트 자신의 인스턴스</ko>
-   * @example
-   class Some extends eg.Component{
-   		hi(){
-  			console.log("hi");
-   		}
-  		some(){
-  			this.off("hi",this.hi); //detach event
-  		}
-  	}
-   */
-
-	}, {
-		key: "off",
-		value: function off(eventName, handlerToDetach) {
-			// All event detach.
-			if (typeof eventName === "undefined") {
-				this._eventHandler = {};
-				return this;
-			}
-
-			// All handler of specific event detach.
-			if (typeof handlerToDetach === "undefined") {
-				if (typeof eventName === "string") {
-					this._eventHandler[eventName] = undefined;
-					return this;
-				} else {
-					var eventHash = eventName;
-					var name = void 0;
-					for (name in eventHash) {
-						this.off(name, eventHash[name]);
-					}
-					return this;
-				}
-			}
-
-			// The handler of specific event detach.
-			var handlerList = this._eventHandler[eventName];
-			if (handlerList) {
-				var k = void 0;
-				var handlerFunction = void 0;
-				for (k = 0, handlerFunction; handlerFunction = handlerList[k]; k++) {
-					if (handlerFunction === handlerToDetach) {
-						handlerList = handlerList.splice(k, 1);
-						break;
-					}
-				}
-			}
-
-			return this;
-		}
-	}]);
-
-	return Component;
-}();
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _component = __webpack_require__(0);
-
-module.exports = _component.Component;
-
-/***/ })
-/******/ ]);
-});
-//# sourceMappingURL=component.js.map
-
-
-/***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _Flicking = __webpack_require__(4);
+
+var _Flicking2 = _interopRequireDefault(_Flicking);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_Flicking2.default.VERSION = "2.0.0-rc"; /**
+                                          * Copyright (c) 2015 NAVER Corp.
+                                          * egjs projects are licensed under the MIT license
+                                          */
+
+module.exports = _Flicking2.default;
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -578,25 +549,25 @@ module.exports = _component.Component;
 
 exports.__esModule = true;
 
-var _component = __webpack_require__(2);
+var _component = __webpack_require__(1);
 
 var _component2 = _interopRequireDefault(_component);
 
-var _axes = __webpack_require__(8);
+var _axes = __webpack_require__(5);
 
 var _axes2 = _interopRequireDefault(_axes);
 
 var _utils = __webpack_require__(7);
 
-var _consts = __webpack_require__(1);
+var _consts = __webpack_require__(2);
 
 var consts = _interopRequireWildcard(_consts);
 
-var _config = __webpack_require__(4);
+var _config = __webpack_require__(8);
 
 var _browser = __webpack_require__(0);
 
-var _eventHandler = __webpack_require__(5);
+var _eventHandler = __webpack_require__(9);
 
 var _eventHandler2 = _interopRequireDefault(_eventHandler);
 
@@ -2092,595 +2063,7 @@ exports.default = Flicking;
 module.exports = exports["default"];
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-/**
- * Copyright (c) 2015 NAVER Corp.
- * egjs projects are licensed under the MIT license
- */
-// internal config values
-var CONFIG = {
-	panel: {
-		$list: null, // panel list
-		index: 0, // dom index used among process
-		no: 0, // panel no used among process
-		currIndex: 0, // current physical dom index
-		currNo: 0, // current logical panel number
-		size: 0, // panel size
-		count: 0, // total physical panel count
-		origCount: 0, // total count of given original panels
-		changed: false, // if panel changed
-		animating: false, // current animating status boolean
-		minCount: 3 // minimum panel count
-	},
-	touch: {
-		holdPos: 0, // hold x,y coordinate
-		destPos: 0, // destination x,y coordinate
-		distance: 0, // touch distance pixel of start to end touch
-		direction: null, // touch direction
-		lastPos: 0, // to determine move on holding
-		holding: false
-	},
-	customEvent: { // for custom events value
-		flick: true,
-		restore: false,
-		restoreCall: false
-	},
-	dirData: [], // direction constant value according horizontal or vertical
-	indexToMove: 0,
-	$dummyAnchor: null // For buggy link highlighting on Android 2.x
-};
-
-// default options
-var OPTIONS = {
-	hwAccelerable: true, // ns.isHWAccelerable(),  // check weather hw acceleration is available
-	prefix: "eg-flick", // prefix value of class name
-	deceleration: 0.0006, // deceleration value
-	horizontal: true, // move direction (true == horizontal, false == vertical)
-	circular: false, // circular mode. In this mode at least 3 panels are required.
-	previewPadding: null, // preview padding value in left(up) to right(down) order. In this mode at least 5 panels are required.
-	bounce: null, // bounce value in left(up) to right(down) order. Works only in non-circular mode.
-	threshold: 40, // the distance pixel threshold value for change panel
-	duration: 100, // duration ms for animation
-	panelEffect: function panelEffect(x) {
-		return 1 - Math.pow(1 - x, 3);
-	}, // easing function for panel change animation
-	defaultIndex: 0, // initial panel index to be shown
-	inputType: [// input type
-	"touch", "mouse"],
-	thresholdAngle: 45, // the threshold value that determines whether user action is horizontal or vertical (0~90)
-	adaptiveHeight: false // Set container's height be adaptive according panel's height
-};
-
-exports.CONFIG = CONFIG;
-exports.OPTIONS = OPTIONS;
-
-/***/ }),
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-
-var _consts = __webpack_require__(1);
-
-var consts = _interopRequireWildcard(_consts);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Copyright (c) 2015 NAVER Corp.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * egjs projects are licensed under the MIT license
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-exports.default = function (superclass) {
-	return function (_superclass) {
-		_inherits(_class, _superclass);
-
-		function _class() {
-			_classCallCheck(this, _class);
-
-			return _possibleConstructorReturn(this, _superclass.apply(this, arguments));
-		}
-
-		/**
-   * 'hold' event handler
-   */
-		_class.prototype._holdHandler = function _holdHandler(e) {
-			var conf = this._conf;
-			var holdPos = e.pos.flick;
-
-			conf.touch.holdPos = holdPos;
-			conf.touch.holding = true;
-			conf.panel.changed = false;
-
-			this._adjustContainerCss("start", holdPos);
-		};
-
-		/**
-   * 'change' event handler
-   */
-
-
-		_class.prototype._changeHandler = function _changeHandler(e) {
-			var conf = this._conf;
-			var touch = conf.touch;
-			var pos = e.pos.flick;
-			var holdPos = touch.holdPos;
-			var direction = void 0;
-			var eventRes = null;
-			var movedPx = void 0;
-
-			this._setPointerEvents(e); // for "click" bug
-
-			/**
-    * This event is fired when panel moves.
-    * @ko 패널이 이동할 때 발생하는 이벤트
-    * @name eg.Flicking#flick
-    * @event
-    * @param {Object} param The object of data to be sent to an event <ko>이벤트에 전달되는 데이터 객체</ko>
-    * @param {String} param.eventType The name of the event<ko>이름명</ko>
-    * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
-    * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content <ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
-    * @param {Number} param.direction Direction of the movement (see eg.Axes.DIRECTION_* constant) <ko>이동 방향(eg.Axes.DIRECTION_* constant 참고)</ko>
-    * @param {Array} param.pos Start coordinate <ko>출발점 좌표</ko>
-    * @param {Number} param.pos.0 x-coordinate <ko>x 좌표</ko>
-    * @param {Number} param.pos.1 y-coordinate <ko>y 좌표</ko>
-    * @param {Boolean} param.holding Indicates whether a user holds an element on the screen of the device. <ko>사용자가 기기의 화면을 누르고 있는지 여부</ko>
-    * @param {Number} param.distance Distance moved from then starting point. According the move direction, positive on eg.Axes.DIRECTION_LEFT/UP and negative on eg.Axes.DIRECTION_RIGHT/DOWN <ko>시작점부터 이동된 거리의 값. 이동 방향에 따라 eg.Axes.DIRECTION_LEFT/UP의 경우 양수를 eg.Axes.DIRECTION_RIGHT/DOWN의 경우는 음수를 반환</ko>
-    */
-			if (e.inputEvent) {
-				direction = e.inputEvent.direction;
-
-				// Adjust direction in case of diagonal touch move
-				movedPx = e.inputEvent[this.options.horizontal ? "deltaX" : "deltaY"];
-
-				if (!~conf.dirData.indexOf(direction)) {
-					direction = conf.dirData[+(Math.abs(touch.lastPos) <= movedPx)];
-				}
-
-				touch.lastPos = movedPx;
-			} else {
-				touch.lastPos = null;
-			}
-
-			conf.customEvent.flick && (eventRes = this._triggerEvent(consts.EVENTS.flick, {
-				pos: pos,
-				holding: e.holding,
-				direction: direction || touch.direction,
-				distance: pos - holdPos
-			}));
-
-			(eventRes || eventRes === null) && this._setTranslate([-pos, 0]);
-		};
-
-		/**
-   * 'release' event handler
-   */
-
-
-		_class.prototype._releaseHandler = function _releaseHandler(e) {
-			var conf = this._conf;
-			var touch = conf.touch;
-			var holdPos = touch.holdPos;
-			var panelSize = conf.panel.size;
-			var customEvent = conf.customEvent;
-			var isPlusMove = touch.holdPos < e.depaPos.flick;
-
-			touch.distance = e.depaPos.flick - holdPos;
-			touch.direction = conf.dirData[+!isPlusMove];
-			touch.destPos = holdPos + (isPlusMove ? panelSize : -panelSize);
-
-			var distance = touch.distance;
-			var duration = this.options.duration;
-			var moveTo = holdPos;
-
-			if (this._isMovable()) {
-				!customEvent.restoreCall && (customEvent.restore = false);
-				moveTo = touch.destPos;
-			} else if (Math.abs(distance) > 0) {
-				this._triggerBeforeRestore(e);
-			} else {
-				duration = 0;
-			}
-
-			// trigger animation
-			e.setTo({ flick: moveTo }, duration);
-
-			distance === 0 && this._adjustContainerCss("end");
-			touch.holding = false;
-
-			this._setPointerEvents(); // for "click" bug
-		};
-
-		/**
-   * 'animationStart' event handler
-   */
-
-
-		_class.prototype._animationStartHandler = function _animationStartHandler(e) {
-			var conf = this._conf;
-			var panel = conf.panel;
-			var customEvent = conf.customEvent;
-			var isFromInput = e.inputEvent || conf.touch.lastPos;
-
-			panel.animating = true;
-
-			// when animation was started by input action
-			if (!customEvent.restoreCall && isFromInput && this._setPhaseValue("start", {
-				depaPos: e.depaPos.flick,
-				destPos: e.destPos.flick
-			}) === false) {
-				e.stop();
-			}
-
-			if (isFromInput) {
-				e.duration = this.options.duration;
-
-				e.destPos.flick = panel.size * (panel.index + conf.indexToMove);
-			}
-		};
-
-		/**
-   * 'animationEnd' event handler
-   */
-
-
-		_class.prototype._animationEndHandler = function _animationEndHandler() {
-			this._setPhaseValue("end");
-
-			this._conf.panel.animating = false;
-			this._triggerRestore();
-		};
-
-		return _class;
-	}(superclass);
-};
-
-module.exports = exports["default"];
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _Flicking = __webpack_require__(3);
-
-var _Flicking2 = _interopRequireDefault(_Flicking);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-_Flicking2.default.VERSION = "2.0.0-rc"; /**
-                                          * Copyright (c) 2015 NAVER Corp.
-                                          * egjs projects are licensed under the MIT license
-                                          */
-
-module.exports = _Flicking2.default;
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports.Mixin = exports.utils = undefined;
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
-                                                                                                                                                                                                                                                                               * Copyright (c) 2015 NAVER Corp.
-                                                                                                                                                                                                                                                                               * egjs projects are licensed under the MIT license
-                                                                                                                                                                                                                                                                               */
-
-
-var _browser = __webpack_require__(0);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var utils = {
-	/**
-  * Select or create element
-  * @param {String|HTMLElement} param
-  *  when string given is as HTML tag, then create element
-  *  otherwise it returns selected elements
-  * @returns {HTMLElement}
-  */
-	$: function $(param) {
-		var el = null;
-
-		if (typeof param === "string") {
-			// check if string is HTML tag format
-			var match = param.match(/^<([a-z]+)\s*([^>]*)>/);
-
-			// creating element
-			if (match) {
-				el = _browser.document.createElement(match[1]);
-
-				// attributes
-				match.length === 3 && match[2].split(" ").forEach(function (v) {
-					var attr = v.split("=");
-
-					el.setAttribute(attr[0], attr[1].trim().replace(/(^["']|["']$)/g, ""));
-				});
-			} else {
-				el = _browser.document.querySelectorAll(param);
-
-				if (!el.length) {
-					el = null;
-				} else if (el.length === 1) {
-					el = el[0];
-				}
-			}
-		} else if (param.nodeName && param.nodeType === 1) {
-			el = param;
-		}
-
-		return el;
-	},
-
-
-	/**
-  * Check if is array
-  * @param arr
-  * @returns {Boolean}
-  */
-	isArray: function isArray(arr) {
-		return arr && arr.constructor === Array;
-	},
-
-
-	/**
-  * Check if is object
-  * @param {Object} obj
-  * @returns {Boolean}
-  */
-	isObject: function isObject(obj) {
-		return obj && !obj.nodeType && (typeof obj === "undefined" ? "undefined" : _typeof(obj)) === "object" && !this.isArray(obj);
-	},
-
-
-	/**
-  * Merge object returning new object
-  * @param {Object} target
-  * @param {Object} objectN
-  * @returns {Object} merged target object
-  * @example
-  *  var target = { a: 1 };
-  *  utils.extend(target, { b: 2, c: 3 });
-  *  target;  // { a: 1, b: 2, c: 3 };
-  */
-	extend: function extend(target) {
-		var _this = this;
-
-		for (var _len = arguments.length, objectN = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-			objectN[_key - 1] = arguments[_key];
-		}
-
-		if (!objectN.length || objectN.length === 1 && !objectN[0]) {
-			return target;
-		}
-
-		var source = objectN.shift();
-
-		if (this.isObject(target) && this.isObject(source)) {
-			Object.keys(source).forEach(function (key) {
-				var value = source[key];
-
-				if (_this.isObject(value)) {
-					!target[key] && (target[key] = {});
-
-					target[key] = _this.extend(target[key], value);
-				} else {
-					target[key] = _this.isArray(value) ? value.concat() : value;
-				}
-			});
-		}
-
-		return this.extend.apply(this, [target].concat(objectN));
-	},
-
-
-	/**
-  * Get or set the style value or apply
-  * @param {HTMLElement} el
-  * @param {String|Object} style
-  *  String: return style property value
-  *  Object: set style value
-  * @param {Boolean} getAsNumber Get the value as number
-  * @returns {String|HTMLElement}
-  */
-	css: function css(el, style, getAsNumber) {
-		if (typeof style === "string") {
-			var value = _browser.window.getComputedStyle(el)[style];
-
-			return getAsNumber ? this.getNumValue(value) : value;
-		} else {
-			var applyStyle = function applyStyle(target, source) {
-				return Object.keys(source).forEach(function (v) {
-					target[v] = source[v];
-				});
-			};
-
-			this.isArray(el) ? el.forEach(function (v) {
-				return applyStyle(v.style, style);
-			}) : applyStyle(el.style, style);
-		}
-
-		return el;
-	},
-
-
-	/**
-  * Check and parse value to number
-  * @param {Number|String} val
-  * @param {Number} defVal
-  * @return {Number}
-  */
-	getNumValue: function getNumValue(val, defVal) {
-		var num = val;
-
-		return isNaN(num = parseInt(num, 10)) ? defVal : num;
-	},
-
-
-	/**
-  * Return unit formatted value
-  * @param {Number|String} val
-  * @return {String} val Value formatted with unit
-  */
-	getUnitValue: function getUnitValue(val) {
-		var rx = /(?:[a-z]{2,}|%)$/;
-
-		return (parseInt(val, 10) || 0) + (String(val).match(rx) || "px");
-	},
-
-
-	/**
-  * Get element's outer value
-  * @param {HTMLElement} el
-  * @param {String} type - [outerWidth|outerHeight]
-  * @returns {Number} outer's value
-  */
-	getOuter: function getOuter(el, type) {
-		var style = _browser.window.getComputedStyle(el);
-		var margin = type === "outerWidth" ? ["marginLeft", "marginRight"] : ["marginTop", "marginBottom"];
-
-		return this.getNumValue(style[type.replace("outer", "").toLocaleLowerCase()]) + this.getNumValue(style[margin[0]]) + this.getNumValue(style[margin[1]]);
-	},
-
-
-	/**
-  * Get element's outerWidth value with margin
-  * @param {HTMLElement} el
-  * @returns {Number}
-  */
-	outerWidth: function outerWidth(el) {
-		return this.getOuter(el, "outerWidth");
-	},
-
-
-	/**
-  * Get element's outerHeight value with margin
-  * @param {HTMLElement} el
-  * @returns {Number}
-  */
-	outerHeight: function outerHeight(el) {
-		return this.getOuter(el, "outerHeight");
-	},
-
-
-	/**
-  * Checks whether hardware acceleration is enabled.
-  *
-  * @ko 하드웨어 가속을 사용할 수 있는 환경인지 확인한다
-  * @method eg#isHWAccelerable
-  * @return {Boolean} Indicates whether hardware acceleration is enabled. <ko>하드웨어 가속 사용 가능 여부</ko>
-  */
-	isHWAccelerable: function isHWAccelerable() {
-		var ua = _browser.window.navigator.userAgent;
-		var result = false;
-		var match = void 0;
-
-		// chrome 25- has a text blur bug (except Samsung's sbrowser)
-		if (match = ua.match(/Chrome\/(\d+)/)) {
-			result = match[1] >= "25";
-		} else if (/ie|edge|firefox|safari|inapp/.test(ua)) {
-			result = true;
-		} else if (match = ua.match(/Android ([\d.]+)/)) {
-			var version = match[1];
-			var useragent = (ua.match(/\(.*\)/) || [null])[0];
-
-			// android 4.1+ blacklist
-			// EK-GN120 : Galaxy Camera, SM-G386F : Galaxy Core LTE
-			// SHW-M420 : Galaxy Nexus , SHW-M200 : NexusS , GT-S7562 : Galaxy S duos
-			result = version >= "4.1.0" && !/EK-GN120|SM-G386F/.test(useragent) || version >= "4.0.3" && /SHW-|SHV-|GT-|SCH-|SGH-|SPH-|LG-F160|LG-F100|LG-F180|LG-F200|EK-|IM-A|LG-F240|LG-F260/.test(useragent) && !/SHW-M420|SHW-M200|GT-S7562/.test(useragent);
-		}
-
-		this.isHWAccelerable = function () {
-			return result;
-		};
-		return result;
-	},
-
-
-	/**
-  * Returns the syntax of the translate style which is applied to CSS transition properties.
-  *
-  * @ko CSS 트랜지션 속성에 적용할 translate 스타일 구문을 반환한다
-  * @method eg#translate
-  * @param {String} x Distance to move along the X axis <ko>x축을 따라 이동할 거리</ko>
-  * @param {String} y Distance to move along the Y axis <ko>y축을 따라 이동할 거리</ko>
-  * @param {Boolean} [isHA] Force hardware acceleration <ko>하드웨어 가속 사용 여부</ko>
-  * @return {String} Syntax of the translate style <ko>translate 스타일 구문</ko>
-  */
-	translate: function translate(x, y, isHA) {
-		return isHA || false ? "translate3d(" + x + "," + y + ",0)" : "translate(" + x + "," + y + ")";
-	},
-
-
-	// 1. user press one position on screen.
-	// 2. user moves to the other position on screen.
-	// 3. when user releases fingers on screen, 'click' event is fired at previous position.
-	hasClickBug: function hasClickBug() {
-		var ua = _browser.window.navigator.userAgent;
-		var result = /Safari/.test(ua);
-
-		this.hasClickBug = function () {
-			return result;
-		};
-		return result;
-	}
-};
-
-var MixinBuilder = function () {
-	function MixinBuilder(superclass) {
-		_classCallCheck(this, MixinBuilder);
-
-		this.superclass = superclass || function () {
-			function _class() {
-				_classCallCheck(this, _class);
-			}
-
-			return _class;
-		}();
-	}
-
-	MixinBuilder.prototype.with = function _with() {
-		for (var _len2 = arguments.length, mixins = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-			mixins[_key2] = arguments[_key2];
-		}
-
-		return mixins.reduce(function (c, m) {
-			return m(c);
-		}, this.superclass);
-	};
-
-	return MixinBuilder;
-}();
-
-var Mixin = function Mixin(superclass) {
-	return new MixinBuilder(superclass);
-};
-
-exports.utils = utils;
-exports.Mixin = Mixin;
-
-/***/ }),
-/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -2690,11 +2073,11 @@ exports.Mixin = Mixin;
  * @egjs/axes JavaScript library
  * 
  * 
- * @version 2.0.0-rc
+ * @version 2.0.0
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(true)
-		module.exports = factory(__webpack_require__(9), __webpack_require__(2));
+		module.exports = factory(__webpack_require__(6), __webpack_require__(1));
 	else if(typeof define === 'function' && define.amd)
 		define("Axes", ["hammerjs", "@egjs/component"], factory);
 	else if(typeof exports === 'object')
@@ -4753,7 +4136,7 @@ exports.WheelInput = WheelInput;
 });
 
 /***/ }),
-/* 9 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/*! Hammer.JS - v2.0.7 - 2016-04-22
@@ -7401,6 +6784,574 @@ if (true) {
 
 })(window, document, 'Hammer');
 
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.Mixin = exports.utils = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
+                                                                                                                                                                                                                                                                               * Copyright (c) 2015 NAVER Corp.
+                                                                                                                                                                                                                                                                               * egjs projects are licensed under the MIT license
+                                                                                                                                                                                                                                                                               */
+
+
+var _browser = __webpack_require__(0);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var utils = {
+	/**
+  * Select or create element
+  * @param {String|HTMLElement} param
+  *  when string given is as HTML tag, then create element
+  *  otherwise it returns selected elements
+  * @returns {HTMLElement}
+  */
+	$: function $(param) {
+		var el = null;
+
+		if (typeof param === "string") {
+			// check if string is HTML tag format
+			var match = param.match(/^<([a-z]+)\s*([^>]*)>/);
+
+			// creating element
+			if (match) {
+				el = _browser.document.createElement(match[1]);
+
+				// attributes
+				match.length === 3 && match[2].split(" ").forEach(function (v) {
+					var attr = v.split("=");
+
+					el.setAttribute(attr[0], attr[1].trim().replace(/(^["']|["']$)/g, ""));
+				});
+			} else {
+				el = _browser.document.querySelectorAll(param);
+
+				if (!el.length) {
+					el = null;
+				} else if (el.length === 1) {
+					el = el[0];
+				}
+			}
+		} else if (param.nodeName && param.nodeType === 1) {
+			el = param;
+		}
+
+		return el;
+	},
+
+
+	/**
+  * Check if is array
+  * @param arr
+  * @returns {Boolean}
+  */
+	isArray: function isArray(arr) {
+		return arr && arr.constructor === Array;
+	},
+
+
+	/**
+  * Check if is object
+  * @param {Object} obj
+  * @returns {Boolean}
+  */
+	isObject: function isObject(obj) {
+		return obj && !obj.nodeType && (typeof obj === "undefined" ? "undefined" : _typeof(obj)) === "object" && !this.isArray(obj);
+	},
+
+
+	/**
+  * Merge object returning new object
+  * @param {Object} target
+  * @param {Object} objectN
+  * @returns {Object} merged target object
+  * @example
+  *  var target = { a: 1 };
+  *  utils.extend(target, { b: 2, c: 3 });
+  *  target;  // { a: 1, b: 2, c: 3 };
+  */
+	extend: function extend(target) {
+		var _this = this;
+
+		for (var _len = arguments.length, objectN = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+			objectN[_key - 1] = arguments[_key];
+		}
+
+		if (!objectN.length || objectN.length === 1 && !objectN[0]) {
+			return target;
+		}
+
+		var source = objectN.shift();
+
+		if (this.isObject(target) && this.isObject(source)) {
+			Object.keys(source).forEach(function (key) {
+				var value = source[key];
+
+				if (_this.isObject(value)) {
+					!target[key] && (target[key] = {});
+
+					target[key] = _this.extend(target[key], value);
+				} else {
+					target[key] = _this.isArray(value) ? value.concat() : value;
+				}
+			});
+		}
+
+		return this.extend.apply(this, [target].concat(objectN));
+	},
+
+
+	/**
+  * Get or set the style value or apply
+  * @param {HTMLElement} el
+  * @param {String|Object} style
+  *  String: return style property value
+  *  Object: set style value
+  * @param {Boolean} getAsNumber Get the value as number
+  * @returns {String|HTMLElement}
+  */
+	css: function css(el, style, getAsNumber) {
+		if (typeof style === "string") {
+			var value = _browser.window.getComputedStyle(el)[style];
+
+			return getAsNumber ? this.getNumValue(value) : value;
+		} else {
+			var applyStyle = function applyStyle(target, source) {
+				return Object.keys(source).forEach(function (v) {
+					target[v] = source[v];
+				});
+			};
+
+			this.isArray(el) ? el.forEach(function (v) {
+				return applyStyle(v.style, style);
+			}) : applyStyle(el.style, style);
+		}
+
+		return el;
+	},
+
+
+	/**
+  * Check and parse value to number
+  * @param {Number|String} val
+  * @param {Number} defVal
+  * @return {Number}
+  */
+	getNumValue: function getNumValue(val, defVal) {
+		var num = val;
+
+		return isNaN(num = parseInt(num, 10)) ? defVal : num;
+	},
+
+
+	/**
+  * Return unit formatted value
+  * @param {Number|String} val
+  * @return {String} val Value formatted with unit
+  */
+	getUnitValue: function getUnitValue(val) {
+		var rx = /(?:[a-z]{2,}|%)$/;
+
+		return (parseInt(val, 10) || 0) + (String(val).match(rx) || "px");
+	},
+
+
+	/**
+  * Get element's outer value
+  * @param {HTMLElement} el
+  * @param {String} type - [outerWidth|outerHeight]
+  * @returns {Number} outer's value
+  */
+	getOuter: function getOuter(el, type) {
+		var style = _browser.window.getComputedStyle(el);
+		var margin = type === "outerWidth" ? ["marginLeft", "marginRight"] : ["marginTop", "marginBottom"];
+
+		return this.getNumValue(style[type.replace("outer", "").toLocaleLowerCase()]) + this.getNumValue(style[margin[0]]) + this.getNumValue(style[margin[1]]);
+	},
+
+
+	/**
+  * Get element's outerWidth value with margin
+  * @param {HTMLElement} el
+  * @returns {Number}
+  */
+	outerWidth: function outerWidth(el) {
+		return this.getOuter(el, "outerWidth");
+	},
+
+
+	/**
+  * Get element's outerHeight value with margin
+  * @param {HTMLElement} el
+  * @returns {Number}
+  */
+	outerHeight: function outerHeight(el) {
+		return this.getOuter(el, "outerHeight");
+	},
+
+
+	/**
+  * Checks whether hardware acceleration is enabled.
+  *
+  * @ko 하드웨어 가속을 사용할 수 있는 환경인지 확인한다
+  * @method eg#isHWAccelerable
+  * @return {Boolean} Indicates whether hardware acceleration is enabled. <ko>하드웨어 가속 사용 가능 여부</ko>
+  */
+	isHWAccelerable: function isHWAccelerable() {
+		var ua = _browser.window.navigator.userAgent;
+		var result = false;
+		var match = void 0;
+
+		// chrome 25- has a text blur bug (except Samsung's sbrowser)
+		if (match = ua.match(/Chrome\/(\d+)/)) {
+			result = match[1] >= "25";
+		} else if (/ie|edge|firefox|safari|inapp/.test(ua)) {
+			result = true;
+		} else if (match = ua.match(/Android ([\d.]+)/)) {
+			var version = match[1];
+			var useragent = (ua.match(/\(.*\)/) || [null])[0];
+
+			// android 4.1+ blacklist
+			// EK-GN120 : Galaxy Camera, SM-G386F : Galaxy Core LTE
+			// SHW-M420 : Galaxy Nexus , SHW-M200 : NexusS , GT-S7562 : Galaxy S duos
+			result = version >= "4.1.0" && !/EK-GN120|SM-G386F/.test(useragent) || version >= "4.0.3" && /SHW-|SHV-|GT-|SCH-|SGH-|SPH-|LG-F160|LG-F100|LG-F180|LG-F200|EK-|IM-A|LG-F240|LG-F260/.test(useragent) && !/SHW-M420|SHW-M200|GT-S7562/.test(useragent);
+		}
+
+		this.isHWAccelerable = function () {
+			return result;
+		};
+		return result;
+	},
+
+
+	/**
+  * Returns the syntax of the translate style which is applied to CSS transition properties.
+  *
+  * @ko CSS 트랜지션 속성에 적용할 translate 스타일 구문을 반환한다
+  * @method eg#translate
+  * @param {String} x Distance to move along the X axis <ko>x축을 따라 이동할 거리</ko>
+  * @param {String} y Distance to move along the Y axis <ko>y축을 따라 이동할 거리</ko>
+  * @param {Boolean} [isHA] Force hardware acceleration <ko>하드웨어 가속 사용 여부</ko>
+  * @return {String} Syntax of the translate style <ko>translate 스타일 구문</ko>
+  */
+	translate: function translate(x, y, isHA) {
+		return isHA || false ? "translate3d(" + x + "," + y + ",0)" : "translate(" + x + "," + y + ")";
+	},
+
+
+	// 1. user press one position on screen.
+	// 2. user moves to the other position on screen.
+	// 3. when user releases fingers on screen, 'click' event is fired at previous position.
+	hasClickBug: function hasClickBug() {
+		var ua = _browser.window.navigator.userAgent;
+		var result = /Safari/.test(ua);
+
+		this.hasClickBug = function () {
+			return result;
+		};
+		return result;
+	}
+};
+
+var MixinBuilder = function () {
+	function MixinBuilder(superclass) {
+		_classCallCheck(this, MixinBuilder);
+
+		this.superclass = superclass || function () {
+			function _class() {
+				_classCallCheck(this, _class);
+			}
+
+			return _class;
+		}();
+	}
+
+	MixinBuilder.prototype.with = function _with() {
+		for (var _len2 = arguments.length, mixins = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+			mixins[_key2] = arguments[_key2];
+		}
+
+		return mixins.reduce(function (c, m) {
+			return m(c);
+		}, this.superclass);
+	};
+
+	return MixinBuilder;
+}();
+
+var Mixin = function Mixin(superclass) {
+	return new MixinBuilder(superclass);
+};
+
+exports.utils = utils;
+exports.Mixin = Mixin;
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+// internal config values
+var CONFIG = {
+	panel: {
+		$list: null, // panel list
+		index: 0, // dom index used among process
+		no: 0, // panel no used among process
+		currIndex: 0, // current physical dom index
+		currNo: 0, // current logical panel number
+		size: 0, // panel size
+		count: 0, // total physical panel count
+		origCount: 0, // total count of given original panels
+		changed: false, // if panel changed
+		animating: false, // current animating status boolean
+		minCount: 3 // minimum panel count
+	},
+	touch: {
+		holdPos: 0, // hold x,y coordinate
+		destPos: 0, // destination x,y coordinate
+		distance: 0, // touch distance pixel of start to end touch
+		direction: null, // touch direction
+		lastPos: 0, // to determine move on holding
+		holding: false
+	},
+	customEvent: { // for custom events value
+		flick: true,
+		restore: false,
+		restoreCall: false
+	},
+	dirData: [], // direction constant value according horizontal or vertical
+	indexToMove: 0,
+	$dummyAnchor: null // For buggy link highlighting on Android 2.x
+};
+
+// default options
+var OPTIONS = {
+	hwAccelerable: true, // ns.isHWAccelerable(),  // check weather hw acceleration is available
+	prefix: "eg-flick", // prefix value of class name
+	deceleration: 0.0006, // deceleration value
+	horizontal: true, // move direction (true == horizontal, false == vertical)
+	circular: false, // circular mode. In this mode at least 3 panels are required.
+	previewPadding: null, // preview padding value in left(up) to right(down) order. In this mode at least 5 panels are required.
+	bounce: null, // bounce value in left(up) to right(down) order. Works only in non-circular mode.
+	threshold: 40, // the distance pixel threshold value for change panel
+	duration: 100, // duration ms for animation
+	panelEffect: function panelEffect(x) {
+		return 1 - Math.pow(1 - x, 3);
+	}, // easing function for panel change animation
+	defaultIndex: 0, // initial panel index to be shown
+	inputType: [// input type
+	"touch", "mouse"],
+	thresholdAngle: 45, // the threshold value that determines whether user action is horizontal or vertical (0~90)
+	adaptiveHeight: false // Set container's height be adaptive according panel's height
+};
+
+exports.CONFIG = CONFIG;
+exports.OPTIONS = OPTIONS;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _consts = __webpack_require__(2);
+
+var consts = _interopRequireWildcard(_consts);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Copyright (c) 2015 NAVER Corp.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * egjs projects are licensed under the MIT license
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+exports.default = function (superclass) {
+	return function (_superclass) {
+		_inherits(_class, _superclass);
+
+		function _class() {
+			_classCallCheck(this, _class);
+
+			return _possibleConstructorReturn(this, _superclass.apply(this, arguments));
+		}
+
+		/**
+   * 'hold' event handler
+   */
+		_class.prototype._holdHandler = function _holdHandler(e) {
+			var conf = this._conf;
+			var holdPos = e.pos.flick;
+
+			conf.touch.holdPos = holdPos;
+			conf.touch.holding = true;
+			conf.panel.changed = false;
+
+			this._adjustContainerCss("start", holdPos);
+		};
+
+		/**
+   * 'change' event handler
+   */
+
+
+		_class.prototype._changeHandler = function _changeHandler(e) {
+			var conf = this._conf;
+			var touch = conf.touch;
+			var pos = e.pos.flick;
+			var holdPos = touch.holdPos;
+			var direction = void 0;
+			var eventRes = null;
+			var movedPx = void 0;
+
+			this._setPointerEvents(e); // for "click" bug
+
+			/**
+    * This event is fired when panel moves.
+    * @ko 패널이 이동할 때 발생하는 이벤트
+    * @name eg.Flicking#flick
+    * @event
+    * @param {Object} param The object of data to be sent to an event <ko>이벤트에 전달되는 데이터 객체</ko>
+    * @param {String} param.eventType The name of the event<ko>이름명</ko>
+    * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
+    * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content <ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
+    * @param {Number} param.direction Direction of the movement (see eg.Axes.DIRECTION_* constant) <ko>이동 방향(eg.Axes.DIRECTION_* constant 참고)</ko>
+    * @param {Array} param.pos Start coordinate <ko>출발점 좌표</ko>
+    * @param {Number} param.pos.0 x-coordinate <ko>x 좌표</ko>
+    * @param {Number} param.pos.1 y-coordinate <ko>y 좌표</ko>
+    * @param {Boolean} param.holding Indicates whether a user holds an element on the screen of the device. <ko>사용자가 기기의 화면을 누르고 있는지 여부</ko>
+    * @param {Number} param.distance Distance moved from then starting point. According the move direction, positive on eg.Axes.DIRECTION_LEFT/UP and negative on eg.Axes.DIRECTION_RIGHT/DOWN <ko>시작점부터 이동된 거리의 값. 이동 방향에 따라 eg.Axes.DIRECTION_LEFT/UP의 경우 양수를 eg.Axes.DIRECTION_RIGHT/DOWN의 경우는 음수를 반환</ko>
+    */
+			if (e.inputEvent) {
+				direction = e.inputEvent.direction;
+
+				// Adjust direction in case of diagonal touch move
+				movedPx = e.inputEvent[this.options.horizontal ? "deltaX" : "deltaY"];
+
+				if (!~conf.dirData.indexOf(direction)) {
+					direction = conf.dirData[+(Math.abs(touch.lastPos) <= movedPx)];
+				}
+
+				touch.lastPos = movedPx;
+			} else {
+				touch.lastPos = null;
+			}
+
+			conf.customEvent.flick && (eventRes = this._triggerEvent(consts.EVENTS.flick, {
+				pos: pos,
+				holding: e.holding,
+				direction: direction || touch.direction,
+				distance: pos - holdPos
+			}));
+
+			(eventRes || eventRes === null) && this._setTranslate([-pos, 0]);
+		};
+
+		/**
+   * 'release' event handler
+   */
+
+
+		_class.prototype._releaseHandler = function _releaseHandler(e) {
+			var conf = this._conf;
+			var touch = conf.touch;
+			var holdPos = touch.holdPos;
+			var panelSize = conf.panel.size;
+			var customEvent = conf.customEvent;
+			var isPlusMove = touch.holdPos < e.depaPos.flick;
+
+			touch.distance = e.depaPos.flick - holdPos;
+			touch.direction = conf.dirData[+!isPlusMove];
+			touch.destPos = holdPos + (isPlusMove ? panelSize : -panelSize);
+
+			var distance = touch.distance;
+			var duration = this.options.duration;
+			var moveTo = holdPos;
+
+			if (this._isMovable()) {
+				!customEvent.restoreCall && (customEvent.restore = false);
+				moveTo = touch.destPos;
+			} else if (Math.abs(distance) > 0) {
+				this._triggerBeforeRestore(e);
+			} else {
+				duration = 0;
+			}
+
+			// trigger animation
+			e.setTo({ flick: moveTo }, duration);
+
+			distance === 0 && this._adjustContainerCss("end");
+			touch.holding = false;
+
+			this._setPointerEvents(); // for "click" bug
+		};
+
+		/**
+   * 'animationStart' event handler
+   */
+
+
+		_class.prototype._animationStartHandler = function _animationStartHandler(e) {
+			var conf = this._conf;
+			var panel = conf.panel;
+			var customEvent = conf.customEvent;
+			var isFromInput = e.inputEvent || conf.touch.lastPos;
+
+			panel.animating = true;
+
+			// when animation was started by input action
+			if (!customEvent.restoreCall && isFromInput && this._setPhaseValue("start", {
+				depaPos: e.depaPos.flick,
+				destPos: e.destPos.flick
+			}) === false) {
+				e.stop();
+			}
+
+			if (isFromInput) {
+				e.duration = this.options.duration;
+
+				e.destPos.flick = panel.size * (panel.index + conf.indexToMove);
+			}
+		};
+
+		/**
+   * 'animationEnd' event handler
+   */
+
+
+		_class.prototype._animationEndHandler = function _animationEndHandler() {
+			this._setPhaseValue("end");
+
+			this._conf.panel.animating = false;
+			this._triggerRestore();
+		};
+
+		return _class;
+	}(superclass);
+};
+
+module.exports = exports["default"];
 
 /***/ })
 /******/ ]);

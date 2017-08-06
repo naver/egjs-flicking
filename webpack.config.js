@@ -21,11 +21,11 @@ var config = {
 			amd: "@egjs/component",
 			root: [pkg.namespace.eg, "Component"]
 		},
-		"@egjs/movablecoord": {
-			commonjs: "@egjs/movablecoord",
-			commonjs2: "@egjs/movablecoord",
-			amd: "@egjs/movablecoord",
-			root: [pkg.namespace.eg, "MovableCoord"]
+		"@egjs/axes": {
+			commonjs: "@egjs/axes",
+			commonjs2: "@egjs/axes",
+			amd: "@egjs/axes",
+			root: [pkg.namespace.eg, "Axes"]
 		}
 	}],
 	devtool: "cheap-module-source-map",
@@ -48,7 +48,10 @@ var config = {
 			}
 		]
 	},
-	plugins: [new StringReplacePlugin()]
+	plugins: [
+		new webpack.optimize.ModuleConcatenationPlugin(),
+		new StringReplacePlugin()
+	]
 };
 
 module.exports = function (env) {
