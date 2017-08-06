@@ -30,8 +30,7 @@ jQuery(document).ready(function($) {
 
     /* ======= codepen ======= */
     function getDomainUrl() {
-        return window.location.href.replace("/index.html", "/")
-            .replace("/gallery.html", "/");
+        return window.HOMELINK;
     }
 
     $("#docs .highlight").each(function() {
@@ -75,12 +74,6 @@ jQuery(document).ready(function($) {
                         return getDomainUrl() + url;
                     });
 
-                // // for design
-                // $htmlEl.css({
-                //     "margin-bottom": "20px",
-                //     "border-radius": "4px",
-                // });
-                                
                 var data = {
                     title              : $htmlEl.prev().text(),
                     private            : false,
@@ -91,7 +84,7 @@ jQuery(document).ready(function($) {
                     css_pre_processor  : "none",
                     css_starter        : "neither",
                     css_prefix_free    : false,
-                    js                 : js[0],
+                    js                 : js[0].replace("window.HOMELINK", '"' + getDomainUrl() + '"'),
                     js_pre_processor   : "babel",
                     html_classes       : "loading",
                     css_external       : "",
