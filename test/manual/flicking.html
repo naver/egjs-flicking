@@ -320,12 +320,16 @@
     function methodLog(element, v) {
         var arr = [];
 
-        if(v && v.constructor === Array) {
+        if(v && (v.nodeType || v.constructor === Array)) {
+	        if (v.nodeType == 1) {
+		        v = [v];
+	        }
+
         	for (var i = 0, el; el = v[i]; i++) {
         		arr.push(el.querySelector("p").innerHTML);
             }
         } else {
-            arr = [ v ];
+            arr = [v];
         }
 
         elLog1.innerHTML = element.innerHTML +" ==> "+ arr.join(", ");
