@@ -249,8 +249,12 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 		const wrapperStyle = getComputedStyle(this.$wrapper);
 		const paddingType = horizontal ? ["Left", "Right"] : ["Top", "Bottom"];
+		const wrapperSize = Math.max(
+			this.$wrapper[`offset${horizontal ? "Width" : "Height"}`],
+			utils.getNumValue(wrapperStyle[horizontal ? "width" : "height"])
+		);
 
-		panel.size = utils.getNumValue(wrapperStyle[horizontal ? "width" : "height"]) - (
+		panel.size = wrapperSize - (
 				utils.getNumValue(wrapperStyle[`padding${paddingType[0]}`]) +
 				utils.getNumValue(wrapperStyle[`padding${paddingType[1]}`])
 			);

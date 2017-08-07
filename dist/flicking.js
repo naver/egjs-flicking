@@ -467,8 +467,9 @@ var Flicking = function (_Mixin$with) {
 
 		var wrapperStyle = getComputedStyle(this.$wrapper);
 		var paddingType = horizontal ? ["Left", "Right"] : ["Top", "Bottom"];
+		var wrapperSize = Math.max(this.$wrapper["offset" + (horizontal ? "Width" : "Height")], _utils.utils.getNumValue(wrapperStyle[horizontal ? "width" : "height"]));
 
-		panel.size = _utils.utils.getNumValue(wrapperStyle[horizontal ? "width" : "height"]) - (_utils.utils.getNumValue(wrapperStyle["padding" + paddingType[0]]) + _utils.utils.getNumValue(wrapperStyle["padding" + paddingType[1]]));
+		panel.size = wrapperSize - (_utils.utils.getNumValue(wrapperStyle["padding" + paddingType[0]]) + _utils.utils.getNumValue(wrapperStyle["padding" + paddingType[1]]));
 	};
 
 	/**
