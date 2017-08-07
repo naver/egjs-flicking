@@ -111,7 +111,7 @@ exports.document = document;
 
 
 exports.__esModule = true;
-exports.DATA_HEIGHT = exports.IS_ANDROID2 = exports.SUPPORT_WILLCHANGE = exports.SUPPORT_TRANSFORM = exports.EVENTS = undefined;
+exports.DATA_HEIGHT = exports.IS_ANDROID2 = exports.SUPPORT_WILLCHANGE = exports.TRANSFORM = exports.EVENTS = undefined;
 
 var _browser = __webpack_require__(0);
 
@@ -124,15 +124,19 @@ var EVENTS = {
 	restore: "restore"
 };
 
-// check for css transform support
+// check for the transform property
 /**
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-var SUPPORT_TRANSFORM = function () {
+var TRANSFORM = {
+	name: "transform"
+};
+
+TRANSFORM.support = function () {
 	var style = _browser.document.documentElement.style;
 
-	return "transform" in style || "webkitTransform" in style;
+	return TRANSFORM.name in style || (TRANSFORM.name = "webkitTransform") in style;
 }();
 
 // check for will-change support
@@ -145,7 +149,7 @@ var IS_ANDROID2 = /Android 2\./.test(navigator.userAgent);
 var DATA_HEIGHT = "data-height";
 
 exports.EVENTS = EVENTS;
-exports.SUPPORT_TRANSFORM = SUPPORT_TRANSFORM;
+exports.TRANSFORM = TRANSFORM;
 exports.SUPPORT_WILLCHANGE = SUPPORT_WILLCHANGE;
 exports.IS_ANDROID2 = IS_ANDROID2;
 exports.DATA_HEIGHT = DATA_HEIGHT;
@@ -625,10 +629,12 @@ var Flicking = function (_Mixin$with) {
 
 
 	Flicking.prototype._setMoveStyle = function _setMoveStyle($el, coordsValue) {
-		this._setMoveStyle = consts.SUPPORT_TRANSFORM ? function moveStyle($element, coords) {
-			_utils.utils.css($element, {
-				transform: _utils.utils.translate(coords[0], coords[1], this._conf.useLayerHack)
-			});
+		var transform = consts.TRANSFORM;
+
+		this._setMoveStyle = transform.support ? function ($element, coords) {
+			var _utils$css;
+
+			_utils.utils.css($element, (_utils$css = {}, _utils$css[transform.name] = _utils.utils.translate(coords[0], coords[1], this._conf.useLayerHack), _utils$css));
 		} : function ($element, coords) {
 			_utils.utils.css($element, { left: coords[0], top: coords[1] });
 		};
@@ -661,7 +667,7 @@ var Flicking = function (_Mixin$with) {
 			};
 		} else {
 			this._applyPanelsCss = function applyCss(v, i) {
-				var coords = this._getDataByDirection([consts.SUPPORT_TRANSFORM ? 100 * i + "%" : this._conf.panel.size * i + "px", 0]);
+				var coords = this._getDataByDirection([consts.TRANSFORM.support ? 100 * i + "%" : this._conf.panel.size * i + "px", 0]);
 
 				this._setMoveStyle(v, coords);
 			};
@@ -704,13 +710,14 @@ var Flicking = function (_Mixin$with) {
 
 				this._setTranslate([-to, 0]);
 			} else if (phase === "end") {
+				var _utils$css2;
+
 				to = this._getCoordsValue([to, 0]);
 
-				_utils.utils.css(container, {
+				_utils.utils.css(container, (_utils$css2 = {
 					left: to.x,
-					top: to.y,
-					transform: _utils.utils.translate(0, 0, conf.useLayerHack)
-				});
+					top: to.y
+				}, _utils$css2[consts.TRANSFORM.name] = _utils.utils.translate(0, 0, conf.useLayerHack), _utils$css2));
 
 				conf.$dummyAnchor.focus();
 			}
@@ -1447,7 +1454,7 @@ var Flicking = function (_Mixin$with) {
 		var panelSize = void 0;
 
 		if (!this.isPlaying()) {
-			var _utils$css;
+			var _utils$css3;
 
 			if (_utils.utils.isArray(options.previewPadding) && typeof +options.previewPadding.join("") === "number") {
 				this._setPadding(options.previewPadding.concat());
@@ -1461,7 +1468,7 @@ var Flicking = function (_Mixin$with) {
 
 			// resize elements
 			horizontal && _utils.utils.css(this.$container, { width: maxCoords[0] + panelSize + "px" });
-			_utils.utils.css(panel.$list, (_utils$css = {}, _utils$css[horizontal ? "width" : "height"] = _utils.utils.getUnitValue(panelSize), _utils$css));
+			_utils.utils.css(panel.$list, (_utils$css3 = {}, _utils$css3[horizontal ? "width" : "height"] = _utils.utils.getUnitValue(panelSize), _utils$css3));
 
 			// remove data-height attribute and re-evaluate panel's height
 			if (options.adaptiveHeight) {
@@ -1575,7 +1582,7 @@ var Flicking = function (_Mixin$with) {
 
 	Flicking.prototype.getStatus = function getStatus(stringify) {
 		var panel = this._conf.panel;
-		var rxStyle = /(transform|left|top|will-change|box-sizing|width):[^;]*;/g;
+		var rxStyle = /((?:-webkit-)?transform|left|top|will-change|box-sizing|width):[^;]*;/g;
 		var status = {
 			// current panel position
 			panel: {
