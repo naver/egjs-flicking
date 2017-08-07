@@ -397,10 +397,12 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * @param {Array} coordsValue
 	 */
 	_setMoveStyle($el, coordsValue) {
-		this._setMoveStyle = consts.SUPPORT_TRANSFORM ?
-			function moveStyle($element, coords) {
+		const transform = consts.TRANSFORM;
+
+		this._setMoveStyle = transform.support ?
+			function($element, coords) {
 				utils.css($element, {
-					transform: utils.translate(coords[0], coords[1], this._conf.useLayerHack)
+					[transform.name]: utils.translate(coords[0], coords[1], this._conf.useLayerHack)
 				});
 			} : ($element, coords) => {
 				utils.css($element, {left: coords[0], top: coords[1]});
@@ -437,7 +439,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		} else {
 			this._applyPanelsCss = function applyCss(v, i) {
 				const coords = this._getDataByDirection([
-					consts.SUPPORT_TRANSFORM ?
+					consts.TRANSFORM.support ?
 						`${100 * i}%` :
 						`${this._conf.panel.size * i}px`, 0
 				]);
@@ -486,7 +488,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 				utils.css(container, {
 					left: to.x,
 					top: to.y,
-					transform: utils.translate(0, 0, conf.useLayerHack)
+					[consts.TRANSFORM.name]: utils.translate(0, 0, conf.useLayerHack)
 				});
 
 				conf.$dummyAnchor.focus();
@@ -1294,7 +1296,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 */
 	getStatus(stringify) {
 		const panel = this._conf.panel;
-		const rxStyle = /(transform|left|top|will-change|box-sizing|width):[^;]*;/g;
+		const rxStyle = /((?:-webkit-)?transform|left|top|will-change|box-sizing|width):[^;]*;/g;
 		const status = {
 			// current panel position
 			panel: {
