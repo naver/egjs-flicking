@@ -33,9 +33,7 @@
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.5/es5-shim.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.5/es5-sham.js"></script>
-    <script src="./assets/component.js"></script>
-    <script src="./assets/axes.pkgd.js"></script>
-    <script src="../../dist/flicking.js"></script>
+    <script src="../../dist/flicking.pkgd.js"></script>
 </head>
 <body style="display:none">
 <h1>Full flicking demo</h1>
@@ -338,13 +336,13 @@
 
     function getDirection(dir) {
         switch(dir) {
-            case eg.Axes.DIRECTION_RIGHT :
+            case eg.Flicking.DIRECTION_RIGHT :
                 return "→";
-            case eg.Axes.DIRECTION_LEFT :
+            case eg.Flicking.DIRECTION_LEFT :
                 return "←";
-            case eg.Axes.DIRECTION_UP :
+            case eg.Flicking.DIRECTION_UP :
                 return "↑";
-            case eg.Axes.DIRECTION_DOWN :
+            case eg.Flicking.DIRECTION_DOWN :
                 return "↓";
         }
     }

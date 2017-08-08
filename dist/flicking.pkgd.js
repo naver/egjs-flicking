@@ -2064,9 +2064,72 @@ var Flicking = function (_Mixin$with) {
 		}
 	};
 
+	/**
+  * @name eg.Axes.DIRECTION_NONE
+  * @constant
+  * @type {Number}
+  */
+
+
+	/**
+  * @name eg.Axes.DIRECTION_LEFT
+  * @constant
+  * @type {Number}
+  */
+
+
+	/**
+  * @name eg.Axes.DIRECTION_RIGHT
+  * @constant
+  * @type {Number}
+  */
+
+
+	/**
+  * @name eg.Axes.DIRECTION_UP
+  * @constant
+  * @type {Number}
+  */
+
+
+	/**
+  * @name eg.Axes.DIRECTION_DOWN
+  * @constant
+  * @type {Number}
+  */
+
+
+	/**
+  * @name eg.Axes.DIRECTION_HORIZONTAL
+  * @constant
+  * @type {Number}
+  */
+
+	/**
+  * @name eg.Axes.DIRECTION_VERTICAL
+  * @constant
+  * @type {Number}
+  */
+
+
+	/**
+  * @name eg.Axes.DIRECTION_ALL
+  * @constant
+  * @type {Number}
+  */
+
+
 	return Flicking;
 }((0, _utils.Mixin)(_component2["default"])["with"](_eventHandler2["default"]));
 
+Flicking.DIRECTION_NONE = _axes2["default"].DIRECTION_NONE;
+Flicking.DIRECTION_LEFT = _axes2["default"].DIRECTION_LEFT;
+Flicking.DIRECTION_RIGHT = _axes2["default"].DIRECTION_RIGHT;
+Flicking.DIRECTION_UP = _axes2["default"].DIRECTION_UP;
+Flicking.DIRECTION_DOWN = _axes2["default"].DIRECTION_DOWN;
+Flicking.DIRECTION_HORIZONTAL = _axes2["default"].DIRECTION_HORIZONTAL;
+Flicking.DIRECTION_VERTICAL = _axes2["default"].DIRECTION_VERTICAL;
+Flicking.DIRECTION_ALL = _axes2["default"].DIRECTION_ALL;
 exports["default"] = Flicking;
 module.exports = exports["default"];
 
