@@ -1402,4 +1402,59 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			this[x] = null;
 		}
 	}
+
+	/**
+	 * @name eg.Axes.DIRECTION_NONE
+	 * @constant
+	 * @type {Number}
+	 */
+	static DIRECTION_NONE = Axes.DIRECTION_NONE;
+
+	/**
+	 * @name eg.Axes.DIRECTION_LEFT
+	 * @constant
+	 * @type {Number}
+	 */
+	static DIRECTION_LEFT = Axes.DIRECTION_LEFT;
+
+	/**
+	 * @name eg.Axes.DIRECTION_RIGHT
+	 * @constant
+	 * @type {Number}
+	 */
+	static DIRECTION_RIGHT = Axes.DIRECTION_RIGHT;
+
+	/**
+	 * @name eg.Axes.DIRECTION_UP
+	 * @constant
+	 * @type {Number}
+	 */
+	static DIRECTION_UP = Axes.DIRECTION_UP;
+
+	/**
+	 * @name eg.Axes.DIRECTION_DOWN
+	 * @constant
+	 * @type {Number}
+	 */
+	static DIRECTION_DOWN = Axes.DIRECTION_DOWN;
+
+	/**
+	 * @name eg.Axes.DIRECTION_HORIZONTAL
+	 * @constant
+	 * @type {Number}
+	 */
+	static DIRECTION_HORIZONTAL = Axes.DIRECTION_HORIZONTAL;
+	/**
+	 * @name eg.Axes.DIRECTION_VERTICAL
+	 * @constant
+	 * @type {Number}
+	 */
+	static DIRECTION_VERTICAL = Axes.DIRECTION_VERTICAL;
+
+	/**
+	 * @name eg.Axes.DIRECTION_ALL
+	 * @constant
+	 * @type {Number}
+	 */
+	static DIRECTION_ALL = Axes.DIRECTION_ALL;
 }
