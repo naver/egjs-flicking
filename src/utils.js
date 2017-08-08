@@ -128,6 +128,38 @@ const utils = {
 	},
 
 	/**
+	 * classList
+	 * @param {HTMLElement} el target DOM element
+	 * @param {String} className class name string to be handled
+	 * @param {Boolean} add Add or remove class - true: Add, false: Remove
+	 * @return {Boolean} if add param is missing, then return existence of class name
+	 */
+	classList(el, className, add) {
+		const isAddParam = typeof add === "boolean";
+		let res;
+
+		if (el.classList) {
+			res = el.classList[
+				(isAddParam && (add ? "add" : "remove")) || "contains"
+				](className);
+		} else {
+			res = el.className;
+
+			if (isAddParam) {
+				if (add && res.indexOf(className) === -1) {
+					res = el.className = (`${res} ${className}`).replace(/\s{2,}/g, " ");
+				} else if (!add) {
+					res = el.className = res.replace(className, "");
+				}
+			} else {
+				res = new RegExp(`\\b${className}\\b`).test(res);
+			}
+		}
+
+		return res;
+	},
+
+	/**
 	 * Check and parse value to number
 	 * @param {Number|String} val
 	 * @param {Number} defVal
