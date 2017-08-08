@@ -108,7 +108,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		const padding = options.previewPadding;
 		let $nodes = $children;
 
-		if ($nodes[0].classList.contains(`${options.prefix}-container`)) {
+		if (utils.classList($nodes[0], `${options.prefix}-container`)) {
 			$nodes = $nodes[0];
 			this.$container = $nodes;
 			$nodes = $nodes.children;
@@ -189,7 +189,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 		// panels' css values
 		$children.forEach(v => {
-			v.classList.add(`${prefix}-panel`);
+			utils.classList(v, `${prefix}-panel`, true);
 
 			utils.css(v, {
 				position: "absolute",

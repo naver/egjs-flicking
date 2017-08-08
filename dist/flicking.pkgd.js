@@ -535,14 +535,14 @@ var _Flicking = __webpack_require__(4);
 
 var _Flicking2 = _interopRequireDefault(_Flicking);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-_Flicking2.default.VERSION = "2.0.0-rc"; /**
-                                          * Copyright (c) 2015 NAVER Corp.
-                                          * egjs projects are licensed under the MIT license
-                                          */
+_Flicking2["default"].VERSION = "2.0.0-rc"; /**
+                                             * Copyright (c) 2015 NAVER Corp.
+                                             * egjs projects are licensed under the MIT license
+                                             */
 
-module.exports = _Flicking2.default;
+module.exports = _Flicking2["default"];
 
 /***/ }),
 /* 4 */
@@ -575,9 +575,9 @@ var _eventHandler = __webpack_require__(9);
 
 var _eventHandler2 = _interopRequireDefault(_eventHandler);
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -696,7 +696,7 @@ var Flicking = function (_Mixin$with) {
 		var padding = options.previewPadding;
 		var $nodes = $children;
 
-		if ($nodes[0].classList.contains(options.prefix + "-container")) {
+		if (_utils.utils.classList($nodes[0], options.prefix + "-container")) {
 			$nodes = $nodes[0];
 			this.$container = $nodes;
 			$nodes = $nodes.children;
@@ -733,7 +733,7 @@ var Flicking = function (_Mixin$with) {
 		});
 
 		[["LEFT", "RIGHT"], ["UP", "DOWN"]][+!options.horizontal].forEach(function (v) {
-			return conf.dirData.push(_axes2.default["DIRECTION_" + v]);
+			return conf.dirData.push(_axes2["default"]["DIRECTION_" + v]);
 		});
 	};
 
@@ -784,7 +784,7 @@ var Flicking = function (_Mixin$with) {
 
 		// panels' css values
 		$children.forEach(function (v) {
-			v.classList.add(prefix + "-panel");
+			_utils.utils.classList(v, prefix + "-panel", true);
 
 			_utils.utils.css(v, {
 				position: "absolute",
@@ -801,7 +801,7 @@ var Flicking = function (_Mixin$with) {
 		}
 
 		// create Axes instance
-		this._axesInst = new _axes2.default({
+		this._axesInst = new _axes2["default"]({
 			flick: {
 				range: [0, panel.size * (panelCount - 1)],
 				bounce: bounce
@@ -1168,7 +1168,7 @@ var Flicking = function (_Mixin$with) {
 		var axesInst = this._axesInst;
 
 		if (bind) {
-			this._panInput = new _axes2.default.PanInput($wrapper, {
+			this._panInput = new _axes2["default"].PanInput($wrapper, {
 				inputType: options.inputType,
 				thresholdAngle: options.thresholdAngle,
 				scale: this._getDataByDirection([-1, 0])
@@ -1202,7 +1202,7 @@ var Flicking = function (_Mixin$with) {
 		var $panel = indexToMove === 0 ?
 
 		// panel moved by 1
-		this["get" + (direction === _axes2.default.DIRECTION_LEFT && "Next" || direction === _axes2.default.DIRECTION_RIGHT && "Prev" || "") + "Element"]() :
+		this["get" + (direction === _axes2["default"].DIRECTION_LEFT && "Next" || direction === _axes2["default"].DIRECTION_RIGHT && "Prev" || "") + "Element"]() :
 
 		// panel moved by .moveTo()
 		conf.panel.$list[conf.panel.currIndex + indexToMove];
@@ -2065,9 +2065,9 @@ var Flicking = function (_Mixin$with) {
 	};
 
 	return Flicking;
-}((0, _utils.Mixin)(_component2.default).with(_eventHandler2.default));
+}((0, _utils.Mixin)(_component2["default"])["with"](_eventHandler2["default"]));
 
-exports.default = Flicking;
+exports["default"] = Flicking;
 module.exports = exports["default"];
 
 /***/ }),
@@ -6947,6 +6947,37 @@ var utils = {
 
 
 	/**
+  * classList
+  * @param {HTMLElement} el target DOM element
+  * @param {String} className class name string to be handled
+  * @param {Boolean} add Add or remove class - true: Add, false: Remove
+  * @return {Boolean} if add param is missing, then return existence of class name
+  */
+	classList: function classList(el, className, add) {
+		var isAddParam = typeof add === "boolean";
+		var res = void 0;
+
+		if (el.classList) {
+			res = el.classList[isAddParam && (add ? "add" : "remove") || "contains"](className);
+		} else {
+			res = el.className;
+
+			if (isAddParam) {
+				if (add && res.indexOf(className) === -1) {
+					res = el.className = (res + " " + className).replace(/\s{2,}/g, " ");
+				} else if (!add) {
+					res = el.className = res.replace(className, "");
+				}
+			} else {
+				res = new RegExp("\\b" + className + "\\b").test(res);
+			}
+		}
+
+		return res;
+	},
+
+
+	/**
   * Check and parse value to number
   * @param {Number|String} val
   * @param {Number} defVal
@@ -7081,7 +7112,7 @@ var MixinBuilder = function () {
 		}();
 	}
 
-	MixinBuilder.prototype.with = function _with() {
+	MixinBuilder.prototype["with"] = function _with() {
 		for (var _len2 = arguments.length, mixins = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
 			mixins[_key2] = arguments[_key2];
 		}
@@ -7183,7 +7214,7 @@ var _consts = __webpack_require__(2);
 
 var consts = _interopRequireWildcard(_consts);
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -7195,7 +7226,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
 
 
-exports.default = function (superclass) {
+exports["default"] = function (superclass) {
 	return function (_superclass) {
 		_inherits(_class, _superclass);
 

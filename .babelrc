@@ -9,6 +9,8 @@
     ],
     "plugins": [
         "add-module-exports",
-        "transform-object-assign"
+        "transform-object-assign",
+        "transform-es3-property-literals",
+        "transform-es3-member-expression-literals"
     ]
 }
