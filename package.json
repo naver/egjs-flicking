@@ -31,6 +31,9 @@
   },
   "homepage": "https://github.com/naver/egjs-flicking",
   "license": "MIT <https://naver.github.io/egjs/license.txt>",
+  "bugs": {
+    "url" : "https://github.com/naver/egjs-flicking/issues"
+  },
   "dependencies": {
     "@egjs/component": "^2.0.0",
     "@egjs/axes": "github:naver/egjs-axes#2.0.0"
