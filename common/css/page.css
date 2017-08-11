@@ -296,6 +296,9 @@ pre code {
   background-clip: padding-box;
   margin: 0 auto;
 }
+.docs .docs-inner a {
+   color:#337ab7; 
+}
 .docs .block {
   margin-bottom: 60px;
 }
@@ -537,4 +540,9 @@ h4 {
 .docs-inner a:hover h3 {
   text-decoration: none;
   color: #eebf3f;
+}
+
+.demobox {
+  margin-bottom: 20px;
+  border-radius: 4px;
 }

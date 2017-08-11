@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="./common/css/bootstrap.min.css">
     <link rel="stylesheet" href="./common/css/page.css">
     <link rel="stylesheet" href="./common/css/monokai.css">
+    <script src="./common/js/jquery-2.2.4.js"></script>
+    <script src="./common/js/bootstrap.min.js"></script>
 </head>
 
 	<link rel="stylesheet" href="assets/css/horizontal.css">
@@ -33,10 +35,20 @@
 	<script src="release/latest/dist/flicking.pkgd.min.js"></script>
 
 <script>
+	var homeUrl = window.location.href;
+	if (homeUrl.indexOf("#") !== -1) {
+		homeUrl = homeUrl.substr(0, homeUrl.indexOf("#"));
+	}
+	homeUrl = homeUrl
+		.replace("/index.html", "/")
+		.replace("/gallery.html", "/");
+	if (homeUrl[homeUrl.length-1] !== "/") {
+		homeUrl += "/";
+	};
+	window.HOMELINK = homeUrl;
 	window.LIBLINK = [];
 	
-	window.LIBLINK.push(window.location.href.replace("/index.html", "/")
-            .replace("/gallery.html", "/") + "release/latest/dist/flicking.pkgd.min.js");
+	window.LIBLINK.push(window.HOMELINK + "release/latest/dist/flicking.pkgd.min.js");
 	
 </script>
 <body>
@@ -71,7 +83,7 @@
                             <a class="page-scroll" href="release/latest/doc" target="_blank">API Document</a>
                         </li>
                         <li>
-                            <a class="page-scroll" href="//github.com/naver/egjs-flicking/releases" target="_blank">v2.0.0-rc.3</a>
+                            <a class="page-scroll" href="//github.com/naver/egjs-flicking/releases" target="_blank">v2.0.0</a>
                         </li>
                     </ul>
                 </div>
@@ -86,7 +98,7 @@
         <div class="btns">
             <!--<a class="btn btn-cta-primary" href="release/latest/doc" target="_blank">Github</a>-->
             <a class="btn btn-cta-primary" href="release/latest/doc" target="_blank">API Document</a>
-            <a class="btn btn-cta-primary" href="//github.com/naver/egjs-flicking/releases" target="_blank">v2.0.0-rc.3</a>
+            <a class="btn btn-cta-primary" href="//github.com/naver/egjs-flicking/releases" target="_blank">v2.0.0</a>
         </div>
     </div>
     <div class="social-media">
@@ -417,8 +429,6 @@
     </footer><!--//footer-->
 
     <!-- Javascript -->
-    <script src="./common/js/jquery-2.2.4.js"></script>
-    <script src="./common/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="./common/js/app.js"></script>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

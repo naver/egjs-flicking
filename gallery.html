@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="./common/css/bootstrap.min.css">
     <link rel="stylesheet" href="./common/css/page.css">
     <link rel="stylesheet" href="./common/css/monokai.css">
+    <script src="./common/js/jquery-2.2.4.js"></script>
+    <script src="./common/js/bootstrap.min.js"></script>
 </head>
 
 	<link rel="stylesheet" href="assets/css/horizontal.css">
@@ -33,10 +35,20 @@
 	<script src="release/latest/dist/flicking.pkgd.min.js"></script>
 
 <script>
+	var homeUrl = window.location.href;
+	if (homeUrl.indexOf("#") !== -1) {
+		homeUrl = homeUrl.substr(0, homeUrl.indexOf("#"));
+	}
+	homeUrl = homeUrl
+		.replace("/index.html", "/")
+		.replace("/gallery.html", "/");
+	if (homeUrl[homeUrl.length-1] !== "/") {
+		homeUrl += "/";
+	};
+	window.HOMELINK = homeUrl;
 	window.LIBLINK = [];
 	
-	window.LIBLINK.push(window.location.href.replace("/index.html", "/")
-            .replace("/gallery.html", "/") + "release/latest/dist/flicking.pkgd.min.js");
+	window.LIBLINK.push(window.HOMELINK + "release/latest/dist/flicking.pkgd.min.js");
 	
 </script>
 <body>
@@ -296,9 +308,6 @@
 		</div>
 	</section>
 </div>
-<script src="./common/js/jquery-2.2.4.js"></script>
-<script src="./common/js/jquery-2.2.4.js"></script>
-<script src="./common/js/bootstrap.min.js"></script>
 
 	<script src="assets/js/horizontal.js"></script>
 
