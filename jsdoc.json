@@ -18,7 +18,6 @@
 		"plugins/markdown",
 		"node_modules/egjs-jsdoc-template/jsdoc-plugin/ko", 
 		"node_modules/egjs-jsdoc-template/jsdoc-plugin/group",
-		"node_modules/egjs-jsdoc-template/jsdoc-plugin/codepen",
 		"node_modules/egjs-jsdoc-template/jsdoc-plugin/support"
 	],
 	"templates": {
