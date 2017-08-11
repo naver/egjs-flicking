@@ -639,7 +639,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		 * @param {String} param.eventType The name of the event <ko>이름명</ko>
 		 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM. (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다. (@deprecated since 1.3.0)</ko>
 		 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content.<ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
-		 * @param {Number} param.direction Direction of the movement (see eg.Axes.DIRECTION_* constant) <ko>이동 방향(eg.Axes.DIRECTION_* constant 참고)</ko>
+		 * @param {Number} param.direction Direction of the movement (see eg.Flicking.DIRECTION_* constant) <ko>이동 방향(eg.Flicking.DIRECTION_* constant 참고)</ko>
 		 * @param {Array} param.depaPos Start coordinate <ko>출발점 좌표</ko>
 		 * @param {Number} param.depaPos.0 x-coordinate <ko>x 좌표</ko>
 		 * @param {Number} param.depaPos.1 y-coordinate <ko>y 좌표</ko>
@@ -673,7 +673,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		 * @param {String} param.eventType The name of the event <ko>이름명</ko>
 		 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM(@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
 		 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content. <ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
-		 * @param {Number} param.direction Direction of the panel move (see eg.Axes.DIRECTION_* constant) <ko>이동 방향(eg.Axes.DIRECTION_* constant 참고)</ko>
+		 * @param {Number} param.direction Direction of the panel move (see eg.Flicking.DIRECTION_* constant) <ko>이동 방향(eg.Flicking.DIRECTION_* constant 참고)</ko>
 		 */
 		customEvent.restore && this._triggerEvent(consts.EVENTS.restore);
 		customEvent.restoreCall = false;
@@ -699,7 +699,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			 * @param {String} param.eventType The name of the event <ko>이름명</ko>
 			 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM. (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
 			 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content.<ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
-			 * @param {Number} param.direction Direction of the movement (see eg.Axes.DIRECTION_* constant) <ko>−	이동 방향(eg.Axes.DIRECTION_* constant 참고)</ko>
+			 * @param {Number} param.direction Direction of the movement (see eg.Flicking.DIRECTION_* constant) <ko>−	이동 방향(eg.Flicking.DIRECTION_* constant 참고)</ko>
 			 * @param {Array} param.depaPos Start coordinate <ko>출발점 좌표</ko>
 			 * @param {Number} param.depaPos.0 x-coordinate <ko>x 좌표</ko>
 			 * @param {Number} param.depaPos.1 y-coordinate <ko>y 좌표</ko>
@@ -732,7 +732,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			 * @param {String} param.eventType The name of the event <ko>이름명</ko>
 			 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
 			 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content. <ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다.</ko>
-			 * @param {Number} param.direction Direction of the movemen (see eg.Axes.DIRECTION_* constant) <ko>−	이동 방향(eg.Axes.DIRECTION_* constant 참고</ko>
+			 * @param {Number} param.direction Direction of the movemen (see eg.Flicking.DIRECTION_* constant) <ko>−	이동 방향(eg.Flicking.DIRECTION_* constant 참고</ko>
 			 */
 			panel.changed && this._triggerEvent(consts.EVENTS.flickEnd);
 		}
@@ -1404,56 +1404,81 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	}
 
 	/**
-	 * @name eg.Axes.DIRECTION_NONE
-	 * @constant
+	 * Constant value for none direction
+	 * @ko none 방향에 대한 상수 값
+	 * @name DIRECTION_NONE
+	 * @memberof eg.Flicking
+	 * @static
 	 * @type {Number}
 	 */
 	static DIRECTION_NONE = Axes.DIRECTION_NONE;
 
 	/**
-	 * @name eg.Axes.DIRECTION_LEFT
-	 * @constant
+	 * @description Constant value for left direction
+	 * @ko left 방향에 대한 상수 값
+	 * @name DIRECTION_LEFT
+	 * @memberof eg.Flicking
+	 * @static
 	 * @type {Number}
 	 */
 	static DIRECTION_LEFT = Axes.DIRECTION_LEFT;
 
 	/**
-	 * @name eg.Axes.DIRECTION_RIGHT
-	 * @constant
+	 * Constant value for right direction
+	 * @ko right 방향에 대한 상수 값
+	 * @name DIRECTION_RIGHT
+	 * @memberof eg.Flicking
+	 * @static
 	 * @type {Number}
 	 */
 	static DIRECTION_RIGHT = Axes.DIRECTION_RIGHT;
 
 	/**
-	 * @name eg.Axes.DIRECTION_UP
-	 * @constant
+	 * Constant value for up direction
+	 * @ko up 방향에 대한 상수 값
+	 * @name DIRECTION_UP
+	 * @memberof eg.Flicking
+	 * @static
 	 * @type {Number}
 	 */
 	static DIRECTION_UP = Axes.DIRECTION_UP;
 
 	/**
-	 * @name eg.Axes.DIRECTION_DOWN
-	 * @constant
+	 * Constant value for down direction
+	 * @ko down 방향에 대한 상수 값
+	 * @name DIRECTION_DOWN
+	 * @memberof eg.Flicking
+	 * @static
 	 * @type {Number}
 	 */
 	static DIRECTION_DOWN = Axes.DIRECTION_DOWN;
 
 	/**
-	 * @name eg.Axes.DIRECTION_HORIZONTAL
-	 * @constant
+	 * Constant value for horizontal direction
+	 * @ko horizontal 방향에 대한 상수 값
+	 * @name DIRECTION_HORIZONTAL
+	 * @memberof eg.Flicking
+	 * @static
 	 * @type {Number}
 	 */
 	static DIRECTION_HORIZONTAL = Axes.DIRECTION_HORIZONTAL;
+
 	/**
-	 * @name eg.Axes.DIRECTION_VERTICAL
-	 * @constant
+	 * Constant value for vertical direction
+	 * @ko vertical 방향에 대한 상수 값
+	 * @name DIRECTION_VERTICAL
+	 * @memberof eg.Flicking
+	 * @static
 	 * @type {Number}
 	 */
 	static DIRECTION_VERTICAL = Axes.DIRECTION_VERTICAL;
 
 	/**
-	 * @name eg.Axes.DIRECTION_ALL
-	 * @constant
+	 * Constant value for all direction
+	 * @ko all 방향에 대한 상수 값
+	 * @name DIRECTION_ALL
+	 * @memberof eg.Flicking
+	 * @static
 	 * @type {Number}
 	 */
 	static DIRECTION_ALL = Axes.DIRECTION_ALL;
