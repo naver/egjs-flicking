@@ -640,16 +640,12 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM. (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다. (@deprecated since 1.3.0)</ko>
 		 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content.<ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
 		 * @param {Number} param.direction Direction of the movement (see eg.Flicking.DIRECTION_* constant) <ko>이동 방향(eg.Flicking.DIRECTION_* constant 참고)</ko>
-		 * @param {Array} param.depaPos Start coordinate <ko>출발점 좌표</ko>
-		 * @param {Number} param.depaPos.0 x-coordinate <ko>x 좌표</ko>
-		 * @param {Number} param.depaPos.1 y-coordinate <ko>y 좌표</ko>
-		 * @param {Array} param.destPos End coordinate <ko>도착점 좌표</ko>
-		 * @param {Number} param.destPos.0 x-coordinate <ko>x 좌표</ko>
-		 * @param {Number} param.destPos.1 y-coordinate <ko>y 좌표</ko>
+		 * @param {Number} param.depaPos starting coordinate <ko>출발점 좌표</ko>
+		 * @param {Number} param.destPos destination coordinate <ko>도착점 좌표</ko>
 		 */
 		conf.customEvent.restore = this._triggerEvent(consts.EVENTS.beforeRestore, {
-			depaPos: e.depaPos,
-			destPos: e.destPos
+			depaPos: e.depaPos.flick,
+			destPos: e.destPos.flick
 		});
 
 		if (!conf.customEvent.restore) {
@@ -700,12 +696,8 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM. (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
 			 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content.<ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
 			 * @param {Number} param.direction Direction of the movement (see eg.Flicking.DIRECTION_* constant) <ko>−	이동 방향(eg.Flicking.DIRECTION_* constant 참고)</ko>
-			 * @param {Array} param.depaPos Start coordinate <ko>출발점 좌표</ko>
-			 * @param {Number} param.depaPos.0 x-coordinate <ko>x 좌표</ko>
-			 * @param {Number} param.depaPos.1 y-coordinate <ko>y 좌표</ko>
-			 * @param {Array} param.destPos End coordinate <ko>도착점 좌표</ko>
-			 * @param {Number} param.destPos.0 x-coordinate <ko>x 좌표</ko>
-			 * @param {Number} param.destPos.1 y-coordinate <ko>y 좌표</ko>
+			 * @param {Number} param.depaPos starting coordinate <ko>출발점 좌표</ko>
+			 * @param {Number} param.destPos destination coordinate <ko>도착점 좌표</ko>
 			 */
 			if (!this._triggerEvent(consts.EVENTS.beforeFlickStart, pos)) {
 				panel.changed = panel.animating = false;
