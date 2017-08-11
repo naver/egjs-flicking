@@ -724,7 +724,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			 * @param {String} param.eventType The name of the event <ko>이름명</ko>
 			 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
 			 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content. <ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다.</ko>
-			 * @param {Number} param.direction Direction of the movemen (see eg.Flicking.DIRECTION_* constant) <ko>−	이동 방향(eg.Flicking.DIRECTION_* constant 참고</ko>
+			 * @param {Number} param.direction Direction of the movemen (see eg.Flicking.DIRECTION_* constant) <ko>이동 방향(eg.Flicking.DIRECTION_* constant 참고</ko>
 			 */
 			panel.changed && this._triggerEvent(consts.EVENTS.flickEnd);
 		}
