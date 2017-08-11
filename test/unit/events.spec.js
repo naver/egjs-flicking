@@ -4,7 +4,7 @@
  */
 /*eslint-disable */
 import tutils from "./assets/utils";
-import Axes from "@egjs/Axes";
+import Axes from "@egjs/axes";
 
 describe("Custom events", function() {
 	describe("When changes panel normally", function() {

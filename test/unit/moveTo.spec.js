@@ -4,7 +4,7 @@
  */
 /*eslint-disable */
 import tutils from "./assets/utils";
-import Axes from "@egjs/Axes";
+import Axes from "@egjs/axes";
 
 describe("moveTo() method", function() {
 	describe("Check for functionality", function() {
