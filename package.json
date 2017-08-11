@@ -1,6 +1,6 @@
 {
   "name": "@egjs/flicking",
-  "version": "2.0.0",
+  "version": "2.0.0-snapshot",
   "main": "dist/flicking.js",
   "es2015": "src/Flicking.js",
   "scripts": {
