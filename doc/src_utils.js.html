@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Source: src/utils.js | egjs::Flicking - API</title>
+    
+    <meta name="description" content="A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side." />
+    
+        <meta name="keywords" content="UI Component, egjs, flicking, carousel" />
+        <meta name="keyword" content="UI Component, egjs, flicking, carousel" />
+    
+    
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    
+    <meta property="og:url" content=""/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <link rel="canonical" href="https://naver.github.io/egjs-flicking/release/latest/doc/"/>
+    
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":true,"cleverLinks":true,"default":{"outputSourceFiles":true},"applicationName":"eg.Flicking","disqus":"egjs","googleAnalytics":"UA-70842526-17","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"egjs::Flicking - API","description":"A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.","keyword":"UI Component, egjs, flicking, carousel"},"linenums":true,"link":{"canonical":"https://naver.github.io/egjs-flicking/release/latest/doc/"}};
+    </script>
+    
+
+    
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', config.googleAnalytics]);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName">
+        <a href="//naver.github.io/egjs/"><img style="width:40px; height:20px;" src="img/type_white.svg"/></a>
+        <a href="//naver.github.io/egjs-flicking/">Flicking</a>
+    </h3>
+
+    <div class="search">
+        <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
+    </div>
+    <ul class="list">
+        <li class="item">
+            <span class="title">
+                <a href="index.html">README</a>
+            </span>
+        </li>
+    
+        <!-- Non Grouping Version -->
+        
+            
+
+        
+            
+
+<li class="item" data-name="eg.Flicking">
+    <span class="title">
+        <a href="eg.Flicking.html">eg.Flicking</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    <span class="subtitle">Members</span>
+    
+        <li data-name="eg.Flicking.DIRECTION_ALL"><a href="eg.Flicking.html#.DIRECTION_ALL">DIRECTION_ALL</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_DOWN"><a href="eg.Flicking.html#.DIRECTION_DOWN">DIRECTION_DOWN</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_HORIZONTAL"><a href="eg.Flicking.html#.DIRECTION_HORIZONTAL">DIRECTION_HORIZONTAL</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_LEFT"><a href="eg.Flicking.html#.DIRECTION_LEFT">DIRECTION_LEFT</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_NONE"><a href="eg.Flicking.html#.DIRECTION_NONE">DIRECTION_NONE</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_RIGHT"><a href="eg.Flicking.html#.DIRECTION_RIGHT">DIRECTION_RIGHT</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_UP"><a href="eg.Flicking.html#.DIRECTION_UP">DIRECTION_UP</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_VERTICAL"><a href="eg.Flicking.html#.DIRECTION_VERTICAL">DIRECTION_VERTICAL</a></li>
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    <span class="subtitle">Methods</span>
+    
+        <li data-name="eg.Flicking#destroy"><a href="eg.Flicking.html#destroy">destroy</a></li>
+    
+        <li data-name="eg.Flicking#disableInput"><a href="eg.Flicking.html#disableInput">disableInput</a></li>
+    
+        <li data-name="eg.Flicking#enableInput"><a href="eg.Flicking.html#enableInput">enableInput</a></li>
+    
+        <li data-name="eg.Flicking#getAllElements"><a href="eg.Flicking.html#getAllElements">getAllElements</a></li>
+    
+        <li data-name="eg.Flicking#getElement"><a href="eg.Flicking.html#getElement">getElement</a></li>
+    
+        <li data-name="eg.Flicking#getIndex"><a href="eg.Flicking.html#getIndex">getIndex</a></li>
+    
+        <li data-name="eg.Flicking#getNextElement"><a href="eg.Flicking.html#getNextElement">getNextElement</a></li>
+    
+        <li data-name="eg.Flicking#getNextIndex"><a href="eg.Flicking.html#getNextIndex">getNextIndex</a></li>
+    
+        <li data-name="eg.Flicking#getPrevElement"><a href="eg.Flicking.html#getPrevElement">getPrevElement</a></li>
+    
+        <li data-name="eg.Flicking#getPrevIndex"><a href="eg.Flicking.html#getPrevIndex">getPrevIndex</a></li>
+    
+        <li data-name="eg.Flicking#getStatus"><a href="eg.Flicking.html#getStatus">getStatus</a></li>
+    
+        <li data-name="eg.Flicking#getTotalCount"><a href="eg.Flicking.html#getTotalCount">getTotalCount</a></li>
+    
+        <li data-name="eg.Flicking#hasOn"><a href="eg.Flicking.html#hasOn">hasOn</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#isPlaying"><a href="eg.Flicking.html#isPlaying">isPlaying</a></li>
+    
+        <li data-name="eg.Flicking#moveTo"><a href="eg.Flicking.html#moveTo">moveTo</a></li>
+    
+        <li data-name="eg.Flicking#next"><a href="eg.Flicking.html#next">next</a></li>
+    
+        <li data-name="eg.Flicking#off"><a href="eg.Flicking.html#off">off</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#on"><a href="eg.Flicking.html#on">on</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#once"><a href="eg.Flicking.html#once">once</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#prev"><a href="eg.Flicking.html#prev">prev</a></li>
+    
+        <li data-name="eg.Flicking#resize"><a href="eg.Flicking.html#resize">resize</a></li>
+    
+        <li data-name="eg.Flicking#restore"><a href="eg.Flicking.html#restore">restore</a></li>
+    
+        <li data-name="eg.Flicking#setStatus"><a href="eg.Flicking.html#setStatus">setStatus</a></li>
+    
+        <li data-name="eg.Flicking#trigger"><a href="eg.Flicking.html#trigger">trigger</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    <span class="subtitle">Events</span>
+    
+        <li data-name="eg.Flicking#event:beforeFlickStart"><a href="eg.Flicking.html#event:beforeFlickStart">beforeFlickStart</a></li>
+    
+        <li data-name="eg.Flicking#event:beforeRestore"><a href="eg.Flicking.html#event:beforeRestore">beforeRestore</a></li>
+    
+        <li data-name="eg.Flicking#event:flick"><a href="eg.Flicking.html#event:flick">flick</a></li>
+    
+        <li data-name="eg.Flicking#event:flickEnd"><a href="eg.Flicking.html#event:flickEnd">flickEnd</a></li>
+    
+        <li data-name="eg.Flicking#event:restore"><a href="eg.Flicking.html#event:restore">restore</a></li>
+    
+    </ul>
+
+    
+</li>
+
+        
+    
+    </ul>
+</div>
+
+    <div class="main">
+        <h1 class="page-title" data-filename="src_utils.js.html">Source: src/utils.js</h1>
+        
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+import {window, document} from "./browser";
+
+const utils = {
+	/**
+	 * Select or create element
+	 * @param {String|HTMLElement} param
+	 *  when string given is as HTML tag, then create element
+	 *  otherwise it returns selected elements
+	 * @returns {HTMLElement}
+	 */
+	$(param) {
+		let el = null;
+
+		if (typeof param === "string") {
+			// check if string is HTML tag format
+			const match = param.match(/^&lt;([a-z]+)\s*([^>]*)>/);
+
+			// creating element
+			if (match) {
+				el = document.createElement(match[1]);
+
+				// attributes
+				match.length === 3 &amp;&amp;
+					match[2].split(" ").forEach(v => {
+						const attr = v.split("=");
+
+						el.setAttribute(attr[0], attr[1].trim().replace(/(^["']|["']$)/g, ""));
+					});
+			} else {
+				el = document.querySelectorAll(param);
+
+				if (!el.length) {
+					el = null;
+				} else if (el.length === 1) {
+					el = el[0];
+				}
+			}
+		} else if (param.nodeName &amp;&amp; param.nodeType === 1) {
+			el = param;
+		}
+
+		return el;
+	},
+
+	/**
+	 * Check if is array
+	 * @param arr
+	 * @returns {Boolean}
+	 */
+	isArray(arr) {
+		return arr &amp;&amp; arr.constructor === Array;
+	},
+
+	/**
+	 * Check if is object
+	 * @param {Object} obj
+	 * @returns {Boolean}
+	 */
+	isObject(obj) {
+		return obj &amp;&amp; !obj.nodeType &amp;&amp; typeof obj === "object" &amp;&amp; !this.isArray(obj);
+	},
+
+	/**
+	 * Merge object returning new object
+	 * @param {Object} target
+	 * @param {Object} objectN
+	 * @returns {Object} merged target object
+	 * @example
+	 *  var target = { a: 1 };
+	 *  utils.extend(target, { b: 2, c: 3 });
+	 *  target;  // { a: 1, b: 2, c: 3 };
+	 */
+	extend(target, ...objectN) {
+		if (!objectN.length || (objectN.length === 1 &amp;&amp; !objectN[0])) {
+			return target;
+		}
+
+		const source = objectN.shift();
+
+		if (this.isObject(target) &amp;&amp; this.isObject(source)) {
+			Object.keys(source).forEach(key => {
+				const value = source[key];
+
+				if (this.isObject(value)) {
+					!target[key] &amp;&amp; (target[key] = {});
+
+					target[key] = this.extend(target[key], value);
+				} else {
+					target[key] = this.isArray(value) ?
+						value.concat() : value;
+				}
+			});
+		}
+
+		return this.extend(target, ...objectN);
+	},
+
+	/**
+	 * Get or set the style value or apply
+	 * @param {HTMLElement} el
+	 * @param {String|Object} style
+	 *  String: return style property value
+	 *  Object: set style value
+	 * @param {Boolean} getAsNumber Get the value as number
+	 * @returns {String|HTMLElement}
+	 */
+	css(el, style, getAsNumber) {
+		if (typeof(style) === "string") {
+			const value = window.getComputedStyle(el)[style];
+
+			return getAsNumber ? this.getNumValue(value) : value;
+		} else {
+			const applyStyle = (target, source) =>
+				Object.keys(source).forEach(v => {
+					target[v] = source[v];
+				});
+
+			this.isArray(el) ?
+				el.forEach(v => applyStyle(v.style, style)) :
+				applyStyle(el.style, style);
+		}
+
+		return el;
+	},
+
+	/**
+	 * classList
+	 * @param {HTMLElement} el target DOM element
+	 * @param {String} className class name string to be handled
+	 * @param {Boolean} add Add or remove class - true: Add, false: Remove
+	 * @return {Boolean} if add param is missing, then return existence of class name
+	 */
+	classList(el, className, add) {
+		const isAddParam = typeof add === "boolean";
+		let res;
+
+		if (el.classList) {
+			res = el.classList[
+				(isAddParam &amp;&amp; (add ? "add" : "remove")) || "contains"
+				](className);
+		} else {
+			res = el.className;
+
+			if (isAddParam) {
+				if (add &amp;&amp; res.indexOf(className) === -1) {
+					res = el.className = (`${res} ${className}`).replace(/\s{2,}/g, " ");
+				} else if (!add) {
+					res = el.className = res.replace(className, "");
+				}
+			} else {
+				res = new RegExp(`\\b${className}\\b`).test(res);
+			}
+		}
+
+		return res;
+	},
+
+	/**
+	 * Check and parse value to number
+	 * @param {Number|String} val
+	 * @param {Number} defVal
+	 * @return {Number}
+	 */
+	getNumValue(val, defVal) {
+		let num = val;
+
+		return isNaN(num = parseInt(num, 10)) ? defVal : num;
+	},
+
+	/**
+	 * Return unit formatted value
+	 * @param {Number|String} val
+	 * @return {String} val Value formatted with unit
+	 */
+	getUnitValue(val) {
+		const rx = /(?:[a-z]{2,}|%)$/;
+
+		return (parseInt(val, 10) || 0) + (String(val).match(rx) || "px");
+	},
+
+	/**
+	 * Get element's outer value
+	 * @param {HTMLElement} el
+	 * @param {String} type - [outerWidth|outerHeight]
+	 * @returns {Number} outer's value
+	 */
+	getOuter(el, type) {
+		const style = window.getComputedStyle(el);
+		const margin = type === "outerWidth" ?
+			["marginLeft", "marginRight"] : ["marginTop", "marginBottom"];
+
+		return this.getNumValue(style[type.replace("outer", "").toLocaleLowerCase()]) +
+			this.getNumValue(style[margin[0]]) +
+			this.getNumValue(style[margin[1]]);
+	},
+
+	/**
+	 * Get element's outerWidth value with margin
+	 * @param {HTMLElement} el
+	 * @returns {Number}
+	 */
+	outerWidth(el) {
+		return this.getOuter(el, "outerWidth");
+	},
+
+	/**
+	 * Get element's outerHeight value with margin
+	 * @param {HTMLElement} el
+	 * @returns {Number}
+	 */
+	outerHeight(el) {
+		return this.getOuter(el, "outerHeight");
+	},
+
+	/**
+	 * Checks whether hardware acceleration is enabled.
+	 *
+	 * @ko 하드웨어 가속을 사용할 수 있는 환경인지 확인한다
+	 * @method eg#isHWAccelerable
+	 * @return {Boolean} Indicates whether hardware acceleration is enabled. &lt;ko>하드웨어 가속 사용 가능 여부&lt;/ko>
+	 */
+	isHWAccelerable() {
+		const ua = window.navigator.userAgent;
+		let result = false;
+		let match;
+
+		// chrome 25- has a text blur bug (except Samsung's sbrowser)
+		if ((match = ua.match(/Chrome\/(\d+)/))) {
+			result = match[1] >= "25";
+		} else if (/ie|edge|firefox|safari|inapp/.test(ua)) {
+			result = true;
+		} else if ((match = ua.match(/Android ([\d.]+)/))) {
+			const version = match[1];
+			const useragent = (ua.match(/\(.*\)/) || [null])[0];
+
+			// android 4.1+ blacklist
+			// EK-GN120 : Galaxy Camera, SM-G386F : Galaxy Core LTE
+			// SHW-M420 : Galaxy Nexus , SHW-M200 : NexusS , GT-S7562 : Galaxy S duos
+			result = (version >= "4.1.0" &amp;&amp; !/EK-GN120|SM-G386F/.test(useragent)) ||
+				(
+					version >= "4.0.3" &amp;&amp;
+						/SHW-|SHV-|GT-|SCH-|SGH-|SPH-|LG-F160|LG-F100|LG-F180|LG-F200|EK-|IM-A|LG-F240|LG-F260/.test(useragent) &amp;&amp;
+							!/SHW-M420|SHW-M200|GT-S7562/.test(useragent)
+				);
+		}
+
+		this.isHWAccelerable = () => result;
+		return result;
+	},
+
+	/**
+	 * Returns the syntax of the translate style which is applied to CSS transition properties.
+	 *
+	 * @ko CSS 트랜지션 속성에 적용할 translate 스타일 구문을 반환한다
+	 * @method eg#translate
+	 * @param {String} x Distance to move along the X axis &lt;ko>x축을 따라 이동할 거리&lt;/ko>
+	 * @param {String} y Distance to move along the Y axis &lt;ko>y축을 따라 이동할 거리&lt;/ko>
+	 * @param {Boolean} [isHA] Force hardware acceleration &lt;ko>하드웨어 가속 사용 여부&lt;/ko>
+	 * @return {String} Syntax of the translate style &lt;ko>translate 스타일 구문&lt;/ko>
+	 */
+	translate(x, y, isHA) {
+		return isHA || false ?
+			`translate3d(${x},${y},0)` : `translate(${x},${y})`;
+	},
+
+	// 1. user press one position on screen.
+	// 2. user moves to the other position on screen.
+	// 3. when user releases fingers on screen, 'click' event is fired at previous position.
+	hasClickBug() {
+		const ua = window.navigator.userAgent;
+		const result = /Safari/.test(ua);
+
+		this.hasClickBug = () => result;
+		return result;
+	}
+};
+
+class MixinBuilder {
+	constructor(superclass) {
+		this.superclass = superclass || class {};
+	}
+
+	with(...mixins) {
+		return mixins.reduce((c, m) => m(c), this.superclass);
+	}
+}
+
+const Mixin = superclass => new MixinBuilder(superclass);
+
+export {utils, Mixin};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+
+        
+        <!-- disqus code -->
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        <!-- // disqus code -->
+        
+
+        <footer>
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Mon Aug 14 2017 14:27:56 GMT+0900 (대한민국 표준시)
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/main.js"></script>
+</body>
+</html>
