@@ -15,15 +15,12 @@ webpack.*.js
 .eslintrc*
 
 #docs
-doc
 demo
 jsdoc.json
-README.md
 
 #editor settings
 .idea
 .editorconfig
-
 
 coverage/
 node_modules/
