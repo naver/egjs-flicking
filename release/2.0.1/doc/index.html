@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: src/eventHandler.js | egjs::Flicking - API</title>
+    <title>Index | egjs::Flicking - API</title>
     
     <meta name="description" content="A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side." />
     
@@ -183,168 +183,147 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="src_eventHandler.js.html">Source: src/eventHandler.js</h1>
+        <h1 class="page-title" data-filename="index.html">Index</h1>
         
 
 
     
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+    
+
+
+
+
     <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Copyright (c) 2015 NAVER Corp.
- * egjs projects are licensed under the MIT license
- */
-import * as consts from "./consts";
+        <article class="readme"><h1>egjs-flicking</h1><p><a href="https://www.npmjs.com/package/@egjs/flicking"><img src="https://img.shields.io/npm/v/@egjs/flicking.svg?style=flat" alt="version"></a> <a href="https://travis-ci.org/naver/egjs-flicking"><img src="https://travis-ci.org/naver/egjs-flicking.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/naver/egjs-flicking?branch=master"><img src="https://coveralls.io/repos/github/naver/egjs-flicking/badge.svg?branch=master" alt="Coverage Status"></a> <a href="https://greenkeeper.io/"><img src="https://badges.greenkeeper.io/naver/egjs-flicking.svg" alt="Greenkeeper"></a> </p>
+<p>A module used to implement flicking interactions.<br>With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side. </p>
+<h2>Documents</h2><ul>
+<li><a href="https://naver.github.io/egjs-flicking/">Get Started and Demos</a></li>
+<li><a href="https://naver.github.io/egjs-flicking/release/latest/doc/">API documentation</a></li>
+</ul>
+<h2>Download and Installation</h2><p>Download dist files from repo directly or install it via npm. </p>
+<h3>For development (Uncompressed)</h3><p>You can download the uncompressed files for development</p>
+<ul>
+<li>Latest : https://naver.github.io/egjs-flicking/release/latest/dist/flicking.js</li>
+<li>Specific version : https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.js</li>
+</ul>
+<h3>For production (Compressed)</h3><p>You can download the compressed files for production</p>
+<ul>
+<li>Latest : https://naver.github.io/egjs-flicking/release/latest/dist/flicking.min.js</li>
+<li>Specific version : https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.min.js</li>
+</ul>
+<h3>Packaged version (with Dependencies)</h3><blockquote>
+<p>Packaged version is to provide for ease use of 'egjs-flicking' with dependency.</p>
+</blockquote>
+<ul>
+<li><p><strong>Latest</strong></p>
+<ul>
+<li>https://naver.github.io/egjs-flicking/release/latest/dist/flicking.pkgd.js</li>
+<li>https://naver.github.io/egjs-flicking/release/latest/dist/flicking.pkgd.min.js</li>
+</ul>
+</li>
+<li><p><strong>Specific version</strong></p>
+<ul>
+<li>https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.js</li>
+<li>https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.min.js</li>
+</ul>
+</li>
+</ul>
+<h3>Installation with npm</h3><p>The following command shows how to install egjs-flicking using npm.</p>
+<pre class="prettyprint source lang-bash"><code>$ npm install @egjs/flicking</code></pre><h3>Using CDN</h3><p>If you want to load files using CDN, check the files URL provided by the CDN service.</p>
+<ul>
+<li>jsDelivr: https://cdn.jsdelivr.net/npm/@egjs/flicking/dist/</li>
+</ul>
+<h2>Supported Browsers</h2><p>The following are the supported browsers.</p>
+<table>
+<thead>
+<tr>
+<th>Internet Explorer</th>
+<th>Chrome</th>
+<th>Firefox</th>
+<th>Safari</th>
+<th>iOS</th>
+<th>Android</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>9+</td>
+<td>Latest</td>
+<td>Latest</td>
+<td>Latest</td>
+<td>7+</td>
+<td>2.3+(except 3.x)</td>
+</tr>
+</tbody>
+</table>
+<h2>Dependency</h2><p>egjs-flicking has the dependencies for the following libraries:</p>
+<table>
+<thead>
+<tr>
+<th><a href="https://github.com/naver/egjs-component">eg.Component</a></th>
+<th><a href="https://github.com/naver/egjs-axes">eg.Axes</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.0.0+</td>
+<td>2.0.0+</td>
+</tr>
+</tbody>
+</table>
+<h2>How to start developing egjs-flicking?</h2><p>For anyone interested to develop egjs-flicking, follow the instructions below.</p>
+<h3>Development Environment</h3><h4>1. Clone the repository</h4><p>Clone the egjs-flicking repository and install the dependency modules.</p>
+<pre class="prettyprint source lang-bash"><code># Clone the repository.
+$ git clone https://github.com/naver/egjs-flicking.git</code></pre><h4>2. Install dependencies</h4><pre class="prettyprint source"><code># Install the dependency modules.
+$ npm install</code></pre><h4>3. Build</h4><p>Use npm script to build billboard.js</p>
+<pre class="prettyprint source lang-bash"><code># Run webpack-dev-server for development
+$ npm start
 
-export default superclass => class extends superclass {
-	/**
-	 * 'hold' event handler
-	 */
-	_holdHandler(e) {
-		const conf = this._conf;
-		const holdPos = e.pos.flick;
+# Build
+$ npm run build
 
-		conf.touch.holdPos = holdPos;
-		conf.touch.holding = true;
-		conf.panel.changed = false;
+# Generate jsdoc
+$ npm run jsdoc</code></pre><p>Two folders will be created after complete build is completed.</p>
+<ul>
+<li><strong>dist</strong> folder: Includes the <strong>flicking.js</strong> and <strong>flicking.min.js</strong> files.</li>
+<li><strong>doc</strong> folder: Includes API documentation. The home page for the documentation is <strong>doc/index.html</strong>.</li>
+</ul>
+<h3>Linting</h3><p>To keep the same code style, we adopted <a href="http://eslint.org/">ESLint</a> to maintain our code quality. The <a href="https://github.com/naver/eslint-config-naver/tree/master/rules">rules</a> are modified version based on <a href="https://github.com/airbnb/javascript">Airbnb JavaScript Style Guide</a>.<br>Setup your editor for check or run below command for linting.</p>
+<pre class="prettyprint source lang-bash"><code>$ npm run lint</code></pre><h3>Test</h3><p>Once you created a branch and done with development, you must perform a test running with <code>npm test</code> command before your push the code to a remote repository.</p>
+<pre class="prettyprint source lang-bash"><code>$ npm run test</code></pre><p>Running <code>npm test</code> command will start <a href="https://mochajs.org/">Mocha</a> tests via <a href="https://karma-runner.github.io/">Karma-runner</a>.</p>
+<h2>Bug Report</h2><p>If you find a bug, please report to us opening a new <a href="https://github.com/naver/egjs-flicking/issues">Issues</a> on GitHub.</p>
+<h2>License</h2><p>egjs-flicking is released under the <a href="http://naver.github.io/egjs/license.txt">MIT license</a>.</p>
+<pre class="prettyprint source"><code>Copyright (c) 2015 NAVER Corp.
 
-		this._adjustContainerCss("start", holdPos);
-	}
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-	/**
-	 * 'change' event handler
-	 */
-	_changeHandler(e) {
-		const conf = this._conf;
-		const touch = conf.touch;
-		const pos = e.pos.flick;
-		const holdPos = touch.holdPos;
-		let direction;
-		let eventRes = null;
-		let movedPx;
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-		this._setPointerEvents(e);  // for "click" bug
-
-		/**
-		 * This event is fired when panel moves.
-		 * @ko 패널이 이동할 때 발생하는 이벤트
-		 * @name eg.Flicking#flick
-		 * @event
-		 * @param {Object} param The object of data to be sent to an event &lt;ko>이벤트에 전달되는 데이터 객체&lt;/ko>
-		 * @param {String} param.eventType The name of the event&lt;ko>이름명&lt;/ko>
-		 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM (@deprecated since 1.3.0)&lt;ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)&lt;/ko>
-		 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content &lt;ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다&lt;/ko>
-		 * @param {Number} param.direction Direction of the movement (see eg.Axes.DIRECTION_* constant) &lt;ko>이동 방향(eg.Axes.DIRECTION_* constant 참고)&lt;/ko>
-		 * @param {Number} param.pos current coordinate &lt;ko>현재 좌표&lt;/ko>
-		 * @param {Boolean} param.holding Indicates whether a user holds an element on the screen of the device. &lt;ko>사용자가 기기의 화면을 누르고 있는지 여부&lt;/ko>
-		 * @param {Number} param.distance Distance moved from then starting point. According the move direction, positive on eg.Axes.DIRECTION_LEFT/UP and negative on eg.Axes.DIRECTION_RIGHT/DOWN &lt;ko>시작점부터 이동된 거리의 값. 이동 방향에 따라 eg.Axes.DIRECTION_LEFT/UP의 경우 양수를 eg.Axes.DIRECTION_RIGHT/DOWN의 경우는 음수를 반환&lt;/ko>
-		 */
-		if (e.inputEvent) {
-			direction = e.inputEvent.direction;
-
-			// Adjust direction in case of diagonal touch move
-			movedPx = e.inputEvent[this.options.horizontal ? "deltaX" : "deltaY"];
-
-			if (!~conf.dirData.indexOf(direction)) {
-				direction = conf.dirData[+(Math.abs(touch.lastPos) &lt;= movedPx)];
-			}
-
-			touch.lastPos = movedPx;
-		} else {
-			touch.lastPos = null;
-		}
-
-		conf.customEvent.flick &amp;&amp; (eventRes =
-			this._triggerEvent(consts.EVENTS.flick, {
-				pos,
-				holding: e.holding,
-				direction: direction || touch.direction,
-				distance: pos - holdPos
-			}
-		));
-
-		(eventRes || eventRes === null) &amp;&amp; this._setTranslate([-pos, 0]);
-	}
-
-	/**
-	 * 'release' event handler
-	 */
-	_releaseHandler(e) {
-		const conf = this._conf;
-		const touch = conf.touch;
-		const holdPos = touch.holdPos;
-		const panelSize = conf.panel.size;
-		const customEvent = conf.customEvent;
-		const isPlusMove = touch.holdPos &lt; e.depaPos.flick;
-
-		touch.distance = e.depaPos.flick - holdPos;
-		touch.direction = conf.dirData[+!(isPlusMove)];
-		touch.destPos = holdPos + (isPlusMove ? panelSize : -panelSize);
-
-		const distance = touch.distance;
-		let duration = this.options.duration;
-		let moveTo = holdPos;
-
-		if (this._isMovable()) {
-			!customEvent.restoreCall &amp;&amp; (customEvent.restore = false);
-			moveTo = touch.destPos;
-		} else if (Math.abs(distance) > 0) {
-			this._triggerBeforeRestore(e);
-		} else {
-			duration = 0;
-		}
-
-		// trigger animation
-		e.setTo({flick: moveTo}, duration);
-
-		distance === 0 &amp;&amp; this._adjustContainerCss("end");
-		touch.holding = false;
-
-		this._setPointerEvents();  // for "click" bug
-	}
-
-	/**
-	 * 'animationStart' event handler
-	 */
-	_animationStartHandler(e) {
-		const conf = this._conf;
-		const panel = conf.panel;
-		const customEvent = conf.customEvent;
-		const isFromInput = e.inputEvent || conf.touch.lastPos;
-
-		panel.animating = true;
-
-		// when animation was started by input action
-		if (!customEvent.restoreCall &amp;&amp; isFromInput &amp;&amp;
-			this._setPhaseValue("start", {
-				depaPos: e.depaPos.flick,
-				destPos: e.destPos.flick
-			}) === false) {
-			e.stop();
-		}
-
-		if (isFromInput) {
-			e.duration = this.options.duration;
-
-			e.destPos.flick =
-				panel.size * (
-					panel.index + conf.indexToMove
-				);
-		}
-	}
-
-	/**
-	 * 'animationEnd' event handler
-	 */
-	_animationEndHandler() {
-		this._setPhaseValue("end");
-
-		this._conf.panel.animating = false;
-		this._triggerRestore();
-	}
-};
-</code></pre>
-        </article>
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</code></pre><!-- badges -->
+<!-- links --></article>
     </section>
 
 
@@ -361,7 +340,7 @@ export default superclass => class extends superclass {
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Fri Aug 11 2017 18:40:04 GMT+0900 (KST)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Mon Aug 14 2017 15:26:44 GMT+0900 (KST)
         </footer>
     </div>
 </div>

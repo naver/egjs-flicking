@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Index | egjs::Flicking - API</title>
+    <title>Source: src/utils.js | egjs::Flicking - API</title>
     
     <meta name="description" content="A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side." />
     
@@ -183,142 +183,309 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="index.html">Index</h1>
+        <h1 class="page-title" data-filename="src_utils.js.html">Source: src/utils.js</h1>
         
 
 
     
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-    
-
-
-
-
     <section>
-        <article class="readme"><h1>egjs-flicking <a href="https://badge.fury.io/js/%40egjs%2Fflicking"><img src="https://badge.fury.io/js/%40egjs%2Fflicking.svg" alt="npm version"></a> <a href="https://travis-ci.org/naver/egjs-flicking"><img src="https://travis-ci.org/naver/egjs-flicking.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/naver/egjs-flicking?branch=master"><img src="https://coveralls.io/repos/github/naver/egjs-flicking/badge.svg?branch=master" alt="Coverage Status"></a></h1><p>A module used to implement flicking interactions.<br>With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side. </p>
-<h2>Documents</h2><ul>
-<li><a href="https://naver.github.io/egjs-flicking/">Get Started and Demos</a></li>
-<li><a href="https://naver.github.io/egjs-flicking/release/latest/doc/">API documentation</a></li>
-</ul>
-<h2>Download and Installation</h2><p>Download dist files from repo directly or install it via npm. </p>
-<h3>For development (Uncompressed)</h3><p>You can download the uncompressed files for development</p>
-<ul>
-<li>Latest : https://naver.github.io/egjs-flicking/release/latest/dist/flicking.js</li>
-<li>Specific version : https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.js</li>
-</ul>
-<h3>For production (Compressed)</h3><p>You can download the compressed files for production</p>
-<ul>
-<li>Latest : https://naver.github.io/egjs-flicking/release/latest/dist/flicking.min.js</li>
-<li>Specific version : https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.min.js</li>
-</ul>
-<h3>Packaged version (with Dependencies)</h3><blockquote>
-<p>Packaged version is not an official distribution.<br>Is just to provide for ease use of 'egjs-flicking' with dependency.</p>
-</blockquote>
-<ul>
-<li><p><strong>Latest</strong></p>
-<ul>
-<li>https://naver.github.io/egjs-flicking/release/latest/dist/flicking.pkgd.js</li>
-<li>https://naver.github.io/egjs-flicking/release/latest/dist/flicking.pkgd.min.js</li>
-</ul>
-</li>
-<li><p><strong>Specific version</strong></p>
-<ul>
-<li>https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.js</li>
-<li>https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.min.js</li>
-</ul>
-</li>
-</ul>
-<h3>Installation with npm</h3><p>The following command shows how to install egjs-flicking using npm.</p>
-<pre class="prettyprint source lang-bash"><code>$ npm install @egjs/flicking</code></pre><h2>Supported Browsers</h2><p>The following are the supported browsers.</p>
-<table>
-<thead>
-<tr>
-<th>Internet Explorer</th>
-<th>Chrome</th>
-<th>Firefox</th>
-<th>Safari</th>
-<th>iOS</th>
-<th>Android</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>9+</td>
-<td>Latest</td>
-<td>Latest</td>
-<td>Latest</td>
-<td>7+</td>
-<td>2.3+(except 3.x)</td>
-</tr>
-</tbody>
-</table>
-<h2>Dependency</h2><p>egjs-flicking has the dependencies for the following libraries:</p>
-<table>
-<thead>
-<tr>
-<th><a href="https://github.com/naver/egjs-component">eg.Component</a></th>
-<th><a href="https://github.com/naver/egjs-movablecoord">eg.MovableCoord</a></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>2.0.0+</td>
-<td>2.0.0+</td>
-</tr>
-</tbody>
-</table>
-<h2>How to start developing egjs-flicking?</h2><p>For anyone interested to develop egjs-flicking, follow the instructions below.</p>
-<h3>Development Environment</h3><h4>1. Clone the repository</h4><p>Clone the egjs-flicking repository and install the dependency modules.</p>
-<pre class="prettyprint source lang-bash"><code># Clone the repository.
-$ git clone https://github.com/naver/egjs-flicking.git</code></pre><h4>2. Install dependencies</h4><p><code>npm</code> is supported.</p>
-<pre class="prettyprint source"><code># Install the dependency modules.
-$ npm install</code></pre><h4>3. Build</h4><p>Use npm script to build billboard.js</p>
-<pre class="prettyprint source lang-bash"><code># Run webpack-dev-server for development
-$ npm start
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+import {window, document} from "./browser";
 
-# Build
-$ npm run build
+const utils = {
+	/**
+	 * Select or create element
+	 * @param {String|HTMLElement} param
+	 *  when string given is as HTML tag, then create element
+	 *  otherwise it returns selected elements
+	 * @returns {HTMLElement}
+	 */
+	$(param) {
+		let el = null;
 
-# Generate jsdoc
-$ npm run jsdoc</code></pre><p>Two folders will be created after complete build is completed.</p>
-<ul>
-<li><strong>dist</strong> folder: Includes the <strong>flicking.js</strong> and <strong>flicking.min.js</strong> files.</li>
-<li><strong>doc</strong> folder: Includes API documentation. The home page for the documentation is <strong>doc/index.html</strong>.</li>
-</ul>
-<h3>Linting</h3><p>To keep the same code style, we adopted <a href="http://eslint.org/">ESLint</a> to maintain our code quality. The <a href="https://github.com/naver/eslint-config-naver/tree/master/rules">rules</a> are modified version based on <a href="https://github.com/airbnb/javascript">Airbnb JavaScript Style Guide</a>.<br>Setup your editor for check or run below command for linting.</p>
-<pre class="prettyprint source lang-bash"><code>$ npm run lint</code></pre><h3>Test</h3><p>Once you created a branch and done with development, you must perform a test running <code>npm run test</code> command before you push code to a remote repository.</p>
-<pre class="prettyprint source lang-bash"><code>$ npm run test</code></pre><p>Running a <code>npm run test</code> command will start <a href="https://mochajs.org/">Mocha</a> tests via <a href="https://karma-runner.github.io/">Karma-runner</a>.</p>
-<h2>Bug Report</h2><p>If you find a bug, please report it to us using the <a href="https://github.com/naver/egjs-flicking/issues">Issues</a> page on GitHub.</p>
-<h2>License</h2><p>egjs-flicking is released under the <a href="http://naver.github.io/egjs/license.txt">MIT license</a>.</p>
-<pre class="prettyprint source"><code>Copyright (c) 2015 NAVER Corp.
+		if (typeof param === "string") {
+			// check if string is HTML tag format
+			const match = param.match(/^&lt;([a-z]+)\s*([^>]*)>/);
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the &quot;Software&quot;), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+			// creating element
+			if (match) {
+				el = document.createElement(match[1]);
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+				// attributes
+				match.length === 3 &amp;&amp;
+					match[2].split(" ").forEach(v => {
+						const attr = v.split("=");
 
-THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.</code></pre></article>
+						el.setAttribute(attr[0], attr[1].trim().replace(/(^["']|["']$)/g, ""));
+					});
+			} else {
+				el = document.querySelectorAll(param);
+
+				if (!el.length) {
+					el = null;
+				} else if (el.length === 1) {
+					el = el[0];
+				}
+			}
+		} else if (param.nodeName &amp;&amp; param.nodeType === 1) {
+			el = param;
+		}
+
+		return el;
+	},
+
+	/**
+	 * Check if is array
+	 * @param arr
+	 * @returns {Boolean}
+	 */
+	isArray(arr) {
+		return arr &amp;&amp; arr.constructor === Array;
+	},
+
+	/**
+	 * Check if is object
+	 * @param {Object} obj
+	 * @returns {Boolean}
+	 */
+	isObject(obj) {
+		return obj &amp;&amp; !obj.nodeType &amp;&amp; typeof obj === "object" &amp;&amp; !this.isArray(obj);
+	},
+
+	/**
+	 * Merge object returning new object
+	 * @param {Object} target
+	 * @param {Object} objectN
+	 * @returns {Object} merged target object
+	 * @example
+	 *  var target = { a: 1 };
+	 *  utils.extend(target, { b: 2, c: 3 });
+	 *  target;  // { a: 1, b: 2, c: 3 };
+	 */
+	extend(target, ...objectN) {
+		if (!objectN.length || (objectN.length === 1 &amp;&amp; !objectN[0])) {
+			return target;
+		}
+
+		const source = objectN.shift();
+
+		if (this.isObject(target) &amp;&amp; this.isObject(source)) {
+			Object.keys(source).forEach(key => {
+				const value = source[key];
+
+				if (this.isObject(value)) {
+					!target[key] &amp;&amp; (target[key] = {});
+
+					target[key] = this.extend(target[key], value);
+				} else {
+					target[key] = this.isArray(value) ?
+						value.concat() : value;
+				}
+			});
+		}
+
+		return this.extend(target, ...objectN);
+	},
+
+	/**
+	 * Get or set the style value or apply
+	 * @param {HTMLElement} el
+	 * @param {String|Object} style
+	 *  String: return style property value
+	 *  Object: set style value
+	 * @param {Boolean} getAsNumber Get the value as number
+	 * @returns {String|HTMLElement}
+	 */
+	css(el, style, getAsNumber) {
+		if (typeof(style) === "string") {
+			const value = window.getComputedStyle(el)[style];
+
+			return getAsNumber ? this.getNumValue(value) : value;
+		} else {
+			const applyStyle = (target, source) =>
+				Object.keys(source).forEach(v => {
+					target[v] = source[v];
+				});
+
+			this.isArray(el) ?
+				el.forEach(v => applyStyle(v.style, style)) :
+				applyStyle(el.style, style);
+		}
+
+		return el;
+	},
+
+	/**
+	 * classList
+	 * @param {HTMLElement} el target DOM element
+	 * @param {String} className class name string to be handled
+	 * @param {Boolean} add Add or remove class - true: Add, false: Remove
+	 * @return {Boolean} if add param is missing, then return existence of class name
+	 */
+	classList(el, className, add) {
+		const isAddParam = typeof add === "boolean";
+		let res;
+
+		if (el.classList) {
+			res = el.classList[
+				(isAddParam &amp;&amp; (add ? "add" : "remove")) || "contains"
+				](className);
+		} else {
+			res = el.className;
+
+			if (isAddParam) {
+				if (add &amp;&amp; res.indexOf(className) === -1) {
+					res = el.className = (`${res} ${className}`).replace(/\s{2,}/g, " ");
+				} else if (!add) {
+					res = el.className = res.replace(className, "");
+				}
+			} else {
+				res = new RegExp(`\\b${className}\\b`).test(res);
+			}
+		}
+
+		return res;
+	},
+
+	/**
+	 * Check and parse value to number
+	 * @param {Number|String} val
+	 * @param {Number} defVal
+	 * @return {Number}
+	 */
+	getNumValue(val, defVal) {
+		let num = val;
+
+		return isNaN(num = parseInt(num, 10)) ? defVal : num;
+	},
+
+	/**
+	 * Return unit formatted value
+	 * @param {Number|String} val
+	 * @return {String} val Value formatted with unit
+	 */
+	getUnitValue(val) {
+		const rx = /(?:[a-z]{2,}|%)$/;
+
+		return (parseInt(val, 10) || 0) + (String(val).match(rx) || "px");
+	},
+
+	/**
+	 * Get element's outer value
+	 * @param {HTMLElement} el
+	 * @param {String} type - [outerWidth|outerHeight]
+	 * @returns {Number} outer's value
+	 */
+	getOuter(el, type) {
+		const style = window.getComputedStyle(el);
+		const margin = type === "outerWidth" ?
+			["marginLeft", "marginRight"] : ["marginTop", "marginBottom"];
+
+		return this.getNumValue(style[type.replace("outer", "").toLocaleLowerCase()]) +
+			this.getNumValue(style[margin[0]]) +
+			this.getNumValue(style[margin[1]]);
+	},
+
+	/**
+	 * Get element's outerWidth value with margin
+	 * @param {HTMLElement} el
+	 * @returns {Number}
+	 */
+	outerWidth(el) {
+		return this.getOuter(el, "outerWidth");
+	},
+
+	/**
+	 * Get element's outerHeight value with margin
+	 * @param {HTMLElement} el
+	 * @returns {Number}
+	 */
+	outerHeight(el) {
+		return this.getOuter(el, "outerHeight");
+	},
+
+	/**
+	 * Checks whether hardware acceleration is enabled.
+	 *
+	 * @ko 하드웨어 가속을 사용할 수 있는 환경인지 확인한다
+	 * @method eg#isHWAccelerable
+	 * @return {Boolean} Indicates whether hardware acceleration is enabled. &lt;ko>하드웨어 가속 사용 가능 여부&lt;/ko>
+	 */
+	isHWAccelerable() {
+		const ua = window.navigator.userAgent;
+		let result = false;
+		let match;
+
+		// chrome 25- has a text blur bug (except Samsung's sbrowser)
+		if ((match = ua.match(/Chrome\/(\d+)/))) {
+			result = match[1] >= "25";
+		} else if (/ie|edge|firefox|safari|inapp/.test(ua)) {
+			result = true;
+		} else if ((match = ua.match(/Android ([\d.]+)/))) {
+			const version = match[1];
+			const useragent = (ua.match(/\(.*\)/) || [null])[0];
+
+			// android 4.1+ blacklist
+			// EK-GN120 : Galaxy Camera, SM-G386F : Galaxy Core LTE
+			// SHW-M420 : Galaxy Nexus , SHW-M200 : NexusS , GT-S7562 : Galaxy S duos
+			result = (version >= "4.1.0" &amp;&amp; !/EK-GN120|SM-G386F/.test(useragent)) ||
+				(
+					version >= "4.0.3" &amp;&amp;
+						/SHW-|SHV-|GT-|SCH-|SGH-|SPH-|LG-F160|LG-F100|LG-F180|LG-F200|EK-|IM-A|LG-F240|LG-F260/.test(useragent) &amp;&amp;
+							!/SHW-M420|SHW-M200|GT-S7562/.test(useragent)
+				);
+		}
+
+		this.isHWAccelerable = () => result;
+		return result;
+	},
+
+	/**
+	 * Returns the syntax of the translate style which is applied to CSS transition properties.
+	 *
+	 * @ko CSS 트랜지션 속성에 적용할 translate 스타일 구문을 반환한다
+	 * @method eg#translate
+	 * @param {String} x Distance to move along the X axis &lt;ko>x축을 따라 이동할 거리&lt;/ko>
+	 * @param {String} y Distance to move along the Y axis &lt;ko>y축을 따라 이동할 거리&lt;/ko>
+	 * @param {Boolean} [isHA] Force hardware acceleration &lt;ko>하드웨어 가속 사용 여부&lt;/ko>
+	 * @return {String} Syntax of the translate style &lt;ko>translate 스타일 구문&lt;/ko>
+	 */
+	translate(x, y, isHA) {
+		return isHA || false ?
+			`translate3d(${x},${y},0)` : `translate(${x},${y})`;
+	},
+
+	// 1. user press one position on screen.
+	// 2. user moves to the other position on screen.
+	// 3. when user releases fingers on screen, 'click' event is fired at previous position.
+	hasClickBug() {
+		const ua = window.navigator.userAgent;
+		const result = /Safari/.test(ua);
+
+		this.hasClickBug = () => result;
+		return result;
+	}
+};
+
+class MixinBuilder {
+	constructor(superclass) {
+		this.superclass = superclass || class {};
+	}
+
+	with(...mixins) {
+		return mixins.reduce((c, m) => m(c), this.superclass);
+	}
+}
+
+const Mixin = superclass => new MixinBuilder(superclass);
+
+export {utils, Mixin};
+</code></pre>
+        </article>
     </section>
 
 
@@ -335,7 +502,7 @@ THE SOFTWARE.</code></pre></article>
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Fri Aug 11 2017 18:40:04 GMT+0900 (KST)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Mon Aug 14 2017 15:26:44 GMT+0900 (KST)
         </footer>
     </div>
 </div>

@@ -5,7 +5,7 @@
  * @egjs/flicking JavaScript library
  * https://github.com/naver/egjs-flicking
  * 
- * @version 2.0.0
+ * @version 2.0.1
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -167,7 +167,7 @@ var _Flicking2 = _interopRequireDefault(_Flicking);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-_Flicking2["default"].VERSION = "2.0.0"; /**
+_Flicking2["default"].VERSION = "2.0.1"; /**
                                           * Copyright (c) 2015 NAVER Corp.
                                           * egjs projects are licensed under the MIT license
                                           */
@@ -911,7 +911,7 @@ var Flicking = function (_Mixin$with) {
    * @param {Number} param.direction Direction of the panel move (see eg.Flicking.DIRECTION_* constant) <ko>이동 방향(eg.Flicking.DIRECTION_* constant 참고)</ko>
    */
 		customEvent.restore && this._triggerEvent(consts.EVENTS.restore);
-		customEvent.restoreCall = false;
+		customEvent.restore = customEvent.restoreCall = false;
 	};
 
 	/**

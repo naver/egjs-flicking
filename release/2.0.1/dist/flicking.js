@@ -5,18 +5,18 @@
  * @egjs/flicking JavaScript library
  * https://github.com/naver/egjs-flicking
  * 
- * @version 2.0.0-rc.3
+ * @version 2.0.1
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("@egjs/component"), require("@egjs/movablecoord"));
+		module.exports = factory(require("@egjs/component"), require("@egjs/axes"));
 	else if(typeof define === 'function' && define.amd)
-		define(["@egjs/component", "@egjs/movablecoord"], factory);
+		define("Flicking", ["@egjs/component", "@egjs/axes"], factory);
 	else if(typeof exports === 'object')
-		exports["Flicking"] = factory(require("@egjs/component"), require("@egjs/movablecoord"));
+		exports["Flicking"] = factory(require("@egjs/component"), require("@egjs/axes"));
 	else
-		root["eg"] = root["eg"] || {}, root["eg"]["Flicking"] = factory(root["eg"]["Component"], root["eg"]["MovableCoord"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_7__, __WEBPACK_EXTERNAL_MODULE_8__) {
+		root["eg"] = root["eg"] || {}, root["eg"]["Flicking"] = factory(root["eg"]["Component"], root["eg"]["Axes"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_5__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -52,9 +52,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -82,7 +79,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -92,9 +89,7 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+exports.__esModule = true;
 /**
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
@@ -115,10 +110,8 @@ exports.document = document;
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.DATA_HEIGHT = exports.IS_ANDROID2 = exports.SUPPORT_WILLCHANGE = exports.SUPPORT_TRANSFORM = exports.EVENTS = undefined;
+exports.__esModule = true;
+exports.DATA_HEIGHT = exports.IS_ANDROID2 = exports.SUPPORT_WILLCHANGE = exports.TRANSFORM = exports.EVENTS = undefined;
 
 var _browser = __webpack_require__(0);
 
@@ -131,15 +124,19 @@ var EVENTS = {
 	restore: "restore"
 };
 
-// check for css transform support
+// check for the transform property
 /**
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-var SUPPORT_TRANSFORM = function () {
+var TRANSFORM = {
+	name: "transform"
+};
+
+TRANSFORM.support = function () {
 	var style = _browser.document.documentElement.style;
 
-	return "transform" in style || "webkitTransform" in style;
+	return TRANSFORM.name in style || (TRANSFORM.name = "webkitTransform") in style;
 }();
 
 // check for will-change support
@@ -152,7 +149,7 @@ var IS_ANDROID2 = /Android 2\./.test(navigator.userAgent);
 var DATA_HEIGHT = "data-height";
 
 exports.EVENTS = EVENTS;
-exports.SUPPORT_TRANSFORM = SUPPORT_TRANSFORM;
+exports.TRANSFORM = TRANSFORM;
 exports.SUPPORT_WILLCHANGE = SUPPORT_WILLCHANGE;
 exports.IS_ANDROID2 = IS_ANDROID2;
 exports.DATA_HEIGHT = DATA_HEIGHT;
@@ -164,17 +161,35 @@ exports.DATA_HEIGHT = DATA_HEIGHT;
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
+var _Flicking = __webpack_require__(3);
 
-var _component = __webpack_require__(7);
+var _Flicking2 = _interopRequireDefault(_Flicking);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+_Flicking2["default"].VERSION = "2.0.1"; /**
+                                          * Copyright (c) 2015 NAVER Corp.
+                                          * egjs projects are licensed under the MIT license
+                                          */
+
+module.exports = _Flicking2["default"];
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _component = __webpack_require__(4);
 
 var _component2 = _interopRequireDefault(_component);
 
-var _movablecoord = __webpack_require__(8);
+var _axes = __webpack_require__(5);
 
-var _movablecoord2 = _interopRequireDefault(_movablecoord);
+var _axes2 = _interopRequireDefault(_axes);
 
 var _utils = __webpack_require__(6);
 
@@ -182,17 +197,17 @@ var _consts = __webpack_require__(1);
 
 var consts = _interopRequireWildcard(_consts);
 
-var _config = __webpack_require__(3);
+var _config = __webpack_require__(7);
 
 var _browser = __webpack_require__(0);
 
-var _eventHandler = __webpack_require__(4);
+var _eventHandler = __webpack_require__(8);
 
 var _eventHandler2 = _interopRequireDefault(_eventHandler);
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -216,8 +231,8 @@ var Flicking = function (_Mixin$with) {
 	_inherits(Flicking, _Mixin$with);
 
 	/**
-  * Constructor
-  * @param {HTMLElement|String|jQuery} element A base element for the eg.Flicking module <ko>eg.Flicking 모듈을 사용할 기준 엘리먼트</ko>
+ * Constructor
+ * @param {HTMLElement|String|jQuery} element A base element for the eg.Flicking module <ko>eg.Flicking 모듈을 사용할 기준 엘리먼트</ko>
  * @param {Object} options The option object of the eg.Flicking module<ko>eg.Flicking 모듈의 옵션 객체</ko>
  * @param {Boolean} [options.hwAccelerable=eg.isHWAccelerable()] Force hardware compositing <ko>하드웨어 가속 사용 여부</ko>
  * @param {String} [options.prefix=eg-flick] A prefix for class names of the panel elements <ko>패널 엘리먼트의 클래스 이름에 설정할 접두사</ko>
@@ -234,8 +249,8 @@ var Flicking = function (_Mixin$with) {
  * @param {Number} [options.thresholdAngle=45] The threshold value that determines whether user action is horizontal or vertical (0~90) <ko>사용자의 동작이 가로 방향인지 세로 방향인지 판단하는 기준 각도(0~90)</ko>
  * @param {Boolean} [options.adaptiveHeight=false] Set container's height be adaptive according panel's height.<br>(Note: on Android 4.1.x stock browser, has rendering bug which not correctly render height value on panel with single node. To avoid just append another empty node at the end.)<ko>컨테이너 영역이 패널의 높이값에 따라 변경될지 여부<br>(참고: Android 4.1.x 스톡 브라우저에서 단일 노드로 구성된 패널의 높이값 변경이 제대로 렌더링 되지 않는 버그가 있음. 비어있는 노드를 추가하면 해결이 가능하다.)</ko>
  *
- * @see Easing Functions Cheat Sheet {@link http://easings.net/}
- * @see If you want to try a different easing function, use the jQuery easing plugin ({@link http://gsgd.co.uk/sandbox/jquery/easing}) or the jQuery UI easing library ({@link https://jqueryui.com/easing}). <ko>다른 easing 함수를 사용하려면 jQuery easing 플러그인({@link http://gsgd.co.uk/sandbox/jquery/easing})이나, jQuery UI easing 라이브러리({@link https://jqueryui.com/easing})를 사용한다</ko>
+  * @see Easing Functions Cheat Sheet {@link http://easings.net/}
+  * @see If you want to try a different easing function, use the jQuery easing plugin ({@link http://gsgd.co.uk/sandbox/jquery/easing}) or the jQuery UI easing library ({@link https://jqueryui.com/easing}). <ko>다른 easing 함수를 사용하려면 jQuery easing 플러그인({@link http://gsgd.co.uk/sandbox/jquery/easing})이나, jQuery UI easing 라이브러리({@link https://jqueryui.com/easing})를 사용한다</ko>
  */
 	function Flicking(element, options, _prefix) {
 		_classCallCheck(this, Flicking);
@@ -311,7 +326,7 @@ var Flicking = function (_Mixin$with) {
 		var padding = options.previewPadding;
 		var $nodes = $children;
 
-		if ($nodes[0].classList.contains(options.prefix + "-container")) {
+		if (_utils.utils.classList($nodes[0], options.prefix + "-container")) {
 			$nodes = $nodes[0];
 			this.$container = $nodes;
 			$nodes = $nodes.children;
@@ -348,7 +363,7 @@ var Flicking = function (_Mixin$with) {
 		});
 
 		[["LEFT", "RIGHT"], ["UP", "DOWN"]][+!options.horizontal].forEach(function (v) {
-			return conf.dirData.push(_movablecoord2.default["DIRECTION_" + v]);
+			return conf.dirData.push(_axes2["default"]["DIRECTION_" + v]);
 		});
 	};
 
@@ -399,7 +414,7 @@ var Flicking = function (_Mixin$with) {
 
 		// panels' css values
 		$children.forEach(function (v) {
-			v.classList.add(prefix + "-panel");
+			_utils.utils.classList(v, prefix + "-panel", true);
 
 			_utils.utils.css(v, {
 				position: "absolute",
@@ -415,15 +430,16 @@ var Flicking = function (_Mixin$with) {
 			panelCount = panel.count = (panel.$list = [].slice.call(this.$container.children)).length;
 		}
 
-		// create MovableCoord instance
-		this._mcInst = new _movablecoord2.default({
-			min: [0, 0],
-			max: this._getDataByDirection([panel.size * (panelCount - 1), 0]),
-			margin: 0,
-			circular: false,
+		// create Axes instance
+		this._axesInst = new _axes2["default"]({
+			flick: {
+				range: [0, panel.size * (panelCount - 1)],
+				bounce: bounce
+			}
+		}, {
 			easing: options.panelEffect,
 			deceleration: options.deceleration,
-			bounce: this._getDataByDirection([0, bounce[1], 0, bounce[0]])
+			interruptable: false
 		});
 
 		this._setDefaultPanel(options.defaultIndex);
@@ -455,8 +471,9 @@ var Flicking = function (_Mixin$with) {
 
 		var wrapperStyle = getComputedStyle(this.$wrapper);
 		var paddingType = horizontal ? ["Left", "Right"] : ["Top", "Bottom"];
+		var wrapperSize = Math.max(this.$wrapper["offset" + (horizontal ? "Width" : "Height")], _utils.utils.getNumValue(wrapperStyle[horizontal ? "width" : "height"]));
 
-		panel.size = _utils.utils.getNumValue(wrapperStyle[horizontal ? "width" : "height"]) - (_utils.utils.getNumValue(wrapperStyle["padding" + paddingType[0]]) + _utils.utils.getNumValue(wrapperStyle["padding" + paddingType[1]]));
+		panel.size = wrapperSize - (_utils.utils.getNumValue(wrapperStyle["padding" + paddingType[0]]) + _utils.utils.getNumValue(wrapperStyle["padding" + paddingType[1]]));
 	};
 
 	/**
@@ -549,7 +566,7 @@ var Flicking = function (_Mixin$with) {
 			coords = [-(panel.size * index), 0];
 
 			this._setTranslate(coords);
-			this._setMovableCoord("setTo", [Math.abs(coords[0]), Math.abs(coords[1])], true, 0);
+			this._setAxes("setTo", Math.abs(coords[0]), 0);
 		}
 	};
 
@@ -585,8 +602,8 @@ var Flicking = function (_Mixin$with) {
 				currIndex: baseIndex
 			});
 
-			// arrange MovableCoord's coord position
-			conf.customEvent.flick = !!this._setMovableCoord("setTo", [panel.size * panel.index, 0], true, 0);
+			// arrange Axes' coord position
+			conf.customEvent.flick = !!this._setAxes("setTo", panel.size * panel.index, 0);
 		}
 
 		this._applyPanelsPos();
@@ -606,16 +623,18 @@ var Flicking = function (_Mixin$with) {
   *
   * Initialize setting up checking if browser support transform css property.
   * If browser doesn't support transform, then use left/top properties instead.
-  * @param {HTMLElement} $element
-  * @param {Array} coords
+  * @param {HTMLElement} $el
+  * @param {Array} coordsValue
   */
 
 
 	Flicking.prototype._setMoveStyle = function _setMoveStyle($el, coordsValue) {
-		this._setMoveStyle = consts.SUPPORT_TRANSFORM ? function moveStyle($element, coords) {
-			_utils.utils.css($element, {
-				transform: _utils.utils.translate(coords[0], coords[1], this._conf.useLayerHack)
-			});
+		var transform = consts.TRANSFORM;
+
+		this._setMoveStyle = transform.support ? function ($element, coords) {
+			var _utils$css;
+
+			_utils.utils.css($element, (_utils$css = {}, _utils$css[transform.name] = _utils.utils.translate(coords[0], coords[1], this._conf.useLayerHack), _utils$css));
 		} : function ($element, coords) {
 			_utils.utils.css($element, { left: coords[0], top: coords[1] });
 		};
@@ -625,7 +644,6 @@ var Flicking = function (_Mixin$with) {
 
 	/**
   * Callback function for applying CSS values to each panels
-  *
   * Need to be initialized before use, to set up for Android 2.x browsers or others.
   */
 
@@ -649,7 +667,7 @@ var Flicking = function (_Mixin$with) {
 			};
 		} else {
 			this._applyPanelsCss = function applyCss(v, i) {
-				var coords = this._getDataByDirection([consts.SUPPORT_TRANSFORM ? 100 * i + "%" : this._conf.panel.size * i + "px", 0]);
+				var coords = this._getDataByDirection([consts.TRANSFORM.support ? 100 * i + "%" : this._conf.panel.size * i + "px", 0]);
 
 				this._setMoveStyle(v, coords);
 			};
@@ -658,27 +676,26 @@ var Flicking = function (_Mixin$with) {
 
 	/**
   * Adjust container's css value to handle Android 2.x link highlighting bug
-  *
   * @param {String} phase
   *    start - set left/top value to 0
   *    end - set translate value to 0
-  * @param {Array} coordValue coordinate value
+  * @param {Array} toValue coordinate value
   */
 
 
-	Flicking.prototype._adjustContainerCss = function _adjustContainerCss(phase, coordValue) {
+	Flicking.prototype._adjustContainerCss = function _adjustContainerCss(phase, toValue) {
 		var conf = this._conf;
 		var panel = conf.panel;
 		var options = this.options;
 		var horizontal = options.horizontal;
 		var paddingTop = options.previewPadding[0];
 		var container = this.$container;
-		var coords = coordValue;
+		var to = toValue;
 		var value = void 0;
 
 		if (consts.IS_ANDROID2) {
-			if (!coords) {
-				coords = [-panel.size * panel.index, 0];
+			if (!to) {
+				to = -panel.size * panel.index;
 			}
 
 			if (phase === "start") {
@@ -691,15 +708,16 @@ var Flicking = function (_Mixin$with) {
 					value !== paddingTop && (container.top = "0px");
 				}
 
-				this._setTranslate([-coords[+!options.horizontal], 0]);
+				this._setTranslate([-to, 0]);
 			} else if (phase === "end") {
-				coords = this._getCoordsValue(coords);
+				var _utils$css2;
 
-				_utils.utils.css(container, {
-					left: coords.x,
-					top: coords.y,
-					transform: _utils.utils.translate(0, 0, conf.useLayerHack)
-				});
+				to = this._getCoordsValue([to, 0]);
+
+				_utils.utils.css(container, (_utils$css2 = {
+					left: to.x,
+					top: to.y
+				}, _utils$css2[consts.TRANSFORM.name] = _utils.utils.translate(0, 0, conf.useLayerHack), _utils$css2));
 
 				conf.$dummyAnchor.focus();
 			}
@@ -707,23 +725,16 @@ var Flicking = function (_Mixin$with) {
 	};
 
 	/**
-  * Set MovableCoord coord value
+  * Set Axes coord value
   * @param {String} method
-  * @param {Array} coordValue
-  * @param {Boolean} isDirVal
+  * @param {Number} flick destination value
   * @param {Number} duration
-  * @return {eg.MovableCoord} MovableCoord instance
+  * @return {eg.Axes} Axes instance
   */
 
 
-	Flicking.prototype._setMovableCoord = function _setMovableCoord(method, coordValue, isDirVal, duration) {
-		var coord = coordValue;
-
-		if (isDirVal) {
-			coord = this._getDataByDirection(coord);
-		}
-
-		return this._mcInst[method](coord[0], coord[1], duration);
+	Flicking.prototype._setAxes = function _setAxes(method, flick, duration) {
+		return this._axesInst[method]({ flick: flick }, duration);
 	};
 
 	/**
@@ -741,7 +752,6 @@ var Flicking = function (_Mixin$with) {
 
 	/**
   * Get data according options.horizontal value
-  *
   * @param {Array} value primary data to handle
   * @return {Array}
   */
@@ -785,24 +795,25 @@ var Flicking = function (_Mixin$with) {
 	Flicking.prototype._bindEvents = function _bindEvents(bind) {
 		var options = this.options;
 		var $wrapper = this.$wrapper;
-		var mcInst = this._mcInst;
+		var axesInst = this._axesInst;
 
 		if (bind) {
-			mcInst.bind($wrapper, {
-				scale: this._getDataByDirection([-1, 0]),
-				direction: _movablecoord2.default["DIRECTION_" + (options.horizontal ? "HORIZONTAL" : "VERTICAL")],
-				interruptable: false,
+			this._panInput = new _axes2["default"].PanInput($wrapper, {
 				inputType: options.inputType,
-				thresholdAngle: options.thresholdAngle
-			}).on({
+				thresholdAngle: options.thresholdAngle,
+				scale: this._getDataByDirection([-1, 0])
+			});
+
+			axesInst.on({
 				hold: this._holdHandler.bind(this),
 				change: this._changeHandler.bind(this),
 				release: this._releaseHandler.bind(this),
 				animationStart: this._animationStartHandler.bind(this),
 				animationEnd: this._animationEndHandler.bind(this)
-			});
+			}).connect(this._getDataByDirection(["flick", ""]), this._panInput);
 		} else {
-			mcInst.unbind($wrapper).off();
+			this.disableInput();
+			axesInst.off();
 		}
 	};
 
@@ -821,23 +832,26 @@ var Flicking = function (_Mixin$with) {
 		var $panel = indexToMove === 0 ?
 
 		// panel moved by 1
-		this["get" + (direction === _movablecoord2.default.DIRECTION_LEFT && "Next" || direction === _movablecoord2.default.DIRECTION_RIGHT && "Prev" || "") + "Element"]() :
+		this["get" + (direction === _axes2["default"].DIRECTION_LEFT && "Next" || direction === _axes2["default"].DIRECTION_RIGHT && "Prev" || "") + "Element"]() :
 
 		// panel moved by .moveTo()
 		conf.panel.$list[conf.panel.currIndex + indexToMove];
 
 		var $first = $panel.querySelector(":first-child");
 
-		height = $first.getAttribute(consts.DATA_HEIGHT);
+		if ($first) {
+			height = $first.getAttribute(consts.DATA_HEIGHT);
 
-		if (!height) {
-			$children = $panel.children;
-			height = _utils.utils.outerHeight($children.length > 1 ? ($panel.style.height = "auto", $panel) : $first);
+			if (!height) {
+				$children = $panel.children;
 
-			$first.setAttribute(consts.DATA_HEIGHT, height);
+				height = _utils.utils.outerHeight($children.length > 1 ? ($panel.style.height = "auto", $panel) : $first);
+
+				height > 0 && $first.setAttribute(consts.DATA_HEIGHT, height);
+			}
+
+			height > 0 && (this.$wrapper.style.height = height + "px");
 		}
-
-		this.$wrapper.style.height = height + "px";
 	};
 
 	/**
@@ -851,7 +865,7 @@ var Flicking = function (_Mixin$with) {
 		var touch = conf.touch;
 
 		// reverse direction value when restore
-		touch.direction = ~~conf.dirData.join("").replace(touch.direction, "");
+		touch.direction = +conf.dirData.join("").replace(touch.direction, "");
 
 		/**
    * This event is fired before an element is restored to its original position when user action is done while the element is not dragged until a certain distance threshold is reached
@@ -862,17 +876,13 @@ var Flicking = function (_Mixin$with) {
    * @param {String} param.eventType The name of the event <ko>이름명</ko>
    * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM. (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다. (@deprecated since 1.3.0)</ko>
    * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content.<ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
-   * @param {Number} param.direction Direction of the movement (see eg.MovableCoord.DIRECTION_* constant) <ko>이동 방향(eg.MovableCoord.DIRECTION_* constant 참고)</ko>
-   * @param {Array} param.depaPos Start coordinate <ko>출발점 좌표</ko>
-   * @param {Number} param.depaPos.0 x-coordinate <ko>x 좌표</ko>
-   * @param {Number} param.depaPos.1 y-coordinate <ko>y 좌표</ko>
-   * @param {Array} param.destPos End coordinate <ko>도착점 좌표</ko>
-   * @param {Number} param.destPos.0 x-coordinate <ko>x 좌표</ko>
-   * @param {Number} param.destPos.1 y-coordinate <ko>y 좌표</ko>
+   * @param {Number} param.direction Direction of the movement (see eg.Flicking.DIRECTION_* constant) <ko>이동 방향(eg.Flicking.DIRECTION_* constant 참고)</ko>
+   * @param {Number} param.depaPos starting coordinate <ko>출발점 좌표</ko>
+   * @param {Number} param.destPos destination coordinate <ko>도착점 좌표</ko>
    */
 		conf.customEvent.restore = this._triggerEvent(consts.EVENTS.beforeRestore, {
-			depaPos: e.depaPos,
-			destPos: e.destPos
+			depaPos: e.depaPos.flick,
+			destPos: e.destPos.flick
 		});
 
 		if (!conf.customEvent.restore) {
@@ -898,10 +908,10 @@ var Flicking = function (_Mixin$with) {
    * @param {String} param.eventType The name of the event <ko>이름명</ko>
    * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM(@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
    * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content. <ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
-   * @param {Number} param.direction Direction of the panel move (see eg.MovableCoord.DIRECTION_* constant) <ko>이동 방향(eg.MovableCoord.DIRECTION_* constant 참고)</ko>
+   * @param {Number} param.direction Direction of the panel move (see eg.Flicking.DIRECTION_* constant) <ko>이동 방향(eg.Flicking.DIRECTION_* constant 참고)</ko>
    */
 		customEvent.restore && this._triggerEvent(consts.EVENTS.restore);
-		customEvent.restoreCall = false;
+		customEvent.restore = customEvent.restoreCall = false;
 	};
 
 	/**
@@ -926,13 +936,9 @@ var Flicking = function (_Mixin$with) {
     * @param {String} param.eventType The name of the event <ko>이름명</ko>
     * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM. (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
     * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content.<ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
-    * @param {Number} param.direction Direction of the movement (see eg.MovableCoord.DIRECTION_* constant) <ko>−	이동 방향(eg.MovableCoord.DIRECTION_* constant 참고)</ko>
-    * @param {Array} param.depaPos Start coordinate <ko>출발점 좌표</ko>
-    * @param {Number} param.depaPos.0 x-coordinate <ko>x 좌표</ko>
-    * @param {Number} param.depaPos.1 y-coordinate <ko>y 좌표</ko>
-    * @param {Array} param.destPos End coordinate <ko>도착점 좌표</ko>
-    * @param {Number} param.destPos.0 x-coordinate <ko>x 좌표</ko>
-    * @param {Number} param.destPos.1 y-coordinate <ko>y 좌표</ko>
+    * @param {Number} param.direction Direction of the movement (see eg.Flicking.DIRECTION_* constant) <ko>−	이동 방향(eg.Flicking.DIRECTION_* constant 참고)</ko>
+    * @param {Number} param.depaPos starting coordinate <ko>출발점 좌표</ko>
+    * @param {Number} param.destPos destination coordinate <ko>도착점 좌표</ko>
     */
 			if (!this._triggerEvent(consts.EVENTS.beforeFlickStart, pos)) {
 				panel.changed = panel.animating = false;
@@ -959,7 +965,7 @@ var Flicking = function (_Mixin$with) {
     * @param {String} param.eventType The name of the event <ko>이름명</ko>
     * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
     * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content. <ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다.</ko>
-    * @param {Number} param.direction Direction of the movemen (see eg.MovableCoord.DIRECTION_* constant) <ko>−	이동 방향(eg.MovableCoord.DIRECTION_* constant 참고</ko>
+    * @param {Number} param.direction Direction of the movemen (see eg.Flicking.DIRECTION_* constant) <ko>이동 방향(eg.Flicking.DIRECTION_* constant 참고</ko>
     */
 			panel.changed && this._triggerEvent(consts.EVENTS.flickEnd);
 		}
@@ -1038,7 +1044,7 @@ var Flicking = function (_Mixin$with) {
 		var pointer = _utils.utils.css(this.$container, "pointerEvents");
 		var val = void 0;
 
-		if (e && e.holding && e.hammerEvent && e.hammerEvent.preventSystemEvent && pointer !== "none") {
+		if (e && e.holding && e.inputEvent && e.inputEvent.preventSystemEvent && pointer !== "none") {
 			val = "none";
 		} else if (!e && pointer !== "auto") {
 			val = "auto";
@@ -1049,7 +1055,7 @@ var Flicking = function (_Mixin$with) {
 
 	/**
   * Get coordinate value with unit
-  * @param coords {Array} x,y numeric value
+  * @param coordsValue {Array} x,y numeric value
   * @return {Object} x,y coordinate value with unit
   */
 
@@ -1066,7 +1072,7 @@ var Flicking = function (_Mixin$with) {
 
 	/**
   * Set translate property value
-  * @param {Array} coords coordinate x,y value
+  * @param {Array} coordsValue coordinate x,y value
   */
 
 
@@ -1083,14 +1089,14 @@ var Flicking = function (_Mixin$with) {
 
 	Flicking.prototype._isMovable = function _isMovable() {
 		var options = this.options;
-		var mcInst = this._mcInst;
+		var axesInst = this._axesInst;
 		var isMovable = Math.abs(this._conf.touch.distance) >= options.threshold;
 		var max = void 0;
 		var currPos = void 0;
 
 		if (!options.circular && isMovable) {
-			max = this._getDataByDirection(mcInst.options.max)[0];
-			currPos = this._getDataByDirection(mcInst.get())[0];
+			max = axesInst.axis.flick.range[1];
+			currPos = axesInst.get().flick;
 
 			// if current position out of range
 			if (currPos < 0 || currPos > max) {
@@ -1322,8 +1328,8 @@ var Flicking = function (_Mixin$with) {
 
 		this._setValueToMove(next);
 
-		if (options.circular || this[next ? "getNextIndex" : "getPrevIndex"]() != null) {
-			this._movePanelByPhase("setBy", [panel.size * (next ? 1 : -1), 0], duration);
+		if (options.circular || this["get" + (next ? "Next" : "Prev") + "Index"]() !== null) {
+			this._movePanelByPhase("setBy", panel.size * (next ? 1 : -1), duration);
 		}
 
 		return this;
@@ -1331,17 +1337,17 @@ var Flicking = function (_Mixin$with) {
 
 	/**
   * Move panel applying start/end phase value
-  * @param {String} method movableCoord method name
-  * @param {Object} coords coordinate array value
+  * @param {String} method Axes' method name
+  * @param {Number} to destination value
   * @param {Number} durationValue duration value
   */
 
 
-	Flicking.prototype._movePanelByPhase = function _movePanelByPhase(method, coords, durationValue) {
+	Flicking.prototype._movePanelByPhase = function _movePanelByPhase(method, to, durationValue) {
 		var duration = _utils.utils.getNumValue(durationValue, this.options.duration);
 
 		if (this._setPhaseValue("start") !== false) {
-			this._setMovableCoord(method, coords, true, duration);
+			this._setAxes(method, to, duration);
 			!duration && this._setPhaseValue("end");
 		}
 	};
@@ -1376,7 +1382,7 @@ var Flicking = function (_Mixin$with) {
   * Moves an element to the indicated panel.
   * @ko 지정한 패널로 이동한다.
   * @method eg.Flicking#moveTo
-  * @param {Number} no Logical index number of the target panel element, which is relative to the panel content. <ko>이동할 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
+  * @param {Number} noValue Logical index number of the target panel element, which is relative to the panel content. <ko>이동할 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
   * @param {Number} [duration=options.duration] Duration of the panel movement (unit: ms) <ko>패널 이동 애니메이션 진행 시간(단위: ms)</ko>
   * @return {eg.Flicking} An instance of a module itself<ko>모듈 자신의 인스턴스</ko>
   */
@@ -1410,33 +1416,9 @@ var Flicking = function (_Mixin$with) {
 		this._conf.indexToMove = indexToMove;
 		this._setValueToMove(isPositive);
 
-		this._movePanelByPhase(circular ? "setBy" : "setTo", [panel.size * (circular ? indexToMove : no), 0], duration);
+		this._movePanelByPhase(circular ? "setBy" : "setTo", panel.size * (circular ? indexToMove : no), duration);
 
 		return this;
-	};
-
-	/**
-  * Update panel's previewPadding size according options.previewPadding
-  */
-
-
-	Flicking.prototype._checkPadding = function _checkPadding() {
-		var options = this.options;
-		var previewPadding = options.previewPadding.concat();
-		var padding = _utils.utils.css(this.$wrapper, "padding").split(" ");
-
-		options.horizontal && padding.reverse();
-
-		// get current padding value
-		padding = [padding[0]];
-		padding.push(padding[padding.length === 2 ? 0 : 2]);
-
-		padding = padding.map(Number);
-
-		// update padding when current and given are different
-		if (previewPadding.length === 2 && previewPadding[0] !== padding[0] || previewPadding[1] !== padding[1]) {
-			this._setPadding(previewPadding);
-		}
 	};
 
 	/**
@@ -1457,46 +1439,49 @@ var Flicking = function (_Mixin$with) {
 
 
 	Flicking.prototype.resize = function resize() {
-		var _utils$css;
-
 		var conf = this._conf;
 		var options = this.options;
 		var panel = conf.panel;
 		var horizontal = options.horizontal;
 		var panelSize = void 0;
 
-		if (~~options.previewPadding.join("")) {
-			this._checkPadding();
-			panelSize = panel.size;
-		} else if (horizontal) {
-			panelSize = panel.size = _utils.utils.css(this.$wrapper, "width", true);
-		}
+		if (!this.isPlaying()) {
+			var _utils$css3;
 
-		var maxCoords = this._getDataByDirection([panelSize * (panel.count - 1), 0]);
-
-		// resize elements
-		horizontal && _utils.utils.css(this.$container, { width: maxCoords[0] + panelSize + "px" });
-		_utils.utils.css(panel.$list, (_utils$css = {}, _utils$css[horizontal ? "width" : "height"] = _utils.utils.getUnitValue(panelSize), _utils$css));
-
-		// remove data-height attribute and re-evaluate panel's height
-		if (options.adaptiveHeight) {
-			var $panel = this.$container.querySelectorAll("[" + consts.DATA_HEIGHT + "]");
-
-			if ($panel.length) {
-				[].slice.call($panel).forEach(function (v) {
-					return v.removeAttribute(consts.DATA_HEIGHT);
-				});
-
-				this._setAdaptiveHeight();
+			if (_utils.utils.isArray(options.previewPadding) && typeof +options.previewPadding.join("") === "number") {
+				this._setPadding(options.previewPadding.concat());
+				panelSize = panel.size;
+			} else if (horizontal) {
+				panelSize = panel.size = _utils.utils.css(this.$wrapper, "width", true);
 			}
-		}
 
-		this._mcInst.options.max = maxCoords;
-		this._setMovableCoord("setTo", [panelSize * panel.index, 0], true, 0);
+			var max = panelSize * (panel.count - 1);
+			var maxCoords = this._getDataByDirection([max, 0]);
 
-		if (consts.IS_ANDROID2) {
-			this._applyPanelsPos();
-			this._adjustContainerCss("end");
+			// resize elements
+			horizontal && _utils.utils.css(this.$container, { width: maxCoords[0] + panelSize + "px" });
+			_utils.utils.css(panel.$list, (_utils$css3 = {}, _utils$css3[horizontal ? "width" : "height"] = _utils.utils.getUnitValue(panelSize), _utils$css3));
+
+			// remove data-height attribute and re-evaluate panel's height
+			if (options.adaptiveHeight) {
+				var $panel = this.$container.querySelectorAll("[" + consts.DATA_HEIGHT + "]");
+
+				if ($panel.length) {
+					[].slice.call($panel).forEach(function (v) {
+						return v.removeAttribute(consts.DATA_HEIGHT);
+					});
+
+					this._setAdaptiveHeight();
+				}
+			}
+
+			this._axesInst.axis.flick.range = [0, max];
+			this._setAxes("setTo", panelSize * panel.index, 0);
+
+			if (consts.IS_ANDROID2) {
+				this._applyPanelsPos();
+				this._adjustContainerCss("end");
+			}
 		}
 
 		return this;
@@ -1523,20 +1508,20 @@ var Flicking = function (_Mixin$with) {
 	Flicking.prototype.restore = function restore(durationValue) {
 		var conf = this._conf;
 		var panel = conf.panel;
-		var currPos = this._getDataByDirection(this._mcInst.get());
+		var currPos = this._axesInst.get().flick;
 		var duration = durationValue;
 		var destPos = void 0;
 
 		// check if the panel isn't in right position
-		if (currPos[0] !== panel.currIndex * panel.size) {
+		if (currPos !== panel.currIndex * panel.size) {
 			conf.customEvent.restoreCall = true;
 			duration = _utils.utils.getNumValue(duration, this.options.duration);
 
 			this._revertPanelNo();
-			destPos = this._getDataByDirection([panel.size * panel.index, 0]);
+			destPos = panel.size * panel.index;
 
 			this._triggerBeforeRestore({ depaPos: currPos, destPos: destPos });
-			this._setMovableCoord("setTo", destPos, true, duration);
+			this._setAxes("setTo", destPos, duration);
 
 			if (!duration) {
 				this._adjustContainerCss("end");
@@ -1561,7 +1546,7 @@ var Flicking = function (_Mixin$with) {
 
 
 	Flicking.prototype.enableInput = function enableInput() {
-		this._mcInst.enableInput();
+		this._panInput.enable();
 		return this;
 	};
 
@@ -1574,8 +1559,74 @@ var Flicking = function (_Mixin$with) {
 
 
 	Flicking.prototype.disableInput = function disableInput() {
-		this._mcInst.disableInput();
+		this._panInput.disable();
 		return this;
+	};
+
+	/**
+  * Get current flicking status
+  * @ko 현재의 상태 값을 반환한다.
+  * @method eg.Flicking#getStatus
+  * @param {Boolean} stringify Set true if want get stringified status value <ko>상태 값을 문자열로 전달받고자 하는지 여부</ko>
+  * @return {{panel: {index: (*|number), no: (*|number), currIndex: number, currNo: number}, $list}}
+  */
+
+
+	Flicking.prototype.getStatus = function getStatus(stringify) {
+		var panel = this._conf.panel;
+		var rxStyle = /((?:-webkit-)?transform|left|top|will-change|box-sizing|width):[^;]*;/g;
+		var status = {
+			// current panel position
+			panel: {
+				index: panel.index,
+				no: panel.no,
+				currIndex: panel.currIndex,
+				currNo: panel.currNo
+			},
+
+			// panel's html
+			$list: panel.$list.map(function (v) {
+				return {
+					style: v.style.cssText.replace(rxStyle, "").trim(),
+					className: v.className,
+					html: v.innerHTML
+				};
+			})
+		};
+
+		return stringify ? JSON.stringify(status) : status;
+	};
+
+	/**
+  * Set flicking as given status
+  * @method eg.Flicking#setStatus
+  * @param {Object|String} statusValue status value to be restored <ko>복원할 상태 값</ko>
+  */
+
+
+	Flicking.prototype.setStatus = function setStatus(statusValue) {
+		var panel = this._conf.panel;
+		var isAdaptiveHeight = this.options.adaptiveHeight;
+		var status = typeof statusValue === "string" ? JSON.parse(statusValue) : statusValue;
+
+		if (status) {
+			for (var x in status.panel) {
+				x in panel && (panel[x] = status.panel[x]);
+			}
+
+			panel.$list.forEach(function (v, i) {
+				var data = status.$list[i];
+				var style = data.style;
+				var className = data.className;
+				var html = data.html;
+
+				style && (v.style.cssText += style);
+				className && (v.className = className);
+				html && (v.innerHTML = html);
+			});
+
+			isAdaptiveHeight && this._setAdaptiveHeight();
+		}
 	};
 
 	/**
@@ -1616,14 +1667,13 @@ var Flicking = function (_Mixin$with) {
 		for (var i = 0, $el; $el = $children[i]; i++) {
 			if (i > list.length - 1) {
 				$el.parentNode.removeChild($el);
-				break;
+			} else {
+				var className = list[i].className;
+				var style = list[i].style;
+
+				$el[className ? "setAttribute" : "removeAttribute"]("class", className);
+				$el[style ? "setAttribute" : "removeAttribute"]("style", style);
 			}
-
-			var className = list[i].className;
-			var style = list[i].style;
-
-			$el[className ? "setAttribute" : "removeAttribute"]("class", className);
-			$el[style ? "setAttribute" : "removeAttribute"]("style", style);
 		}
 
 		// unbind events
@@ -1636,283 +1686,111 @@ var Flicking = function (_Mixin$with) {
 		}
 	};
 
+	/**
+  * Constant value for none direction
+  * @ko none 방향에 대한 상수 값
+  * @name DIRECTION_NONE
+  * @memberof eg.Flicking
+  * @static
+  * @type {Number}
+  */
+
+
+	/**
+  * @description Constant value for left direction
+  * @ko left 방향에 대한 상수 값
+  * @name DIRECTION_LEFT
+  * @memberof eg.Flicking
+  * @static
+  * @type {Number}
+  */
+
+
+	/**
+  * Constant value for right direction
+  * @ko right 방향에 대한 상수 값
+  * @name DIRECTION_RIGHT
+  * @memberof eg.Flicking
+  * @static
+  * @type {Number}
+  */
+
+
+	/**
+  * Constant value for up direction
+  * @ko up 방향에 대한 상수 값
+  * @name DIRECTION_UP
+  * @memberof eg.Flicking
+  * @static
+  * @type {Number}
+  */
+
+
+	/**
+  * Constant value for down direction
+  * @ko down 방향에 대한 상수 값
+  * @name DIRECTION_DOWN
+  * @memberof eg.Flicking
+  * @static
+  * @type {Number}
+  */
+
+
+	/**
+  * Constant value for horizontal direction
+  * @ko horizontal 방향에 대한 상수 값
+  * @name DIRECTION_HORIZONTAL
+  * @memberof eg.Flicking
+  * @static
+  * @type {Number}
+  */
+
+
+	/**
+  * Constant value for vertical direction
+  * @ko vertical 방향에 대한 상수 값
+  * @name DIRECTION_VERTICAL
+  * @memberof eg.Flicking
+  * @static
+  * @type {Number}
+  */
+
+
+	/**
+  * Constant value for all direction
+  * @ko all 방향에 대한 상수 값
+  * @name DIRECTION_ALL
+  * @memberof eg.Flicking
+  * @static
+  * @type {Number}
+  */
+
+
 	return Flicking;
-}((0, _utils.Mixin)(_component2.default).with(_eventHandler2.default));
+}((0, _utils.Mixin)(_component2["default"])["with"](_eventHandler2["default"]));
 
-exports.default = Flicking;
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-/**
- * Copyright (c) 2015 NAVER Corp.
- * egjs projects are licensed under the MIT license
- */
-// internal config values
-var CONFIG = {
-	panel: {
-		$list: null, // panel list
-		index: 0, // dom index used among process
-		no: 0, // panel no used among process
-		currIndex: 0, // current physical dom index
-		currNo: 0, // current logical panel number
-		size: 0, // panel size
-		count: 0, // total physical panel count
-		origCount: 0, // total count of given original panels
-		changed: false, // if panel changed
-		animating: false, // current animating status boolean
-		minCount: 3 // minimum panel count
-	},
-	touch: {
-		holdPos: [0, 0], // hold x,y coordinate
-		destPos: [0, 0], // destination x,y coordinate
-		distance: 0, // touch distance pixel of start to end touch
-		direction: null, // touch direction
-		lastPos: 0, // to determine move on holding
-		holding: false
-	},
-	customEvent: { // for custom events value
-		flick: true,
-		restore: false,
-		restoreCall: false
-	},
-	dirData: [], // direction constant value according horizontal or vertical
-	indexToMove: 0,
-	$dummyAnchor: null // For buggy link highlighting on Android 2.x
-};
-
-// default options
-var OPTIONS = {
-	hwAccelerable: true, // ns.isHWAccelerable(),  // check weather hw acceleration is available
-	prefix: "eg-flick", // prefix value of class name
-	deceleration: 0.0006, // deceleration value
-	horizontal: true, // move direction (true == horizontal, false == vertical)
-	circular: false, // circular mode. In this mode at least 3 panels are required.
-	previewPadding: null, // preview padding value in left(up) to right(down) order. In this mode at least 5 panels are required.
-	bounce: null, // bounce value in left(up) to right(down) order. Works only in non-circular mode.
-	threshold: 40, // the distance pixel threshold value for change panel
-	duration: 100, // duration ms for animation
-	panelEffect: function panelEffect(x) {
-		return 1 - Math.pow(1 - x, 3);
-	}, // easing function for panel change animation
-	defaultIndex: 0, // initial panel index to be shown
-	inputType: [// input type
-	"touch", "mouse"],
-	thresholdAngle: 45, // the threshold value that determines whether user action is horizontal or vertical (0~90)
-	adaptiveHeight: false // Set container's height be adaptive according panel's height
-};
-
-exports.CONFIG = CONFIG;
-exports.OPTIONS = OPTIONS;
+Flicking.DIRECTION_NONE = _axes2["default"].DIRECTION_NONE;
+Flicking.DIRECTION_LEFT = _axes2["default"].DIRECTION_LEFT;
+Flicking.DIRECTION_RIGHT = _axes2["default"].DIRECTION_RIGHT;
+Flicking.DIRECTION_UP = _axes2["default"].DIRECTION_UP;
+Flicking.DIRECTION_DOWN = _axes2["default"].DIRECTION_DOWN;
+Flicking.DIRECTION_HORIZONTAL = _axes2["default"].DIRECTION_HORIZONTAL;
+Flicking.DIRECTION_VERTICAL = _axes2["default"].DIRECTION_VERTICAL;
+Flicking.DIRECTION_ALL = _axes2["default"].DIRECTION_ALL;
+exports["default"] = Flicking;
+module.exports = exports["default"];
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
-var _consts = __webpack_require__(1);
-
-var consts = _interopRequireWildcard(_consts);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Copyright (c) 2015 NAVER Corp.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * egjs projects are licensed under the MIT license
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
-exports.default = function (superclass) {
-	return function (_superclass) {
-		_inherits(_class, _superclass);
-
-		function _class() {
-			_classCallCheck(this, _class);
-
-			return _possibleConstructorReturn(this, _superclass.apply(this, arguments));
-		}
-
-		/**
-   * 'hold' event handler
-   */
-		_class.prototype._holdHandler = function _holdHandler(e) {
-			var conf = this._conf;
-
-			conf.touch.holdPos = e.pos;
-			conf.touch.holding = true;
-			conf.panel.changed = false;
-
-			this._adjustContainerCss("start", e.pos);
-		};
-
-		/**
-   * 'change' event handler
-   */
-
-
-		_class.prototype._changeHandler = function _changeHandler(e) {
-			var conf = this._conf;
-			var touch = conf.touch;
-			var posIndex = +!this.options.horizontal;
-			var pos = e.pos[posIndex];
-			var holdPos = touch.holdPos[posIndex];
-			var direction = void 0;
-			var eventRes = null;
-			var movedPx = void 0;
-
-			this._setPointerEvents(e); // for "click" bug
-
-			/**
-    * This event is fired when panel moves.
-    * @ko 패널이 이동할 때 발생하는 이벤트
-    * @name eg.Flicking#flick
-    * @event
-    * @param {Object} param The object of data to be sent to an event <ko>이벤트에 전달되는 데이터 객체</ko>
-    * @param {String} param.eventType The name of the event<ko>이름명</ko>
-    * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
-    * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content <ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
-    * @param {Number} param.direction Direction of the movement (see eg.MovableCoord.DIRECTION_* constant) <ko>이동 방향(eg.MovableCoord.DIRECTION_* constant 참고)</ko>
-    * @param {Array} param.pos Start coordinate <ko>출발점 좌표</ko>
-    * @param {Number} param.pos.0 x-coordinate <ko>x 좌표</ko>
-    * @param {Number} param.pos.1 y-coordinate <ko>y 좌표</ko>
-    * @param {Boolean} param.holding Indicates whether a user holds an element on the screen of the device. <ko>사용자가 기기의 화면을 누르고 있는지 여부</ko>
-    * @param {Number} param.distance Distance moved from then starting point. According the move direction, positive on eg.MovableCoord.DIRECTION_LEFT/UP and negative on eg.MovableCoord.DIRECTION_RIGHT/DOWN <ko>시작점부터 이동된 거리의 값. 이동 방향에 따라 eg.MovableCoord.DIRECTION_LEFT/UP의 경우 양수를 eg.MovableCoord.DIRECTION_RIGHT/DOWN의 경우는 음수를 반환</ko>
-    */
-			if (e.hammerEvent) {
-				direction = e.hammerEvent.direction;
-
-				// Adjust direction in case of diagonal touch move
-				movedPx = e.hammerEvent[this.options.horizontal ? "deltaX" : "deltaY"];
-
-				if (!~conf.dirData.indexOf(direction)) {
-					direction = conf.dirData[+(Math.abs(touch.lastPos) <= movedPx)];
-				}
-
-				touch.lastPos = movedPx;
-			} else {
-				touch.lastPos = null;
-			}
-
-			conf.customEvent.flick && (eventRes = this._triggerEvent(consts.EVENTS.flick, {
-				pos: e.pos,
-				holding: e.holding,
-				direction: direction || touch.direction,
-				distance: pos - (holdPos || (touch.holdPos[posIndex] = pos))
-			}));
-
-			(eventRes || eventRes === null) && this._setTranslate([-pos, 0]);
-		};
-
-		/**
-   * 'release' event handler
-   */
-
-
-		_class.prototype._releaseHandler = function _releaseHandler(e) {
-			var touch = this._conf.touch;
-			var pos = e.destPos;
-			var posIndex = +!this.options.horizontal;
-			var holdPos = touch.holdPos[posIndex];
-			var panelSize = this._conf.panel.size;
-
-			touch.distance = e.depaPos[posIndex] - touch.holdPos[posIndex];
-
-			touch.direction = this._conf.dirData[+!(touch.holdPos[posIndex] < e.depaPos[posIndex])];
-
-			pos[posIndex] = Math.max(holdPos - panelSize, Math.min(holdPos, pos[posIndex]));
-
-			touch.destPos[posIndex] = pos[posIndex] = Math.round(pos[posIndex] / panelSize) * panelSize;
-
-			touch.distance === 0 && this._adjustContainerCss("end");
-			touch.holding = false;
-
-			this._setPointerEvents(); // for "click" bug
-		};
-
-		/**
-   * 'animationStart' event handler
-   */
-
-
-		_class.prototype._animationStartHandler = function _animationStartHandler(e) {
-			var conf = this._conf;
-			var panel = conf.panel;
-			var customEvent = conf.customEvent;
-
-			panel.animating = true;
-
-			if (!customEvent.restoreCall && e.hammerEvent && this._setPhaseValue("start", {
-				depaPos: e.depaPos,
-				destPos: e.destPos
-			}) === false) {
-				e.stop();
-			}
-
-			if (e.hammerEvent) {
-				e.duration = this.options.duration;
-
-				e.destPos[+!this.options.horizontal] = panel.size * (panel.index + conf.indexToMove);
-			}
-
-			if (this._isMovable()) {
-				!customEvent.restoreCall && (customEvent.restore = false);
-			} else {
-				this._triggerBeforeRestore(e);
-			}
-		};
-
-		/**
-   * 'animationEnd' event handler
-   */
-
-
-		_class.prototype._animationEndHandler = function _animationEndHandler() {
-			this._setPhaseValue("end");
-
-			this._conf.panel.animating = false;
-			this._triggerRestore();
-		};
-
-		return _class;
-	}(superclass);
-};
+module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-
-
-var _Flicking = __webpack_require__(2);
-
-var _Flicking2 = _interopRequireDefault(_Flicking);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-_Flicking2.default.VERSION = "2.0.0-rc.3"; /**
-                                            * Copyright (c) 2015 NAVER Corp.
-                                            * egjs projects are licensed under the MIT license
-                                            */
-
-module.exports = _Flicking2.default;
+module.exports = __WEBPACK_EXTERNAL_MODULE_5__;
 
 /***/ }),
 /* 6 */
@@ -1921,9 +1799,7 @@ module.exports = _Flicking2.default;
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
+exports.__esModule = true;
 exports.Mixin = exports.utils = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
@@ -2045,7 +1921,7 @@ var utils = {
   * @param {String|Object} style
   *  String: return style property value
   *  Object: set style value
-  * @parma {Boolean} getAsNumber - get the value as number
+  * @param {Boolean} getAsNumber Get the value as number
   * @returns {String|HTMLElement}
   */
 	css: function css(el, style, getAsNumber) {
@@ -2066,6 +1942,37 @@ var utils = {
 		}
 
 		return el;
+	},
+
+
+	/**
+  * classList
+  * @param {HTMLElement} el target DOM element
+  * @param {String} className class name string to be handled
+  * @param {Boolean} add Add or remove class - true: Add, false: Remove
+  * @return {Boolean} if add param is missing, then return existence of class name
+  */
+	classList: function classList(el, className, add) {
+		var isAddParam = typeof add === "boolean";
+		var res = void 0;
+
+		if (el.classList) {
+			res = el.classList[isAddParam && (add ? "add" : "remove") || "contains"](className);
+		} else {
+			res = el.className;
+
+			if (isAddParam) {
+				if (add && res.indexOf(className) === -1) {
+					res = el.className = (res + " " + className).replace(/\s{2,}/g, " ");
+				} else if (!add) {
+					res = el.className = res.replace(className, "");
+				}
+			} else {
+				res = new RegExp("\\b" + className + "\\b").test(res);
+			}
+		}
+
+		return res;
 	},
 
 
@@ -2204,7 +2111,7 @@ var MixinBuilder = function () {
 		}();
 	}
 
-	MixinBuilder.prototype.with = function _with() {
+	MixinBuilder.prototype["with"] = function _with() {
 		for (var _len2 = arguments.length, mixins = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
 			mixins[_key2] = arguments[_key2];
 		}
@@ -2226,15 +2133,261 @@ exports.Mixin = Mixin;
 
 /***/ }),
 /* 7 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_7__;
+"use strict";
+
+
+exports.__esModule = true;
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+// internal config values
+var CONFIG = {
+	panel: {
+		$list: null, // panel list
+		index: 0, // dom index used among process
+		no: 0, // panel no used among process
+		currIndex: 0, // current physical dom index
+		currNo: 0, // current logical panel number
+		size: 0, // panel size
+		count: 0, // total physical panel count
+		origCount: 0, // total count of given original panels
+		changed: false, // if panel changed
+		animating: false, // current animating status boolean
+		minCount: 3 // minimum panel count
+	},
+	touch: {
+		holdPos: 0, // hold x,y coordinate
+		destPos: 0, // destination x,y coordinate
+		distance: 0, // touch distance pixel of start to end touch
+		direction: null, // touch direction
+		lastPos: 0, // to determine move on holding
+		holding: false
+	},
+	customEvent: { // for custom events value
+		flick: true,
+		restore: false,
+		restoreCall: false
+	},
+	dirData: [], // direction constant value according horizontal or vertical
+	indexToMove: 0,
+	$dummyAnchor: null // For buggy link highlighting on Android 2.x
+};
+
+// default options
+var OPTIONS = {
+	hwAccelerable: true, // ns.isHWAccelerable(),  // check weather hw acceleration is available
+	prefix: "eg-flick", // prefix value of class name
+	deceleration: 0.0006, // deceleration value
+	horizontal: true, // move direction (true == horizontal, false == vertical)
+	circular: false, // circular mode. In this mode at least 3 panels are required.
+	previewPadding: null, // preview padding value in left(up) to right(down) order. In this mode at least 5 panels are required.
+	bounce: null, // bounce value in left(up) to right(down) order. Works only in non-circular mode.
+	threshold: 40, // the distance pixel threshold value for change panel
+	duration: 100, // duration ms for animation
+	panelEffect: function panelEffect(x) {
+		return 1 - Math.pow(1 - x, 3);
+	}, // easing function for panel change animation
+	defaultIndex: 0, // initial panel index to be shown
+	inputType: [// input type
+	"touch", "mouse"],
+	thresholdAngle: 45, // the threshold value that determines whether user action is horizontal or vertical (0~90)
+	adaptiveHeight: false // Set container's height be adaptive according panel's height
+};
+
+exports.CONFIG = CONFIG;
+exports.OPTIONS = OPTIONS;
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_8__;
+"use strict";
+
+
+exports.__esModule = true;
+
+var _consts = __webpack_require__(1);
+
+var consts = _interopRequireWildcard(_consts);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Copyright (c) 2015 NAVER Corp.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * egjs projects are licensed under the MIT license
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+exports["default"] = function (superclass) {
+	return function (_superclass) {
+		_inherits(_class, _superclass);
+
+		function _class() {
+			_classCallCheck(this, _class);
+
+			return _possibleConstructorReturn(this, _superclass.apply(this, arguments));
+		}
+
+		/**
+   * 'hold' event handler
+   */
+		_class.prototype._holdHandler = function _holdHandler(e) {
+			var conf = this._conf;
+			var holdPos = e.pos.flick;
+
+			conf.touch.holdPos = holdPos;
+			conf.touch.holding = true;
+			conf.panel.changed = false;
+
+			this._adjustContainerCss("start", holdPos);
+		};
+
+		/**
+   * 'change' event handler
+   */
+
+
+		_class.prototype._changeHandler = function _changeHandler(e) {
+			var conf = this._conf;
+			var touch = conf.touch;
+			var pos = e.pos.flick;
+			var holdPos = touch.holdPos;
+			var direction = void 0;
+			var eventRes = null;
+			var movedPx = void 0;
+
+			this._setPointerEvents(e); // for "click" bug
+
+			/**
+    * This event is fired when panel moves.
+    * @ko 패널이 이동할 때 발생하는 이벤트
+    * @name eg.Flicking#flick
+    * @event
+    * @param {Object} param The object of data to be sent to an event <ko>이벤트에 전달되는 데이터 객체</ko>
+    * @param {String} param.eventType The name of the event<ko>이름명</ko>
+    * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
+    * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content <ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
+    * @param {Number} param.direction Direction of the movement (see eg.Axes.DIRECTION_* constant) <ko>이동 방향(eg.Axes.DIRECTION_* constant 참고)</ko>
+    * @param {Number} param.pos current coordinate <ko>현재 좌표</ko>
+    * @param {Boolean} param.holding Indicates whether a user holds an element on the screen of the device. <ko>사용자가 기기의 화면을 누르고 있는지 여부</ko>
+    * @param {Number} param.distance Distance moved from then starting point. According the move direction, positive on eg.Axes.DIRECTION_LEFT/UP and negative on eg.Axes.DIRECTION_RIGHT/DOWN <ko>시작점부터 이동된 거리의 값. 이동 방향에 따라 eg.Axes.DIRECTION_LEFT/UP의 경우 양수를 eg.Axes.DIRECTION_RIGHT/DOWN의 경우는 음수를 반환</ko>
+    */
+			if (e.inputEvent) {
+				direction = e.inputEvent.direction;
+
+				// Adjust direction in case of diagonal touch move
+				movedPx = e.inputEvent[this.options.horizontal ? "deltaX" : "deltaY"];
+
+				if (!~conf.dirData.indexOf(direction)) {
+					direction = conf.dirData[+(Math.abs(touch.lastPos) <= movedPx)];
+				}
+
+				touch.lastPos = movedPx;
+			} else {
+				touch.lastPos = null;
+			}
+
+			conf.customEvent.flick && (eventRes = this._triggerEvent(consts.EVENTS.flick, {
+				pos: pos,
+				holding: e.holding,
+				direction: direction || touch.direction,
+				distance: pos - holdPos
+			}));
+
+			(eventRes || eventRes === null) && this._setTranslate([-pos, 0]);
+		};
+
+		/**
+   * 'release' event handler
+   */
+
+
+		_class.prototype._releaseHandler = function _releaseHandler(e) {
+			var conf = this._conf;
+			var touch = conf.touch;
+			var holdPos = touch.holdPos;
+			var panelSize = conf.panel.size;
+			var customEvent = conf.customEvent;
+			var isPlusMove = touch.holdPos < e.depaPos.flick;
+
+			touch.distance = e.depaPos.flick - holdPos;
+			touch.direction = conf.dirData[+!isPlusMove];
+			touch.destPos = holdPos + (isPlusMove ? panelSize : -panelSize);
+
+			var distance = touch.distance;
+			var duration = this.options.duration;
+			var moveTo = holdPos;
+
+			if (this._isMovable()) {
+				!customEvent.restoreCall && (customEvent.restore = false);
+				moveTo = touch.destPos;
+			} else if (Math.abs(distance) > 0) {
+				this._triggerBeforeRestore(e);
+			} else {
+				duration = 0;
+			}
+
+			// trigger animation
+			e.setTo({ flick: moveTo }, duration);
+
+			distance === 0 && this._adjustContainerCss("end");
+			touch.holding = false;
+
+			this._setPointerEvents(); // for "click" bug
+		};
+
+		/**
+   * 'animationStart' event handler
+   */
+
+
+		_class.prototype._animationStartHandler = function _animationStartHandler(e) {
+			var conf = this._conf;
+			var panel = conf.panel;
+			var customEvent = conf.customEvent;
+			var isFromInput = e.inputEvent || conf.touch.lastPos;
+
+			panel.animating = true;
+
+			// when animation was started by input action
+			if (!customEvent.restoreCall && isFromInput && this._setPhaseValue("start", {
+				depaPos: e.depaPos.flick,
+				destPos: e.destPos.flick
+			}) === false) {
+				e.stop();
+			}
+
+			if (isFromInput) {
+				e.duration = this.options.duration;
+
+				e.destPos.flick = panel.size * (panel.index + conf.indexToMove);
+			}
+		};
+
+		/**
+   * 'animationEnd' event handler
+   */
+
+
+		_class.prototype._animationEndHandler = function _animationEndHandler() {
+			this._setPhaseValue("end");
+
+			this._conf.panel.animating = false;
+			this._triggerRestore();
+		};
+
+		return _class;
+	}(superclass);
+};
+
+module.exports = exports["default"];
 
 /***/ })
 /******/ ]);

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: src/utils.js | egjs::Flicking - API</title>
+    <title>Source: src/eventHandler.js | egjs::Flicking - API</title>
     
     <meta name="description" content="A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side." />
     
@@ -183,7 +183,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="src_utils.js.html">Source: src/utils.js</h1>
+        <h1 class="page-title" data-filename="src_eventHandler.js.html">Source: src/eventHandler.js</h1>
         
 
 
@@ -194,296 +194,155 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import {window, document} from "./browser";
+import * as consts from "./consts";
 
-const utils = {
+export default superclass => class extends superclass {
 	/**
-	 * Select or create element
-	 * @param {String|HTMLElement} param
-	 *  when string given is as HTML tag, then create element
-	 *  otherwise it returns selected elements
-	 * @returns {HTMLElement}
+	 * 'hold' event handler
 	 */
-	$(param) {
-		let el = null;
+	_holdHandler(e) {
+		const conf = this._conf;
+		const holdPos = e.pos.flick;
 
-		if (typeof param === "string") {
-			// check if string is HTML tag format
-			const match = param.match(/^&lt;([a-z]+)\s*([^>]*)>/);
+		conf.touch.holdPos = holdPos;
+		conf.touch.holding = true;
+		conf.panel.changed = false;
 
-			// creating element
-			if (match) {
-				el = document.createElement(match[1]);
+		this._adjustContainerCss("start", holdPos);
+	}
 
-				// attributes
-				match.length === 3 &amp;&amp;
-					match[2].split(" ").forEach(v => {
-						const attr = v.split("=");
+	/**
+	 * 'change' event handler
+	 */
+	_changeHandler(e) {
+		const conf = this._conf;
+		const touch = conf.touch;
+		const pos = e.pos.flick;
+		const holdPos = touch.holdPos;
+		let direction;
+		let eventRes = null;
+		let movedPx;
 
-						el.setAttribute(attr[0], attr[1].trim().replace(/(^["']|["']$)/g, ""));
-					});
-			} else {
-				el = document.querySelectorAll(param);
+		this._setPointerEvents(e);  // for "click" bug
 
-				if (!el.length) {
-					el = null;
-				} else if (el.length === 1) {
-					el = el[0];
-				}
+		/**
+		 * This event is fired when panel moves.
+		 * @ko 패널이 이동할 때 발생하는 이벤트
+		 * @name eg.Flicking#flick
+		 * @event
+		 * @param {Object} param The object of data to be sent to an event &lt;ko>이벤트에 전달되는 데이터 객체&lt;/ko>
+		 * @param {String} param.eventType The name of the event&lt;ko>이름명&lt;/ko>
+		 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM (@deprecated since 1.3.0)&lt;ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)&lt;/ko>
+		 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content &lt;ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다&lt;/ko>
+		 * @param {Number} param.direction Direction of the movement (see eg.Axes.DIRECTION_* constant) &lt;ko>이동 방향(eg.Axes.DIRECTION_* constant 참고)&lt;/ko>
+		 * @param {Number} param.pos current coordinate &lt;ko>현재 좌표&lt;/ko>
+		 * @param {Boolean} param.holding Indicates whether a user holds an element on the screen of the device. &lt;ko>사용자가 기기의 화면을 누르고 있는지 여부&lt;/ko>
+		 * @param {Number} param.distance Distance moved from then starting point. According the move direction, positive on eg.Axes.DIRECTION_LEFT/UP and negative on eg.Axes.DIRECTION_RIGHT/DOWN &lt;ko>시작점부터 이동된 거리의 값. 이동 방향에 따라 eg.Axes.DIRECTION_LEFT/UP의 경우 양수를 eg.Axes.DIRECTION_RIGHT/DOWN의 경우는 음수를 반환&lt;/ko>
+		 */
+		if (e.inputEvent) {
+			direction = e.inputEvent.direction;
+
+			// Adjust direction in case of diagonal touch move
+			movedPx = e.inputEvent[this.options.horizontal ? "deltaX" : "deltaY"];
+
+			if (!~conf.dirData.indexOf(direction)) {
+				direction = conf.dirData[+(Math.abs(touch.lastPos) &lt;= movedPx)];
 			}
-		} else if (param.nodeName &amp;&amp; param.nodeType === 1) {
-			el = param;
-		}
 
-		return el;
-	},
-
-	/**
-	 * Check if is array
-	 * @param arr
-	 * @returns {Boolean}
-	 */
-	isArray(arr) {
-		return arr &amp;&amp; arr.constructor === Array;
-	},
-
-	/**
-	 * Check if is object
-	 * @param {Object} obj
-	 * @returns {Boolean}
-	 */
-	isObject(obj) {
-		return obj &amp;&amp; !obj.nodeType &amp;&amp; typeof obj === "object" &amp;&amp; !this.isArray(obj);
-	},
-
-	/**
-	 * Merge object returning new object
-	 * @param {Object} target
-	 * @param {Object} objectN
-	 * @returns {Object} merged target object
-	 * @example
-	 *  var target = { a: 1 };
-	 *  utils.extend(target, { b: 2, c: 3 });
-	 *  target;  // { a: 1, b: 2, c: 3 };
-	 */
-	extend(target, ...objectN) {
-		if (!objectN.length || (objectN.length === 1 &amp;&amp; !objectN[0])) {
-			return target;
-		}
-
-		const source = objectN.shift();
-
-		if (this.isObject(target) &amp;&amp; this.isObject(source)) {
-			Object.keys(source).forEach(key => {
-				const value = source[key];
-
-				if (this.isObject(value)) {
-					!target[key] &amp;&amp; (target[key] = {});
-
-					target[key] = this.extend(target[key], value);
-				} else {
-					target[key] = this.isArray(value) ?
-						value.concat() : value;
-				}
-			});
-		}
-
-		return this.extend(target, ...objectN);
-	},
-
-	/**
-	 * Get or set the style value or apply
-	 * @param {HTMLElement} el
-	 * @param {String|Object} style
-	 *  String: return style property value
-	 *  Object: set style value
-	 * @param {Boolean} getAsNumber Get the value as number
-	 * @returns {String|HTMLElement}
-	 */
-	css(el, style, getAsNumber) {
-		if (typeof(style) === "string") {
-			const value = window.getComputedStyle(el)[style];
-
-			return getAsNumber ? this.getNumValue(value) : value;
+			touch.lastPos = movedPx;
 		} else {
-			const applyStyle = (target, source) =>
-				Object.keys(source).forEach(v => {
-					target[v] = source[v];
-				});
-
-			this.isArray(el) ?
-				el.forEach(v => applyStyle(v.style, style)) :
-				applyStyle(el.style, style);
+			touch.lastPos = null;
 		}
 
-		return el;
-	},
-
-	/**
-	 * classList
-	 * @param {HTMLElement} el target DOM element
-	 * @param {String} className class name string to be handled
-	 * @param {Boolean} add Add or remove class - true: Add, false: Remove
-	 * @return {Boolean} if add param is missing, then return existence of class name
-	 */
-	classList(el, className, add) {
-		const isAddParam = typeof add === "boolean";
-		let res;
-
-		if (el.classList) {
-			res = el.classList[
-				(isAddParam &amp;&amp; (add ? "add" : "remove")) || "contains"
-				](className);
-		} else {
-			res = el.className;
-
-			if (isAddParam) {
-				if (add &amp;&amp; res.indexOf(className) === -1) {
-					res = el.className = (`${res} ${className}`).replace(/\s{2,}/g, " ");
-				} else if (!add) {
-					res = el.className = res.replace(className, "");
-				}
-			} else {
-				res = new RegExp(`\\b${className}\\b`).test(res);
+		conf.customEvent.flick &amp;&amp; (eventRes =
+			this._triggerEvent(consts.EVENTS.flick, {
+				pos,
+				holding: e.holding,
+				direction: direction || touch.direction,
+				distance: pos - holdPos
 			}
+		));
+
+		(eventRes || eventRes === null) &amp;&amp; this._setTranslate([-pos, 0]);
+	}
+
+	/**
+	 * 'release' event handler
+	 */
+	_releaseHandler(e) {
+		const conf = this._conf;
+		const touch = conf.touch;
+		const holdPos = touch.holdPos;
+		const panelSize = conf.panel.size;
+		const customEvent = conf.customEvent;
+		const isPlusMove = touch.holdPos &lt; e.depaPos.flick;
+
+		touch.distance = e.depaPos.flick - holdPos;
+		touch.direction = conf.dirData[+!(isPlusMove)];
+		touch.destPos = holdPos + (isPlusMove ? panelSize : -panelSize);
+
+		const distance = touch.distance;
+		let duration = this.options.duration;
+		let moveTo = holdPos;
+
+		if (this._isMovable()) {
+			!customEvent.restoreCall &amp;&amp; (customEvent.restore = false);
+			moveTo = touch.destPos;
+		} else if (Math.abs(distance) > 0) {
+			this._triggerBeforeRestore(e);
+		} else {
+			duration = 0;
 		}
 
-		return res;
-	},
+		// trigger animation
+		e.setTo({flick: moveTo}, duration);
+
+		distance === 0 &amp;&amp; this._adjustContainerCss("end");
+		touch.holding = false;
+
+		this._setPointerEvents();  // for "click" bug
+	}
 
 	/**
-	 * Check and parse value to number
-	 * @param {Number|String} val
-	 * @param {Number} defVal
-	 * @return {Number}
+	 * 'animationStart' event handler
 	 */
-	getNumValue(val, defVal) {
-		let num = val;
+	_animationStartHandler(e) {
+		const conf = this._conf;
+		const panel = conf.panel;
+		const customEvent = conf.customEvent;
+		const isFromInput = e.inputEvent || conf.touch.lastPos;
 
-		return isNaN(num = parseInt(num, 10)) ? defVal : num;
-	},
+		panel.animating = true;
 
-	/**
-	 * Return unit formatted value
-	 * @param {Number|String} val
-	 * @return {String} val Value formatted with unit
-	 */
-	getUnitValue(val) {
-		const rx = /(?:[a-z]{2,}|%)$/;
+		// when animation was started by input action
+		if (!customEvent.restoreCall &amp;&amp; isFromInput &amp;&amp;
+			this._setPhaseValue("start", {
+				depaPos: e.depaPos.flick,
+				destPos: e.destPos.flick
+			}) === false) {
+			e.stop();
+		}
 
-		return (parseInt(val, 10) || 0) + (String(val).match(rx) || "px");
-	},
+		if (isFromInput) {
+			e.duration = this.options.duration;
 
-	/**
-	 * Get element's outer value
-	 * @param {HTMLElement} el
-	 * @param {String} type - [outerWidth|outerHeight]
-	 * @returns {Number} outer's value
-	 */
-	getOuter(el, type) {
-		const style = window.getComputedStyle(el);
-		const margin = type === "outerWidth" ?
-			["marginLeft", "marginRight"] : ["marginTop", "marginBottom"];
-
-		return this.getNumValue(style[type.replace("outer", "").toLocaleLowerCase()]) +
-			this.getNumValue(style[margin[0]]) +
-			this.getNumValue(style[margin[1]]);
-	},
-
-	/**
-	 * Get element's outerWidth value with margin
-	 * @param {HTMLElement} el
-	 * @returns {Number}
-	 */
-	outerWidth(el) {
-		return this.getOuter(el, "outerWidth");
-	},
-
-	/**
-	 * Get element's outerHeight value with margin
-	 * @param {HTMLElement} el
-	 * @returns {Number}
-	 */
-	outerHeight(el) {
-		return this.getOuter(el, "outerHeight");
-	},
-
-	/**
-	 * Checks whether hardware acceleration is enabled.
-	 *
-	 * @ko 하드웨어 가속을 사용할 수 있는 환경인지 확인한다
-	 * @method eg#isHWAccelerable
-	 * @return {Boolean} Indicates whether hardware acceleration is enabled. &lt;ko>하드웨어 가속 사용 가능 여부&lt;/ko>
-	 */
-	isHWAccelerable() {
-		const ua = window.navigator.userAgent;
-		let result = false;
-		let match;
-
-		// chrome 25- has a text blur bug (except Samsung's sbrowser)
-		if ((match = ua.match(/Chrome\/(\d+)/))) {
-			result = match[1] >= "25";
-		} else if (/ie|edge|firefox|safari|inapp/.test(ua)) {
-			result = true;
-		} else if ((match = ua.match(/Android ([\d.]+)/))) {
-			const version = match[1];
-			const useragent = (ua.match(/\(.*\)/) || [null])[0];
-
-			// android 4.1+ blacklist
-			// EK-GN120 : Galaxy Camera, SM-G386F : Galaxy Core LTE
-			// SHW-M420 : Galaxy Nexus , SHW-M200 : NexusS , GT-S7562 : Galaxy S duos
-			result = (version >= "4.1.0" &amp;&amp; !/EK-GN120|SM-G386F/.test(useragent)) ||
-				(
-					version >= "4.0.3" &amp;&amp;
-						/SHW-|SHV-|GT-|SCH-|SGH-|SPH-|LG-F160|LG-F100|LG-F180|LG-F200|EK-|IM-A|LG-F240|LG-F260/.test(useragent) &amp;&amp;
-							!/SHW-M420|SHW-M200|GT-S7562/.test(useragent)
+			e.destPos.flick =
+				panel.size * (
+					panel.index + conf.indexToMove
 				);
 		}
-
-		this.isHWAccelerable = () => result;
-		return result;
-	},
+	}
 
 	/**
-	 * Returns the syntax of the translate style which is applied to CSS transition properties.
-	 *
-	 * @ko CSS 트랜지션 속성에 적용할 translate 스타일 구문을 반환한다
-	 * @method eg#translate
-	 * @param {String} x Distance to move along the X axis &lt;ko>x축을 따라 이동할 거리&lt;/ko>
-	 * @param {String} y Distance to move along the Y axis &lt;ko>y축을 따라 이동할 거리&lt;/ko>
-	 * @param {Boolean} [isHA] Force hardware acceleration &lt;ko>하드웨어 가속 사용 여부&lt;/ko>
-	 * @return {String} Syntax of the translate style &lt;ko>translate 스타일 구문&lt;/ko>
+	 * 'animationEnd' event handler
 	 */
-	translate(x, y, isHA) {
-		return isHA || false ?
-			`translate3d(${x},${y},0)` : `translate(${x},${y})`;
-	},
+	_animationEndHandler() {
+		this._setPhaseValue("end");
 
-	// 1. user press one position on screen.
-	// 2. user moves to the other position on screen.
-	// 3. when user releases fingers on screen, 'click' event is fired at previous position.
-	hasClickBug() {
-		const ua = window.navigator.userAgent;
-		const result = /Safari/.test(ua);
-
-		this.hasClickBug = () => result;
-		return result;
+		this._conf.panel.animating = false;
+		this._triggerRestore();
 	}
 };
-
-class MixinBuilder {
-	constructor(superclass) {
-		this.superclass = superclass || class {};
-	}
-
-	with(...mixins) {
-		return mixins.reduce((c, m) => m(c), this.superclass);
-	}
-}
-
-const Mixin = superclass => new MixinBuilder(superclass);
-
-export {utils, Mixin};
 </code></pre>
         </article>
     </section>
@@ -502,7 +361,7 @@ export {utils, Mixin};
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Fri Aug 11 2017 18:40:04 GMT+0900 (KST)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Mon Aug 14 2017 15:26:44 GMT+0900 (KST)
         </footer>
     </div>
 </div>

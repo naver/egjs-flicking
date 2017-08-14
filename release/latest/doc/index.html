@@ -205,7 +205,8 @@
 
 
     <section>
-        <article class="readme"><h1>egjs-flicking <a href="https://badge.fury.io/js/%40egjs%2Fflicking"><img src="https://badge.fury.io/js/%40egjs%2Fflicking.svg" alt="npm version"></a> <a href="https://travis-ci.org/naver/egjs-flicking"><img src="https://travis-ci.org/naver/egjs-flicking.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/naver/egjs-flicking?branch=master"><img src="https://coveralls.io/repos/github/naver/egjs-flicking/badge.svg?branch=master" alt="Coverage Status"></a></h1><p>A module used to implement flicking interactions.<br>With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side. </p>
+        <article class="readme"><h1>egjs-flicking</h1><p><a href="https://www.npmjs.com/package/@egjs/flicking"><img src="https://img.shields.io/npm/v/@egjs/flicking.svg?style=flat" alt="version"></a> <a href="https://travis-ci.org/naver/egjs-flicking"><img src="https://travis-ci.org/naver/egjs-flicking.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/naver/egjs-flicking?branch=master"><img src="https://coveralls.io/repos/github/naver/egjs-flicking/badge.svg?branch=master" alt="Coverage Status"></a> <a href="https://greenkeeper.io/"><img src="https://badges.greenkeeper.io/naver/egjs-flicking.svg" alt="Greenkeeper"></a> </p>
+<p>A module used to implement flicking interactions.<br>With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side. </p>
 <h2>Documents</h2><ul>
 <li><a href="https://naver.github.io/egjs-flicking/">Get Started and Demos</a></li>
 <li><a href="https://naver.github.io/egjs-flicking/release/latest/doc/">API documentation</a></li>
@@ -222,7 +223,7 @@
 <li>Specific version : https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.min.js</li>
 </ul>
 <h3>Packaged version (with Dependencies)</h3><blockquote>
-<p>Packaged version is not an official distribution.<br>Is just to provide for ease use of 'egjs-flicking' with dependency.</p>
+<p>Packaged version is to provide for ease use of 'egjs-flicking' with dependency.</p>
 </blockquote>
 <ul>
 <li><p><strong>Latest</strong></p>
@@ -239,7 +240,11 @@
 </li>
 </ul>
 <h3>Installation with npm</h3><p>The following command shows how to install egjs-flicking using npm.</p>
-<pre class="prettyprint source lang-bash"><code>$ npm install @egjs/flicking</code></pre><h2>Supported Browsers</h2><p>The following are the supported browsers.</p>
+<pre class="prettyprint source lang-bash"><code>$ npm install @egjs/flicking</code></pre><h3>Using CDN</h3><p>If you want to load files using CDN, check the files URL provided by the CDN service.</p>
+<ul>
+<li>jsDelivr: https://cdn.jsdelivr.net/npm/@egjs/flicking/dist/</li>
+</ul>
+<h2>Supported Browsers</h2><p>The following are the supported browsers.</p>
 <table>
 <thead>
 <tr>
@@ -267,7 +272,7 @@
 <thead>
 <tr>
 <th><a href="https://github.com/naver/egjs-component">eg.Component</a></th>
-<th><a href="https://github.com/naver/egjs-movablecoord">eg.MovableCoord</a></th>
+<th><a href="https://github.com/naver/egjs-axes">eg.Axes</a></th>
 </tr>
 </thead>
 <tbody>
@@ -280,8 +285,7 @@
 <h2>How to start developing egjs-flicking?</h2><p>For anyone interested to develop egjs-flicking, follow the instructions below.</p>
 <h3>Development Environment</h3><h4>1. Clone the repository</h4><p>Clone the egjs-flicking repository and install the dependency modules.</p>
 <pre class="prettyprint source lang-bash"><code># Clone the repository.
-$ git clone https://github.com/naver/egjs-flicking.git</code></pre><h4>2. Install dependencies</h4><p><code>npm</code> is supported.</p>
-<pre class="prettyprint source"><code># Install the dependency modules.
+$ git clone https://github.com/naver/egjs-flicking.git</code></pre><h4>2. Install dependencies</h4><pre class="prettyprint source"><code># Install the dependency modules.
 $ npm install</code></pre><h4>3. Build</h4><p>Use npm script to build billboard.js</p>
 <pre class="prettyprint source lang-bash"><code># Run webpack-dev-server for development
 $ npm start
@@ -296,9 +300,9 @@ $ npm run jsdoc</code></pre><p>Two folders will be created after complete build 
 <li><strong>doc</strong> folder: Includes API documentation. The home page for the documentation is <strong>doc/index.html</strong>.</li>
 </ul>
 <h3>Linting</h3><p>To keep the same code style, we adopted <a href="http://eslint.org/">ESLint</a> to maintain our code quality. The <a href="https://github.com/naver/eslint-config-naver/tree/master/rules">rules</a> are modified version based on <a href="https://github.com/airbnb/javascript">Airbnb JavaScript Style Guide</a>.<br>Setup your editor for check or run below command for linting.</p>
-<pre class="prettyprint source lang-bash"><code>$ npm run lint</code></pre><h3>Test</h3><p>Once you created a branch and done with development, you must perform a test running <code>npm run test</code> command before you push code to a remote repository.</p>
-<pre class="prettyprint source lang-bash"><code>$ npm run test</code></pre><p>Running a <code>npm run test</code> command will start <a href="https://mochajs.org/">Mocha</a> tests via <a href="https://karma-runner.github.io/">Karma-runner</a>.</p>
-<h2>Bug Report</h2><p>If you find a bug, please report it to us using the <a href="https://github.com/naver/egjs-flicking/issues">Issues</a> page on GitHub.</p>
+<pre class="prettyprint source lang-bash"><code>$ npm run lint</code></pre><h3>Test</h3><p>Once you created a branch and done with development, you must perform a test running with <code>npm test</code> command before your push the code to a remote repository.</p>
+<pre class="prettyprint source lang-bash"><code>$ npm run test</code></pre><p>Running <code>npm test</code> command will start <a href="https://mochajs.org/">Mocha</a> tests via <a href="https://karma-runner.github.io/">Karma-runner</a>.</p>
+<h2>Bug Report</h2><p>If you find a bug, please report to us opening a new <a href="https://github.com/naver/egjs-flicking/issues">Issues</a> on GitHub.</p>
 <h2>License</h2><p>egjs-flicking is released under the <a href="http://naver.github.io/egjs/license.txt">MIT license</a>.</p>
 <pre class="prettyprint source"><code>Copyright (c) 2015 NAVER Corp.
 
@@ -318,7 +322,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.</code></pre></article>
+THE SOFTWARE.</code></pre><!-- badges -->
+<!-- links --></article>
     </section>
 
 
@@ -335,7 +340,7 @@ THE SOFTWARE.</code></pre></article>
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Fri Aug 11 2017 18:40:04 GMT+0900 (KST)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Mon Aug 14 2017 15:26:44 GMT+0900 (KST)
         </footer>
     </div>
 </div>
