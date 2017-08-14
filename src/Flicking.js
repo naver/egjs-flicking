@@ -672,7 +672,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		 * @param {Number} param.direction Direction of the panel move (see eg.Flicking.DIRECTION_* constant) <ko>이동 방향(eg.Flicking.DIRECTION_* constant 참고)</ko>
 		 */
 		customEvent.restore && this._triggerEvent(consts.EVENTS.restore);
-		customEvent.restoreCall = false;
+		customEvent.restore = customEvent.restoreCall = false;
 	}
 
 	/**

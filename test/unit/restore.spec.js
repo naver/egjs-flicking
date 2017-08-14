@@ -158,4 +158,42 @@ describe("restore() method", function() {
 			setTimeout(done, 300);
 		});
 	});
+
+	describe("After the restore event", function() {
+		tutils.hooks.run();
+
+		// Given
+		const $el = tutils.createFixture("#mflick1");
+
+		const inst = tutils.create($el, {
+			duration: 100,
+			hwAccelerable: true,
+			threshold: 100,
+			circular: true
+		});
+
+		it("Check for the custom event firing", done => {
+			tutils.simulator(inst.$wrapper, {
+				pos: [300, 0],
+				deltaX: -70,
+				deltaY: 0,
+				duration: 500
+			}, () => {
+				setTimeout(() => {
+					expect($el.eventFired).to.deep.equal(["flick", "beforeRestore", "flick", "restore"]);
+					$el.eventFired = [];
+					done();
+				}, 500)
+			});
+		});
+
+		it("check after the restore", done => {
+			inst.next();
+
+			setTimeout(() => {
+				expect($el.eventFired).to.deep.equal(["beforeFlickStart", "flick", "flickEnd"]);
+				done();
+			}, 500);
+		});
+	});
 });
