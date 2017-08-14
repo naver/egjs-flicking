@@ -1,8 +1,6 @@
-# egjs-flicking [![npm version](https://badge.fury.io/js/%40egjs%2Fflicking.svg)](https://badge.fury.io/js/%40egjs%2Fflicking) [![Build Status](https://travis-ci.org/naver/egjs-flicking.svg?branch=master)](https://travis-ci.org/naver/egjs-flicking) [![Coverage Status](https://coveralls.io/repos/github/naver/egjs-flicking/badge.svg?branch=master)](https://coveralls.io/github/naver/egjs-flicking?branch=master)
+# egjs-flicking
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/naver/egjs-flicking.svg)](https://greenkeeper.io/)
-
-
+[![version][badge-version]][link-version] [![Build Status][badge-build-status]][link-build-status] [![Coverage Status][badge-coverage]][link-coverage] [![Greenkeeper][badge-gk]][link-gk] 
 
 A module used to implement flicking interactions.
 With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side. 
@@ -159,3 +157,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ```
+
+<!-- badges -->
+[badge-version]: https://img.shields.io/npm/v/@egjs/flicking.svg?style=flat
+[badge-build-status]: https://travis-ci.org/naver/egjs-flicking.svg?branch=master
+[badge-coverage]: https://coveralls.io/repos/github/naver/egjs-flicking/badge.svg?branch=master
+[badge-gk]: https://badges.greenkeeper.io/naver/egjs-flicking.svg
+
+<!-- links -->
+[link-version]: https://www.npmjs.com/package/@egjs/flicking
+[link-build-status]: https://travis-ci.org/naver/egjs-flicking
+[link-coverage]: https://coveralls.io/github/naver/egjs-flicking?branch=master
+[link-gk]: https://greenkeeper.io/
