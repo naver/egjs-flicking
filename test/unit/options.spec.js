@@ -117,7 +117,7 @@ describe("Setting options", function() {
 		it("Left bounce distance is correct?", done => {
 			const inst = tutils.create("#mflick1", { bounce : bounce }, {
 				beforeRestore: e => {
-					depaPos = e.depaPos[0]
+					depaPos = e.depaPos
 				}
 			});
 
@@ -137,7 +137,7 @@ describe("Setting options", function() {
 				bounce : bounce,
 				horizontal: false
 			}, {
-				beforeRestore: e => depaPos = e.depaPos[1]
+				beforeRestore: e => depaPos = e.depaPos
 			});
 
 			tutils.simulator(inst.$wrapper, {
@@ -162,7 +162,7 @@ describe("Setting options", function() {
 				bounce : bounce,
 				defaultIndex: 2
 			}, {
-				beforeRestore: e => depaPos = e.depaPos[0]
+				beforeRestore: e => depaPos = e.depaPos
 			});
 
 		const inst2 = tutils.create("#mflick2", {
@@ -170,10 +170,10 @@ describe("Setting options", function() {
 				defaultIndex: 2,
 				horizontal: false
 			}, {
-				beforeRestore: e => depaPos2 = e.depaPos[1]
+				beforeRestore: e => depaPos2 = e.depaPos
 			});
 
-		const max1 = inst1._mcInst.options.max[0];
+		const max1 = inst1._axesInst.axis.flick.range[1];
 
 		it("Right bounce distance is correct?", done => {
 			// When
@@ -188,7 +188,7 @@ describe("Setting options", function() {
 			});
 		});
 
-		const max2 = inst2._mcInst.options.max[1];
+		const max2 = inst2._axesInst.axis.flick.range[1];
 
 		it("Down bounce distance is correct?", done => {
 			// When

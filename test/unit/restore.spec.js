@@ -26,12 +26,12 @@ describe("restore() method", function() {
 		};
 
 		let setCondition = function() {
-			inst._mcInst._pos = [145,0];
+			inst._axesInst._axm.set({flick:145});
 			inst._setTranslate([-145,0]);
 		};
 
 		let runTest = function() {
-			let currPos = inst._mcInst.get()[0];
+			let currPos = inst._axesInst.get().flick;
 			let panel = inst._conf.panel;
 
 			// Restored in right position?
@@ -58,7 +58,7 @@ describe("restore() method", function() {
 			const panel = inst._conf.panel;
 			const pos = panel.size * (panel.currIndex + 1);
 
-			inst._mcInst._pos = [pos,0];
+			inst._axesInst._axm.set({flick:pos});
 			inst._setTranslate([-pos,0]);
 
 			inst.restore(0);
@@ -109,7 +109,7 @@ describe("restore() method", function() {
 
 		let runTest = () => {
 			// Panel is in right position?
-			expect(inst._mcInst.get()[0] % inst._conf.panel.size).to.equal(0);
+			expect(inst._axesInst.get().flick % inst._conf.panel.size).to.equal(0);
 
 			// Restored to previous panel number?
 			expect(panelIndex.no === inst.getIndex() && panelIndex.index === inst.getIndex(true)).to.be.ok;

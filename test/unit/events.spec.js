@@ -4,7 +4,7 @@
  */
 /*eslint-disable */
 import tutils from "./assets/utils";
-import MovableCoord from "@egjs/movablecoord";
+import Axes from "@egjs/axes";
 
 describe("Custom events", function() {
 	describe("When changes panel normally", function() {
@@ -223,14 +223,14 @@ describe("Custom events", function() {
 					touches: 1
 				}, () => {
 					// Then
-					let currPos = inst._getDataByDirection(inst._mcInst.get())[0];
+					let currPos = inst._axesInst.get().flick;
 
 					// The panel stopped to move and is not positioned well?
 					expect(currPos % inst._conf.panel.size).to.be.ok;
 
 					// When
 					inst.restore(0);
-					currPos = inst._getDataByDirection(inst._mcInst.get())[0];
+					currPos = inst._axesInst.get().flick;
 
 					// The panel restored in its original position?
 					expect(currPos % inst._conf.panel.size === 0).to.be.ok;
@@ -247,7 +247,7 @@ describe("Custom events", function() {
 					let direction = tutils.unique($el.eventDirection);
 
 					// Direction value of restore event are right?
-					expect(direction.length === 1 && direction[0] === MovableCoord.DIRECTION_RIGHT).to.be.ok;
+					expect(direction.length === 1 && direction[0] === Axes.DIRECTION_RIGHT).to.be.ok;
 
 					done();
 				});
@@ -461,10 +461,10 @@ describe("Custom events", function() {
 			// When
 			tutils.simulator($el, { deltaX: -100, deltaY: 90 }, () => {
 				// Is left during touch hold?
-				expect(check(directionHold[id], MovableCoord.DIRECTION_LEFT)).to.be.ok;
+				expect(check(directionHold[id], Axes.DIRECTION_LEFT)).to.be.ok;
 
 				// Is left during touch unhold?
-				expect(check(directionUnhold[id], MovableCoord.DIRECTION_LEFT)).to.be.ok;
+				expect(check(directionUnhold[id], Axes.DIRECTION_LEFT)).to.be.ok;
 
 				done();
 			});
@@ -480,10 +480,10 @@ describe("Custom events", function() {
 			// When
 			tutils.simulator($el, { deltaX: 100, deltaY: 50 }, () => {
 				// Is right during touch hold?
-				expect(check(directionHold[id], MovableCoord.DIRECTION_RIGHT)).to.be.ok;
+				expect(check(directionHold[id], Axes.DIRECTION_RIGHT)).to.be.ok;
 
 				// Is right during touch unhold?
-				expect(check(directionUnhold[id], MovableCoord.DIRECTION_RIGHT)).to.be.ok;
+				expect(check(directionUnhold[id], Axes.DIRECTION_RIGHT)).to.be.ok;
 
 				done();
 			});
@@ -502,10 +502,10 @@ describe("Custom events", function() {
 			// When
 			tutils.simulator($el, { deltaX: 50, deltaY: -100 }, () => {
 				// Is up during touch hold?
-				expect(check(directionHold[id], MovableCoord.DIRECTION_UP)).to.be.ok;
+				expect(check(directionHold[id], Axes.DIRECTION_UP)).to.be.ok;
 
 				// Is up during touch unhold?
-				expect(check(directionUnhold[id], MovableCoord.DIRECTION_UP)).to.be.ok;
+				expect(check(directionUnhold[id], Axes.DIRECTION_UP)).to.be.ok;
 
 				done();
 			});
@@ -524,10 +524,10 @@ describe("Custom events", function() {
 			// When
 			tutils.simulator($el, { deltaX: -50, deltaY: 100 }, () => {
 				// Is down during touch hold?
-				expect(check(directionHold[id], MovableCoord.DIRECTION_DOWN)).to.be.ok;
+				expect(check(directionHold[id], Axes.DIRECTION_DOWN)).to.be.ok;
 
 				// Is down during touch unhold?
-				expect(check(directionUnhold[id], MovableCoord.DIRECTION_DOWN)).to.be.ok;
+				expect(check(directionUnhold[id], Axes.DIRECTION_DOWN)).to.be.ok;
 
 				done();
 			});

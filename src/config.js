@@ -18,8 +18,8 @@ const CONFIG = {
 		minCount: 3         // minimum panel count
 	},
 	touch: {
-		holdPos: [0, 0],    // hold x,y coordinate
-		destPos: [0, 0],	// destination x,y coordinate
+		holdPos: 0,         // hold x,y coordinate
+		destPos: 0,	        // destination x,y coordinate
 		distance: 0,		// touch distance pixel of start to end touch
 		direction: null,	// touch direction
 		lastPos: 0,			// to determine move on holding

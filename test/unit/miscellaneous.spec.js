@@ -100,7 +100,9 @@ describe("Miscellaneous", function() {
 			// Given
 			const MockFlicking = FlickingInjector({
 				"./consts": utils.extend(utils.extend({}, consts), {
-					SUPPORT_TRANSFORM: false
+					TRANSFORM: {
+						support: false
+					}
 				})
 			});
 

@@ -13,11 +13,15 @@ const EVENTS = {
 	restore: "restore"
 };
 
-// check for css transform support
-const SUPPORT_TRANSFORM = (() => {
+// check for the transform property
+const TRANSFORM = {
+	name: "transform"
+};
+
+TRANSFORM.support = (() => {
 	const style = doc.documentElement.style;
 
-	return "transform" in style || "webkitTransform" in style;
+	return TRANSFORM.name in style || (TRANSFORM.name = "webkitTransform") in style;
 })();
 
 // check for will-change support
@@ -32,7 +36,7 @@ const DATA_HEIGHT = "data-height";
 
 export {
 	EVENTS,
-	SUPPORT_TRANSFORM,
+	TRANSFORM,
 	SUPPORT_WILLCHANGE,
 	IS_ANDROID2,
 	DATA_HEIGHT

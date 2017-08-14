@@ -1,3 +1,4 @@
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -32,9 +33,7 @@
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.5/es5-shim.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.5/es5-sham.js"></script>
-    <script src="../../node_modules/@egjs/movablecoord/dist/movablecoord.pkgd.js"></script>
-    <script src="../../node_modules/@egjs/component/dist/component.js"></script>
-    <script src="../../dist/flicking.js"></script>
+    <script src="../../dist/flicking.pkgd.js"></script>
 </head>
 <body style="display:none">
 <h1>Full flicking demo</h1>
@@ -320,12 +319,16 @@
     function methodLog(element, v) {
         var arr = [];
 
-        if(v && v.constructor === Array) {
+        if(v && (v.nodeType || v.constructor === Array)) {
+	        if (v.nodeType == 1) {
+		        v = [v];
+	        }
+
         	for (var i = 0, el; el = v[i]; i++) {
         		arr.push(el.querySelector("p").innerHTML);
             }
         } else {
-            arr = [ v ];
+            arr = [v];
         }
 
         elLog1.innerHTML = element.innerHTML +" ==> "+ arr.join(", ");
@@ -333,13 +336,13 @@
 
     function getDirection(dir) {
         switch(dir) {
-            case eg.MovableCoord.DIRECTION_RIGHT :
+            case eg.Flicking.DIRECTION_RIGHT :
                 return "→";
-            case eg.MovableCoord.DIRECTION_LEFT :
+            case eg.Flicking.DIRECTION_LEFT :
                 return "←";
-            case eg.MovableCoord.DIRECTION_UP :
+            case eg.Flicking.DIRECTION_UP :
                 return "↑";
-            case eg.MovableCoord.DIRECTION_DOWN :
+            case eg.Flicking.DIRECTION_DOWN :
                 return "↓";
         }
     }
@@ -461,7 +464,7 @@
             threshold : 50,
             circular : true
         }).on({
-            beforeFlickStart : function(e) {
+            beforeFlickStart: function(e) {
                 if(e.no === 2) {
                     e.stop();
                     this.restore();
