@@ -1,6 +1,6 @@
-# egjs-flicking [![npm version](https://badge.fury.io/js/%40egjs%2Fflicking.svg)](https://badge.fury.io/js/%40egjs%2Fflicking) [![Build Status](https://travis-ci.org/naver/egjs-flicking.svg?branch=master)](https://travis-ci.org/naver/egjs-flicking) [![Coverage Status](https://coveralls.io/repos/github/naver/egjs-flicking/badge.svg?branch=master)](https://coveralls.io/github/naver/egjs-flicking?branch=master)
+# egjs-flicking
 
-
+[![version][badge-version]][link-version] [![Build Status][badge-build-status]][link-build-status] [![Coverage Status][badge-coverage]][link-coverage] [![Greenkeeper][badge-gk]][link-gk] 
 
 A module used to implement flicking interactions.
 With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side. 
@@ -8,7 +8,6 @@ With this module, you can make flicking gestures, which are ways to navigate lef
 ## Documents
 - [Get Started and Demos](https://naver.github.io/egjs-flicking/)
 - [API documentation](https://naver.github.io/egjs-flicking/release/latest/doc/)
-
 
 ## Download and Installation
 
@@ -29,8 +28,7 @@ You can download the compressed files for production
 - Specific version : https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.min.js
 
 ### Packaged version (with Dependencies)
-> Packaged version is not an official distribution.
-> Is just to provide for ease use of 'egjs-flicking' with dependency.
+> Packaged version is to provide for ease use of 'egjs-flicking' with dependency.
 
  - **Latest**
     - https://naver.github.io/egjs-flicking/release/latest/dist/flicking.pkgd.js
@@ -40,7 +38,6 @@ You can download the compressed files for production
     - https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.js
     - https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.min.js
 
-
 ### Installation with npm
 
 The following command shows how to install egjs-flicking using npm.
@@ -48,6 +45,12 @@ The following command shows how to install egjs-flicking using npm.
 ```bash
 $ npm install @egjs/flicking
 ```
+
+### Using CDN
+
+If you want to load files using CDN, check the files URL provided by the CDN service.
+
+- jsDelivr: https://cdn.jsdelivr.net/npm/@egjs/flicking@latest/dist/
 
 ## Supported Browsers
 The following are the supported browsers.
@@ -60,7 +63,7 @@ The following are the supported browsers.
 ## Dependency
 egjs-flicking has the dependencies for the following libraries:
 
-|[eg.Component](https://github.com/naver/egjs-component)|[eg.MovableCoord](https://github.com/naver/egjs-movablecoord)|
+|[eg.Component](https://github.com/naver/egjs-component)|[eg.Axes](https://github.com/naver/egjs-axes)|
 |----|----|
 |2.0.0+|2.0.0+|
 
@@ -81,7 +84,6 @@ $ git clone https://github.com/naver/egjs-flicking.git
 ```
 
 #### 2. Install dependencies
-`npm` is supported.
 
 ```
 # Install the dependency modules.
@@ -119,18 +121,17 @@ $ npm run lint
 
 ### Test
 
-Once you created a branch and done with development, you must perform a test running `npm run test` command before you push code to a remote repository.
+Once you created a branch and done with development, you must perform a test running with `npm test` command before your push the code to a remote repository.
 
 ```bash
 $ npm run test
 ```
-Running a `npm run test` command will start [Mocha](https://mochajs.org/) tests via [Karma-runner](https://karma-runner.github.io/).
-
+Running `npm test` command will start [Mocha](https://mochajs.org/) tests via [Karma-runner](https://karma-runner.github.io/).
 
 
 ## Bug Report
 
-If you find a bug, please report it to us using the [Issues](https://github.com/naver/egjs-flicking/issues) page on GitHub.
+If you find a bug, please report to us opening a new [Issues](https://github.com/naver/egjs-flicking/issues) on GitHub.
 
 
 ## License
@@ -157,3 +158,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ```
+
+<!-- badges -->
+[badge-version]: https://img.shields.io/npm/v/@egjs/flicking.svg?style=flat
+[badge-build-status]: https://travis-ci.org/naver/egjs-flicking.svg?branch=master
+[badge-coverage]: https://coveralls.io/repos/github/naver/egjs-flicking/badge.svg?branch=master
+[badge-gk]: https://badges.greenkeeper.io/naver/egjs-flicking.svg
+
+<!-- links -->
+[link-version]: https://www.npmjs.com/package/@egjs/flicking
+[link-build-status]: https://travis-ci.org/naver/egjs-flicking
+[link-coverage]: https://coveralls.io/github/naver/egjs-flicking?branch=master
+[link-gk]: https://greenkeeper.io/
