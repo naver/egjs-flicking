@@ -29,16 +29,28 @@
 {% include header.html %}
 {% include promo.html %}
 <div>
-	<section id="about" class="docs section">
+	<section id="index" class="section">
+			<div class="container">
+				<div class="docs-inner">
+					<p class="text-center">
+						<a href="#getting-started">Getting Started </a>/ 
+						<a href="#demos"> Demos </a>/
+						<a target="_blank" href="//{{ site.data.egjs.github.user }}.github.io/{{ site.data.egjs.github.repo }}/release/latest/doc/"> Documentation </a>/ 
+						<a target="_blank" href="//github.com/{{ site.data.egjs.github.user }}/{{ site.data.egjs.github.repo }}"> Source </a>
+					</p>
+				</div>
+			</div>
+		</section>
+	<section id="getting-started" class="docs section">
 		<div class="container">
 			<div class="docs-inner">
-				<h2 class="title text-center">Get Started</h2>
+				<h2 class="title text-center">Getting Started</h2>
 				{% capture started %}{% include_relative started.md %}{% endcapture %}
 				{{ started | markdownify }}
 			</div>
 		</div>
 	</section>
-	<section id="docs" class="docs section demos">
+	<section id="demos" class="docs section demos">
 		<div class="container">
 			<div class="docs-inner">
 				<h2 class="title text-center">Demos</h2>

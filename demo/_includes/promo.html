@@ -1,22 +1,12 @@
-<section id="promo" class="promo section offset-header" style="padding-top:90px">
-    <div class="container text-center">
-        <h2 class="title"><span class="highlight">{{ site.data.egjs.component }}</span></h2>
-        <p class="intro">{{ site.data.egjs.desc }}</p>
-        <div class="btns">
-            <!--<a class="btn btn-cta-primary" href="release/latest/doc" target="_blank">Github</a>-->
-            <a class="btn btn-cta-primary" href="release/latest/doc" target="_blank">API Document</a>
-            <a class="btn btn-cta-primary" href="//github.com/{{ site.data.egjs.github.user }}/{{ site.data.egjs.github.repo }}/releases" target="_blank">v{{ site.data.version }}</a>
+<section id="promo" class="promo section">
+    <div class="container">
+        <div class="hero-image" style="background-image: url({{ site.data.egjs.home }}/img/{{ site.data.egjs.component }}.png)">
         </div>
-    </div>
-    <div class="social-media">
-        <div class="social-media-inner container text-center">
-            <ul class="list-inline">
-                <li class="facebook-like">
-                     <div class="fb-like" data-href="//{{ site.data.egjs.github.user }}.github.io/{{ site.data.egjs.github.repo }}/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
-                </li>
-                <li class="github-fork"><iframe src="//ghbtns.com/github-btn.html?user={{ site.data.egjs.github.user }}&repo={{ site.data.egjs.github.repo }}&type=fork" allowtransparency="true" frameborder="0" scrolling="0" width="53" height="20"></iframe></li>
-                <li class="github-star"><iframe src="//ghbtns.com/github-btn.html?user={{ site.data.egjs.github.user }}&repo={{ site.data.egjs.github.repo }}&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe></li>
-            </ul>
-        </div>
+        <h2 class="title">
+            <span class="highlight">{{ site.data.egjs.component }}</span><a href="https://github.com/{{ site.data.egjs.github.user }}/{{ site.data.egjs.github.repo }}/releases/tag/{{ site.data.version }}"><span class="version">v{{ site.data.version }}</span></a>
+        </h2>
+        <p class="intro">{{ site.data.egjs.desc }}<br/>
+            <span class="hashtag">{{ site.data.egjs.hashtag }}</span>
+        </p>
     </div>
 </section>
