@@ -33,7 +33,7 @@ jQuery(document).ready(function($) {
         return window.HOMELINK;
     }
 
-    $("#docs .highlight").each(function() {
+    $("#demos .highlight").each(function() {
         var $el = $(this);
         var $htmlEl = $el.parent().prev();
         if ($htmlEl.length && $htmlEl.attr("codepen")) {
