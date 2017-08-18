@@ -245,7 +245,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		}
 
 		Object.keys(cssValue).length &&
-		utils.css(this.$wrapper, cssValue);
+			utils.css(this.$wrapper, cssValue);
 
 		const wrapperStyle = getComputedStyle(this.$wrapper);
 		const paddingType = horizontal ? ["Left", "Right"] : ["Top", "Bottom"];

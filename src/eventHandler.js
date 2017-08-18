@@ -120,8 +120,6 @@ export default superclass => class extends superclass {
 		const customEvent = conf.customEvent;
 		const isFromInput = e.inputEvent || conf.touch.lastPos;
 
-		panel.animating = true;
-
 		// when animation was started by input action
 		if (!customEvent.restoreCall && isFromInput &&
 			this._setPhaseValue("start", {
@@ -139,15 +137,17 @@ export default superclass => class extends superclass {
 					panel.index + conf.indexToMove
 				);
 		}
+
+		panel.animating = true;
 	}
 
 	/**
 	 * 'animationEnd' event handler
 	 */
 	_animationEndHandler() {
-		this._setPhaseValue("end");
-
 		this._conf.panel.animating = false;
+
+		this._setPhaseValue("end");
 		this._triggerRestore();
 	}
 };
