@@ -582,4 +582,86 @@ describe("Custom events", function() {
 			runTest("#mflick3-1", { circular: true, horizontal: false },  { deltaX: 0, deltaY: 100 }, false, done);
 		});
 	});
+
+	describe("Check for the animation status", function() {
+		tutils.hooks.run();
+
+		let status = {};
+		const handler = e => {
+			const holding = e.holding;
+			const type = `${e.eventType}${holding ? "Hold": ""}`;
+
+			if (!status[type]) {
+				status[type] = {truthy: 0, falsy: 0};
+			}
+
+			status[type][inst.isPlaying() ? "truthy" : "falsy"]++;
+		};
+		const inst = tutils.create("#mflick1", { threshold : 50 }, {
+			beforeRestore: handler,
+			restore: handler,
+			beforeFlickStart: handler,
+			flick: handler,
+			flickEnd: handler
+		});
+
+		it("during the normal flicking moves", done => {
+			// When
+			// -- flick -- beforeFlickStart -- flick -- flickEnd -->
+			tutils.simulator(inst.$wrapper, {
+				pos: [0, 0],
+				deltaX: -70
+			}, () => {
+				setTimeout(() => {
+					// during the flick hold
+					expect(status.flickHold.truthy).to.be.equal(0);
+					expect(status.flickHold.falsy > 0).to.be.true;
+
+					// beforeFlickStart
+					expect(status.beforeFlickStart.truthy).to.be.equal(0);
+					expect(status.beforeFlickStart.falsy).to.be.equal(1);
+
+					// during the flick without holding
+					expect(status.flick.truthy > 0).to.be.true;
+					expect(status.flick.falsy).to.be.equal(0);
+
+					// flickEnd
+					expect(status.flickEnd.truthy).to.be.equal(0);
+					expect(status.flickEnd.falsy).to.be.equal(1);
+
+					status = {};
+					done();
+				}, 500)
+			});
+		});
+
+		it("when not trespassing the threshold", done => {
+			// When
+			// -- flick -- beforeRestore -- flick -- restore -->
+			tutils.simulator(inst.$wrapper, {
+				pos: [0, 0],
+				deltaX: -30
+			}, () => {
+				setTimeout(() => {
+					// during the flick hold
+					expect(status.flickHold.truthy).to.be.equal(0);
+					expect(status.flickHold.falsy > 0).to.be.true;
+
+					// beforeRestore
+					expect(status.beforeRestore.truthy).to.be.equal(0);
+					expect(status.beforeRestore.falsy).to.be.equal(1);
+
+					// during the flick without holding
+					expect(status.flick.truthy > 0).to.be.true;
+					expect(status.flick.falsy).to.be.equal(0);
+
+					// restore
+					expect(status.beforeRestore.truthy).to.be.equal(0);
+					expect(status.beforeRestore.falsy).to.be.equal(1);
+
+					done();
+				}, 500)
+			});
+		});
+	});
 });
