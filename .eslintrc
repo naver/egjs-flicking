@@ -8,6 +8,9 @@
         "linebreak-style": 0,
         "comma-dangle": ["error", "never"],
         "no-multi-assign": 0,
-        "no-lonely-if": 0
+        "no-lonely-if": 0,
+        "no-multi-spaces": ["error", {
+            "ignoreEOLComments": true
+        }]
     }
 }

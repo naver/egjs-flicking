@@ -5,7 +5,7 @@
 // internal config values
 const CONFIG = {
 	panel: {
-		$list: null,	    // panel list
+		$list: null,        // panel list
 		index: 0,			// dom index used among process
 		no: 0,				// panel no used among process
 		currIndex: 0,       // current physical dom index

@@ -141,7 +141,7 @@ const utils = {
 		if (el.classList) {
 			res = el.classList[
 				(isAddParam && (add ? "add" : "remove")) || "contains"
-				](className);
+			](className);
 		} else {
 			res = el.className;
 

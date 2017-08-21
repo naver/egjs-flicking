@@ -1,18 +1,25 @@
 language: node_js
 node_js:
   - "6"
-dist: trusty
-sudo: false
+dist: trusty # needs Ubuntu Trusty
+sudo: false  # no need for virtualization
+before_install:
+  - npm install -g npm@5
+  - yarn global add greenkeeper-lockfile@1
 install:
   - npm install
 addons:
-  chrome: stable
+  chrome: stable # install chrome stable
 cache:
+  yarn: true
   directories:
     - "node_modules"
 before_script:
+    - greenkeeper-lockfile-update
     - npm run lint
 script:
   - npm run coverage
+after_script:
+  - greenkeeper-lockfile-upload
 after_success:
   - npm run coveralls
