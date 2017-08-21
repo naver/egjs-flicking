@@ -19,7 +19,7 @@ import eventHandler from "./eventHandler";
  * @support {"ie": "10+", "ch" : "latest", "ff" : "latest",  "sf" : "latest" , "edge" : "latest", "ios" : "7+", "an" : "2.3+ (except 3.x)"}
  */
 export default class Flicking extends Mixin(Component).with(eventHandler) {
-   /**
+	/**
 	* Constructor
 	* @param {HTMLElement|String|jQuery} element A base element for the eg.Flicking module <ko>eg.Flicking 모듈을 사용할 기준 엘리먼트</ko>
 	* @param {Object} options The option object of the eg.Flicking module<ko>eg.Flicking 모듈의 옵션 객체</ko>
@@ -255,9 +255,9 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		);
 
 		panel.size = wrapperSize - (
-				utils.getNumValue(wrapperStyle[`padding${paddingType[0]}`]) +
-				utils.getNumValue(wrapperStyle[`padding${paddingType[1]}`])
-			);
+			utils.getNumValue(wrapperStyle[`padding${paddingType[0]}`]) +
+			utils.getNumValue(wrapperStyle[`padding${paddingType[1]}`])
+		);
 	}
 
 	/**
@@ -423,8 +423,8 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			conf.$dummyAnchor = utils.$(`.${dummyAnchorClassName}`);
 
 			!conf.$dummyAnchor && this.$wrapper.appendChild(
-					conf.$dummyAnchor = utils.$(`<a href="javascript:void(0)" class="${dummyAnchorClassName}" style="position:absolute;height:0px;width:0px">`)
-				);
+				conf.$dummyAnchor = utils.$(`<a href="javascript:void(0)" class="${dummyAnchorClassName}" style="position:absolute;height:0px;width:0px">`)
+			);
 
 			this._applyPanelsCss = function applyCss(v, i) {
 				const coords = this._getDataByDirection([

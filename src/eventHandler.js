@@ -68,8 +68,8 @@ export default superclass => class extends superclass {
 				holding: e.holding,
 				direction: direction || touch.direction,
 				distance: pos - holdPos
-			}
-		));
+			})
+		);
 
 		(eventRes || eventRes === null) && this._setTranslate([-pos, 0]);
 	}
