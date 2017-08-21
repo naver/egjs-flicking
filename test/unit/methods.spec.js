@@ -440,7 +440,6 @@ describe("Methods call", function() {
 			})
 		};
 
-
 		const inst = tutils.create($el, {
 			defaultIndex: 2,
 			circular: true
@@ -497,6 +496,19 @@ describe("Methods call", function() {
 		// Then
 		it("Removed cloned panel elements?", () => {
 			expect(panelCount).to.equal($el2.children.length);
+		});
+
+		it("Check for inputType unique key", () => {
+			let has = false;
+
+			for (let x in $el2) {
+				if (!/event(Fired|Direction)/.test(x) && $el2.hasOwnProperty(x)) {
+					has = true;
+					break;
+				}
+			}
+
+			expect(has).to.be.false;
 		});
 	});
 });
