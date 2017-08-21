@@ -1389,6 +1389,10 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		this._bindEvents(false);
 		this.off();
 
+		// destroy eg.Axes instance
+		this._axesInst.destroy();
+		this._panInput.destroy();
+
 		// release resources
 		for (const x in this) {
 			this[x] = null;
