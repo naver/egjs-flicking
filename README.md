@@ -57,7 +57,7 @@ The following are the supported browsers.
 
 |Internet Explorer|Chrome|Firefox|Safari|iOS|Android|
 |---|---|---|---|---|---|
-|9+|Latest|Latest|Latest|7+|2.3+(except 3.x)|
+|10+|Latest|Latest|Latest|7+|2.3+(except 3.x)|
 
 
 ## Dependency
