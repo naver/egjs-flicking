@@ -985,7 +985,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * Returns the references of whole panel elements.
 	 * @ko 패널을 구성하는 모든 엘리먼트의 레퍼런스를 반환한다
 	 * @method eg.Flicking#getAllElements
-	 * @return {HTMLElement} Whole panel elements <ko>모든 패널 엘리먼트</ko>
+	 * @return {HTMLElement[]} Whole panel elements <ko>모든 패널 엘리먼트</ko>
 	 */
 	getAllElements() {
 		return this._conf.panel.$list;

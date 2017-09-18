@@ -3,6 +3,7 @@
   "version": "2.0.3-snapshot",
   "main": "dist/flicking.js",
   "es2015": "src/Flicking.js",
+  "types": "src/flicking.d.ts",  
   "scripts": {
     "start": "webpack-dev-server --open",
     "build": "webpack --env production && webpack --env packaged",
