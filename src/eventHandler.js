@@ -10,10 +10,12 @@ export default superclass => class extends superclass {
 	 */
 	_holdHandler(e) {
 		const conf = this._conf;
+		const touch = conf.touch;
 		const holdPos = e.pos.flick;
 
-		conf.touch.holdPos = holdPos;
-		conf.touch.holding = true;
+		touch.holdPos = holdPos;
+		touch.holding = true;
+		touch.isTrusted = true;
 		conf.panel.changed = false;
 
 		this._adjustContainerCss("start", holdPos);
@@ -145,9 +147,14 @@ export default superclass => class extends superclass {
 	 * 'animationEnd' event handler
 	 */
 	_animationEndHandler() {
-		this._conf.panel.animating = false;
+		const conf = this._conf;
+
+		conf.panel.animating = false;
 
 		this._setPhaseValue("end");
 		this._triggerRestore();
+
+		// reset isTrusted
+		conf.touch.isTrusted = false;
 	}
 };

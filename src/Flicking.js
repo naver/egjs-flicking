@@ -875,7 +875,8 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			eventType: name,
 			index: panel.currIndex,
 			no: panel.currNo,
-			direction: conf.touch.direction
+			direction: conf.touch.direction,
+			isTrusted: conf.touch.isTrusted
 		}, param));
 	}
 
