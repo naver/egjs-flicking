@@ -26,7 +26,7 @@ describe("restore() method", function() {
 		};
 
 		let setCondition = function() {
-			inst._axesInst._axm.set({flick:145});
+			inst._axesInst.axm.set({flick:145});
 			inst._setTranslate([-145,0]);
 		};
 
@@ -58,7 +58,7 @@ describe("restore() method", function() {
 			const panel = inst._conf.panel;
 			const pos = panel.size * (panel.currIndex + 1);
 
-			inst._axesInst._axm.set({flick:pos});
+			inst._axesInst.axm.set({flick:pos});
 			inst._setTranslate([-pos,0]);
 
 			inst.restore(0);
