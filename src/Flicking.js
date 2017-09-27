@@ -427,9 +427,9 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			);
 
 			this._applyPanelsCss = function applyCss(v, i) {
-				const coords = this._getDataByDirection([
-					`${this._conf.panel.size * i}px`, 0
-				]);
+				const coords = this._getDataByDirection(
+					[`${this._conf.panel.size * i}px`, 0]
+				);
 
 				utils.css(v, {
 					left: coords[0],
