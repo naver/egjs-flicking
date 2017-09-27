@@ -118,7 +118,7 @@ exports.document = document;
  * @egjs/component JavaScript library
  * http://naver.github.io/egjs/component
  * 
- * @version 2.0.0
+ * @version 2.1.0
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(true)
@@ -208,7 +208,7 @@ var _Component2 = _interopRequireDefault(_Component);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-_Component2["default"].VERSION = "2.0.0";
+_Component2["default"].VERSION = "2.1.0";
 module.exports = _Component2["default"];
 
 /***/ }),
@@ -249,13 +249,27 @@ var Component = function () {
   * @ko 커스텀 이벤트를 발생시킨다
   * @param {String} eventName The name of the custom event to be triggered <ko>발생할 커스텀 이벤트의 이름</ko>
   * @param {Object} customEvent Event data to be sent when triggering a custom event <ko>커스텀 이벤트가 발생할 때 전달할 데이터</ko>
-  * @return {Boolean} Indicates whether the event has occurred. If the stop() method is called by a custom event handler, it will return false and prevent the event from occurring. <ko>이벤트 발생 여부. 커스텀 이벤트 핸들러에서 stop() 메서드를 호출하면 'false'를 반환하고 이벤트 발생을 중단한다.</ko>
+  * @return {Boolean} Indicates whether the event has occurred. If the stop() method is called by a custom event handler, it will return false and prevent the event from occurring. <a href="https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F">Ref</a> <ko>이벤트 발생 여부. 커스텀 이벤트 핸들러에서 stop() 메서드를 호출하면 'false'를 반환하고 이벤트 발생을 중단한다. <a href="https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F">참고</a></ko>
   * @example
  class Some extends eg.Component {
   some(){
-    this.trigger("hi");// fire hi event.
+  	if(this.trigger("beforeHi")){ // When event call to stop return false.
+ 	this.trigger("hi");// fire hi event.
+  	}
   }
  }
+ const some = new Some();
+ some.on("beforeHi", (e) => {
+ if(condition){
+ 	e.stop(); // When event call to stop, `hi` event not call.
+ }
+ });
+ some.on("hi", (e) => {
+ // `currentTarget` is component instance.
+ console.log(some === e.currentTarget); // true
+ });
+ // If you want to more know event design. You can see article.
+ // https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F
   */
 
 
@@ -281,6 +295,7 @@ var Component = function () {
 		customEvent.stop = function () {
 			isCanceled = true;
 		};
+		customEvent.currentTarget = this;
 
 		for (var _len = arguments.length, restParam = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
 			restParam[_key - 2] = arguments[_key];
@@ -2168,20 +2183,20 @@ module.exports = exports["default"];
  * @egjs/axes project is licensed under the MIT license
  * 
  * @egjs/axes JavaScript library
+ * https://github.com/naver/egjs-axes
  * 
- * 
- * @version 2.0.0
+ * @version 2.2.0
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(true)
 		module.exports = factory(__webpack_require__(6), __webpack_require__(1));
 	else if(typeof define === 'function' && define.amd)
-		define("Axes", ["hammerjs", "@egjs/component"], factory);
+		define(["hammerjs", "@egjs/component"], factory);
 	else if(typeof exports === 'object')
 		exports["Axes"] = factory(require("hammerjs"), require("@egjs/component"));
 	else
 		root["eg"] = root["eg"] || {}, root["eg"]["Axes"] = factory(root["Hammer"], root["eg"]["Component"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_8__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_8__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -2254,6 +2269,16 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 exports.__esModule = true;
+function toArray(nodes) {
+    // const el = Array.prototype.slice.call(nodes);
+    // for IE8
+    var el = [];
+    for (var i = 0, len = nodes.length; i < len; i++) {
+        el.push(nodes[i]);
+    }
+    return el;
+}
+exports.toArray = toArray;
 function $(param, multi) {
     if (multi === void 0) { multi = false; }
     var el;
@@ -2264,10 +2289,10 @@ function $(param, multi) {
         if (match) {
             var dummy = document.createElement("div");
             dummy.innerHTML = param;
-            el = Array.prototype.slice.call(dummy.childNodes);
+            el = toArray(dummy.childNodes);
         }
         else {
-            el = Array.prototype.slice.call(document.querySelectorAll(param));
+            el = toArray(document.querySelectorAll(param));
         }
         if (!multi) {
             el = el.length >= 1 ? el[0] : undefined;
@@ -2315,7 +2340,7 @@ if (raf && !caf) {
 else if (!(raf && caf)) {
     raf = function (callback) {
         return window.setTimeout(function () {
-            callback(window.performance && window.performance.now());
+            callback(window.performance && window.performance.now && window.performance.now() || new Date().getTime());
         }, 16);
     };
     caf = window.clearTimeout;
@@ -2350,6 +2375,69 @@ exports.cancelAnimationFrame = cancelAnimationFrame;
 "use strict";
 
 exports.__esModule = true;
+var Hammer = __webpack_require__(4);
+exports.SUPPORT_TOUCH = "ontouchstart" in window;
+exports.UNIQUEKEY = "_EGJS_AXES_INPUTTYPE_";
+function toAxis(source, offset) {
+    return offset.reduce(function (acc, v, i) {
+        if (source[i]) {
+            acc[source[i]] = v;
+        }
+        return acc;
+    }, {});
+}
+exports.toAxis = toAxis;
+;
+function createHammer(element, recognizers, inputClass) {
+    try {
+        var options = {
+            recognizers: [
+                recognizers
+            ],
+            // css properties were removed due to usablility issue
+            // http://hammerjs.github.io/jsdoc/Hammer.defaults.cssProps.html
+            cssProps: {
+                userSelect: "none",
+                touchSelect: "none",
+                touchCallout: "none",
+                userDrag: "none"
+            }
+        };
+        inputClass && (options["inputClass"] = inputClass);
+        // create Hammer
+        return new Hammer.Manager(element, options);
+    }
+    catch (e) {
+        return null;
+    }
+}
+exports.createHammer = createHammer;
+;
+function convertInputType(inputType) {
+    if (inputType === void 0) { inputType = []; }
+    var hasTouch = false;
+    var hasMouse = false;
+    inputType.forEach(function (v) {
+        switch (v) {
+            case "mouse":
+                hasMouse = true;
+                break;
+            case "touch": hasTouch = exports.SUPPORT_TOUCH;
+        }
+    });
+    return (hasTouch && Hammer.TouchInput) ||
+        (hasMouse && Hammer.MouseInput) || null;
+}
+exports.convertInputType = convertInputType;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
 var Coordinate = {
     getInsidePosition: function (destPos, range, circular, bounce) {
         var toDestPos = destPos;
@@ -2359,7 +2447,7 @@ var Coordinate = {
         ];
         toDestPos = Math.max(targetRange[0], toDestPos);
         toDestPos = Math.min(targetRange[1], toDestPos);
-        return +Math.min(targetRange[1], Math.max(targetRange[0], toDestPos)).toFixed(5);
+        return +toDestPos.toFixed(5);
     },
     // determine outside
     isOutside: function (pos, range) {
@@ -2392,7 +2480,7 @@ exports["default"] = Coordinate;
 
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2406,9 +2494,9 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     return t;
 };
 exports.__esModule = true;
-var Coordinate_1 = __webpack_require__(1);
+var Coordinate_1 = __webpack_require__(2);
 ;
-var AxisManager = (function () {
+var AxisManager = /** @class */ (function () {
     function AxisManager(axis, options) {
         var _this = this;
         this.axis = axis;
@@ -2503,73 +2591,10 @@ exports.AxisManager = AxisManager;
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var Hammer = __webpack_require__(3);
-exports.SUPPORT_TOUCH = "ontouchstart" in window;
-exports.UNIQUEKEY = "_EGJS_AXES_INPUTTYPE_";
-function toAxis(source, offset) {
-    return offset.reduce(function (acc, v, i) {
-        if (source[i]) {
-            acc[source[i]] = v;
-        }
-        return acc;
-    }, {});
-}
-exports.toAxis = toAxis;
-;
-function createHammer(element, recognizers, inputClass) {
-    try {
-        var options = {
-            recognizers: [
-                recognizers
-            ],
-            // css properties were removed due to usablility issue
-            // http://hammerjs.github.io/jsdoc/Hammer.defaults.cssProps.html
-            cssProps: {
-                userSelect: "none",
-                touchSelect: "none",
-                touchCallout: "none",
-                userDrag: "none"
-            }
-        };
-        inputClass && (options["inputClass"] = inputClass);
-        // create Hammer
-        return new Hammer.Manager(element, options);
-    }
-    catch (e) {
-        return null;
-    }
-}
-exports.createHammer = createHammer;
-;
-function convertInputType(inputType) {
-    if (inputType === void 0) { inputType = []; }
-    var hasTouch = false;
-    var hasMouse = false;
-    inputType.forEach(function (v) {
-        switch (v) {
-            case "mouse":
-                hasMouse = true;
-                break;
-            case "touch": hasTouch = exports.SUPPORT_TOUCH;
-        }
-    });
-    return (hasTouch && Hammer.TouchInput) ||
-        (hasMouse && Hammer.MouseInput) || null;
-}
-exports.convertInputType = convertInputType;
-
+module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
 
 /***/ }),
 /* 5 */
@@ -2640,11 +2665,12 @@ var Component = __webpack_require__(8);
 var AnimationManager_1 = __webpack_require__(9);
 var EventManager_1 = __webpack_require__(10);
 var InterruptManager_1 = __webpack_require__(11);
-var AxisManager_1 = __webpack_require__(2);
+var AxisManager_1 = __webpack_require__(3);
 var InputObserver_1 = __webpack_require__(12);
 var PanInput_1 = __webpack_require__(13);
 var PinchInput_1 = __webpack_require__(14);
 var WheelInput_1 = __webpack_require__(15);
+var MoveKeyInput_1 = __webpack_require__(16);
 var const_1 = __webpack_require__(5);
 /**
  * @typedef {Object} AxisOption The Axis information. The key of the axis specifies the name to use as the logical virtual coordinate system.
@@ -2676,7 +2702,7 @@ var const_1 = __webpack_require__(5);
  *
  * @param {Object.<string, AxisOption>} axis Axis information managed by eg.Axes. The key of the axis specifies the name to use as the logical virtual coordinate system.  <ko>eg.Axes가 관리하는 축 정보. 축의 키는 논리적인 가상 좌표계로 사용할 이름을 지정한다.</ko>
  * @param {AxesOption} [options] The option object of the eg.Axes module<ko>eg.Axes 모듈의 옵션 객체</ko>
- * @param {Object.<string, number>} startPos The coordinates to be moved when creating an instance<ko>인스턴스 생성시 이동할 좌표</ko>
+ * @param {Object.<string, number>} [startPos] The coordinates to be moved when creating an instance. not triggering change event.<ko>인스턴스 생성시 이동할 좌표, change 이벤트는 발생하지 않음.</ko>
  *
  * @support {"ie": "10+", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "2.3+ (except 3.x)"}
  * @example
@@ -2737,7 +2763,7 @@ var const_1 = __webpack_require__(5);
  * // [PinchInput] Connect 'something2' axis when two pointers are moving toward (zoom-in) or away from each other (zoom-out).
  * axes.connect("something2", pinchInputArea);
  */
-var Axes = (function (_super) {
+var Axes = /** @class */ (function (_super) {
     __extends(Axes, _super);
     function Axes(axis, options, startPos) {
         if (axis === void 0) { axis = {}; }
@@ -2754,12 +2780,13 @@ var Axes = (function (_super) {
             deceleration: 0.0006
         }, options);
         _this._complementOptions();
-        _this._axm = new AxisManager_1.AxisManager(_this.axis, _this.options);
-        _this._em = new EventManager_1.EventManager(_this, _this._axm);
-        _this._itm = new InterruptManager_1.InterruptManager(_this.options);
-        _this._am = new AnimationManager_1.AnimationManager(_this.options, _this._itm, _this._em, _this._axm);
-        _this._io = new InputObserver_1.InputObserver(_this.options, _this._itm, _this._em, _this._axm, _this._am);
-        startPos && setTimeout(function () { return _this._em.triggerChange(startPos); }, 0);
+        _this.itm = new InterruptManager_1.InterruptManager(_this.options);
+        _this.axm = new AxisManager_1.AxisManager(_this.axis, _this.options);
+        _this.em = new EventManager_1.EventManager(_this);
+        _this.am = new AnimationManager_1.AnimationManager(_this);
+        _this.io = new InputObserver_1.InputObserver(_this);
+        _this.em.setAnimationManager(_this.am);
+        startPos && _this.em.triggerChange(startPos);
         return _this;
     }
     /**
@@ -2827,7 +2854,7 @@ var Axes = (function (_super) {
             }
         }
         inputType.mapAxes(mapped);
-        inputType.connect(this._io);
+        inputType.connect(this.io);
         this._inputs.push(inputType);
         return this;
     };
@@ -2861,8 +2888,10 @@ var Axes = (function (_super) {
     Axes.prototype.disconnect = function (inputType) {
         if (inputType) {
             var index = this._inputs.indexOf(inputType);
-            this._inputs[index].disconnect();
-            ~index && this._inputs.splice(index, 1);
+            if (index >= 0) {
+                this._inputs[index].disconnect();
+                this._inputs.splice(index, 1);
+            }
         }
         else {
             this._inputs.forEach(function (v) { return v.disconnect(); });
@@ -2893,7 +2922,7 @@ var Axes = (function (_super) {
      * axes.get(["x", "zoom"]); // {"x": 0, "zoom": 50}
      */
     Axes.prototype.get = function (axes) {
-        return this._axm.get(axes);
+        return this.axm.get(axes);
     };
     /**
      * Moves an axis to specific coordinates.
@@ -2925,7 +2954,7 @@ var Axes = (function (_super) {
      */
     Axes.prototype.setTo = function (pos, duration) {
         if (duration === void 0) { duration = 0; }
-        this._am.setTo(pos, duration);
+        this.am.setTo(pos, duration);
         return this;
     };
     /**
@@ -2958,7 +2987,7 @@ var Axes = (function (_super) {
      */
     Axes.prototype.setBy = function (pos, duration) {
         if (duration === void 0) { duration = 0; }
-        this._am.setBy(pos, duration);
+        this.am.setBy(pos, duration);
         return this;
     };
     /**
@@ -2985,7 +3014,7 @@ var Axes = (function (_super) {
      * axes.isBounceArea();
      */
     Axes.prototype.isBounceArea = function (axes) {
-        return this._axm.isOutside(axes);
+        return this.axm.isOutside(axes);
     };
     /**
     * Destroys properties, and events used in a module and disconnect all connections to inputTypes.
@@ -2994,12 +3023,13 @@ var Axes = (function (_super) {
     */
     Axes.prototype.destroy = function () {
         this.disconnect();
-        this._em.destroy();
+        this.em.destroy();
     };
     Axes.VERSION = "2.1.0";
     Axes.PanInput = PanInput_1.PanInput;
     Axes.PinchInput = PinchInput_1.PinchInput;
     Axes.WheelInput = WheelInput_1.WheelInput;
+    Axes.MoveKeyInput = MoveKeyInput_1.MoveKeyInput;
     /**
      * @name eg.Axes.TRANSFORM
      * @desc Returns the transform attribute with CSS vendor prefixes.
@@ -3086,11 +3116,12 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     return t;
 };
 exports.__esModule = true;
-var Coordinate_1 = __webpack_require__(1);
-var AxisManager_1 = __webpack_require__(2);
+var Coordinate_1 = __webpack_require__(2);
+var AxisManager_1 = __webpack_require__(3);
 var utils_1 = __webpack_require__(0);
-var AnimationManager = (function () {
-    function AnimationManager(options, itm, em, axm) {
+var AnimationManager = /** @class */ (function () {
+    function AnimationManager(_a) {
+        var options = _a.options, itm = _a.itm, em = _a.em, axm = _a.axm;
         this.options = options;
         this.itm = itm;
         this.em = em;
@@ -3112,48 +3143,63 @@ var AnimationManager = (function () {
         }
         return AnimationManager.getDuration(duration, this.options.minimumDuration, this.options.maximumDuration);
     };
-    AnimationManager.prototype.createAnimationParam = function (pos, duration, inputEvent) {
-        if (inputEvent === void 0) { inputEvent = null; }
+    AnimationManager.prototype.createAnimationParam = function (pos, duration, option) {
         var depaPos = this.axm.get();
         var destPos = this.axm.get(this.axm.map(pos, function (v, k, opt) {
             return Coordinate_1["default"].getInsidePosition(v, opt.range, opt.circular, opt.bounce);
         }));
+        var inputEvent = option && option.event || null;
         return {
             depaPos: depaPos,
             destPos: destPos,
             duration: AnimationManager.getDuration(duration, this.options.minimumDuration, this.options.maximumDuration),
             delta: this.axm.getDelta(depaPos, destPos),
             inputEvent: inputEvent,
+            input: option && option.input || null,
+            isTrusted: !!inputEvent,
             done: this.animationEnd
         };
     };
-    AnimationManager.prototype.grab = function (axes, event) {
+    AnimationManager.prototype.grab = function (axes, option) {
         if (this._animateParam && !axes.length) {
             var orgPos_1 = this.axm.get(axes);
             var pos = this.axm.map(orgPos_1, function (v, k, opt) { return Coordinate_1["default"].getCirculatedPos(v, opt.range, opt.circular); });
             if (!this.axm.every(pos, function (v, k) { return orgPos_1[k] === v; })) {
-                this.em.triggerChange(pos, event);
+                this.em.triggerChange(pos, option, !!option);
             }
             this._animateParam = null;
             this._raf && utils_1.cancelAnimationFrame(this._raf);
             this._raf = null;
-            this.em.triggerAnimationEnd();
+            this.em.triggerAnimationEnd(!!event);
         }
     };
-    AnimationManager.prototype.restore = function (inputEvent) {
-        if (inputEvent === void 0) { inputEvent = null; }
+    AnimationManager.prototype.getEventInfo = function () {
+        if (this._animateParam && this._animateParam.input && this._animateParam.inputEvent) {
+            return {
+                input: this._animateParam.input,
+                event: this._animateParam.inputEvent
+            };
+        }
+        else {
+            return null;
+        }
+    };
+    AnimationManager.prototype.restore = function (option) {
         var pos = this.axm.get();
         var destPos = this.axm.map(pos, function (v, k, opt) { return Math.min(opt.range[1], Math.max(opt.range[0], v)); });
-        this.animateTo(destPos, this.getDuration(pos, destPos), inputEvent);
+        this.animateTo(destPos, this.getDuration(pos, destPos), option);
     };
     AnimationManager.prototype.animationEnd = function () {
+        var beforeParam = this.getEventInfo();
         this._animateParam = null;
         // for Circular
         var circularTargets = this.axm.filter(this.axm.get(), function (v, k, opt) { return Coordinate_1["default"].isCircularable(v, opt.range, opt.circular); });
         Object.keys(circularTargets).length > 0 && this.setTo(this.axm.map(circularTargets, function (v, k, opt) { return Coordinate_1["default"].getCirculatedPos(v, opt.range, opt.circular); }));
         this.itm.setInterrupt(false);
-        this.em.triggerAnimationEnd();
-        this.axm.isOutside() && this.restore();
+        this.em.triggerAnimationEnd(!!beforeParam);
+        if (this.axm.isOutside()) {
+            this.restore(beforeParam);
+        }
     };
     AnimationManager.prototype.animateLoop = function (param, complete) {
         this._animateParam = __assign({}, param);
@@ -3184,10 +3230,9 @@ var AnimationManager = (function () {
         userWish.duration = AnimationManager.getDuration(userWish.duration, this.options.minimumDuration, this.options.maximumDuration);
         return userWish;
     };
-    AnimationManager.prototype.animateTo = function (destPos, duration, inputEvent) {
+    AnimationManager.prototype.animateTo = function (destPos, duration, option) {
         var _this = this;
-        if (inputEvent === void 0) { inputEvent = null; }
-        var param = this.createAnimationParam(destPos, duration, inputEvent);
+        var param = this.createAnimationParam(destPos, duration, option);
         var depaPos = __assign({}, param.depaPos);
         var retTrigger = this.em.triggerAnimationStart(param);
         // to control
@@ -3197,11 +3242,15 @@ var AnimationManager = (function () {
             console.warn("You can't stop the 'animation' event when 'circular' is true.");
         }
         if (retTrigger && !AxisManager_1.AxisManager.equal(userWish.destPos, depaPos)) {
+            var inputEvent = option && option.event || null;
             this.animateLoop({
                 depaPos: depaPos,
                 destPos: userWish.destPos,
                 duration: userWish.duration,
-                delta: this.axm.getDelta(depaPos, userWish.destPos)
+                delta: this.axm.getDelta(depaPos, userWish.destPos),
+                isTrusted: !!inputEvent,
+                inputEvent: inputEvent,
+                input: option && option.input || null
             }, function () { return _this.animationEnd(); });
         }
     };
@@ -3274,19 +3323,20 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     return t;
 };
 exports.__esModule = true;
-var EventManager = (function () {
-    function EventManager(axes, axm) {
+var EventManager = /** @class */ (function () {
+    function EventManager(axes) {
         this.axes = axes;
-        this.axm = axm;
     }
     /**
      * This event is fired when a user holds an element on the screen of the device.
      * @ko 사용자가 기기의 화면에 손을 대고 있을 때 발생하는 이벤트
      * @name eg.Axes#hold
      * @event
-     * @param {Object} param The object of data to be sent when the event is fired<ko>이벤트가 발생할 때 전달되는 데이터 객체</ko>
-     * @param {Object.<string, number>} param.pos coordinate <ko>좌표 정보</ko>
-     * @param {Object} param.inputEvent The event object received from inputType <ko>inputType으로 부터 받은 이벤트 객체</ko>
+     * @type {object} The object of data to be sent when the event is fired<ko>이벤트가 발생할 때 전달되는 데이터 객체</ko>
+     * @property {Object.<string, number>} pos coordinate <ko>좌표 정보</ko>
+     * @property {Object} input The instance of inputType where the event occurred<ko>이벤트가 발생한 inputType 인스턴스</ko>
+     * @property {Object} inputEvent The event object received from inputType <ko>inputType으로 부터 받은 이벤트 객체</ko>
+     * @property {Boolean} isTrusted Returns true if an event was generated by the user action, or false if it was caused by a script or API call <ko>사용자의 액션에 의해 이벤트가 발생하였으면 true, 스크립트나 API호출에 의해 발생하였을 경우에는 false를 반환한다.</ko>
      *
      * @example
      * const axes = new eg.Axes({
@@ -3298,13 +3348,17 @@ var EventManager = (function () {
      *   }
      * }).on("hold", function(event) {
      *   // event.pos
+     *   // event.input
      *   // event.inputEvent
+     *   // isTrusted
      * });
      */
-    EventManager.prototype.triggerHold = function (pos, event) {
+    EventManager.prototype.triggerHold = function (pos, option) {
         this.axes.trigger("hold", {
             pos: pos,
-            inputEvent: event
+            input: option.input || null,
+            inputEvent: option.event || null,
+            isTrusted: true
         });
     };
     /** Specifies the coordinates to move after the 'change' event. It works when the holding value of the change event is true.
@@ -3347,13 +3401,14 @@ var EventManager = (function () {
      * @ko 사용자가 기기의 화면에서 손을 뗐을 때 발생하는 이벤트
      * @name eg.Axes#release
      * @event
-     *
-     * @param {Object} param The object of data to be sent when the event is fired<ko>이벤트가 발생할 때 전달되는 데이터 객체</ko>
-     * @param {Object.<string, number>} param.depaPos The coordinates when releasing an element<ko>손을 뗐을 때의 좌표 </ko>
-     * @param {Object.<string, number>} param.destPos The coordinates to move to after releasing an element<ko>손을 뗀 뒤에 이동할 좌표</ko>
-     * @param {Object.<string, number>} param.delta  The movement variation of coordinate <ko>좌표의 변화량</ko>
-     * @param {Object} param.inputEvent The event object received from inputType <ko>inputType으로 부터 받은 이벤트 객체</ko>
-     * @param {setTo} param.setTo Specifies the animation coordinates to move after the event <ko>이벤트 이후 이동할 애니메이션 좌표를 지정한다</ko>
+     * @type {object} The object of data to be sent when the event is fired<ko>이벤트가 발생할 때 전달되는 데이터 객체</ko>
+     * @property {Object.<string, number>} depaPos The coordinates when releasing an element<ko>손을 뗐을 때의 좌표 </ko>
+     * @property {Object.<string, number>} destPos The coordinates to move to after releasing an element<ko>손을 뗀 뒤에 이동할 좌표</ko>
+     * @property {Object.<string, number>} delta  The movement variation of coordinate <ko>좌표의 변화량</ko>
+     * @property {Object} inputEvent The event object received from inputType <ko>inputType으로 부터 받은 이벤트 객체</ko>
+     * @property {Object} input The instance of inputType where the event occurred<ko>이벤트가 발생한 inputType 인스턴스</ko>
+     * @property {setTo} setTo Specifies the animation coordinates to move after the event <ko>이벤트 이후 이동할 애니메이션 좌표를 지정한다</ko>
+     * @property {Boolean} isTrusted Returns true if an event was generated by the user action, or false if it was caused by a script or API call <ko>사용자의 액션에 의해 이벤트가 발생하였으면 true, 스크립트나 API호출에 의해 발생하였을 경우에는 false를 반환한다.</ko>
      *
      * @example
      * const axes = new eg.Axes({
@@ -3367,15 +3422,16 @@ var EventManager = (function () {
      *   // event.depaPos
      *   // event.destPos
      *   // event.delta
+     *   // event.input
      *   // event.inputEvent
      *   // event.setTo
+     *   // event.isTrusted
      *
      *   // if you want to change the animation coordinates to move after the 'release' event.
      *   event.setTo({x: 10}, 2000);
      * });
      */
-    EventManager.prototype.triggerRelease = function (param, event) {
-        if (event === void 0) { event = null; }
+    EventManager.prototype.triggerRelease = function (param) {
         param.setTo = this.createUserControll(param.destPos, param.duration);
         this.axes.trigger("release", param);
     };
@@ -3384,13 +3440,14 @@ var EventManager = (function () {
      * @ko 좌표가 변경됐을 때 발생하는 이벤트
      * @name eg.Axes#change
      * @event
-     *
-     * @param {Object} param The object of data to be sent when the event is fired <ko>이벤트가 발생할 때 전달되는 데이터 객체</ko>
-     * @param {Object.<string, number>} param.pos  The coordinate <ko>좌표</ko>
-     * @param {Object.<string, number>} param.delta  The movement variation of coordinate <ko>좌표의 변화량</ko>
-     * @param {Boolean} param.holding Indicates whether a user holds an element on the screen of the device.<ko>사용자가 기기의 화면을 누르고 있는지 여부</ko>
-     * @param {Object} param.inputEvent The event object received from inputType. It returns null if the event is fired through a call to the setTo() or setBy() method.<ko>inputType으로 부터 받은 이벤트 객체. setTo() 메서드나 setBy() 메서드를 호출해 이벤트가 발생했을 때는 'null'을 반환한다.</ko>
-     * @param {set} param.set Specifies the coordinates to move after the event. It works when the holding value is true <ko>이벤트 이후 이동할 좌표를 지정한다. holding 값이 true일 경우에 동작한다.</ko>
+     * @type {object} The object of data to be sent when the event is fired <ko>이벤트가 발생할 때 전달되는 데이터 객체</ko>
+     * @property {Object.<string, number>} pos  The coordinate <ko>좌표</ko>
+     * @property {Object.<string, number>} delta  The movement variation of coordinate <ko>좌표의 변화량</ko>
+     * @property {Boolean} holding Indicates whether a user holds an element on the screen of the device.<ko>사용자가 기기의 화면을 누르고 있는지 여부</ko>
+     * @property {Object} input The instance of inputType where the event occurred. If the value is changed by animation, it returns 'null'.<ko>이벤트가 발생한 inputType 인스턴스. 애니메이션에 의해 값이 변경될 경우에는 'null'을 반환한다.</ko>
+     * @property {Object} inputEvent The event object received from inputType. If the value is changed by animation, it returns 'null'.<ko>inputType으로 부터 받은 이벤트 객체. 애니메이션에 의해 값이 변경될 경우에는 'null'을 반환한다.</ko>
+     * @property {set} set Specifies the coordinates to move after the event. It works when the holding value is true <ko>이벤트 이후 이동할 좌표를 지정한다. holding 값이 true일 경우에 동작한다.</ko>
+     * @property {Boolean} isTrusted Returns true if an event was generated by the user action, or false if it was caused by a script or API call <ko>사용자의 액션에 의해 이벤트가 발생하였으면 true, 스크립트나 API호출에 의해 발생하였을 경우에는 false를 반환한다.</ko>
      *
      * @example
      * const axes = new eg.Axes({
@@ -3403,70 +3460,49 @@ var EventManager = (function () {
      * }).on("change", function(event) {
      *   // event.pos
      *   // event.delta
+     *   // event.input
      *   // event.inputEvent
      *   // event.holding
      *   // event.set
+     *   // event.isTrusted
      *
      *   // if you want to change the coordinates to move after the 'change' event.
      *   // it works when the holding value of the change event is true.
      *   event.holding && event.set({x: 10});
      * });
      */
-    EventManager.prototype.triggerChange = function (pos, event) {
-        if (event === void 0) { event = null; }
-        var moveTo = this.axm.moveTo(pos);
+    EventManager.prototype.triggerChange = function (pos, option, holding) {
+        if (option === void 0) { option = null; }
+        if (holding === void 0) { holding = false; }
+        var eventInfo = this.am.getEventInfo();
+        var moveTo = this.am.axm.moveTo(pos);
+        var inputEvent = option && option.event || eventInfo && eventInfo.event || null;
         var param = {
             pos: moveTo.pos,
             delta: moveTo.delta,
-            holding: event !== null,
-            inputEvent: event,
+            holding: holding,
+            inputEvent: inputEvent,
+            isTrusted: !!inputEvent,
+            input: option && option.input || eventInfo && eventInfo.input || null,
             set: event ? this.createUserControll(moveTo.pos) : function () { }
         };
         this.axes.trigger("change", param);
-        event && this.axm.set(param.set()["destPos"]);
+        event && this.am.axm.set(param.set()["destPos"]);
     };
     /**
-       * This event is fired when animation starts.
-       * @ko 에니메이션이 시작할 때 발생한다.
-       * @name eg.Axes#animationStart
-       * @event
-       *
-       * @param {Object} param The object of data to be sent when the event is fired<ko>이벤트가 발생할 때 전달되는 데이터 객체</ko>
-       * @param {Object.<string, number>} param.depaPos The coordinates when animation starts<ko>애니메이션이 시작 되었을 때의 좌표 </ko>
-       * @param {Object.<string, number>} param.destPos The coordinates to move to. If you change this value, you can run the animation<ko>이동할 좌표. 이값을 변경하여 애니메이션을 동작시킬수 있다</ko>
-       * @param {Object.<string, number>} param.delta  The movement variation of coordinate <ko>좌표의 변화량</ko>
-       * @param {Number} duration Duration of the animation (unit: ms). If you change this value, you can control the animation duration time.<ko>애니메이션 진행 시간(단위: ms). 이값을 변경하여 애니메이션의 이동시간을 조절할 수 있다.</ko>
-       * @param {Object} param.inputEvent The event object received from inputType <ko>inputType으로 부터 받은 이벤트 객체</ko>
-       * @param {setTo} param.setTo Specifies the animation coordinates to move after the event <ko>이벤트 이후 이동할 애니메이션 좌표를 지정한다</ko>
-       *
-       * @example
-       * const axes = new eg.Axes({
-       *   "x": {
-       *      range: [0, 100]
-       *   },
-       *   "zoom": {
-       *      range: [50, 30]
-       *   }
-       * }).on("release", function(event) {
-       *   // event.depaPos
-       *   // event.destPos
-       *   // event.delta
-       *   // event.inputEvent
-       *   // event.setTo
-       *
-       *   // if you want to change the animation coordinates to move after the 'animationStart' event.
-       *   event.setTo({x: 10}, 2000);
-       * });
-       */
-    EventManager.prototype.triggerAnimationStart = function (param) {
-        param.setTo = this.createUserControll(param.destPos, param.duration);
-        return this.axes.trigger("animationStart", param);
-    };
-    /**
-     * This event is fired when animation ends.
-     * @ko 에니메이션이 끝났을 때 발생한다.
-     * @name eg.Axes#animationEnd
+     * This event is fired when animation starts.
+     * @ko 에니메이션이 시작할 때 발생한다.
+     * @name eg.Axes#animationStart
      * @event
+     * @type {object} The object of data to be sent when the event is fired<ko>이벤트가 발생할 때 전달되는 데이터 객체</ko>
+     * @property {Object.<string, number>} depaPos The coordinates when animation starts<ko>애니메이션이 시작 되었을 때의 좌표 </ko>
+     * @property {Object.<string, number>} destPos The coordinates to move to. If you change this value, you can run the animation<ko>이동할 좌표. 이값을 변경하여 애니메이션을 동작시킬수 있다</ko>
+     * @property {Object.<string, number>} delta  The movement variation of coordinate <ko>좌표의 변화량</ko>
+     * @property {Number} duration Duration of the animation (unit: ms). If you change this value, you can control the animation duration time.<ko>애니메이션 진행 시간(단위: ms). 이값을 변경하여 애니메이션의 이동시간을 조절할 수 있다.</ko>
+     * @property {Object} input The instance of inputType where the event occurred. If the value is changed by animation, it returns 'null'.<ko>이벤트가 발생한 inputType 인스턴스. 애니메이션에 의해 값이 변경될 경우에는 'null'을 반환한다.</ko>
+     * @property {Object} inputEvent The event object received from inputType <ko>inputType으로 부터 받은 이벤트 객체</ko>
+     * @property {setTo} setTo Specifies the animation coordinates to move after the event <ko>이벤트 이후 이동할 애니메이션 좌표를 지정한다</ko>
+     * @property {Boolean} isTrusted Returns true if an event was generated by the user action, or false if it was caused by a script or API call <ko>사용자의 액션에 의해 이벤트가 발생하였으면 true, 스크립트나 API호출에 의해 발생하였을 경우에는 false를 반환한다.</ko>
      *
      * @example
      * const axes = new eg.Axes({
@@ -3476,11 +3512,48 @@ var EventManager = (function () {
      *   "zoom": {
      *      range: [50, 30]
      *   }
-     * }).on("animationEnd", function() {
+     * }).on("release", function(event) {
+     *   // event.depaPos
+     *   // event.destPos
+     *   // event.delta
+     *   // event.input
+     *   // event.inputEvent
+     *   // event.setTo
+     *   // event.isTrusted
+     *
+     *   // if you want to change the animation coordinates to move after the 'animationStart' event.
+     *   event.setTo({x: 10}, 2000);
      * });
      */
-    EventManager.prototype.triggerAnimationEnd = function () {
-        this.axes.trigger("animationEnd");
+    EventManager.prototype.triggerAnimationStart = function (param) {
+        param.setTo = this.createUserControll(param.destPos, param.duration);
+        return this.axes.trigger("animationStart", param);
+    };
+    /**
+     * This event is fired when animation ends.
+     * @ko 에니메이션이 끝났을 때 발생한다.
+     * @name eg.Axes#animationEnd
+     * @event
+     * @type {object} The object of data to be sent when the event is fired<ko>이벤트가 발생할 때 전달되는 데이터 객체</ko>
+     * @property {Boolean} isTrusted Returns true if an event was generated by the user action, or false if it was caused by a script or API call <ko>사용자의 액션에 의해 이벤트가 발생하였으면 true, 스크립트나 API호출에 의해 발생하였을 경우에는 false를 반환한다.</ko>
+     *
+     * @example
+     * const axes = new eg.Axes({
+     *   "x": {
+     *      range: [0, 100]
+     *   },
+     *   "zoom": {
+     *      range: [50, 30]
+     *   }
+     * }).on("animationEnd", function(event) {
+     *   // event.isTrusted
+     * });
+     */
+    EventManager.prototype.triggerAnimationEnd = function (isTrusted) {
+        if (isTrusted === void 0) { isTrusted = false; }
+        this.axes.trigger("animationEnd", {
+            isTrusted: isTrusted
+        });
     };
     EventManager.prototype.createUserControll = function (pos, duration) {
         if (duration === void 0) { duration = 0; }
@@ -3494,6 +3567,9 @@ var EventManager = (function () {
             (userDuration !== undefined) && (userControl.duration = userDuration);
             return userControl;
         };
+    };
+    EventManager.prototype.setAnimationManager = function (am) {
+        this.am = am;
     };
     EventManager.prototype.destroy = function () {
         this.axes.off();
@@ -3511,7 +3587,7 @@ exports.EventManager = EventManager;
 "use strict";
 
 exports.__esModule = true;
-var InterruptManager = (function () {
+var InterruptManager = /** @class */ (function () {
     function InterruptManager(options) {
         this.options = options;
         this._prevented = false; //  check whether the animation event was prevented
@@ -3539,17 +3615,18 @@ exports.InterruptManager = InterruptManager;
 "use strict";
 
 exports.__esModule = true;
-var AxisManager_1 = __webpack_require__(2);
-var Coordinate_1 = __webpack_require__(1);
-var InputObserver = (function () {
-    function InputObserver(options, itm, em, axm, am) {
+var AxisManager_1 = __webpack_require__(3);
+var Coordinate_1 = __webpack_require__(2);
+var InputObserver = /** @class */ (function () {
+    function InputObserver(_a) {
+        var options = _a.options, itm = _a.itm, em = _a.em, axm = _a.axm, am = _a.am;
+        this.isOutside = false;
+        this.moveDistance = null;
         this.options = options;
         this.itm = itm;
         this.em = em;
         this.axm = axm;
         this.am = am;
-        this.isOutside = false;
-        this.moveDistance = null;
     }
     // when move pointer is held in outside
     InputObserver.prototype.atOutside = function (pos) {
@@ -3579,23 +3656,28 @@ var InputObserver = (function () {
             });
         }
     };
-    InputObserver.prototype.hold = function (inputType, event) {
-        if (this.itm.isInterrupted() || !inputType.axes.length) {
+    InputObserver.prototype.get = function (input) {
+        return this.axm.get(input.axes);
+    };
+    InputObserver.prototype.hold = function (input, event) {
+        if (this.itm.isInterrupted() || !input.axes.length) {
             return;
         }
+        var changeOption = {
+            input: input,
+            event: event
+        };
         this.itm.setInterrupt(true);
-        this.am.grab(inputType.axes, event);
-        if (!this.moveDistance) {
-            this.em.triggerHold(this.axm.get(), event);
-        }
-        this.isOutside = this.axm.isOutside(inputType.axes);
-        this.moveDistance = this.axm.get(inputType.axes);
+        this.am.grab(input.axes, changeOption);
+        !this.moveDistance && this.em.triggerHold(this.axm.get(), changeOption);
+        this.isOutside = this.axm.isOutside(input.axes);
+        this.moveDistance = this.axm.get(input.axes);
     };
-    InputObserver.prototype.change = function (inputType, event, offset) {
+    InputObserver.prototype.change = function (input, event, offset) {
         if (!this.itm.isInterrupting() || this.axm.every(offset, function (v) { return v === 0; })) {
             return;
         }
-        var depaPos = this.axm.get(inputType.axes);
+        var depaPos = this.axm.get(input.axes);
         var destPos;
         // for outside logic
         destPos = this.axm.map(this.moveDistance || depaPos, function (v, k) { return v + (offset[k] || 0); });
@@ -3607,16 +3689,19 @@ var InputObserver = (function () {
             this.isOutside = false;
         }
         destPos = this.atOutside(destPos);
-        this.em.triggerChange(destPos, event);
+        this.em.triggerChange(destPos, {
+            input: input,
+            event: event
+        }, true);
     };
-    InputObserver.prototype.release = function (inputType, event, offset, inputDuration) {
+    InputObserver.prototype.release = function (input, event, offset, inputDuration) {
         if (!this.itm.isInterrupting()) {
             return;
         }
         if (!this.moveDistance) {
             return;
         }
-        var pos = this.axm.get(inputType.axes);
+        var pos = this.axm.get(input.axes);
         var depaPos = this.axm.get();
         var destPos = this.axm.get(this.axm.map(offset, function (v, k, opt) {
             return Coordinate_1["default"].getInsidePosition(pos[k] + v, opt.range, opt.circular, opt.bounce);
@@ -3627,20 +3712,26 @@ var InputObserver = (function () {
             destPos: destPos,
             duration: this.am.getDuration(destPos, pos, inputDuration),
             delta: this.axm.getDelta(depaPos, destPos),
-            inputEvent: event
+            inputEvent: event,
+            input: input,
+            isTrusted: true
         };
         this.em.triggerRelease(param);
         this.moveDistance = null;
         // to contol
         var userWish = this.am.getUserControll(param);
         var isEqual = AxisManager_1.AxisManager.equal(userWish.destPos, depaPos);
+        var changeOption = {
+            input: input,
+            event: event
+        };
         if (isEqual || userWish.duration === 0) {
-            !isEqual && this.em.triggerChange(userWish.destPos, event);
+            !isEqual && this.em.triggerChange(userWish.destPos, changeOption, true);
             this.itm.setInterrupt(false);
-            this.axm.isOutside() && this.am.restore(event);
+            this.axm.isOutside() && this.am.restore(changeOption);
         }
         else {
-            this.am.animateTo(userWish.destPos, userWish.duration, event);
+            this.am.animateTo(userWish.destPos, userWish.duration, changeOption);
         }
     };
     return InputObserver;
@@ -3664,10 +3755,10 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     return t;
 };
 exports.__esModule = true;
-var Hammer = __webpack_require__(3);
+var Hammer = __webpack_require__(4);
 var const_1 = __webpack_require__(5);
 var utils_1 = __webpack_require__(0);
-var InputType_1 = __webpack_require__(4);
+var InputType_1 = __webpack_require__(1);
 /**
  * @typedef {Object} PanInputOption The option object of the eg.Axes.PanInput module.
  * @ko eg.Axes.PanInput 모듈의 옵션 객체
@@ -3702,7 +3793,7 @@ var InputType_1 = __webpack_require__(4);
  * @param {HTMLElement|String|jQuery} element An element to use the eg.Axes.PanInput module <ko>eg.Axes.PanInput 모듈을 사용할 엘리먼트</ko>
  * @param {PanInputOption} [options] The option object of the eg.Axes.PanInput module<ko>eg.Axes.PanInput 모듈의 옵션 객체</ko>
  */
-var PanInput = (function () {
+var PanInput = /** @class */ (function () {
     function PanInput(el, options) {
         this.axes = [];
         this.hammer = null;
@@ -3937,9 +4028,9 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     return t;
 };
 exports.__esModule = true;
-var Hammer = __webpack_require__(3);
+var Hammer = __webpack_require__(4);
 var utils_1 = __webpack_require__(0);
-var InputType_1 = __webpack_require__(4);
+var InputType_1 = __webpack_require__(1);
 /**
  * @typedef {Object} PinchInputOption The option object of the eg.Axes.PinchInput module
  * @ko eg.Axes.PinchInput 모듈의 옵션 객체
@@ -3961,11 +4052,12 @@ var InputType_1 = __webpack_require__(4);
  * @param {HTMLElement|String|jQuery} element An element to use the eg.Axes.PinchInput module <ko>eg.Axes.PinchInput 모듈을 사용할 엘리먼트</ko>
  * @param {PinchInputOption} [options] The option object of the eg.Axes.PinchInput module<ko>eg.Axes.PinchInput 모듈의 옵션 객체</ko>
  */
-var PinchInput = (function () {
+var PinchInput = /** @class */ (function () {
     function PinchInput(el, options) {
         this.axes = [];
         this.hammer = null;
         this.element = null;
+        this._base = null;
         this._prev = null;
         /**
          * Hammer helps you add support for touch gestures to your page
@@ -4034,17 +4126,27 @@ var PinchInput = (function () {
         this.hammer = null;
     };
     PinchInput.prototype.onPinchStart = function (event) {
-        this._prev = event.scale;
+        this._base = this.observer.get(this)[this.axes[0]];
+        var offset = this.getOffset(event.scale);
         this.observer.hold(this, event);
+        this.observer.change(this, event, InputType_1.toAxis(this.axes, [offset]));
+        this._prev = event.scale;
     };
     PinchInput.prototype.onPinchMove = function (event) {
-        var offset = (event.scale - this._prev) * this.options.scale;
+        var offset = this.getOffset(event.scale, this._prev);
         this.observer.change(this, event, InputType_1.toAxis(this.axes, [offset]));
         this._prev = event.scale;
     };
     PinchInput.prototype.onPinchEnd = function (event) {
+        var offset = this.getOffset(event.scale, this._prev);
+        this.observer.change(this, event, InputType_1.toAxis(this.axes, [offset]));
         this.observer.release(this, event, InputType_1.toAxis(this.axes, [0]), 0);
+        this._base = null;
         this._prev = null;
+    };
+    PinchInput.prototype.getOffset = function (pinchScale, prev) {
+        if (prev === void 0) { prev = 1; }
+        return this._base * (pinchScale - prev) * this.options.scale;
     };
     PinchInput.prototype.attachEvent = function (observer) {
         this.observer = observer;
@@ -4109,12 +4211,11 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 exports.__esModule = true;
 var utils_1 = __webpack_require__(0);
-var InputType_1 = __webpack_require__(4);
+var InputType_1 = __webpack_require__(1);
 /**
  * @typedef {Object} WheelInputOption The option object of the eg.Axes.WheelInput module
  * @ko eg.Axes.WheelInput 모듈의 옵션 객체
  * @property {Number} [scale=1] Coordinate scale that a user can move<ko>사용자의 동작으로 이동하는 좌표의 배율</ko>
- * @property {Number} [throttle=100]
 **/
 /**
  * @class eg.Axes.WheelInput
@@ -4132,16 +4233,16 @@ var InputType_1 = __webpack_require__(4);
  * @param {HTMLElement|String|jQuery} element An element to use the eg.Axes.WheelInput module <ko>eg.Axes.WheelInput 모듈을 사용할 엘리먼트</ko>
  * @param {WheelInputOption} [options] The option object of the eg.Axes.WheelInput module<ko>eg.Axes.WheelInput 모듈의 옵션 객체</ko>
  */
-var WheelInput = (function () {
+var WheelInput = /** @class */ (function () {
     function WheelInput(el, options) {
         this.axes = [];
         this.element = null;
         this._isEnabled = false;
+        this._isHolded = false;
         this._timer = null;
         this.element = utils_1.$(el);
         this.options = __assign({
-            scale: 1,
-            throttle: 100
+            scale: 1
         }, options);
         this.onWheel = this.onWheel.bind(this);
     }
@@ -4175,13 +4276,19 @@ var WheelInput = (function () {
         if (event.deltaY === 0) {
             return;
         }
+        if (!this._isHolded) {
+            this.observer.hold(this, event);
+            this._isHolded = true;
+        }
+        var offset = (event.deltaY > 0 ? -1 : 1) * this.options.scale;
+        this.observer.change(this, event, InputType_1.toAxis(this.axes, [offset]));
         clearTimeout(this._timer);
         this._timer = setTimeout(function () {
-            _this.observer.hold(_this, event);
-            var offset = (event.deltaY > 0 ? -1 : 1) * _this.options.scale;
-            _this.observer.change(_this, event, InputType_1.toAxis(_this.axes, [offset]));
-            _this.observer.release(_this, event, InputType_1.toAxis(_this.axes, [0]));
-        }, 200);
+            if (_this._isHolded) {
+                _this.observer.release(_this, event, InputType_1.toAxis(_this.axes, [0]));
+                _this._isHolded = false;
+            }
+        }, 50);
     };
     WheelInput.prototype.attachEvent = function (observer) {
         this.observer = observer;
@@ -4228,9 +4335,176 @@ exports.WheelInput = WheelInput;
 ;
 
 
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
+exports.__esModule = true;
+var utils_1 = __webpack_require__(0);
+var InputType_1 = __webpack_require__(1);
+exports.KEYMAP = {
+    LEFT_ARROW: 37,
+    A: 65,
+    UP_ARROW: 38,
+    W: 87,
+    RIGHT_ARROW: 39,
+    D: 68,
+    DOWN_ARROW: 40,
+    S: 83
+};
+/**
+ * @typedef {Object} MoveKeyInputOption The option object of the eg.Axes.MoveKeyInput module
+ * @ko eg.Axes.MoveKeyInput 모듈의 옵션 객체
+ * @property {Array<Number>} [scale] Coordinate scale that a user can move<ko>사용자의 동작으로 이동하는 좌표의 배율</ko>
+ * @property {Number} [scale[0]=1] Coordinate scale for the first axis<ko>첫번째 축의 배율</ko>
+ * @property {Number} [scale[1]=1] Coordinate scale for the decond axis<ko>두번째 축의 배율</ko>
+**/
+/**
+ * @class eg.Axes.MoveKeyInput
+ * @classdesc A module that passes the amount of change to eg.Axes when the move key stroke is occured. use two axis.
+ * @ko 이동키 입력이 발생했을 때의 변화량을 eg.Axes에 전달하는 모듈. 두 개 의 축을 사용한다.
+ *
+ * @example
+ * const moveKey = new eg.Axes.MoveKeyInput("#area", {
+ * 		scale: [1, 1]
+ * });
+ *
+ * // Connect 'x', 'y' axes when the moveKey is pressed.
+ * axes.connect(["x", "y"], moveKey);
+ *
+ * @param {HTMLElement|String|jQuery} element An element to use the eg.Axes.MoveKeyInput module <ko>eg.Axes.MoveKeyInput 모듈을 사용할 엘리먼트</ko>
+ * @param {MoveKeyInputOption} [options] The option object of the eg.Axes.MoveKeyInput module<ko>eg.Axes.MoveKeyInput 모듈의 옵션 객체</ko>
+ */
+var MoveKeyInput = /** @class */ (function () {
+    function MoveKeyInput(el, options) {
+        this.axes = [];
+        this.element = null;
+        this._isEnabled = false;
+        this._isHolded = false;
+        this.element = utils_1.$(el);
+        this.options = __assign({
+            scale: [1, 1]
+        }, options);
+        this.onKeydown = this.onKeydown.bind(this);
+    }
+    MoveKeyInput.prototype.mapAxes = function (axes) {
+        this.axes = axes;
+    };
+    MoveKeyInput.prototype.connect = function (observer) {
+        this.dettachEvent();
+        // add tabindex="0" to the container for making it focusable
+        if (this.element.getAttribute("tabindex") !== "0") {
+            this.element.setAttribute("tabindex", "0");
+        }
+        this.attachEvent(observer);
+        return this;
+    };
+    MoveKeyInput.prototype.disconnect = function () {
+        this.dettachEvent();
+        return this;
+    };
+    /**
+    * Destroys elements, properties, and events used in a module.
+    * @ko 모듈에 사용한 엘리먼트와 속성, 이벤트를 해제한다.
+    * @method eg.Axes.MoveKeyInput#destroy
+    */
+    MoveKeyInput.prototype.destroy = function () {
+        this.disconnect();
+        this.element = null;
+    };
+    MoveKeyInput.prototype.onKeydown = function (event) {
+        if (!this._isEnabled) {
+            return;
+        }
+        event.preventDefault();
+        var isMoveKey = true;
+        var offsets;
+        var e = event;
+        switch (e.keyCode) {
+            case exports.KEYMAP.LEFT_ARROW:
+            case exports.KEYMAP.A:
+                offsets = [-this.options.scale[0], 0];
+                break;
+            case exports.KEYMAP.RIGHT_ARROW:
+            case exports.KEYMAP.D:
+                offsets = [this.options.scale[0], 0];
+                break;
+            case exports.KEYMAP.UP_ARROW:
+            case exports.KEYMAP.W:
+                offsets = [0, this.options.scale[1]];
+                break;
+            case exports.KEYMAP.DOWN_ARROW:
+            case exports.KEYMAP.S:
+                offsets = [0, -this.options.scale[1]];
+                break;
+            default:
+                isMoveKey = false;
+        }
+        if (isMoveKey) {
+            this.observer.change(this, event, InputType_1.toAxis(this.axes, offsets));
+            // Suppress "double action" if event handled
+            e.preventDefault();
+        }
+    };
+    MoveKeyInput.prototype.attachEvent = function (observer) {
+        this.observer = observer;
+        this.element.addEventListener("keydown", this.onKeydown, false);
+        this._isEnabled = true;
+    };
+    MoveKeyInput.prototype.dettachEvent = function () {
+        this.element.removeEventListener("keydown", this.onKeydown, false);
+        this._isEnabled = false;
+        this.observer = null;
+    };
+    /**
+     * Enables input devices
+     * @ko 입력 장치를 사용할 수 있게 한다
+     * @method eg.Axes.MoveKeyInput#enable
+     * @return {eg.Axes.MoveKeyInput} An instance of a module itself <ko>모듈 자신의 인스턴스</ko>
+     */
+    MoveKeyInput.prototype.enable = function () {
+        this._isEnabled = true;
+        return this;
+    };
+    /**
+     * Disables input devices
+     * @ko 입력 장치를 사용할 수 없게 한다.
+     * @method eg.Axes.MoveKeyInput#disable
+     * @return {eg.Axes.MoveKeyInput} An instance of a module itself <ko>모듈 자신의 인스턴스</ko>
+     */
+    MoveKeyInput.prototype.disable = function () {
+        this._isEnabled = false;
+        return this;
+    };
+    /**
+     * Returns whether to use an input device
+     * @ko 입력 장치를 사용 여부를 반환한다.
+     * @method eg.Axes.MoveKeyInput#isEnable
+     * @return {Boolean} Whether to use an input device <ko>입력장치 사용여부</ko>
+     */
+    MoveKeyInput.prototype.isEnable = function () {
+        return this._isEnabled;
+    };
+    return MoveKeyInput;
+}());
+exports.MoveKeyInput = MoveKeyInput;
+;
+
+
 /***/ })
 /******/ ]);
 });
+//# sourceMappingURL=axes.js.map
 
 /***/ }),
 /* 6 */
