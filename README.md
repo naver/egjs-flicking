@@ -51,6 +51,8 @@ $ npm install @egjs/flicking
 If you want to load files using CDN, check the files URL provided by the CDN service.
 
 - jsDelivr: https://cdn.jsdelivr.net/npm/@egjs/flicking/dist/
+- cdnjs: https://cdnjs.com/libraries/egjs-flicking
+- unpkg: https://unpkg.com/@egjs/flicking/dist/
 
 ## Supported Browsers
 The following are the supported browsers.
