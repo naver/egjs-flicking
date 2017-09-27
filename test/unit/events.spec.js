@@ -664,4 +664,65 @@ describe("Custom events", function() {
 			});
 		});
 	});
+
+	describe("Check for the event.isTrusted value", function() {
+		tutils.hooks.run();
+
+		const isTrusted = [];
+		const handler = e => {
+			isTrusted.push(e.isTrusted);
+		};
+		const inst = tutils.create("#mflick1", { threshold : 50 }, {
+			beforeRestore: handler,
+			restore: handler,
+			beforeFlickStart: handler,
+			flick: handler,
+			flickEnd: handler
+		});
+
+		it("run by API:next() calls", done => {
+			inst.next(100);
+
+			setTimeout(() => {
+				expect(isTrusted.indexOf(true)).to.be.equal(-1);
+				done();
+			}, 150);
+		});
+
+		it("run by API:moveTo() calls", done => {
+			isTrusted.splice(0);
+			inst.moveTo(0, 100);
+
+			setTimeout(() => {
+				expect(isTrusted.indexOf(true)).to.be.equal(-1);
+				done();
+			}, 150);
+		});
+
+		it("during the normal flicking moves", done => {
+			isTrusted.splice(0);
+
+			// When
+			tutils.simulator(inst.$wrapper, {
+				pos: [0, 0],
+				deltaX: -70
+			}, () => {
+				expect(isTrusted.indexOf(false)).to.be.equal(-1);
+				done();
+			});
+		});
+
+		it("during the normal restoration", done => {
+			isTrusted.splice(0);
+
+			// When
+			tutils.simulator(inst.$wrapper, {
+				pos: [0, 0],
+				deltaX: -30
+			}, () => {
+				expect(isTrusted.indexOf(false)).to.be.equal(-1);
+				done();
+			});
+		});
+	});
 });

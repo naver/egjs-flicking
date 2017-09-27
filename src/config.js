@@ -23,7 +23,8 @@ const CONFIG = {
 		distance: 0,		// touch distance pixel of start to end touch
 		direction: null,	// touch direction
 		lastPos: 0,			// to determine move on holding
-		holding: false
+		holding: false,
+		isTrusted: false    // if event was instantiated by user's action explicitly
 	},
 	customEvent: {          // for custom events value
 		flick: true,
