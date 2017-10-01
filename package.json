@@ -52,7 +52,7 @@
     "babel-preset-es2015": "^6.24.1",
     "chai": "^4.1.1",
     "clean-webpack-plugin": "^0.1.16",
-    "coveralls": "^2.13.1",
+    "coveralls": "^3.0.0",
     "cpx": "^1.5.0",
     "egjs-jsdoc-template": "1.3.3",
     "eslint": "^4.5.0",
