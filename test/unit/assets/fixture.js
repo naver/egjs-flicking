@@ -78,7 +78,7 @@ const FIXTURE = {
 				</div>`,
 	mflick4: `<div style="${STYLE}" class="flick">
 					<div style="background-color:#CC66CC;">
-						<p>Layer 0</p>
+						<p style="padding:5px;margin:5px">Layer 0</p>
 					</div>
 					<div style="background-color:#66cccc;">
 						<p>

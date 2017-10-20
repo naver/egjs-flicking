@@ -190,12 +190,18 @@ const utils = {
 	 */
 	getOuter(el, type) {
 		const style = window.getComputedStyle(el);
-		const margin = type === "outerWidth" ?
-			["marginLeft", "marginRight"] : ["marginTop", "marginBottom"];
+		let paddingMargin = 0;
 
-		return this.getNumValue(style[type.replace("outer", "").toLocaleLowerCase()]) +
-			this.getNumValue(style[margin[0]]) +
-			this.getNumValue(style[margin[1]]);
+		(type === "outerWidth" ?
+			["Left", "Right"] :
+			["Top", "Bottom"]
+		).forEach(dir => {
+			["padding", "margin"].forEach(v => {
+				paddingMargin += this.getNumValue(style[`${v}${dir}`]);
+			});
+		});
+
+		return this.getNumValue(style[type.replace("outer", "").toLocaleLowerCase()]) + paddingMargin;
 	},
 
 	/**

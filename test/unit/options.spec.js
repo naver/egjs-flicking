@@ -399,9 +399,21 @@ describe("Setting options", function() {
 			let containerHeight = utils.css(inst.$container, "height", true);
 
 			if (!isNaN(containerHeight)) {
+				const panel = inst.getElement().children[0];
+
 				expect(utils.css(inst.$container, "height", true)).to.be.equal(
-					Number(inst.getElement().children[0].getAttribute('data-height'))
+					Number(panel.getAttribute('data-height'))
 				);
+
+				let paddingMargin = 0;
+
+				["Top", "Bottom"].forEach(dir => {
+					["margin", "padding"].forEach(v => {
+						paddingMargin += utils.css(panel, `${v}${dir}`, true);
+					});
+				});
+
+				expect(containerHeight).to.be.equal(utils.css(panel, "height", true) + paddingMargin);
 			}
 		};
 
