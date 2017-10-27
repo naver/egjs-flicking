@@ -17,9 +17,7 @@ describe("Initialization", function() {
 			expect(utils.css(inst.$container, "width", true))
 				.to.deep.equal(utils.css(inst.$container.parentNode, "width", true));
 
-			utils.css(inst._conf.panel.$list, {padding: "0 20px"});
-
-			// The panel should maintain same width as wrapper element.", () => {
+			// The panel should maintain same width as wrapper element
 			expect(inst._conf.panel.size)
 				.to.equal(utils.outerWidth(inst._conf.panel.$list[0]));
 		});
@@ -29,8 +27,6 @@ describe("Initialization", function() {
 
 			expect(utils.css(inst.$container, "height", true))
 				.to.deep.equal(utils.css(inst.$container.parentNode, "height", true));
-
-			utils.css(inst._conf.panel.$list, {padding: "20px 0"});
 
 			// The panel should maintain same height as wrapper element
 			expect(inst._conf.panel.size)
