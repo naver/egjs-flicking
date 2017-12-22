@@ -39,7 +39,7 @@ const CONFIG = {
 
 // default options
 const OPTIONS = {
-	hwAccelerable: true,    // ns.isHWAccelerable(),  // check weather hw acceleration is available
+	hwAccelerable: true,    // set for hw acceleration
 	prefix: "eg-flick",     // prefix value of class name
 	deceleration: 0.0006,   // deceleration value
 	horizontal: true,       // move direction (true == horizontal, false == vertical)

@@ -11,35 +11,137 @@ import {document} from "./browser";
 import eventHandler from "./eventHandler";
 
 /**
- * A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.
- * @ko 플리킹 UI를 구현하는 모듈. 나란히 배치한 패널을 쓸어 넘겨 다음 패널이나 이전 패널로 이동하는 플리킹 UI를 만들 수 있다.
+ * Create an instance of the eg.Flicking class. Create a flicking UI that sweeps a side-by-side panel with mouse move or touch move input and moves to the next or previous panel.
+ * @ko eg.Flicking 클래스의 인스턴스를 생성한다. 나란히 배치한 패널을 마우스 이동(move) 혹은 터치 이동(move) 입력을 받아 쓸어 넘겨 다음 패널이나 이전 패널로 이동하는 UI를 만든다.
  * @alias eg.Flicking
  * @extends eg.Component
- *
+ * @requires {@link https://github.com/naver/egjs-component|eg.Component}
+ * @requires {@link https://github.com/naver/egjs-axes|eg.Axes}
+ * @see Easing Functions Cheat Sheet {@link http://easings.net/} <ko>이징 함수 Cheat Sheet {@link http://easings.net/}</ko>
+ * @see If you want to try a different easing function, use the jQuery easing plugin ({@link http://gsgd.co.uk/sandbox/jquery/easing}) or the jQuery UI easing library ({@link https://jqueryui.com/easing}). <ko>다른 easing 함수를 사용하려면 jQuery easing 플러그인({@link http://gsgd.co.uk/sandbox/jquery/easing})이나, jQuery UI easing 라이브러리({@link https://jqueryui.com/easing})를 사용한다</ko>
+ * @throws {Error} An Error occur when given base element doesn't exist or it hasn't proper DOM structure to be initialized. <ko>주어진 기본 요소가 존재하지 않거나 초기화 할 적절한 DOM 구조가없는 경우 오류가 발생한다.</ko>
  * @support {"ie": "10+", "ch" : "latest", "ff" : "latest",  "sf" : "latest" , "edge" : "latest", "ios" : "7+", "an" : "2.3+ (except 3.x)"}
+ * @example
+ * A common example.
+ * 일반적인 예.
+ * ```html
+ * <div id="flick">
+ * 	<div><p>panel 0</p></div>
+ * 	<div><p>panel 1</p></div>
+ * 	<div><p>panel 2</p></div>
+ * </div>
+ * ```
+ * ```javascript
+ * // Examples to omit and omit optional options.
+ * // 생략가능한 옵션은 생략하고 생성하는 예.
+ * new eg.Flicking("#flick");
+ *
+ * // An example of specifying and generating values for all optional parameters.
+ * // 모든 옵션의 값을 지정하고 생성하는 예.
+ * new eg.Flicking("#flick", {
+ * 	hwAccelerable: true,
+ * 	prefix: "eg-flick",
+ * 	deceleration: 0.0006,
+ * 	horizontal: true,
+ * 	circular: false,
+ * 	previewPadding: [0 0],
+ * 	bounce: [10, 10],
+ * 	threshold: 40,
+ * 	duration: 100,
+ * 	panelEffect: x => 1 - Math.pow(1 - x, 3),
+ * 	defaultIndex: 0,
+ * 	inputType: ["touch", "mouse"],
+ * 	thresholdAngle: 45,
+ * 	adaptiveHeight: false
+ * });
+ * ```
+ * @example
+ * Example of constructor element parameter value specification.
+ * 생성자 element 파라미터 값 지정 예.
+ * ```javascript
+ * // An example of assigning HTMLElement to an element parameter.
+ * // element 파라미터에 HTMLElement를 지정하는 예.
+ * new eg.Flicking(document.getElementById("flick"));
+ *
+ * // An example of assigning a jQuery object to an element parameter.
+ * // element 파라미터에 jQuery객체를 지정하는 예.
+ * new eg.Flicking($("#flick")[0]);
+ *
+ * // An example of assigning a css selector string to an element parameter.
+ * // element 파라미터에 css 선택자 문자열을 지정하는 예.
+ * new eg.Flicking("#flick");
+ * ```
+ * @example
+ * Panel element definition location example.
+ * 패널 요소 정의 위치 예.
+ * ```html
+ * <!--An example of defining a panel element as a child of a base element.-->
+ * <!--패널 요소를 기준 요소의 자식으로 정의한 예.-->
+ * <div id="flick">
+ * 	<div><p>panel 0</p></div>
+ * 	<div><p>panel 1</p></div>
+ * 	<div><p>panel 2</p></div>
+ * </div>
+ *
+ * <!--An example of defining a panel element as a child of a container element.-->
+ * <!--패널 요소를 컨테이너 요소의 자식으로 정의한 예.-->
+ * <div id="flick2">
+ * 	<div class="eg-flick-container">
+ * 		<div><p>panel 0</p></div>
+ * 		<div><p>panel 1</p></div>
+ * 		<div><p>panel 2</p></div>
+ * 	<div>
+ * </div>
+ * ```
+ * @example
+ * An example where only one panel is defined and created with a circular.
+ * 패널을 하나만 정의하고 순환으로 생성하는 예.
+ * ```html
+ * <div id="flick">
+ * 	<div><p>panel 0</p></div>
+ * </div>
+ * ```
+ * ```javascript
+ * // If the number of defined panels is less than the minimum number required for the circulation operation, the necessary number of panel elements are generated.
+ * // 정의된 패널의 수가 순환동작에 필요한 최소 개수보다 적으면 필요한 수만큼의 패널 요소가 생성된다.
+ * new eg.Flicking("#flick", {
+ * 	circular: true
+ * })
+ * ```
+ * @example
+ * For error occurrence example. There is no panel element.
+ * 오류 발생 예. 패널 요소가 하나도 없는 경우.
+ * ```html
+ * <div id="flick"></div>
+ * ```
+ * ```javascript
+ * try{
+ * 	new eg.Flicking("#flick");
+ * } catch(e) {
+ * 	// An error occurs because there are no child elements in the reference element.
+ *	// 기준 요소안에 자식 요소가 하나도 없으므로 에러가 발생한다.
+ * }
+ * ```
  */
 export default class Flicking extends Mixin(Component).with(eventHandler) {
 	/**
-	* Constructor
-	* @param {HTMLElement|String|jQuery} element A base element for the eg.Flicking module <ko>eg.Flicking 모듈을 사용할 기준 엘리먼트</ko>
-	* @param {Object} options The option object of the eg.Flicking module<ko>eg.Flicking 모듈의 옵션 객체</ko>
-	* @param {Boolean} [options.hwAccelerable=eg.isHWAccelerable()] Force hardware compositing <ko>하드웨어 가속 사용 여부</ko>
-	* @param {String} [options.prefix=eg-flick] A prefix for class names of the panel elements <ko>패널 엘리먼트의 클래스 이름에 설정할 접두사</ko>
-	* @param {Number} [options.deceleration=0.0006] Deceleration of the animation where acceleration is manually enabled by user. A higher value indicates shorter running time <ko>사용자의 동작으로 가속도가 적용된 애니메이션의 감속도. 값이 높을수록 애니메이션 실행 시간이 짧아진다</ko>
-	* @param {Boolean} [options.horizontal=true] Direction of the panel movement (true: horizontal, false: vertical) <ko>패널 이동 방향 (true 가로방향, false 세로방향)</ko>
-	* @param {Boolean} [options.circular=false] Indicates whether a circular panel is available <ko>패널 순환 여부</ko>
-	* @param {Number|Array} [options.previewPadding=[0,0]] The preview size for the previous or next panel. If direction is set to "horizontal", the preview section will be displayed on the left and right of the panel. If direction is set to "vertical", it will be displayed on the top and bottom of the panel <ko>이전 패널과 다음 패널을 미리 보는 영역의 크기. 패널 이동 방향이 가로 방향이면 패널 왼쪽과 오른쪽에 미리 보는 영역이 나타난다. 패널 이동 방향이 세로 방향이면 패널 위쪽과 아래쪽에 미리 보는 영역이 나타난다</ko>
-	* @param {Number|Array} [options.bounce=[10,10]] −	The size of bouncing area. If a panel is set to "non-circulable", the start and end panels can exceed the base element area and move further as much as the bouncing area. If a panel is dragged to the bouncing area and then dropped, the panel where bouncing effects are applied is retuned back into the base element area. <ko>바운스 영역의 크기. 패널이 순환하지 않도록 설정됐다면 시작 패널과 마지막 패널은 기준 엘리먼트 영역을 넘어 바운스 영역의 크기만큼 더 이동할 수 있다. 패널을 바운스 영역까지 끌었다가 놓으면, 바운스 효과가 적용된 패널이 다시 기준 엘리먼트 영역 안으로 들어온다</ko>
-	* @param {Number} [options.threshold=40] Distance threshold. If the drag exceeds the threshold value, it will be changed to the next panel <ko>다음 패널로 바뀌는 기준 이동 거리. 패널을 기준 이동 거리 이상 끌었다 놓으면 패널이 다음 패널로 바뀐다</ko>
-	* @param {Number} [options.duration=100] Duration of the panel movement (unit: ms) <ko>패널 이동 애니메이션 진행 시간(단위: ms)</ko>
-	* @param {Function} [options.panelEffect=easeOutCubic] The easing function to apply to a panel moving animation <ko>패널 이동 애니메이션에 적용할 easing 함수</ko>
-	* @param {Number} [options.defaultIndex=0] The index number of a panel to be selected upon module initialization <ko>모듈이 초기화될 때 선택할 패널의 인덱스 번호</ko>
-	* @param {Array} [options.inputType] Types of input devices.<br>- touch: A touch screen can be used to move a panel.<br>- mouse: A mouse can be used to move a panel. <ko>입력 장치 종류.<br>- touch: 터치 입력 장치로 패널을 이동할 수 있다.<br>- mouse: 마우스로 패널을 이동할 수 있다.</ko>
-	* @param {Number} [options.thresholdAngle=45] The threshold value that determines whether user action is horizontal or vertical (0~90) <ko>사용자의 동작이 가로 방향인지 세로 방향인지 판단하는 기준 각도(0~90)</ko>
-	* @param {Boolean} [options.adaptiveHeight=false] Set container's height be adaptive according panel's height.<br>(Note: on Android 4.1.x stock browser, has rendering bug which not correctly render height value on panel with single node. To avoid just append another empty node at the end.)<ko>컨테이너 영역이 패널의 높이값에 따라 변경될지 여부<br>(참고: Android 4.1.x 스톡 브라우저에서 단일 노드로 구성된 패널의 높이값 변경이 제대로 렌더링 되지 않는 버그가 있음. 비어있는 노드를 추가하면 해결이 가능하다.)</ko>
-	*
-    * @see Easing Functions Cheat Sheet {@link http://easings.net/}
-    * @see If you want to try a different easing function, use the jQuery easing plugin ({@link http://gsgd.co.uk/sandbox/jquery/easing}) or the jQuery UI easing library ({@link https://jqueryui.com/easing}). <ko>다른 easing 함수를 사용하려면 jQuery easing 플러그인({@link http://gsgd.co.uk/sandbox/jquery/easing})이나, jQuery UI easing 라이브러리({@link https://jqueryui.com/easing})를 사용한다</ko>
+	 * Constructor
+	 * @param {HTMLElement|String} element A base element for the eg.Flicking module. When specifying a value as a `String` type, you must specify a css selector string to select the element.<ko>eg.Flicking 모듈을 사용할 기준 요소. `String`타입으로 값 지정시 요소를 선택하기 위한 css 선택자 문자열을 지정해야 한다.</ko>
+	 * @param {Object} [options] The option object of the eg.Flicking module<ko>eg.Flicking 모듈의 옵션 객체</ko>
+	 * @param {Boolean} [options.hwAccelerable=true] Force hardware compositing.<ko>하드웨어 가속 사용 여부.</ko>
+	 * @param {String} [options.prefix="eg-flick"] A prefix for class names of the panel elements.<ko>패널 요소의 클래스 이름 접두사.</ko>
+	 * @param {Number} [options.deceleration=0.0006] Deceleration of the animation where acceleration is manually enabled by user. A higher value indicates shorter running time.<ko>사용자의 동작으로 가속도가 적용된 애니메이션의 감속도. 값이 높을수록 애니메이션 실행 시간이 짧아진다.</ko>
+	 * @param {Boolean} [options.horizontal=true] Direction of the panel movement. (true: horizontal, false: vertical)<ko>패널 이동 방향. (true 가로방향, false 세로방향)</ko>
+	 * @param {Boolean} [options.circular=false] Whether to let the first panel flick right to the end panel (let the left panel flick from the end panel to move to the first panel). (The term 'circulation')<ko>첫 패널에서 우 액션 입력하여 끝 패널로 이동하게 할지와 끝 패널에서 우 액션 입력하여 첫 패널로 이동할하게 할지 여부. (통칭 '순환')</ko>
+	 * @param {Number|Array} [options.previewPadding=[0,0]] The preview size value(unit: pixel) for the previous or next panel. If direction is set to "horizontal", the preview section will be displayed on the left and right of the panel. If direction is set to "vertical", it will be displayed on the top and bottom of the panel.<ko>이전 패널과 다음 패널을 미리 보는 영역의 크기값(단위: 픽셀). 패널 이동 방향이 가로 방향이면 패널 좌우에, 세로 방향이면 패널 상하에 미리 보는 영역이 나타난다.</ko>
+	 * @param {Number|Array} [options.bounce=[10,10]] The size value(unit: pixel) of the bounce area. If `circular=false`, the panel can be moved by this value when inputting a right gesture in the first panel or inputting a left gesture in the end panel. When the input is completed while moving, it returns to its original position.<ko>바운스 영역의 크기값(단위: 픽셀). `circular=false`인 경우, 첫 패널에서 우 액션 입력시, 끝 패널에서 좌 액션 입력시 이 값 만큼만 패널이 이동할 수 있고 이동한 상태에서 입력을 마치면 원래 자리로 돌아온다.</ko>
+	 * @param {Number} [options.threshold=40] Movement threshold to destination panel(unit: pixel). A panel element must be dragged beyond the threshold to move to the destination panel.<ko>목적 패널로의 이동 임계값 (단위: 픽셀). 패널 요소를 임계값 이상으로 끌어다 놓아야만이 목적 패널로 이동한다.</ko>
+	 * @param {Number} [options.duration=100] Duration of the panel movement. (unit: ms)<ko>패널 이동 애니메이션 진행 시간.(단위: ms)</ko>
+	 * @param {Function} [options.panelEffect=x => 1 - Math.pow(1 - x, 3)] The easing function to apply to a panel moving animation. The default function is easeOutCubic.<ko>패널 이동 애니메이션에 적용할 `easing`함수. 기본값은 `easeOutCubic`이다.</ko>
+	 * @param {Number} [options.defaultIndex=0] The panel index number to specify when initializing the module. A zero-based integer.<ko>모듈 초기화시 지정할 패널 인덱스 번호. 0부터 시작하는 정수.</ko>
+	 * @param {Array} [options.inputType=["touch,"mouse"]] Types of input devices. ({@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.PanInput.html|eg.Axes.PanInput Reference})<br>- "touch": A touch input device.<br>- "mouse": A mouse.<ko>입력 장치 종류. ({@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.PanInput.html|eg.Axes.PanInput 참고})<br>- "touch": 터치 입력 장치.<br>- "mouse": 마우스.</ko>
+	 * @param {Number} [options.thresholdAngle=45] The threshold value that determines whether user input is horizontal or vertical. (0 ~ 90)<ko>사용자의 입력이 가로 방향인지 세로 방향인지 판단하는 기준 각도 (0 ~ 90)</ko>
+	 * @param {Boolean} [options.adaptiveHeight=false] Whether the height of the container element reflects the height value of the panel after completing the movement.<br>(Note: on Android 4.1.x stock browser, has rendering bug which not correctly render height value on panel with single node. To avoid just append another empty node at the end.)<ko>목적 패널로 이동한 후 그 패널의 높이값을 컨테이너 요소의 높이값에 반영할지 여부.<br>(참고: Android 4.1.x 스톡 브라우저에서 단일 노드로 구성된 패널의 높이값 변경이 제대로 렌더링 되지 않는 버그가 있음. 비어있는 노드를 추가하면 해결이 가능하다.)</ko>
 	*/
 	constructor(element, options, _prefix) {
 		super();
@@ -73,6 +175,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Set options values
+	 * @private
 	 * @param {Object} options
 	 */
 	_setOptions(options) {
@@ -99,6 +202,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Set config values
+	 * @private
 	 * @param {HTMLCollection} $children wrappers' children elements
 	 * @param {String} _prefix event prefix
 	 * @return {HTMLElement}
@@ -148,6 +252,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Build and set panel nodes to make flicking structure
+	 * @private
 	 */
 	_build() {
 		const panel = this._conf.panel;
@@ -224,6 +329,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Set preview padding value
+	 * @private
 	 * @param {Array} padding
 	 * @param {Boolean} build
 	 */
@@ -262,6 +368,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * To fulfill minimum panel count cloning original node when circular or previewPadding option are set
+	 * @private
 	 * @return {Boolean} true : added clone node, false : not added
 	 */
 	_addClonePanels() {
@@ -291,6 +398,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Move panel's position within array
+	 * @private
 	 * @param {Number} count element counts to move
 	 * @param {Boolean} append where the list to be appended(moved) (true: to the end, false: to the beginning)
 	 */
@@ -306,6 +414,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Set default panel to show
+	 * @private
 	 * @param {Number} index
 	 */
 	_setDefaultPanel(index) {
@@ -346,6 +455,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Arrange panels' position
+	 * @private
 	 * @param {Boolean} sort Need to sort panel's position
 	 * @param {Number} indexToMove Number to move from current position (negative: left, positive: right)
 	 */
@@ -383,6 +493,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Set each panel's position in DOM
+	 * @private
 	 */
 	_applyPanelsPos() {
 		this._conf.panel.$list.forEach(this._applyPanelsCss.bind(this));
@@ -393,6 +504,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 *
 	 * Initialize setting up checking if browser support transform css property.
 	 * If browser doesn't support transform, then use left/top properties instead.
+	 * @private
 	 * @param {HTMLElement} $el
 	 * @param {Array} coordsValue
 	 */
@@ -414,6 +526,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	/**
 	 * Callback function for applying CSS values to each panels
 	 * Need to be initialized before use, to set up for Android 2.x browsers or others.
+	 * @private
 	 */
 	_applyPanelsCss() {
 		const conf = this._conf;
@@ -451,6 +564,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Adjust container's css value to handle Android 2.x link highlighting bug
+	 * @private
 	 * @param {String} phase
 	 *    start - set left/top value to 0
 	 *    end - set translate value to 0
@@ -498,6 +612,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Set Axes coord value
+	 * @private
 	 * @param {String} method
 	 * @param {Number} flick destination value
 	 * @param {Number} duration
@@ -510,6 +625,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	/**
 	 * Set hint for browser to decide efficient way of doing transform changes(or animation)
 	 * https://dev.opera.com/articles/css-will-change-property/
+	 * @private
 	 */
 	_setHint() {
 		const style = {willChange: "transform"};
@@ -520,6 +636,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Get data according options.horizontal value
+	 * @private
 	 * @param {Array} value primary data to handle
 	 * @return {Array}
 	 */
@@ -532,6 +649,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Move nodes
+	 * @private
 	 * @param {Boolean} direction
 	 * @param {Number} indexToMove
 	 */
@@ -543,6 +661,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Get the base position index of the panel
+	 * @private
 	 */
 	_getBasePositionIndex() {
 		return Math.floor(this._conf.panel.count / 2 - 0.1);
@@ -550,6 +669,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Bind events
+	 * @private
 	 * @param {Boolean} bind
 	 */
 	_bindEvents(bind) {
@@ -579,6 +699,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Set container's height value according to children's height
+	 * @private
 	 * @param {Number} direction
 	 */
 	_setAdaptiveHeight(direction) {
@@ -621,6 +742,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Trigger beforeRestore event
+	 * @private
 	 * @param {Object} e event object
 	 */
 	_triggerBeforeRestore(e) {
@@ -631,18 +753,24 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		touch.direction = +conf.dirData.join("").replace(touch.direction, "");
 
 		/**
-		 * This event is fired before an element is restored to its original position when user action is done while the element is not dragged until a certain distance threshold is reached
-		 * @ko 다음 패널로 바뀌는 기준 이동 거리만큼 이동하기 전에 사용자의 동작이 끝났을 때 원래 패널로 복원되기 전에 발생하는 이벤트
+		 * This event occurs before the current panel starts to return to its original position. Followes [flick]{@link eg.Flicking#event:flick} and [restore]{@link eg.Flicking#event:restore} events. The conditions of occurrence are as follows.<br><br>1. The user has finished input but does not exceed the panel movement threshold.<br>2. Call the [restore()]{@link eg.Flicking#restore} method. (Prevent the default behavior of the [beforeFlickStart]{@link eg.Flicking#event:beforeFlickStart} event.)
+		 * @ko 현재 패널이 원래 위치로 되돌아가기 시작전에 발생하는 이벤트이다. 뒤이어 [flick]{@link eg.Flicking#event:flick}과 [restore]{@link eg.Flicking#event:restore}이벤트가 발생한다. 발생조건은 아래와 같다.<br><br>1. 사용자 입력이 끝났는데 패널 이동 임계점을 넘지 않은 경우.<br>2. [restore()]{@link eg.Flicking#restore} 메서드 호출.([beforeFlickStart]{@link eg.Flicking#event:beforeFlickStart} 이벤트의 기본동작 방지 전제)
 		 * @name eg.Flicking#beforeRestore
 		 * @event
-		 * @param {Object} param The object of data to be sent to an event <ko>이벤트에 전달되는 데이터 객체</ko>
-		 * @param {String} param.eventType The name of the event <ko>이름명</ko>
-		 * @param {Boolean} param.isTrusted true when the event was generated by a user action otherwise false<ko>사용자의 액션으로 인해 이벤트가 생성된 경우, true. 그 외는 false</ko>
-		 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM. (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다. (@deprecated since 1.3.0)</ko>
-		 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content.<ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
-		 * @param {Number} param.direction Direction of the movement (see eg.Flicking.DIRECTION_* constant) <ko>이동 방향(eg.Flicking.DIRECTION_* constant 참고)</ko>
-		 * @param {Number} param.depaPos starting coordinate <ko>출발점 좌표</ko>
-		 * @param {Number} param.destPos destination coordinate <ko>도착점 좌표</ko>
+		 * @property {String} eventType The name of the event <ko>이벤트 명</ko>
+		 * @property {Boolean} isTrusted `true` when the event was generated by a user action("mouse" or "touch") otherwise `false`.<ko>사용자 액션("mouse" 또는 "touch")에 의해 이벤트가 생성된 경우 `true`. 그 외는 `false`.</ko>
+		 * @property {Number} index Physical index number of the current panel element. See the [getIndex()]{@link eg.Flicking#getIndex} method. (@deprecated since 1.3.0)<ko>현재 패널 요소의 물리적 인덱스 번호. [getIndex()]{@link eg.Flicking#getIndex}메서드 참조. (@deprecated since 1.3.0)</ko>
+		 * @property {Number} no Logical index number of the current panel element. See the [getIndex()]{@link eg.Flicking#getIndex} method.<ko>현재 패널 요소의 논리적 인덱스 번호. [getIndex()]{@link eg.Flicking#getIndex}메서드 참조.</ko>
+		 * @property {Number} direction of the panel movement. If `horizontal=true` is {@link eg.Flicking.DIRECTION_LEFT} or {@link eg.Flicking.DIRECTION_RIGHT}. If `horizontal=false` is {@link eg.Flicking.DIRECTION_UP} or {@link eg.Flicking.DIRECTION_DOWN}.<ko>패널 이동 방향. `horizontal=true` 이면 {@link eg.Flicking.DIRECTION_LEFT} 혹은 {@link eg.Flicking.DIRECTION_RIGHT}. `horizontal=false` 이면 {@link eg.Flicking.DIRECTION_UP} 혹은 {@link eg.Flicking.DIRECTION_DOWN}.</ko>
+		 * @property {Number} depaPos Starting coordinate. <ko>출발점 좌표.</ko>
+		 * @property {Number} destPos Destination coordinate. <ko>도착점 좌표.</ko>
+		 * @see eg.Flicking#event:flick
+		 * @see eg.Flicking#event:restore
+		 * @see eg.Flicking#restore
+		 * @example
+		 * // The order of event occurrence.
+		 * // 이벤트 발생 순서
+		 * beforeRestore (once) > flick (many times) > restore (once)
 		 */
 		conf.customEvent.restore = this._triggerEvent(consts.EVENTS.beforeRestore, {
 			depaPos: e.depaPos.flick,
@@ -657,21 +785,28 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Trigger restore event
+	 * @private
 	 */
 	_triggerRestore() {
 		const customEvent = this._conf.customEvent;
 
 		/**
-		 * This event is fired after an element is restored to its original position when user action is done while the element is not dragged until a certain distance threshold is reached.
-		 * @ko 다음 패널로 바뀌는 기준 이동 거리만큼 이동하기 전에 사용자의 동작이 끝났을 때 원래 패널로 복원된 다음 발생하는 이벤트
+		 * The event that occurs after completing the move by [restore()]{@link eg.Flicking#restore} method.
+		 * @ko [restore()]{@link eg.Flicking#restore} 메서드에 의해 패널이 원래 위치로 이동을 완료한 다음 발생하는 이벤트.
 		 * @name eg.Flicking#restore
 		 * @event
-		 * @param {Object} param The object of data to be sent to an event <ko>이벤트에 전달되는 데이터 객체</ko>
-		 * @param {String} param.eventType The name of the event <ko>이름명</ko>
-		 * @param {Boolean} param.isTrusted true when the event was generated by a user action otherwise false<ko>사용자의 액션으로 인해 이벤트가 생성된 경우, true. 그 외는 false</ko>
-		 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM(@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
-		 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content. <ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
-		 * @param {Number} param.direction Direction of the panel move (see eg.Flicking.DIRECTION_* constant) <ko>이동 방향(eg.Flicking.DIRECTION_* constant 참고)</ko>
+		 * @property {String} eventType The name of the event <ko>이벤트 명</ko>
+		 * @property {Boolean} isTrusted `true` when the event was generated by a user action("mouse" or "touch") otherwise `false`.<ko>사용자 액션("mouse" 또는 "touch")에 의해 이벤트가 생성된 경우 `true`. 그 외는 `false`.</ko>
+		 * @property {Number} index Physical index number of the current panel element. See the [getIndex()]{@link eg.Flicking#getIndex} method. (@deprecated since 1.3.0)<ko>현재 패널 요소의 물리적 인덱스 번호. [getIndex()]{@link eg.Flicking#getIndex}메서드 참조. (@deprecated since 1.3.0)</ko>
+		 * @property {Number} no Logical index number of the current panel element. See the [getIndex()]{@link eg.Flicking#getIndex} method.<ko>현재 패널 요소의 논리적 인덱스 번호. [getIndex()]{@link eg.Flicking#getIndex}메서드 참조.</ko>
+		 * @property {Number} direction of the panel movement. If `horizontal=true` is {@link eg.Flicking.DIRECTION_LEFT} or {@link eg.Flicking.DIRECTION_RIGHT}. If `horizontal=false` is {@link eg.Flicking.DIRECTION_UP} or {@link eg.Flicking.DIRECTION_DOWN}.<ko>패널 이동 방향. `horizontal=true` 이면 {@link eg.Flicking.DIRECTION_LEFT} 혹은 {@link eg.Flicking.DIRECTION_RIGHT}. `horizontal=false` 이면 {@link eg.Flicking.DIRECTION_UP} 혹은 {@link eg.Flicking.DIRECTION_DOWN}.</ko>
+		 * @see eg.Flicking#event:beforeRestore
+		 * @see eg.Flicking#event:flick
+		 * @see eg.Flicking#restore
+		 * @example
+		 * // The order of event occurrence.
+		 * // 이벤트 발생 순서
+		 * beforeRestore (once) > flick (many times) > restore (once)
 		 */
 		customEvent.restore && this._triggerEvent(consts.EVENTS.restore);
 		customEvent.restore = customEvent.restoreCall = false;
@@ -679,6 +814,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Set value when panel changes
+	 * @private
 	 * @param {String} phase - [start|end]
 	 * @param {Object} pos
 	 */
@@ -689,18 +825,33 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 		if (phase === "start" && (panel.changed = this._isMovable())) {
 			/**
-			 * This event is fired before flicking starts
-			 * @ko 플리킹이 시작하기 전에 발생하는 이벤트
+			 * An event that occurs before a user action or [moveTo()]{@link eg.Flicking#moveTo}, [prev()]{@link eg.Flicking#prev}, [next()]{@link eg.Flicking#next} method initiates a move to the destination panel. If you do not prevent the default behavior, then many [flick]{@link eg.Flicking#event:flick} events and one [flickEnd]{@link eg.Flicking#event:flickEnd} event will occur.
+			 * @ko 사용자 액션 혹은 [moveTo()]{@link eg.Flicking#moveTo}, [prev()]{@link eg.Flicking#prev}, [next()]{@link eg.Flicking#next} 메서드에 의해 목적 패널로의 이동 시작전 발생하는 이벤트. 기본동작을 막지 않는다면 뒤이어 다수의 [flick]{@link eg.Flicking#event:flick}이벤트와 그 뒤 한 번의 [flickEnd]{@link eg.Flicking#event:flickEnd}이벤트가 발생한다.
 			 * @name eg.Flicking#beforeFlickStart
 			 * @event
-			 * @param {Object} param The object of data to be sent to an event <ko>이벤트에 전달되는 데이터 객체</ko>
-			 * @param {String} param.eventType The name of the event <ko>이름명</ko>
-			 * @param {Boolean} param.isTrusted true when the event was generated by a user action otherwise false<ko>사용자의 액션으로 인해 이벤트가 생성된 경우, true. 그 외는 false</ko>
-			 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM. (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
-			 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content.<ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
-			 * @param {Number} param.direction Direction of the movement (see eg.Flicking.DIRECTION_* constant) <ko>−	이동 방향(eg.Flicking.DIRECTION_* constant 참고)</ko>
-			 * @param {Number} param.depaPos starting coordinate <ko>출발점 좌표</ko>
-			 * @param {Number} param.destPos destination coordinate <ko>도착점 좌표</ko>
+			 * @property {String} eventType The name of the event <ko>이벤트 명</ko>
+			 * @property {Boolean} isTrusted `true` when the event was generated by a user action("mouse" or "touch") otherwise `false`.<ko>사용자 액션("mouse" 또는 "touch")에 의해 이벤트가 생성된 경우 `true`. 그 외는 `false`</ko>
+			 * @property {Number} index Physical index number of the current panel element. See the [getIndex()]{@link eg.Flicking#getIndex} method. (@deprecated since 1.3.0)<ko>현재 패널 요소의 물리적 인덱스 번호. [getIndex()]{@link eg.Flicking#getIndex}메서드 참조. (@deprecated since 1.3.0)</ko>
+			 * @property {Number} no Logical index number of the current panel element. See the [getIndex()]{@link eg.Flicking#getIndex} method.<ko>현재 패널 요소의 논리적 인덱스 번호. [getIndex()]{@link eg.Flicking#getIndex}메서드 참조.</ko>
+			 * @property {Number} direction of the panel movement. If `horizontal=true` is {@link eg.Flicking.DIRECTION_LEFT} or {@link eg.Flicking.DIRECTION_RIGHT}. If `horizontal=false` is {@link eg.Flicking.DIRECTION_UP} or {@link eg.Flicking.DIRECTION_DOWN}.<ko>패널 이동 방향. `horizontal=true` 이면 {@link eg.Flicking.DIRECTION_LEFT} 혹은 {@link eg.Flicking.DIRECTION_RIGHT}. `horizontal=false` 이면 {@link eg.Flicking.DIRECTION_UP} 혹은 {@link eg.Flicking.DIRECTION_DOWN}.</ko>
+			 * @property {Number} depaPos Starting coordinate. <ko>출발점 좌표.</ko>
+			 * @property {Number} destPos Destination coordinate. <ko>도착점 좌표.</ko>
+			 * @property {Function} stop Cancels the default action. (Default action: Move to destination panel.) The panel element stays at the position of the call to `stop()`. To return to the original position, you must call the [restore()]{@link eg.Flicking#restore} method.<ko>기본동작을 취소한다. (기본동작: 목적 패널로의 이동.) 패널 요소가 `stop()`호출시점의 위치에 머물러 있는다. 원래 자리로 되돌리려면 [restore()]{@link eg.Flicking#restore} 메서드를 호출해야 한다.</ko>
+			 * @see eg.Flicking#event:flick
+			 * @see eg.Flicking#event:flickEnd
+			 * @see eg.Flicking#moveTo
+			 * @see eg.Flicking#prev
+			 * @see eg.Flicking#next
+			 * @example
+			 * // The order of event occurrence.
+			 * // 이벤트 발생 순서
+			 * beforeFlickStart (once) > flick (many times) > flickEnd (once)
+			 * @example
+			 * // An example to prevent the default behavior.
+			 * // 기본동작을 막는 예.
+			 * new eg.Flicking("#flick").on("beforeFlickStart", e => {
+			 * 	e.stop();
+			 * });
 			 */
 			if (!this._triggerEvent(consts.EVENTS.beforeFlickStart, pos)) {
 				panel.changed = panel.animating = false;
@@ -719,16 +870,24 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			conf.touch.distance = conf.indexToMove = 0;
 
 			/**
-			 * This event is fired after panel moves.
-			 * @ko 패널이 이동한 다음 발생하는 이벤트
+			 * The event that occurs after completing the move to the destination panel. It occurs in the following cases.<br><br>- After completing the movement to the destination panel by user's move input.<br>- `moveTo()`, `prev()`, `next()` method call. (It does not occur if you have disabled the default behavior of the [beforeFlickStart]{@link eg.Flicking#event:beforeFlickStart} event.)
+			 * @ko 목적 패널로의 이동을 완료한 다음 발생하는 이벤트. 아래의 경우에 발생한다.<br><br>- 사용자의 이동(move) 액션 입력에 의한 목적 패널로의 이동완료 후.<br>- `moveTo()`, `prev()`, `next()` 메서드 호출.([beforeFlickStart]{@link eg.Flicking#event:beforeFlickStart}이벤트의 기본동작을 막았다면 발생하지 않는다.)
 			 * @name eg.Flicking#flickEnd
 			 * @event
-			 * @param {Object} param The object of data to be sent to an event <ko>이벤트에 전달되는 데이터 객체</ko>
-			 * @param {String} param.eventType The name of the event <ko>이름명</ko>
-			 * @param {Boolean} param.isTrusted true when the event was generated by a user action otherwise false<ko>사용자의 액션으로 인해 이벤트가 생성된 경우, true. 그 외는 false</ko>
-			 * @param {Number} param.index Physical index number of the current panel element, which is relative to DOM (@deprecated since 1.3.0)<ko>현재 패널 엘리먼트의 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다 (@deprecated since 1.3.0)</ko>
-			 * @param {Number} param.no Logical index number of the current panel element, which is relative to the panel content. <ko>현재 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다.</ko>
-			 * @param {Number} param.direction Direction of the movemen (see eg.Flicking.DIRECTION_* constant) <ko>이동 방향(eg.Flicking.DIRECTION_* constant 참고</ko>
+			 * @property {String} eventType The name of the event.<ko>이벤트 명</ko>
+			 * @property {Boolean} isTrusted `true` when the event was generated by a user action("mouse" or "touch") otherwise `false`.<ko>사용자 액션("mouse" 또는 "touch")에 의해 이벤트가 생성된 경우 `true`. 그 외는 `false`.</ko>
+			 * @property {Number} index Physical index number of the current panel element. See the [getIndex()]{@link eg.Flicking#getIndex} method. (@deprecated since 1.3.0)<ko>현재 패널 요소의 물리적 인덱스 번호. [getIndex()]{@link eg.Flicking#getIndex}메서드 참조. (@deprecated since 1.3.0)</ko>
+			 * @property {Number} no Logical index number of the current panel element. See the [getIndex()]{@link eg.Flicking#getIndex} method.<ko>현재 패널 요소의 논리적 인덱스 번호. [getIndex()]{@link eg.Flicking#getIndex}메서드 참조.</ko>
+			 * @property {Number} direction of the panel movement. If `horizontal=true` is {@link eg.Flicking.DIRECTION_LEFT} or {@link eg.Flicking.DIRECTION_RIGHT}. If `horizontal=false` is {@link eg.Flicking.DIRECTION_UP} or {@link eg.Flicking.DIRECTION_DOWN}.<ko>패널 이동 방향. `horizontal=true` 이면 {@link eg.Flicking.DIRECTION_LEFT} 혹은 {@link eg.Flicking.DIRECTION_RIGHT}. `horizontal=false` 이면 {@link eg.Flicking.DIRECTION_UP} 혹은 {@link eg.Flicking.DIRECTION_DOWN}.</ko>
+			 * @see eg.Flicking#event:beforeFlickStart
+			 * @see eg.Flicking#event:flick
+			 * @see eg.Flicking#moveTo
+			 * @see eg.Flicking#prev
+			 * @see eg.Flicking#next
+			 * @example
+			 * // The order of event occurrence.
+			 * // 이벤트 발생 순서
+			 * beforeFlickStart (once) > flick (many times) > flickEnd (once)
 			 */
 			panel.changed && this._triggerEvent(consts.EVENTS.flickEnd);
 		}
@@ -739,6 +898,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Get positive or negative according direction
+	 * @private
 	 */
 	_getNumByDirection() {
 		const conf = this._conf;
@@ -748,6 +908,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Revert panel number
+	 * @private
 	 */
 	_revertPanelNo() {
 		const panel = this._conf.panel;
@@ -764,6 +925,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Set the panel number
+	 * @private
 	 * @param {Object} obj number object
 	 */
 	_setPanelNo(obj) {
@@ -793,6 +955,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Set pointerEvents css property on container element due to the iOS click bug
+	 * @private
 	 * @param {Event} e
 	 */
 	_setPointerEvents(e) {
@@ -813,6 +976,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Get coordinate value with unit
+	 * @private
 	 * @param coordsValue {Array} x,y numeric value
 	 * @return {Object} x,y coordinate value with unit
 	 */
@@ -828,6 +992,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Set translate property value
+	 * @private
 	 * @param {Array} coordsValue coordinate x,y value
 	 */
 	_setTranslate(coordsValue) {
@@ -838,6 +1003,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Check if panel passed through threshold pixel
+	 * @private
 	 */
 	_isMovable() {
 		const options = this.options;
@@ -861,6 +1027,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Trigger custom events
+	 * @private
 	 * @param {String} name - event name
 	 * @param {Object} param - additional event value
 	 * @return {Boolean}
@@ -886,6 +1053,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Get next/prev panel element/index.
+	 * @private
 	 * @param {Boolean} direction
 	 * @param {Boolean} element - true:to get element, false:to get index
 	 * @param {Number} physical - true : physical, false : logical
@@ -933,6 +1101,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Set value to force move panels when duration is 0
+	 * @private
 	 * @param {Boolean} next
 	 */
 	_setValueToMove(next) {
@@ -944,10 +1113,66 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Returns the index number of the current panel element.
-	 * @ko 현재 패널 엘리먼트의 인덱스 번호를 반환한다
+	 * @ko 현재 패널 요소의 인덱스 번호를 반환한다.
 	 * @method eg.Flicking#getIndex
-	 * @param {Boolean} [physical=false] Types of index numbers<br>- true: Indicates physical index numbers relative to DOM.<br>- false: Indicates logical index numbers relative to the panel content. <ko>−	인덱스 번호의 종류<br>- true: 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다.<br>- false: 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다.</ko>
-	 * @return {Number} Index number of the current panel element <ko>현재 패널의 인덱스 번호</ko>
+	 * @param {Boolean} [physical=false] Types of index numbers.<br>- true (Physical): Math.floor({Total number of panels} / 2 - 0.1) value. (Increase by 1 for every two panels.) If the circular option is false, it equals physical=false.<br>- false (Logical): The value of how the content(innerHTML) of the current panel element is in the defined order of the panel elements.<ko>인덱스 번호의 종류.<br>- true (물리적): `Math.floor({패널 총 개수} / 2 - 0.1)` 값. (패널이 2개 늘어날 때마다 1씩 증가) `circular`옵션이 `false`이면 `physical=false`와 동일한 값.<br>- false (논리적): 현재 패널 요소의 컨텐트(innerHTML)가 '패널 요소들의 정의된 순서'에서 몇 번째인지에 대한 값.</ko>
+	 * @return {Number} Index number of the current panel element. A zero-based integer.<ko>현재 패널의 인덱스 번호. 0부터 시작하는 정수.</ko>
+	 * @see eg.Flicking#getPrevIndex
+	 * @see eg.Flicking#getNextIndex
+	 * @example
+	 * ```html
+	 * <div id="flick">
+	 * 	<div><p>panel 0</p></div>
+	 * 	<div><p>panel 1</p></div>
+	 * 	<div><p>panel 2</p></div>
+	 * 	<div><p>panel 3</p></div>
+	 * </div>
+	 * ```
+	 * ```javascript
+	 * // circular off and left flicking.
+	 * // 순환을 끄고 좌 플리킹.
+	 * new eg.Flicking("#flick").on("flickEnd", {currentTarget} => {
+	 * 	console.log(currentTarget.getIndex()); // 1 > 2 > 3
+	 * 	console.log(currentTarget.getIndex(true)); // 1 > 2 > 3
+	 * };
+	 *
+	 * // circular on and left flicking.
+	 * // 순환을 켜고 좌 플리킹.
+	 * new eg.Flicking("#flick", {circular: true}).on("flickEnd", {currentTarget} => {
+	 * 	console.log(currentTarget.getIndex()); // 1 > 2 > 3 > 0 > 1 > 2 > 3 > 0 ...
+	 * 	console.log(currentTarget.getIndex(true)); // 1 > 1 > 1 > 1 > 1 > 1 > 1 > 1 ...
+	 * };
+	 * ```
+	 * @example
+	 * ```html
+	 * <!--Define only two panels.-->
+	 * <!--패널을 두 개만 정의한다.-->
+	 * <div id="flick2">
+	 * 	<div><p>panel 0</p></div>
+	 * 	<div><p>panel 1</p></div>
+	 * </div>
+	 * ```
+	 * ```javascript
+	 * // (In the case of circulation) If the number of defined panel elements is less than the minimum number required, the number of panels is created.
+	 * // Therefore, it is described as 'the number of panel definitions of the contents of the panel.'
+	 * // (순환인 경우) 정의된 패널 요소의 개수가 필요 최소개수보다 적으면 그 수만큼의 패널을 생성한다.
+	 * // 그렇기 때문에 '패널이 담고 있는 컨텐트의 패널 정의 순성상의 번호'라고 설명한다.
+	 * const flick = new eg.Flicking("flick2", {
+	 * 	circular: true
+	 * });
+	 *
+	 * // The content of the current panel is the first in the panel definition order.
+	 * // 현재 패널이 담고 있는 컨텐트는 패널 정의 순서상 첫 번째이다.
+	 * flick.getIndex(); // 0
+	 *
+	 * // The content of the next panel is the second in the panel definition order.
+	 * // 다음 패널이 담고 있는 컨텐트는 패널 정의 순서상 두 번째이다.
+	 * flick.getNextIndex(); // 1
+	 *
+	 * // The content of the previous panel is the second in the panel definition order.
+	 * // 이전 패널이 담고 있는 컨텐트는 패널 정의 순서상 두 번째이다.
+	 * flick.getPrevIndex(); // 1
+	 * ```
 	 */
 	getIndex(physical) {
 		return this._conf.panel[physical ? "currIndex" : "currNo"];
@@ -955,9 +1180,11 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Returns the reference of the current panel element.
-	 * @ko 현재 패널 엘리먼트의 레퍼런스를 반환한다
+	 * @ko 현재 패널 요소의 레퍼런스를 반환한다.
 	 * @method eg.Flicking#getElement
-	 * @return {HTMLElement} Current element <ko>현재 엘리먼트</ko>
+	 * @return {HTMLElement} Current panel element.<ko>현재 패널 요소.</ko>
+	 * @see eg.Flicking#getPrevElement
+	 * @see eg.Flicking#getNextElement
 	 */
 	getElement() {
 		const panel = this._conf.panel;
@@ -967,9 +1194,11 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Returns the reference of the next panel element.
-	 * @ko 다음 패널 엘리먼트의 레퍼런스를 반환한다.
+	 * @ko 다음 패널 요소의 레퍼런스를 반환한다.
 	 * @method eg.Flicking#getNextElement
-	 * @return {HTMLElement|null} Next panel element or null if it does not exist.<ko>다음 패널 엘리먼트. 패널이 없으면 'null'을 반환한다.</ko>
+	 * @return {HTMLElement|null} Next panel element or `null` if it does not exist.<ko>다음 패널 요소. 패널이 없으면 `null`을 반환한다.</ko>
+	 * @see eg.Flicking#getElement
+	 * @see eg.Flicking#getPrevElement
 	 */
 	getNextElement() {
 		return this._getElement(this._conf.dirData[0], true);
@@ -977,20 +1206,22 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Returns the index number of the next panel element.
-	 * @ko 다음 패널 엘리먼트의 인덱스 번호를 반환한다
+	 * @ko 다음 패널 요소의 인덱스 번호를 반환한다.
 	 * @method eg.Flicking#getNextIndex
-	 * @param {Boolean} [physical=false] Types of index numbers<br>- true: Indicates physical index numbers relative to DOM.<br>- false: Indicates logical index numbers relative to the panel content. <ko>−	인덱스 번호의 종류<br>- true: 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다.<br>- false: 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다.</ko>
-	 * @return {Number|null} Index number of the next panel element or null if it does not exist. <ko>다음 패널 엘리먼트의 인덱스 번호. 패널이 없으면 'null'을 반환한다</ko>
+	 * @param {Boolean} [physical=false] Types of index numbers<br>- true (Physical): Plus one of [getIndex()]{@link eg.Flicking#getIndex} return value.<br>- false (Logical): The value of how the content(innerHTML) of the next panel element is in the defined order of the panel elements.<ko>인덱스 번호의 종류.<br>- true (물리적): [getIndex()]{@link eg.Flicking#getIndex} 반환값에 1을 더한 값.<br>- false (논리적): 다음 패널 요소의 컨텐트(innerHTML)가 '패널 요소들의 정의된 순서'에서 몇 번째인지에 대한 값.</ko>
+	 * @return {Number|null} Index number of the next panel element or null if it does not exist. A zero-based integer.<ko>다음 패널 요소의 인덱스 번호. 0부터 시작하는 정수. 패널이 없으면 `null`을 반환한다.</ko>
+	 * @see eg.Flicking#getIndex
+	 * @see eg.Flicking#getPrevIndex
 	 */
 	getNextIndex(physical) {
 		return this._getElement(this._conf.dirData[0], false, physical);
 	}
 
 	/**
-	 * Returns the references of whole panel elements.
-	 * @ko 패널을 구성하는 모든 엘리먼트의 레퍼런스를 반환한다
+	 * Returns a reference to all panel elements.
+	 * @ko 모든 패널 요소의 레퍼런스를 반환한다.
 	 * @method eg.Flicking#getAllElements
-	 * @return {HTMLElement[]} Whole panel elements <ko>모든 패널 엘리먼트</ko>
+	 * @return {HTMLElement[]} Whole panel elements.<ko>모든 패널 요소.</ko>
 	 */
 	getAllElements() {
 		return this._conf.panel.$list;
@@ -998,9 +1229,11 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Returns the reference of the previous panel element.
-	 * @ko 이전 패널 엘리먼트의 레퍼런스를 반환한다.
+	 * @ko 이전 패널 요소의 레퍼런스를 반환한다.
 	 * @method eg.Flicking#getPrevElement
-	 * @return {HTMLElement|null} Previous panel element or null if it does not exist. <ko>이전 패널 엘리먼트. 패널이 없으면 'null'을 반환한다</ko>
+	 * @return {HTMLElement|null} Previous panel element or `null` if it does not exist.<ko>이전 패널 요소. 패널이 없으면 `null`을 반환한다.</ko>
+	 * @see eg.Flicking#getElement
+	 * @see eg.Flicking#getNextElement
 	 */
 	getPrevElement() {
 		return this._getElement(this._conf.dirData[1], true);
@@ -1008,10 +1241,12 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Returns the index number of the previous panel element.
-	 * @ko 이전 패널 엘리먼트의 인덱스 번호를 반환한다
+	 * @ko 이전 패널 요소의 인덱스 번호를 반환한다.
 	 * @method eg.Flicking#getPrevIndex
-	 * @param {Boolean} [physical=false] Types of index numbers<br>- true: Indicates physical index numbers relative to DOM.<br>- false: Indicates logical index numbers relative to the panel content. <ko>−	인덱스 번호의 종류<br>- true: 물리적 인덱스 번호. DOM 엘리먼트를 기준으로 하는 인덱스 번호다.<br>- false: 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다.</ko>
-	 * @return {Number|null} Previous element index value or null if no more element exist<ko>이전 패널 인덱스 번호. 패널이 없는 경우에는 null</ko>
+	 * @param {Boolean} [physical=false] Types of index numbers<br>- true (Physical): Minus one of [getIndex()]{@link eg.Flicking#getIndex} return value.<br>- false (Logical): The value of how the content(innerHTML) of the current panel element is in the defined order of the panel elements.<ko>인덱스 번호의 종류<br>- true (물리적): [getIndex()]{@link eg.Flicking#getIndex} 반환값에 1을 뺀 값.<br>- false (논리적): 이전 패널 요소의 컨텐트(innerHTML)가 '패널 요소들의 정의된 순서'에서 몇 번째인지에 대한 값.</ko>
+	 * @return {Number|null} Previous element index value or null if no more element exist. A zero-based integer.<ko>이전 패널 요소의 인덱스 번호. 0부터 시작하는 정수. 패널이 없는 경우는 `null`.</ko>
+	 * @see eg.Flicking#getIndex
+	 * @see eg.Flicking#getNextIndex
 	 */
 	getPrevIndex(physical) {
 		return this._getElement(this._conf.dirData[1], false, physical);
@@ -1019,11 +1254,11 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Returns the total number of whole panel elements.
-	 * @ko 전체 패널 엘리먼트의 개수를 반환한다
+	 * @ko 패널 요소의 총개수를 반환한다.
 	 * @method eg.Flicking#getTotalCount
 	 * @deprecated since 1.3.0
-	 * @param {Boolean} [physical=false] Number of elements relative to (true: DOM, false: panel content)<ko>엘리먼트 개수의 기준(true: DOM 엘리먼트 기준, false: 패널 콘텐츠 기준)</ko>
-	 * @return {Number} Total number of whole panel elements <ko>모든 패널 엘리먼트의 개수</ko>
+	 * @param {Boolean} [physical=false] Based on number of panel elements (true: the number included up to the module needs, false: the actual number defined)<ko>패널 요소 개수 기준(`true`: 모듈 필요에 의해 생성된 것까지 포함한 개수, `false`: 실제 정의한 개수)</ko>
+	 * @return {Number} Total number of whole panel elements. <ko>패널 요소 총개수.</ko>
 	 */
 	getTotalCount(physical) {
 		return this._conf.panel[physical ? "count" : "origCount"];
@@ -1041,6 +1276,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Move panel to the given direction
+	 * @private
 	 * @param {Boolean} next
 	 * @param {Number} duration
 	 */
@@ -1066,6 +1302,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	/**
 	 * Move panel applying start/end phase value
+	 * @private
 	 * @param {String} method Axes' method name
 	 * @param {Number} to destination value
 	 * @param {Number} durationValue duration value
@@ -1080,34 +1317,49 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	}
 
 	/**
-	 * Moves an element to the next panel.
-	 * @ko 다음 패널로 이동한다.
+	 * Moves an element to the next panel. If `horizontal=true`is right panel. If `horizontal=false`is lower panel.
+	 * @ko 다음 패널로 이동한다. `horizontal=true`이면 우측 패널. `horizontal=false`이면 하측 패널.
 	 * @method eg.Flicking#next
 	 * @param {Number} [duration=options.duration] Duration of the panel movement (unit: ms) <ko>패널 이동 애니메이션 진행 시간(단위: ms)</ko>
 	 * @return {eg.Flicking} An instance of a module itself <ko>모듈 자신의 인스턴스</ko>
+	 * @fires eg.Flicking#beforeFlickStart
+	 * @fires eg.Flicking#flick
+	 * @fires eg.Flicking#flickEnd
+	 * @see eg.Flicking#moveTo
+	 * @see eg.Flicking#prev
 	 */
 	next(duration) {
 		return this._movePanel(true, duration);
 	}
 
 	/**
-	 * Moves an element to the previous panel.
-	 * @ko 이전 패널로 이동한다.
+	 * Moves an element to the previous panel. If `horizontal=true`is left panel. If `horizontal=false`is upper panel.
+	 * @ko 이전 패널로 이동한다. `horizontal=true`이면 좌측 패널. `horizontal=false`이면 상측 패널.
 	 * @method eg.Flicking#prev
 	 * @param {Number} [duration=options.duration] Duration of the panel movement (unit: ms) <ko>패널 이동 애니메이션 진행 시간(단위: ms)</ko>
 	 * @return {eg.Flicking} An instance of a module itself<ko>모듈 자신의 인스턴스</ko>
+	 * @fires eg.Flicking#beforeFlickStart
+	 * @fires eg.Flicking#flick
+	 * @fires eg.Flicking#flickEnd
+	 * @see eg.Flicking#moveTo
+	 * @see eg.Flicking#next
 	 */
 	prev(duration) {
 		return this._movePanel(false, duration);
 	}
 
 	/**
-	 * Moves an element to the indicated panel.
-	 * @ko 지정한 패널로 이동한다.
+	 * Moves to the panel in the order specified in `noValue`. If noValue is equal to the current logical index numbering, no action is taken. [beforeFlickStart]{@link eg.Flicking#event:beforeFlickStart}, [flick]{@link eg.Flicking#event:flick}, [flickEnd]{@link eg.Flicking#event:flickEnd} events occur one after the other.
+	 * @ko `noValue`에 지정한 순서의 패널로 이동한다. `noValue`값이 현재의 논리적 인덱스 번호와 같다면 아무동작 하지 않는다. [beforeFlickStart]{@link eg.Flicking#event:beforeFlickStart}, [flick]{@link eg.Flicking#event:flick}, [flickEnd]{@link eg.Flicking#event:flickEnd} 이벤트가 차례로 발생한다.
 	 * @method eg.Flicking#moveTo
-	 * @param {Number} noValue Logical index number of the target panel element, which is relative to the panel content. <ko>이동할 패널 엘리먼트의 논리적 인덱스 번호. 패널 콘텐츠를 기준으로 하는 인덱스 번호다</ko>
+	 * @param {Number} noValue The logical index number of the panel element to be moved. (Based on the defined order of the panel elements.)<ko>이동할 패널 요소의 논리적 인덱스 번호. ([getIndex()]{@link eg.Flicking#getIndex}메서드 참조.)</ko>
 	 * @param {Number} [duration=options.duration] Duration of the panel movement (unit: ms) <ko>패널 이동 애니메이션 진행 시간(단위: ms)</ko>
 	 * @return {eg.Flicking} An instance of a module itself<ko>모듈 자신의 인스턴스</ko>
+	 * @fires eg.Flicking#beforeFlickStart
+	 * @fires eg.Flicking#flick
+	 * @fires eg.Flicking#flickEnd
+	 * @see eg.Flicking#prev
+	 * @see eg.Flicking#next
 	 */
 	moveTo(noValue, duration) {
 		const conf = this._conf;
@@ -1150,21 +1402,23 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	}
 
 	/**
-	 * Updates the size of the panel.
-	 * @ko 패널의 크기를 갱신한다
+	 * The horizontal or vertical length of the panel is updated according to the base element. If `horizontal=true` is horizontal. If `horizontal=false` is vertical.
+	 * @ko 패널의 가로 혹은 세로 길이를 기준요소에 맞춰 갱신한다. `horizontal=true`이면 가로, `horizontal=false`이면 세로.
 	 * @method eg.Flicking#resize
 	 * @return {eg.Flicking} An instance of a module itself<ko>모듈 자신의 인스턴스</ko>
 	 * @example
-	 let some = new eg.Flicking("#mflick", {
-					previewPadding: [10,10]
-				});
-
-	 // when device orientaion changes
-	 some.resize();
-
-	 // or when changes previewPadding option from its original value
-	 some.options.previewPadding = [20, 30];
-	 some.resize();
+	 * const flick = new eg.Flicking("#flick", {
+	 * 	previewPadding: [10, 10]
+	 * });
+	 *
+	 * // When device orientaion changes.
+	 * // 단말기를 회전했을 때.
+	 * flick.resize();
+	 *
+	 * // Or when changes previewPadding option from its original value.
+	 * // 또는 previewPadding옵션값을 변경했을 때.
+	 * flick.options.previewPadding = [20, 30];
+	 * flick.resize();
 	 */
 	resize() {
 		const conf = this._conf;
@@ -1215,20 +1469,26 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	}
 
 	/**
-	 * Restores an element to its original position when it movement stops while the element is not dragged until a certain distance threshold is reached.
-	 * @ko 다음 패널로 바뀌기 전에 패널 이동이 멈췄을 때 원래 패널로 복원한다
+	 * Return the panel to its original position. (It only works when the default behavior of the [beforeFlickStart]{@link eg.Flicking#event:beforeFlickStart} event is canceled.) [beforeRestore]{@link eg.Flicking#event:beforeRestore}, [flick]{@link eg.Flicking#event:flick}, [restore]{@link eg.Flicking#event:restore} events are occur in order.
+	 * @ko 패널의 위치를 원래 자리로 되돌린다. ([beforeFlickStart]{@link eg.Flicking#event:beforeFlickStart} 이벤트의 기본동작을 취소한 경우에만 동작함.) [beforeRestore]{@link eg.Flicking#event:beforeRestore}, [flick]{@link eg.Flicking#event:flick}, [restore]{@link eg.Flicking#event:restore} 이벤트가 차례로 발생한다.
 	 * @method eg.Flicking#restore
-	 * @param {Number} [durationValue=options.duration] Duration of the panel movement (unit: ms) <ko>패널 이동 애니메이션 진행 시간(단위: ms)</ko>
+	 * @param {Number} [durationValue=options.duration] Duration of the panel movement (unit: ms)<ko>패널 이동 애니메이션 진행 시간(단위: ms)</ko>
 	 * @return {eg.Flicking} An instance of a module itself<ko>모듈 자신의 인스턴스</ko>
+	 * @fires eg.Flicking#event:beforeRestore
+	 * @fires eg.Flicking#event:flick
+	 * @fires eg.Flicking#event:restore
 	 * @example
-	 * let some = new eg.Flicking("#mflick").on({
-	 *				beforeFlickStart : function(e) {
-	 *					if(e.no === 2) {
-	 *						e.stop();  // stop flicking
-	 *						this.restore(100);  // restoring to previous position
-	 *					}
-	 *				}
-	 *			);
+	 * new eg.Flicking("#flick").on("beforeFlickStart", e => {
+	 * 	if (e.no === 2) {
+	 * 		// Cancels the default behavior of the 'beforeFlickStart' event.
+	 * 		// 'beforeFlickStart' 이벤트 기본동작 취소.
+	 * 		e.stop();
+	 *
+	 * 		// Return to original position.
+	 * 		// 원래 자리로 되돌림.
+	 * 		this.restore(100);
+	 * 	}
+	 * });
 	 */
 	restore(durationValue) {
 		const conf = this._conf;
@@ -1263,10 +1523,11 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	}
 
 	/**
-	 * Enables input devices.
-	 * @ko 입력 장치를 사용할 수 있게 한다
+	 * The input from the input device is not blocked so that the panel can be moved by the input device.
+	 * @ko 막았던 입력 장치로부터의 입력을 푼다.
 	 * @method eg.Flicking#enableInput
 	 * @return {eg.Flicking} An instance of a module itself <ko>모듈 자신의 인스턴스</ko>
+	 * @see eg.Flicking#disableInput
 	 */
 	enableInput() {
 		this._panInput.enable();
@@ -1274,10 +1535,11 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	}
 
 	/**
-	 * Disables input devices.
-	 * @ko 입력 장치를 사용할 수 없게 한다.
+	 * The input from the input device is blocked so that the panel is not moved by the input device.
+	 * @ko 패널이 입력 장치에 의해 움직이지 않도록 입력 장치로부터의 입력을 막는다.
 	 * @method eg.Flicking#disableInput
 	 * @return {eg.Flicking} An instance of a module itself <ko>모듈 자신의 인스턴스</ko>
+	 * @see eg.Flicking#enableInput
 	 */
 	disableInput() {
 		this._panInput.disable();
@@ -1285,11 +1547,35 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	}
 
 	/**
-	 * Get current flicking status
-	 * @ko 현재의 상태 값을 반환한다.
+	 * Get current flicking status. If the returned value is specified as a [setStatus()]{@link eg.Flicking#setStatus} method argument, it can be returned to its value state.
+	 * @ko 현재 상태 값을 반환한다. 반환받은 값을 [setStatus()]{@link eg.Flicking#setStatus} 메서드 인자로 지정하면 그 값 상태로 되돌릴 수 있다.
 	 * @method eg.Flicking#getStatus
-	 * @param {Boolean} stringify Set true if want get stringified status value <ko>상태 값을 문자열로 전달받고자 하는지 여부</ko>
-	 * @return {{panel: {index: (*|number), no: (*|number), currIndex: number, currNo: number}, $list}}
+	 * @param {Boolean} [stringify] Set true if want get stringified status value.<ko>true 지정시 json문자열 형태로 반환한다.</ko>
+	 * @return {Status|String} An object with current state value information.<ko>현재 상태값 정보를 가진 객체.</ko>
+	 * @see eg.Flicking#setStatus
+	 * @example
+	 * const flick = new eg.Flicking("flick");
+	 * const status = flick.getStatus();
+	 * const jsonStaus = flick.getStatus(true);
+	 *
+	 * console.log(status); // {panel: {...}, $list: Array(7)}
+	 * console.log(jsonStatus); // "{\"panel\":{\"index\":3,\"no\":6,\"currIndex\":3,\"currNo\":6},\"$list\":[{\"style\":\"background-color: rgb(155, 49, 137); position: absolute;  height: 100%;\",\"className\":\"eg-flick-panel\",\"html\":\"\n\t\t\t\t\t\t\t\t&lt;p&gt;panel 3&lt;/p&gt;\n\t\t\t\t\t\t\"},{\"style\":\"background-color: rgb(51, 172, 91); position: absolute;  height: 100%;\",\"className\":\"eg-flick-panel\",\"html\":\"\n\t\t\t\t\t\t\t\t&lt;p&gt;panel 4&lt;/p&gt;\n\t\t\t\t\t\t\"},{\"style\":\"background-color: rgb(116, 38, 241); position: absolute;  height: 100%;\",\"className\":\"eg-flick-panel\",\"html\":\"\n\t\t\t\t\t\t\t\t&lt;p&gt;panel 5&lt;/p&gt;\n\t\t\t\t\t\t\"},{\"style\":\"background-color: rgb(141, 139, 24); position: absolute;  height: 100%;\",\"className\":\"eg-flick-panel\",\"html\":\"\n\t\t\t\t\t\t\t\t&lt;p&gt;panel 6&lt;/p&gt;\n\t\t\t\t\t\t\"},{\"style\":\"background-color: rgb(204, 102, 204); position: absolute;  height: 100%;\",\"className\":\"eg-flick-panel\",\"html\":\"\n\t\t\t\t\t\t\t\t&lt;p&gt;panel 0&lt;/p&gt;\n\t\t\t\t\t\t\"},{\"style\":\"background-color: rgb(54, 53, 156); position: absolute;  height: 100%;\",\"className\":\"eg-flick-panel\",\"html\":\"\n\t\t\t\t\t\t\t\t&lt;p&gt;panel 1&lt;/p&gt;\n\t\t\t\t\t\t\"},{\"style\":\"background-color: rgb(196, 218, 72); position: absolute;  height: 100%;\",\"className\":\"eg-flick-panel\",\"html\":\"\n\t\t\t\t\t\t\t\t&lt;p&gt;panel 2&lt;/p&gt;\n\t\t\t\t\t\t\"}]}"
+	 */
+	/**
+	 * The return value specification of the getStatus () method.
+	 * @ko getStatus() 메서드의 반환값 명세.
+	 * @typedef {Object} Status
+	 * @property {Object} panel current panel position<ko>현재 패널 위치</ko>
+	 * @property {Number} panel.index Physical index number.<ko>물리적 인덱스 번호.</ko>
+	 * @property {Number} panel.currIndex Current physical index number.<ko>현재 물리적 인덱스 번호.</ko>
+	 * @property {Number} panel.no Logical index number.<ko>논리적 인덱스 번호.</ko>
+	 * @property {Number} panel.currNo Current logical index number.<ko>현재 논리적 인덱스 번호.</ko>
+	 * @property {Array.<{style: String, className: String, html: String}>} $list panel's html<ko>패널 정보</ko>
+	 * @property {Object} $list.obj For convenience, the element is denoted by obj.<ko>편의상 원소를 obj로 표기함</ko>
+	 * @property {String} $list.obj.style The value of the style attribute of the panel element. ('transform', 'left', 'top', 'will-change', 'box-sizing', 'width' style has been deleted.)<ko>패널 요소의 style 속성 값. ('transform', 'left', 'top', 'will-change', 'box-sizing', 'width' style은 삭제됨)</ko>
+	 * @property {String} $list.obj.className The class name of the panel element.<ko>패널 요소의 class 이름.</ko>
+	 * @property {String} $list.obj.html The innerHTML value of the panel element.<ko>패널 요소의 innerHTML 값.</ko>
+	 * @see eg.Flicking#getIndex
 	 */
 	getStatus(stringify) {
 		const panel = this._conf.panel;
@@ -1316,9 +1602,22 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	}
 
 	/**
-	 * Set flicking as given status
+	 * Restore to the state of the `statusValue`.
+	 * @ko `statusValue`의 상태로 복원한다.
 	 * @method eg.Flicking#setStatus
-	 * @param {Object|String} statusValue status value to be restored <ko>복원할 상태 값</ko>
+	 * @param {Status|String} statusValue Status value to be restored. You can specify the return value of the [getStatus()]{@link eg.Flicking#getStatus} method.<ko>복원할 상태 값. [getStatus()]{@link eg.Flicking#getStatus}메서드 반환값을 지정하면 된다.</ko>
+	 * @see eg.Flicking#getStatus
+	 * @example
+	 * const flick = new eg.Flicking("flick");
+	 * const status = flick.getStatus();
+	 *
+	 * // Move to arbitrary panel.
+	 * // 임의 패널로 이동
+	 * flick.moveTo(2);
+	 *
+	 * // Restore to status.
+	 * // status 상태로 복원
+	 * flick.setStatus(status);
 	 */
 	setStatus(statusValue) {
 		const panel = this._conf.panel;
@@ -1347,9 +1646,13 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	}
 
 	/**
-	 * Destroys elements, properties, and events used in a panel.
-	 * @ko 패널에 사용한 엘리먼트와 속성, 이벤트를 해제한다
+	 * Returns the reference element and its children to the state they were in before the instance was created. Remove all attached event handlers. Specify `null` for all attributes of the instance (including inherited attributes).
+	 * @ko 기준 요소와 그 하위 요소를 인스턴스 생성전의 상태로 되돌린다. 부착된 모든 이벤트 핸들러를 탈거한다. 인스턴스의 모든 속성(상속받은 속성포함)에 `null`을 지정한다.
 	 * @method eg.Flicking#destroy
+	 * @example
+	 * const flick = new eg.Flicking("flick");
+	 * flick.destroy();
+	 * console.log(flick.moveTo); // null
 	 */
 	destroy() {
 		const conf = this._conf;
@@ -1405,82 +1708,98 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	}
 
 	/**
-	 * Constant value for none direction
-	 * @ko none 방향에 대한 상수 값
+	 * Constant value for none direction.
+	 * @ko none 방향에 대한 상수 값.
 	 * @name DIRECTION_NONE
 	 * @memberof eg.Flicking
 	 * @static
+	 * @constant
 	 * @type {Number}
+	 * @default 1
 	 */
 	static DIRECTION_NONE = Axes.DIRECTION_NONE;
 
 	/**
-	 * @description Constant value for left direction
-	 * @ko left 방향에 대한 상수 값
+	 * Constant value for left direction.
+	 * @ko left 방향에 대한 상수 값.
 	 * @name DIRECTION_LEFT
 	 * @memberof eg.Flicking
 	 * @static
+	 * @constant
 	 * @type {Number}
+	 * @default 2
 	 */
 	static DIRECTION_LEFT = Axes.DIRECTION_LEFT;
 
 	/**
-	 * Constant value for right direction
-	 * @ko right 방향에 대한 상수 값
+	 * Constant value for right direction.
+	 * @ko right 방향에 대한 상수 값.
 	 * @name DIRECTION_RIGHT
 	 * @memberof eg.Flicking
 	 * @static
+	 * @constant
 	 * @type {Number}
+	 * @default 4
 	 */
 	static DIRECTION_RIGHT = Axes.DIRECTION_RIGHT;
 
 	/**
-	 * Constant value for up direction
-	 * @ko up 방향에 대한 상수 값
+	 * Constant value for up direction.
+	 * @ko up 방향에 대한 상수 값.
 	 * @name DIRECTION_UP
 	 * @memberof eg.Flicking
 	 * @static
+	 * @constant
 	 * @type {Number}
+	 * @default 8
 	 */
 	static DIRECTION_UP = Axes.DIRECTION_UP;
 
 	/**
-	 * Constant value for down direction
-	 * @ko down 방향에 대한 상수 값
+	 * Constant value for down direction.
+	 * @ko down 방향에 대한 상수 값.
 	 * @name DIRECTION_DOWN
 	 * @memberof eg.Flicking
 	 * @static
+	 * @constant
 	 * @type {Number}
+	 * @default 16
 	 */
 	static DIRECTION_DOWN = Axes.DIRECTION_DOWN;
 
 	/**
-	 * Constant value for horizontal direction
-	 * @ko horizontal 방향에 대한 상수 값
+	 * Constant value for horizontal direction.
+	 * @ko horizontal 방향에 대한 상수 값.
 	 * @name DIRECTION_HORIZONTAL
 	 * @memberof eg.Flicking
 	 * @static
+	 * @constant
 	 * @type {Number}
+	 * @default 6
 	 */
 	static DIRECTION_HORIZONTAL = Axes.DIRECTION_HORIZONTAL;
 
 	/**
-	 * Constant value for vertical direction
-	 * @ko vertical 방향에 대한 상수 값
+	 * Constant value for vertical direction.
+	 * @ko vertical 방향에 대한 상수 값.
 	 * @name DIRECTION_VERTICAL
 	 * @memberof eg.Flicking
 	 * @static
+	 * @constant
 	 * @type {Number}
+	 * @default 24
 	 */
 	static DIRECTION_VERTICAL = Axes.DIRECTION_VERTICAL;
 
 	/**
-	 * Constant value for all direction
-	 * @ko all 방향에 대한 상수 값
+	 * Constant value for all direction.
+	 * @ko all 방향에 대한 상수 값.
 	 * @name DIRECTION_ALL
 	 * @memberof eg.Flicking
 	 * @static
+	 * @constant
 	 * @type {Number}
+	 * @default 30
 	 */
 	static DIRECTION_ALL = Axes.DIRECTION_ALL;
 }
