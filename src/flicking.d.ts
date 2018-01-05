@@ -41,7 +41,7 @@ interface FlickingStatus {
 
 declare class Flicking {
   constructor(el: string | HTMLElement, options?: FlickingOption);
-  destroy();
+  destroy(): void;
   disableInput(): Flicking;
   enableInput(): Flicking;
   getAllElements(): HTMLElement[];
@@ -59,11 +59,11 @@ declare class Flicking {
   prev(duration?: number): Flicking;
   resize(): Flicking;
   restore(duration?: number): Flicking;
-  setStatus(status: FlickingStatus | string);
+  setStatus(status: FlickingStatus | string): void;
 }
 
 declare namespace Flicking {
-  function destroy();
+  function destroy(): void;
   function disableInput(): Flicking;
   function enableInput(): Flicking;
   function getAllElements(): HTMLElement[];
@@ -81,5 +81,5 @@ declare namespace Flicking {
   function prev(duration?: number): Flicking;
   function resize(): Flicking;
   function restore(duration?: number): Flicking;
-  function setStatus(status: FlickingStatus | string);
+  function setStatus(status: FlickingStatus | string): void;
 }
