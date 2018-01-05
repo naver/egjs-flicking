@@ -223,42 +223,6 @@ const utils = {
 	},
 
 	/**
-	 * Checks whether hardware acceleration is enabled.
-	 *
-	 * @ko 하드웨어 가속을 사용할 수 있는 환경인지 확인한다
-	 * @method eg#isHWAccelerable
-	 * @return {Boolean} Indicates whether hardware acceleration is enabled. <ko>하드웨어 가속 사용 가능 여부</ko>
-	 */
-	isHWAccelerable() {
-		const ua = window.navigator.userAgent;
-		let result = false;
-		let match;
-
-		// chrome 25- has a text blur bug (except Samsung's sbrowser)
-		if ((match = ua.match(/Chrome\/(\d+)/))) {
-			result = match[1] >= "25";
-		} else if (/ie|edge|firefox|safari|inapp/.test(ua)) {
-			result = true;
-		} else if ((match = ua.match(/Android ([\d.]+)/))) {
-			const version = match[1];
-			const useragent = (ua.match(/\(.*\)/) || [null])[0];
-
-			// android 4.1+ blacklist
-			// EK-GN120 : Galaxy Camera, SM-G386F : Galaxy Core LTE
-			// SHW-M420 : Galaxy Nexus , SHW-M200 : NexusS , GT-S7562 : Galaxy S duos
-			result = (version >= "4.1.0" && !/EK-GN120|SM-G386F/.test(useragent)) ||
-				(
-					version >= "4.0.3" &&
-						/SHW-|SHV-|GT-|SCH-|SGH-|SPH-|LG-F160|LG-F100|LG-F180|LG-F200|EK-|IM-A|LG-F240|LG-F260/.test(useragent) &&
-							!/SHW-M420|SHW-M200|GT-S7562/.test(useragent)
-				);
-		}
-
-		this.isHWAccelerable = () => result;
-		return result;
-	},
-
-	/**
 	 * Returns the syntax of the translate style which is applied to CSS transition properties.
 	 *
 	 * @ko CSS 트랜지션 속성에 적용할 translate 스타일 구문을 반환한다
