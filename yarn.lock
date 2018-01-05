@@ -1719,7 +1719,7 @@ egjs-jsdoc-template@^1.4.3:
   resolved "https://registry.yarnpkg.com/egjs-jsdoc-template/-/egjs-jsdoc-template-1.4.3.tgz#c65f98300be317ef7caeae23e10ec76ee696be70"
   dependencies:
     catharsis "~0.8.7"
-    marked "~0.3.4"
+    marked "~0.3.9"
     taffydb "https://github.com/hegemonic/taffydb/tarball/7d100bcee0e997ee4977e273cdce60bd8933050e"
 
 elliptic@^6.0.0:
