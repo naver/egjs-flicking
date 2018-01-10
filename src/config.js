@@ -39,7 +39,7 @@ const CONFIG = {
 
 // default options
 const OPTIONS = {
-	hwAccelerable: true,    // set for hw acceleration
+	hwAccelerable: true,    // set for hw acceleration (see https://gist.github.com/netil/c1d1b67e1c1926364c0709f110a09b44 for old devices support)
 	prefix: "eg-flick",     // prefix value of class name
 	deceleration: 0.0006,   // deceleration value
 	horizontal: true,       // move direction (true == horizontal, false == vertical)
