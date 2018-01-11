@@ -581,6 +581,19 @@ describe("Custom events", function() {
 		it("Distance check #4", done => {
 			runTest("#mflick3-1", { circular: true, horizontal: false },  { deltaX: 0, deltaY: 100 }, false, done);
 		});
+
+		it("without implicit user's action, e.distance should be null", done => {
+			const inst = tutils.create("#mflick1", {
+				circular: true
+			}).on({
+				flick: e => {
+					expect(e.distance).to.be.null;
+				},
+				flickEnd: () => done()
+			});
+
+			inst.next();
+		})
 	});
 
 	describe("Check for the animation status", function() {

@@ -90,7 +90,7 @@ export default superclass => class extends superclass {
 				pos,
 				holding: e.holding,
 				direction: direction || touch.direction,
-				distance: pos - holdPos
+				distance: touch.isTrusted ? pos - holdPos : null
 			})
 		);
 
