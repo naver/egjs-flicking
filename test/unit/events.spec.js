@@ -25,7 +25,6 @@ describe("Custom events", function() {
 					eventFired.push(type);
 
 					panel[type] = {
-						index: e.index,
 						no: e.no,
 						getElement: this.getElement(),
 						getIndex: this.getIndex(),
@@ -46,7 +45,6 @@ describe("Custom events", function() {
 				panel: {},
 				inst: f,
 				currentPanel: {
-					index: f._conf.panel.currIndex,
 					no: f._conf.panel.currNo,
 					getElement: f.getElement(),
 					getIndex: f.getIndex(),
@@ -91,7 +89,7 @@ describe("Custom events", function() {
 							};
 
 							for (let x in oPanel) {
-								if (/^(index|no|getIndex)$/.test(x)) {
+								if (/^(no|getIndex)$/.test(x)) {
 									let value = currentPanel[x];
 
 									if (!isCircular || (isCircular && x !== "index")) {
@@ -270,7 +268,6 @@ describe("Custom events", function() {
 				$el.eventFired.push(type);
 
 				panel[type] = {
-					index: e.index,
 					no: e.no
 				};
 			}
@@ -286,7 +283,6 @@ describe("Custom events", function() {
 			$el.eventFired = [];
 
 			currentPanel = {
-				index: inst._conf.panel.index,
 				no: inst._conf.panel.no
 			};
 		};

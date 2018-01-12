@@ -1813,7 +1813,7 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
-egjs-jsdoc-template@^1.4.3:
+egjs-jsdoc-template@^1.4.4:
   version "1.4.4"
   resolved "https://registry.yarnpkg.com/egjs-jsdoc-template/-/egjs-jsdoc-template-1.4.4.tgz#8b0ccff6657aedd5a129859f61fb0fdce0520ae3"
   dependencies:
@@ -5870,7 +5870,7 @@ webpack-dev-middleware@1.12.2, webpack-dev-middleware@^1.12.0:
     range-parser "^1.0.3"
     time-stamp "^2.0.0"
 
-webpack-dev-server@^2.9.7:
+webpack-dev-server@^2.10.1:
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-2.10.1.tgz#a9768375346e62155860fe3cef3d4d641b24273e"
   dependencies:

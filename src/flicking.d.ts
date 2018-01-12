@@ -52,7 +52,6 @@ declare class Flicking {
   getPrevElement(): HTMLElement | null;
   getPrevIndex(physical: boolean): number;
   getStatus(stringify: boolean): FlickingStatus | string;
-  getTotalCount(physical: boolean): number;
   isPlaying(): boolean;
   moveTo(no: number, duration?: number): Flicking;
   next(duration?: number): Flicking;
@@ -74,7 +73,6 @@ declare namespace Flicking {
   function getPrevElement(): HTMLElement | null;
   function getPrevIndex(physical: boolean): number;
   function getStatus(stringify: boolean): FlickingStatus | string;
-  function getTotalCount(physical: boolean): number;
   function isPlaying(): boolean;
   function moveTo(no: number, duration?: number): Flicking;
   function next(duration?: number): Flicking;

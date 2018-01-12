@@ -171,29 +171,6 @@ describe("Methods call", function() {
 		});
 	});
 
-	describe("getTotalCount()", function() {
-		tutils.hooks.run();
-
-		it("Return total panel elements count?", () => {
-			const inst = tutils.create("#mflick1");
-
-			expect(inst.getTotalCount()).to.equal(inst.$container.children.length);
-		});
-
-		// When
-		const inst = tutils.create("#mflick2-1", {
-			circular : true
-		});
-
-		it("When circular options is set, the elements count is less than physical elements count", () => {
-			expect(inst.getTotalCount() < inst.$container.children.length).to.be.ok;
-		});
-
-		it("Returned physical elements total count?", () => {
-			expect(inst.getTotalCount(true)).to.equal(inst.$container.children.length);
-		});
-	});
-
 	describe("isPlaying()", function() {
 		tutils.hooks.run();
 
