@@ -1253,18 +1253,6 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	}
 
 	/**
-	 * Returns the total number of whole panel elements.
-	 * @ko 패널 요소의 총개수를 반환한다.
-	 * @method eg.Flicking#getTotalCount
-	 * @deprecated since 1.3.0
-	 * @param {Boolean} [physical=false] Based on number of panel elements (true: the number included up to the module needs, false: the actual number defined)<ko>패널 요소 개수 기준(`true`: 모듈 필요에 의해 생성된 것까지 포함한 개수, `false`: 실제 정의한 개수)</ko>
-	 * @return {Number} Total number of whole panel elements. <ko>패널 요소 총개수.</ko>
-	 */
-	getTotalCount(physical) {
-		return this._conf.panel[physical ? "count" : "origCount"];
-	}
-
-	/**
 	 * Checks whether the animated panel is playing.
 	 * @ko 패널 이동 애니메이션이 진행 중인지 확인한다.
 	 * @method eg.Flicking#isPlaying
