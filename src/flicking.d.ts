@@ -4,6 +4,8 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // TypeScript Version: 2.2
 
+import * as Component from '@egjs/component';
+
 export as namespace eg;
 
 export = Flicking;
@@ -39,7 +41,7 @@ interface FlickingStatus {
   }[];
 }
 
-declare class Flicking {
+declare class Flicking extends Component {
   constructor(el: string | HTMLElement, options?: FlickingOption);
   destroy(): void;
   disableInput(): Flicking;
