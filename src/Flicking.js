@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 import Component from "@egjs/component";
-import Axes from "@egjs/axes";
+import Axes, {PanInput} from "@egjs/axes";
 import {utils, Mixin} from "./utils";
 import * as consts from "./consts";
 import {CONFIG, OPTIONS} from "./config";
@@ -678,7 +678,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		const axesInst = this._axesInst;
 
 		if (bind) {
-			this._panInput = new Axes.PanInput($wrapper, {
+			this._panInput = new PanInput($wrapper, {
 				inputType: options.inputType,
 				thresholdAngle: options.thresholdAngle,
 				scale: this._getDataByDirection([-1, 0])

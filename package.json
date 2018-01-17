@@ -36,7 +36,7 @@
     "url": "https://github.com/naver/egjs-flicking/issues"
   },
   "dependencies": {
-    "@egjs/axes": "^2.3.3",
+    "@egjs/axes": "^2.4.2",
     "@egjs/component": "^2.1.0"
   },
   "devDependencies": {
