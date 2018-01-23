@@ -54,9 +54,9 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@egjs/axes@^2.3.3":
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/@egjs/axes/-/axes-2.3.3.tgz#453cebf9c15e35d483e1537cd33a951bc485c225"
+"@egjs/axes@^2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@egjs/axes/-/axes-2.4.2.tgz#0b5567f56f476cbc703b534e9ec87a857d2b6285"
   dependencies:
     "@egjs/component" "^2.0.0"
     hammerjs "^2.0.8"
