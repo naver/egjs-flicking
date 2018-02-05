@@ -1,8 +1,7 @@
 {
     "presets": [ 
         [
-            "es2015",
-            {
+            "env", {
                 "loose": true
             }
         ]
