@@ -88,6 +88,40 @@ describe("Setting options", function() {
 		});
 	});
 
+	describe("previewPadding - with different unit value", function() {
+		tutils.hooks.run();
+
+		// Given
+		let inst = tutils.create("#mflick3", {
+			circular : true,
+			previewPadding : [ "10%", "70px" ]
+		});
+
+		let padding = inst.options.previewPadding;
+		let right = inst.$wrapper.style.paddingRight;
+		let left = inst.$wrapper.style.paddingLeft;
+
+		// Then
+		it("Preview padding value with '%' and 'px', applied correctly?", () => {
+			expect(left === padding[0] && right === padding[1]).to.be.ok;
+		});
+
+		// Given
+		inst = tutils.create("#mflick1", {
+			circular : true,
+			previewPadding : "20%"
+		});
+
+		padding = inst.options.previewPadding;
+		right = inst.$wrapper.style.paddingRight;
+		left = inst.$wrapper.style.paddingLeft;
+
+		// Then
+		it("Preview padding value applied as single '%' value", () => {
+			expect(left === padding[0] && right === padding[1]).to.be.ok;
+		});
+	});
+
 	describe("bounce", function() {
 		tutils.hooks.run();
 
