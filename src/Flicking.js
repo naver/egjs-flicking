@@ -343,7 +343,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			horizontal && padding.reverse();
 
 			cssValue.padding = `${horizontal ? "0 " : ""}${
-				// add 'px' unit if not preset
+				// add 'px' unit if not present
 				padding.map(v => (isNaN(v) ? v : `${v}px`))
 					.join(" 0 ")
 			}`;
