@@ -41,8 +41,8 @@ describe("resize() method", function() {
 			// The panel width should be same as current wrapper element
 			expect(panel.size).to.deep.equal(utils.css($el, "width", true));
 
-			// The panel container width should be same as current panels element total width
-			expect(utils.css(inst.$container, "width", true)).to.deep.equal(panel.count * panel.size);
+			// The panel container width should be same as current panel element width
+			expect(utils.css(inst.$container, "width", true)).to.deep.equal(panel.size);
 
 			// Should be updated Axes' 'max' options value
 			expect(oldCoordMax).to.not.deep.equal(inst._axesInst.axis.flick.range[1]);
