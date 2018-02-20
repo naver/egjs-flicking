@@ -1422,11 +1422,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 				panelSize = panel.size = utils.css(this.$wrapper, "width", true);
 			}
 
-			const max = panelSize * (panel.count - 1);
-			const maxCoords = this._getDataByDirection([max, 0]);
-
-			// resize elements
-			horizontal && utils.css(this.$container, {width: `${maxCoords[0] + panelSize}px`});
+			// resize panel elements
 			utils.css(panel.$list, {
 				[horizontal ? "width" : "height"]: utils.getUnitValue(panelSize)
 			});
@@ -1443,7 +1439,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 				}
 			}
 
-			this._axesInst.axis.flick.range = [0, max];
+			this._axesInst.axis.flick.range = [0, panelSize * (panel.count - 1)];
 			this._setAxes("setTo", panelSize * panel.index, 0);
 
 			if (consts.IS_ANDROID2) {
