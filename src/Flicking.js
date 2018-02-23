@@ -514,11 +514,12 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 */
 	_setMoveStyle($el, coordsValue) {
 		const transform = consts.TRANSFORM;
+		const useLayerHack = this._conf.useLayerHack;
 
 		this._setMoveStyle = transform.support ?
-			function($element, coords) {
+			($element, coords) => {
 				utils.css($element, {
-					[transform.name]: utils.translate(coords[0], coords[1], this._conf.useLayerHack)
+					[transform.name]: utils.translate(coords[0], coords[1], useLayerHack)
 				});
 			} : ($element, coords) => {
 				utils.css($element, {left: coords[0], top: coords[1]});
