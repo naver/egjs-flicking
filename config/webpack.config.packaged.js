@@ -1,10 +1,10 @@
-var merge = require("webpack-merge");
-var webpack = require("webpack");
-var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-var uglifyConfig = require("./uglify");
-var banner = require("./banner");
+const merge = require("webpack-merge");
+const webpack = require("webpack");
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const uglifyConfig = require("./uglify");
+const banner = require("./banner");
 
-var config = {
+const config = {
 	entry: {
 		"flicking.pkgd": "./src/index.js",
 		"flicking.pkgd.min": "./src/index.js"
@@ -16,7 +16,7 @@ var config = {
 	]
 };
 
-module.exports = function (common) {
+module.exports = common => {
 	return merge.strategy({
 		entry: "replace",
 		externals: "replace",
