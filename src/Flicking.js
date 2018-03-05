@@ -1416,7 +1416,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		let panelSize;
 
 		if (!this.isPlaying()) {
-			if (utils.isArray(options.previewPadding) && typeof +options.previewPadding.join("") === "number") {
+			if (utils.isArray(options.previewPadding) && typeof(+options.previewPadding.join("")) === "number") {
 				this._setPadding(options.previewPadding.concat());
 				panelSize = panel.size;
 			} else if (horizontal) {
