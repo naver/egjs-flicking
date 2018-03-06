@@ -54,7 +54,8 @@ const OPTIONS = {
 		"touch", "mouse"
 	],
 	thresholdAngle: 45,     // the threshold value that determines whether user action is horizontal or vertical (0~90)
-	adaptiveHeight: false   // Set container's height be adaptive according panel's height
+	adaptiveHeight: false,  // Set container's height be adaptive according panel's height
+	zIndex: 2000            // z-index value for container element
 };
 
 export {

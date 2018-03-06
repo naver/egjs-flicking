@@ -507,4 +507,20 @@ describe("Setting options", function() {
 			});
 		});
 	});
+
+	describe("zIndex", () => {
+		tutils.hooks.run();
+
+		// Given
+		const zIndex = 100;
+		const inst = tutils.create("#mflick3", {
+			zIndex
+		});
+
+		// Then
+		it(`The z-index for container should be ${zIndex}`, () => {
+			expect(+inst.options.zIndex).to.be.equal(zIndex);
+			expect(+inst.$container.style.zIndex).to.be.equal(zIndex);
+		});
+	});
 });
