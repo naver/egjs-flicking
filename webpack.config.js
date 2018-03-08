@@ -57,6 +57,7 @@ const config = {
 		new StringReplacePlugin(),
 		new Stylish()
 	],
+	devtool: "cheap-module-source-map",
 	stats: "minimal"
 };
 
