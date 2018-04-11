@@ -5,7 +5,13 @@
 import Component from "@egjs/component";
 import Axes, {PanInput} from "@egjs/axes";
 import {utils, Mixin} from "./utils";
-import * as consts from "./consts";
+import {
+	EVENTS,
+	TRANSFORM,
+	SUPPORT_WILLCHANGE,
+	IS_ANDROID2,
+	DATA_HEIGHT
+} from "./consts";
 import {CONFIG, OPTIONS} from "./config";
 import {document} from "./browser";
 import eventHandler from "./eventHandler";
@@ -168,7 +174,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		this._applyPanelsCss();
 		this._arrangePanels();
 
-		this.options.hwAccelerable && consts.SUPPORT_WILLCHANGE && this._setHint();
+		this.options.hwAccelerable && SUPPORT_WILLCHANGE && this._setHint();
 		this.options.adaptiveHeight && this._setAdaptiveHeight();
 
 		this._adjustContainerCss("end");
@@ -243,7 +249,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 					style: v.getAttribute("style") || null
 				}))
 			},
-			useLayerHack: options.hwAccelerable && !consts.SUPPORT_WILLCHANGE,
+			useLayerHack: options.hwAccelerable && !SUPPORT_WILLCHANGE,
 			eventPrefix: _prefix || ""
 		});
 
@@ -514,7 +520,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * @param {Array} coordsValue
 	 */
 	_setMoveStyle($el, coordsValue) {
-		const transform = consts.TRANSFORM;
+		const transform = TRANSFORM;
 		const useLayerHack = this._conf.useLayerHack;
 
 		this._setMoveStyle = transform.support ?
@@ -538,7 +544,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		const conf = this._conf;
 		const dummyAnchorClassName = "__dummy_anchor";
 
-		if (consts.IS_ANDROID2) {
+		if (IS_ANDROID2) {
 			conf.$dummyAnchor = utils.$(`.${dummyAnchorClassName}`);
 
 			!conf.$dummyAnchor && this.$wrapper.appendChild(
@@ -558,7 +564,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		} else {
 			this._applyPanelsCss = function applyCss(v, i) {
 				const coords = this._getDataByDirection([
-					consts.TRANSFORM.support ?
+					TRANSFORM.support ?
 						`${100 * i}%` :
 						`${this._conf.panel.size * i}px`, 0
 				]);
@@ -586,7 +592,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		let to = toValue;
 		let value;
 
-		if (consts.IS_ANDROID2) {
+		if (IS_ANDROID2) {
 			if (!to) {
 				to = -panel.size * panel.index;
 			}
@@ -608,7 +614,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 				utils.css(container, {
 					left: to.x,
 					top: to.y,
-					[consts.TRANSFORM.name]: utils.translate(0, 0, conf.useLayerHack)
+					[TRANSFORM.name]: utils.translate(0, 0, conf.useLayerHack)
 				});
 
 				conf.$dummyAnchor.focus();
@@ -730,7 +736,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		const $first = $panel.querySelector(":first-child");
 
 		if ($first) {
-			height = $first.getAttribute(consts.DATA_HEIGHT);
+			height = $first.getAttribute(DATA_HEIGHT);
 
 			if (!height) {
 				$children = $panel.children;
@@ -739,7 +745,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 					$children.length > 1 ? ($panel.style.height = "auto", $panel) : $first
 				);
 
-				height > 0 && $first.setAttribute(consts.DATA_HEIGHT, height);
+				height > 0 && $first.setAttribute(DATA_HEIGHT, height);
 			}
 
 			height > 0 && (this.$wrapper.style.height = `${height}px`);
@@ -777,7 +783,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		 * // 이벤트 발생 순서
 		 * beforeRestore (once) > flick (many times) > restore (once)
 		 */
-		conf.customEvent.restore = this._triggerEvent(consts.EVENTS.beforeRestore, {
+		conf.customEvent.restore = this._triggerEvent(EVENTS.beforeRestore, {
 			depaPos: e.depaPos.flick,
 			destPos: e.destPos.flick
 		});
@@ -812,7 +818,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		 * // 이벤트 발생 순서
 		 * beforeRestore (once) > flick (many times) > restore (once)
 		 */
-		customEvent.restore && this._triggerEvent(consts.EVENTS.restore);
+		customEvent.restore && this._triggerEvent(EVENTS.restore);
 		customEvent.restore = customEvent.restoreCall = false;
 	}
 
@@ -856,7 +862,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			 * 	e.stop();
 			 * });
 			 */
-			if (!this._triggerEvent(consts.EVENTS.beforeFlickStart, pos)) {
+			if (!this._triggerEvent(EVENTS.beforeFlickStart, pos)) {
 				panel.changed = panel.animating = false;
 				return false;
 			} else {
@@ -869,7 +875,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 				this._arrangePanels(true, conf.indexToMove);
 			}
 
-			!consts.IS_ANDROID2 && this._setTranslate([-panel.size * panel.index, 0]);
+			!IS_ANDROID2 && this._setTranslate([-panel.size * panel.index, 0]);
 			conf.touch.distance = conf.indexToMove = 0;
 
 			/**
@@ -891,7 +897,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			 * // 이벤트 발생 순서
 			 * beforeFlickStart (once) > flick (many times) > flickEnd (once)
 			 */
-			panel.changed && this._triggerEvent(consts.EVENTS.flickEnd);
+			panel.changed && this._triggerEvent(EVENTS.flickEnd);
 		}
 
 		this._adjustContainerCss(phase);
@@ -1039,7 +1045,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		const panel = conf.panel;
 
 		// pass changed panel no only on 'flickEnd' event
-		if (name === consts.EVENTS.flickEnd) {
+		if (name === EVENTS.flickEnd) {
 			panel.currNo = panel.no;
 			panel.currIndex = panel.index;
 		}
@@ -1431,11 +1437,11 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 			// remove data-height attribute and re-evaluate panel's height
 			if (options.adaptiveHeight) {
-				const $panel = this.$container.querySelectorAll(`[${consts.DATA_HEIGHT}]`);
+				const $panel = this.$container.querySelectorAll(`[${DATA_HEIGHT}]`);
 
 				if ($panel.length) {
 					[].slice.call($panel)
-						.forEach(v => v.removeAttribute(consts.DATA_HEIGHT));
+						.forEach(v => v.removeAttribute(DATA_HEIGHT));
 
 					this._setAdaptiveHeight();
 				}
@@ -1444,7 +1450,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			this._axesInst.axis.flick.range = [0, panelSize * (panel.count - 1)];
 			this._setAxes("setTo", panelSize * panel.index, 0);
 
-			if (consts.IS_ANDROID2) {
+			if (IS_ANDROID2) {
 				this._applyPanelsPos();
 				this._adjustContainerCss("end");
 			}
