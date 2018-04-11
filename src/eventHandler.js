@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import * as consts from "./consts";
+import {EVENTS} from "./consts";
 
 export default superclass => class extends superclass {
 	/**
@@ -85,7 +85,7 @@ export default superclass => class extends superclass {
 		}
 
 		conf.customEvent.flick && (eventRes =
-			this._triggerEvent(consts.EVENTS.flick, {
+			this._triggerEvent(EVENTS.flick, {
 				pos,
 				holding: e.holding,
 				direction: direction || touch.direction,
