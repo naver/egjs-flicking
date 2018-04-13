@@ -431,7 +431,6 @@ describe("Methods call", function() {
 			tutils.simulator($el, {
 				deltaX: -70
 			}, () => {
-
 				expect(isEventFired).to.be.false;  // Input action should be disabled
 				expect($el.getAttribute("class") || "").to.equal(origPanelStyle.wrapper.className);  // Wrapper element class has been restored?
 				expect($el.getAttribute("style") || "").to.equal(origPanelStyle.wrapper.style);  // Wrapper element style has been restored?

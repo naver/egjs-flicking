@@ -1652,6 +1652,14 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		const container = origPanelStyle.container;
 		const list = origPanelStyle.list;
 
+		// unbind events
+		this._bindEvents(false);
+		this.off();
+
+		// destroy eg.Axes instance
+		this._axesInst.destroy();
+		this._panInput.destroy();
+
 		// unwrap container element and restore original inline style
 		// restore wrapper style
 		const $wrapper = this.$wrapper;
@@ -1683,14 +1691,6 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 				$el[style ? "setAttribute" : "removeAttribute"]("style", style);
 			}
 		}
-
-		// unbind events
-		this._bindEvents(false);
-		this.off();
-
-		// destroy eg.Axes instance
-		this._axesInst.destroy();
-		this._panInput.destroy();
 
 		// release resources
 		for (const x in this) {
