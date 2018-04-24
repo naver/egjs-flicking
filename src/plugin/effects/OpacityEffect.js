@@ -62,7 +62,7 @@ export default class OpacityEffect extends Plugin {
 	}
 
 	resize() {
-		this.size = Plugin.utils.css(this.$$.$wrapper, "width", true);
+		this.size = this.$$._conf.panel.size;
 		this.onRestore("resize");
 	}
 
@@ -82,16 +82,17 @@ export default class OpacityEffect extends Plugin {
 		/prev|resize/.test(type) && utils.classList(utils.css(this.details[2], {opacity: ""}), "selected", false);
 	}
 
-	onFlick(pos, offset) {
+	onFlick(e, distance) {
+		const pos = e.pos;
 		const per = (pos % this.size) / this.size;
 		const utils = Plugin.utils;
 
-		if (Math.abs(offset) >= this.size) {
+		if (Math.abs(distance) >= this.size) {
 			return;
 		}
 
-		const opacity = (offset > 0 && per <= 0.5 && 1 - (2 * per)) ||
-			(offset < 0 && per > 0.5 && 2 * (per - 0.5));
+		const opacity = (distance > 0 && per <= 0.5 && 1 - (2 * per)) ||
+			(distance < 0 && per > 0.5 && 2 * (per - 0.5));
 
 		if (opacity !== undefined) {
 			utils.css(this.details[1], {opacity});

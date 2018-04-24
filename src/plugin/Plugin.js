@@ -83,9 +83,9 @@ export default class Plugin {
 	 */
 	_onFlick(e) {
 		const pos = e.pos;
-		const distance = e.distance;
+		const distance = e.distance || pos - this.$$._conf.panel.size;
 
-		this.onFlick && this.onFlick(pos, distance);
+		this.onFlick && this.onFlick(e, distance);
 	}
 
 	/**
