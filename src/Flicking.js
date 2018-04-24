@@ -154,6 +154,8 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		super();
 
 		this.$wrapper = utils.$(element);
+		this.plugins = [];
+
 		const $children = this.$wrapper && this.$wrapper.children;
 
 		if (!this.$wrapper || !$children || !$children.length) {
@@ -226,7 +228,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		}
 
 		// convert to array
-		$nodes = [].slice.call($nodes);
+		$nodes = utils.toArray($nodes);
 
 		// config value
 		const conf = this._conf = utils.extend(utils.extend({}, CONFIG), {
@@ -315,7 +317,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 		if (this._addClonePanels()) {
 			panelCount = panel.count = (
-				panel.$list = [].slice.call(this.$container.children)
+				panel.$list = utils.toArray(this.$container.children)
 			).length;
 		}
 
@@ -1440,7 +1442,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 				const $panel = this.$container.querySelectorAll(`[${DATA_HEIGHT}]`);
 
 				if ($panel.length) {
-					[].slice.call($panel)
+					utils.toArray($panel)
 						.forEach(v => v.removeAttribute(DATA_HEIGHT));
 
 					this._setAdaptiveHeight();
@@ -1545,7 +1547,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * @return {Status|String} An object with current state value information.<ko>현재 상태값 정보를 가진 객체.</ko>
 	 * @see eg.Flicking#setStatus
 	 * @example
-	 * const flick = new eg.Flicking("flick");
+	 * const flick = new eg.Flicking("#flick");
 	 * const status = flick.getStatus();
 	 * const jsonStaus = flick.getStatus(true);
 	 *
@@ -1599,7 +1601,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * @param {Status|String} statusValue Status value to be restored. You can specify the return value of the [getStatus()]{@link eg.Flicking#getStatus} method.<ko>복원할 상태 값. [getStatus()]{@link eg.Flicking#getStatus}메서드 반환값을 지정하면 된다.</ko>
 	 * @see eg.Flicking#getStatus
 	 * @example
-	 * const flick = new eg.Flicking("flick");
+	 * const flick = new eg.Flicking("#flick");
 	 * const status = flick.getStatus();
 	 *
 	 * // Move to arbitrary panel.
@@ -1637,11 +1639,11 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	}
 
 	/**
-	 * Returns the reference element and its children to the state they were in before the instance was created. Remove all attached event handlers. Specify `null` for all attributes of the instance (including inherited attributes).
-	 * @ko 기준 요소와 그 하위 요소를 인스턴스 생성전의 상태로 되돌린다. 부착된 모든 이벤트 핸들러를 탈거한다. 인스턴스의 모든 속성(상속받은 속성포함)에 `null`을 지정한다.
+	 * Returns the reference element and its children to the state they were in before the instance was created. Remove all attached event handlers. Specify `null` for all attributes of the instance (including inherited attributes).<br>If plugin isn't empty, also reset all plugins registered.
+	 * @ko 기준 요소와 그 하위 요소를 인스턴스 생성전의 상태로 되돌린다. 부착된 모든 이벤트 핸들러를 탈거한다. 인스턴스의 모든 속성(상속받은 속성포함)에 `null`을 지정한다.<br>플러그인이 비어있지 않다면, 플러그인도 모두 리셋한다.
 	 * @method eg.Flicking#destroy
 	 * @example
-	 * const flick = new eg.Flicking("flick");
+	 * const flick = new eg.Flicking("#flick");
 	 * flick.destroy();
 	 * console.log(flick.moveTo); // null
 	 */
@@ -1692,11 +1694,79 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			}
 		}
 
+		// release plugin resources
+		this.plugins.forEach(v => {
+			this.plugins[v].$componentWillUnmount();
+		});
+
 		// release resources
 		for (const x in this) {
 			this[x] = null;
 		}
 	}
+
+	/**
+	 * Register plugin to be used.
+	 * @ko 사용될 플러그인을 등록한다.
+	 * @method eg.Flicking#plugin
+	 * @example
+	 * new eg.Flicking("#flick").plugin([
+	 *     new eg.Flicking.plugin.OpacityEffect("span"),
+	 *     ...
+	 * ]);
+	 * @return {eg.Flicking} An instance of a module itself <ko>모듈 자신의 인스턴스</ko>
+	 */
+	plugin(list) {
+		list.forEach(p => {
+			/**
+			 * A list of plugins used.
+			 * @ko 사용된 플러그인 목록
+			 * @property {Array} plugins An array of plugin instances <ko>플러그인 인스턴스 배열</ko>
+			 * @name plugins
+			 * @type {Array}
+			 * @instance
+			 * @example
+			 * const flick = new eg.Flicking( ... ).plugin([ ... ]);
+			 *
+			 * flick.plugins; // [ ... ] - array of plugins
+			 * @memberof eg.Flicking
+			 */
+			if (this.plugins.filter(v => v.constructor === p.constructor).length === 0) {
+				this.plugins.push(p.$componentWillMount(this));
+			}
+		});
+
+		return this;
+	}
+
+	/**
+	 * Collection of utilities used internally
+	 * @ko 내부에서 사용되는 유틸리티 모음
+	 * @name utils
+	 * @memberof eg.Flicking
+	 * @static
+	 * @constant
+	 * @private
+	 * @type {Object}
+	 */
+	static utils = utils;
+
+	/**
+	 * Constant value used internally
+	 * @ko 내부에서 사용되는 상수 값
+	 * @name consts
+	 * @memberof eg.Flicking
+	 * @static
+	 * @constant
+	 * @private
+	 * @type {Object}
+	 */
+	static consts = {
+		EVENTS,
+		TRANSFORM,
+		SUPPORT_WILLCHANGE,
+		IS_ANDROID2
+	};
 
 	/**
 	 * Constant value for none direction.

@@ -4,6 +4,7 @@
  */
 /*eslint-disable */
 import tutils from "./assets/utils";
+import OpacityEffect from "../../src/plugin/effects/OpacityEffect";
 
 describe("Methods call", function() {
 	describe("getIndex()", function() {
@@ -387,6 +388,22 @@ describe("Methods call", function() {
 			inst.moveTo(2,0);
 
 			expect(inst.getElement().innerHTML.indexOf("Layer 2") > -1).to.be.ok;
+		});
+	});
+
+
+	describe("plugin()", function() {
+		tutils.hooks.run();
+
+		const inst = tutils.create("#mflick2", {
+			circular : true
+		}).plugin([
+			new OpacityEffect("p")
+		]);
+
+		it("Plugin has been registered?", () => {
+			expect(inst.plugins.length === 1).to.be.ok;
+			expect(inst.plugins[0] instanceof OpacityEffect).to.be.ok;
 		});
 	});
 

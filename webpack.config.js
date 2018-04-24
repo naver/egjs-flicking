@@ -64,5 +64,5 @@ const config = {
 module.exports = env => {
 	const mode = (env && env.mode) || "development";
 
-	return require(`./config/webpack.config.${mode}.js`)(config);
+	return require(`./config/webpack.config.${mode}.js`)(config, env);
 };

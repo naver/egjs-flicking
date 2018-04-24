@@ -7,10 +7,6 @@ const uglifyConfig = require("./uglify");
 const banner = require("./banner");
 
 const config = {
-	entry: {
-		"flicking": "./src/index.js",
-		"flicking.min": "./src/index.js"
-	},
 	module: {
 		rules: [
 			{
@@ -33,8 +29,13 @@ const config = {
 	]
 };
 
-module.exports = common => merge.strategy({
-	entry: "replace",
-	module: "append",
-	plugins: "append"
-})(common, config);
+module.exports = common => {
+	Object.keys(common.entry).forEach(v => {
+		common.entry[`${v}.min`] = common.entry[v];
+	});
+
+	return merge.strategy({
+		module: "append",
+		plugins: "append"
+	})(common, config);
+}
