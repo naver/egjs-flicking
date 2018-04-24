@@ -97,23 +97,24 @@ export default class ParallaxEffect extends Plugin {
 		/prev|resize/.test(type) && utils.css(this.imgs[0], {transform: utils.translate("-50%", 0, useLayerHack)});
 	}
 
-	onFlick(pos, offset) {
+	onFlick(e, distance) {
 		const utils = Plugin.utils;
+		const pos = e.pos;
 		const maxRange = this.size;
 		const delta = (pos % maxRange) / 2;
 		const siblingDelta = -(maxRange / 2 - delta);
 		const useLayerHack = this.options.useLayerHack;
 
-		if (Math.abs(offset) >= maxRange) {
+		if (Math.abs(distance) >= maxRange) {
 			return;
 		}
 
 		const update = [];
 
-		if (offset > 0) {
+		if (distance > 0) {
 			update.push({el: this.imgs[1], x: delta});
 			update.push({el: this.imgs[2], x: siblingDelta});
-		} else if (offset < 0) {
+		} else if (distance < 0) {
 			update.push({el: this.imgs[1], x: siblingDelta});
 			update.push({el: this.imgs[0], x: delta});
 		}
@@ -128,9 +129,7 @@ export default class ParallaxEffect extends Plugin {
 	}
 
 	resize() {
-		const $$ = this.$$;
-
-		this.size = Plugin.utils.css($$.$wrapper, "width", true);
+		this.size = this.$$._conf.panel.size;
 		this.onRestore("resize");
 	}
 
