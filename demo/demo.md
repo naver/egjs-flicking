@@ -146,7 +146,8 @@ instance.getNextElement().appendChild(df.firstChild);
 
 ```js
 var instance = new eg.Flicking("#wrapper", {
-	circular: true
+	circular: true,
+	prefix: "plugin"
 }).plugin([
     new eg.Flicking.plugin.OpacityEffect(".text")
 ]);
@@ -158,7 +159,8 @@ var instance = new eg.Flicking("#wrapper", {
 
 ```js
 var instance = new eg.Flicking("#wrapper", {
-	circular: true
+	circular: true,
+	prefix: "plugin"
 }).plugin([
     new eg.Flicking.plugin.ParallaxEffect("p")
 ]);
@@ -170,7 +172,8 @@ var instance = new eg.Flicking("#wrapper", {
 
 ```js
 var instance = new eg.Flicking("#wrapper", {
-	circular: true
+	circular: true,
+    prefix: "plugin"
 }).plugin([
     new eg.Flicking.plugin.OpacityEffect(".text"),
     new eg.Flicking.plugin.ParallaxEffect("p")
