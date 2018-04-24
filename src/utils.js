@@ -47,6 +47,15 @@ const utils = {
 	},
 
 	/**
+	 * Converts to array
+	 * @param {HTMLCollection|HTMLElement} el
+	 * @returns {Array}
+	 */
+	toArray(el) {
+		return [].slice.call(el);
+	},
+
+	/**
 	 * Check if is array
 	 * @param arr
 	 * @returns {Boolean}
@@ -101,7 +110,7 @@ const utils = {
 
 	/**
 	 * Get or set the style value or apply
-	 * @param {HTMLElement} el
+	 * @param {HTMLElement|Array} el
 	 * @param {String|Object} style
 	 *  String: return style property value
 	 *  Object: set style value

@@ -12,7 +12,8 @@
 			"template": "node_modules/egjs-jsdoc-template",
 			"destination": "./doc/",
 			"ignores": ["eg.Component"],
-			"expendsItemMembers": true
+			"expendsItemMembers": true,
+			"recurse": true
 	},
 	"plugins": [
 		"plugins/markdown",

@@ -6,9 +6,12 @@
   "types": "src/flicking.d.ts",
   "scripts": {
     "start": "webpack-dev-server --open",
-    "build": "npm run build:production && npm run build:packaged",
+    "start:plugin": "webpack-dev-server --open --env.plugin=true",
+    "build": "npm run build:production && npm run build:packaged && npm run build:plugin",
+    "build:dev": "webpack --env.mode=development",
     "build:production": "webpack --env.mode=production",
     "build:packaged": "webpack --env.mode=packaged",
+    "build:plugin": "webpack --env.mode=plugin && webpack --env.mode=plugin --env.min=true",
     "test": "karma start",
     "test:chrome": "karma start --chrome",
     "lint": "eslint src",

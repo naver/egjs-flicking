@@ -137,3 +137,45 @@ instance.getElement().appendChild(df.firstChild);
 instance.getPrevElement().appendChild(df.lastChild);
 instance.getNextElement().appendChild(df.firstChild);
 ```
+
+### Plugins
+
+#### OpacityEffect
+
+{% include_relative assets/html/plugins/OpacityEffect.html %}
+
+```js
+var instance = new eg.Flicking("#wrapper", {
+	circular: true,
+	prefix: "plugin"
+}).plugin([
+    new eg.Flicking.plugin.OpacityEffect(".text")
+]);
+```
+
+#### ParallaxEffect
+
+{% include_relative assets/html/plugins/ParallaxEffect.html %}
+
+```js
+var instance = new eg.Flicking("#wrapper", {
+	circular: true,
+	prefix: "plugin"
+}).plugin([
+    new eg.Flicking.plugin.ParallaxEffect("p")
+]);
+```
+
+#### Combined plugins
+
+{% include_relative assets/html/plugins/plugin.html %}
+
+```js
+var instance = new eg.Flicking("#wrapper", {
+	circular: true,
+    prefix: "plugin"
+}).plugin([
+    new eg.Flicking.plugin.OpacityEffect(".text"),
+    new eg.Flicking.plugin.ParallaxEffect("p")
+]);
+```
