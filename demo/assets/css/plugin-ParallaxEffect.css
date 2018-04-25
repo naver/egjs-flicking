@@ -1,0 +1,31 @@
+.plugin{
+    height:150px;
+}
+
+.plugin-container > div {
+    height:100%;
+    float:left;
+    display:block;
+}
+
+.plugin-panel p {
+    margin:0;
+    padding-top: 20px;
+    height: 100%;
+    color: #fff;
+    font-size: 2.0em;
+    text-align: center;
+    background-repeat: no-repeat;
+    background-position: 50% 0;
+    background-size: cover;
+    text-transform: uppercase;
+}
+
+.plugin-panel p span {
+    display: inline-block;
+    margin-top:15px;
+    padding: 10px;
+    background-color: red;
+    text-transform: lowercase;
+    font-size:.7em;
+}

@@ -2,6 +2,8 @@
     height: 100px;
     background-color: grey;
     margin: 0 auto;
+    border-radius: 10px;
+    border: solid 3px;
 }
 .v_btn {
     border-radius: 20px;
@@ -19,7 +21,6 @@
 .eg-flick-panel p {
     vertical-align: middle;
     font-size: 2em;
-    line-height: 100px;
     text-align: center;
 }
 .vbutton {

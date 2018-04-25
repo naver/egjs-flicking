@@ -31,4 +31,6 @@ css:
 - assets/css/vertical_preview.css
 - assets/css/customevent.css
 - assets/css/infinite.css
-- assets/css/plugin.css
+- assets/css/plugin-all.css
+- assets/css/plugin-OpacityEffect.css
+- assets/css/plugin-ParallaxEffect.css
