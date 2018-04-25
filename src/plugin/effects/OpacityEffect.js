@@ -8,7 +8,7 @@ import Plugin from "../Plugin";
  * A plugin to add opacity effect attached with flicking interaction.
  * @ko 플리킹 인터렉션에 따른 투명도 조절 효과 플러그인
  * @alias eg.Flicking.plugin.OpacityEffect
- * @memberof eg.Flicking
+ * @memberof eg.Flicking.plugin
  * @see eg.Flicking#plugin
  * @see eg.Flicking#plugins
  * @example
@@ -61,25 +61,28 @@ export default class OpacityEffect extends Plugin {
 		this.details = [this.details.pop()].concat(this.details);
 	}
 
+	_setSelected(index, setClass) {
+		const utils = Plugin.utils;
+
+		utils.classList(utils.css(this.details[index], {opacity: ""}), "selected", setClass);
+	}
+
 	resize() {
-		this.size = this.$$._conf.panel.size;
+		this.size = this.getInstanceConf().panel.size;
 		this.onRestore("resize");
 	}
 
 	arrange(type) {
-		const utils = Plugin.utils;
-
 		if (type !== "resize") {
 			this.details = (type === "next") ?
 				this.details.concat(this.details.shift()) :
 				[this.details.pop()].concat(this.details);
 		}
 
-		utils.css(this.details[1], {opacity: ""});
-		utils.classList(this.details[1], "selected", true);
+		this._setSelected(1, true);
 
-		/next|resize/.test(type) && utils.classList(utils.css(this.details[0], {opacity: ""}), "selected", false);
-		/prev|resize/.test(type) && utils.classList(utils.css(this.details[2], {opacity: ""}), "selected", false);
+		/next|resize/.test(type) && this._setSelected(0, false);
+		/prev|resize/.test(type) && this._setSelected(2, false);
 	}
 
 	onFlick(e, distance) {
@@ -94,9 +97,7 @@ export default class OpacityEffect extends Plugin {
 		const opacity = (distance > 0 && per <= 0.5 && 1 - (2 * per)) ||
 			(distance < 0 && per > 0.5 && 2 * (per - 0.5));
 
-		if (opacity !== undefined) {
-			utils.css(this.details[1], {opacity});
-		}
+		opacity !== undefined && utils.css(this.details[1], {opacity});
 	}
 
 	onRestore() {
@@ -105,13 +106,5 @@ export default class OpacityEffect extends Plugin {
 
 	get() {
 		return this.details[1];
-	}
-
-	getNext() {
-		return this.details[2];
-	}
-
-	getPrev() {
-		return this.details[0];
 	}
 }
