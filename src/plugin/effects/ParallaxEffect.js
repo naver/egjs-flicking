@@ -5,8 +5,8 @@
 import Plugin from "../Plugin";
 
 /**
- * A plugin to add horizontal parallax effect attached with flicking interaction.
- * @ko 플리킹 인터렉션에 따른 가로유형 패럴렉스 효과 플러그인
+ * A plugin to add horizontal parallax effect attached with flicking interaction.<br>Should be targeted only one element per panel.
+ * @ko 플리킹 인터렉션에 따른 가로유형 패럴렉스 효과 플러그인.<br>각 패널당 한 개의 요소만 지정되어야 한다.
  * @alias eg.Flicking.plugin.ParallaxEffect
  * @memberof eg.Flicking.plugin
  * @see eg.Flicking#plugin

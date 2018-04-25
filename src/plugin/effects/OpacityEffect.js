@@ -5,8 +5,8 @@
 import Plugin from "../Plugin";
 
 /**
- * A plugin to add opacity effect attached with flicking interaction.
- * @ko 플리킹 인터렉션에 따른 투명도 조절 효과 플러그인
+ * A plugin to add opacity effect attached with flicking interaction.<br>Should be targeted only one element(or a wrapper element having child nodes) per panel.
+ * @ko 플리킹 인터렉션에 따른 투명도 조절 효과 플러그인.<br>각 패널당 한 개의 요소(또는 자식노드를 포함하는 한 개의 래퍼요소)만 지정되어야 한다.
  * @alias eg.Flicking.plugin.OpacityEffect
  * @memberof eg.Flicking.plugin
  * @see eg.Flicking#plugin
