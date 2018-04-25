@@ -5,10 +5,10 @@
 import Plugin from "../Plugin";
 
 /**
- * A plugin to add parallax effect attached with flicking interaction.
- * @ko 플리킹 인터렉션에 따른 패럴렉스 효과 플러그인
+ * A plugin to add horizontal parallax effect attached with flicking interaction.
+ * @ko 플리킹 인터렉션에 따른 가로유형 패럴렉스 효과 플러그인
  * @alias eg.Flicking.plugin.ParallaxEffect
- * @memberof eg.Flicking
+ * @memberof eg.Flicking.plugin
  * @see eg.Flicking#plugin
  * @see eg.Flicking#plugins
  * @example
@@ -47,6 +47,7 @@ export default class ParallaxEffect extends Plugin {
 	}
 
 	$componentMount() {
+		// select target elements
 		this.imgs = this.$$.getAllElements().map(
 			v => v.querySelector(this.options.selector)
 		);
@@ -58,13 +59,10 @@ export default class ParallaxEffect extends Plugin {
 	}
 
 	_build() {
-		const $$ = this.$$;
 		const utils = Plugin.utils;
-		const consts = Plugin.consts;
-		const needToHint = this.options.hwAccelerable && consts.SUPPORT_WILLCHANGE;
 
 		// set panel element's style
-		utils.css($$._conf.panel.$list, {overflow: "hidden"});
+		utils.css(this.getInstanceConf().panel.$list, {overflow: "hidden"});
 
 		// set targeted element's style
 		this.imgs.forEach((v, i) => {
@@ -76,34 +74,40 @@ export default class ParallaxEffect extends Plugin {
 				x = 0;
 			}
 
-			needToHint && utils.css(v, {willChange: "transform"});
-			utils.css(v, {transform: utils.translate(`${x}%`, 0, this.options.useLayerHack)});
+			this.useWillChange && utils.css(v, {willChange: "transform"});
+			this._setTranslate(v, `${x}%`, 0);
 		});
 	}
 
-	arrange(type) {
-		const utils = Plugin.utils;
-		const useLayerHack = this.options.useLayerHack;
+	_setTranslate(el, x, y) {
+		Plugin.utils.css(el, {
+			transform:
+				Plugin.utils.translate.apply(null,
+					this.$$._getDataByDirection([x, y]).concat(this.useLayerHack)
+				)
+		});
 
+		return el;
+	}
+
+	arrange(type) {
 		if (type !== "resize") {
 			this.imgs = (type === "next") ?
 				this.imgs.concat(this.imgs.shift()) :
 				[this.imgs.pop()].concat(this.imgs);
 		}
 
-		utils.css(this.imgs[1], {transform: utils.translate(0, 0, useLayerHack)});
+		this._setTranslate(this.imgs[1], 0, 0);
 
-		/next|resize/.test(type) && utils.css(this.imgs[2], {transform: utils.translate("50%", 0, useLayerHack)});
-		/prev|resize/.test(type) && utils.css(this.imgs[0], {transform: utils.translate("-50%", 0, useLayerHack)});
+		/next|resize/.test(type) && this._setTranslate(this.imgs[2], "50%", 0);
+		/prev|resize/.test(type) && this._setTranslate(this.imgs[0], "-50%", 0);
 	}
 
 	onFlick(e, distance) {
-		const utils = Plugin.utils;
 		const pos = e.pos;
 		const maxRange = this.size;
 		const delta = (pos % maxRange) / 2;
 		const siblingDelta = -(maxRange / 2 - delta);
-		const useLayerHack = this.options.useLayerHack;
 
 		if (Math.abs(distance) >= maxRange) {
 			return;
@@ -119,9 +123,7 @@ export default class ParallaxEffect extends Plugin {
 			update.push({el: this.imgs[0], x: delta});
 		}
 
-		update.forEach(v => {
-			utils.css(v.el, {transform: utils.translate(`${v.x}px`, 0, useLayerHack)});
-		});
+		update.forEach(v => this._setTranslate(v.el, `${v.x}px`, 0));
 	}
 
 	onRestore() {
@@ -129,19 +131,11 @@ export default class ParallaxEffect extends Plugin {
 	}
 
 	resize() {
-		this.size = this.$$._conf.panel.size;
+		this.size = this.getInstanceConf().panel.size;
 		this.onRestore("resize");
 	}
 
 	get() {
 		return this.imgs[1];
-	}
-
-	getNext() {
-		return this.imgs[2];
-	}
-
-	getPrev() {
-		return this.imgs[0];
 	}
 }

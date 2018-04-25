@@ -41,6 +41,10 @@ export default class Plugin {
 	$componentWillMount(instance) {
 		this.$$ = instance;
 
+		// get hint and layer-hack setting
+		this.useWillChange = instance.$container.style.willChange === "transform";
+		this.useLayerHack = this.getInstanceConf().useLayerHack;
+
 		this.bindEvents();
 		this.$componentMount();
 		this.$componentDidMount();
@@ -63,6 +67,10 @@ export default class Plugin {
 		Object.keys(this).forEach(v => {
 			this[v] = null;
 		});
+	}
+
+	getInstanceConf() {
+		return this.$$._conf;
 	}
 
 	/**
@@ -133,4 +141,16 @@ export default class Plugin {
 	 * @private
 	 */
 	static consts = consts;
+
+	/**
+	 * Version info string
+	 * @ko 버전정보 문자열
+	 * @name VERSION
+	 * @memberof Plugin
+	 * @static
+	 * @type {String}
+	 * @example
+	 * eg.Flicking.plugin.OpacityEffect.VERSION;  // ex) 2.2.0
+	 */
+	static VERSION = "#__VERSION__#";
 }
