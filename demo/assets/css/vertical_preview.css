@@ -8,15 +8,16 @@
 .v_btn {
     border-radius: 20px;
     margin: 3px;
-    height: 22px;
-    font-size: 10px;
+    width: 35px;
+    font-size: 20px;
     border: 2px solid #B7B5B5;
     background-color: #fff;
     position: relative;
     z-index: 2001;
-    top: -30px;
+    top: -45px;
     cursor: pointer;
     color: #B7B5B5;
+    opacity: .8;
 }
 .eg-flick-panel p {
     vertical-align: middle;
