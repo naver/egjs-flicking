@@ -38,6 +38,22 @@ You can download the compressed files for production
     - https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.js
     - https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.min.js
 
+### Plugins
+
+Download necessary plugins to be used
+
+#### List of plugins:
+>  - [OpacityEffect](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.plugin.OpacityEffect.html): Add opacity effect attached with flicking interaction.
+>  - [ParallaxEffect](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.plugin.ParallaxEffect.html): Add horizontal parallax effect attached with flicking interaction.
+
+ - **Latest**
+    - https://naver.github.io/egjs-flicking/release/latest/dist/plugin/[PLUGIN-NAME].js
+    - https://naver.github.io/egjs-flicking/release/latest/dist/plugin/[PLUGIN-NAME].min.js
+
+ - **Specific version**
+    - https://naver.github.io/egjs-flicking/release/[VERSION]/dist/plugin/[PLUGIN-NAME].js
+    - https://naver.github.io/egjs-flicking/release/[VERSION]/dist/plugin/[PLUGIN-NAME].min.js
+
 ### Installation with npm
 
 The following command shows how to install egjs-flicking using npm.
