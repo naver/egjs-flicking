@@ -29,8 +29,18 @@
 
 	<link rel="stylesheet" href="assets/css/infinite.css">
 
+	<link rel="stylesheet" href="assets/css/plugin-all.css">
+
+	<link rel="stylesheet" href="assets/css/plugin-OpacityEffect.css">
+
+	<link rel="stylesheet" href="assets/css/plugin-ParallaxEffect.css">
+
 
 	<script src="release/latest/dist/flicking.pkgd.min.js"></script>
+
+	<script src="release/latest/dist/plugin/OpacityEffect.min.js"></script>
+
+	<script src="release/latest/dist/plugin/ParallaxEffect.min.js"></script>
 
 <script>
 	var homeUrl = window.location.href;
@@ -47,6 +57,10 @@
 	window.LIBLINK = [];
 	
 	window.LIBLINK.push(window.HOMELINK + "release/latest/dist/flicking.pkgd.min.js");
+	
+	window.LIBLINK.push(window.HOMELINK + "release/latest/dist/plugin/OpacityEffect.min.js");
+	
+	window.LIBLINK.push(window.HOMELINK + "release/latest/dist/plugin/ParallaxEffect.min.js");
 	
 </script>
 <body>
@@ -302,6 +316,105 @@
 </code></pre>
 </div>
 
+<h3 id="plugins">Plugins</h3>
+
+<h4 id="opacityeffect">OpacityEffect</h4>
+
+<div id="OpacityEffect" class="plugin" codepen="plugin-OpacityEffect">
+  <div>
+    <p style="background-image:url(./assets/img/bg01.jpg)">
+      Layer 1<br />
+      <span class="text">description</span>
+    </p>
+  </div>
+  <div>
+    <p style="background-image:url(./assets/img/bg02.jpg)">
+      Layer 2<br />
+      <span class="text">description</span>
+    </p>
+  </div>
+  <div>
+    <p style="background-image:url(./assets/img/bg03.jpg)">
+      Layer 3<br />
+      <span class="text">description</span>
+    </p>
+  </div>
+</div>
+
+<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
+	<span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+	<span class="na">prefix</span><span class="p">:</span> <span class="s2">"plugin"</span>
+<span class="p">}).</span><span class="nx">plugin</span><span class="p">([</span>
+    <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">OpacityEffect</span><span class="p">(</span><span class="s2">".text"</span><span class="p">)</span>
+<span class="p">]);</span>
+</code></pre>
+</div>
+
+<h4 id="parallaxeffect">ParallaxEffect</h4>
+
+<div id="ParallaxEffect" class="plugin" codepen="plugin-ParallaxEffect">
+  <div>
+    <p style="background-image:url(./assets/img/bg01.jpg)">
+      Layer 1<br />
+      <span class="text">description</span>
+    </p>
+  </div>
+  <div>
+    <p style="background-image:url(./assets/img/bg02.jpg)">
+      Layer 2<br />
+      <span class="text">description</span>
+    </p>
+  </div>
+  <div>
+    <p style="background-image:url(./assets/img/bg03.jpg)">
+      Layer 3<br />
+      <span class="text">description</span>
+    </p>
+  </div>
+</div>
+
+<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
+	<span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+	<span class="na">prefix</span><span class="p">:</span> <span class="s2">"plugin"</span>
+<span class="p">}).</span><span class="nx">plugin</span><span class="p">([</span>
+    <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">ParallaxEffect</span><span class="p">(</span><span class="s2">"p"</span><span class="p">)</span>
+<span class="p">]);</span>
+</code></pre>
+</div>
+
+<h4 id="combined-plugins">Combined plugins</h4>
+
+<div id="plugin" class="plugin" codepen="plugin-all">
+  <div>
+    <p style="background-image:url(./assets/img/bg01.jpg)">
+      Layer 1<br />
+      <span class="text">description</span>
+    </p>
+  </div>
+  <div>
+    <p style="background-image:url(./assets/img/bg02.jpg)">
+      Layer 2<br />
+      <span class="text">description</span>
+    </p>
+  </div>
+  <div>
+    <p style="background-image:url(./assets/img/bg03.jpg)">
+      Layer 3<br />
+      <span class="text">description</span>
+    </p>
+  </div>
+</div>
+
+<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
+	<span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">prefix</span><span class="p">:</span> <span class="s2">"plugin"</span>
+<span class="p">}).</span><span class="nx">plugin</span><span class="p">([</span>
+    <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">OpacityEffect</span><span class="p">(</span><span class="s2">".text"</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">ParallaxEffect</span><span class="p">(</span><span class="s2">"p"</span><span class="p">)</span>
+<span class="p">]);</span>
+</code></pre>
+</div>
+
 			</div>
 		</div>
 	</section>
@@ -322,6 +435,12 @@
 	<script src="assets/js/customevent.js"></script>
 
 	<script src="assets/js/infinite.js"></script>
+
+	<script src="assets/js/plugin-all.js"></script>
+
+	<script src="assets/js/plugin-OpacityEffect.js"></script>
+
+	<script src="assets/js/plugin-ParallaxEffect.js"></script>
 
 <script>
 $("h3[id]").append(function() {
