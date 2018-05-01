@@ -80,7 +80,7 @@
     "karma-webpack": "^3.0.0",
     "lite-fixture": "^1.0.2",
     "mocha": "^5.0.5",
-    "sinon": "^4.5.0",
+    "sinon": "^5.0.2",
     "string-replace-webpack-plugin": "0.1.3",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack": "^4.5.0",
