@@ -22,7 +22,7 @@ describe("Miscellaneous", function() {
 
 			// When
 			const $el = tutils.createFixture("#mflick1");
-			const inst = new MockFlicking($el, {});
+			const inst = new MockFlicking.default($el, {});
 
 			const $dummyAnchor = inst.$wrapper.querySelector(".__dummy_anchor");
 
@@ -51,7 +51,7 @@ describe("Miscellaneous", function() {
 
 			// When
 			const $el = tutils.createFixture("#mflick1");
-			const inst = new MockFlicking($el, {});
+			const inst = new MockFlicking.default($el, {});
 			const $container = inst.$container;
 
 			inst.next(300);
@@ -107,7 +107,7 @@ describe("Miscellaneous", function() {
 			});
 
 			const $el = tutils.createFixture("#mflick2");
-			const inst = new MockFlicking($el, {});
+			const inst = new MockFlicking.default($el, {});
 			inst.next(0);
 
 			expect(inst.$container.style.left.length > 0).to.be.true;
@@ -119,7 +119,7 @@ describe("Miscellaneous", function() {
 
         it("When no element is given", () => {
 	        const MockFlicking = FlickingInjector();
-	        expect(() => new MockFlicking("#NO-ELEMENT")).to.throw(Error);
+	        expect(() => new MockFlicking.default("#NO-ELEMENT")).to.throw(Error);
         });
 
 		it("When no child element is given", () => {
