@@ -523,4 +523,43 @@ describe("Setting options", function() {
 			expect(+inst.$container.style.zIndex).to.be.equal(zIndex);
 		});
 	});
+
+
+	describe("useTranslate", () => {
+		tutils.hooks.run();
+
+		// Given
+		const inst = tutils.create("#mflick1", {
+			circular: true,
+			useTranslate: false
+		});
+		const panelSize = inst._conf.panel.size;
+
+		inst.$wrapper.style.width = "68.321%";
+		inst.resize();
+
+		it("check for panel width set to float number", () => {
+			const width = panelSize * parseFloat(inst.$wrapper.style.width) / 100;
+			const size = inst._conf.panel.size;
+
+			expect(width).to.be.closeTo(size, 0.5);
+			expect(size % 1 === 0).to.be.false;  // is float number?
+		});
+
+		// Then
+		it("Panel move method should be based on top/left", () => {
+			const panelSize = inst._conf.panel.size;
+			const checkPanelLeft = $list => {
+				$list.forEach((v, i) => {
+					expect(parseFloat(v.style.left)).to.be.closeTo(panelSize * i, 0.5);
+				});
+			}
+
+			expect(inst.$container.style.left).to.not.be.equal("0px");
+
+			checkPanelLeft(inst._conf.panel.$list);
+			inst.next(0);
+			checkPanelLeft(inst._conf.panel.$list);
+		});
+	});
 });
