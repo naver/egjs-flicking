@@ -47,7 +47,7 @@ const config = {
 };
 
 module.exports = (common, env) => {
-	if (env && env.min) {
+	if (env && env.MIN) {
 		config.output.filename = "[name].min.js";
 		config.plugins.push(new UglifyJSPlugin(uglifyConfig));
 	} else {
