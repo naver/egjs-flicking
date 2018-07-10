@@ -3,6 +3,7 @@ const pkg = require("./package.json");
 const path = require("path");
 const StringReplacePlugin = require("string-replace-webpack-plugin");
 const Stylish = require("webpack-stylish");
+const WebpackBar = require("webpackbar");
 
 const config = {
 	entry: {
@@ -55,14 +56,20 @@ const config = {
 	plugins: [
 		new webpack.optimize.ModuleConcatenationPlugin(),
 		new StringReplacePlugin(),
-		new Stylish()
+		new Stylish(),
+		new WebpackBar()
 	],
 	devtool: "cheap-module-source-map",
 	stats: "minimal"
 };
 
-module.exports = env => {
-	const mode = (env && env.mode) || "development";
+module.exports = () => {
+	const env = process.env;
+	let mode = "development";
+
+	if (env.NODE_ENV) {
+		mode = env.NODE_ENV;
+	}
 
 	return require(`./config/webpack.config.${mode}.js`)(config, env);
 };
