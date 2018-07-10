@@ -149,6 +149,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * @param {Number} [options.thresholdAngle=45] The threshold value that determines whether user input is horizontal or vertical. (0 ~ 90)<ko>사용자의 입력이 가로 방향인지 세로 방향인지 판단하는 기준 각도 (0 ~ 90)</ko>
 	 * @param {Boolean} [options.adaptiveHeight=false] Whether the height of the container element reflects the height value of the panel after completing the movement.<br>(Note: on Android 4.1.x stock browser, has rendering bug which not correctly render height value on panel with single node. To avoid just append another empty node at the end.)<ko>목적 패널로 이동한 후 그 패널의 높이값을 컨테이너 요소의 높이값에 반영할지 여부.<br>(참고: Android 4.1.x 스톡 브라우저에서 단일 노드로 구성된 패널의 높이값 변경이 제대로 렌더링 되지 않는 버그가 있음. 비어있는 노드를 추가하면 해결이 가능하다.)</ko>
 	 * @param {Number} [options.zIndex=2000] z-index value for container element<ko>컨테이너 요소의 z-index 값</ko>
+	 * @param {Boolean} [options.useTranslate=true] Use css translate method on panel moves. When set to 'false', it'll use top/left instead.<ko>패널 이동시 CSS translate 사용 여부. 'false'로 설정 시, top/left 속성을 사용</ko>
 	*/
 	constructor(element, options, _prefix) {
 		super();
@@ -206,6 +207,11 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			}
 
 			this.options[key] = val;
+		}
+
+		// block use of translate for Android2 environment
+		if (IS_ANDROID2) {
+			this.options.useTranslate = false;
 		}
 	}
 
@@ -345,7 +351,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	_setPadding(padding, build) {
 		const horizontal = this.options.horizontal;
 		const panel = this._conf.panel;
-		const paddingSum = padding.reduce((a, c) => parseInt(a, 10) + parseInt(c, 10));
+		const paddingSum = padding.reduce((a, c) => parseFloat(a) + parseFloat(c));
 		const cssValue = {};
 
 		if (paddingSum || !build) {
@@ -545,15 +551,18 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	_applyPanelsCss() {
 		const conf = this._conf;
 		const dummyAnchorClassName = "__dummy_anchor";
+		const useTranslate = this.options.useTranslate;
 
-		if (IS_ANDROID2) {
-			conf.$dummyAnchor = utils.$(`.${dummyAnchorClassName}`);
+		if (!useTranslate) {
+			if (IS_ANDROID2) {
+				conf.$dummyAnchor = utils.$(`.${dummyAnchorClassName}`);
 
-			!conf.$dummyAnchor && this.$wrapper.appendChild(
-				conf.$dummyAnchor = utils.$(`<a href="javascript:void(0)" class="${dummyAnchorClassName}" style="position:absolute;height:0px;width:0px">`)
-			);
+				!conf.$dummyAnchor && this.$wrapper.appendChild(
+					conf.$dummyAnchor = utils.$(`<a href="javascript:void(0)" class="${dummyAnchorClassName}" style="position:absolute;height:0px;width:0px">`)
+				);
+			}
 
-			this._applyPanelsCss = function applyCss(v, i) {
+			this._applyPanelsCss = function(v, i) {
 				const coords = this._getDataByDirection(
 					[`${this._conf.panel.size * i}px`, 0]
 				);
@@ -564,7 +573,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 				});
 			};
 		} else {
-			this._applyPanelsCss = function applyCss(v, i) {
+			this._applyPanelsCss = function(v, i) {
 				const coords = this._getDataByDirection([
 					TRANSFORM.support ?
 						`${100 * i}%` :
@@ -588,20 +597,21 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		const conf = this._conf;
 		const panel = conf.panel;
 		const options = this.options;
+		const useTranslate = options.useTranslate;
 		const horizontal = options.horizontal;
 		const paddingTop = options.previewPadding[0];
 		let container = this.$container;
 		let to = toValue;
 		let value;
 
-		if (IS_ANDROID2) {
+		if (!useTranslate) {
 			if (!to) {
 				to = -panel.size * panel.index;
 			}
 
 			if (phase === "start") {
 				container = container.style;
-				value = parseInt(container[horizontal ? "left" : "top"], 10);
+				value = parseFloat(container[horizontal ? "left" : "top"]);
 
 				if (horizontal) {
 					value && (container.left = "0px");
@@ -619,7 +629,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 					[TRANSFORM.name]: utils.translate(0, 0, conf.useLayerHack)
 				});
 
-				conf.$dummyAnchor.focus();
+				conf.$dummyAnchor && conf.$dummyAnchor.focus();
 			}
 		}
 	}
@@ -834,6 +844,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		const conf = this._conf;
 		const options = this.options;
 		const panel = conf.panel;
+		const useTranslate = options.useTranslate;
 
 		if (phase === "start" && (panel.changed = this._isMovable())) {
 			/**
@@ -877,7 +888,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 				this._arrangePanels(true, conf.indexToMove);
 			}
 
-			!IS_ANDROID2 && this._setTranslate([-panel.size * panel.index, 0]);
+			useTranslate && this._setTranslate([-panel.size * panel.index, 0]);
 			conf.touch.distance = conf.indexToMove = 0;
 
 			/**
@@ -1422,6 +1433,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		const options = this.options;
 		const panel = conf.panel;
 		const horizontal = options.horizontal;
+		const useTranslate = options.useTranslate;
 		let panelSize;
 
 		if (!this.isPlaying()) {
@@ -1452,7 +1464,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			this._axesInst.axis.flick.range = [0, panelSize * (panel.count - 1)];
 			this._setAxes("setTo", panelSize * panel.index, 0);
 
-			if (IS_ANDROID2) {
+			if (!useTranslate) {
 				this._applyPanelsPos();
 				this._adjustContainerCss("end");
 			}

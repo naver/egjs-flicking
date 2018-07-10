@@ -177,7 +177,7 @@ const utils = {
 	getNumValue(val, defVal) {
 		let num = val;
 
-		return isNaN(num = parseInt(num, 10)) ? defVal : num;
+		return isNaN(num = parseFloat(num)) ? defVal : num;
 	},
 
 	/**
@@ -188,7 +188,7 @@ const utils = {
 	getUnitValue(val) {
 		const rx = /(?:[a-z]{2,}|%)$/;
 
-		return (parseInt(val, 10) || 0) + (String(val).match(rx) || "px");
+		return (parseFloat(val) || 0) + (String(val).match(rx) || "px");
 	},
 
 	/**
