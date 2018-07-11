@@ -349,6 +349,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * @param {Boolean} build
 	 */
 	_setPadding(padding, build) {
+		const $wrapper = this.$wrapper;
 		const horizontal = this.options.horizontal;
 		const panel = this._conf.panel;
 		const paddingSum = padding.reduce((a, c) => parseFloat(a) + parseFloat(c));
@@ -369,19 +370,17 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			cssValue.boxSizing = "border-box";
 		}
 
-		Object.keys(cssValue).length &&
-			utils.css(this.$wrapper, cssValue);
+		Object.keys(cssValue).length && utils.css($wrapper, cssValue);
 
-		const wrapperStyle = getComputedStyle(this.$wrapper);
 		const paddingType = horizontal ? ["Left", "Right"] : ["Top", "Bottom"];
 		const wrapperSize = Math.max(
-			this.$wrapper[`offset${horizontal ? "Width" : "Height"}`],
-			utils.getNumValue(wrapperStyle[horizontal ? "width" : "height"])
+			$wrapper[`offset${horizontal ? "Width" : "Height"}`],
+			utils.css($wrapper, horizontal ? "width" : "height", true)
 		);
 
 		panel.size = wrapperSize - (
-			utils.getNumValue(wrapperStyle[`padding${paddingType[0]}`]) +
-			utils.getNumValue(wrapperStyle[`padding${paddingType[1]}`])
+			utils.css($wrapper, `padding${paddingType[0]}`, true) +
+			utils.css($wrapper, `padding${paddingType[1]}`, true)
 		);
 	}
 
@@ -980,19 +979,20 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * @param {Event} e
 	 */
 	_setPointerEvents(e) {
-		const pointer = utils.css(this.$container, "pointerEvents");
-		let val;
+		const $container = this.$container;
+		const pointer = utils.css($container, "pointerEvents");
+		let pointerEvents;
 
 		if (e && e.holding &&
 			e.inputEvent && e.inputEvent.preventSystemEvent &&
 			pointer !== "none"
 		) {
-			val = "none";
+			pointerEvents = "none";
 		} else if (!e && pointer !== "auto") {
-			val = "auto";
+			pointerEvents = "auto";
 		}
 
-		val && utils.css(this.$container, {pointerEvents: val});
+		pointerEvents && utils.css($container, {pointerEvents});
 	}
 
 	/**
