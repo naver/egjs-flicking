@@ -38,6 +38,15 @@ You can download the compressed files for production
     - https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.js
     - https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.min.js
 
+### Nightly version
+
+Nightly version is the latest build from the master branch.
+With nightly, you can try upcoming changes prior the official release.
+
+- https://github.com/naver/egjs-flicking/tree/nightly/dist
+
+> The version info will be given as the build datetime: `x.x.x-nightly-yyyymmddhhmmss`
+
 ### Plugins
 
 Download necessary plugins to be used
