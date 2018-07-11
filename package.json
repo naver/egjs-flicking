@@ -12,6 +12,7 @@
     "build:production": "cross-env NODE_ENV=production webpack",
     "build:packaged": "cross-env NODE_ENV=packaged webpack",
     "build:plugin": "cross-env NODE_ENV=plugin webpack && cross-env NODE_ENV=plugin MIN=true webpack",
+    "build:nightly": "node ./config/nightly.js",
     "test": "karma start",
     "test:chrome": "karma start --chrome",
     "lint": "eslint src",

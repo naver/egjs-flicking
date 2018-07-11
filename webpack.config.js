@@ -71,5 +71,9 @@ module.exports = () => {
 		mode = env.NODE_ENV;
 	}
 
+	if (env.NIGHTLY) {
+		pkg.version = env.NIGHTLY;
+	}
+
 	return require(`./config/webpack.config.${mode}.js`)(config, env);
 };
