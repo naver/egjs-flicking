@@ -119,7 +119,11 @@ const utils = {
 	 */
 	css(el, style, getAsNumber) {
 		if (typeof(style) === "string") {
-			const value = window.getComputedStyle(el)[style];
+			let value = el.style[style];
+
+			if (!value || value === "auto" || (/\d/.test(value) && !/\d(px)?$/.test(value))) {
+				value = window.getComputedStyle(el)[style];
+			}
 
 			return getAsNumber ? this.getNumValue(value) : value;
 		} else {
@@ -198,7 +202,6 @@ const utils = {
 	 * @returns {Number} outer's value
 	 */
 	getOuter(el, type) {
-		const style = window.getComputedStyle(el);
 		let paddingMargin = 0;
 
 		(type === "outerWidth" ?
@@ -206,11 +209,11 @@ const utils = {
 			["Top", "Bottom"]
 		).forEach(dir => {
 			["padding", "margin"].forEach(v => {
-				paddingMargin += this.getNumValue(style[`${v}${dir}`]);
+				paddingMargin += this.css(el, `${v}${dir}`, true);
 			});
 		});
 
-		return this.getNumValue(style[type.replace("outer", "").toLocaleLowerCase()]) + paddingMargin;
+		return this.css(el, type.replace("outer", "").toLocaleLowerCase(), true) + paddingMargin;
 	},
 
 	/**
@@ -251,7 +254,7 @@ const utils = {
 	// 3. when user releases fingers on screen, 'click' event is fired at previous position.
 	hasClickBug() {
 		const ua = window.navigator.userAgent;
-		const result = /Safari/.test(ua);
+		const result = /iPhone|iPad/.test(ua);
 
 		this.hasClickBug = () => result;
 		return result;
