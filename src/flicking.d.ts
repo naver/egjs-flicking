@@ -22,6 +22,8 @@ interface FlickingOption {
   inputType?: string[];
   thresholdAngle?: number;
   adaptiveHeight?: boolean;
+  zIndex?: number;
+  useTranslate?: boolean;
 }
 
 interface FlickingStatus {
