@@ -5,7 +5,7 @@
  * @egjs/flicking JavaScript library
  * https://github.com/naver/egjs-flicking
  * 
- * @version 2.3.0-nightly-20180711164052
+ * @version 2.3.0-nightly-20180806185847
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -129,8 +129,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 /**
- * A plugin to add horizontal parallax effect attached with flicking interaction.<br>Should be targeted only one element per panel.
- * @ko 플리킹 인터렉션에 따른 가로유형 패럴렉스 효과 플러그인.<br>각 패널당 한 개의 요소만 지정되어야 한다.
+ * A plugin to add horizontal parallax effect attached with flicking interaction.
+ * - Should be targeted only one element per panel.
+ * - It can't be used with `previewPadding` option.
+ * @ko 플리킹 인터렉션에 따른 가로유형 패럴렉스 효과 플러그인.
+ * - 각 패널당 한 개의 요소만 지정되어야 한다.
+ * - `previewPadding` 옵션과 같이 사용될 수 없다.
  * @alias eg.Flicking.plugin.ParallaxEffect
  * @memberof eg.Flicking.plugin
  * @see eg.Flicking#plugin
@@ -192,6 +196,7 @@ var ParallaxEffect = function (_Plugin) {
 		var _this3 = this;
 
 		var utils = _Plugin3["default"].utils;
+		var currIndex = this._getCurrIndex();
 
 		// set panel element's style
 		utils.css(this.getInstanceConf().panel.$list, { overflow: "hidden" });
@@ -200,9 +205,9 @@ var ParallaxEffect = function (_Plugin) {
 		this.imgs.forEach(function (v, i) {
 			var x = -50;
 
-			if (i === 0) {
+			if (currIndex > i) {
 				x = 50;
-			} else if (i === 1) {
+			} else if (currIndex === i) {
 				x = 0;
 			}
 
@@ -212,22 +217,39 @@ var ParallaxEffect = function (_Plugin) {
 	};
 
 	ParallaxEffect.prototype._setTranslate = function _setTranslate(el, x, y) {
-		_Plugin3["default"].utils.css(el, {
+		el && _Plugin3["default"].utils.css(el, {
 			transform: _Plugin3["default"].utils.translate.apply(null, this.$$._getDataByDirection([x, y]).concat(this.useLayerHack))
 		});
 
 		return el;
 	};
 
+	ParallaxEffect.prototype._getCurrIndex = function _getCurrIndex() {
+		return this.getInstanceConf().panel.currIndex;
+	};
+
+	ParallaxEffect.prototype._getPanel = function _getPanel() {
+		var index = this._getCurrIndex();
+
+		return {
+			prev: this.imgs[index - 1],
+			curr: this.imgs[index],
+			next: this.imgs[index + 1]
+		};
+	};
+
 	ParallaxEffect.prototype.arrange = function arrange(type) {
-		if (type !== "resize") {
+		if (this.$$.options.circular && type !== "resize") {
 			this.imgs = type === "next" ? this.imgs.concat(this.imgs.shift()) : [this.imgs.pop()].concat(this.imgs);
 		}
 
-		this._setTranslate(this.imgs[1], 0, 0);
+		var panel = this._getPanel();
 
-		/next|resize/.test(type) && this._setTranslate(this.imgs[2], "50%", 0);
-		/prev|resize/.test(type) && this._setTranslate(this.imgs[0], "-50%", 0);
+		// update panel's translate
+		this._setTranslate(panel.curr, 0, 0);
+
+		/next|resize/.test(type) && this._setTranslate(panel.next, "50%", 0);
+		/prev|resize/.test(type) && this._setTranslate(panel.prev, "-50%", 0);
 	};
 
 	ParallaxEffect.prototype.onFlick = function onFlick(e, distance) {
@@ -242,14 +264,15 @@ var ParallaxEffect = function (_Plugin) {
 			return;
 		}
 
+		var panel = this._getPanel();
 		var update = [];
 
-		if (distance > 0) {
-			update.push({ el: this.imgs[1], x: delta });
-			update.push({ el: this.imgs[2], x: siblingDelta });
-		} else if (distance < 0) {
-			update.push({ el: this.imgs[1], x: siblingDelta });
-			update.push({ el: this.imgs[0], x: delta });
+		if (distance > 0 && panel.next) {
+			update.push({ el: panel.curr, x: delta });
+			update.push({ el: panel.next, x: siblingDelta });
+		} else if (distance < 0 && panel.prev) {
+			update.push({ el: panel.curr, x: siblingDelta });
+			update.push({ el: panel.prev, x: delta });
 		}
 
 		update.forEach(function (v) {
@@ -267,13 +290,16 @@ var ParallaxEffect = function (_Plugin) {
 	};
 
 	ParallaxEffect.prototype.get = function get() {
-		return this.imgs[1];
+		return this.imgs[this._getCurrIndex()];
 	};
 
 	return ParallaxEffect;
 }(_Plugin3["default"]);
 
 exports["default"] = ParallaxEffect;
+
+
+module.exports = ParallaxEffect;
 
 /***/ }),
 /* 1 */
@@ -311,7 +337,7 @@ var consts = utils.extend(utils.extend({}, _Flicking2["default"].consts), {
 
 /**
  * Base class to generate flicking plugin
- * Lifecyle: componentWillMount --> componentMount --> componentDidMount --> componentWillUnmount
+ * Lifecycle: componentWillMount --> componentMount --> componentDidMount --> componentWillUnmount
  * @ko Flicking 플러그인을 생성하기 위한 기본 클래스
  * @alias eg.Flicking.plugin
  * @private
@@ -471,7 +497,7 @@ var Plugin = function () {
 
 Plugin.utils = utils;
 Plugin.consts = consts;
-Plugin.VERSION = "2.3.0-nightly-20180711164052";
+Plugin.VERSION = "2.3.0-nightly-20180806185847";
 exports["default"] = Plugin;
 
 /***/ }),

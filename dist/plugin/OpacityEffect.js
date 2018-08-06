@@ -5,7 +5,7 @@
  * @egjs/flicking JavaScript library
  * https://github.com/naver/egjs-flicking
  * 
- * @version 2.3.0-nightly-20180711164052
+ * @version 2.3.0-nightly-20180806185847
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -140,7 +140,7 @@ var consts = utils.extend(utils.extend({}, _Flicking2["default"].consts), {
 
 /**
  * Base class to generate flicking plugin
- * Lifecyle: componentWillMount --> componentMount --> componentDidMount --> componentWillUnmount
+ * Lifecycle: componentWillMount --> componentMount --> componentDidMount --> componentWillUnmount
  * @ko Flicking 플러그인을 생성하기 위한 기본 클래스
  * @alias eg.Flicking.plugin
  * @private
@@ -300,7 +300,7 @@ var Plugin = function () {
 
 Plugin.utils = utils;
 Plugin.consts = consts;
-Plugin.VERSION = "2.3.0-nightly-20180711164052";
+Plugin.VERSION = "2.3.0-nightly-20180806185847";
 exports["default"] = Plugin;
 
 /***/ }),
@@ -335,8 +335,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 /**
- * A plugin to add opacity effect attached with flicking interaction.<br>Should be targeted only one element(or a wrapper element having child nodes) per panel.
- * @ko 플리킹 인터렉션에 따른 투명도 조절 효과 플러그인.<br>각 패널당 한 개의 요소(또는 자식노드를 포함하는 한 개의 래퍼요소)만 지정되어야 한다.
+ * A plugin to add opacity effect attached with flicking interaction.
+ * - Should be targeted only one element(or a wrapper element having child nodes) per panel.
+ * @ko 플리킹 인터렉션에 따른 투명도 조절 효과 플러그인.
+ * - 각 패널당 한 개의 요소(또는 자식노드를 포함하는 한 개의 래퍼요소)만 지정되어야 한다.
  * @alias eg.Flicking.plugin.OpacityEffect
  * @memberof eg.Flicking.plugin
  * @see eg.Flicking#plugin
@@ -441,6 +443,9 @@ var OpacityEffect = function (_Plugin) {
 }(_Plugin3["default"]);
 
 exports["default"] = OpacityEffect;
+
+
+module.exports = OpacityEffect;
 
 /***/ })
 /******/ ]);
