@@ -6,7 +6,7 @@
   "types": "src/flicking.d.ts",
   "scripts": {
     "start": "webpack-serve --open",
-    "start:plugin": "cross-env PLUGIN=true webpack-dev-server --open",
+    "start:plugin": "cross-env PLUGIN=true webpack-serve --open",
     "build": "npm run build:production && npm run build:packaged && npm run build:plugin",
     "build:dev": "cross-env NODE_ENV=development webpack",
     "build:production": "cross-env NODE_ENV=production webpack",
