@@ -5,8 +5,12 @@
 import Plugin from "../Plugin";
 
 /**
- * A plugin to add horizontal parallax effect attached with flicking interaction.<br>Should be targeted only one element per panel.
- * @ko 플리킹 인터렉션에 따른 가로유형 패럴렉스 효과 플러그인.<br>각 패널당 한 개의 요소만 지정되어야 한다.
+ * A plugin to add horizontal parallax effect attached with flicking interaction.
+ * - Should be targeted only one element per panel.
+ * - It can't be used with `previewPadding` option.
+ * @ko 플리킹 인터렉션에 따른 가로유형 패럴렉스 효과 플러그인.
+ * - 각 패널당 한 개의 요소만 지정되어야 한다.
+ * - `previewPadding` 옵션과 같이 사용될 수 없다.
  * @alias eg.Flicking.plugin.ParallaxEffect
  * @memberof eg.Flicking.plugin
  * @see eg.Flicking#plugin
@@ -60,6 +64,7 @@ export default class ParallaxEffect extends Plugin {
 
 	_build() {
 		const utils = Plugin.utils;
+		const currIndex = this._getCurrIndex();
 
 		// set panel element's style
 		utils.css(this.getInstanceConf().panel.$list, {overflow: "hidden"});
@@ -68,9 +73,9 @@ export default class ParallaxEffect extends Plugin {
 		this.imgs.forEach((v, i) => {
 			let x = -50;
 
-			if (i === 0) {
+			if (currIndex > i) {
 				x = 50;
-			} else if (i === 1) {
+			} else if (currIndex === i) {
 				x = 0;
 			}
 
@@ -80,7 +85,7 @@ export default class ParallaxEffect extends Plugin {
 	}
 
 	_setTranslate(el, x, y) {
-		Plugin.utils.css(el, {
+		el && Plugin.utils.css(el, {
 			transform:
 				Plugin.utils.translate.apply(null,
 					this.$$._getDataByDirection([x, y]).concat(this.useLayerHack)
@@ -90,17 +95,35 @@ export default class ParallaxEffect extends Plugin {
 		return el;
 	}
 
+
+	_getCurrIndex() {
+		return this.getInstanceConf().panel.currIndex;
+	}
+
+	_getPanel() {
+		const index = this._getCurrIndex();
+
+		return {
+			prev: this.imgs[index - 1],
+			curr: this.imgs[index],
+			next: this.imgs[index + 1]
+		};
+	}
+
 	arrange(type) {
-		if (type !== "resize") {
+		if (this.$$.options.circular && type !== "resize") {
 			this.imgs = (type === "next") ?
 				this.imgs.concat(this.imgs.shift()) :
 				[this.imgs.pop()].concat(this.imgs);
 		}
 
-		this._setTranslate(this.imgs[1], 0, 0);
+		const panel = this._getPanel();
 
-		/next|resize/.test(type) && this._setTranslate(this.imgs[2], "50%", 0);
-		/prev|resize/.test(type) && this._setTranslate(this.imgs[0], "-50%", 0);
+		// update panel's translate
+		this._setTranslate(panel.curr, 0, 0);
+
+		/next|resize/.test(type) && this._setTranslate(panel.next, "50%", 0);
+		/prev|resize/.test(type) && this._setTranslate(panel.prev, "-50%", 0);
 	}
 
 	onFlick(e, distance) {
@@ -113,14 +136,15 @@ export default class ParallaxEffect extends Plugin {
 			return;
 		}
 
+		const panel = this._getPanel();
 		const update = [];
 
-		if (distance > 0) {
-			update.push({el: this.imgs[1], x: delta});
-			update.push({el: this.imgs[2], x: siblingDelta});
-		} else if (distance < 0) {
-			update.push({el: this.imgs[1], x: siblingDelta});
-			update.push({el: this.imgs[0], x: delta});
+		if (distance > 0 && panel.next) {
+			update.push({el: panel.curr, x: delta});
+			update.push({el: panel.next, x: siblingDelta});
+		} else if (distance < 0 && panel.prev) {
+			update.push({el: panel.curr, x: siblingDelta});
+			update.push({el: panel.prev, x: delta});
 		}
 
 		update.forEach(v => this._setTranslate(v.el, `${v.x}px`, 0));
@@ -136,6 +160,8 @@ export default class ParallaxEffect extends Plugin {
 	}
 
 	get() {
-		return this.imgs[1];
+		return this.imgs[this._getCurrIndex()];
 	}
 }
+
+module.exports = ParallaxEffect;
