@@ -19,7 +19,7 @@ const consts = utils.extend(utils.extend({}, Flicking.consts), {
 
 /**
  * Base class to generate flicking plugin
- * Lifecyle: componentWillMount --> componentMount --> componentDidMount --> componentWillUnmount
+ * Lifecycle: componentWillMount --> componentMount --> componentDidMount --> componentWillUnmount
  * @ko Flicking 플러그인을 생성하기 위한 기본 클래스
  * @alias eg.Flicking.plugin
  * @private
