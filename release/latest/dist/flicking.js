@@ -5,7 +5,7 @@
  * @egjs/flicking JavaScript library
  * https://github.com/naver/egjs-flicking
  * 
- * @version 2.3.0
+ * @version 2.4.0
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -55,17 +55,32 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -111,7 +126,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
  * eg.Flicking.VERSION;  // ex) 2.2.0
  * @memberof eg.Flicking
  */
-_Flicking2["default"].VERSION = "2.3.0"; /**
+_Flicking2["default"].VERSION = "2.4.0"; /**
                                           * Copyright (c) 2015 NAVER Corp.
                                           * egjs projects are licensed under the MIT license
                                           */
@@ -296,6 +311,7 @@ var Flicking = function (_Mixin$with) {
   * @param {Number} [options.thresholdAngle=45] The threshold value that determines whether user input is horizontal or vertical. (0 ~ 90)<ko>사용자의 입력이 가로 방향인지 세로 방향인지 판단하는 기준 각도 (0 ~ 90)</ko>
   * @param {Boolean} [options.adaptiveHeight=false] Whether the height of the container element reflects the height value of the panel after completing the movement.<br>(Note: on Android 4.1.x stock browser, has rendering bug which not correctly render height value on panel with single node. To avoid just append another empty node at the end.)<ko>목적 패널로 이동한 후 그 패널의 높이값을 컨테이너 요소의 높이값에 반영할지 여부.<br>(참고: Android 4.1.x 스톡 브라우저에서 단일 노드로 구성된 패널의 높이값 변경이 제대로 렌더링 되지 않는 버그가 있음. 비어있는 노드를 추가하면 해결이 가능하다.)</ko>
   * @param {Number} [options.zIndex=2000] z-index value for container element<ko>컨테이너 요소의 z-index 값</ko>
+  * @param {Boolean} [options.useTranslate=true] Use css translate method on panel moves. When set to 'false', it'll use top/left instead.<ko>패널 이동시 CSS translate 사용 여부. 'false'로 설정 시, top/left 속성을 사용</ko>
  */
 	function Flicking(element, options, _prefix) {
 		_classCallCheck(this, Flicking);
@@ -358,6 +374,11 @@ var Flicking = function (_Mixin$with) {
 			}
 
 			this.options[key] = val;
+		}
+
+		// block use of translate for Android2 environment
+		if (_consts.IS_ANDROID2) {
+			this.options.useTranslate = false;
 		}
 	};
 
@@ -504,10 +525,11 @@ var Flicking = function (_Mixin$with) {
 
 
 	Flicking.prototype._setPadding = function _setPadding(padding, build) {
+		var $wrapper = this.$wrapper;
 		var horizontal = this.options.horizontal;
 		var panel = this._conf.panel;
 		var paddingSum = padding.reduce(function (a, c) {
-			return parseInt(a, 10) + parseInt(c, 10);
+			return parseFloat(a) + parseFloat(c);
 		});
 		var cssValue = {};
 
@@ -526,13 +548,12 @@ var Flicking = function (_Mixin$with) {
 			cssValue.boxSizing = "border-box";
 		}
 
-		Object.keys(cssValue).length && _utils.utils.css(this.$wrapper, cssValue);
+		Object.keys(cssValue).length && _utils.utils.css($wrapper, cssValue);
 
-		var wrapperStyle = getComputedStyle(this.$wrapper);
 		var paddingType = horizontal ? ["Left", "Right"] : ["Top", "Bottom"];
-		var wrapperSize = Math.max(this.$wrapper["offset" + (horizontal ? "Width" : "Height")], _utils.utils.getNumValue(wrapperStyle[horizontal ? "width" : "height"]));
+		var wrapperSize = Math.max($wrapper["offset" + (horizontal ? "Width" : "Height")], _utils.utils.css($wrapper, horizontal ? "width" : "height", true));
 
-		panel.size = wrapperSize - (_utils.utils.getNumValue(wrapperStyle["padding" + paddingType[0]]) + _utils.utils.getNumValue(wrapperStyle["padding" + paddingType[1]]));
+		panel.size = wrapperSize - (_utils.utils.css($wrapper, "padding" + paddingType[0], true) + _utils.utils.css($wrapper, "padding" + paddingType[1], true));
 	};
 
 	/**
@@ -718,13 +739,16 @@ var Flicking = function (_Mixin$with) {
 	Flicking.prototype._applyPanelsCss = function _applyPanelsCss() {
 		var conf = this._conf;
 		var dummyAnchorClassName = "__dummy_anchor";
+		var useTranslate = this.options.useTranslate;
 
-		if (_consts.IS_ANDROID2) {
-			conf.$dummyAnchor = _utils.utils.$("." + dummyAnchorClassName);
+		if (!useTranslate) {
+			if (_consts.IS_ANDROID2) {
+				conf.$dummyAnchor = _utils.utils.$("." + dummyAnchorClassName);
 
-			!conf.$dummyAnchor && this.$wrapper.appendChild(conf.$dummyAnchor = _utils.utils.$("<a href=\"javascript:void(0)\" class=\"" + dummyAnchorClassName + "\" style=\"position:absolute;height:0px;width:0px\">"));
+				!conf.$dummyAnchor && this.$wrapper.appendChild(conf.$dummyAnchor = _utils.utils.$("<a href=\"javascript:void(0)\" class=\"" + dummyAnchorClassName + "\" style=\"position:absolute;height:0px;width:0px\">"));
+			}
 
-			this._applyPanelsCss = function applyCss(v, i) {
+			this._applyPanelsCss = function (v, i) {
 				var coords = this._getDataByDirection([this._conf.panel.size * i + "px", 0]);
 
 				_utils.utils.css(v, {
@@ -733,7 +757,7 @@ var Flicking = function (_Mixin$with) {
 				});
 			};
 		} else {
-			this._applyPanelsCss = function applyCss(v, i) {
+			this._applyPanelsCss = function (v, i) {
 				var coords = this._getDataByDirection([_consts.TRANSFORM.support ? 100 * i + "%" : this._conf.panel.size * i + "px", 0]);
 
 				this._setMoveStyle(v, coords);
@@ -755,20 +779,21 @@ var Flicking = function (_Mixin$with) {
 		var conf = this._conf;
 		var panel = conf.panel;
 		var options = this.options;
+		var useTranslate = options.useTranslate;
 		var horizontal = options.horizontal;
 		var paddingTop = options.previewPadding[0];
 		var container = this.$container;
 		var to = toValue;
 		var value = void 0;
 
-		if (_consts.IS_ANDROID2) {
+		if (!useTranslate) {
 			if (!to) {
 				to = -panel.size * panel.index;
 			}
 
 			if (phase === "start") {
 				container = container.style;
-				value = parseInt(container[horizontal ? "left" : "top"], 10);
+				value = parseFloat(container[horizontal ? "left" : "top"]);
 
 				if (horizontal) {
 					value && (container.left = "0px");
@@ -787,7 +812,7 @@ var Flicking = function (_Mixin$with) {
 					top: to.y
 				}, _utils$css2[_consts.TRANSFORM.name] = _utils.utils.translate(0, 0, conf.useLayerHack), _utils$css2));
 
-				conf.$dummyAnchor.focus();
+				conf.$dummyAnchor && conf.$dummyAnchor.focus();
 			}
 		}
 	};
@@ -1015,6 +1040,7 @@ var Flicking = function (_Mixin$with) {
 		var conf = this._conf;
 		var options = this.options;
 		var panel = conf.panel;
+		var useTranslate = options.useTranslate;
 
 		if (phase === "start" && (panel.changed = this._isMovable())) {
 			/**
@@ -1058,7 +1084,7 @@ var Flicking = function (_Mixin$with) {
 				this._arrangePanels(true, conf.indexToMove);
 			}
 
-			!_consts.IS_ANDROID2 && this._setTranslate([-panel.size * panel.index, 0]);
+			useTranslate && this._setTranslate([-panel.size * panel.index, 0]);
 			conf.touch.distance = conf.indexToMove = 0;
 
 			/**
@@ -1158,16 +1184,17 @@ var Flicking = function (_Mixin$with) {
 
 
 	Flicking.prototype._setPointerEvents = function _setPointerEvents(e) {
-		var pointer = _utils.utils.css(this.$container, "pointerEvents");
-		var val = void 0;
+		var $container = this.$container;
+		var pointer = _utils.utils.css($container, "pointerEvents");
+		var pointerEvents = void 0;
 
 		if (e && e.holding && e.inputEvent && e.inputEvent.preventSystemEvent && pointer !== "none") {
-			val = "none";
+			pointerEvents = "none";
 		} else if (!e && pointer !== "auto") {
-			val = "auto";
+			pointerEvents = "auto";
 		}
 
-		val && _utils.utils.css(this.$container, { pointerEvents: val });
+		pointerEvents && _utils.utils.css($container, { pointerEvents: pointerEvents });
 	};
 
 	/**
@@ -1639,6 +1666,7 @@ var Flicking = function (_Mixin$with) {
 		var options = this.options;
 		var panel = conf.panel;
 		var horizontal = options.horizontal;
+		var useTranslate = options.useTranslate;
 		var panelSize = void 0;
 
 		if (!this.isPlaying()) {
@@ -1670,7 +1698,7 @@ var Flicking = function (_Mixin$with) {
 			this._axesInst.axis.flick.range = [0, panelSize * (panel.count - 1)];
 			this._setAxes("setTo", panelSize * panel.index, 0);
 
-			if (_consts.IS_ANDROID2) {
+			if (!useTranslate) {
 				this._applyPanelsPos();
 				this._adjustContainerCss("end");
 			}
@@ -2117,7 +2145,6 @@ Flicking.DIRECTION_HORIZONTAL = _axes2["default"].DIRECTION_HORIZONTAL;
 Flicking.DIRECTION_VERTICAL = _axes2["default"].DIRECTION_VERTICAL;
 Flicking.DIRECTION_ALL = _axes2["default"].DIRECTION_ALL;
 exports["default"] = Flicking;
-module.exports = exports["default"];
 
 /***/ }),
 /* 2 */
@@ -2275,7 +2302,11 @@ var utils = {
   */
 	css: function css(el, style, getAsNumber) {
 		if (typeof style === "string") {
-			var value = _browser.window.getComputedStyle(el)[style];
+			var value = el.style[style];
+
+			if (!value || value === "auto" || /\d/.test(value) && !/\d(px)?$/.test(value)) {
+				value = _browser.window.getComputedStyle(el)[style];
+			}
 
 			return getAsNumber ? this.getNumValue(value) : value;
 		} else {
@@ -2334,7 +2365,7 @@ var utils = {
 	getNumValue: function getNumValue(val, defVal) {
 		var num = val;
 
-		return isNaN(num = parseInt(num, 10)) ? defVal : num;
+		return isNaN(num = parseFloat(num)) ? defVal : num;
 	},
 
 
@@ -2346,7 +2377,7 @@ var utils = {
 	getUnitValue: function getUnitValue(val) {
 		var rx = /(?:[a-z]{2,}|%)$/;
 
-		return (parseInt(val, 10) || 0) + (String(val).match(rx) || "px");
+		return (parseFloat(val) || 0) + (String(val).match(rx) || "px");
 	},
 
 
@@ -2359,16 +2390,15 @@ var utils = {
 	getOuter: function getOuter(el, type) {
 		var _this2 = this;
 
-		var style = _browser.window.getComputedStyle(el);
 		var paddingMargin = 0;
 
 		(type === "outerWidth" ? ["Left", "Right"] : ["Top", "Bottom"]).forEach(function (dir) {
 			["padding", "margin"].forEach(function (v) {
-				paddingMargin += _this2.getNumValue(style["" + v + dir]);
+				paddingMargin += _this2.css(el, "" + v + dir, true);
 			});
 		});
 
-		return this.getNumValue(style[type.replace("outer", "").toLocaleLowerCase()]) + paddingMargin;
+		return this.css(el, type.replace("outer", "").toLocaleLowerCase(), true) + paddingMargin;
 	},
 
 
@@ -2412,7 +2442,7 @@ var utils = {
 	// 3. when user releases fingers on screen, 'click' event is fired at previous position.
 	hasClickBug: function hasClickBug() {
 		var ua = _browser.window.navigator.userAgent;
-		var result = /Safari/.test(ua);
+		var result = /iPhone|iPad/.test(ua);
 
 		this.hasClickBug = function () {
 			return result;
@@ -2591,7 +2621,8 @@ var OPTIONS = {
 	"touch", "mouse"],
 	thresholdAngle: 45, // the threshold value that determines whether user action is horizontal or vertical (0~90)
 	adaptiveHeight: false, // Set container's height be adaptive according panel's height
-	zIndex: 2000 // z-index value for container element
+	zIndex: 2000, // z-index value for container element
+	useTranslate: true // use of translate on panel moves
 };
 
 exports.CONFIG = CONFIG;
@@ -2809,8 +2840,6 @@ exports["default"] = function (superclass) {
 		return _class;
 	}(superclass);
 };
-
-module.exports = exports["default"];
 
 /***/ })
 /******/ ]);
