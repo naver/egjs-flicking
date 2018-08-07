@@ -5,7 +5,7 @@
  * @egjs/flicking JavaScript library
  * https://github.com/naver/egjs-flicking
  * 
- * @version 2.3.0-nightly-20180806185847
+ * @version 2.4.0-nightly-20180807172826
  * 
  * All-in-one packaged file for ease use of '@egjs/flicking' with below dependencies.
  * - @egjs/axes ^2.5.2, @egjs/component ^2.1.1
@@ -129,7 +129,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
  * eg.Flicking.VERSION;  // ex) 2.2.0
  * @memberof eg.Flicking
  */
-_Flicking2["default"].VERSION = "2.3.0-nightly-20180806185847"; /**
+_Flicking2["default"].VERSION = "2.4.0-nightly-20180807172826"; /**
                                                                  * Copyright (c) 2015 NAVER Corp.
                                                                  * egjs projects are licensed under the MIT license
                                                                  */
@@ -2912,7 +2912,7 @@ var Axes = /** @class */ (function (_super) {
         this.disconnect();
         this.em.destroy();
     };
-    Axes.VERSION = "2.3.0-nightly-20180806185847";
+    Axes.VERSION = "2.4.0-nightly-20180807172826";
     /**
      * @name eg.Axes.TRANSFORM
      * @desc Returns the transform attribute with CSS vendor prefixes.

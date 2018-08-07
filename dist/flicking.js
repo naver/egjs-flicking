@@ -5,7 +5,7 @@
  * @egjs/flicking JavaScript library
  * https://github.com/naver/egjs-flicking
  * 
- * @version 2.3.0-nightly-20180806185847
+ * @version 2.4.0-nightly-20180807172826
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -126,7 +126,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
  * eg.Flicking.VERSION;  // ex) 2.2.0
  * @memberof eg.Flicking
  */
-_Flicking2["default"].VERSION = "2.3.0-nightly-20180806185847"; /**
+_Flicking2["default"].VERSION = "2.4.0-nightly-20180807172826"; /**
                                                                  * Copyright (c) 2015 NAVER Corp.
                                                                  * egjs projects are licensed under the MIT license
                                                                  */
