@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Class: ParallaxEffect | egjs::Flicking - API</title>
+    
+    <meta name="description" content="A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side." />
+    
+        <meta name="keywords" content="UI Component, egjs, flicking, carousel" />
+        <meta name="keyword" content="UI Component, egjs, flicking, carousel" />
+    
+    
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    
+    <meta property="og:url" content=""/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <link rel="canonical" href="https://naver.github.io/egjs-flicking/release/latest/doc/"/>
+    
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":true,"cleverLinks":true,"default":{"outputSourceFiles":true},"applicationName":"eg.Flicking","disqus":"egjs","googleAnalytics":"UA-70842526-17","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"egjs::Flicking - API","description":"A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.","keyword":"UI Component, egjs, flicking, carousel"},"linenums":true,"link":{"canonical":"https://naver.github.io/egjs-flicking/release/latest/doc/"}};
+    </script>
+    
+
+    
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', config.googleAnalytics]);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName">
+        <a href="//naver.github.io/egjs/"><img style="width:40px; height:20px;" src="img/type_white.svg"/></a>
+
+        <!-- Homepage link (prefer link.home than applicationName) -->
+        
+        <a href="//naver.github.io/egjs-flicking/">Flicking</a>
+        
+    </h3>
+
+    <div class="search">
+        <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
+    </div>
+    <ul class="list">
+        <li class="item">
+            <span class="title">
+                <a href="index.html">README</a>
+            </span>
+        </li>
+    
+        <!-- Non Grouping Version -->
+        
+            
+
+        
+            
+
+<li class="item" data-name="eg.Flicking">
+    <span class="title">
+        <a href="eg.Flicking.html">eg.Flicking</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    <span class="subtitle">Members</span>
+    
+        <li data-name="eg.Flicking.DIRECTION_ALL"><a href="eg.Flicking.html#.DIRECTION_ALL">DIRECTION_ALL</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_DOWN"><a href="eg.Flicking.html#.DIRECTION_DOWN">DIRECTION_DOWN</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_HORIZONTAL"><a href="eg.Flicking.html#.DIRECTION_HORIZONTAL">DIRECTION_HORIZONTAL</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_LEFT"><a href="eg.Flicking.html#.DIRECTION_LEFT">DIRECTION_LEFT</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_NONE"><a href="eg.Flicking.html#.DIRECTION_NONE">DIRECTION_NONE</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_RIGHT"><a href="eg.Flicking.html#.DIRECTION_RIGHT">DIRECTION_RIGHT</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_UP"><a href="eg.Flicking.html#.DIRECTION_UP">DIRECTION_UP</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_VERTICAL"><a href="eg.Flicking.html#.DIRECTION_VERTICAL">DIRECTION_VERTICAL</a></li>
+    
+        <li data-name="eg.Flicking.VERSION"><a href="eg.Flicking.html#.VERSION">VERSION</a></li>
+    
+        <li data-name="eg.Flicking#plugins"><a href="eg.Flicking.html#plugins">plugins</a></li>
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    <span class="subtitle">Methods</span>
+    
+        <li data-name="eg.Flicking#destroy"><a href="eg.Flicking.html#destroy">destroy</a></li>
+    
+        <li data-name="eg.Flicking#disableInput"><a href="eg.Flicking.html#disableInput">disableInput</a></li>
+    
+        <li data-name="eg.Flicking#enableInput"><a href="eg.Flicking.html#enableInput">enableInput</a></li>
+    
+        <li data-name="eg.Flicking#getAllElements"><a href="eg.Flicking.html#getAllElements">getAllElements</a></li>
+    
+        <li data-name="eg.Flicking#getElement"><a href="eg.Flicking.html#getElement">getElement</a></li>
+    
+        <li data-name="eg.Flicking#getIndex"><a href="eg.Flicking.html#getIndex">getIndex</a></li>
+    
+        <li data-name="eg.Flicking#getNextElement"><a href="eg.Flicking.html#getNextElement">getNextElement</a></li>
+    
+        <li data-name="eg.Flicking#getNextIndex"><a href="eg.Flicking.html#getNextIndex">getNextIndex</a></li>
+    
+        <li data-name="eg.Flicking#getPrevElement"><a href="eg.Flicking.html#getPrevElement">getPrevElement</a></li>
+    
+        <li data-name="eg.Flicking#getPrevIndex"><a href="eg.Flicking.html#getPrevIndex">getPrevIndex</a></li>
+    
+        <li data-name="eg.Flicking#getStatus"><a href="eg.Flicking.html#getStatus">getStatus</a></li>
+    
+        <li data-name="eg.Flicking#hasOn"><a href="eg.Flicking.html#hasOn">hasOn</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#isPlaying"><a href="eg.Flicking.html#isPlaying">isPlaying</a></li>
+    
+        <li data-name="eg.Flicking#moveTo"><a href="eg.Flicking.html#moveTo">moveTo</a></li>
+    
+        <li data-name="eg.Flicking#next"><a href="eg.Flicking.html#next">next</a></li>
+    
+        <li data-name="eg.Flicking#off"><a href="eg.Flicking.html#off">off</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#on"><a href="eg.Flicking.html#on">on</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#once"><a href="eg.Flicking.html#once">once</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#plugin"><a href="eg.Flicking.html#plugin">plugin</a></li>
+    
+        <li data-name="eg.Flicking#prev"><a href="eg.Flicking.html#prev">prev</a></li>
+    
+        <li data-name="eg.Flicking#resize"><a href="eg.Flicking.html#resize">resize</a></li>
+    
+        <li data-name="eg.Flicking#restore"><a href="eg.Flicking.html#restore">restore</a></li>
+    
+        <li data-name="eg.Flicking#setStatus"><a href="eg.Flicking.html#setStatus">setStatus</a></li>
+    
+        <li data-name="eg.Flicking#trigger"><a href="eg.Flicking.html#trigger">trigger</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    <span class="subtitle">Events</span>
+    
+        <li data-name="eg.Flicking#event:beforeFlickStart"><a href="eg.Flicking.html#event:beforeFlickStart">beforeFlickStart</a></li>
+    
+        <li data-name="eg.Flicking#event:beforeRestore"><a href="eg.Flicking.html#event:beforeRestore">beforeRestore</a></li>
+    
+        <li data-name="eg.Flicking#event:flick"><a href="eg.Flicking.html#event:flick">flick</a></li>
+    
+        <li data-name="eg.Flicking#event:flickEnd"><a href="eg.Flicking.html#event:flickEnd">flickEnd</a></li>
+    
+        <li data-name="eg.Flicking#event:restore"><a href="eg.Flicking.html#event:restore">restore</a></li>
+    
+    </ul>
+
+    
+</li>
+
+        
+            
+
+<li class="item" data-name="eg.Flicking.plugin.OpacityEffect">
+    <span class="title">
+        <a href="eg.Flicking.plugin.OpacityEffect.html">eg.Flicking.plugin.OpacityEffect</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    </ul>
+
+    
+</li>
+
+        
+            
+
+<li class="item" data-name="eg.Flicking.plugin.ParallaxEffect">
+    <span class="title">
+        <a href="eg.Flicking.plugin.ParallaxEffect.html">eg.Flicking.plugin.ParallaxEffect</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    </ul>
+
+    
+</li>
+
+        
+    
+    </ul>
+</div>
+
+    <div class="main">
+        <h1 class="page-title" data-filename="eg.Flicking.plugin.ParallaxEffect.html">Class: ParallaxEffect</h1>
+        
+
+
+
+<section>
+
+<header>
+    <h2>
+    
+        <span>plugin.ParallaxEffect</span>
+        
+    </h2>
+    <button id="toggle">
+        
+            English
+        
+    </button>
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="ParallaxEffect">
+            
+            new eg.Flicking.plugin.ParallaxEffect<span class="signature">(selector)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_plugin_effects_ParallaxEffect.js.html">ParallaxEffect.js</a>, <a href="src_plugin_effects_ParallaxEffect.js.html#line44">line 44</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>A plugin to add horizontal parallax effect attached with flicking interaction.</p>
+<ul>
+<li>Should be targeted only one element per panel.</li>
+<li>It can't be used with <code>previewPadding</code> option.</li>
+</ul>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>플리킹 인터렉션에 따른 가로유형 패럴렉스 효과 플러그인.</p>
+<ul>
+<li>각 패널당 한 개의 요소만 지정되어야 한다.</li>
+<li><code>previewPadding</code> 옵션과 같이 사용될 수 없다.</li>
+</ul>
+	</div>
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>selector</strong>
+            
+
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">String</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Target selector string within panel element</p></div>
+            <div class="description ko"><p>패널 내에 위치한 대상 요소 셀렉터 문자열</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code><pre class="prettyprint source lang-html"><code>&lt;div id=&quot;flick&quot;>
+    &lt;div>&lt;p style=&quot;background-image:url(a.png)&quot;>panel 0&lt;/p>&lt;/div>
+    &lt;div>&lt;p style=&quot;background-image:url(b.png)&quot;>panel 1&lt;/p>&lt;/div>
+    &lt;div>&lt;p style=&quot;background-image:url(c.png)&quot;>panel 2&lt;/p>&lt;/div>
+&lt;/div></code></pre><pre class="prettyprint source lang-js"><code>// as namespace usage
+new eg.Flicking(&quot;#some&quot;)
+ .plugin([
+     // Apply parallax effect to '&lt;p>' selector matched elements
+     new eg.Flicking.plugin.ParallaxEffect(&quot;p&quot;)
+ ]);
+
+// as ESM import usage
+import Flicking from &quot;@egjs/flicking&quot;;
+import ParallaxEffect from &quot;@egjs/flicking/dist/plugin/ParallaxEffect&quot;;
+
+new Flicking(&quot;#some&quot;)
+ .plugin([
+     new ParallaxEffect(&quot;p&quot;)
+ ]);</code></pre></code></pre>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>
+                <div class="en"><a href="eg.Flicking.html#plugin">eg.Flicking#plugin</a></div>
+                <div class="ko"><a href="eg.Flicking.html#plugin">eg.Flicking#plugin</a></div>
+            </li>
+        
+            <li>
+                <div class="en"><a href="eg.Flicking.html#plugins">eg.Flicking#plugins</a></div>
+                <div class="ko"><a href="eg.Flicking.html#plugins">eg.Flicking#plugins</a></div>
+            </li>
+        </ul>
+    </dd>
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+
+
+        
+
+
+    
+    </div>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+        
+        <!-- disqus code -->
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        <!-- // disqus code -->
+        
+
+        <footer>
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Aug 07 2018 11:03:50 GMT+0900 (대한민국 표준시)
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/main.js"></script>
+</body>
+</html>
