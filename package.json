@@ -67,7 +67,7 @@
     "eslint-loader": "^2.0.0",
     "gh-pages": "^2.0.0",
     "hammer-simulator": "0.0.1",
-    "husky": "^0.14.3",
+    "husky": "^1.0.0",
     "inject-loader": "^4.0.1",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jsdoc": "^3.5.5",
