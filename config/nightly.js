@@ -25,8 +25,7 @@ const version = pkg.version.replace(/snapshot/, `nightly-${getDatetime()}`);
 
 // build command
 const build = {
-	production: `cross-env NIGHTLY=${version} npm run build:production`,
-	packaged: `cross-env NIGHTLY=${version} npm run build:packaged`,
+	build: `cross-env NIGHTLY=${version} npm run build:rollup`,
 	plugin: `cross-env NIGHTLY=${version} NODE_ENV=plugin webpack && cross-env NIGHTLY=${version} NODE_ENV=plugin MIN=true webpack`
 };
 
