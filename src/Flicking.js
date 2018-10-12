@@ -1762,7 +1762,17 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * @type {Object}
 	 */
 	static utils = utils;
-
+	/**
+	 * Version info string
+	 * @ko 버전정보 문자열
+	 * @name VERSION
+	 * @static
+	 * @type {String}
+	 * @example
+	 * eg.Flicking.VERSION;  // ex) 2.2.0
+	 * @memberof eg.Flicking
+	 */
+	static VERSION = "#__VERSION__#";
 	/**
 	 * Constant value used internally
 	 * @ko 내부에서 사용되는 상수 값

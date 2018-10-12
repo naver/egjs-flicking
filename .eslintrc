@@ -5,6 +5,7 @@
     "extends": "eslint-config-naver",
     "parser": "babel-eslint",
     "rules": {
+        "array-element-newline": ["error", "consistent"],
         "linebreak-style": 0,
         "comma-dangle": ["error", "never"],
         "no-multi-assign": 0,

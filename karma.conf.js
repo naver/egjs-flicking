@@ -23,7 +23,18 @@ module.exports = function(config) {
 					{
 						test: /\.js$/,
 						exclude: /node_modules/,
-						loader: "babel-loader"
+						loader: "babel-loader",
+						query: {
+							"presets": [
+								[
+									"@babel/preset-env",
+									{
+										"loose": true,
+										"modules": "commonjs"
+									}
+								]
+							]
+						}
 					}
 				]
 			},

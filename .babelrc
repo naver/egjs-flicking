@@ -1,16 +1,17 @@
 {
     "presets": [ 
         [
-            "env", {
-                "loose": true
+            "@babel/preset-env", {
+                "loose": true,
+                "modules": false
             }
         ]
     ],
     "plugins": [
-        "add-module-exports",
-        "transform-class-properties",
+        "no-side-effect-class-properties",
+        ["@babel/plugin-proposal-class-properties", {"loose": true}],
         "transform-es3-property-literals",
         "transform-es3-member-expression-literals",
-        "transform-object-assign"
+        "@babel/plugin-transform-object-assign"
     ]
 }
