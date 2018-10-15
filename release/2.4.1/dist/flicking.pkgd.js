@@ -8,7 +8,7 @@ https://github.com/naver/egjs-flicking
 @version 2.4.1
 
 All-in-one packaged file for ease use of '@egjs/flicking' with below dependencies.
-NOTE: This is not an official distribution file and is only for user convenience.
+- @egjs/axes ^2.5.7, @egjs/component ^2.1.2
 */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
