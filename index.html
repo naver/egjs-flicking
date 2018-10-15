@@ -88,7 +88,7 @@
         <div class="hero-image" style="background-image: url(//naver.github.io/egjs/img/Flicking.png)">
         </div>
         <h2 class="title">
-            <span class="highlight">Flicking</span><a href="https://github.com/naver/egjs-flicking/releases/tag/2.4.0"><span class="version">v2.4.0</span></a>
+            <span class="highlight">Flicking</span><a href="https://github.com/naver/egjs-flicking/releases/tag/2.4.1"><span class="version">v2.4.1</span></a>
         </h2>
         <p class="intro">A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.<br/>
             <span class="hashtag">#carousel #slider</span>
@@ -120,7 +120,7 @@
 
 <h4 id="set-up-your-html">Set up your HTML</h4>
 
-<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="c">&lt;!-- wrapper --&gt;</span>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- wrapper --&gt;</span>
 <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"wrapper"</span><span class="nt">&gt;</span>
   <span class="c">&lt;!-- panels --&gt;</span>
   <span class="nt">&lt;div&gt;</span>
@@ -133,33 +133,29 @@
     <span class="nt">&lt;p&gt;</span>panel 2<span class="nt">&lt;/p&gt;</span>
   <span class="nt">&lt;/div&gt;</span>
 <span class="nt">&lt;/div&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="load-files-or-import-library">Load files or import library</h4>
 
 <h5 id="es5">ES5</h5>
-<div class="language-html highlighter-rouge"><pre class="highlight"><code>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"//naver.github.io/egjs-flicking/release/latest/dist/flicking.pkgd.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 
 <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"//naver.github.io/egjs-flicking/release/latest/dist/plugin/OpacityEffect.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 
 <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"//naver.github.io/egjs-flicking/release/latest/dist/plugin/ParallaxEffect.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h5 id="es6">ES6+</h5>
-<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="kr">import</span> <span class="nx">Flicking</span> <span class="nx">from</span> <span class="s2">"@egjs/flicking"</span><span class="p">;</span>
-</code></pre>
-</div>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Flicking</span> <span class="k">from</span> <span class="s2">"@egjs/flicking"</span><span class="p">;</span>
+</code></pre></div></div>
 
 <h3 id="initialize">Initialize</h3>
 
-<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="c1">// creating instance</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// creating instance</span>
 <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 			</div>
 		</div>
@@ -188,10 +184,9 @@
   <button onclick="f1.prev()" class="f_btn">&lt;</button> <button class="f_btn f_right" onclick="f1.next()">&gt;</button>
 </div>
 
-<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="c1">// creating instance</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// creating instance</span>
 <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="circular">Circular</h4>
 
@@ -210,14 +205,13 @@
     <button onclick="f2.prev()" class="f_btn">&lt;</button> <button class="f_btn f_right" onclick="f2.next()">&gt;</button>
 </div>
 
-<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="c1">// creating instance</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// creating instance</span>
 <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
   <span class="na">duration</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
   <span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
   <span class="na">defaultIndex</span><span class="p">:</span> <span class="mi">1</span>
 <span class="p">});</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="preview--circular">Preview &amp; circular</h4>
 
@@ -242,15 +236,14 @@
   <button onclick="f3.prev()" class="f_btn">&lt;</button> <button class="f_btn f_right" onclick="f3.next()">&gt;</button>
 </div>
 
-<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="c1">// creating instance</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// creating instance</span>
 <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
   <span class="na">duration</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
   <span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
   <span class="na">previewPadding</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span>
   <span class="na">defaultIndex</span><span class="p">:</span> <span class="mi">3</span>
 <span class="p">});</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="vertical-direction">Vertical direction</h3>
 
@@ -271,12 +264,11 @@
 	<div class="vbutton"><button onclick="v1.prev()" class="v_btn">^</button> <button onclick="v1.next()" class="v_btn">v</button></div>
 </div>
 
-<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="c1">// creating instance</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// creating instance</span>
 <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
   <span class="na">horizontal</span><span class="p">:</span> <span class="kc">false</span>
 <span class="p">});</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="circular-1">Circular</h4>
 
@@ -295,15 +287,14 @@
   <div class="vbutton"><button onclick="v2.prev()" class="v_btn">^</button> <button onclick="v2.next()" class="v_btn">v</button></div>
 </div>
 
-<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="c1">// creating instance</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// creating instance</span>
 <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
   <span class="na">horizontal</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
   <span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
   <span class="na">duration</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
   <span class="na">defaultIndex</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
 <span class="p">});</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="preview--circular-1">Preview &amp; circular</h4>
 
@@ -328,7 +319,7 @@
   <div class="vbutton"><button onclick="v3.prev()" class="v_btn">^</button> <button onclick="v3.next()" class="v_btn">v</button></div>
 </div>
 
-<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="c1">// creating instance</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// creating instance</span>
 <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
   <span class="na">horizontal</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
   <span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
@@ -336,8 +327,7 @@
   <span class="na">duration</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
   <span class="na">defaultIndex</span><span class="p">:</span> <span class="mi">3</span>
 <span class="p">});</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="custom-events">Custom events</h3>
 
@@ -357,7 +347,7 @@
   <div id="log"></div>
 </div>
 
-<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
   <span class="na">duration</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
   <span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
   <span class="na">threshold</span><span class="p">:</span> <span class="mi">70</span>
@@ -372,8 +362,7 @@
 <span class="kd">function</span> <span class="nx">handler</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
   <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"log"</span><span class="p">).</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">eventType</span> <span class="o">+</span><span class="s2">" event fired."</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="infinite-flicking">Infinite Flicking</h3>
 
@@ -386,7 +375,7 @@
   <button onclick="f5.prev()" class="f_btn">&lt;</button> <button class="f_btn f_right" onclick="f5.next()">&gt;</button>
 </div>
 
-<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
 	<span class="na">duration</span> <span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
 	<span class="na">hwAccelerable</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
 	<span class="na">threshold</span> <span class="p">:</span> <span class="mi">70</span><span class="p">,</span>
@@ -412,8 +401,7 @@
 <span class="nx">instance</span><span class="p">.</span><span class="nx">getElement</span><span class="p">().</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">df</span><span class="p">.</span><span class="nx">firstChild</span><span class="p">);</span>
 <span class="nx">instance</span><span class="p">.</span><span class="nx">getPrevElement</span><span class="p">().</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">df</span><span class="p">.</span><span class="nx">lastChild</span><span class="p">);</span>
 <span class="nx">instance</span><span class="p">.</span><span class="nx">getNextElement</span><span class="p">().</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">df</span><span class="p">.</span><span class="nx">firstChild</span><span class="p">);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="plugins">Plugins</h3>
 
@@ -440,14 +428,13 @@
   </div>
 </div>
 
-<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
 	<span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
 	<span class="na">prefix</span><span class="p">:</span> <span class="s2">"plugin"</span>
 <span class="p">}).</span><span class="nx">plugin</span><span class="p">([</span>
     <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">OpacityEffect</span><span class="p">(</span><span class="s2">".text"</span><span class="p">)</span>
 <span class="p">]);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="parallaxeffect">ParallaxEffect</h4>
 
@@ -472,14 +459,13 @@
   </div>
 </div>
 
-<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
 	<span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
 	<span class="na">prefix</span><span class="p">:</span> <span class="s2">"plugin"</span>
 <span class="p">}).</span><span class="nx">plugin</span><span class="p">([</span>
     <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">ParallaxEffect</span><span class="p">(</span><span class="s2">"p"</span><span class="p">)</span>
 <span class="p">]);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="combined-plugins">Combined plugins</h4>
 
@@ -504,15 +490,14 @@
   </div>
 </div>
 
-<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
 	<span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="na">prefix</span><span class="p">:</span> <span class="s2">"plugin"</span>
 <span class="p">}).</span><span class="nx">plugin</span><span class="p">([</span>
     <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">OpacityEffect</span><span class="p">(</span><span class="s2">".text"</span><span class="p">),</span>
     <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">ParallaxEffect</span><span class="p">(</span><span class="s2">"p"</span><span class="p">)</span>
 <span class="p">]);</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 			</div>
 		</div>
