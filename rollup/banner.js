@@ -11,7 +11,7 @@ ${pkg.homepage}
 `;
 const pkgd = `${prefix}
 All-in-one packaged file for ease use of '${pkg.name}' with below dependencies.
-NOTE: This is not an official distribution file and is only for user convenience.
+- ${Object.entries(pkg.dependencies).map(v => v.join(" ")).join(", ")}
 */`;
 
 exports.banner = `${prefix}*/`;
