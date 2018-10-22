@@ -3,12 +3,20 @@
  * egjs projects are licensed under the MIT license
  */
 /* eslint-disable no-new-func, no-nested-ternary */
-const win = typeof window !== "undefined" &&
-	window.Math === Math ? window : (
-		typeof self !== "undefined" && (
-			self.Math === Math ? self : Function("return this")()
-		)
-	);
+
+let win;
+
+if (typeof window === "undefined") {
+	// window is undefined in node.js
+	win = {
+		document: {},
+		navigator: {
+			userAgent: ""
+		}
+	};
+} else {
+	win = window;
+}
 /* eslint-enable no-new-func, no-nested-ternary */
 
 const document = win.document;
