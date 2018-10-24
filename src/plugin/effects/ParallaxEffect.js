@@ -163,5 +163,3 @@ export default class ParallaxEffect extends Plugin {
 		return this.imgs[this._getCurrIndex()];
 	}
 }
-
-module.exports = ParallaxEffect;

@@ -110,5 +110,3 @@ export default class OpacityEffect extends Plugin {
 		return this.details[1];
 	}
 }
-
-module.exports = OpacityEffect;
