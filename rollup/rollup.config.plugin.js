@@ -3,18 +3,18 @@ const uglify = require("./uglify");
 module.exports = ["OpacityEffect", "ParallaxEffect"].map(id => (
 	[
 		{
-			input: `plugin/effects/${id}.js`,
+			input: `./src/plugin/effects/${id}.js`,
 			external: ["@egjs/flicking"],
 			output: {
 				globals: {
 					"@egjs/flicking": "eg.Flicking"
 				},
 				name: `eg.Flicking.plugin.${id}`,
-				file: `./dist/plugin/${id}.js`
+				file: `./packages/flicking-plugins/dist/plugin/${id}.js`
 			}
 		},
 		{
-			input: `plugin/effects/${id}.js`,
+			input: `./src/plugin/effects/${id}.js`,
 			plugins: [uglify],
 			external: ["@egjs/flicking"],
 			output: {
@@ -22,7 +22,7 @@ module.exports = ["OpacityEffect", "ParallaxEffect"].map(id => (
 					"@egjs/flicking": "eg.Flicking"
 				},
 				name: `eg.Flicking.plugin.${id}`,
-				file: `./dist/plugin/${id}.min.js`
+				file: `./packages/flicking-plugins/dist/${id}.min.js`
 			}
 		}
 	]

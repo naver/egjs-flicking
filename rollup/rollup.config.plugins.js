@@ -1,6 +1,6 @@
 module.exports = [
 	{
-		input: `src/plugin/effects/plugins.js`,
+		input: `src/plugin/index.js`,
 		external: ["@egjs/flicking"],
 		output: {
 			format: "es",
@@ -9,7 +9,7 @@ module.exports = [
 		}
 	},
 	{
-		input: `src/plugin/effects/plugins.js`,
+		input: `src/plugin/index.js`,
 		external: ["@egjs/flicking"],
 		output: {
 			globals: {

@@ -143,8 +143,10 @@ instance.getNextElement().appendChild(df.firstChild);
 #### OpacityEffect
 
 {% include_relative assets/html/plugin-OpacityEffect.html %}
-
 ```js
+import Flicking from "@egjs/flicking";
+import {OpacityEffect} from "@egjs/flicking-plugins";
+
 var instance = new eg.Flicking("#wrapper", {
 	circular: true,
 	prefix: "plugin"
@@ -156,8 +158,10 @@ var instance = new eg.Flicking("#wrapper", {
 #### ParallaxEffect
 
 {% include_relative assets/html/plugin-ParallaxEffect.html %}
-
 ```js
+import Flicking from "@egjs/flicking";
+import {ParallaxEffect} from "@egjs/flicking-plugins";
+
 var instance = new eg.Flicking("#wrapper", {
 	circular: true,
 	prefix: "plugin"
@@ -169,8 +173,10 @@ var instance = new eg.Flicking("#wrapper", {
 #### Combined plugins
 
 {% include_relative assets/html/plugin-all.html %}
-
 ```js
+import Flicking from "@egjs/flicking";
+import {OpacityEffect, ParallaxEffect} from "@egjs/flicking-plugins";
+
 var instance = new eg.Flicking("#wrapper", {
 	circular: true,
     prefix: "plugin"
