@@ -1283,32 +1283,6 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	}
 
 	/**
-	 * Move panel to the given direction
-	 * @private
-	 * @param {Boolean} next
-	 * @param {Number} duration
-	 */
-	// _movePanel(next, duration) {
-	// 	const conf = this._conf;
-	// 	const panel = conf.panel;
-	// 	const options = this.options;
-
-	// 	if (panel.animating || conf.touch.holding) {
-	// 		return undefined;
-	// 	}
-
-	// 	this._setValueToMove(next);
-
-	// 	if (options.circular ||
-	// 		this[`get${next ? "Next" : "Prev"}Index`]() !== null
-	// 	) {
-	// 		this._movePanelByPhase("setBy", panel.size * (next ? 1 : -1), duration);
-	// 	}
-
-	// 	return this;
-	// }
-
-	/**
 	 * Move panel applying start/end phase value
 	 * @private
 	 * @param {String} method Axes' method name
