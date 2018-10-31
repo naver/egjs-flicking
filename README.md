@@ -62,13 +62,18 @@ import {OpacityEffect, ParallaxEffect} from "@egjs/flicking-plugins";
 Download necessary plugins to be used
 
 #### List of plugins:
+>  - **plugins** : all plugins
 >  - [OpacityEffect](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.plugin.OpacityEffect.html): Add opacity effect attached with flicking interaction.
 >  - [ParallaxEffect](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.plugin.ParallaxEffect.html): Add horizontal parallax effect attached with flicking interaction.
 
  - **Latest**
+    - https://naver.github.io/egjs-flicking/release/plugins/latest/dist/plugins.js (all)
+    - https://naver.github.io/egjs-flicking/release/plugins/latest/dist/plugins.min.js (all)
     - https://naver.github.io/egjs-flicking/release/plugins/latest/dist/[PLUGIN-NAME].js
     - https://naver.github.io/egjs-flicking/release/plugins/latest/dist/[PLUGIN-NAME].min.js
  - **Specific version**
+    - https://naver.github.io/egjs-flicking/release/plugins/[PLUGIN-VERSION]/dist/plugins.js (all)
+    - https://naver.github.io/egjs-flicking/release/plugins/[PLUGIN-VERSION]/dist/plugins.min.js (all)
     - https://naver.github.io/egjs-flicking/release/plugins/[PLUGIN-VERSION]/dist/[PLUGIN-NAME].js
     - https://naver.github.io/egjs-flicking/release/plugins/[PLUGIN-VERSION]/dist/[PLUGIN-NAME].min.js
 
