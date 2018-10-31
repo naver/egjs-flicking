@@ -734,4 +734,48 @@ describe("Custom events", function() {
 			});
 		});
 	});
+	describe("check drag with next() method", function() {
+		tutils.hooks.run();
+
+		let inst;
+		let flickEnd = 0;
+		let isIndexToMove = false;
+		const handler = e => {
+			flickEnd++;
+		};
+		const flick = e => {
+			flickEnd && !isIndexToMove && (isIndexToMove = !!inst._conf.indexToMove);
+		}
+		inst = tutils.create("#mflick1", { threshold : 50 }, {
+			flickEnd: handler,
+			flick: flick,
+		});
+
+		it("during the normal flicking moves", done => {
+			// When
+			// -- flick -- beforeFlickStart -- flick -- flickEnd -->
+			tutils.simulator(inst.$wrapper, {
+				pos: [0, 0],
+				deltaX: -70
+			}, () => {
+				// Then
+				setTimeout(() => {
+					// during the flick hold
+					expect(flickEnd).to.be.equal(1);
+					expect(inst._conf.touch.lastPos).to.be.ok;
+					expect(inst._conf.indexToMove).to.be.equals(0);
+
+
+					inst.next(200);
+
+					setTimeout(() => {
+						expect(flickEnd).to.be.equal(2);
+						expect(inst._conf.touch.lastPos).to.be.not.ok;
+						expect(isIndexToMove).to.be.ok;
+						done();
+					}, 400);
+				}, 500)
+			});
+		});
+	});
 });
