@@ -43,8 +43,8 @@ interface FlickingStatus {
 export default class Flicking extends Component {
   constructor(el: string | HTMLElement, options?: FlickingOption);
   destroy(): void;
-  disableInput(): Flicking;
-  enableInput(): Flicking;
+  disableInput(): this;
+  enableInput(): this;
   getAllElements(): HTMLElement[];
   getElement(): HTMLElement;
   getIndex(physical: boolean): number;
@@ -54,10 +54,10 @@ export default class Flicking extends Component {
   getPrevIndex(physical: boolean): number;
   getStatus(stringify: boolean): FlickingStatus;
   isPlaying(): boolean;
-  moveTo(no: number, duration?: number): Flicking;
-  next(duration?: number): Flicking;
-  prev(duration?: number): Flicking;
-  resize(): Flicking;
-  restore(duration?: number): Flicking;
+  moveTo(no: number, duration?: number): this;
+  next(duration?: number): this;
+  prev(duration?: number): this;
+  resize(): this;
+  restore(duration?: number): this;
   setStatus(status: FlickingStatus | string): void;
 }

@@ -1283,32 +1283,6 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	}
 
 	/**
-	 * Move panel to the given direction
-	 * @private
-	 * @param {Boolean} next
-	 * @param {Number} duration
-	 */
-	_movePanel(next, duration) {
-		const conf = this._conf;
-		const panel = conf.panel;
-		const options = this.options;
-
-		if (panel.animating || conf.touch.holding) {
-			return undefined;
-		}
-
-		this._setValueToMove(next);
-
-		if (options.circular ||
-			this[`get${next ? "Next" : "Prev"}Index`]() !== null
-		) {
-			this._movePanelByPhase("setBy", panel.size * (next ? 1 : -1), duration);
-		}
-
-		return this;
-	}
-
-	/**
 	 * Move panel applying start/end phase value
 	 * @private
 	 * @param {String} method Axes' method name
@@ -1337,7 +1311,12 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * @see eg.Flicking#prev
 	 */
 	next(duration) {
-		return this._movePanel(true, duration);
+		const index = this.getNextIndex();
+
+		if (typeof index !== "number") {
+			return this;
+		}
+		return this.moveTo(index, duration);
 	}
 
 	/**
@@ -1353,7 +1332,12 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * @see eg.Flicking#next
 	 */
 	prev(duration) {
-		return this._movePanel(false, duration);
+		const index = this.getPrevIndex();
+
+		if (typeof index !== "number") {
+			return this;
+		}
+		return this.moveTo(index, duration);
 	}
 
 	/**
