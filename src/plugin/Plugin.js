@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Flicking from "../Flicking.js";
+import Flicking from "@egjs/flicking";
 
 // is to through pass Flicking's utils & constants to plugins
 const utils = Flicking.utils;

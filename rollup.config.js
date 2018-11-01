@@ -27,5 +27,7 @@ const defaultConfig = {
 export default merge(defaultConfig, [
 	...require("./rollup/rollup.config.esm"),
 	...require("./rollup/rollup.config.development"),
-	...require("./rollup/rollup.config.pkgd")
+	...require("./rollup/rollup.config.pkgd"),
+	...require("./rollup/rollup.config.plugins"),
+	...require("./rollup/rollup.config.plugins.all")
 ]);

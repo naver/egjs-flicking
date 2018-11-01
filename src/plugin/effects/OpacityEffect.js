@@ -31,7 +31,7 @@ import Plugin from "../Plugin";
  *
  * // as ESM import usage
  * import Flicking from "@egjs/flicking";
- * import OpacityEffect from "@egjs/flicking/dist/plugin/OpacityEffect";
+ * import {OpacityEffect} from "@egjs/flicking-plugins";
  *
  * new Flicking("#some")
  *  .plugin([
@@ -110,5 +110,3 @@ export default class OpacityEffect extends Plugin {
 		return this.details[1];
 	}
 }
-
-module.exports = OpacityEffect;

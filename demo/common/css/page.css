@@ -543,9 +543,14 @@ pre code {
   font-size: 13px;
   color: #f8f8f2;
 }
-
+.highlight {
+  position: relative;
+}
 .codepenform {
-  float: right;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  z-index: 2;
 }
 
 .navbar-toggle {

@@ -18,6 +18,11 @@ module.exports = function(config) {
 
 		webpack: {
 			devtool: "inline-source-map",
+			resolve: {
+				alias: {
+					"@egjs/flicking": `${__dirname}/src/Flicking`
+				}
+			},
 			module: {
 				rules: [
 					{

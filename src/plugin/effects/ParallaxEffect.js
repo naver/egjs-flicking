@@ -33,7 +33,7 @@ import Plugin from "../Plugin";
  *
  * // as ESM import usage
  * import Flicking from "@egjs/flicking";
- * import ParallaxEffect from "@egjs/flicking/dist/plugin/ParallaxEffect";
+ * import {ParallaxEffect} from "@egjs/flicking-plugins";
  *
  * new Flicking("#some")
  *  .plugin([
@@ -163,5 +163,3 @@ export default class ParallaxEffect extends Plugin {
 		return this.imgs[this._getCurrIndex()];
 	}
 }
-
-module.exports = ParallaxEffect;

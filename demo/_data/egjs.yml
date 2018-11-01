@@ -4,8 +4,8 @@ desc: A module used to implement flicking interactions. With this module, you ca
 hashtag: "#carousel #slider"
 dist:
 - release/latest/dist/flicking.pkgd.min.js
-- release/latest/dist/plugin/OpacityEffect.min.js
-- release/latest/dist/plugin/ParallaxEffect.min.js
+- release/plugins/latest/dist/OpacityEffect.min.js
+- release/plugins/latest/dist/ParallaxEffect.min.js
 GA: UA-70842526-17
 github:
   user: naver
