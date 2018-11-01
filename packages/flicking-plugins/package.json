@@ -1,9 +1,10 @@
 {
 	"name": "@egjs/flicking-plugins",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "",
 	"module": "./dist/plugins.esm.js",
 	"main": "./dist/all.js",
+	"types": "./index.d.ts",
 	"sideEffects": false,
 	"scripts": {
 		"demo:prebuild-version": "cpx 'dist/**/*' ../../demo/release/plugins/$npm_package_version/dist --clean",
