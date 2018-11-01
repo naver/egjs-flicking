@@ -19,6 +19,9 @@ const TRANSFORM = {
 };
 
 TRANSFORM.support = (() => {
+	if (!doc.documentElement) {
+		return false;
+	}
 	const style = doc.documentElement.style;
 
 	return TRANSFORM.name in style || (TRANSFORM.name = "webkitTransform") in style;
@@ -29,7 +32,7 @@ const SUPPORT_WILLCHANGE = global.CSS && global.CSS.supports &&
 	global.CSS.supports("will-change", "transform");
 
 // check for Android 2.x
-const IS_ANDROID2 = /Android 2\./.test(navigator.userAgent);
+const IS_ANDROID2 = /Android 2\./.test(global.navigator.userAgent);
 
 // data-height attribute's name for adaptiveHeight option
 const DATA_HEIGHT = "data-height";
