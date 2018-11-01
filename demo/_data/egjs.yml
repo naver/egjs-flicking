@@ -3,7 +3,7 @@ home: //naver.github.io/egjs
 desc: A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.
 hashtag: "#carousel #slider"
 dist:
-- https://naver.github.io/egjs-flicking/release/2.4.0/dist/flicking.pkgd.min.js
+- release/latest/dist/flicking.pkgd.min.js
 - release/plugins/latest/dist/OpacityEffect.min.js
 - release/plugins/latest/dist/ParallaxEffect.min.js
 GA: UA-70842526-17
