@@ -49,7 +49,7 @@ With nightly, you can try upcoming changes prior the official release.
 
 ### Plugins
 
-Go to [**@ejgs/flicking-plugins**](https://github.com/naver/egjs-flicking/tree/exportplugin/packages/flicking-plugins)
+Go to [**@ejgs/flicking-plugins**](https://github.com/naver/egjs-flicking/tree/master/packages/flicking-plugins)
 
 Using npm:
 ```
