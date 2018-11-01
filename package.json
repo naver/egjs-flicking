@@ -9,7 +9,7 @@
 	"scripts": {
 		"start": "webpack-serve --open",
 		"start:plugin": "cross-env PLUGIN=true webpack-serve --open",
-		"build": "npm run build:rollup && npm run build:plugin",
+		"build": "npm run build:rollup && npm run build:plugin && npm run test:node",
 		"build:rollup": "rollup -c",
 		"build:webpack": "npm run build:production && npm run build:packaged && npm run build:plugin",
 		"build:dev": "cross-env NODE_ENV=development webpack",
@@ -19,6 +19,7 @@
 		"build:nightly": "node ./config/nightly.js",
 		"release": "node config/release.js",
 		"test": "karma start",
+		"test:node": "node ./dist/flicking.pkgd.js",
 		"test:chrome": "karma start --chrome",
 		"lint": "eslint src",
 		"jsdoc": "rm -rf ./doc && jsdoc -c jsdoc.json",
