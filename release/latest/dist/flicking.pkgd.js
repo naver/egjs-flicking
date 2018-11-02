@@ -5,7 +5,7 @@ Copyright (c) 2017 NAVER Corp.
 @egjs/flicking JavaScript library
 https://github.com/naver/egjs-flicking
 
-@version 2.4.1
+@version 2.4.1-snapshot
 
 All-in-one packaged file for ease use of '@egjs/flicking' with below dependencies.
 - @egjs/axes ^2.5.7, @egjs/component ^2.1.2
@@ -313,7 +313,7 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
     return Component;
   }();
 
-  /*! Hammer.JS - v2.0.11 - 2018-10-10
+  /*! Hammer.JS - v2.0.11 - 2018-10-22
    * http://naver.github.io/egjs
    *
    * Forked By Naver egjs
@@ -405,7 +405,9 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
 
   var assign$1 = assign;
   var VENDOR_PREFIXES = ['', 'webkit', 'Moz', 'MS', 'ms', 'o'];
-  var TEST_ELEMENT = document.createElement('div');
+  var TEST_ELEMENT = typeof document === "undefined" ? {
+    style: {}
+  } : document.createElement('div');
   var TYPE_FUNCTION = 'function';
   var round = Math.round,
       abs = Math.abs;
@@ -437,6 +439,17 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
 
     return undefined;
   }
+  /* eslint-disable no-new-func, no-nested-ternary */
+
+
+  var win;
+
+  if (typeof window === "undefined") {
+    // window is undefined in node.js
+    win = {};
+  } else {
+    win = window;
+  }
 
   var PREFIXED_TOUCH_ACTION = prefixed(TEST_ELEMENT.style, 'touchAction');
   var NATIVE_TOUCH_ACTION = PREFIXED_TOUCH_ACTION !== undefined;
@@ -447,11 +460,11 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
     }
 
     var touchMap = {};
-    var cssSupports = window.CSS && window.CSS.supports;
+    var cssSupports = win.CSS && win.CSS.supports;
     ['auto', 'manipulation', 'pan-y', 'pan-x', 'pan-x pan-y', 'none'].forEach(function (val) {
       // If css.supports is not supported but there is native touch-action assume it supports
       // all values. This is the case for IE 10 and 11.
-      return touchMap[val] = cssSupports ? window.CSS.supports('touch-action', val) : true;
+      return touchMap[val] = cssSupports ? win.CSS.supports('touch-action', val) : true;
     });
     return touchMap;
   }
@@ -465,8 +478,8 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
   var TOUCH_ACTION_PAN_Y = 'pan-y';
   var TOUCH_ACTION_MAP = getTouchActionProps();
   var MOBILE_REGEX = /mobile|tablet|ip(ad|hone|od)|android/i;
-  var SUPPORT_TOUCH = 'ontouchstart' in window;
-  var SUPPORT_POINTER_EVENTS = prefixed(window, 'PointerEvent') !== undefined;
+  var SUPPORT_TOUCH = 'ontouchstart' in win;
+  var SUPPORT_POINTER_EVENTS = prefixed(win, 'PointerEvent') !== undefined;
   var SUPPORT_ONLY_TOUCH = SUPPORT_TOUCH && MOBILE_REGEX.test(navigator.userAgent);
   var INPUT_TYPE_TOUCH = 'touch';
   var INPUT_TYPE_PEN = 'pen';
@@ -1188,7 +1201,7 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
   var POINTER_ELEMENT_EVENTS = 'pointerdown';
   var POINTER_WINDOW_EVENTS = 'pointermove pointerup pointercancel'; // IE10 has prefixed support, and case-sensitive
 
-  if (window.MSPointerEvent && !window.PointerEvent) {
+  if (win.MSPointerEvent && !win.PointerEvent) {
     POINTER_ELEMENT_EVENTS = 'MSPointerDown';
     POINTER_WINDOW_EVENTS = 'MSPointerMove MSPointerUp MSPointerCancel';
   }
@@ -3152,7 +3165,7 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
   @egjs/axes JavaScript library
   https://github.com/naver/egjs-axes
 
-  @version 2.5.7
+  @version 2.5.7-snapshot
   */
   /*! *****************************************************************************
   Copyright (c) Microsoft Corporation. All rights reserved.
@@ -3387,6 +3400,24 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
 
     return AxisManager;
   }();
+  /* eslint-disable no-new-func, no-nested-ternary */
+
+
+  var win$1;
+
+  if (typeof window === "undefined") {
+    // window is undefined in node.js
+    win$1 = {
+      document: {},
+      navigator: {
+        userAgent: ""
+      }
+    };
+  } else {
+    win$1 = window;
+  }
+
+  var document$1 = win$1.document;
 
   function toArray$1(nodes) {
     // const el = Array.prototype.slice.call(nodes);
@@ -3425,13 +3456,13 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
       if (!multi) {
         el = el.length >= 1 ? el[0] : undefined;
       }
-    } else if (param === window) {
+    } else if (param === win$1) {
       // window
       el = param;
     } else if (param.nodeName && (param.nodeType === 1 || param.nodeType === 9)) {
       // HTMLElement, Document
       el = param;
-    } else if ("jQuery" in window && param instanceof jQuery || param.constructor.prototype.jquery) {
+    } else if ("jQuery" in win$1 && param instanceof jQuery || param.constructor.prototype.jquery) {
       // jQuery
       el = multi ? param.toArray() : param.get(0);
     } else if (Array.isArray(param)) {
@@ -3447,8 +3478,8 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
     return el;
   }
 
-  var raf = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
-  var caf = window.cancelAnimationFrame || window.webkitCancelAnimationFrame;
+  var raf = win$1.requestAnimationFrame || win$1.webkitRequestAnimationFrame;
+  var caf = win$1.cancelAnimationFrame || win$1.webkitCancelAnimationFrame;
 
   if (raf && !caf) {
     var keyInfo_1 = {};
@@ -3471,12 +3502,12 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
     };
   } else if (!(raf && caf)) {
     raf = function (callback) {
-      return window.setTimeout(function () {
-        callback(window.performance && window.performance.now && window.performance.now() || new Date().getTime());
+      return win$1.setTimeout(function () {
+        callback(win$1.performance && win$1.performance.now && win$1.performance.now() || new Date().getTime());
       }, 16);
     };
 
-    caf = window.clearTimeout;
+    caf = win$1.clearTimeout;
   }
   /**
    * A polyfill for the window.requestAnimationFrame() method.
@@ -4268,6 +4299,10 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
 
 
   var TRANSFORM = function () {
+    if (typeof document === "undefined") {
+      return "";
+    }
+
     var bodyStyle = (document.head || document.getElementsByTagName("head")[0]).style;
     var target = ["transform", "webkitTransform", "msTransform", "mozTransform"];
 
@@ -4670,7 +4705,7 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
      */
 
 
-    Axes.VERSION = "2.5.7";
+    Axes.VERSION = "2.5.7-snapshot";
     /**
      * @name eg.Axes.TRANSFORM
      * @desc Returns the transform attribute with CSS vendor prefixes.
@@ -4742,8 +4777,8 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
     return Axes;
   }(Component);
 
-  var SUPPORT_POINTER_EVENTS$1 = "PointerEvent" in window || "MSPointerEvent" in window;
-  var SUPPORT_TOUCH$1 = "ontouchstart" in window;
+  var SUPPORT_POINTER_EVENTS$1 = "PointerEvent" in win$1 || "MSPointerEvent" in win$1;
+  var SUPPORT_TOUCH$1 = "ontouchstart" in win$1;
   var UNIQUEKEY = "_EGJS_AXES_INPUTTYPE_";
 
   function toAxis(source, offset) {
@@ -5109,10 +5144,10 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
    */
 
   /* eslint-disable no-new-func, no-nested-ternary */
-  var win = typeof window !== "undefined" && window.Math === Math ? window : typeof self !== "undefined" && (self.Math === Math ? self : Function("return this")());
+  var win$2 = typeof window !== "undefined" && window.Math === Math ? window : typeof self !== "undefined" && (self.Math === Math ? self : Function("return this")());
   /* eslint-enable no-new-func, no-nested-ternary */
 
-  var document$1 = win.document;
+  var document$2 = win$2.document;
 
   /**
    * Copyright (c) 2015 NAVER Corp.
@@ -5134,14 +5169,14 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
         var match = param.match(/^<([a-z]+)\s*([^>]*)>/); // creating element
 
         if (match) {
-          el = document$1.createElement(match[1]); // attributes
+          el = document$2.createElement(match[1]); // attributes
 
           match.length === 3 && match[2].split(" ").forEach(function (v) {
             var attr = v.split("=");
             el.setAttribute(attr[0], attr[1].trim().replace(/(^["']|["']$)/g, ""));
           });
         } else {
-          el = document$1.querySelectorAll(param);
+          el = document$2.querySelectorAll(param);
 
           if (!el.length) {
             el = null;
@@ -5236,7 +5271,7 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
         var value = el.style[style];
 
         if (!value || value === "auto" || /\d/.test(value) && !/\d(px)?$/.test(value)) {
-          value = win.getComputedStyle(el)[style];
+          value = win$2.getComputedStyle(el)[style];
         }
 
         return getAsNumber ? this.getNumValue(value) : value;
@@ -5359,7 +5394,7 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
     // 2. user moves to the other position on screen.
     // 3. when user releases fingers on screen, 'click' event is fired at previous position.
     hasClickBug: function hasClickBug() {
-      var ua = win.navigator.userAgent;
+      var ua = win$2.navigator.userAgent;
       var result = /iPhone|iPad/.test(ua);
 
       this.hasClickBug = function () {
@@ -5420,12 +5455,12 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
   };
 
   TRANSFORM$1.support = function () {
-    var style = document$1.documentElement.style;
+    var style = document$2.documentElement.style;
     return TRANSFORM$1.name in style || (TRANSFORM$1.name = "webkitTransform") in style;
   }(); // check for will-change support
 
 
-  var SUPPORT_WILLCHANGE = win.CSS && win.CSS.supports && win.CSS.supports("will-change", "transform"); // check for Android 2.x
+  var SUPPORT_WILLCHANGE = win$2.CSS && win$2.CSS.supports && win$2.CSS.supports("will-change", "transform"); // check for Android 2.x
 
   var IS_ANDROID2 = /Android 2\./.test(navigator.userAgent); // data-height attribute's name for adaptiveHeight option
 
@@ -5618,6 +5653,7 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
             touch.lastPos = null;
           }
 
+          console.log(pos, touch.lastPos);
           conf.customEvent.flick && (eventRes = this._triggerEvent(EVENTS.flick, {
             pos: pos,
             holding: e.holding,
@@ -6011,7 +6047,7 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
           utils.css(this.$container, cssValue);
         } else {
           var $parent = $children[0].parentNode;
-          var $container = document$1.createElement("div");
+          var $container = document$2.createElement("div");
           $container.className = prefix + "-container";
           utils.css($container, cssValue);
           $children.forEach(function (v) {
@@ -6245,6 +6281,7 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
         this._setMoveStyle = transform.support ? function ($element, coords) {
           var _utils$css;
 
+          console.log("sms", coords);
           utils.css($element, (_utils$css = {}, _utils$css[transform.name] = utils.translate(coords[0], coords[1], useLayerHack), _utils$css));
         } : function ($element, coords) {
           utils.css($element, {
@@ -6588,6 +6625,7 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
             this._arrangePanels(true, conf.indexToMove);
           }
 
+          console.log("PAN", panel.size, panel.index);
           useTranslate && this._setTranslate([-panel.size * panel.index, 0]);
           conf.touch.distance = conf.indexToMove = 0;
           /**
@@ -6659,6 +6697,8 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
 
         var num = this._getNumByDirection();
 
+        console.trace(obj, num);
+
         if (utils.isObject(obj)) {
           for (var key in obj) {
             panel[key] = obj[key];
@@ -6725,6 +6765,8 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
 
       _proto._setTranslate = function _setTranslate(coordsValue) {
         var coords = this._getCoordsValue(coordsValue);
+
+        console.log("ts", coordsValue, coords);
 
         this._setMoveStyle(this.$container, [coords.x, coords.y]);
       };
@@ -7502,7 +7544,7 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
     }(Mixin(Component)["with"](eventHandler));
 
     Flicking.utils = utils;
-    Flicking.VERSION = "2.4.1";
+    Flicking.VERSION = "2.4.1-snapshot";
     Flicking.consts = {
       EVENTS: EVENTS,
       TRANSFORM: TRANSFORM$1,

@@ -5,7 +5,7 @@ Copyright (c) 2017 NAVER Corp.
 @egjs/flicking JavaScript library
 https://github.com/naver/egjs-flicking
 
-@version 2.4.1
+@version 2.4.1-snapshot
 */
 import Component from '@egjs/component';
 import Axes, { PanInput } from '@egjs/axes';
@@ -531,6 +531,7 @@ var eventHandler = (function (superclass) {
           touch.lastPos = null;
         }
 
+        console.log(pos, touch.lastPos);
         conf.customEvent.flick && (eventRes = this._triggerEvent(EVENTS.flick, {
           pos: pos,
           holding: e.holding,
@@ -1158,6 +1159,7 @@ function () {
       this._setMoveStyle = transform.support ? function ($element, coords) {
         var _utils$css;
 
+        console.log("sms", coords);
         utils.css($element, (_utils$css = {}, _utils$css[transform.name] = utils.translate(coords[0], coords[1], useLayerHack), _utils$css));
       } : function ($element, coords) {
         utils.css($element, {
@@ -1501,6 +1503,7 @@ function () {
           this._arrangePanels(true, conf.indexToMove);
         }
 
+        console.log("PAN", panel.size, panel.index);
         useTranslate && this._setTranslate([-panel.size * panel.index, 0]);
         conf.touch.distance = conf.indexToMove = 0;
         /**
@@ -1572,6 +1575,8 @@ function () {
 
       var num = this._getNumByDirection();
 
+      console.trace(obj, num);
+
       if (utils.isObject(obj)) {
         for (var key in obj) {
           panel[key] = obj[key];
@@ -1638,6 +1643,8 @@ function () {
 
     _proto._setTranslate = function _setTranslate(coordsValue) {
       var coords = this._getCoordsValue(coordsValue);
+
+      console.log("ts", coordsValue, coords);
 
       this._setMoveStyle(this.$container, [coords.x, coords.y]);
     };
@@ -2415,7 +2422,7 @@ function () {
   }(Mixin(Component)["with"](eventHandler));
 
   Flicking.utils = utils;
-  Flicking.VERSION = "2.4.1";
+  Flicking.VERSION = "2.4.1-snapshot";
   Flicking.consts = {
     EVENTS: EVENTS,
     TRANSFORM: TRANSFORM,

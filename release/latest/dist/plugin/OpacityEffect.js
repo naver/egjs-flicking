@@ -5,7 +5,7 @@
  * @egjs/flicking JavaScript library
  * https://github.com/naver/egjs-flicking
  * 
- * @version 2.4.1
+ * @version 2.4.1-snapshot
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -292,7 +292,7 @@ function () {
 
   Plugin.utils = utils;
   Plugin.consts = consts;
-  Plugin.VERSION = "2.4.1";
+  Plugin.VERSION = "2.4.1-snapshot";
   return Plugin;
 }();
 
