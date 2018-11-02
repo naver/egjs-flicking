@@ -38,9 +38,9 @@
 
 	<script src="release/latest/dist/flicking.pkgd.min.js"></script>
 
-	<script src="release/latest/dist/plugin/OpacityEffect.min.js"></script>
+	<script src="release/plugins/latest/dist/OpacityEffect.min.js"></script>
 
-	<script src="release/latest/dist/plugin/ParallaxEffect.min.js"></script>
+	<script src="release/plugins/latest/dist/ParallaxEffect.min.js"></script>
 
 <script>
 	var homeUrl = window.location.href;
@@ -58,9 +58,9 @@
 	
 	window.LIBLINK.push(window.HOMELINK + "release/latest/dist/flicking.pkgd.min.js");
 	
-	window.LIBLINK.push(window.HOMELINK + "release/latest/dist/plugin/OpacityEffect.min.js");
+	window.LIBLINK.push(window.HOMELINK + "release/plugins/latest/dist/OpacityEffect.min.js");
 	
-	window.LIBLINK.push(window.HOMELINK + "release/latest/dist/plugin/ParallaxEffect.min.js");
+	window.LIBLINK.push(window.HOMELINK + "release/plugins/latest/dist/ParallaxEffect.min.js");
 	
 </script>
 <body>
@@ -88,7 +88,7 @@
         <div class="hero-image" style="background-image: url(//naver.github.io/egjs/img/Flicking.png)">
         </div>
         <h2 class="title">
-            <span class="highlight">Flicking</span><a href="https://github.com/naver/egjs-flicking/releases/tag/2.4.1-snapshot"><span class="version">v2.4.1-snapshot</span></a>
+            <span class="highlight">Flicking</span><a href="https://github.com/naver/egjs-flicking/releases/tag/2.4.2"><span class="version">v2.4.2</span></a>
         </h2>
         <p class="intro">A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.<br/>
             <span class="hashtag">#carousel #slider</span>
@@ -141,9 +141,9 @@
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"//naver.github.io/egjs-flicking/release/latest/dist/flicking.pkgd.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 
-<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"//naver.github.io/egjs-flicking/release/latest/dist/plugin/OpacityEffect.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"//naver.github.io/egjs-flicking/release/plugins/latest/dist/OpacityEffect.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 
-<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"//naver.github.io/egjs-flicking/release/latest/dist/plugin/ParallaxEffect.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"//naver.github.io/egjs-flicking/release/plugins/latest/dist/ParallaxEffect.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 
 </code></pre></div></div>
 
@@ -427,8 +427,10 @@
     </p>
   </div>
 </div>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Flicking</span> <span class="k">from</span> <span class="s2">"@egjs/flicking"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">OpacityEffect</span><span class="p">}</span> <span class="k">from</span> <span class="s2">"@egjs/flicking-plugins"</span><span class="p">;</span>
 
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
+<span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
 	<span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
 	<span class="na">prefix</span><span class="p">:</span> <span class="s2">"plugin"</span>
 <span class="p">}).</span><span class="nx">plugin</span><span class="p">([</span>
@@ -458,8 +460,10 @@
     </p>
   </div>
 </div>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Flicking</span> <span class="k">from</span> <span class="s2">"@egjs/flicking"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">ParallaxEffect</span><span class="p">}</span> <span class="k">from</span> <span class="s2">"@egjs/flicking-plugins"</span><span class="p">;</span>
 
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
+<span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
 	<span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
 	<span class="na">prefix</span><span class="p">:</span> <span class="s2">"plugin"</span>
 <span class="p">}).</span><span class="nx">plugin</span><span class="p">([</span>
@@ -489,8 +493,10 @@
     </p>
   </div>
 </div>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Flicking</span> <span class="k">from</span> <span class="s2">"@egjs/flicking"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">OpacityEffect</span><span class="p">,</span> <span class="nx">ParallaxEffect</span><span class="p">}</span> <span class="k">from</span> <span class="s2">"@egjs/flicking-plugins"</span><span class="p">;</span>
 
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
+<span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
 	<span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="na">prefix</span><span class="p">:</span> <span class="s2">"plugin"</span>
 <span class="p">}).</span><span class="nx">plugin</span><span class="p">([</span>
