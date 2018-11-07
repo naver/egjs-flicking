@@ -1,28 +1,29 @@
-.App {
+.flick {
+  height: 100px;
+  background-color: grey;
+  margin: 0 auto;
+  border-radius: 10px;
+  border: solid 3px;
+}
+.f_btn {
+  border-radius: 50px;
+  margin: 10px;
+  width: 48px;
+  font-size: 30px;
+  border: 2px solid #B7B5B5;
+  background-color: #fff;
+  position: relative;
+  z-index: 2001;
+  top: -85px;
+  opacity: .8;
+  cursor: pointer;
+  color: #B7B5B5;
+}
+.f_right {
+  float: right;
+}
+.eg-flick-panel p {
+  vertical-align: middle;
+  font-size: 2em;
   text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-}
-
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
-}
-
-.App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
 }
