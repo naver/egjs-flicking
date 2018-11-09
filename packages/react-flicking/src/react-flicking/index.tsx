@@ -65,10 +65,11 @@ export default class Flicking extends React.Component<IFlickingProps> {
     const props = this.props;
 
     for (const name in props) {
-      if (name in flickingOptions) {
+      if (flickingOptions.indexOf(name as keyof IFlickingOptions) !== -1) {
         options[name] = props[name];
       }
     }
+
     this.flicking = new NativeFlicking(ReactDOM.findDOMNode(this) as HTMLElement, options);
 
     const flicking = this.flicking;
@@ -88,7 +89,8 @@ export default class Flicking extends React.Component<IFlickingProps> {
     flicking.on("restore", (e) => {
       this.props.onRestore(e);
     });
-    flicking.resize();
+
+    window.addEventListener("resize", this.resize);
   }
   public moveTo(no: number, duration?: number) {
     this.flicking.moveTo(no, duration);
@@ -115,7 +117,7 @@ export default class Flicking extends React.Component<IFlickingProps> {
     return this.flicking.getPrevElement();
   }
   public getIndex(physical: boolean) {
-    return this.flicking.getIndex(physical); 
+    return this.flicking.getIndex(physical);
   }
   public getNextIndex(physical: boolean) {
     return this.flicking.getNextIndex(physical);
@@ -123,11 +125,12 @@ export default class Flicking extends React.Component<IFlickingProps> {
   public getPrevIndex(physical: boolean) {
     return this.flicking.getPrevIndex(physical);
   }
-  public resize() {
+  public resize = () => {
     this.flicking.resize();
     return this;
   }
   public componentWillUnmount() {
     this.flicking.destroy();
+    window.removeEventListener("resize", this.resize);
   }
 }
