@@ -16,14 +16,12 @@ export default {
 		{
 			format: "es",
 			freeze: false,
-			exports: "named",
 			"sourcemap": true,
 			file: "./dist/flicking.esm.js"
 		},
 		{
 			format: "cjs",
 			freeze: false,
-			exports: "named",
 			"sourcemap": true,
 			file: "./dist/flicking.cjs.js"
 		}

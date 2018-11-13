@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Flicking, { DIRECTION_LEFT, IOnFlickEnd } from "./react-flicking";
+import Flicking, { DIRECTION_LEFT } from "./react-flicking";
 
 const colors = ["#CC66CC", "#66cccc", "#ffc000"];
 export default class App extends React.Component {
@@ -8,7 +8,7 @@ export default class App extends React.Component {
   public state = {
     count: 3,
   }
-  public onFlickEnd = (e: IOnFlickEnd) => {
+  public onFlickEnd = (e: any) => {
     console.log(e.direction,DIRECTION_LEFT, e.no);
     if (e.direction === DIRECTION_LEFT && e.no + 1 === this.state.count) {
       console.log("?");
