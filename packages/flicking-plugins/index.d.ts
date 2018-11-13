@@ -1,7 +1,7 @@
 import Flicking from "@egjs/flicking";
 
 
-class Plugin {
+declare class Plugin {
   constructor(options: any);
   resize(): void;
 }
