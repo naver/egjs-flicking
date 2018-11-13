@@ -1,6 +1,8 @@
 import NativeFlicking from "@egjs/flicking";
+import { HTMLAttributes } from 'react';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { addClass, hasClass } from './utils';
 
 export interface IFlickingOptions {
   hwAccelerable?: boolean;
@@ -20,28 +22,40 @@ export interface IFlickingOptions {
   zIndex?: number;
   useTranslate?: number;
 }
-export interface IFlickingProps extends IFlickingOptions {
+export const DIRECTION_LEFT: number = (NativeFlicking as any).DIRECTION_LEFT;
+export const DIRECTION_RIGHT: number = (NativeFlicking as any).DIRECTION_RIGHT;
+export const DIRECTION_TOP: number = (NativeFlicking as any).DIRECTION_TOP;
+export const DIRECTION_BOTTOM: number = (NativeFlicking as any).DIRECTION_BOTTOM;
+
+export interface IFlickingProps extends IFlickingOptions, HTMLAttributes<HTMLElement> {
   onFlick?: (e?: any) => void;
   onFlickEnd?: (e?: any) => void;
   onBeforeFlickStart?: (e?: any) => void;
   onBeforeRestore?: (e?: any) => void;
   onRestore?: (e?: any) => void;
   tag?: string;
-  [key: string]: any;
+}
+export interface IOnFlickEnd {
+  currentTarget?: Flicking;
+  isTrusted?: boolean;
+  no?: number;
+  direction?: number;
 }
 
 
 const flickingOptions: Array<keyof IFlickingOptions> = ["hwAccelerable", "prefix", "deceleration",
   "horizontal", "circular", "previewPadding", "bounce", "threshold", "duration", "panelEffect", "defaultIndex", "inputType",
-"thresholdAngle", "adaptiveHeight", "zIndex", "useTranslate"];
+  "thresholdAngle", "adaptiveHeight", "zIndex", "useTranslate"];
 
 export default class Flicking extends React.Component<IFlickingProps> {
   public static defaultProps: IFlickingProps = {
-    onBeforeFlickStart: (e?: any) => {return;},
-    onBeforeRestore: (e?: any) => {return;},
-    onFlick: (e?: any) => {return;},
-    onFlickEnd: (e?: any) => {return;},
-    onRestore: (e?: any) => {return;},
+    horizontal: true,
+    onBeforeFlickStart: (e?: any) => { return; },
+    onBeforeRestore: (e?: any) => { return; },
+    onFlick: (e?: any) => { return; },
+    onFlickEnd: (e?: any) => { return; },
+    onRestore: (e?: any) => { return; },
+    prefix: "eg-flick",
     tag: "div",
   };
   private flicking: NativeFlicking;
@@ -58,7 +72,30 @@ export default class Flicking extends React.Component<IFlickingProps> {
       attributes[name] = props[name];
     }
 
-    return <Tag {...attributes}>{this.props.children}</Tag>;
+    return <Tag {...attributes}>
+      <div className={`${this.props.prefix}-container`}>
+        {this.props.children}
+      </div>
+    </Tag>;
+  }
+  public componentDidUpdate() {
+    const flicking = (this.flicking as any);
+    const panel = flicking._conf.panel;
+    const horizontal = this.props.horizontal;
+    const className = `${this.props.prefix}-panel`;
+    panel.$list = Array.prototype.slice.call(flicking.$container.children);
+
+    panel.$list.forEach((el: HTMLElement) => {
+      if (hasClass(el, className)) {
+        return;
+      }
+      addClass(el, className);
+      el.style.cssText += `position:absolute;box-sizing:border-box;${horizontal ? "height" : "size"}: 100%;top:0;left:0;`;
+    });
+    panel.count = panel.$list.children;
+    panel.origCount = panel.count;
+    flicking._applyPanelsPos();
+    this.resize();
   }
   public componentDidMount() {
     const options = {};
@@ -77,7 +114,7 @@ export default class Flicking extends React.Component<IFlickingProps> {
     flicking.on("flick", (e) => {
       this.props.onFlick(e);
     });
-    flicking.on("flickEnd", (e) => {
+    flicking.on("flickEnd", (e: IOnFlickEnd) => {
       this.props.onFlickEnd(e);
     });
     flicking.on("beforeFlickStart", (e) => {
