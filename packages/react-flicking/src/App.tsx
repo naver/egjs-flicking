@@ -2,10 +2,14 @@ import * as React from 'react';
 import './App.css';
 
 import Circular from "./circular";
+import Combined from "./combined";
 import CusomEvents from "./customevents";
 import InfiniteFlicking from "./infiniteflicking";
 import Normal from "./normal";
+import OpacityEffect from './OpacityEffect';
+import ParallaxEffect from "./ParallaxEffect";
 import Preview from "./preview";
+
 
 
 class App extends React.Component {
@@ -37,6 +41,15 @@ class App extends React.Component {
         <h2>Infinite Flicking</h2>
         <div className="horizontal">
           <InfiniteFlicking />
+        </div>
+        <h2>Plugins</h2>
+        <div className="horizontal">
+          <p>OpacityEffect</p>
+          <OpacityEffect />
+          <p>ParallaxEffect</p>
+          <ParallaxEffect />
+          <p>Combined plugins</p>
+          <Combined />
         </div>
       </div>
     );

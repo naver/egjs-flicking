@@ -5,12 +5,11 @@ body, body * {
 }
 .flick_demo {
   position: relative;
-  height: 100px;
   margin: 10px;
 }
 .flick {
   position: relative;
-  height: 100%;
+  height: 100px;
   background-color: grey;
   margin: 0 auto;
   border-radius: 10px;
@@ -42,7 +41,7 @@ body, body * {
 .horizontal .f_right {
   right: 10px;
 }
-.vertical .flick_demo {
+.vertical .flick {
   height: 150px;
 }
 .vertical .f_btn {
@@ -76,4 +75,102 @@ body, body * {
 
 #log .red {
 color: red;
+}
+
+
+.plugin{
+  height:150px;
+}
+
+.plugin-container > div {
+  height:100%;
+  float:left;
+  display:block;
+}
+
+.plugin-panel p {
+  margin:0;
+  padding-top: 20px;
+  height: 100%;
+  color: #fff;
+  font-size: 2.0em;
+  text-align: center;
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  background-size: cover;
+  text-transform: uppercase;
+}
+
+.plugin-panel p span {
+  display: inline-block;
+  margin-top:15px;
+  padding: 10px;
+  background-color: red;
+  text-transform: lowercase;
+  font-size:.7em;
+}
+
+
+.plugin{
+  height:150px;
+}
+
+.plugin-container > div {
+  height:100%;
+  float:left;
+  display:block;
+}
+
+.plugin-panel p {
+  margin:0;
+  padding-top: 20px;
+  height: 100%;
+  color: #fff;
+  font-size: 2.0em;
+  text-align: center;
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  background-size: cover;
+  text-transform: uppercase;
+}
+
+.plugin-panel p span {
+  display: inline-block;
+  margin-top:15px;
+  padding: 10px;
+  background-color: red;
+  text-transform: lowercase;
+  font-size:.7em;
+}
+
+.plugin{
+  height:150px;
+}
+
+.plugin-container > div {
+  height:100%;
+  float:left;
+  display:block;
+}
+
+.plugin-panel p {
+  margin:0;
+  padding-top: 20px;
+  height: 100%;
+  color: #fff;
+  font-size: 2.0em;
+  text-align: center;
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  background-size: cover;
+  text-transform: uppercase;
+}
+
+.plugin-panel p span {
+  display: inline-block;
+  margin-top:15px;
+  padding: 10px;
+  background-color: red;
+  text-transform: lowercase;
+  font-size:.7em;
 }
