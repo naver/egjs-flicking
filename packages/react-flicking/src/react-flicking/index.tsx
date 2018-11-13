@@ -35,12 +35,6 @@ export interface IFlickingProps extends IFlickingOptions, HTMLAttributes<HTMLEle
   onRestore?: (e?: any) => void;
   tag?: string;
 }
-export interface IOnFlickEnd {
-  currentTarget?: Flicking;
-  isTrusted?: boolean;
-  no?: number;
-  direction?: number;
-}
 
 
 const flickingOptions: Array<keyof IFlickingOptions> = ["hwAccelerable", "prefix", "deceleration",
@@ -114,7 +108,7 @@ export default class Flicking extends React.Component<IFlickingProps> {
     flicking.on("flick", (e) => {
       this.props.onFlick(e);
     });
-    flicking.on("flickEnd", (e: IOnFlickEnd) => {
+    flicking.on("flickEnd", (e) => {
       this.props.onFlickEnd(e);
     });
     flicking.on("beforeFlickStart", (e) => {
@@ -161,6 +155,10 @@ export default class Flicking extends React.Component<IFlickingProps> {
   }
   public getPrevIndex(physical: boolean) {
     return this.flicking.getPrevIndex(physical);
+  }
+  public plugin(plugins: any[]) {
+    (this.flicking as any).plugin(plugins);
+    return this;
   }
   public resize = () => {
     this.flicking.resize();
