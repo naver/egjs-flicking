@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "removeComments": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "declaration"
+  },
+  "include": [
+    "./src/react-flicking/**/*"
+  ],
+}
