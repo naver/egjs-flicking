@@ -32,7 +32,7 @@
 		"demo:prebuild-plugin-latest": "cd packages/flicking-plugins && npm run demo:prebuild-latest",
 		"demo:prebuild": "npm run demo:prebuild-version && npm run demo:prebuild-latest && npm run demo:prebuild-plugin-version && npm run demo:prebuild-plugin-latest",
 		"demo:deploy": "npm run build && npm run jsdoc && npm run demo:prebuild && gh-pages -d demo/_site --add --remote upstream",
-		"demo:deploy-plugin": "npm run build && npm run demo:prebuild && gh-pages -d demo/_site/release/plugins --dest=./release/plugins --add --remote origin",
+		"demo:deploy-plugin": "npm run build && npm run demo:prebuild && gh-pages -d demo/_site/release/plugins --dest=./release/plugins --add --remote upstream",
 		"demo:deploy-origin": "npm run build && npm run jsdoc && npm run demo:prebuild && gh-pages -d demo/_site --add --remote origin",
 		"demo:updateVersion": "echo $npm_package_version > demo/_data/version.yml",
 		"demo:setup": "cpx 'node_modules/@egjs/common-demo/**/*' 'demo/' && rm demo/package.json",
