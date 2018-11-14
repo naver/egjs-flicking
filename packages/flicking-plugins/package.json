@@ -1,6 +1,6 @@
 {
 	"name": "@egjs/flicking-plugins",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "",
 	"module": "./dist/plugins.esm.js",
 	"main": "./dist/all.js",
