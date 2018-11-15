@@ -9,9 +9,7 @@ export default class App extends React.Component {
     count: 3,
   }
   public onFlickEnd = (e: any) => {
-    console.log(e.direction,DIRECTION_LEFT, e.no);
     if (e.direction === DIRECTION_LEFT && e.no + 1 === this.state.count) {
-      console.log("?");
       this.setState({ count: this.state.count + 1 });
     }
   }

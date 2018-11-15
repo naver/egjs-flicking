@@ -86,8 +86,9 @@ export default class Flicking extends React.Component<IFlickingProps> {
       addClass(el, className);
       el.style.cssText += `position:absolute;box-sizing:border-box;${horizontal ? "height" : "size"}: 100%;top:0;left:0;`;
     });
-    panel.count = panel.$list.children;
+    panel.count = panel.$list.length;
     panel.origCount = panel.count;
+
     flicking._applyPanelsPos();
     this.resize();
   }
@@ -162,6 +163,11 @@ export default class Flicking extends React.Component<IFlickingProps> {
   }
   public resize = () => {
     this.flicking.resize();
+    (this.flicking as any).plugins.forEach((plugin: any) => {
+      if (plugin.resize) {
+        plugin.resize();
+      }
+    });
     return this;
   }
   public componentWillUnmount() {
