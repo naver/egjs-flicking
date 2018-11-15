@@ -1,8 +1,10 @@
-# @egjs/react-flicking [![npm version](https://badge.fury.io/js/%40egjs%2Freact-infinitegrid.svg)](https://badge.fury.io/js/%40egjs%2Freact-flicking)
+# @egjs/react-flicking [![npm version](https://badge.fury.io/js/%40egjs%2Freact-flicking.svg)](https://badge.fury.io/js/%40egjs%2Freact-flicking)
+
 
 A react component that can easily use [@egjs/flicking](https://github.com/naver/egjs-flicking)
 
-* [Flicking Demo]()
+* [API documentation for **@egjs/flicking**](https://naver.github.io/egjs-flicking/release/latest/doc/)
+* [Flicking Demo](https://codesandbox.io/s/l7j2r37vp7)
 
 ## Install
 ```
@@ -47,7 +49,12 @@ import Flicking from "@egjs/react-flicking";
 * [Normal](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/normal.tsx)
 * [Circular](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/circular.tsx)
 * [Preview & Padding](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/preview.tsx)
+* [Custom Events](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/customevents.tsx)
+* [Combined Plugins](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/combined.tsx)
 
+* [Use OpacityEffect Plugin](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/OpacityEffect.tsx)
+
+* [Use OpacityEffect Plugin](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/ParallaxEffect.tsx)
 ## Development
 
 ```sh
