@@ -44,6 +44,20 @@ import Flicking from "@egjs/react-flicking";
   <div>panel 2</div>
 </Flicking>
 ```
+## Methods
+* [moveTo(no: number, duration?: number): this](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#moveTo)
+* [next(duration?: number): this](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#next)
+* [prev(duration?: number): this](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#prev)
+* [getAllElements(): HTMLElement[]](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#getAllElements)
+* [getElement(): HTMLElement](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#getElement)
+* [getNextElement(): HTMLElement](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#getNextElement)
+* [getPrevElement(): HTMLElement](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#getPrevElement)
+* [getIndex(physical: boolean): number](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#getIndex)
+* [getNextIndex(physical: boolean): number](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#getNextIndex)
+* [getPrevIndex(physical: boolean): number](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#getPrevIndex)
+* [plugin(plugins: any[]): this](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#plugin)
+* [resize: () => this](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#resize)
+
 
 ## More examples
 * [Normal](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/normal.tsx)
