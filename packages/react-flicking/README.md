@@ -65,9 +65,7 @@ import Flicking from "@egjs/react-flicking";
 * [Preview & Padding](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/preview.tsx)
 * [Custom Events](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/customevents.tsx)
 * [Combined Plugins](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/combined.tsx)
-
 * [Use OpacityEffect Plugin](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/OpacityEffect.tsx)
-
 * [Use OpacityEffect Plugin](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/ParallaxEffect.tsx)
 ## Development
 
