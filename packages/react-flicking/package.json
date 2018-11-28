@@ -1,6 +1,6 @@
 {
   "name": "@egjs/react-flicking",
-  "version": "0.0.2",
+  "version": "0.0.3-rc",
   "main": "dist/flicking.cjs.js",
   "module": "dist/flicking.esm.js",
   "types": "declaration/index.d.ts",
