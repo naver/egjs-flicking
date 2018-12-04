@@ -42,6 +42,10 @@ class App extends React.Component {
         <div className="horizontal">
           <InfiniteFlicking />
         </div>
+        <h2>Infinite Flicking(circular)</h2>
+        <div className="horizontal">
+          <InfiniteFlicking circular={true}/>
+        </div>
         <h2>Plugins</h2>
         <div className="horizontal">
           <p>OpacityEffect</p>

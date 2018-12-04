@@ -2,7 +2,8 @@ import * as React from 'react';
 import Flicking, { DIRECTION_LEFT } from "./react-flicking";
 
 const colors = ["#CC66CC", "#66cccc", "#ffc000"];
-export default class App extends React.Component {
+
+export default class App extends React.Component<{circular?: boolean}> {
   public flick: Flicking;
   public log: HTMLElement;
   public state = {
@@ -17,7 +18,7 @@ export default class App extends React.Component {
     const lists = [];
     const count = this.state.count;
     for (let i = 0; i < count; ++i) {
-      lists.push(<div key={i} style={{ backgroundColor: colors[i % 3] }} ><p>panel {i}</p></div>)
+      lists.push(<div className={`panel${i}`} key={i} style={{ backgroundColor: colors[i % 3] }} ><p>panel {i}</p></div>)
     }
     return lists;
   }
@@ -25,7 +26,7 @@ export default class App extends React.Component {
     return <div className="flick_demo">
       <Flicking id="mflick2"
         className="flick" ref={e => { this.flick = e; (window as any).flick = e; }}
-        onFlickEnd={this.onFlickEnd}
+        onFlickEnd={this.onFlickEnd} circular={this.props.circular || false}
       >
         {this.renderPanel()}
       </Flicking>
