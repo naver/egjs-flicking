@@ -219,7 +219,7 @@ describe("Methods call", function() {
 			expect(element[0]).to.equal(nextElement[0]);
 		});
 	});
-	describe.only("prev() / next() with previewPadding", function() {
+	describe("prev() / next() with previewPadding", function() {
 		tutils.hooks.run();
 
 		// Given
