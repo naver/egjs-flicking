@@ -1316,7 +1316,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		if (typeof index !== "number") {
 			return this;
 		}
-		return this.moveTo(index, duration);
+		return this.moveTo(index, duration, Axes.DIRECTION_RIGHT);
 	}
 
 	/**
@@ -1337,7 +1337,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		if (typeof index !== "number") {
 			return this;
 		}
-		return this.moveTo(index, duration);
+		return this.moveTo(index, duration, Axes.DIRECTION_LEFT);
 	}
 
 	/**
@@ -1353,7 +1353,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * @see eg.Flicking#prev
 	 * @see eg.Flicking#next
 	 */
-	moveTo(noValue, duration) {
+	moveTo(noValue, duration, direction) {
 		const conf = this._conf;
 		const panel = conf.panel;
 		const circular = this.options.circular;
@@ -1370,6 +1370,11 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		}
 
 		indexToMove = no - (circular ? panel.no : currentIndex);
+		if (direction === Axes.DIRECTION_RIGHT && indexToMove < 0) {
+			indexToMove += panel.origCount;
+		} else if (direction === Axes.DIRECTION_LEFT && indexToMove > 0) {
+			indexToMove -= panel.origCount;
+		}
 		isPositive = indexToMove > 0;
 
 		// check for real panel count which can be moved on each sides in circular mode
