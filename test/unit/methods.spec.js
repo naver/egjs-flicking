@@ -236,8 +236,10 @@ describe("Methods call", function() {
 		})
 		it("prev()", () => {
 			// When
+			// 1 -> 3
 			inst.prev(0);
 			const direction1 = inst._conf.touch.direction;
+			// 3 -> 2
 			inst.prev(0);
 			const direction2 = inst._conf.touch.direction;
 			// Then
@@ -246,8 +248,10 @@ describe("Methods call", function() {
 		});
 		it("next()", () => {
 			// When
+			// 2 -> 3
 			inst.next(0);
 			const direction1 = inst._conf.touch.direction;
+			// 3 -> 1
 			inst.next(0);
 			const direction2 = inst._conf.touch.direction;
 

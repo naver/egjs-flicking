@@ -1316,7 +1316,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		if (typeof index !== "number") {
 			return this;
 		}
-		return this.moveTo(index, duration, Axes.DIRECTION_RIGHT);
+		return this._moveTo(index, duration, Axes.DIRECTION_RIGHT);
 	}
 
 	/**
@@ -1337,7 +1337,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		if (typeof index !== "number") {
 			return this;
 		}
-		return this.moveTo(index, duration, Axes.DIRECTION_LEFT);
+		return this._moveTo(index, duration, Axes.DIRECTION_LEFT);
 	}
 
 	/**
@@ -1353,7 +1353,10 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * @see eg.Flicking#prev
 	 * @see eg.Flicking#next
 	 */
-	moveTo(noValue, duration, direction) {
+	moveTo(noValue, duration) {
+		this._moveTo(noValue, duration);
+	}
+	_moveTo(noValue, duration, direction) {
 		const conf = this._conf;
 		const panel = conf.panel;
 		const circular = this.options.circular;
