@@ -238,9 +238,11 @@ describe("Methods call", function() {
 			// When
 			// 1 -> 3
 			inst.prev(0);
+			// direction is from left to right.
 			const direction1 = inst._conf.touch.direction;
 			// 3 -> 2
 			inst.prev(0);
+			// direction is from left to right.
 			const direction2 = inst._conf.touch.direction;
 			// Then
 			expect(direction1).to.be.equals(Axes.DIRECTION_RIGHT);
@@ -250,9 +252,11 @@ describe("Methods call", function() {
 			// When
 			// 2 -> 3
 			inst.next(0);
+			// direction is from right to left
 			const direction1 = inst._conf.touch.direction;
 			// 3 -> 1
 			inst.next(0);
+			// direction is from right to left
 			const direction2 = inst._conf.touch.direction;
 
 			// Then
