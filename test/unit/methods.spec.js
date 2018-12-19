@@ -5,6 +5,7 @@
 /*eslint-disable */
 import tutils from "./assets/utils";
 import OpacityEffect from "../../src/plugin/effects/OpacityEffect";
+import Axes from "@egjs/axes";
 
 describe("Methods call", function() {
 	describe("getIndex()", function() {
@@ -218,7 +219,51 @@ describe("Methods call", function() {
 			expect(element[0]).to.equal(nextElement[0]);
 		});
 	});
+	describe("prev() / next() with previewPadding", function() {
+		tutils.hooks.run();
 
+		// Given
+		const inst = tutils.create("#mflick2-1", {
+			circular : true,
+			previewPadding: [40, 40],
+		});
+
+		const container = inst.getElement().parentElement;
+
+		// Then
+		it("children's length is double when children's length is 3 and previewPadding is not zero", () => {
+			expect(container.children.length).to.be.equals(6);
+		})
+		it("prev()", () => {
+			// When
+			// 1 -> 3
+			inst.prev(0);
+			// direction is from left to right.
+			const direction1 = inst._conf.touch.direction;
+			// 3 -> 2
+			inst.prev(0);
+			// direction is from left to right.
+			const direction2 = inst._conf.touch.direction;
+			// Then
+			expect(direction1).to.be.equals(Axes.DIRECTION_RIGHT);
+			expect(direction2).to.be.equals(Axes.DIRECTION_RIGHT);
+		});
+		it("next()", () => {
+			// When
+			// 2 -> 3
+			inst.next(0);
+			// direction is from right to left
+			const direction1 = inst._conf.touch.direction;
+			// 3 -> 1
+			inst.next(0);
+			// direction is from right to left
+			const direction2 = inst._conf.touch.direction;
+
+			// Then
+			expect(direction1).to.be.equals(Axes.DIRECTION_LEFT);
+			expect(direction2).to.be.equals(Axes.DIRECTION_LEFT);
+		});
+	});
 	describe("prev()", function() {
 		tutils.hooks.run();
 
