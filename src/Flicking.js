@@ -1354,7 +1354,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * @see eg.Flicking#next
 	 */
 	moveTo(noValue, duration) {
-		this._moveTo(noValue, duration);
+		return this._moveTo(noValue, duration);
 	}
 	_moveTo(noValue, duration, direction) {
 		const conf = this._conf;
