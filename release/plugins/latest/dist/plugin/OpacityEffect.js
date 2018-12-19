@@ -5,7 +5,7 @@ Copyright (c) 2017 NAVER Corp.
 @egjs/flicking JavaScript library
 https://github.com/naver/egjs-flicking
 
-@version 2.4.2
+@version 2.4.3
 */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('@egjs/flicking')) :
@@ -167,7 +167,7 @@ https://github.com/naver/egjs-flicking
 
     Plugin.utils = utils;
     Plugin.consts = consts;
-    Plugin.VERSION = "2.4.2";
+    Plugin.VERSION = "2.4.3";
     return Plugin;
   }();
 

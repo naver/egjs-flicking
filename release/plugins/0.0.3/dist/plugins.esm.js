@@ -5,7 +5,7 @@ Copyright (c) 2017 NAVER Corp.
 @egjs/flicking JavaScript library
 https://github.com/naver/egjs-flicking
 
-@version 2.4.2-snapshot
+@version 2.4.3
 */
 import Flicking from '@egjs/flicking';
 
@@ -163,7 +163,7 @@ function () {
 
   Plugin.utils = utils;
   Plugin.consts = consts;
-  Plugin.VERSION = "2.4.2-snapshot";
+  Plugin.VERSION = "2.4.3";
   return Plugin;
 }();
 
