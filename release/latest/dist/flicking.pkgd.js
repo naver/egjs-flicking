@@ -5,7 +5,7 @@ Copyright (c) 2017 NAVER Corp.
 @egjs/flicking JavaScript library
 https://github.com/naver/egjs-flicking
 
-@version 2.4.2
+@version 2.4.2-snapshot
 
 All-in-one packaged file for ease use of '@egjs/flicking' with below dependencies.
 - @egjs/axes ^2.5.7, @egjs/component ^2.1.2
@@ -7087,7 +7087,7 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
           return this;
         }
 
-        return this.moveTo(index, duration);
+        return this.moveTo(index, duration, Axes.DIRECTION_RIGHT);
       };
       /**
        * Moves an element to the previous panel. If `horizontal=true`is left panel. If `horizontal=false`is upper panel.
@@ -7110,7 +7110,7 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
           return this;
         }
 
-        return this.moveTo(index, duration);
+        return this.moveTo(index, duration, Axes.DIRECTION_LEFT);
       };
       /**
        * Moves to the panel in the order specified in `noValue`. If noValue is equal to the current logical index numbering, no action is taken. [beforeFlickStart]{@link eg.Flicking#event:beforeFlickStart}, [flick]{@link eg.Flicking#event:flick}, [flickEnd]{@link eg.Flicking#event:flickEnd} events occur one after the other.
@@ -7127,7 +7127,7 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
        */
 
 
-      _proto.moveTo = function moveTo(noValue, duration) {
+      _proto.moveTo = function moveTo(noValue, duration, direction) {
         var conf = this._conf;
         var panel = conf.panel;
         var circular = this.options.circular;
@@ -7142,6 +7142,13 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
         }
 
         indexToMove = no - (circular ? panel.no : currentIndex);
+
+        if (direction === Axes.DIRECTION_RIGHT && indexToMove < 0) {
+          indexToMove += panel.origCount;
+        } else if (direction === Axes.DIRECTION_LEFT && indexToMove > 0) {
+          indexToMove -= panel.origCount;
+        }
+
         isPositive = indexToMove > 0; // check for real panel count which can be moved on each sides in circular mode
 
         if (circular && Math.abs(indexToMove) > (isPositive ? panel.count - (currentIndex + 1) : currentIndex)) {
@@ -7541,7 +7548,7 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
     }(Mixin(Component)["with"](eventHandler));
 
     Flicking.utils = utils;
-    Flicking.VERSION = "2.4.2";
+    Flicking.VERSION = "2.4.2-snapshot";
     Flicking.consts = {
       EVENTS: EVENTS,
       TRANSFORM: TRANSFORM$1,
