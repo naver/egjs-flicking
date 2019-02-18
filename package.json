@@ -97,7 +97,7 @@
 		"karma-sourcemap-loader": "^0.3.7",
 		"karma-webpack": "^3.0.0",
 		"lite-fixture": "^1.0.2",
-		"mocha": "^5.0.5",
+		"mocha": "^6.0.0",
 		"rollup": "^0.66.5",
 		"rollup-plugin-babel": "^4.0.3",
 		"rollup-plugin-node-resolve": "^3.4.0",
