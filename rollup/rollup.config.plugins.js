@@ -1,4 +1,5 @@
 const uglify = require("./uglify");
+const banner = require("./banner-plugins").banner;
 
 module.exports = ["OpacityEffect", "ParallaxEffect"].map(id => (
 	[
@@ -6,6 +7,7 @@ module.exports = ["OpacityEffect", "ParallaxEffect"].map(id => (
 			input: `./src/plugin/effects/${id}.js`,
 			external: ["@egjs/flicking"],
 			output: {
+				banner,
 				globals: {
 					"@egjs/flicking": "eg.Flicking"
 				},
@@ -18,6 +20,7 @@ module.exports = ["OpacityEffect", "ParallaxEffect"].map(id => (
 			plugins: [uglify],
 			external: ["@egjs/flicking"],
 			output: {
+				banner,
 				globals: {
 					"@egjs/flicking": "eg.Flicking"
 				},

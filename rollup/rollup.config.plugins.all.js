@@ -1,10 +1,12 @@
 const uglify = require("./uglify");
+const banner = require("./banner-plugins").banner;
 
 module.exports = [
 	{
 		input: `src/plugin/index.js`,
 		external: ["@egjs/flicking"],
 		output: {
+			banner,
 			format: "es",
 			exports: "named",
 			file: `./packages/flicking-plugins/dist/plugins.esm.js`
@@ -14,6 +16,7 @@ module.exports = [
 		input: `src/plugin/index.js`,
 		external: ["@egjs/flicking"],
 		output: {
+			banner,
 			globals: {
 				"@egjs/flicking": "eg.Flicking"
 			},
@@ -28,6 +31,7 @@ module.exports = [
 		plugins: [uglify],
 		external: ["@egjs/flicking"],
 		output: {
+			banner,
 			globals: {
 				"@egjs/flicking": "eg.Flicking"
 			},

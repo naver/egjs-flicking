@@ -1,11 +1,11 @@
 /*
 Copyright (c) 2017 NAVER Corp.
-@egjs/flicking project is licensed under the MIT <https://naver.github.io/egjs/license.txt> license
+@egjs/flicking-plugins project is licensed under the MIT <https://naver.github.io/egjs/license.txt> license
 
-@egjs/flicking JavaScript library
+@egjs/flicking-plugins JavaScript library
 https://github.com/naver/egjs-flicking
 
-@version 2.4.3
+@version 0.0.4
 */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@egjs/flicking')) :
@@ -167,7 +167,7 @@ https://github.com/naver/egjs-flicking
 
     Plugin.utils = utils;
     Plugin.consts = consts;
-    Plugin.VERSION = "2.4.3";
+    Plugin.VERSION = "2.4.3-snapshot";
     return Plugin;
   }();
 
