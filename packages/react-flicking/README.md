@@ -24,7 +24,7 @@ import Flicking from "@egjs/react-flicking";
   onRestore = {e => {}}
   hwAccelerable = {true}
   prefix = "eg-flick"
-  deceleration = "0.0006"
+  deceleration = {0.0006}
   horizontal = {true}
   circular = {false}
   previewPadding = {[0, 0]}
