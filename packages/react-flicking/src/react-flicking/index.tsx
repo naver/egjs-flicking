@@ -20,7 +20,7 @@ export interface IFlickingOptions {
   thresholdAngle?: number;
   adaptiveHeight?: boolean;
   zIndex?: number;
-  useTranslate?: number;
+  useTranslate?: boolean;
 }
 export const DIRECTION_LEFT: number = (NativeFlicking as any).DIRECTION_LEFT;
 export const DIRECTION_RIGHT: number = (NativeFlicking as any).DIRECTION_RIGHT;
@@ -56,7 +56,7 @@ export default class Flicking extends React.Component<IFlickingProps> {
   public render() {
     const props = this.props;
     const defaultProps = Flicking.defaultProps;
-    const Tag = props.tag;
+    const Tag = props.tag as  keyof JSX.IntrinsicElements;
     const attributes = {};
 
     for (const name in props) {
