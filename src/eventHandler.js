@@ -93,7 +93,11 @@ export default superclass => class extends superclass {
 			})
 		);
 
-		(eventRes || eventRes === null) && this._setTranslate([-pos, 0]);
+		if (eventRes || eventRes === null) {
+			this._setTranslate([-pos, 0]);
+		} else {
+			e.stop();
+		}
 	}
 
 	/**
