@@ -1,11 +1,11 @@
 /*
 Copyright (c) 2017 NAVER Corp.
-@egjs/flicking-plugins project is licensed under the MIT <https://naver.github.io/egjs/license.txt> license
+@egjs/flicking project is licensed under the MIT <https://naver.github.io/egjs/license.txt> license
 
-@egjs/flicking-plugins JavaScript library
+@egjs/flicking JavaScript library
 https://github.com/naver/egjs-flicking
 
-@version 0.0.5
+@version 2.4.3
 */
 import Flicking from '@egjs/flicking';
 
@@ -121,8 +121,7 @@ function () {
 
     _proto._onFlick = function _onFlick(e) {
       var pos = e.pos;
-      var panel = this.$$._conf.panel;
-      var distance = e.distance != null ? e.distance : pos - panel.size * panel.index;
+      var distance = e.distance || pos - this.$$._conf.panel.size;
       this.onFlick && this.onFlick(e, distance);
     };
     /**
@@ -164,7 +163,7 @@ function () {
 
   Plugin.utils = utils;
   Plugin.consts = consts;
-  Plugin.VERSION = "2.4.3-snapshot";
+  Plugin.VERSION = "2.4.3";
   return Plugin;
 }();
 
