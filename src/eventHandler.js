@@ -93,7 +93,20 @@ export default superclass => class extends superclass {
 			})
 		);
 
-		(eventRes || eventRes === null) && this._setTranslate([-pos, 0]);
+		if (eventRes || eventRes === null) {
+			this._setTranslate([-pos, 0]);
+		} else {
+			e.stop();
+			// release, animationEnd
+			touch.distance = 0;
+			touch.direction = null;
+			touch.destPos = 0;
+			touch.holding = false;
+			touch.isTrusted = false;
+			this._adjustContainerCss("end");
+			this._setPointerEvents();
+			this._setPhaseValue("end");
+		}
 	}
 
 	/**
