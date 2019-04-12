@@ -101,10 +101,10 @@ export default superclass => class extends superclass {
 			touch.distance = 0;
 			touch.direction = null;
 			touch.destPos = 0;
-			this._adjustContainerCss("end");
 			touch.holding = false;
-			this._setPointerEvents();
 			touch.isTrusted = false;
+			this._adjustContainerCss("end");
+			this._setPointerEvents();
 			this._setPhaseValue("end");
 		}
 	}
