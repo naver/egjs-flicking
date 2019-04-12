@@ -99,12 +99,12 @@ export default superclass => class extends superclass {
 			e.stop();
 			// release, animationEnd
 			touch.distance = 0;
-			touch.direction = direction || touch.direction;
+			touch.direction = null;
 			touch.destPos = 0;
 			this._adjustContainerCss("end");
 			touch.holding = false;
 			this._setPointerEvents();
-			conf.touch.isTrusted = false;
+			touch.isTrusted = false;
 			this._setPhaseValue("end");
 		}
 	}
