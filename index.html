@@ -1,563 +1,357 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>egjs-flicking</title>
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Zilla+Slab:700" rel="stylesheet">    
-    <link rel="stylesheet" href="./common/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./common/css/page.css">
-    <link rel="stylesheet" href="./common/css/monokai.css">
-    <script src="./common/js/jquery-2.2.4.js"></script>
-    <script src="./common/js/bootstrap.min.js"></script>
+    <script async="" src="https://www.google-analytics.com/analytics.js"></script>
+    <script src="./release/latest/dist/flicking.pkgd.js"></script>
+    <script src="https://daybrush.com/scenejs/release/latest/dist/scene.js"></script>
+    <link rel="stylesheet" href="./index.css">
+    <title>egjs::Flicking 3.0</title>
 </head>
 
-	<link rel="stylesheet" href="assets/css/horizontal.css">
-
-	<link rel="stylesheet" href="assets/css/horizontal_circular.css">
-
-	<link rel="stylesheet" href="assets/css/horizontal_preview.css">
-
-	<link rel="stylesheet" href="assets/css/vertical.css">
-
-	<link rel="stylesheet" href="assets/css/vertical_circular.css">
-
-	<link rel="stylesheet" href="assets/css/vertical_preview.css">
-
-	<link rel="stylesheet" href="assets/css/customevent.css">
-
-	<link rel="stylesheet" href="assets/css/infinite.css">
-
-	<link rel="stylesheet" href="assets/css/plugin-all.css">
-
-	<link rel="stylesheet" href="assets/css/plugin-OpacityEffect.css">
-
-	<link rel="stylesheet" href="assets/css/plugin-ParallaxEffect.css">
-
-
-	<script src="release/latest/dist/flicking.pkgd.min.js"></script>
-
-	<script src="release/plugins/latest/dist/OpacityEffect.min.js"></script>
-
-	<script src="release/plugins/latest/dist/ParallaxEffect.min.js"></script>
-
-<script>
-	var homeUrl = window.location.href;
-	if (homeUrl.indexOf("#") !== -1) {
-		homeUrl = homeUrl.substr(0, homeUrl.indexOf("#"));
-	}
-	homeUrl = homeUrl
-		.replace("/index.html", "/")
-		.replace("/gallery.html", "/");
-	if (homeUrl[homeUrl.length-1] !== "/") {
-		homeUrl += "/";
-	};
-	window.HOMELINK = homeUrl;
-	window.LIBLINK = [];
-	
-	window.LIBLINK.push(window.HOMELINK + "release/latest/dist/flicking.pkgd.min.js");
-	
-	window.LIBLINK.push(window.HOMELINK + "release/plugins/latest/dist/OpacityEffect.min.js");
-	
-	window.LIBLINK.push(window.HOMELINK + "release/plugins/latest/dist/ParallaxEffect.min.js");
-	
-</script>
-<body>
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-    <!-- ******HEADER****** -->
-    <header id="header" class="header">
-            <div class="container">
-                <a href="//naver.github.io/egjs">
-                    <h1 class="logo pull-left"></h1>
-                </a><!--//logo-->
+<body class="scroll">
+    <div class="scroller"></div>
+    <div class="pages">
+        <div class="page page1" id="home">
+            <div class="article">
+                <div class="content">
+                    <h1>Flicking 3.0</h1>
+                    <p class="description">
+                        You can make flicking gestures, which are ways to navigate left and right to move between panels
+                        arranged side by side.
+                    </p>
+                    <div class="downloads">
+                        <div class="target">
+                            <a href="https://github.com/naver/egjs-flicking" target="_blank"><button class="download">Github</button></a>
+                            <a href="./release/latest/doc/index.html" target="_blank"><button class="download">Documentation</button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ex">
+                    <div class="buttons">
+                        <button class="prev"><span>PREV</span></button><span class="divider"></span><button
+                            class="next"><span>NEXT</span></button>
+                    </div>
+                    <div class="ex-wrapper">
+                        <div class="kingcard">
+                            <div class="card-rotor">
+                                <div class="card-wrapper forward">
+                                    <div class="card">
+                                        <div class="left number">K</div>
+                                        <div class="right number">K</div>
+                                        <div class="mark">
+                                            <div class="crown">
+                                                <div class="point left"></div>
+                                                <div class="point center"></div>
+                                                <div class="point right"></div>
+                                            </div>
+                                            <img src="https://naver.github.io/egjs/img/logo.svg">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-wrapper backward">
+                                    <div class="card">
+                                        <div class="left number"><img src="https://naver.github.io/egjs/img/logo.svg">
+                                        </div>
+                                        <div class="right number"><img src="https://naver.github.io/egjs/img/logo.svg">
+                                        </div>
+                                        <div class="mark">
+                                            K
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="shadow"></div>
+                                <div class="levels">
+                                    <div class="level"></div>
+                                    <div class="level"></div>
+                                    <div class="level"></div>
+                                    <div class="level"></div>
+                                </div>
+                            </div>
+                            <ul class="progress">
+                                <li class="checked"></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </div>
+                        <div class="iphone-wrapper">
+                            <div class="iphone">
+                                <div class="head"></div>
+                                <div class="home"></div>
+                                <div class="container">
+                                    <div class="panels">
+                                        <div class="panel"></div>
+                                        <div class="panel"></div>
+                                        <div class="panel"></div>
+                                        <div class="panel"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="finger">
+                            <svg class="svg cursor" viewBox="0 0 80 80">
+                                <path
+                                    d="M 30 50 L 30 10 L 30 50 L 40 50 L 40 25 L 40 50 L 50 50 L 50 32 L 50 50 L 60 50 L 60 39 L 60 60 L 56 75 L 30 75 L 15 40 L 30 60Z"
+                                    stroke-width="10" stroke="#333" fill="#333" opacity="0.9" stroke-lineJoin="round">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </header><!--//header-->
-    
-    
-<section id="promo" class="promo section">
-    <div class="container">
-        <div class="hero-image" style="background-image: url(//naver.github.io/egjs/img/Flicking.png)">
         </div>
-        <h2 class="title">
-            <span class="highlight">Flicking</span><a href="https://github.com/naver/egjs-flicking/releases/tag/2.4.3"><span class="version">v2.4.3</span></a>
-        </h2>
-        <p class="intro">A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.<br/>
-            <span class="hashtag">#carousel #slider</span>
-        </p>
-    </div>
-</section>
-<div>
-	<section id="index" class="section">
-			<div class="container">
-				<div class="docs-inner">
-					<p class="text-center">
-						<a href="#getting-started">Getting Started </a>/ 
-						<a href="#demos"> Demos </a>/
-						<a target="_blank" href="//naver.github.io/egjs-flicking/release/latest/doc/"> Documentation </a>/ 
-						<a target="_blank" href="//github.com/naver/egjs-flicking"> Source </a>
-					</p>
-				</div>
-			</div>
-		</section>
-	<section id="getting-started" class="docs section">
-		<div class="container">
-			<div class="docs-inner">
-				<h2 class="title text-center">Getting Started</h2>
-				
-				<h3 id="browser-support">Browser support</h3>
-<p>IE 10+ (possibly 9 also), latest of Chrome/FF/Safari, iOS 7+ and Android 2.3+ (except 3.x)</p>
-
-<h3 id="quick-steps-to-use">Quick steps to use:</h3>
-
-<h4 id="set-up-your-html">Set up your HTML</h4>
-
-<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- wrapper --&gt;</span>
-<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"wrapper"</span><span class="nt">&gt;</span>
-  <span class="c">&lt;!-- panels --&gt;</span>
-  <span class="nt">&lt;div&gt;</span>
-    <span class="nt">&lt;p&gt;</span>panel 0<span class="nt">&lt;/p&gt;</span>
-  <span class="nt">&lt;/div&gt;</span>
-  <span class="nt">&lt;div&gt;</span>
-    <span class="nt">&lt;p&gt;</span>panel 1<span class="nt">&lt;/p&gt;</span>
-  <span class="nt">&lt;/div&gt;</span>
-  <span class="nt">&lt;div&gt;</span>
-    <span class="nt">&lt;p&gt;</span>panel 2<span class="nt">&lt;/p&gt;</span>
-  <span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-</code></pre></div></div>
-
-<h4 id="load-files-or-import-library">Load files or import library</h4>
-
-<h5 id="es5">ES5</h5>
-<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"//naver.github.io/egjs-flicking/release/latest/dist/flicking.pkgd.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
-
-<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"//naver.github.io/egjs-flicking/release/plugins/latest/dist/OpacityEffect.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
-
-<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"//naver.github.io/egjs-flicking/release/plugins/latest/dist/ParallaxEffect.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
-
-</code></pre></div></div>
-
-<h5 id="es6">ES6+</h5>
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Flicking</span> <span class="k">from</span> <span class="s2">"@egjs/flicking"</span><span class="p">;</span>
-</code></pre></div></div>
-
-<h3 id="initialize">Initialize</h3>
-
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// creating instance</span>
-<span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">);</span>
-</code></pre></div></div>
-
-			</div>
-		</div>
-	</section>
-	<section id="demos" class="docs section demos">
-		<div class="container">
-			<div class="docs-inner">
-				<h2 class="title text-center">Demos</h2>
-				
-				<h3 id="horizontal-direction">Horizontal direction</h3>
-
-<h4 id="non-circular">Non-Circular</h4>
-
-<div codepen="horizontal">
-  <div id="mflick1" class="flick">
-    <div style="background-color:#CC66CC">
-      <p>panel 0</p>
-    </div>
-    <div style="background-color:#66cccc">
-      <p>panel 1</p>
-    </div>
-    <div style="background-color:#ffc000">
-      <p>panel 2</p>
-    </div>
-  </div>
-  <button onclick="f1.prev()" class="f_btn">&lt;</button> <button class="f_btn f_right" onclick="f1.next()">&gt;</button>
-</div>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// creating instance</span>
-<span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h4 id="circular">Circular</h4>
-
-<div codepen="horizontal_circular">
-    <div id="mflick2" class="flick">
-        <div id="item1" style="background-color:#CC66CC">
-            <p>panel 0</p>
-        </div>
-        <div id="item2" style="background-color:#66cccc">
-            <p>panel 1</p>
-        </div>
-        <div id="item3" style="background-color:#ffc000">
-            <p>panel 2</p>
-        </div>
-    </div>
-    <button onclick="f2.prev()" class="f_btn">&lt;</button> <button class="f_btn f_right" onclick="f2.next()">&gt;</button>
-</div>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// creating instance</span>
-<span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
-  <span class="na">duration</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
-  <span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-  <span class="na">defaultIndex</span><span class="p">:</span> <span class="mi">1</span>
-<span class="p">});</span>
-</code></pre></div></div>
-
-<h4 id="preview--circular">Preview &amp; circular</h4>
-
-<div codepen="horizontal_preview">
-  <div id="mflick3" class="flick">
-    <div class="p0" style="background-color:#CC66CC">
-      <p>panel 0</p>
-    </div>
-    <div class="p1" style="background-color:#66cccc">
-      <p>panel 1</p>
-    </div>
-    <div class="p2" style="background-color:#ffc000">
-      <p>panel 2</p>
-    </div>
-    <div class="p3" style="background-color:green">
-      <p>panel 3</p>
-    </div>
-    <div class="p4" style="background-color:maroon">
-      <p>panel 4</p>
-    </div>
-  </div>
-  <button onclick="f3.prev()" class="f_btn">&lt;</button> <button class="f_btn f_right" onclick="f3.next()">&gt;</button>
-</div>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// creating instance</span>
-<span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
-  <span class="na">duration</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
-  <span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-  <span class="na">previewPadding</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span>
-  <span class="na">defaultIndex</span><span class="p">:</span> <span class="mi">3</span>
-<span class="p">});</span>
-</code></pre></div></div>
-
-<h3 id="vertical-direction">Vertical direction</h3>
-
-<h4 id="non-circular-1">Non-Circular</h4>
-
-<div codepen="vertical">
-	<div id="vflick1" class="flick f_vertical">
-		<div style="background-color:#CC66CC">
-			<p>panel 0</p>
-		</div>
-		<div style="background-color:#66cccc">
-			<p>panel 1</p>
-		</div>
-		<div style="background-color:#ffc000">
-			<p>panel 2</p>
-		</div>
-	</div>
-	<div class="vbutton"><button onclick="v1.prev()" class="v_btn">^</button> <button onclick="v1.next()" class="v_btn">v</button></div>
-</div>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// creating instance</span>
-<span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
-  <span class="na">horizontal</span><span class="p">:</span> <span class="kc">false</span>
-<span class="p">});</span>
-</code></pre></div></div>
-
-<h4 id="circular-1">Circular</h4>
-
-<div codepen="vertical_circular">
-	<div id="vflick2" class="flick cir_vertical">
-    <div style="background-color:#CC66CC">
-      <p>panel 0</p>
-    </div>
-    <div style="background-color:#66cccc">
-      <p>panel 1</p>
-    </div>
-    <div style="background-color:#ffc000">
-      <p>panel 2</p>
-    </div>
-  </div>
-  <div class="vbutton"><button onclick="v2.prev()" class="v_btn">^</button> <button onclick="v2.next()" class="v_btn">v</button></div>
-</div>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// creating instance</span>
-<span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
-  <span class="na">horizontal</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-  <span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-  <span class="na">duration</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
-  <span class="na">defaultIndex</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-<span class="p">});</span>
-</code></pre></div></div>
-
-<h4 id="preview--circular-1">Preview &amp; circular</h4>
-
-<div codepen="vertical_preview">
-	<div id="vflick3" class="flick prev_vertical">
-    <div class="p0" style="background-color:#CC66CC">
-      <p>panel 0</p>
-    </div>
-    <div class="p1" style="background-color:#66cccc">
-      <p>panel 1</p>
-    </div>
-    <div class="p2" style="background-color:#ffc000">
-      <p>panel 2</p>
-    </div>
-    <div class="p3" style="background-color:green">
-      <p>panel 3</p>
-    </div>
-    <div class="p4" style="background-color:maroon">
-      <p>panel 4</p>
-    </div>
-  </div>
-  <div class="vbutton"><button onclick="v3.prev()" class="v_btn">^</button> <button onclick="v3.next()" class="v_btn">v</button></div>
-</div>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// creating instance</span>
-<span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
-  <span class="na">horizontal</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-  <span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-  <span class="na">previewPadding</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-  <span class="na">duration</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
-  <span class="na">defaultIndex</span><span class="p">:</span> <span class="mi">3</span>
-<span class="p">});</span>
-</code></pre></div></div>
-
-<h3 id="custom-events">Custom events</h3>
-
-<div codepen="customevent">
-  <div id="mflick4" class="flick">
-    <div id="item1" style="background-color:#CC66CC">
-      <p>panel 0</p>
-    </div>
-    <div id="item2" style="background-color:#66cccc">
-      <p>panel 1</p>
-    </div>
-    <div id="item3" style="background-color:#ffc000">
-      <p>panel 2</p>
-    </div>
-  </div>
-  <button onclick="f4.prev()" class="f_btn">&lt;</button> <button class="f_btn f_right" onclick="f4.next()">&gt;</button>
-  <div id="log"></div>
-</div>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
-  <span class="na">duration</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
-  <span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-  <span class="na">threshold</span><span class="p">:</span> <span class="mi">70</span>
-<span class="p">}).</span><span class="nx">on</span><span class="p">({</span>
-  <span class="na">beforeFlickStart</span><span class="p">:</span> <span class="nx">handler</span><span class="p">,</span>
-  <span class="na">flick</span><span class="p">:</span> <span class="nx">handler</span><span class="p">,</span>
-  <span class="na">flickEnd</span><span class="p">:</span> <span class="nx">handler</span><span class="p">,</span>
-  <span class="na">beforeRestore</span><span class="p">:</span> <span class="nx">handler</span><span class="p">,</span>
-  <span class="na">restore</span><span class="p">:</span> <span class="nx">handler</span>
-<span class="p">});</span>
-
-<span class="kd">function</span> <span class="nx">handler</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"log"</span><span class="p">).</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">eventType</span> <span class="o">+</span><span class="s2">" event fired."</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h3 id="infinite-flicking">Infinite Flicking</h3>
-
-<div codepen="infinite">
-  <div id="mflick5" class="flick">
-    <div style="background-color:#CC66CC"></div>
-    <div style="background-color:#66cccc"></div>
-    <div style="background-color:#ffc000"></div>
-  </div>
-  <button onclick="f5.prev()" class="f_btn">&lt;</button> <button class="f_btn f_right" onclick="f5.next()">&gt;</button>
-</div>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
-	<span class="na">duration</span> <span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
-	<span class="na">hwAccelerable</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-	<span class="na">threshold</span> <span class="p">:</span> <span class="mi">70</span><span class="p">,</span>
-	<span class="na">circular</span><span class="p">:</span> <span class="kc">true</span>
-<span class="p">}).</span><span class="nx">on</span><span class="p">(</span><span class="s2">"flickEnd"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-	<span class="kd">var</span> <span class="nx">direction</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">direction</span><span class="p">;</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">direction</span> <span class="o">===</span> <span class="nx">MC</span><span class="p">.</span><span class="nx">DIRECTION_LEFT</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">df</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getNextElement</span><span class="p">().</span><span class="nx">firstChild</span><span class="p">);</span>
-		<span class="k">this</span><span class="p">.</span><span class="nx">getNextElement</span><span class="p">().</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">df</span><span class="p">.</span><span class="nx">firstChild</span><span class="p">);</span>
-	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">direction</span> <span class="o">===</span> <span class="nx">MC</span><span class="p">.</span><span class="nx">DIRECTION_RIGHT</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">df</span><span class="p">.</span><span class="nx">insertBefore</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getPrevElement</span><span class="p">().</span><span class="nx">firstChild</span><span class="p">,</span> <span class="nx">df</span><span class="p">.</span><span class="nx">firstChild</span><span class="p">);</span>
-		<span class="k">this</span><span class="p">.</span><span class="nx">getPrevElement</span><span class="p">().</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">df</span><span class="p">.</span><span class="nx">lastChild</span><span class="p">);</span>
-	<span class="p">}</span>
-<span class="p">});</span>
-
-<span class="c1">// Prepare 9999 panels data</span>
-<span class="kd">var</span> <span class="nx">df</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createDocumentFragment</span><span class="p">();</span>
-<span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span><span class="mi">9999</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-	<span class="nx">df</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s2">"&lt;p&gt;panel "</span><span class="o">+</span> <span class="nx">i</span> <span class="o">+</span><span class="s2">"&lt;/p&gt;"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]);</span>
-<span class="p">}</span>
-
-<span class="c1">// Show initial panel data</span>
-<span class="nx">instance</span><span class="p">.</span><span class="nx">getElement</span><span class="p">().</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">df</span><span class="p">.</span><span class="nx">firstChild</span><span class="p">);</span>
-<span class="nx">instance</span><span class="p">.</span><span class="nx">getPrevElement</span><span class="p">().</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">df</span><span class="p">.</span><span class="nx">lastChild</span><span class="p">);</span>
-<span class="nx">instance</span><span class="p">.</span><span class="nx">getNextElement</span><span class="p">().</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">df</span><span class="p">.</span><span class="nx">firstChild</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h3 id="plugins">Plugins</h3>
-
-<h4 id="opacityeffect">OpacityEffect</h4>
-
-<div id="OpacityEffect" class="plugin" codepen="plugin-OpacityEffect">
-  <div>
-    <p style="background-image:url(./assets/img/bg01.jpg)">
-      Layer 1<br />
-      <span class="text">description</span>
-    </p>
-  </div>
-  <div>
-    <p style="background-image:url(./assets/img/bg02.jpg)">
-      Layer 2<br />
-      <span class="text">description</span>
-    </p>
-  </div>
-  <div>
-    <p style="background-image:url(./assets/img/bg03.jpg)">
-      Layer 3<br />
-      <span class="text">description</span>
-    </p>
-  </div>
-</div>
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Flicking</span> <span class="k">from</span> <span class="s2">"@egjs/flicking"</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span><span class="nx">OpacityEffect</span><span class="p">}</span> <span class="k">from</span> <span class="s2">"@egjs/flicking-plugins"</span><span class="p">;</span>
-
-<span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
-	<span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-	<span class="na">prefix</span><span class="p">:</span> <span class="s2">"plugin"</span>
-<span class="p">}).</span><span class="nx">plugin</span><span class="p">([</span>
-    <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">OpacityEffect</span><span class="p">(</span><span class="s2">".text"</span><span class="p">)</span>
-<span class="p">]);</span>
-</code></pre></div></div>
-
-<h4 id="parallaxeffect">ParallaxEffect</h4>
-
-<div id="ParallaxEffect" class="plugin" codepen="plugin-ParallaxEffect">
-  <div>
-    <p style="background-image:url(./assets/img/bg01.jpg)">
-      Layer 1<br />
-      <span class="text">description</span>
-    </p>
-  </div>
-  <div>
-    <p style="background-image:url(./assets/img/bg02.jpg)">
-      Layer 2<br />
-      <span class="text">description</span>
-    </p>
-  </div>
-  <div>
-    <p style="background-image:url(./assets/img/bg03.jpg)">
-      Layer 3<br />
-      <span class="text">description</span>
-    </p>
-  </div>
-</div>
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Flicking</span> <span class="k">from</span> <span class="s2">"@egjs/flicking"</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span><span class="nx">ParallaxEffect</span><span class="p">}</span> <span class="k">from</span> <span class="s2">"@egjs/flicking-plugins"</span><span class="p">;</span>
-
-<span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
-	<span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-	<span class="na">prefix</span><span class="p">:</span> <span class="s2">"plugin"</span>
-<span class="p">}).</span><span class="nx">plugin</span><span class="p">([</span>
-    <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">ParallaxEffect</span><span class="p">(</span><span class="s2">"p"</span><span class="p">)</span>
-<span class="p">]);</span>
-</code></pre></div></div>
-
-<h4 id="combined-plugins">Combined plugins</h4>
-
-<div id="plugin" class="plugin" codepen="plugin-all">
-  <div>
-    <p style="background-image:url(./assets/img/bg01.jpg)">
-      Layer 1<br />
-      <span class="text">description</span>
-    </p>
-  </div>
-  <div>
-    <p style="background-image:url(./assets/img/bg02.jpg)">
-      Layer 2<br />
-      <span class="text">description</span>
-    </p>
-  </div>
-  <div>
-    <p style="background-image:url(./assets/img/bg03.jpg)">
-      Layer 3<br />
-      <span class="text">description</span>
-    </p>
-  </div>
-</div>
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Flicking</span> <span class="k">from</span> <span class="s2">"@egjs/flicking"</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span><span class="nx">OpacityEffect</span><span class="p">,</span> <span class="nx">ParallaxEffect</span><span class="p">}</span> <span class="k">from</span> <span class="s2">"@egjs/flicking-plugins"</span><span class="p">;</span>
-
-<span class="kd">var</span> <span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">(</span><span class="s2">"#wrapper"</span><span class="p">,</span> <span class="p">{</span>
-	<span class="na">circular</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="na">prefix</span><span class="p">:</span> <span class="s2">"plugin"</span>
-<span class="p">}).</span><span class="nx">plugin</span><span class="p">([</span>
-    <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">OpacityEffect</span><span class="p">(</span><span class="s2">".text"</span><span class="p">),</span>
-    <span class="k">new</span> <span class="nx">eg</span><span class="p">.</span><span class="nx">Flicking</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">ParallaxEffect</span><span class="p">(</span><span class="s2">"p"</span><span class="p">)</span>
-<span class="p">]);</span>
-</code></pre></div></div>
-
-			</div>
-		</div>
-	</section>
-</div>
-    <!-- ******FOOTER****** -->
-    <footer>
-            <div id="footerContent">
-              <div class="left">
-                <ul>
-                    <li><a target="_blank" href="https://naver.github.io/">
-                        <img class="naver_opensource" src="https://naver.github.io/egjs/img/n_opensource.png" />
-                        </a></li>
-                    <li><a target="_blank" href="https://naver.github.io/egjs/">egjs</a>
-                    </li>
-                    <li><a target="_blank" href="https://naver.github.io/billboard.js/">billboard.js</a></li>
-                </ul>
-              </div>
+        <div class="page page2" id="features">
+            <div class="article">
+                <div class="head">
+                    <h1>Features</h1>
+                    <p class="description">
+                        These are the key features of Flicking 3. <span class="blind-condition">We've added features
+                            that weren't available for traditional flicking or that many of you want.</span>
+                    </p>
+                </div>
+                <div class="features">
+                    <div class="feature">
+                        <a href="./features/infiniteflicking.html" target="_blank">
+                            <p class="flicking">
+                                <img src="./images/features/infiniteflicking.gif" />
+                            </p>
+                            <p class="title">Infinite Flicking</p>
+                        </a>
+                    </div>
+                    <div class="feature">
+                        <a href="./features/freescroll.html" target="_blank">
+                            <p class="flicking">
+                                <img src="./images/features/freescroll.gif" />
+                            </p>
+                            <p class="title">Free Scroll</p>
+                        </a>
+                    </div>
+                    <div class="feature">
+                        <a href="./features/variablesize.html" target="_blank">
+                            <p class="flicking">
+                                <img src="./images/features/variablesize.gif" />
+                            </p>
+                            <p class="title">Multiple Panel & Variable Size</p>
+                        </a>
+                    </div>
+                    <div class="feature">
+                        <a href="./features/hangeranchor.html" target="_blank">
+                            <p class="flicking">
+                                <img src="./images/features/hangeranchor.gif" />
+                            </p>
+                            <p class="title">Flexible Align</p>
+                        </a>
+                    </div>
+                    <div class="feature">
+                        <a href="./features/snap.html" target="_blank">
+                            <p class="flicking">
+                                <img src="./images/features/snap.gif" />
+                            </p>
+                            <p class="title">Snap</p>
+                        </a>
+                    </div>
+                    <div class="feature">
+                        <a href="./features/gap.html" target="_blank">
+                            <p class="flicking">
+                                <img src="./images/features/gap.png" />
+                            </p>
+                            <p class="title">Gap</p>
+                        </a>
+                    </div>
+                    <div class="feature">
+                        <a href="./features/progress.html" target="_blank">
+                            <p class="flicking">
+                                <img src="./images/features/progress.gif" />
+                            </p>
+                            <p class="title">Progress</p>
+                        </a>
+                    </div>
+                    <div class="feature">
+                        <a href="./features/bound.html" target="_blank">
+                            <p class="flicking">
+                                <img src="./images/features/bound.gif" />
+                            </p>
+                            <p class="title">Endpoint Bound</p>
+                        </a>
+                    </div>
+                </div>
             </div>
-          </footer>
-    <!-- Javascript -->
-    <script type="text/javascript" src="./common/js/app.js"></script>
+        </div>
+        <div class="page page3" id="plugins">
+            <div class="article">
+                <div class="head">
+                    <h1>Plugins</h1>
+                    <p class="description">
+                        These plugins are available for Flicking 3. You can give effect to Flicking with it.
+                    </p>
+                </div>
+                <div class="downloads">
+                    <div class="target">
+                        <a href="https://github.com/naver/egjs-flicking-plugins/"
+                            target="_blank"><button class="download">Github</button></a>
+                        <a href="https://naver.github.io/egjs-flicking-plugins/release/latest/doc/"
+                            target="_blank"><button class="download">Documentation</button></a>
+                    </div>
+                </div>
+                <div class="plugins">
+                    <div class="plugin">
+                        <a href="./plugins/parallax.html" target="_blank">
+                            <p class="flicking">
+                                <img src="./images/plugins/parallax.gif" />
+                            </p>
+                            <p class="title">Parallax</p>
+                        </a>
+                    </div>
+                    <div class="plugin">
+                        <a href="./plugins/fade.html" target="_blank">
+                            <p class="flicking">
+                                <img src="./images/plugins/fade.gif" />
+                            </p>
+                            <p class="title">Fade</p>
+                        </a>
+                    </div>
+                    <div class="plugin">
+                        <a href="./plugins/autoplay.html" target="_blank">
+                            <p class="flicking">
+                                <img src="./images/plugins/autoplay.gif" />
+                            </p>
+                            <p class="title">AutoPlay</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="page page4" id="demo">
+            <div class="article">
+                <div class="head">
+                    <h1>Projects</h1>
+                    <p class="description">
+                        These are projects that have created various pages using flicking.
+                    </p>
+                </div>
+                <div class="uses">
+                    <div class="use">
+                        <a href="./projects/artwindow.html" target="_blank">
+                            <p class="thumb"><img src="./images/artwindow.png" /></p>
+                            <p class="title">Shopping Art Window</p>
+                        </a>
+                    </div>
+                    <div class="use">
+                        <a href="./projects/mobileartwindow.html" target="_blank">
+                            <p class="thumb" style="width: 350px;"><img src="./images/mobileartwindow.png" /></p>
+                            <p class="title">Shopping Art Window(Mobile)</p>
+                        </a>
+                    </div>
+                    <div class="use">
+                            <a href="./projects/keywords.html" target="_blank">
+                                <p class="thumb" style="width: 350px;"><img src="./images/keyword.png" /></p>
+                                <p class="title">Keywords</p>
+                            </a>
+                        </div>
+                    <div class="use">
+                        <a href="./projects/grafolio.html" target="_blank">
+                            <p class="thumb"><img src="./images/grafolio.png" /></p>
+                            <p class="title">Grafolio Patron Rewards</p>
+                        </a>
+                    </div>
+                    <div class="use">
+                        <a href="./projects/post.html" target="_blank">
+                            <p class="thumb" style="width: 300px;"><img src="./images/post.png" width /></p>
+                            <p class="title">Naver Post</p>
+                        </a>
+                    </div>
+                    <div class="use">
+                        <a href="./projects/shoppingsearch.html" target="_blank">
+                            <p class="thumb"><img src="./images/shoppingsearch.png" /></p>
+                            <p class="title">Mobile Search For Shopping</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="page page5" id="try">
+            <div class="article">
+                <div class="head">
+                    <h1>Try</h1>
+                    <p class="description">
+                        Click edit on CODEPEN to get a code for how easy it is!
+                    </p>
+                </div>
+                <p class="codepen" data-height="510" data-theme-id="0" data-default-tab="js,result" data-user="egjs" data-slug-hash="VNQPQd" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid black; margin: 1em 0; padding: 1em;" data-pen-title="Flicking 3.0 try">
+                        <span>See the Pen <a href="https://codepen.io/egjs/pen/VNQPQd/">
+                        Flicking 3.0 try</a> by egjs (<a href="https://codepen.io/egjs">@egjs</a>)
+                        on <a href="https://codepen.io">CodePen</a>.</span>
+                      </p>
+                      <script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+            </div>
+        </div>
+        <div class="page page6" id="download">
+            <div class="article">
+                <div class="head">
+                    <h1>Download</h1>
+                </div>
+                <div class="downloads">
+                    <p class="title">NPM</p>
+                    <div class="target shell">npm install @egjs/flicking<input type="text" class="copy-input"
+                            value="npm install @egjs/flicking"></div>
+                    <p class="title">DEVELOPMENT</p>
+                    <div class="target">
+                        <a href="https://naver.github.io/egjs-flicking/release/latest/dist/flicking.js"
+                            target="_blank"><button class="download">flicking.js</button></a>
+                        <a href="https://naver.github.io/egjs-flicking/release/latest/dist/flicking.min.js"
+                            target="_blank"><button class="download">flicking.min.js</button></a>
+                    </div>
+                    <p class="title">PRODUCTION</p>
+                    <div class="target">
+                        <a href="https://naver.github.io/egjs-flicking/release/latest/dist/flicking.pkgd.js"
+                            target="_blank"><button class="download">flicking.pkgd.js</button></a>
+                        <a href="https://naver.github.io/egjs-flicking/release/latest/dist/flicking.pkgd.min.js"
+                            target="_blank"><button class="download">flicking.pkgd.min.js</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="page footer">
+            <div class="article">
+                <p>
+                    <span class="egjs">
+                        <img src="https://naver.github.io/egjs/img/logo.svg" /><span class="eg">eg</span><span
+                            class="js">js</span>
+                    </span>
+                </p>
+                <p class="license">This project is licensed under the MIT license.</p>
+                <p class="copy">&copy; NAVER Corp.</p>
+            </div>
+        </div>
+    </div>
+    <div class="pagination">
+        <ul>
+            <li class="checked" data-label="Home"></li>
+            <li data-label="Features"></li>
+            <li data-label="Plugins"></li>
+            <li data-label="Projects"></li>
+            <li data-label="Try"></li>
+            <li data-label="Download"></li>
+            <li class="last"></li>
+        </ul>
+    </div>
+
+    <script src="index.js"></script>
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-      ga('create', 'UA-70842526-17', 'auto');
-      ga('send', 'pageview');
+        ga('create', 'UA-70842526-17', 'auto');
+        ga('send', 'pageview');
     </script>
-
-
-	<script src="assets/js/horizontal.js"></script>
-
-	<script src="assets/js/horizontal_circular.js"></script>
-
-	<script src="assets/js/horizontal_preview.js"></script>
-
-	<script src="assets/js/vertical.js"></script>
-
-	<script src="assets/js/vertical_circular.js"></script>
-
-	<script src="assets/js/vertical_preview.js"></script>
-
-	<script src="assets/js/customevent.js"></script>
-
-	<script src="assets/js/infinite.js"></script>
-
-	<script src="assets/js/plugin-all.js"></script>
-
-	<script src="assets/js/plugin-OpacityEffect.js"></script>
-
-	<script src="assets/js/plugin-ParallaxEffect.js"></script>
-
 </body>
+
 </html>

@@ -1,0 +1,164 @@
+<!doctype html>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../common/common.css">
+<link rel="stylesheet" href="../common/highlight.css">
+<link rel="stylesheet" href="./features.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
+<script src="../common/highlight.js"></script>
+<script src="../release/latest/dist/flicking.pkgd.js"></script>
+<script src="../common/pagination.js"></script>
+<style>
+    .buttons {
+        padding: 10px 0px;
+        text-align: center;
+    }
+    .buttons button {
+        padding: 10px 15px;
+        background: #eee;
+        border: 0;
+    }
+    .buttons button:hover {
+        background: #ccc;
+    }
+    .panel, .infinite {
+        font-weight: bold;
+    }
+    .flicking2 .infinite {
+        transition: all ease 1s;
+    }
+    .flicking .infinite.placeholder {
+        background: #ddd;
+        color: transparent;
+    }
+</style>
+<div class="container">
+    <h1>Infinite Flicking</h1>
+    <h2>Append  &amp; Prepend panel dynamically</h2>
+    <ul class="extra">
+        <li>You can dynamically add panels to the flicking.</li>
+        <li>The panel's indexes are zero-based integer.</li>
+        <li>Note: The number displayed above each panel is not panel's index.</li>
+    </ul>
+    <div class="flicking flicking0">
+        <div class="infinite infinite0">0</div>
+        <div class="infinite infinite1">1</div>
+        <div class="infinite infinite2">2</div>
+        <div class="infinite infinite3">3</div>
+        <div class="infinite infinite4">4</div>
+    </div>
+    <div class="pagination pagination0"></div>
+    <div class="buttons">
+        <button id="prepend">Prepend</button>
+        <button id="append">Append</button>
+    </div>
+    <pre><code class="hljs javascript" data-script="flicking0"></code></pre>
+    <h2>infinite: true &amp; needPanel event</h2>
+    <ul class="extra">
+        <li>Enabling the infinite option can make <strong>needPanel</strong> event to be triggered when more panels at moving direction should be fetched within <strong>infiniteThreshold</strong> value.</li>
+    </ul>
+    <div class="flicking flicking1">
+        <div class="infinite infinite0">0</div>
+        <div class="infinite infinite1">1</div>
+        <div class="infinite infinite2">2</div>
+        <div class="infinite infinite3">3</div>
+        <div class="infinite infinite4">4</div>
+    </div>
+    <div class="pagination pagination1"></div>
+    <pre><code class="hljs javascript" data-script="flicking1"></code></pre>
+
+
+
+
+
+    <h2>infinite: true &amp; placeholder</h2>
+    <ul class="extra">
+        <li>You can make continuous carousel UI with asynchronous data by adding placeholder panel first, then update panel with fetched data later.</li>
+    </ul>
+    <div class="flicking flicking2">
+        <div class="infinite infinite0">0</div>
+        <div class="infinite infinite1">1</div>
+        <div class="infinite infinite2">2</div>
+        <div class="infinite infinite3">3</div>
+        <div class="infinite infinite4">4</div>
+    </div>
+    <div class="pagination pagination2"></div>
+    <pre><code class="hljs javascript" data-script="flicking2"></code></pre>
+</div>
+<script data-script="flicking0">
+var prev = 0;
+var next = 4;
+var flicking0 = new eg.Flicking(".flicking0", {
+    gap: 10,
+});
+
+document.querySelector("#prepend").addEventListener("click", function () {
+    prev -= 2;
+    flicking0.prepend(
+        '<div class="infinite infinite' + Math.abs(prev) % 5 + '">' + (prev) + '</div>'
+        + '<div class="infinite infinite' + Math.abs(prev + 1) % 5 + '">' + (prev + 1) + '</div>'
+    );
+    flickingPagination0.update(flicking0);
+});
+document.querySelector("#append").addEventListener("click", function () {
+    next += 2;
+    flicking0.append(
+        '<div class="infinite infinite' + (next - 1) % 5 + '">' + (next - 1) + '</div>'
+        + '<div class="infinite infinite' + next % 5 + '">' + next + '</div>'
+    );
+    flickingPagination0.update(flicking0);
+});
+</script>
+<script data-script="flicking1">
+var flicking1 = new eg.Flicking(".flicking1", {
+    gap: 10,
+    infinite: true,
+    infiniteThreshold: 50,
+});
+
+flicking1.on("needPanel", function (e) {
+    var length = flicking1.getPanelCount();
+
+    e.panel.insertAfter(
+        '<div class="infinite infinite' + (length + 1) % 5 + '">'+ (length + 1) + '</div>'
+        + '<div class="infinite infinite' + (length + 2) % 5 + '">' + (length + 2) + '</div>'
+    );
+    flickingPagination1.update(flicking1);
+});
+</script>
+<script data-script="flicking2">
+var flicking2 = new eg.Flicking(".flicking2", {
+    gap: 10,
+    infinite: true,
+    moveType: "freeScroll",
+});
+
+flicking2.on("needPanel", function (e) {
+    var length = flicking2.getPanelCount();
+
+    /* placeholder */
+    var panels = e.panel.insertAfter(
+        '<div class="infinite placeholder infinite' + (length + 1) % 5 + '">'+ (length + 1) + '</div>'
+        + '<div class="infinite placeholder infinite' + (length + 2) % 5 + '">' + (length + 2) + '</div>'
+    );
+    flickingPagination2.update(flicking2);
+    /* insert data */
+    setTimeout(function () {
+        panels.forEach(function (panel) {
+            panel.update(function (el) {
+                el.className = el.className.replace(/\s*placeholder/g, "");
+            });
+        });
+    }, 1500);
+});
+</script>
+<script data-script=".">
+    var flickingPagination0 = CustomPagination(".pagination0");
+    flicking0.addPlugins(flickingPagination0);
+
+    var flickingPagination1 = CustomPagination(".pagination1");
+    flicking1.addPlugins(flickingPagination1);
+
+    var flickingPagination2 = CustomPagination(".pagination2");
+    flicking2.addPlugins(flickingPagination2);
+</script>
+<script src="../common/codepen.js"></script>

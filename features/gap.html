@@ -1,0 +1,78 @@
+<!doctype html>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="../common/common.css">
+<link rel="stylesheet" href="../common/highlight.css">
+<link rel="stylesheet" href="./features.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
+<script src="../common/highlight.js"></script>
+<script src="../release/latest/dist/flicking.pkgd.js"></script>
+<script src="../common/pagination.js"></script>
+<style>
+  .flicking0 .panel {
+    padding-right: 0;
+  }
+  .flicking1 .panel:last-child {
+    padding-right: 0;
+  }
+  .flicking1 .panel {
+    padding-right: 0;
+  }
+  .flicking1 .panel:before {
+    position: absolute;
+    width: 20px;
+    content: "2 0 p x";
+    word-break: break-all;
+    font-weight: bold;
+    color: #333;
+    left: 200px;
+    top: 50%;
+    transform: translateY(-50%);
+    line-height: 1.2;
+    text-align: center;
+  }
+</style>
+
+<div class="container">
+  <h1>Gap</h1>
+  <ul class="extra">
+    <li>You can specify the interval between the frames.</li>
+  </ul>
+  <h2>Default</h2>
+  <div class="flicking flicking0">
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+  </div>
+  <div class="pagination pagination0"></div>
+  <pre><code class="hljs javascript" data-script="flicking0"></code></pre>
+  <h2>gap: 20</h2>
+  <div class="flicking flicking1">
+      <div class="panel"></div>
+      <div class="panel"></div>
+      <div class="panel"></div>
+      <div class="panel"></div>
+      <div class="panel"></div>
+      <div class="panel"></div>
+    </div>
+    <div class="pagination pagination1"></div>
+    <pre><code class="hljs javascript" data-script="flicking1"></code></pre>
+</div>
+<script data-script="flicking0">
+var flicking = new eg.Flicking(".flicking0", {
+  bound: true,
+});
+</script>
+<script data-script="flicking1">
+var flicking1 = new eg.Flicking(".flicking1", {
+  gap: 20,
+  bound: true,
+});
+</script>
+<script data-script=".">
+flicking.addPlugins(CustomPagination(".pagination0"));
+flicking1.addPlugins(CustomPagination(".pagination1"));
+</script>
+<script src="../common/codepen.js"></script>
