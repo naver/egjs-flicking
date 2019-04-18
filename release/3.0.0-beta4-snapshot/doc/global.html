@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Global | egjs::Flicking - API</title>
+    
+    <meta name="description" content="A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side." />
+    
+        <meta name="keywords" content="UI Component, egjs, flicking, carousel" />
+        <meta name="keyword" content="UI Component, egjs, flicking, carousel" />
+    
+    
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    
+    <meta property="og:url" content=""/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <link rel="canonical" href="https://naver.github.io/egjs-flicking/release/latest/doc/"/>
+    
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":true,"cleverLinks":true,"default":{"outputSourceFiles":true},"applicationName":"eg.Flicking","disqus":"egjs","googleAnalytics":"UA-70842526-17","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"egjs::Flicking - API","description":"A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.","keyword":"UI Component, egjs, flicking, carousel"},"linenums":true,"link":{"canonical":"https://naver.github.io/egjs-flicking/release/latest/doc/"}};
+    </script>
+    
+
+    
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', config.googleAnalytics]);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName">
+        <a href="//naver.github.io/egjs/"><img style="width:40px; height:20px;" src="img/type_white.svg"/></a>
+
+        <!-- Homepage link (prefer link.home than applicationName) -->
+        
+        <a href="//naver.github.io/egjs-flicking/">Flicking</a>
+        
+    </h3>
+
+    <div class="search">
+        <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
+    </div>
+    <ul class="list">
+        <li class="item">
+            <span class="title">
+                <a href="index.html">README</a>
+            </span>
+        </li>
+    
+        <!-- Non Grouping Version -->
+        
+            
+
+        
+            
+
+<li class="item" data-name="eg.Flicking">
+    <span class="title">
+        <a href="eg.Flicking.html">eg.Flicking</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    <span class="subtitle">Members</span>
+    
+        <li data-name="eg.Flicking.DIRECTION"><a href="eg.Flicking.html#.DIRECTION">DIRECTION</a></li>
+    
+        <li data-name="eg.Flicking.EVENTS"><a href="eg.Flicking.html#.EVENTS">EVENTS</a></li>
+    
+        <li data-name="eg.Flicking.NeedPanelEvent"><a href="eg.Flicking.html#.NeedPanelEvent">NeedPanelEvent</a></li>
+    
+        <li data-name="eg.Flicking.VERSION"><a href="eg.Flicking.html#.VERSION">VERSION</a></li>
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    <span class="subtitle">Typedefs</span>
+    
+        <li data-name="eg.Flicking.ChangeEvent"><a href="eg.Flicking.html#.ChangeEvent">ChangeEvent</a></li>
+    
+        <li data-name="eg.Flicking.Direction"><a href="eg.Flicking.html#.Direction">Direction</a></li>
+    
+        <li data-name="eg.Flicking.ElementLike"><a href="eg.Flicking.html#.ElementLike">ElementLike</a></li>
+    
+        <li data-name="eg.Flicking.EventType"><a href="eg.Flicking.html#.EventType">EventType</a></li>
+    
+        <li data-name="eg.Flicking.FlickingEvent"><a href="eg.Flicking.html#.FlickingEvent">FlickingEvent</a></li>
+    
+        <li data-name="eg.Flicking.FlickingOptions"><a href="eg.Flicking.html#.FlickingOptions">FlickingOptions</a></li>
+    
+        <li data-name="eg.Flicking.FlickingPanel"><a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a></li>
+    
+        <li data-name="eg.Flicking.FlickingStatus"><a href="eg.Flicking.html#.FlickingStatus">FlickingStatus</a></li>
+    
+        <li data-name="eg.Flicking.MoveTypeFreeScrollOption"><a href="eg.Flicking.html#.MoveTypeFreeScrollOption">MoveTypeFreeScrollOption</a></li>
+    
+        <li data-name="eg.Flicking.MoveTypeOption"><a href="eg.Flicking.html#.MoveTypeOption">MoveTypeOption</a></li>
+    
+        <li data-name="eg.Flicking.MoveTypeSnapOption"><a href="eg.Flicking.html#.MoveTypeSnapOption">MoveTypeSnapOption</a></li>
+    
+        <li data-name="eg.Flicking.Plugin"><a href="eg.Flicking.html#.Plugin">Plugin</a></li>
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    <span class="subtitle">Methods</span>
+    
+        <li data-name="eg.Flicking#addPlugins"><a href="eg.Flicking.html#addPlugins">addPlugins</a></li>
+    
+        <li data-name="eg.Flicking#append"><a href="eg.Flicking.html#append">append</a></li>
+    
+        <li data-name="eg.Flicking#destroy"><a href="eg.Flicking.html#destroy">destroy</a></li>
+    
+        <li data-name="eg.Flicking#disableInput"><a href="eg.Flicking.html#disableInput">disableInput</a></li>
+    
+        <li data-name="eg.Flicking#enableInput"><a href="eg.Flicking.html#enableInput">enableInput</a></li>
+    
+        <li data-name="eg.Flicking#getAllPanels"><a href="eg.Flicking.html#getAllPanels">getAllPanels</a></li>
+    
+        <li data-name="eg.Flicking#getCurrentPanel"><a href="eg.Flicking.html#getCurrentPanel">getCurrentPanel</a></li>
+    
+        <li data-name="eg.Flicking#getElement"><a href="eg.Flicking.html#getElement">getElement</a></li>
+    
+        <li data-name="eg.Flicking#getIndex"><a href="eg.Flicking.html#getIndex">getIndex</a></li>
+    
+        <li data-name="eg.Flicking#getPanel"><a href="eg.Flicking.html#getPanel">getPanel</a></li>
+    
+        <li data-name="eg.Flicking#getPanelCount"><a href="eg.Flicking.html#getPanelCount">getPanelCount</a></li>
+    
+        <li data-name="eg.Flicking#getStatus"><a href="eg.Flicking.html#getStatus">getStatus</a></li>
+    
+        <li data-name="eg.Flicking#getVisiblePanels"><a href="eg.Flicking.html#getVisiblePanels">getVisiblePanels</a></li>
+    
+        <li data-name="eg.Flicking#hasOn"><a href="eg.Flicking.html#hasOn">hasOn</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#isPlaying"><a href="eg.Flicking.html#isPlaying">isPlaying</a></li>
+    
+        <li data-name="eg.Flicking#moveTo"><a href="eg.Flicking.html#moveTo">moveTo</a></li>
+    
+        <li data-name="eg.Flicking#next"><a href="eg.Flicking.html#next">next</a></li>
+    
+        <li data-name="eg.Flicking#off"><a href="eg.Flicking.html#off">off</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#on"><a href="eg.Flicking.html#on">on</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#once"><a href="eg.Flicking.html#once">once</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#prepend"><a href="eg.Flicking.html#prepend">prepend</a></li>
+    
+        <li data-name="eg.Flicking#prev"><a href="eg.Flicking.html#prev">prev</a></li>
+    
+        <li data-name="eg.Flicking#remove"><a href="eg.Flicking.html#remove">remove</a></li>
+    
+        <li data-name="eg.Flicking#removePlugins"><a href="eg.Flicking.html#removePlugins">removePlugins</a></li>
+    
+        <li data-name="eg.Flicking#replace"><a href="eg.Flicking.html#replace">replace</a></li>
+    
+        <li data-name="eg.Flicking#resize"><a href="eg.Flicking.html#resize">resize</a></li>
+    
+        <li data-name="eg.Flicking#setLastIndex"><a href="eg.Flicking.html#setLastIndex">setLastIndex</a></li>
+    
+        <li data-name="eg.Flicking#setStatus"><a href="eg.Flicking.html#setStatus">setStatus</a></li>
+    
+        <li data-name="eg.Flicking#trigger"><a href="eg.Flicking.html#trigger">trigger</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    <span class="subtitle">Events</span>
+    
+        <li data-name="eg.Flicking#event:change"><a href="eg.Flicking.html#event:change">change</a></li>
+    
+        <li data-name="eg.Flicking#event:holdEnd"><a href="eg.Flicking.html#event:holdEnd">holdEnd</a></li>
+    
+        <li data-name="eg.Flicking#event:holdStart"><a href="eg.Flicking.html#event:holdStart">holdStart</a></li>
+    
+        <li data-name="eg.Flicking#event:move"><a href="eg.Flicking.html#event:move">move</a></li>
+    
+        <li data-name="eg.Flicking#event:moveEnd"><a href="eg.Flicking.html#event:moveEnd">moveEnd</a></li>
+    
+        <li data-name="eg.Flicking#event:moveStart"><a href="eg.Flicking.html#event:moveStart">moveStart</a></li>
+    
+        <li data-name="eg.Flicking#event:needPanel"><a href="eg.Flicking.html#event:needPanel">needPanel</a></li>
+    
+        <li data-name="eg.Flicking#event:restore"><a href="eg.Flicking.html#event:restore">restore</a></li>
+    
+        <li data-name="eg.Flicking#event:select"><a href="eg.Flicking.html#event:select">select</a></li>
+    
+    </ul>
+
+    
+</li>
+
+        
+    
+    </ul>
+</div>
+
+    <div class="main">
+        <h1 class="page-title" data-filename="global.html">Global</h1>
+        
+
+
+
+<section>
+
+<header>
+    <h2>
+        
+    </h2>
+    <button id="toggle">
+        
+            English
+        
+    </button>
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+        
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+        
+    
+    </div>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="isUndefined">
+            
+            isUndefined<span class="signature">(value)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="node_modules_@egjs_component_src_component.js.html">component.js</a>, <a href="node_modules_@egjs_component_src_component.js.html#line7">line 7</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Copyright (c) 2015 NAVER Corp.<br>
+egjs projects are licensed under the MIT license</p>
+	</div>
+	
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>value</strong>
+            
+
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type"></span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+        
+        <!-- disqus code -->
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        <!-- // disqus code -->
+        
+
+        <footer>
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 0.3.7</a> on Thu Apr 18 2019 11:56:26 GMT+0900 (Korean Standard Time)
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/main.js"></script>
+</body>
+</html>

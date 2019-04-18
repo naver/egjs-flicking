@@ -1,0 +1,9163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Class: Flicking | egjs::Flicking - API</title>
+    
+    <meta name="description" content="A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side." />
+    
+        <meta name="keywords" content="UI Component, egjs, flicking, carousel" />
+        <meta name="keyword" content="UI Component, egjs, flicking, carousel" />
+    
+    
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    
+    <meta property="og:url" content=""/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <link rel="canonical" href="https://naver.github.io/egjs-flicking/release/latest/doc/"/>
+    
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":true,"cleverLinks":true,"default":{"outputSourceFiles":true},"applicationName":"eg.Flicking","disqus":"egjs","googleAnalytics":"UA-70842526-17","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"egjs::Flicking - API","description":"A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.","keyword":"UI Component, egjs, flicking, carousel"},"linenums":true,"link":{"canonical":"https://naver.github.io/egjs-flicking/release/latest/doc/"}};
+    </script>
+    
+
+    
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', config.googleAnalytics]);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName">
+        <a href="//naver.github.io/egjs/"><img style="width:40px; height:20px;" src="img/type_white.svg"/></a>
+
+        <!-- Homepage link (prefer link.home than applicationName) -->
+        
+        <a href="//naver.github.io/egjs-flicking/">Flicking</a>
+        
+    </h3>
+
+    <div class="search">
+        <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
+    </div>
+    <ul class="list">
+        <li class="item">
+            <span class="title">
+                <a href="index.html">README</a>
+            </span>
+        </li>
+    
+        <!-- Non Grouping Version -->
+        
+            
+
+        
+            
+
+<li class="item" data-name="eg.Flicking">
+    <span class="title">
+        <a href="eg.Flicking.html">eg.Flicking</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    <span class="subtitle">Members</span>
+    
+        <li data-name="eg.Flicking.DIRECTION"><a href="eg.Flicking.html#.DIRECTION">DIRECTION</a></li>
+    
+        <li data-name="eg.Flicking.EVENTS"><a href="eg.Flicking.html#.EVENTS">EVENTS</a></li>
+    
+        <li data-name="eg.Flicking.VERSION"><a href="eg.Flicking.html#.VERSION">VERSION</a></li>
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    <span class="subtitle">Typedefs</span>
+    
+        <li data-name="eg.Flicking.ChangeEvent"><a href="eg.Flicking.html#.ChangeEvent">ChangeEvent</a></li>
+    
+        <li data-name="eg.Flicking.Direction"><a href="eg.Flicking.html#.Direction">Direction</a></li>
+    
+        <li data-name="eg.Flicking.EventType"><a href="eg.Flicking.html#.EventType">EventType</a></li>
+    
+        <li data-name="eg.Flicking.FlickingEvent"><a href="eg.Flicking.html#.FlickingEvent">FlickingEvent</a></li>
+    
+        <li data-name="eg.Flicking.FlickingOptions"><a href="eg.Flicking.html#.FlickingOptions">FlickingOptions</a></li>
+    
+        <li data-name="eg.Flicking.FlickingPanel"><a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a></li>
+    
+        <li data-name="eg.Flicking.FlickingStatus"><a href="eg.Flicking.html#.FlickingStatus">FlickingStatus</a></li>
+    
+        <li data-name="eg.Flicking.Plugin"><a href="eg.Flicking.html#.Plugin">Plugin</a></li>
+    
+        <li data-name="eg.Flicking.SelectEvent"><a href="eg.Flicking.html#.SelectEvent">SelectEvent</a></li>
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    <span class="subtitle">Methods</span>
+    
+        <li data-name="eg.Flicking#addPlugins"><a href="eg.Flicking.html#addPlugins">addPlugins</a></li>
+    
+        <li data-name="eg.Flicking#destroy"><a href="eg.Flicking.html#destroy">destroy</a></li>
+    
+        <li data-name="eg.Flicking#disableInput"><a href="eg.Flicking.html#disableInput">disableInput</a></li>
+    
+        <li data-name="eg.Flicking#enableInput"><a href="eg.Flicking.html#enableInput">enableInput</a></li>
+    
+        <li data-name="eg.Flicking#getAllPanels"><a href="eg.Flicking.html#getAllPanels">getAllPanels</a></li>
+    
+        <li data-name="eg.Flicking#getCurrentPanel"><a href="eg.Flicking.html#getCurrentPanel">getCurrentPanel</a></li>
+    
+        <li data-name="eg.Flicking#getIndex"><a href="eg.Flicking.html#getIndex">getIndex</a></li>
+    
+        <li data-name="eg.Flicking#getNextIndex"><a href="eg.Flicking.html#getNextIndex">getNextIndex</a></li>
+    
+        <li data-name="eg.Flicking#getPanel"><a href="eg.Flicking.html#getPanel">getPanel</a></li>
+    
+        <li data-name="eg.Flicking#getPanelCount"><a href="eg.Flicking.html#getPanelCount">getPanelCount</a></li>
+    
+        <li data-name="eg.Flicking#getPrevIndex"><a href="eg.Flicking.html#getPrevIndex">getPrevIndex</a></li>
+    
+        <li data-name="eg.Flicking#getStatus"><a href="eg.Flicking.html#getStatus">getStatus</a></li>
+    
+        <li data-name="eg.Flicking#getVisiblePanels"><a href="eg.Flicking.html#getVisiblePanels">getVisiblePanels</a></li>
+    
+        <li data-name="eg.Flicking#hasOn"><a href="eg.Flicking.html#hasOn">hasOn</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#isPlaying"><a href="eg.Flicking.html#isPlaying">isPlaying</a></li>
+    
+        <li data-name="eg.Flicking#moveTo"><a href="eg.Flicking.html#moveTo">moveTo</a></li>
+    
+        <li data-name="eg.Flicking#next"><a href="eg.Flicking.html#next">next</a></li>
+    
+        <li data-name="eg.Flicking#off"><a href="eg.Flicking.html#off">off</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#on"><a href="eg.Flicking.html#on">on</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#once"><a href="eg.Flicking.html#once">once</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#prev"><a href="eg.Flicking.html#prev">prev</a></li>
+    
+        <li data-name="eg.Flicking#removePlugins"><a href="eg.Flicking.html#removePlugins">removePlugins</a></li>
+    
+        <li data-name="eg.Flicking#resize"><a href="eg.Flicking.html#resize">resize</a></li>
+    
+        <li data-name="eg.Flicking#setStatus"><a href="eg.Flicking.html#setStatus">setStatus</a></li>
+    
+        <li data-name="eg.Flicking#trigger"><a href="eg.Flicking.html#trigger">trigger</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    <span class="subtitle">Events</span>
+    
+        <li data-name="eg.Flicking#event:change"><a href="eg.Flicking.html#event:change">change</a></li>
+    
+        <li data-name="eg.Flicking#event:holdEnd"><a href="eg.Flicking.html#event:holdEnd">holdEnd</a></li>
+    
+        <li data-name="eg.Flicking#event:holdStart"><a href="eg.Flicking.html#event:holdStart">holdStart</a></li>
+    
+        <li data-name="eg.Flicking#event:moveEnd"><a href="eg.Flicking.html#event:moveEnd">moveEnd</a></li>
+    
+        <li data-name="eg.Flicking#event:moveStart"><a href="eg.Flicking.html#event:moveStart">moveStart</a></li>
+    
+        <li data-name="eg.Flicking#event:restore"><a href="eg.Flicking.html#event:restore">restore</a></li>
+    
+        <li data-name="eg.Flicking#event:select"><a href="eg.Flicking.html#event:select">select</a></li>
+    
+    </ul>
+
+    
+</li>
+
+        
+    
+    </ul>
+</div>
+
+    <div class="main">
+        <h1 class="page-title" data-filename="eg.Flicking.html">Class: Flicking</h1>
+        
+
+
+
+<section>
+
+<header>
+    <h2>
+    
+        <span>eg.Flicking</span>
+        
+    </h2>
+    <button id="toggle">
+        
+            English
+        
+    </button>
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="Flicking">
+            
+            new eg.Flicking<span class="signature">(element, <span class="optional">options</span>)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line19">line 19</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		
+	</div>
+	
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>element</strong>
+            
+
+            
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">HTMLElement | string</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>A base element for the eg.Flicking module. When specifying a value as a <code>string</code> type, you must specify a css selector string to select the element.</p></div>
+            <div class="description ko"><p>eg.Flicking 모듈을 사용할 기준 요소. <code>string</code>타입으로 값 지정시 요소를 선택하기 위한 css 선택자 문자열을 지정해야 한다.</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>options</strong>
+            
+                (default: <code>{}</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">Partial&lt;<a href="eg.Flicking.html#.FlickingOptions">FlickingOptions</a>></span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>The option object of the eg.Flicking module</p></div>
+            <div class="description ko"><p>eg.Flicking 모듈의 옵션 객체</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+            
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>classPrefix</strong>
+            
+                (default: <code>"eg-flick"</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">string</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>A prefix for class names of the panels, viewport and camera.</p></div>
+            <div class="description ko"><p>패널들과 뷰포트, 카메라 클래스 이름의 접두사.</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>deceleration</strong>
+            
+                (default: <code>0.0075</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">number</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Deceleration value for panel movement animation where acceleration is manually enabled by user. Higher value means shorter running time.</p></div>
+            <div class="description ko"><p>사용자의 동작으로 가속도가 적용된 패널 이동 애니메이션의 감속도. 값이 높을수록 애니메이션 실행 시간이 짧아진다.</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>horizontal</strong>
+            
+                (default: <code>true</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">boolean</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Direction of panel movement. (true: horizontal, false: vertical)</p></div>
+            <div class="description ko"><p>패널 이동 방향. (true: 가로방향, false: 세로방향)</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>circular</strong>
+            
+                (default: <code>false</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">boolean</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Enables circular mode, which connects first/last panel for infinite scrolling</p></div>
+            <div class="description ko"><p>순환 모드를 활성화한다. 순환 모드에서는 양 끝의 패널이 서로 연결되여 무한 스크롤이 가능하다.</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>threshold</strong>
+            
+                (default: <code>40</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">number</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Movement threshold to destination panel(unit: pixel). A panel element must be dragged beyond the threshold to move to the destination panel.</p></div>
+            <div class="description ko"><p>목적 패널로의 이동 임계값 (단위: 픽셀). 패널 요소를 임계값 이상으로 끌어다 놓아야만이 목적 패널로 이동한다.</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>duration</strong>
+            
+                (default: <code>100</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">number</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Duration of the panel movement. (unit: ms)</p></div>
+            <div class="description ko"><p>패널 이동 애니메이션 진행 시간.(단위: ms)</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>panelEffect</strong>
+            
+                (default: <code>x => 1 - Math.pow(1 - x, 3)</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">function</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>The easing function to apply to a panel moving animation. The default function is easeOutCubic.</p></div>
+            <div class="description ko"><p>패널 이동 애니메이션에 적용할 <code>easing</code>함수. 기본값은 <code>easeOutCubic</code>이다.</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>defaultIndex</strong>
+            
+                (default: <code>0</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">number</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Index of panel to set as default when initializing the module. A zero-based integer.</p></div>
+            <div class="description ko"><p>모듈 초기화시 지정할 디폴트 패널의 인덱스로, 0부터 시작하는 정수.</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>inputType</strong>
+            
+                (default: <code>["touch,"mouse"]</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">Array.&lt;string></span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Types of input devices. (<a href="https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.PanInput.html">eg.Axes.PanInput Reference</a>)<br>- &quot;touch&quot;: A touch input device.<br>- &quot;mouse&quot;: A mouse.</p></div>
+            <div class="description ko"><p>입력 장치 종류. (<a href="https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.PanInput.html">eg.Axes.PanInput 참고</a>)<br>- &quot;touch&quot;: 터치 입력 장치.<br>- &quot;mouse&quot;: 마우스.</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>thresholdAngle</strong>
+            
+                (default: <code>45</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">number</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>The threshold value that determines whether user input is horizontal or vertical. (0 ~ 90)</p></div>
+            <div class="description ko"><p>사용자의 입력이 가로 방향인지 세로 방향인지 판단하는 기준 각도 (0 ~ 90)</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>bounce</strong>
+            
+                (default: <code>[10,10]</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">number</span>
+|
+
+<span class="param-type">string</span>
+|
+
+<span class="param-type">Array.&lt;number></span>
+|
+
+<span class="param-type">Array.&lt;string></span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>The size value of the bounce area. Only can be enabled when <code>circular=false</code></p></div>
+            <div class="description ko"><p>바운스 영역의 크기값. <code>circular=false</code>인 경우에만 사용할 수 있다.</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>adaptive</strong>
+            
+                (default: <code>false</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">Boolean</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Whether the height(horizontal)/width(vertical) of the viewport element reflects the height/width value of the panel after completing the movement.</p></div>
+            <div class="description ko"><p>목적 패널로 이동한 후 그 패널의 높이(horizontal)/너비(vertical)값을 뷰포트 요소의 높이/너비값에 반영할지 여부.</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>zIndex</strong>
+            
+                (default: <code>2000</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">number</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>z-index value for viewport element</p></div>
+            <div class="description ko"><p>뷰포트 요소의 z-index 값</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>bound</strong>
+            
+                (default: <code>false</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">boolean</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Prevents view going out of first/last panel. Only can be enabled when <code>circular=false</code>.</p></div>
+            <div class="description ko"><p>뷰가 첫번째와 마지막 패널 밖으로 나가는 것을 막아준다. <code>circular=false</code>인 경우에만 사용할 수 있다.</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>overflow</strong>
+            
+                (default: <code>false</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">boolean</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Disables CSS property <code>overflow: hidden</code> in viewport if <code>true</code>.</p></div>
+            <div class="description ko"><p><code>true</code>로 설정시 뷰포트에 <code>overflow: hidden</code> 속성을 해제한다.</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>hanger</strong>
+            
+                (default: <code>"50%"</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">string</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Position of hanger in viewport, which hangs panel anchors.<br>Should be provided in px or % value of viewport size.<br>You can combinate those values with plus/minus sign<br>ex) &quot;50&quot;, &quot;100px&quot;, &quot;0%&quot;, &quot;25% + 100px&quot;</p></div>
+            <div class="description ko"><p>뷰포트 내부의 행어의 위치. 패널의 앵커들이 뷰포트 내에서 멈추는 지점에 해당한다.<br>px값이나, 뷰포트의 크기 대비 %값을 사용할 수 있고, 이를 + 혹은 - 기호로 연계하여 사용할 수도 있다.<br>예) &quot;50&quot;, &quot;100px&quot;, &quot;0%&quot;, &quot;25% + 100px&quot;</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>anchor</strong>
+            
+                (default: <code>"50%"</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">string</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Position of anchor in panels, which can be hanged by viewport hanger.<br>Should be provided in px or % value of panel size.<br>You can combinate those values with plus/minus sign<br>ex) &quot;50&quot;, &quot;100px&quot;, &quot;0%&quot;, &quot;25% + 100px&quot;</p></div>
+            <div class="description ko"><p>패널 내부의 앵커의 위치. 뷰포트의 행어와 연계하여 패널이 화면 내에서 멈추는 지점을 설정할 수 있다.<br>px값이나, 패널의 크기 대비 %값을 사용할 수 있고, 이를 + 혹은 - 기호로 연계하여 사용할 수도 있다.<br>예) &quot;50&quot;, &quot;100px&quot;, &quot;0%&quot;, &quot;25% + 100px&quot;</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>gap</strong>
+            
+                (default: <code>0</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">number</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Space between each panels.<br>Should be given in number(px).</p></div>
+            <div class="description ko"><p>패널간에 부여할 간격의 크기를 나타내는 숫자(px)</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>snap</strong>
+            
+                (default: <code>1</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">number</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>The number of panels you're going to roll over to when you snap</p></div>
+            <div class="description ko"><p>한 번 스냅 할 때 최대 몇 개의 패널까지 넘길 건지 나타내는 숫자</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    
+<table class="params">
+    <thead>
+        <tr>
+            
+                
+                    <th>Type</th>
+                
+            
+            
+                <th class="last">Description</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        
+            <tr>
+                
+                    
+                        <td class="type">Error</td>
+                    
+                
+                
+                    <td class="description last">
+                        <div class="en"><p>An Error occur when given base element doesn't exist or it hasn't proper DOM structure to be initialized. </p></div>
+                        <div class="ko"><p>주어진 기본 요소가 존재하지 않거나 초기화 할 적절한 DOM 구조가없는 경우 오류가 발생한다.</p></div>
+                    </td>
+                
+            </tr>
+        
+    </tbody>
+</table>
+
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>
+                <div class="en">Easing Functions Cheat Sheet <a href="http://easings.net/">http://easings.net/</a> </div>
+                <div class="ko"><p>이징 함수 Cheat Sheet <a href="http://easings.net/">http://easings.net/</a></p></div>
+            </li>
+        </ul>
+    </dd>
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+
+
+        
+            <h3 class="subsection-title">Browser Support</h3>
+            <table class="support">
+                <thead>
+                    <tr>
+                        <th>Browser</th>
+                        <th>Version</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        
+                        <tr>
+                            <td>Desktop - Internet Explorer</td>
+                            <td>9+</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>Desktop - Chrome</td>
+                            <td>latest</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>Desktop - Firefox</td>
+                            <td>latest</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>Desktop - Safari</td>
+                            <td>latest</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>Desktop - Edge</td>
+                            <td>latest</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>iOS</td>
+                            <td>7+</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>Andorid</td>
+                            <td>4.X+</td>
+                        </tr>
+                        
+                </tbody>
+            </table>
+        
+
+
+    
+    </div>
+
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        <ul>
+            <li>
+            	
+            	eg.Component
+            	
+            </li>
+        </ul>
+    
+
+    
+
+    
+        <h3 class="subsection-title">Requires</h3>
+
+        <ul>
+            <li><a href="https://github.com/naver/egjs-component">eg.Component</a></li>
+        
+            <li><a href="https://github.com/naver/egjs-axes">eg.Axes</a></li>
+        </ul>
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".DIRECTION"><span class="type-signature static">static</span>eg.Flicking.DIRECTION<span class="type-signature type $ts:direction<file>/users/user/desktop/naver/flicking3/src/flicking.ts</file>"><a href="eg.Flicking.html#.Direction">Direction</a></span> </h4>
+    </div>
+    
+</dt>
+<dd>
+    
+    <div class="description en">
+        <p>Direction constant - &quot;PREV&quot; or &quot;NEXT&quot;</p>
+    </div>
+    
+    
+    <div class="description ko">
+        <p>방향 상수 - &quot;PREV&quot; 또는 &quot;NEXT&quot;</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code><p>eg.Flicking.DIRECTION.PREV; // &quot;PREV&quot;<br>
+eg.Flicking.DIRECTION.NEXT; // &quot;NEXT&quot;</p></code></pre>
+    
+
+    
+</dd>
+
+        
+            
+
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".EVENTS"><span class="type-signature static">static</span>eg.Flicking.EVENTS<span class="type-signature type $ts:eventtype<file>/users/user/desktop/naver/flicking3/src/flicking.ts</file>"><a href="eg.Flicking.html#.EventType">EventType</a></span> </h4>
+    </div>
+    
+</dt>
+<dd>
+    
+    <div class="description en">
+        <p>Event types</p>
+    </div>
+    
+    
+    <div class="description ko">
+        <p>이벤트 이름 문자열들을 담은 객체</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+
+    
+</dd>
+
+        
+            
+
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".VERSION"><span class="type-signature static">static</span>eg.Flicking.VERSION<span class="type-signature type $ts:string<file>/users/user/desktop/naver/flicking3/src/flicking.ts</file>">string</span> </h4>
+    </div>
+    
+</dt>
+<dd>
+    
+    <div class="description en">
+        <p>Version info string</p>
+    </div>
+    
+    
+    <div class="description ko">
+        <p>버전정보 문자열</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code><p>eg.Flicking.VERSION;  // ex) 3.0.0</p></code></pre>
+    
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="addPlugins">
+            
+            addPlugins<span class="signature">(plugins)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line288">line 288</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Add plugins that can have different effects on Flicking</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>플리킹에 다양한 효과를 부여할 수 있는 플러그인을 추가한다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>plugins</strong>
+            
+
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type"><a href="eg.Flicking.html#.Plugin">Plugin</a> | <a href="eg.Flicking.html#.Plugin">Plugin</a>[]</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>The plugin(s) to add </p></div>
+            <div class="description ko"><p>추가할 플러그인(들)</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+
+An instance of a module itself <ko>모듈 자신의 인스턴스</ko>
+
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="destroy">
+            
+            destroy<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{void}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line325">line 325</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Return the reference element and all its children to the state they were in before the instance was created. Remove all attached event handlers. Specify <code>null</code> for all attributes of the instance (including inherited attributes).</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>기준 요소와 그 하위 패널들을 인스턴스 생성전의 상태로 되돌린다. 부착된 모든 이벤트 핸들러를 탈거한다. 인스턴스의 모든 속성(상속받은 속성포함)에 <code>null</code>을 지정한다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        void
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code><p>const flick = new eg.Flicking(&quot;#flick&quot;);<br>
+flick.destroy();<br>
+console.log(flick.moveTo); // null</p></code></pre>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="disableInput">
+            
+            disableInput<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{this}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line247">line 247</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>The input from the input device is blocked so that the panel is not moved by the input device.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>패널이 입력 장치에 의해 움직이지 않도록 입력 장치로부터의 입력을 막는다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        this
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">An instance of a module itself </div>
+                <div class="ko"><p>모듈 자신의 인스턴스</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="enableInput">
+            
+            enableInput<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{this}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line236">line 236</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>The input from the input device is not blocked so that the panel can be moved by the input device.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>막았던 입력 장치로부터의 입력을 푼다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        this
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">An instance of a module itself </div>
+                <div class="ko"><p>모듈 자신의 인스턴스</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="getAllPanels">
+            
+            getAllPanels<span class="signature">(<span class="optional">includeClone</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a>[]}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line200">line 200</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Returns all panel objects in flicking.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>플리킹 안에 있는 모든 패널 오브젝트들을 반환한다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>includeClone</strong>
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">boolean</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Check whether to include clone or not </p></div>
+            <div class="description ko"><p>복사본을 포함할 건지 안 할 건지 확인한다</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        <a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a>[]
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">All panel objects </div>
+                <div class="ko"><p>플리킹 안에 있는 모든 패널 오브젝트들</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="getCurrentPanel">
+            
+            getCurrentPanel<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line179">line 179</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Returns the selected panel object</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>현재 선택된 패널의 오브젝트를 반환한다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        <a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a>
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">Selected panel object.</div>
+                <div class="ko"><p>선택된 패널 오브젝트</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="getIndex">
+            
+            getIndex<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{number}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line152">line 152</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Returns the index number of the selected panel.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>현재 선택된 패널의 인덱스 번호를 반환한다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        number
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">Zero-based index number of the current panel element.</div>
+                <div class="ko"><p>현재 패널의 인덱스 번호. 0부터 시작하는 정수.</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="getNextIndex">
+            
+            getNextIndex<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{number}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line170">line 170</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Returns the index number of the next panel.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>현재 선택된 패널의 다음 패널의 인덱스 번호를 반환한다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        number
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">Zero-based index number of the next panel.<br>When <code>circular</code> option is <code>false</code>, return -1 if selected panel is last panel.</div>
+                <div class="ko"><p>다음 패널 요소의 인덱스 번호. 0부터 시작하는 정수.<br><code>circular</code>옵션이 <code>false</code>일 때 현재 선택된 패널이 마지막 패널이라면 <code>-1</code>을 반환한다.</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="getPanel">
+            
+            getPanel<span class="signature">(index)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a> | null}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line188">line 188</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Returns the panel object of given index</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>주어진 인덱스에 해당하는 패널의 오브젝트를 반환한다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>index</strong>
+            
+
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">number</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        <a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a> | null
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">panel object of given index, <code>null</code> if it doesn't exists.</div>
+                <div class="ko"><p>주어진 인덱스에 해당하는 패널의 오브젝트, 해당 패널이 존재하지 않을 시 <code>null</code>.</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="getPanelCount">
+            
+            getPanelCount<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{number}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line218">line 218</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Returns the total length of original panels</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>원본 패널의 개수를 반환한다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        number
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">Length of original panels.</div>
+                <div class="ko"><p>원본 패널의 개수</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="getPrevIndex">
+            
+            getPrevIndex<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{number}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line161">line 161</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Returns the index number of the previous panel.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>현재 선택된 패널의 이전 패널의 인덱스 번호를 반환한다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        number
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">Zero-based index number of the previous panel.<br>When <code>circular</code> option is <code>false</code>, return -1 if selected panel is first panel.</div>
+                <div class="ko"><p>이전 패널 요소의 인덱스 번호. 0부터 시작하는 정수.<br><code>circular</code>옵션이 <code>false</code>일 때 현재 선택된 패널이 첫번째 패널이라면 <code>-1</code>을 반환한다.</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="getStatus">
+            
+            getStatus<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Readonly&lt;<a href="eg.Flicking.html#.FlickingStatus">FlickingStatus</a>>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line258">line 258</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Get current flicking status. If the returned value is specified as a <a href="eg.Flicking.html#setStatus"><code>setStatus()</code></a> method argument, it can be returned to its value status.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>현재 상태 값을 반환한다. 반환받은 값을 <a href="eg.Flicking.html#setStatus"><code>setStatus()</code></a> 메서드 인자로 지정하면 그 값 상태로 되돌릴 수 있다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        Readonly&lt;<a href="eg.Flicking.html#.FlickingStatus">FlickingStatus</a>>
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">An object with current status value information.</div>
+                <div class="ko"><p>현재 상태값 정보를 가진 객체.</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="getVisiblePanels">
+            
+            getVisiblePanels<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a>[]}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line208">line 208</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Returns the panel objects shown in the flicking area.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>플리킹 영역에서 보여지는 패널 오브젝트들을 반환한다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        <a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a>[]
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">The panel objects shown in the flicking area. </div>
+                <div class="ko"><p>플리킹 영역에서 보여지는 패널 오브젝트들</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="hasOn">
+            
+                <span class="inherited"><a href="eg.Component.html#hasOn">inherited</a></span>
+            
+            hasOn<span class="signature">(eventName)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Boolean}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="node_modules_@egjs_component_src_component.js.html">component.js</a>, <a href="node_modules_@egjs_component_src_component.js.html#line150">line 150</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Checks whether an event has been attached to a component.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>컴포넌트에 이벤트가 등록됐는지 확인한다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>eventName</strong>
+            
+
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">String</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>The name of the event to be attached </p></div>
+            <div class="description ko"><p>등록 여부를 확인할 이벤트의 이름</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        Boolean
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">Indicates whether the event is attached. </div>
+                <div class="ko"><p>이벤트 등록 여부</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code><p>class Some extends eg.Component {<br>
+some() {<br>
+this.hasOn(&quot;hi&quot;);// check hi event.<br>
+}<br>
+}</p></code></pre>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="isPlaying">
+            
+            isPlaying<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{boolean}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line227">line 227</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Checks whether the animated panel is playing.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>패널 이동 애니메이션이 진행 중인지 확인한다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        boolean
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">Indicates whether the animated panel is playing </div>
+                <div class="ko"><p>패널 이동 애니메이션 진행 중 여부</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="moveTo">
+            
+            moveTo<span class="signature">(index, <span class="optional">duration</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{this}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line124">line 124</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Moves to the panel in the order specified in <code>index</code>. If <code>index</code> is equal to selected panel's index, no action is taken.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p><code>index</code>에 지정한 순서의 패널로 이동한다. <code>index</code>값이 현재 선택된 패널의 인덱스와 동일하다면, 아무 동작도 하지 않는다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>index</strong>
+            
+
+            
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">number</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>The index number of the panel to be moved.</p></div>
+            <div class="description ko"><p>이동할 패널의 인덱스 번호.</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>duration</strong>
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">number</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>[duration=options.duration] Duration of the panel movement (unit: ms) </p></div>
+            <div class="description ko"><p>패널 이동 애니메이션 진행 시간(단위: ms)</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        this
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">An instance of a module itself </div>
+                <div class="ko"><p>모듈 자신의 인스턴스</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="next">
+            
+            next<span class="signature">(<span class="optional">duration</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{this}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line113">line 113</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Move to the next panel. If <code>horizontal=true</code>is right panel. If <code>horizontal=false</code>is lower panel.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>다음 패널로 이동한다. <code>horizontal=true</code>이면 우측 패널. <code>horizontal=false</code>이면 하측 패널.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>duration</strong>
+            
+                (default: <code>options.duration</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">number</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Duration of the panel movement (unit: ms) </p></div>
+            <div class="description ko"><p>패널 이동 애니메이션 진행 시간(단위: ms)</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        this
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">An instance of a module itself </div>
+                <div class="ko"><p>모듈 자신의 인스턴스</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="off">
+            
+                <span class="inherited"><a href="eg.Component.html#off">inherited</a></span>
+            
+            off<span class="signature">(eventName, handlerToDetach)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{eg.Component}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="node_modules_@egjs_component_src_component.js.html">component.js</a>, <a href="node_modules_@egjs_component_src_component.js.html#line209">line 209</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Detaches an event from the component.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>컴포넌트에 등록된 이벤트를 해제한다</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>eventName</strong>
+            
+
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">eventName</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>The name of the event to be detached </p></div>
+            <div class="description ko"><p>해제할 이벤트의 이름</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>handlerToDetach</strong>
+            
+
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">function</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>The handler function of the event to be detached </p></div>
+            <div class="description ko"><p>해제할 이벤트의 핸들러 함수</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                    	eg.Component
+                    	
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">An instance of a component itself </div>
+                <div class="ko"><p>컴포넌트 자신의 인스턴스</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code><p>class Some extends eg.Component {<br>
+hi() {<br>
+console.log(&quot;hi&quot;);<br>
+}<br>
+some() {<br>
+this.off(&quot;hi&quot;,this.hi); //detach event<br>
+}<br>
+}</p></code></pre>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="on">
+            
+                <span class="inherited"><a href="eg.Component.html#on">inherited</a></span>
+            
+            on<span class="signature">(eventName, handlerToAttach)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{eg.Component}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="node_modules_@egjs_component_src_component.js.html">component.js</a>, <a href="node_modules_@egjs_component_src_component.js.html#line170">line 170</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Attaches an event to a component.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>컴포넌트에 이벤트를 등록한다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>eventName</strong>
+            
+
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">eventName</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>The name of the event to be attached </p></div>
+            <div class="description ko"><p>등록할 이벤트의 이름</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>handlerToAttach</strong>
+            
+
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">function</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>The handler function of the event to be attached </p></div>
+            <div class="description ko"><p>등록할 이벤트의 핸들러 함수</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                    	eg.Component
+                    	
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">An instance of a component itself</div>
+                <div class="ko"><p>컴포넌트 자신의 인스턴스</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code><p>class Some extends eg.Component {<br>
+hi() {<br>
+console.log(&quot;hi&quot;);<br>
+}<br>
+some() {<br>
+this.on(&quot;hi&quot;,this.hi); //attach event<br>
+}<br>
+}</p></code></pre>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="once">
+            
+                <span class="inherited"><a href="eg.Component.html#once">inherited</a></span>
+            
+            once<span class="signature">(eventName, handlerToAttach)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{eg.Component}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="node_modules_@egjs_component_src_component.js.html">component.js</a>, <a href="node_modules_@egjs_component_src_component.js.html#line116">line 116</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Executed event just one time.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>이벤트가 한번만 실행된다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>eventName</strong>
+            
+
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">eventName</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>The name of the event to be attached </p></div>
+            <div class="description ko"><p>등록할 이벤트의 이름</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>handlerToAttach</strong>
+            
+
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">function</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>The handler function of the event to be attached </p></div>
+            <div class="description ko"><p>등록할 이벤트의 핸들러 함수</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                    	eg.Component
+                    	
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">An instance of a component itself</div>
+                <div class="ko"><p>컴포넌트 자신의 인스턴스</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code><p>class Some extends eg.Component {<br>
+hi() {<br>
+alert(&quot;hi&quot;);<br>
+}<br>
+thing() {<br>
+this.once(&quot;hi&quot;, this.hi);<br>
+}<br>
+}</p>
+<p>var some = new Some();<br>
+some.thing();<br>
+some.trigger(&quot;hi&quot;);<br>
+// fire alert(&quot;hi&quot;);<br>
+some.trigger(&quot;hi&quot;);<br>
+// Nothing happens</p></code></pre>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="prev">
+            
+            prev<span class="signature">(<span class="optional">duration</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{this}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line103">line 103</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Move to the previous panel. If <code>horizontal=true</code>is left panel. If <code>horizontal=false</code>is upper panel.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>이전 패널로 이동한다. <code>horizontal=true</code>이면 좌측 패널. <code>horizontal=false</code>이면 상측 패널.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>duration</strong>
+            
+                (default: <code>options.duration</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">number</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Duration of the panel movement (unit: ms) </p></div>
+            <div class="description ko"><p>패널 이동 애니메이션 진행 시간(단위: ms)</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        this
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">An instance of a module itself </div>
+                <div class="ko"><p>모듈 자신의 인스턴스</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="removePlugins">
+            
+            removePlugins<span class="signature">(plugins)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line304">line 304</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Remove plugins from Flicking</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>플리킹으로부터 플러그인들을 제거한다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>plugins</strong>
+            
+
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type"><a href="eg.Flicking.html#.Plugin">Plugin</a> | <a href="eg.Flicking.html#.Plugin">Plugin</a>[]</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>The plugin(s) to remove </p></div>
+            <div class="description ko"><p>제거 플러그인(들)</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+
+An instance of a module itself <ko>모듈 자신의 인스턴스</ko>
+
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="resize">
+            
+            resize<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{this}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line345">line 345</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>The horizontal or vertical length of the panel is updated according to the base element. If <code>horizontal=true</code> is horizontal. If <code>horizontal=false</code> is vertical.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>패널의 가로 혹은 세로 길이를 기준요소에 맞춰 갱신한다. <code>horizontal=true</code>이면 가로, <code>horizontal=false</code>이면 세로.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        this
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">An instance of a module itself</div>
+                <div class="ko"><p>모듈 자신의 인스턴스</p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="setStatus">
+            
+            setStatus<span class="signature">(status)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{void}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_Flicking.ts.html">Flicking.ts</a>, <a href="src_Flicking.ts.html#line278">line 278</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Restore to the state of the <code>status</code>.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p><code>status</code>의 상태로 복원한다.</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>status</strong>
+            
+
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type"><a href="eg.Flicking.html#.FlickingStatus">FlickingStatus</a></span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Status value to be restored. You can specify the return value of the <a href="eg.Flicking.html#getStatus"><code>getStatus()</code></a> method.</p></div>
+            <div class="description ko"><p>복원할 상태 값. <a href="eg.Flicking.html#getStatus"><code>getStatus()</code></a>메서드의 반환값을 지정하면 된다.</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        void
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="trigger">
+            
+                <span class="inherited"><a href="eg.Component.html#trigger">inherited</a></span>
+            
+            trigger<span class="signature">(eventName, <span class="optional">customEvent</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Boolean}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="node_modules_@egjs_component_src_component.js.html">component.js</a>, <a href="node_modules_@egjs_component_src_component.js.html#line63">line 63</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Triggers a custom event.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>커스텀 이벤트를 발생시킨다</p>
+	</div>
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>eventName</strong>
+            
+
+            
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">String</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>The name of the custom event to be triggered </p></div>
+            <div class="description ko"><p>발생할 커스텀 이벤트의 이름</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>customEvent</strong>
+            
+                (default: <code>{}</code>)
+            
+
+            
+                
+                    <span class="optional">optional</span>
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">Object</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Event data to be sent when triggering a custom event </p></div>
+            <div class="description ko"><p>커스텀 이벤트가 발생할 때 전달할 데이터</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>...restParam</strong>
+            
+
+            
+                
+                
+                    
+                
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type"></span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        Boolean
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+                <div class="en">Indicates whether the event has occurred. If the stop() method is called by a custom event handler, it will return false and prevent the event from occurring. <a href="https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F">Ref</a> </div>
+                <div class="ko"><p>이벤트 발생 여부. 커스텀 이벤트 핸들러에서 stop() 메서드를 호출하면 'false'를 반환하고 이벤트 발생을 중단한다. <a href="https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F">참고</a></p></div>
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code><p>class Some extends eg.Component {<br>
+some(){<br>
+if(this.trigger(&quot;beforeHi&quot;)){ // When event call to stop return false.<br>
+this.trigger(&quot;hi&quot;);// fire hi event.<br>
+}<br>
+}<br>
+}</p>
+<p>const some = new Some();<br>
+some.on(&quot;beforeHi&quot;, (e) =&gt; {<br>
+if(condition){<br>
+e.stop(); // When event call to stop, <code>hi</code> event not call.<br>
+}<br>
+});<br>
+some.on(&quot;hi&quot;, (e) =&gt; {<br>
+// <code>currentTarget</code> is component instance.<br>
+console.log(some === e.currentTarget); // true<br>
+});<br>
+// If you want to more know event design. You can see article.<br>
+// https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F</p></code></pre>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        <dl>
+                
+
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".ChangeEvent">eg.Flicking.ChangeEvent<span class="type-signature type tsinterface">TSInterface</span> </h4>
+    </div>
+    
+</dt>
+<dd>
+    
+    
+
+    
+<dl class="details">
+    
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>The name of the event </p></div>
+                <div class="ko"><p>이벤트명</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Index number of the current panel. See the <a href="eg.Flicking.html#getIndex"><code>getIndex()</code></a> method.</p></div>
+                <div class="ko"><p>현재 패널 요소의 인덱스 번호. <a href="eg.Flicking.html#getIndex"><code>getIndex()</code></a>메서드 참조.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>panel</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Current panel object. </p></div>
+                <div class="ko"><p> 현재 패널의 오브젝트 </p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>progress</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Current Flicking Progress</p></div>
+                <div class="ko"><p>현재 플리킹의 진행도</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>isTrusted</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p><code>true</code> when the event was generated by a user action(&quot;mouse&quot; or &quot;touch&quot;) otherwise <code>false</code>.</p></div>
+                <div class="ko"><p>사용자 액션(&quot;mouse&quot; 또는 &quot;touch&quot;)에 의해 이벤트가 생성된 경우 <code>true</code>. 그 외는 <code>false</code>.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>holding</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Whether the user is inputing through the input device. (Whether it is 'mousedown' for a mouse device or 'touchmove' for a touch device.)</p></div>
+                <div class="ko"><p>사용자가 입력 장치를 통해 입력중인지 여부. (마우스 장치라면 'mousedown' 여부, 터치 장치라면 'touchmove' 여부)</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>stop</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">() => void</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Cancels the default action, and prevents every events after it.<br>Not effective with events postfixed in <code>-End</code></p></div>
+                <div class="ko"><p>이벤트의 기본동작을 취소하고, 해당 이벤트 뒤에 발생할 이벤트들을 전부 발생하지 않도록 한다.<br><code>-End</code>가 접미사로 붙은 이벤트에서는 유효한 동작을 하지 않는다.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>direction</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">ValueOf&lt;<a href="eg.Flicking.html#.Direction">Direction</a>> | null</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Direction of the panel movement. <code>null</code> in <code>dragStart</code> event.</p></div>
+                <div class="ko"><p>패널 이동 방향. <code>dragStart</code>이벤트에서는 <code>null</code>이다.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>axesEvent</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Original event emitted from (<a href="https://naver.github.io/egjs-axes/release/latest/doc/index.html">eg.Axes</a>)</p></div>
+                <div class="ko"><p>내부의 (<a href="https://naver.github.io/egjs-axes/release/latest/doc/index.html">eg.Axes</a>)로부터 받아온 원본 이벤트</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>currentTarget</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="eg.Flicking.html">Flicking</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Flicking instance that triggered event.</p></div>
+                <div class="ko"><p>이벤트를 발생시킨 Flicking의 인스턴스</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>prevIndex</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Index of previous panel</p></div>
+                <div class="ko"><p>이전 패널의 인덱스</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>prevPanel</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+
+    
+</dd>
+
+            
+                
+
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".Direction">eg.Flicking.Direction<span class="type-signature type tsinterface">TSInterface</span> </h4>
+    </div>
+    
+</dt>
+<dd>
+    
+    
+
+    
+<dl class="details">
+    
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>PREV</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">"PREV"</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>⬅️(horizontal) or ⬆️(vertical)</p></div>
+                <div class="ko"><p>⬅️(horizontal) 또는 ⬆️(vertical)</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>NEXT</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">"NEXT"</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>➡️(horizontal) or ⬇️(vertical)</p></div>
+                <div class="ko"><p>➡️(horizontal) 또는 ⬇️(vertical)</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+
+    
+</dd>
+
+            
+                
+
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".EventType">eg.Flicking.EventType<span class="type-signature type tsinterface">TSInterface</span> </h4>
+    </div>
+    
+</dt>
+<dd>
+    
+    
+
+    
+<dl class="details">
+    
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>HOLD_START</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">"holdStart"</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>holdStart 이벤트</p></div>
+                <div class="ko"><p>holdStart 이벤트</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>HOLD_END</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">"holdEnd"</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>holdEnd 이벤트</p></div>
+                <div class="ko"><p>holdEnd 이벤트</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>MOVE_START</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">"moveStart"</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>moveStart 이벤트</p></div>
+                <div class="ko"><p>moveStart 이벤트</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>MOVE</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">"move"</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>move 이벤트</p></div>
+                <div class="ko"><p>move 이벤트</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>MOVE_END</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">"moveEnd"</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>moveEnd 이벤트</p></div>
+                <div class="ko"><p>moveEnd 이벤트</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>CHANGE</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">"change"</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>change 이벤트</p></div>
+                <div class="ko"><p>change 이벤트</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>RESTORE</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">"restore"</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>restore 이벤트</p></div>
+                <div class="ko"><p>restore 이벤트</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>SELECT</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">"select"</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>select 이벤트</p></div>
+                <div class="ko"><p>select 이벤트</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+
+    
+</dd>
+
+            
+                
+
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".FlickingEvent">eg.Flicking.FlickingEvent<span class="type-signature type tsinterface">TSInterface</span> </h4>
+    </div>
+    
+</dt>
+<dd>
+    
+    
+
+    
+<dl class="details">
+    
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>The name of the event </p></div>
+                <div class="ko"><p>이벤트명</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Index number of the current panel. See the <a href="eg.Flicking.html#getIndex"><code>getIndex()</code></a> method.</p></div>
+                <div class="ko"><p>현재 패널 요소의 인덱스 번호. <a href="eg.Flicking.html#getIndex"><code>getIndex()</code></a>메서드 참조.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>panel</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Current panel object. </p></div>
+                <div class="ko"><p> 현재 패널의 오브젝트 </p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>progress</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Current Flicking Progress</p></div>
+                <div class="ko"><p>현재 플리킹의 진행도</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>isTrusted</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p><code>true</code> when the event was generated by a user action(&quot;mouse&quot; or &quot;touch&quot;) otherwise <code>false</code>.</p></div>
+                <div class="ko"><p>사용자 액션(&quot;mouse&quot; 또는 &quot;touch&quot;)에 의해 이벤트가 생성된 경우 <code>true</code>. 그 외는 <code>false</code>.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>holding</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Whether the user is inputing through the input device. (Whether it is 'mousedown' for a mouse device or 'touchmove' for a touch device.)</p></div>
+                <div class="ko"><p>사용자가 입력 장치를 통해 입력중인지 여부. (마우스 장치라면 'mousedown' 여부, 터치 장치라면 'touchmove' 여부)</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>stop</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">() => void</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Cancels the default action, and prevents every events after it.<br>Not effective with events postfixed in <code>-End</code></p></div>
+                <div class="ko"><p>이벤트의 기본동작을 취소하고, 해당 이벤트 뒤에 발생할 이벤트들을 전부 발생하지 않도록 한다.<br><code>-End</code>가 접미사로 붙은 이벤트에서는 유효한 동작을 하지 않는다.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>direction</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">ValueOf&lt;<a href="eg.Flicking.html#.Direction">Direction</a>> | null</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Direction of the panel movement. <code>null</code> in <code>dragStart</code> event.</p></div>
+                <div class="ko"><p>패널 이동 방향. <code>dragStart</code>이벤트에서는 <code>null</code>이다.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>axesEvent</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Original event emitted from (<a href="https://naver.github.io/egjs-axes/release/latest/doc/index.html">eg.Axes</a>)</p></div>
+                <div class="ko"><p>내부의 (<a href="https://naver.github.io/egjs-axes/release/latest/doc/index.html">eg.Axes</a>)로부터 받아온 원본 이벤트</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>currentTarget</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="eg.Flicking.html">Flicking</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Flicking instance that triggered event.</p></div>
+                <div class="ko"><p>이벤트를 발생시킨 Flicking의 인스턴스</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+
+    
+</dd>
+
+            
+                
+
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".FlickingOptions">eg.Flicking.FlickingOptions<span class="type-signature type tsinterface">TSInterface</span> </h4>
+    </div>
+    
+</dt>
+<dd>
+    
+    
+
+    
+<dl class="details">
+    
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>classPrefix</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>A prefix for class names of the panels, viewport and camera.</p></div>
+                <div class="ko"><p>패널들과 뷰포트, 카메라 클래스 이름의 접두사.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>deceleration</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Deceleration value for panel movement animation where acceleration is manually enabled by user. Higher value means shorter running time.</p></div>
+                <div class="ko"><p>사용자의 동작으로 가속도가 적용된 패널 이동 애니메이션의 감속도. 값이 높을수록 애니메이션 실행 시간이 짧아진다.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>horizontal</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Direction of panel movement. (true: horizontal, false: vertical)</p></div>
+                <div class="ko"><p>패널 이동 방향. (true: 가로방향, false: 세로방향)</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>circular</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Enables circular mode, which connects first/last panel for infinite scrolling</p></div>
+                <div class="ko"><p>순환 모드를 활성화한다. 순환 모드에서는 양 끝의 패널이 서로 연결되여 무한 스크롤이 가능하다.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>threshold</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Movement threshold to destination panel(unit: pixel). A panel element must be dragged beyond the threshold to move to the destination panel.</p></div>
+                <div class="ko"><p>목적 패널로의 이동 임계값 (단위: 픽셀). 패널 요소를 임계값 이상으로 끌어다 놓아야만이 목적 패널로 이동한다.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Duration of the panel movement. (unit: ms)</p></div>
+                <div class="ko"><p>패널 이동 애니메이션 진행 시간.(단위: ms)</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>panelEffect</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">(x: number) => number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>The easing function to apply to a panel moving animation. The default function is easeOutCubic.</p></div>
+                <div class="ko"><p>패널 이동 애니메이션에 적용할 <code>easing</code>함수. 기본값은 <code>easeOutCubic</code>이다.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>defaultIndex</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Index of panel to set as default when initializing the module. A zero-based integer.</p></div>
+                <div class="ko"><p>모듈 초기화시 지정할 디폴트 패널의 인덱스로, 0부터 시작하는 정수.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>inputType</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string[]</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Types of input devices. (<a href="https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.PanInput.html">eg.Axes.PanInput Reference</a>)<br>- &quot;touch&quot;: A touch input device.<br>- &quot;mouse&quot;: A mouse.</p></div>
+                <div class="ko"><p>입력 장치 종류. (<a href="https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.PanInput.html">eg.Axes.PanInput 참고</a>)<br>- &quot;touch&quot;: 터치 입력 장치.<br>- &quot;mouse&quot;: 마우스.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>thresholdAngle</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>The threshold angle that enables Flicking operation. (0 ~ 90 from the x-axis)</p></div>
+                <div class="ko"><p>x축을 기준으로 하여, Flicking의 동작을 가능하게 하는 기준 각도 (0 ~ 90)</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>bounce</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number | string | [number | string, number | string]</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>The size value of the bounce area. Only can be enabled when <code>circular=false</code><br>Should be given in px or % value of viewport size.<br>You can combinate those values with plus/minus sign<br>ex) &quot;50&quot;, &quot;100px&quot;, &quot;0%&quot;, &quot;25% + 100px&quot;</p></div>
+                <div class="ko"><p>바운스 영역의 크기값. <code>circular=false</code>인 경우에만 사용할 수 있다.<br>px값이나, 뷰포트의 크기 대비 %값을 사용할 수 있고, 이를 + 혹은 - 기호로 연계하여 사용할 수도 있다.<br>예) &quot;50&quot;, &quot;100px&quot;, &quot;0%&quot;, &quot;25% + 100px&quot;</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>autoResize</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Whether resize() method should be called automatically after window resize event.</p></div>
+                <div class="ko"><p>window의 <code>resize</code> 이벤트 이후 자동으로 resize()메소드를 호출할지의 여부.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>adaptive</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Whether the height of the viewport element reflects the height value of the panel after completing the movement.</p></div>
+                <div class="ko"><p>목적 패널로 이동한 후 그 패널의 높이값을 뷰포트 요소의 높이값에 반영할지 여부.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>zIndex</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>z-index value for viewport element</p></div>
+                <div class="ko"><p>뷰포트 요소의 z-index 값</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>bound</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Prevents view going out of first/last panel. Only can be enabled when <code>circular=false</code>.</p></div>
+                <div class="ko"><p>뷰가 첫번째와 마지막 패널 밖으로 나가는 것을 막아준다. <code>circular=false</code>인 경우에만 사용할 수 있다.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>overflow</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Disables CSS property <code>overflow: hidden</code> in viewport if <code>true</code>.</p></div>
+                <div class="ko"><p><code>true</code>로 설정시 뷰포트에 <code>overflow: hidden</code> 속성을 해제한다.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>hanger</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Position of hanger in viewport, which hangs panel anchors.<br>Can be given in px or % value of viewport size.<br>You can combinate those values with plus/minus sign<br>ex) &quot;50&quot;, &quot;100px&quot;, &quot;0%&quot;, &quot;25% + 100px&quot;</p></div>
+                <div class="ko"><p>뷰포트 내부의 행어의 위치. 패널의 앵커들이 뷰포트 내에서 멈추는 지점에 해당한다.<br>px값이나, 뷰포트의 크기 대비 %값을 사용할 수 있고, 이를 + 혹은 - 기호로 연계하여 사용할 수도 있다.<br>예) &quot;50&quot;, &quot;100px&quot;, &quot;0%&quot;, &quot;25% + 100px&quot;</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>anchor</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Position of anchor in panels, which can be hanged by viewport hanger.<br>Can be given in px or % value of panel size.<br>You can combinate those values with plus/minus sign<br>ex) &quot;50&quot;, &quot;100px&quot;, &quot;0%&quot;, &quot;25% + 100px&quot;</p></div>
+                <div class="ko"><p>패널 내부의 앵커의 위치. 뷰포트의 행어와 연계하여 패널이 화면 내에서 멈추는 지점을 설정할 수 있다.<br>px값이나, 패널의 크기 대비 %값을 사용할 수 있고, 이를 + 혹은 - 기호로 연계하여 사용할 수도 있다.<br>예) &quot;50&quot;, &quot;100px&quot;, &quot;0%&quot;, &quot;25% + 100px&quot;</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>gap</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Space between each panels.<br>Should be given in number(px).</p></div>
+                <div class="ko"><p>패널간에 부여할 간격의 크기를 나타내는 숫자(px)</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>snap</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>The number of panels you're going to roll over to when you snap</p></div>
+                <div class="ko"><p>한 번 스냅 할 때 최대 몇 개의 패널까지 넘길 건지 나타내는 숫자</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+
+    
+</dd>
+
+            
+                
+
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".FlickingPanel">eg.Flicking.FlickingPanel<span class="type-signature type tsinterface">TSInterface</span> </h4>
+    </div>
+    
+</dt>
+<dd>
+    
+    
+
+    
+<dl class="details">
+    
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>HTML element of panel object.</p></div>
+                <div class="ko"><p>패널 오브젝트에 지정된 HTML Element.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Index of panel, zero-based integer.</p></div>
+                <div class="ko"><p>패널의 인덱스로, 0부터 시작하는 정수</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Position of panel where it is placed from left(horizontal)/top(vertical).</p></div>
+                <div class="ko"><p>패널의 위치로, 왼쪽(horizontal)/위(vertical)을 기준으로 얼마나 떨어져 있는지를 나타내는 값.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>anchorPosition</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Position of panel anchor where it is actually stopped interacting with hanger position.</p></div>
+                <div class="ko"><p>행어의 위치와 상호작용하여 실제로 패널이 멈추는 부분.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>size</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Size of panel, width(horizontal)/height(vertical) in <code>px</code>.</p></div>
+                <div class="ko"><p><code>px</code>단위의 패널의 크기, horizontal일 때는 너비, vertical일 때는 높이에 해당한다.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>progress</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Progress of movement between previous or next panels on the current panel (prev panel: -1 ~ 0, next panel: 0 ~ 1) </p></div>
+                <div class="ko"><p> 현재 패널에서 이전/다음 패널간의 이동 진행률 (이전 패널: -1 ~ 0, 다음 패널: 0 ~ 1)</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>outsetProgress</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Current panel progress in container with outside (start: -1, center(or hanger): 0, end: 1) </p></div>
+                <div class="ko"><p> 현재 패널이 외부까지 포함한 컨테이너에서 진행률 (시작점: -1, 중심(또는 hanger): 0, 도착점: 1)</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>visibleRatio</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Percentage of areas where panels are visible in the viewport </p></div>
+                <div class="ko"><p> 뷰포트 안에 패널이 보이는 영역의 비율 </p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>focus</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">(duration?: number) => void</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Move to this panel.</p></div>
+                <div class="ko"><p>이 패널로 이동한다.</p></div>
+                
+
+                
+                    <h6>Properties</h6>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Duration of the panel movement. (unit: ms)</p></div>
+                <div class="ko"><p>패널 이동 애니메이션 진행 시간.(단위: ms)</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>update</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">(updateFunction: (element: HTMLElement) => void) => void</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Update panel element with given function.</p></div>
+                <div class="ko"><p>패널 요소를 주어진 함수를 이용하여 업데이트한다.</p></div>
+                
+
+                
+                    <h6>Properties</h6>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>updateFunction</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Callback function to update panel element.</p></div>
+                <div class="ko"><p>패널 요소를 업데이트하기 위한 콜백 함수</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>prev</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">() => <a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a> | null</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Return previous panel of current panel, <code>null</code> if it doesn't exist.</p></div>
+                <div class="ko"><p>현재 패널의 이전 패널을 반환한다. 패널이 존재하지 않을 시 <code>null</code>을 반환한다.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>next</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">() => <a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a> | null</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Return next panel of current panel, <code>null</code> if it doesn't exist.</p></div>
+                <div class="ko"><p>현재 패널의 이전 패널을 반환한다. 패널이 존재하지 않을 시 <code>null</code>을 반환한다.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code><ul>
+<li><strong>Updating panel</strong></li>
+</ul>
+<pre class="prettyprint source lang-javascript"><code>// As panel elements can be cloned in circular mode, `element` parameter is provided as read-only.
+// You should use `update()` function to consistently update all panel elements cloned.
+
+// Don't
+panel.element.classList.add(&quot;foo&quot;);
+// Do
+panel.update(el => {
+  el.classList.add(&quot;foo&quot;);
+});
+</code></pre></code></pre>
+    
+
+    
+</dd>
+
+            
+                
+
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".FlickingStatus">eg.Flicking.FlickingStatus<span class="type-signature type tsinterface">TSInterface</span> </h4>
+    </div>
+    
+</dt>
+<dd>
+    
+    
+
+    
+<dl class="details">
+    
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Index of current panel.</p></div>
+                <div class="ko"><p>현재 패널의 인덱스.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>panels</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array&lt;{html: string, index: number}></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Restore information of panels Flicking has.</p></div>
+                <div class="ko"><p>Flicking이 갖고 있는 패널들의 정보</p></div>
+                
+
+                
+                    <h6>Properties</h6>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>html</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p><code>outerHTML</code> of each panel elements.</p></div>
+                <div class="ko"><p>각 패널 엘리먼트의 <code>outerHTML</code></p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">index</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Index of each panels</p></div>
+                <div class="ko"><p>각 패널의 인덱스</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>Camera</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>position of Flicking - </p></div>
+                <div class="ko"><p>Flicking의 카메라 위치</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+
+    
+</dd>
+
+            
+                
+
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".Plugin">eg.Flicking.Plugin<span class="type-signature type tsinterface">TSInterface</span> </h4>
+    </div>
+    
+</dt>
+<dd>
+    
+    
+
+    
+<dl class="details">
+    
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>init</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">(flicking: <a href="eg.Flicking.html">Flicking</a>) => void</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Initialization method that occurs when a plug-in is added</p></div>
+                <div class="ko"><p>플러그인을 추가했을 때 발생하는 초기화 메소드</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>destroy</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">(flicking: <a href="eg.Flicking.html">Flicking</a>) => void</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>A destroy method that occurs when a plug-in is removed</p></div>
+                <div class="ko"><p>플러그인을 제거했을 때 발생하는 해제 메소드</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+
+    
+</dd>
+
+            
+                
+
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".SelectEvent">eg.Flicking.SelectEvent<span class="type-signature type tsinterface">TSInterface</span> </h4>
+    </div>
+    
+</dt>
+<dd>
+    
+    
+
+    
+<dl class="details">
+    
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>The name of the event </p></div>
+                <div class="ko"><p>이벤트명</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Index number of the current panel. See the <a href="eg.Flicking.html#getIndex"><code>getIndex()</code></a> method.</p></div>
+                <div class="ko"><p>현재 패널 요소의 인덱스 번호. <a href="eg.Flicking.html#getIndex"><code>getIndex()</code></a>메서드 참조.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>panel</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Current panel object. </p></div>
+                <div class="ko"><p> 현재 패널의 오브젝트 </p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>progress</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Current Flicking Progress</p></div>
+                <div class="ko"><p>현재 플리킹의 진행도</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>isTrusted</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p><code>true</code> when the event was generated by a user action(&quot;mouse&quot; or &quot;touch&quot;) otherwise <code>false</code>.</p></div>
+                <div class="ko"><p>사용자 액션(&quot;mouse&quot; 또는 &quot;touch&quot;)에 의해 이벤트가 생성된 경우 <code>true</code>. 그 외는 <code>false</code>.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>holding</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Whether the user is inputing through the input device. (Whether it is 'mousedown' for a mouse device or 'touchmove' for a touch device.)</p></div>
+                <div class="ko"><p>사용자가 입력 장치를 통해 입력중인지 여부. (마우스 장치라면 'mousedown' 여부, 터치 장치라면 'touchmove' 여부)</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>stop</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">() => void</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Cancels the default action, and prevents every events after it.<br>Not effective with events postfixed in <code>-End</code></p></div>
+                <div class="ko"><p>이벤트의 기본동작을 취소하고, 해당 이벤트 뒤에 발생할 이벤트들을 전부 발생하지 않도록 한다.<br><code>-End</code>가 접미사로 붙은 이벤트에서는 유효한 동작을 하지 않는다.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>direction</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">ValueOf&lt;<a href="eg.Flicking.html#.Direction">Direction</a>> | null</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Direction of the panel movement. <code>null</code> in <code>dragStart</code> event.</p></div>
+                <div class="ko"><p>패널 이동 방향. <code>dragStart</code>이벤트에서는 <code>null</code>이다.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>axesEvent</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Original event emitted from (<a href="https://naver.github.io/egjs-axes/release/latest/doc/index.html">eg.Axes</a>)</p></div>
+                <div class="ko"><p>내부의 (<a href="https://naver.github.io/egjs-axes/release/latest/doc/index.html">eg.Axes</a>)로부터 받아온 원본 이벤트</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>currentTarget</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="eg.Flicking.html">Flicking</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Flicking instance that triggered event.</p></div>
+                <div class="ko"><p>이벤트를 발생시킨 Flicking의 인스턴스</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>selectedIndex</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Index of panel user selected</p></div>
+                <div class="ko"><p>사용자가 선택한 패널의 인덱스</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>selectedPanel</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Instance of selected panel</p></div>
+                <div class="ko"><p>사용자가 선택한 패널의 오브젝트</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+
+    
+</dd>
+
+            </dl>
+    
+
+    
+        <h3 class="subsection-title">Events</h3>
+
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:change">
+            
+            change
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_types.ts.html">types.ts</a>, <a href="src_types.ts.html#line166">line 166</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Event triggered when panel index is changed.<br>Calling <code>stop()</code> in event will prevent index changing &amp; panel moving.<br><br><code>event</code> doesn't have <code>axesEvent</code> property when triggered by <a href="eg.Flicking.html#moveTo"><code>moveTo()</code></a>, <a href="eg.Flicking.html#prev"><code>prev()</code></a>, <a href="eg.Flicking.html#next"><code>next()</code></a> method.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>패널 인덱스가 변경될 때 발생하는 이벤트.<br>이벤트의 <code>stop()</code>을 호출시 인덱스의 변경과, 패널로의 이동을 막는다.<br><br><a href="eg.Flicking.html#moveTo"><code>moveTo()</code></a>, <a href="eg.Flicking.html#prev"><code>prev()</code></a>, <a href="eg.Flicking.html#next"><code>next()</code></a>와 같은 메소드에 의해 호출되었을 경우 <code>event</code>내의 <code>axesEvent</code> 프로퍼티 값은 undefined이다.</p>
+	</div>
+	
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type"><a href="eg.Flicking.html#.ChangeEvent">eg.Flicking.ChangeEvent</a></span>
+
+
+            </li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:holdEnd">
+            
+            holdEnd
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_types.ts.html">types.ts</a>, <a href="src_types.ts.html#line145">line 145</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Event triggered when user stopped dragging.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>사용자가 드래그를 중단했을 때 발생하는 이벤트.</p>
+	</div>
+	
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type"><a href="eg.Flicking.html#.FlickingEvent">eg.Flicking.FlickingEvent</a></span>
+
+
+            </li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:holdStart">
+            
+            holdStart
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_types.ts.html">types.ts</a>, <a href="src_types.ts.html#line138">line 138</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Event triggered when user started dragging.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>사용자가 드래그를 시작했을 떄 발생하는 이벤트</p>
+	</div>
+	
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type"><a href="eg.Flicking.html#.FlickingEvent">eg.Flicking.FlickingEvent</a></span>
+
+
+            </li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:moveEnd">
+            
+            moveEnd
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_types.ts.html">types.ts</a>, <a href="src_types.ts.html#line159">line 159</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Event triggered after finish moving to the destination panel.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>목적 패널로의 이동을 완료한 다음 발생하는 이벤트.</p>
+	</div>
+	
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type"><a href="eg.Flicking.html#.FlickingEvent">eg.Flicking.FlickingEvent</a></span>
+
+
+            </li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:moveStart">
+            
+            moveStart
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_types.ts.html">types.ts</a>, <a href="src_types.ts.html#line152">line 152</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Event triggered once before first <code>move</code> event.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>첫 번째 <code>move</code>이벤트 직전에 단 한번 발생하는 이벤트.</p>
+	</div>
+	
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type"><a href="eg.Flicking.html#.FlickingEvent">eg.Flicking.FlickingEvent</a></span>
+
+
+            </li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:restore">
+            
+            restore
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_types.ts.html">types.ts</a>, <a href="src_types.ts.html#line173">line 173</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Event triggered when user drag amount not reached <code>threshold</code> in <a href="eg.Flicking.html#.FlickingOptions"><code>FlickingOptions</code></a>.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>사용자가 드래그한 정도가 <a href="eg.Flicking.html#.FlickingOptions"><code>FlickingOptions</code></a>의 <code>threshold</code>값보다 작을 때 발생하는 이벤트.</p>
+	</div>
+	
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type"><a href="eg.Flicking.html#.FlickingEvent">eg.Flicking.FlickingEvent</a></span>
+
+
+            </li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="event:select">
+            
+            select
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_types.ts.html">types.ts</a>, <a href="src_types.ts.html#line180">line 180</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Event triggered when user statically selected(clicked) panel.</p>
+	</div>
+	
+	
+	<div class="description ko">
+		<p>사용자가 패널을 정적으로 선택(클릭)했을 때 발생하는 이벤트.</p>
+	</div>
+	
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type"><a href="eg.Flicking.html#.SelectEvent">eg.Flicking.SelectEvent</a></span>
+
+
+            </li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        </dl>
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+        
+        <!-- disqus code -->
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        <!-- // disqus code -->
+        
+
+        <footer>
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 0.3.7-rc3</a> on Tue Mar 19 2019 13:58:44 GMT+0900 (Korean Standard Time)
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/main.js"></script>
+</body>
+</html>
