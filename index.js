@@ -48,19 +48,23 @@ function check() {
 }
 
 function scroll(index) {
-  if (!isEnableScroll) {
+  if (!isEnableScroll || !pages[index]) {
     return;
   }
   var scrollTop = getScrollTop();
+  var nextTop = pages[index].getBoundingClientRect().top;
 
-  Scene.animateItem({
-    scrollTop: [scrollTop, scrollTop + pages[index].getBoundingClientRect().top],
-  }, {
-    easing: Scene.EASE_IN_OUT,
-    duration: 0.5,
-  }).on("animate", function (e) {
-    window.scrollTo(0, e.frame.get("scrollTop"));
-  });
+  if (nextTop !== 0) {
+    Scene.animateItem({
+      scrollTop: [scrollTop, scrollTop + nextTop],
+    }, {
+      fillMode: "forwards",
+      easing: Scene.EASE_IN_OUT,
+      duration: 0.5,
+    }).on("animate", function (e) {
+      window.scrollTo(0, e.frame.get("scrollTop"));
+    });
+  }
   enableScrollTimer();
 }
 var paginationLiElements = document.querySelectorAll(".pagination li");
@@ -85,7 +89,7 @@ window.addEventListener("wheel", function (e) {
           } else if (delta < 0 && page > 0) {
             scroll(page - 1);
           } else {
-            enableScrollTimer();
+            scroll(page);
           }
         }
       } else if (page > currentPage && delta > 0 || page < currentPage && delta < 0) {
