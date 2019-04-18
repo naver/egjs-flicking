@@ -1,14 +1,15 @@
 module.exports = {
 	include: /\.min\.js$/,
-	sourceMap: true,
 	uglifyOptions: {
-		beautify: false,
-		mangle: {
-			keep_fnames: true
-		},
+		ie8: true,
 		compress: {
-			warnings: false
+			warnings: false,
 		},
-		comments: false
-	}
+		output: {
+			comments: false,
+			beautify: false
+		},
+	},
+	sourceMap: true,
 };
+

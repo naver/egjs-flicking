@@ -24,7 +24,7 @@ const changelog = {
 		docs: "Documents",
 		style: "Code Styles",
 		refactor: "Refactorings",
-		test: "Test Codes",
+    test: "Test Codes",
 		chore: "Chore tasks"
 	},
 
@@ -52,7 +52,7 @@ const changelog = {
 	getLogCmd(afterValue, beforeValue) {
 		const date = new Date();
 
-		const after = afterValue || this.getFormattedDate(date.setMonth(date.getMonth() - 1));  // default: a month ago
+		const after = afterValue; // default: latest tag is created.
 		const before = beforeValue || this.getFormattedDate();  // default: today
 
 		console.log("---------------------------------------------------------------");
@@ -73,7 +73,11 @@ const changelog = {
 	// get git info cmd string
 	getGitInfo() {
 		return "git rev-parse --abbrev-ref HEAD && git log -1 --pretty=\"format:%h %ci\" --no-merges";
-	},
+  },
+  
+  getLatestTagDate() {
+    return "git log --tags --simplify-by-decoration --pretty='format:%ad' -1 --date=short";
+  },
 
 	// generate changelog from the git log result
 	generate(error, stdout, stderr) {
@@ -192,7 +196,7 @@ const changelog = {
 					markdown += template.item
 						.replace(/{=SUBJECT}/g, el.subject)
 						.replace(/{=ISSUE-NO}/g, el.issueNo)
-						.replace(/{=URL}/g, pkg.bugs.url)
+						.replace(/{=URL}/g, pkg.homepage + "/issues")
 						.replace(/{=SUBJECT}/g, el.subject);
 				}
 			}
@@ -207,18 +211,20 @@ const changelog = {
 
 	// initialization
 	init() {
-		const cmd = this.getLogCmd(period[0], period[1]);
-
-		exec(this.getGitInfo(), (function(error, stdout, stderr) {
-			const info = stdout.replace(/\r?\n/," ").split(" ");
-
-			this.gitinfo = {
-				branchName: info[0],
-				shortSHA: info[1],
-				lastCommitTime: info[2]
-			};
-
-			exec(cmd, this.generate.bind(this));
+    exec(this.getLatestTagDate(), (function(error, stdout, stderr) {
+      const cmd = this.getLogCmd(period[0] || stdout, period[1]);
+      
+      exec(this.getGitInfo(), (function(error, stdout, stderr) {
+      	const info = stdout.replace(/\r?\n/," ").split(" ");
+  
+      	this.gitinfo = {
+      		branchName: info[0],
+      		shortSHA: info[1],
+      		lastCommitTime: info[2]
+      	};
+  
+      	exec(cmd, this.generate.bind(this));
+      }).bind(this));
 		}).bind(this));
 	}
 };

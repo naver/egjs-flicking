@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "noUnusedLocals": false,
+    "types": [
+      "karma-chai",
+      "mocha",
+    ]
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./test/**/*.ts"
+  ],
+  "exclude": [
+    "./node_modules/**/*.ts"
+  ]
+}

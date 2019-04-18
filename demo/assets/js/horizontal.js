@@ -1,1 +1,0 @@
-var f1 = new eg.Flicking("#mflick1");

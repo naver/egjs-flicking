@@ -1,9 +1,9 @@
 # egjs-flicking
 
-[![version][badge-version]][link-version] [![Build Status][badge-build-status]][link-build-status] [![Coverage Status][badge-coverage]][link-coverage] [![Greenkeeper][badge-gk]][link-gk] 
+[![version][badge-version]][link-version] [![Build Status][badge-build-status]][link-build-status] [![Coverage Status][badge-coverage]][link-coverage] [![Greenkeeper][badge-gk]][link-gk]
 
 A module used to implement flicking interactions.
-With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side. 
+With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.
 
 ## Documents
 - [Get Started and Demos](https://naver.github.io/egjs-flicking/)
@@ -11,7 +11,7 @@ With this module, you can make flicking gestures, which are ways to navigate lef
 
 ## Download and Installation
 
-Download dist files from repo directly or install it via npm. 
+Download dist files from repo directly or install it via npm.
 
 ### For development (Uncompressed)
 
@@ -59,23 +59,24 @@ npm install @egjs/flicking-plugins
 import {OpacityEffect, ParallaxEffect} from "@egjs/flicking-plugins";
 ```
 
-Download necessary plugins to be used
+Download necessary plugins to use.
 
 #### List of plugins:
->  - **all** : all plugins
->  - [OpacityEffect](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.plugin.OpacityEffect.html): Add opacity effect attached with flicking interaction.
->  - [ParallaxEffect](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.plugin.ParallaxEffect.html): Add horizontal parallax effect attached with flicking interaction.
+
+  - [Fade](https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.Flicking.plugins.OpacityEffect.html): Add fade effect attached with flicking interaction.
+  - [Parallax](https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.Flicking.plugins.ParallaxEffect.html): Add parallax effect attached with flicking interaction.
+  - [AutoPlay](https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.Flicking.plugins.AutoPlay.html): Add autoplay to move to the next/previous panel periodically.
 
  - **Latest**
-    - https://naver.github.io/egjs-flicking/release/plugins/latest/dist/all.js (all)
-    - https://naver.github.io/egjs-flicking/release/plugins/latest/dist/all.min.js (all)
-    - https://naver.github.io/egjs-flicking/release/plugins/latest/dist/[PLUGIN-NAME].js
-    - https://naver.github.io/egjs-flicking/release/plugins/latest/dist/[PLUGIN-NAME].min.js
+    - https://naver.github.io/egjs-flicking-plugins/release/latest/dist/plugins.js (all)
+    - https://naver.github.io/egjs-flicking-plugins/release/latest/dist/plugins.min.js (all)
+    - https://naver.github.io/egjs-flicking-plugins/release/latest/dist/[PLUGIN-NAME].js
+    - https://naver.github.io/egjs-flicking-plugins/release/latest/dist/[PLUGIN-NAME].min.js
  - **Specific version**
-    - https://naver.github.io/egjs-flicking/release/plugins/[PLUGIN-VERSION]/dist/all.js (all)
-    - https://naver.github.io/egjs-flicking/release/plugins/[PLUGIN-VERSION]/dist/all.min.js (all)
-    - https://naver.github.io/egjs-flicking/release/plugins/[PLUGIN-VERSION]/dist/[PLUGIN-NAME].js
-    - https://naver.github.io/egjs-flicking/release/plugins/[PLUGIN-VERSION]/dist/[PLUGIN-NAME].min.js
+    - https://naver.github.io/egjs-flicking-plugins/release/[PLUGIN-VERSION]/dist/plugins.js (all)
+    - https://naver.github.io/egjs-flicking-plugins/release/[PLUGIN-VERSION]/dist/plugins.min.js (all)
+    - https://naver.github.io/egjs-flicking-plugins/release/[PLUGIN-VERSION]/dist/[PLUGIN-NAME].js
+    - https://naver.github.io/egjs-flicking-plugins/release/[PLUGIN-VERSION]/dist/[PLUGIN-NAME].min.js
 
 ### Installation with npm
 
@@ -98,7 +99,7 @@ The following are the supported browsers.
 
 |Internet Explorer|Chrome|Firefox|Safari|iOS|Android|
 |---|---|---|---|---|---|
-|10+|Latest|Latest|Latest|7+|2.3+(except 3.x)|
+|10+|Latest|Latest|Latest|7+|4+|
 
 
 ## Dependency
@@ -153,8 +154,8 @@ Two folders will be created after complete build is completed.
 
 ### Linting
 
-To keep the same code style, we adopted [ESLint](http://eslint.org/) to maintain our code quality. The [rules](https://github.com/naver/eslint-config-naver/tree/master/rules) are modified version based on [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript).
-Setup your editor for check or run below command for linting.
+To keep the same code style, we adopted [TSLint](https://palantir.github.io/tslint/) to maintain our code quality.
+Setup your editor, or run below command to lint.
 
 ```bash
 $ npm run lint

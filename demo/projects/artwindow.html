@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="../common/common.css">
+<link rel="stylesheet" href="../common/highlight.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
+<script src="../common/highlight.js"></script>
+
+<div class="container">
+    <h1><a href="https://shopping.naver.com/art/home" target="_blank">Shopping Art Window</a></h1>
+    <ul class="extra">
+        <li>The <strong>update</strong> method on the panel allows you to change the original element as well as the clone element.</li>
+    </ul>
+</div>
+<div class="banner">
+  <ul>
+    <li class="checked" data-title ="해피 발렌타인\n연인과 함께" data-category="아트윈도 추천">
+      <div>
+        <img
+          src="https://shop-phinf.pstatic.net/20190211_206/shopping_1549851900807yDW3j_JPEG/%BD%C5%C3%B6_%B9%DF%B7%BB%C5%B8%C0%CEpc.jpg?type=w2048"
+          alt="아트윈도 추천 배경이미지">
+        <a><span class="blind">내용 상세보기</span></a>
+      </div>
+    </li>
+    <li data-title ="환경 가까이\n김현주 스튜디오" data-category="화제작가">
+      <div>
+        <img src="https://shop-phinf.pstatic.net/20190213_47/shopping_15500207529408nQKF_JPEG/456.jpg?type=w2048"
+          alt="아트윈도 추천 배경이미지">
+        <a><span class="blind">내용 상세보기</span></a>
+      </div>
+    </li>
+    <li data-title="건축적 가구\n아르케 퍼니처" data-category="화제작가">
+      <div>
+        <img src="https://shop-phinf.pstatic.net/20190131_18/shopping_15489170593120HTao_PNG/PC.png?type=w2048"
+          alt="아트윈도 추천 배경이미지"><a ><span class="blind">내용
+            상세보기</span></a>
+      </div>
+    </li>
+    <li data-title="갤러리/셀렉샵\n설 선물 앵콜" data-category="페이적립 프로모션">
+      <div>
+        <img src="https://shop-phinf.pstatic.net/20190130_208/shopping_15488494966201wz5u_PNG/PC_2.png?type=w2048"
+          alt="아트윈도 추천 배경이미지"><a><span class="blind">내용
+            상세보기</span></a>
+      </div>
+    </li>
+    <li data-title="마음 따듯한\n파스텔컬러" data-category="아트윈도 추천">
+      <div>
+        <img
+          src="https://shop-phinf.pstatic.net/20190201_193/shopping_15489970539959lpy5_JPEG/%BF%C0%C3%A2%C7%E5_pc.jpg?type=w2048"
+          alt="아트윈도 추천 배경이미지"><a ><span class="blind">내용
+            상세보기</span></a>
+      </div>
+    </li>
+    <li data-title="법고창신\n(法古創新) 이은범" data-category="화제작가">
+      <div>
+        <img src="https://shop-phinf.pstatic.net/20190131_291/shopping_1548917360257ccxNc_PNG/PC.png?type=w2048"
+          alt="아트윈도 추천 배경이미지"><a ><span class="blind">내용
+            상세보기</span></a>
+      </div>
+    </li>
+  </ul>
+  <div class="overlay">
+    <em><span>아트윈도 추천</span></em>
+    <strong class="_1QD8Q2BflX">
+      <span>해피 발렌타인<br></span><span>연인과 함께<br></span>
+    </strong>
+    <a href="https://swindow.naver.com/art/event/27368"><span class="blind">내용 상세보기</span></a>
+  </div>
+  <button type="button" class="prev"><span class="blind">이전</span></button>
+  <button type="button" class="next"><span class="blind">이전</span></button>
+</div>
+<pre><code class="hljs javascript"></code></pre>
+<style>
+  .banner {
+    position: relative;
+    height: 325px;
+  }
+  .banner ul {
+      height: 100%;
+  }
+  .banner ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .banner li {
+    margin: 0;
+    padding: 0;
+    width: 60%;
+    overflow: hidden;
+    height: 100%;
+    filter: grayscale(100%);
+    -webkit-filter: grayscale(100%);
+    opacity: 0.4;
+  }
+  .banner li>div {
+      height: 100%;
+  }
+  .banner li.checked {
+    filter: none;
+    -webkit-filter: none;
+    opacity: 1;
+  }
+
+
+  .banner li img {
+    min-width: 100%;
+    height: 100%;
+  }
+  .banner a {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+  .blind {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+    width: 0;
+    height: 0;
+    font-size: 0;
+  }
+  .overlay {
+    position: absolute;
+    left: 20%;
+    top: 0;
+    width: 400px;
+    bottom: 0;
+    z-index: 2001;
+    padding: 52px 50px 0 50px;
+    background-color: rgba(255, 255, 255, 0.85);
+    box-sizing: border-box;
+  }
+  .overlay em {
+    position: relative;
+    display: block;
+    width: 81px;
+    height: 81px;
+    padding: 0px 11px 0px 13px;
+    background-color: #333;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 18px;
+    word-break: break-all;
+    color: #fff;
+    box-sizing: border-box;
+  }
+  .overlay em span {
+    position: relative;
+    display: block;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .overlay strong {
+    display: block;
+    margin-top: 43px;
+    font-size: 40px;
+    line-height: 52px;
+    letter-spacing: -2.5px;
+    word-break: break-all;
+    color: #333;
+  }
+  button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 2001;
+    top: 50%;
+    margin-top: -30px;
+    font-size: 0;
+    outline: none;
+  }
+  button.prev {
+    right: 80%;
+  }
+  button.next {
+    left: 80%;
+  }
+  button:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    display: block;
+  }
+  button.prev:after {
+    background-image: url(https://ssl.pstatic.net/imgshopping/display/p/static/20190215115147/img/sprite/svg/spSw_window_svg.svg);
+    background-size: 672px 612px;
+    background-position: -72px -344px;
+  }
+  button.next:after {
+    background-image: url(https://ssl.pstatic.net/imgshopping/display/p/static/20190215115147/img/sprite/svg/spSw_window_svg.svg);
+    background-size: 672px 612px;
+    background-position: -4px -344px;
+  }
+</style>
+<script src="../release/latest/dist/flicking.pkgd.js"></script>
+<script>
+var overlay = document.querySelector(".overlay")
+var overlayCategory = overlay.querySelector("em span");
+var overlayTitle = overlay.querySelector("strong");
+var flicking = new eg.Flicking(".banner ul", {
+  circular: true,
+  autoResize: true,
+});
+flicking.disableInput();
+
+flicking.on("moveEnd", function (e) {
+  var panel = e.panel;
+  var el = panel.getElement();
+  var category = el.getAttribute("data-category");
+  var title = el.getAttribute("data-title");
+
+  panel.prev().update(function (el) {
+      el.classList.remove("checked");
+  });
+  panel.next().update(function (el) {
+      el.classList.remove("checked");
+  });
+  panel.update(function (el) {
+      el.classList.add("checked")
+  });
+
+  overlayCategory.innerHTML = category;
+  overlayTitle.innerHTML = title.split("\\n").map(function (text) {
+      return "<span>" + text + "</span>"
+  }).join("<br/>");
+});
+
+document.querySelector("button.next").addEventListener("click", function () {
+  flicking.next(500);
+});
+document.querySelector("button.prev").addEventListener("click", function () {
+  flicking.prev(500);
+});
+</script>
+<script src="../common/codepen.js"></script>

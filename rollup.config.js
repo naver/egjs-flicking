@@ -1,33 +1,42 @@
-import babel from "rollup-plugin-babel";
-import replace from "rollup-plugin-replace";
 
-const version = process.env.NIGHTLY || require("./package.json").version;
-const merge = require("./rollup/merge");
-const banner = require("./rollup/banner").banner;
+// flicking.js
+// flicking.min.js
+// flicking.pkgd.js
+// flicking.pkgd.min.js
+// flicking.esm.js
 
-const replaceVersion = replace({
-	"#__VERSION__#": version,
-	delimiters: ["", ""]
-});
 
-const defaultConfig = {
-	input: "src/Flicking.js",
-	plugins: [babel(), replaceVersion],
-	output: {
-		banner,
-		freeze: false,
-		name: "eg.Flicking",
-		format: "umd",
-		exports: "default",
-		interop: false,
-		sourcemap: true
-	}
-};
+const {esm, umds} = require("./config/bundler");
 
-export default merge(defaultConfig, [
-	...require("./rollup/rollup.config.esm"),
-	...require("./rollup/rollup.config.development"),
-	...require("./rollup/rollup.config.pkgd"),
-	...require("./rollup/rollup.config.plugins"),
-	...require("./rollup/rollup.config.plugins.all")
-]);
+
+export default [
+	...umds({
+		input: "./src/index.umd.ts",
+		outputs: [
+			`./dist/flicking.js`,
+			`./dist/flicking.min.js`,
+		],
+		library: "eg.Flicking",
+		externals: {
+			"@egjs/axes": "eg.Axes",
+			"@egjs/component": "eg.Component",
+		},
+	}),
+	...umds({
+		input: "./src/index.umd.ts",
+		outputs: [
+			`./dist/flicking.pkgd.js`,
+			`./dist/flicking.pkgd.min.js`,
+		],
+		library: "eg.Flicking",
+	}),
+	esm({
+		input: "./src/index.ts",
+		output: "./dist/flicking.esm.js",
+		externals: {
+			"@egjs/axes": "eg.Axes",
+			"@egjs/component": "eg.Component",
+		},
+	}),
+];
+

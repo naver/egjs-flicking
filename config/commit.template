@@ -19,9 +19,8 @@ Ref #30
  - style: Changes that do not affect the meaning of the code. Such as white-space, formatting, missing semi-colons, etc... It also possible to change JSHint, JSCS rules of the code.
  - refactor: A code change that neither fixes a bug nor adds a feature
  - test: Adding missing tests. Changing tests.
- - demo: Adding missing demos. Changing demos.
+ - demo: Adding demo. Changing demos.
  - chore: Changes to the build process or tools and libraries such as documentation generation
 
 ============ See More =============
 https://github.com/naver/egjs/wiki/Commit-Log-Guidelines
-

@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en" class="has-background-light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi">
+    <title>Flicking - QA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+    <link rel="stylesheet" href="./test.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.5/es5-shim.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.5/es5-sham.js"></script>
+    <script src="../../dist/flicking.pkgd.js"></script>
+</head>
+<body class="container" style="display: none;">
+    <section class="hero">
+        <div class="hero-body">
+            <h1 class="title">
+                Non-circular
+            </h1>
+        </div>
+    </section>
+
+    <p class="subtitle is-4">Default, Full, 3 Panels</p>
+    <div id="flick1" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-full has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-full has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-full has-background-info">
+            <p>Layer 2</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">Variable size</p>
+    <div id="flick1-1" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-two-thirds has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-half has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-full has-background-info">
+            <p>Layer 2</p>
+        </div>
+        <div class="column is-half has-background-success">
+            <p>Layer 3</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">Hanger & Anchor</p>
+    <div id="flick1-2" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-half has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-half has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-half has-background-info">
+            <p>Layer 2</p>
+        </div>
+        <div class="column is-half has-background-success">
+            <p>Layer 3</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">Hanger & Anchor, Bound</p>
+    <div id="flick1-3" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-half has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-half has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-half has-background-info">
+            <p>Layer 2</p>
+        </div>
+        <div class="column is-half has-background-success">
+            <p>Layer 3</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">Variable size, Hanger & Anchor</p>
+    <div id="flick1-4" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-full has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-one-fifth has-background-danger">
+            <p>1</p>
+        </div>
+        <div class="column is-one-fifth has-background-info">
+            <p>2</p>
+        </div>
+        <div class="column is-one-fifth has-background-success">
+            <p>3</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">Adaptive</p>
+    <div id="flick1-5" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-full has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-full has-background-danger">
+            <p>
+                Layer 1<br>
+                Layer 1<br>
+                Layer 1<br>
+                Layer 1<br>
+                Layer 1<br>
+            </p>
+            <p>
+                Layer 1
+            </p>
+        </div>
+        <div class="column is-full has-background-info">
+            <p>Layer 2</p>
+            <br>
+            <p>Multiple elements on one panel also supported</p>
+        </div>
+    </div><br>
+
+    <p class="subtitle is-4">Gap</p>
+    <div id="flick1-6" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-half has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-half has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-half has-background-info">
+            <p>Layer 2</p>
+        </div>
+        <div class="column is-half has-background-success">
+            <p>Layer 3</p>
+        </div>
+    </div>
+
+    <section class="hero">
+        <div class="hero-body">
+            <h1 class="title">
+                Circular
+            </h1>
+        </div>
+    </section>
+
+    <p class="subtitle is-4">Full & Circular</p>
+    <div id="flick2" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-full has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-full has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-full has-background-info">
+            <p>Layer 2</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">One Panel & Circular & No Gap</p>
+    <div id="flick2-1" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-full has-background-success">
+            <p>Layer 0</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">One Panel & Circular & Gap</p>
+    <div id="flick2-2" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-one-fifth has-background-info">
+            <p>Layer 0</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">Mutliple panels with same size</p>
+    <div id="flick2-3" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-one-fifth has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-one-fifth has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-one-fifth has-background-info">
+            <p>Layer 2</p>
+        </div>
+        <div class="column is-one-fifth has-background-success">
+            <p>Layer 3</p>
+        </div>
+        <div class="column is-one-fifth has-background-warning">
+            <p>Layer 4</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">Variable Size & Circular & Gap</p>
+    <div id="flick2-4" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-two-thirds has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-one-quarter has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-full has-background-info">
+            <p>Layer 2</p>
+        </div>
+        <div class="column is-half has-background-success">
+            <p>Layer 3</p>
+        </div>
+    </div>
+
+    <section class="hero">
+        <div class="hero-body">
+            <h1 class="title">
+                Vertical
+            </h1>
+        </div>
+    </section>
+
+    <p class="subtitle is-4">Default, Full, 3 Panels</p>
+    <div id="flick3" class="columns is-mobile is-size-7-mobile is-vertical">
+        <div class="column is-full-vertical has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-full-vertical has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-full-vertical has-background-info">
+            <p>Layer 2</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">Bound</p>
+    <div id="flick3-1" class="columns is-mobile is-size-7-mobile is-vertical">
+        <div class="column is-full-vertical has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-full-vertical has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-half-vertical has-background-info">
+            <p>Layer 2</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">Circular</p>
+    <div id="flick3-2" class="columns is-mobile is-size-7-mobile is-vertical">
+        <div class="column is-full-vertical has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-full-vertical has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-full-vertical has-background-info">
+            <p>Layer 2</p>
+        </div>
+    </div>
+
+    <section class="hero">
+        <div class="hero-body">
+            <h1 class="title">
+                Snap & Free Scroll
+            </h1>
+        </div>
+    </section>
+
+    <p class="subtitle is-4">Snap</p>
+    <div id="flick4" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-half has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-half has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-half has-background-info">
+            <p>Layer 2</p>
+        </div>
+        <div class="column is-half has-background-success">
+            <p>Layer 3</p>
+        </div>
+        <div class="column is-half has-background-warning">
+            <p>Layer 4</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">Snap & Circular</p>
+    <div id="flick4-1" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-half has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-half has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-half has-background-info">
+            <p>Layer 2</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">Free Scroll</p>
+    <div id="flick4-2" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-full has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-full has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-full has-background-info">
+            <p>Layer 2</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">Free Scroll & Circular</p>
+    <div id="flick4-3" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-full has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-full has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-full has-background-info">
+            <p>Layer 2</p>
+        </div>
+    </div>
+
+    <section class="hero">
+        <div class="hero-body">
+            <h1 class="title">
+                Methods & Events
+            </h1>
+        </div>
+    </section>
+
+    <div id="flick-event" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-half has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-half has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-half has-background-info">
+            <p>Layer 2</p>
+        </div>
+    </div>
+    <div class="tile is-ancestor">
+        <div class="tile is-6 is-parent is-vertical">
+            <div id="methods" class="tile is-child">
+                <div class="is-full">
+                    <h2 class="subtitle">Movement</h2>
+                    <button id="prev" class="button">prev()</button>
+                    <button id="next" class="button">next()</button>
+                    <button id="moveTo" class="button">moveTo(
+                        <input type="number" id="moveTo_no" class="input is-small" min=0 value=0 style="width: 25px;"></input>
+                    )</button>
+                </div>
+                <div class="is-full">
+                    <h2 class="subtitle">Index</h2>
+                    <button id="getIndex" class="button">getIndex()</button>
+                    <button id="getNextIndex" class="button">getNextIndex()</button>
+                    <button id="getPrevIndex" class="button">getPrevIndex()</button>
+                </div>
+                <div class="is-full">
+                    <h2 class="subtitle">Panel</h2>
+                    <button id="getCurrentPanel" class="button">getCurrentPanel()</button>
+                    <button id="getPanel" class="button">getPanel(
+                        <input type="number" id="getPanel_no" class="input is-small" min=0 value=0 style="width: 25px;"></input>
+                    )</button>
+                    <button id="getPanelCount" class="button">getPanelCount()</button>
+                </div>
+                <div class="is-full">
+                    <h2 class="subtitle">Status</h2>
+                    <button id="getStatus" class="button">getStatus()</button>
+                    <button id="setStatus" class="button">setStatus(status)</button>
+                    <button id="isPlaying" class="button">isPlaying()</button>
+                </div>
+                <div class="is-full">
+                    <h2 class="subtitle">Input</h2>
+                    <button id="enableInput" class="button">enableInput()</button>
+                    <button id="disableInput" class="button">disableInput()</button>
+                </div>
+                <div class="column is-full">
+                    <h2 class="subtitle">Resize / Destroy</h2>
+                    <button id="resize" class="button">resize()</button>
+                    <button id="destroy" class="button">destroy()</button>
+                </div>
+                <div class="column is-full">
+                    <h2 class="subtitle">Panel manipulation</h2>
+                    <button id="append" class="button">append()</button>
+                    <button id="prepend" class="button">prepend()</button>
+                    <button id="replace" class="button">replace(
+                        <input type="number" id="replace_no" class="input is-small" min=0 value=0 style="width: 25px;"></input>
+                    )</button>
+                    <button id="remove" class="button">remove(
+                        <input type="number" id="remove_idx" class="input is-small" min=0 value=0 style="width: 25px;"></input>
+                        ,
+                        <input type="number" id="remove_cnt" class="input is-small" min=1 value=1 style="width: 25px;"></input>
+                    )</button>
+                </div>
+            </div>
+            <textarea id="log1" class="tile is-child textarea has-fixed-size"></textarea>
+        </div>
+        <div class="tile is-6">
+            <div id="log2" class="textarea has-fixed-size"></div>
+        </div>
+    </div>
+
+    <section class="hero">
+        <div class="hero-body">
+            <h1 class="title">
+                Event Stop
+            </h1>
+        </div>
+    </section>
+
+    <p class="subtitle is-4">STOP: holdStart</p>
+    <div id="stop-holdStart" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-half has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-half has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-half has-background-info">
+            <p>Layer 2</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">STOP: moveStart</p>
+    <div id="stop-moveStart" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-half has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-half has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-half has-background-info">
+            <p>Layer 2</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">STOP: move</p>
+    <div id="stop-move" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-half has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-half has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-half has-background-info">
+            <p>Layer 2</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">STOP: change</p>
+    <div id="stop-change" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-half has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-half has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-half has-background-info">
+            <p>Layer 2</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">STOP: restore</p>
+    <div id="stop-restore" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-half has-background-primary">
+            <p>Layer 0</p>
+        </div>
+        <div class="column is-half has-background-danger">
+            <p>Layer 1</p>
+        </div>
+        <div class="column is-half has-background-info">
+            <p>Layer 2</p>
+        </div>
+    </div>
+
+    <section class="hero">
+        <div class="hero-body">
+            <h1 class="title">
+                needPanel
+            </h1>
+        </div>
+    </section>
+
+    <p class="subtitle is-4">Add on Click</p>
+    <div id="needPanel-addOnClick" class="columns is-mobile is-size-7-mobile"></div>
+
+    <p class="subtitle is-4">Insert one by one</p>
+    <div id="needPanel-insert1by1" class="columns is-mobile is-size-7-mobile"></div>
+
+    <p class="subtitle is-4">Insert 3 at once</p>
+    <div id="needPanel-insert3" class="columns is-mobile is-size-7-mobile"></div>
+
+    <p class="subtitle is-4">
+        setLastIndex
+        <button id="setLastIndex" class="button">
+            setLastIndex(<input type="number" id="lastIndex" class="input is-small" min=0 value=0 style="width: 40px;"></input>)
+        </button>
+    </p>
+    <div id="needPanel-setMax" class="columns is-mobile is-size-7-mobile">
+        <div class="column is-full has-background-primary">
+            <p>Layer 0</p>
+        </div>
+    </div>
+
+    <p class="subtitle is-4">Circular</p>
+    <div id="needPanel-circular" class="columns is-mobile is-size-7-mobile"></div>
+
+    <script src="./test.js"></script>
+</body>
+</html>

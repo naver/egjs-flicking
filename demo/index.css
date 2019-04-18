@@ -1,0 +1,827 @@
+* {
+  font-family: 'Helvetica Neue', sans-serif;
+  letter-spacing: 1px;
+}
+html, body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
+.pages {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 800px;
+  overflow: hidden;
+}
+
+
+.scroller {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: calc(500% + 200px);
+}
+.pagination {
+  position: fixed;
+  top: 50%;
+  right: 50px;
+  transform: translateY(-50%);
+  padding: 0px 0px 0px 15px;
+  z-index: 20002;
+}
+.pagination ul {
+  padding: 0;
+  margin: 0;
+}
+.pagination li {
+  position: relative;
+  background: rgba(0, 0, 0, 0.2);
+  list-style: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin: 11px auto;
+  transition: background-color ease 0.3s;
+  cursor: pointer;
+}
+.pagination li[data-label]:before {
+  content: attr(data-label);
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  height: 20px;
+  text-align: right;
+  transform: translateY(-50%);
+  font-size: 14px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity ease 0.3s, color ease 0.3s;
+}
+.pagination li.checked[data-label]:before {
+  color: rgba(0, 0, 0, 1);
+}
+.pagination:hover li[data-label]:before  {
+  opacity: 1;
+}
+.pagination li.checked {
+  background: rgba(50, 50, 50, 0.7);
+}
+.pagination li.last {
+  width: 4px;
+  height: 4px;
+}
+.background:before {
+  position: absolute;
+  content: "";
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.page .article {
+  position: absolute;
+  color: #fff;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  max-width: 900px;
+  transform: translate(-50%, -50%);
+  align-items: center;
+}
+.page .article h1 {
+  font-weight: 100;
+  font-size: 50px;
+  margin: 0px 0px 10px;
+  letter-spacing: 3px;
+}
+.page .article p {
+  font-size: 18px;
+  font-weight: 300;
+}
+.page .article .download {
+  border: 0;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  height: 40px;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  border-radius: 20px;
+  font-size: 15px;
+  letter-spacing: 1px;
+  box-sizing: border-box;
+  outline: none;
+  transition: background-color ease 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+}
+.page .article .download:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+.page .article p.description {
+  line-height: 1.4;
+}
+.page .article .content {
+  position: relative;
+  flex: 1;
+  margin-right: 10px;
+}
+
+.iphone {
+  position: relative;
+  width: 200px;
+  height: 400px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: rgba(100, 100, 100, 0.7) 5px 5px;
+  margin: 0px auto;
+  display: none;
+}
+.iphone .container {
+  position: absolute;
+  width: calc(100% - 10px);
+  height: calc(100% - 100px);
+  background:transparent;
+  border: 2px solid #ddd;
+  position: absolute;
+  border-radius: 5px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  bottom: 52px;
+}
+.iphone .head {
+  position: absolute;
+  width: 36px;
+  height: 8px;
+  top: 22px;
+  left: 0;
+  right: 0;
+  border-radius: 4px;
+  margin: auto;
+  background: #ddd;
+}
+.iphone .home {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  bottom: 6px;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.iphone .panels {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  height: 150px;
+}
+.iphone .panel {
+  position: relative;
+  width: 80%;
+  height: 100%;
+  border-radius: 10px;
+  background: #f55;
+}
+.iphone .panel:nth-child(4n + 1) {
+  background-color:#78CAFF;
+}
+.iphone .panel:nth-child(4n + 2) {
+  background-color:#FFD99D;
+}
+.iphone .panel:nth-child(4n + 3) {
+  background-color:#FFB0B9;
+}
+.iphone .panel:nth-child(4n) {
+  background-color:#B5F6B9;
+}
+
+/* scroll */
+body.scroll .scroller {
+  display: none;
+}
+body.scroll .pages {
+  position: relative;
+}
+
+/* page 1 */
+.page1 {
+  background: #30B78E;
+}
+.page1 .article {
+  display: flex;
+}
+.page1 .article .ex {
+  position: relative;
+  width: 360px;
+  height: 420px;
+}
+.page1 .article .ex-wrapper {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.page1 .article .ex .buttons {
+  position: absolute;
+  right: 100%;
+  margin-right: 20px;
+  bottom: 30px;
+  white-space: nowrap;
+  line-height: 30px;
+  height: 30px;
+  opacity: 0.8;
+}
+.page1 .article .ex .buttons .divider {
+  vertical-align: middle;
+  position: relative;
+  display: inline-block;
+  width: 2px;
+  height: 20px;
+  border-radius: 1px;
+  background: #fff;
+  margin: 0px 10px;
+  transform: rotate(20deg);
+}
+.page1 .article .ex .buttons button {
+  background: transparent;
+  color: white;
+  border: 0;
+  box-shadow: none;
+  vertical-align: top;
+  height: 30px;
+  outline: none;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.page1 .article .ex .buttons button span {
+  position: relative;
+  display: block;
+  color: transparent;
+  font-size: 0;
+  background: #fff;
+  border-radius: 1px;
+  height: 2px;
+  width: 22px;
+}
+.page1 .article .ex .buttons button.next span {
+  transform: scale(-1);
+}
+.page1 .article .ex .buttons button span:before, .page1 .article .ex .buttons button span:after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 2px;
+  border-radius: 1px;
+  background: #fff;
+  transform-origin: 1px 50%;
+  top: 0;
+  left: 0;
+}
+
+.page1 .article .ex .buttons button span:before {
+  transform: rotate(-45deg);
+}
+.page1 .article .ex .buttons button span:after {
+  transform: rotate(45deg);
+}
+.page1 .article .iphone-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.page1 .article .iphone {
+  display: block;
+}
+.page1 .kingcard {
+  position: absolute;
+  width: 100%;
+  top: 15px;
+  left: 100%;
+}
+.page1 .kingcard * {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+.page1 .kingcard .card-rotor {
+  position: relative;
+  width: 330px;
+  height: 340px;
+  margin: 0px auto;
+}
+.page1 .kingcard .card-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility:    hidden;
+  -ms-backface-visibility:     hidden;
+  z-index: 1;
+}
+.page1 .card-wrapper.backward {
+  transform: rotateY(180deg);
+}
+.page1 .kingcard .card {
+  width: 192px;
+  height: 267px;
+  border-radius: 10px;
+  background: #f5f5f5;
+  box-sizing: border-box;
+  position: absolute;
+  /* transform-origin: 100% 100%; */
+
+  /* right: 50%; */
+  bottom: 10px;
+}
+.page1 .card-wrapper.forward .card {
+  right: 50%;
+  transform: rotate(35deg);
+  transform-origin: 100% 100%;
+}
+.page1 .card-wrapper.backward .card {
+  left: 50%;
+  transform-origin: 0% 100%;
+  transform: rotate(-35deg);
+}
+.page1 .kingcard .number {
+  position: absolute;
+  font-size: 25px;
+  font-weight: 600;
+  color: #da9b2f;
+  padding: 20px;
+}
+.page1 .kingcard .number img {
+  width: 30px;
+}
+.page1 .kingcard .number.right {
+  bottom: 0;
+  right: 0;
+  transform: rotate(180deg);
+}
+.page1 .kingcard .card .mark {
+  position: absolute;
+  width: 60%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  text-align: center;
+  font-size: 100px;
+  color: #da9b2f;
+}
+.page1 .kingcard .card .mark .crown {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  right: 5px;
+  top: 10px;
+  transform: rotate(35deg);
+}
+.page1 .kingcard .card .mark .crown .point {
+  position: absolute;
+  border-bottom: 35px solid #da9b2f;
+}
+.page1 .kingcard .card .mark .crown .point:after {
+  position: absolute;
+  content: "";
+  bottom: 100%;
+  margin-bottom: 1px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #da9b2f;
+  transform: translate(-50%);
+
+}
+.page1 .kingcard .card .mark .crown .left {
+  border-right: 40px solid transparent;
+  transform-origin: 0 100%;
+  transform: rotate(-10deg);
+}
+.page1 .kingcard .card .mark .crown .right {
+  border-left: 40px solid transparent;
+  right: 0;
+  transform-origin: 100% 100%;
+  transform: rotate(10deg);
+}
+.page1 .kingcard .card .mark .crown .center {
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+}
+
+.page1 .kingcard .shadow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 40px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.2);
+}
+.page1 .kingcard .progress {
+  position: relative;
+  display: block;
+  padding: 0;
+  margin: 10px 0 0;
+  text-align: center;
+}
+.page1 .kingcard .progress li {
+  display: inline-block;
+  margin: 0px 2px;
+  width: 25px;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color ease 0.3s;
+}
+.page1 .kingcard .progress li.checked {
+  background: rgba(0, 0, 0, 0.6);
+}
+.page1 .kingcard .levels {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.page1 .kingcard .level {
+  width: 100%;
+  height: 100%;
+  /* border: 1px solid black; */
+}
+
+.page1 .ex .finger {
+  position: absolute;
+  width: 80px;
+  height: 50px;
+  border-radius: 20px;
+  right: 80px;
+  bottom: 150px;
+  /* background: #333; */
+  transform-origin: 80px 50%;
+  transform: rotate(-20deg);
+  z-index: 2002;
+}
+
+.page1 .downloads .target {
+  margin-left: -5px;
+}
+
+.page2 {
+ background: #ea5d6b;
+}
+.page2 .article {
+  display: block;
+}
+.page2 .article .features {
+  position: relative;
+  height: 300px;
+  white-space: nowrap;
+}
+.page2 .article .head {
+  /* width: 300px;
+  padding-right: 100px; */
+  min-height: 150px;
+}
+.page2 .article .feature {
+  max-width: 500px;
+  height: 300px;
+  white-space: nowrap;
+  display: inline-block;
+  width: 450px;
+  overflow: hidden;
+}
+.page2 .article .feature .flicking img {
+ margin: 5px;
+ max-width: 450px;
+ min-height: 150px;
+ max-height: 180px;
+}
+.page2 .article .feature .flicking.soon img {
+  height: 100px;
+}
+.page2 .article .feature .flicking {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+  border-radius: 5px;
+  background: #fff;
+}
+.page2 .article .feature .flicking:after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: transparent;
+  z-index: 10;
+}
+.page2 .article .feature .flicking.soon {
+  padding: 30px;
+  box-sizing: border-box;
+}
+.page2 .article .feature .flicking.soon span {
+  display: block;
+  text-align: center;
+  color: black;
+  font-weight: bold;
+}
+.page2 .article .feature .flicking.soon span img {
+  width: 80px;
+}
+.page2 .article .feature .title {
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.page2 .article .feature a {
+  color: #fff;
+  text-decoration: none;
+}
+.page2 .article .feature .codepen {
+  letter-spacing: 1px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  display: none;
+}
+.page3 {
+  background: #ea905d;
+}
+.page3 .downloads {
+  padding: 0px 0px 20px;
+}
+.page3 .downloads .target {
+  margin-left: -5px;
+}
+.page3 .downloads p {
+  margin: 10px 0px;
+}
+.page3 .plugins {
+  white-space: nowrap;
+}
+.page3 .plugin {
+  max-width: 550px;
+  width: 500px;
+  overflow: hidden;
+  height: 300px;
+  display: inline-block;
+  white-space: nowrap;
+}
+.page3 .plugin img {
+ margin: 5px;
+ height: 210px;
+}
+.page3 .plugin .flicking {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+  border-radius: 5px;
+  background: #fff;
+}
+.page3 .plugin .flicking:after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: transparent;
+  z-index: 10;
+}
+.page3 .plugin .flicking.soon {
+  padding: 30px;
+  box-sizing: border-box;
+}
+.page3 .plugin .flicking.soon span {
+  display: block;
+  text-align: center;
+  color: black;
+  font-weight: bold;
+}
+.page3 .plugin .flicking.soon span img {
+  width: 80px;
+  height: 110px;
+}
+.page3 .plugin .title {
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.page3 .plugin a {
+  color: #fff;
+  text-decoration: none;
+}
+.page4 {
+  background: #5d95ea;
+}
+.page4 .article {
+  display: block;
+}
+.page4 .uses {
+  white-space: nowrap;
+}
+.page4 .article .use {
+  height: 400px;
+  display: inline-block;
+}
+.page4 .article .use:last-child {
+  border-right: 0px;
+}
+.page4 .use a {
+  text-decoration: none;
+  color: #fff;
+}
+.page4 .use .thumb {
+  position: relative;
+  display: block;
+  width: 500px;
+  height: 340px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+.page4 .use .thumb:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.1);
+}
+.page4 .use img {
+  width: 100%;
+}
+.page4 .use .title {
+  font-weight: 400;
+}
+
+.page5 {
+  background: #F2B51D;
+}
+.page5 .codes {
+  display: flex;
+  align-items: center;
+}
+.page5 .code {
+  flex: auto;
+}
+.page5 .code pre code {
+  padding: 15px;
+}
+.page5 .code pre code>span {
+  line-height: 1.2;
+}
+.page5 .result {
+  flex: 1;
+  padding-left: 40px;
+}
+.page5 .iphone {
+  display: block;
+}
+
+.page6 {
+  background: #c01cf2;
+}
+.downloads {
+  padding: 5px 0px;
+}
+.downloads p.title {
+  font-weight: 400;
+}
+.downloads .target {
+  position: relative;
+  margin-left: -20px;
+  overflow: hidden;
+}
+.downloads .target a {
+  cursor: pointer;
+}
+.downloads .shell {
+  cursor: pointer;
+}
+.downloads .shell input {
+  position: absolute;
+  right: 100%;
+}
+.downloads .shell {
+  display: inline-block;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 15px 20px;
+  border-radius: 5px;
+  padding-right: 45px;
+}
+.downloads .shell:before {
+  position: relative;
+  display: inline-block;
+  content: "$ ";
+  padding-right: 5px;
+}
+.footer {
+  height: 200px;
+  min-height: auto;
+  background: #333;
+  text-align: right;
+}
+.footer .article p {
+  margin: 4px 0;
+  font-weight: 400;
+}
+.footer .egjs {
+  font-size: 30px;
+  line-height: 40px;
+  letter-spacing: 1px;
+}
+.footer .egjs img {
+  height: 40px;
+  vertical-align: top;
+  margin-right: 5px;
+}
+.footer .egjs .eg {
+  color: #fff;
+  vertical-align: top;
+}
+.footer .egjs .js {
+  color: #F2B51D;
+  vertical-align: top;
+}
+.footer .article p.license, .footer .article p.copy {
+  font-size: 14px;
+  font-weight: bold;
+}
+.footer .article p.license {
+  margin-bottom: 16px;
+}
+.footer p.copy {
+  color: #30B78E;
+}
+
+
+@media screen and (max-width: 800px) {
+  .page1 .article {
+    display: block;
+  }
+  .page1 .article .content {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .page1 .article .ex {
+    left: 50%;
+    transform: translate(-50%);
+  }
+  .page1 .article .ex .buttons {
+    right: 0;
+    left: 0;
+    bottom: -30px;
+    margin-right: 0;
+    text-align: center;
+  }
+  .page1 .downloads .target {
+    margin-left: 0;
+  }
+  .page5 {
+    height: 1000px;
+  }
+  .page5 .codes {
+    display: block;
+  }
+  .page5 .result {
+    padding-left: 0;
+    margin-top: 20px;
+  }
+  .blind-condition {
+    display: none;
+  }
+}
+@media screen and (max-width: 320px) {
+  .page1 {
+    min-height: 900px;
+  }
+}

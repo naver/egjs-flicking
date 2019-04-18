@@ -1,3 +1,28 @@
-.flick{height:50px;background-color:grey}
-.eg-flick-container > div { height:100%;float:left;display:block }
-.eg-flick-panel p {margin:0;font-size:2.0em;text-align:center}
+.wrapper{
+    background-color: grey;
+    height: 39px;
+    overflow: hidden;
+}
+p {
+    margin:0;
+    font-size:2.0em;
+    text-align:center;
+}
+
+.eg-flick-panel { height: 130px }
+
+.panel-horizontal-120 { width: 120% }
+.panel-horizontal-full { width: 100% }
+.panel-horizontal-10 { width: 10% }
+.panel-horizontal-20 { width: 20% }
+.panel-horizontal-30 { width: 30% }
+.panel-horizontal-40 { width: 40% }
+.panel-horizontal-50 { width: 50% }
+.panel-horizontal-200px { width: 200px }
+
+.panel-vertical-full { height: 100% }
+.panel-vertical-10 { height: 10% }
+.panel-vertical-20 { height: 20% }
+.panel-vertical-30 { height: 30% }
+.panel-vertical-40 { height: 40% }
+.panel-vertical-50 { height: 50% }

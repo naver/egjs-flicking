@@ -1,0 +1,436 @@
+import Flicking from "./Flicking";
+import Viewport from "./components/Viewport";
+import StateMachine from "./components/StateMachine";
+
+export type ValueOf<T> = T[keyof T];
+/**
+ * HTML `string` of single/mutiple HTMLElement, or an instance of `HTMLElement`.
+ * @ko 단일/복수의 HTMLElement의 outerHTML에 해당하는 `string`, 혹은 `HTMLElement`의 인스턴스.
+ * @typedef
+ * @memberof eg.Flicking
+ */
+export type ElementLike = string | HTMLElement;
+
+/**
+ * @typedef
+ * @memberof eg.Flicking
+ * @property - A prefix of class name will be added for the panels, viewport and camera.<ko>패널들과 뷰포트, 카메라에 추가될 클래스 이름의 접두사.</ko>
+ * @property - Deceleration value for panel movement animation for animation triggered by manual user input. Higher value means shorter running time.<ko>사용자의 동작으로 가속도가 적용된 패널 이동 애니메이션의 감속도. 값이 높을수록 애니메이션 실행 시간이 짧아진다.</ko>
+ * @property - Direction of panel movement. (true: horizontal, false: vertical)<ko>패널 이동 방향. (true: 가로방향, false: 세로방향)</ko>
+ * @property - Enables circular mode, which connects first/last panel for continuous scrolling<ko>순환 모드를 활성화한다. 순환 모드에서는 양 끝의 패널이 서로 연결되어 끊김없는 스크롤이 가능하다.</ko>
+ * @property - Enables infinite mode, which can automatically trigger needPanel until reaching last panel's index reaches lastIndex<ko>무한 모드를 활성화한다. 무한 모드에서는 needPanel 이벤트를 자동으로 트리거한다. 해당 동작은 마지막 패널의 인덱스가 lastIndex와 일치할때까지 일어난다.</ko>
+ * @property - A Threshold from viewport edge before triggering `needPanel` event in infinite mode.<ko>무한 모드에서 `needPanel`이벤트가 발생하기 위한 뷰포트 끝으로부터의 최대 거리.</ko>
+ * @property - Maximum panel index that Flicking can set. Flicking won't trigger `needPanel` when event's panel index is greater than it.<br>Also, if last panel's index reached given index, you can't add more panels.<ko>Flicking이 설정 가능한 패널의 최대 인덱스. `needPanel` 이벤트에 지정된 인덱스가 최대 패널의 개수보다 같거나 커야 하는 경우에 이벤트를 트리거하지 않게 한다.<br>또한, 마지막 패널의 인덱스가 주어진 인덱스와 동일할 경우, 새로운 패널을 더 이상 추가할 수 없다.</ko>
+ * @property - Movement threshold to change panel(unit: pixel). It should be dragged above the threshold to change current panel.<ko>패널 변경을 위한 이동 임계값 (단위: 픽셀). 주어진 값 이상으로 스크롤해야만 패널 변경이 가능하다.</ko>
+ * @property - Duration of the panel movement animation.(unit: ms)<ko>패널 이동 애니메이션 진행 시간.(단위: ms)</ko>
+ * @property - An easing function applied to the panel movement animation. Default value is `easeOutCubic`.<ko>패널 이동 애니메이션에 적용할 easing함수. 기본값은 `easeOutCubic`이다.</ko>
+ * @property - Index of panel to set as default when initializing. A zero-based integer.<ko>초기화시 지정할 디폴트 패널의 인덱스로, 0부터 시작하는 정수.</ko>
+ * @property - Types of input devices to enable.({@link https://naver.github.io/egjs-axes/release/latest/doc/global.html#PanInputOption Reference})<ko>활성화할 입력 장치 종류. ({@link https://naver.github.io/egjs-axes/release/latest/doc/global.html#PanInputOption 참고})</ko>
+ * @property - The threshold angle value(0 ~ 90).<br>If input angle from click/touched position is above or below this value in horizontal and vertical mode each, scrolling won't happen.<ko>스크롤 동작을 막기 위한 임계각(0 ~ 90).<br>클릭/터치한 지점으로부터 계산된 사용자 입력의 각도가 horizontal/vertical 모드에서 각각 크거나 작으면, 스크롤 동작이 이루어지지 않는다.</ko>
+ * @property - The size value of the bounce area. Only can be enabled when `circular=false`.<br>You can set different bounce value for prev/next direction by using array.<br>`number` for px value, and `string` for px, and % value relative to viewport size.(ex - 0, "10px", "20%")<ko>바운스 영역의 크기값. `circular=false`인 경우에만 사용할 수 있다.<br>배열을 통해 prev/next 방향에 대해 서로 다른 바운스 값을 지정 가능하다.<br>`number`를 통해 px값을, `stirng`을 통해 px 혹은 뷰포트 크기 대비 %값을 사용할 수 있다.(ex - 0, "10px", "20%")</ko>
+ * @property - Whether resize() method should be called automatically after window resize event.<ko>window의 `resize` 이벤트 이후 자동으로 resize()메소드를 호출할지의 여부.</ko>
+ * @property - Whether the height(horizontal)/width(vertical) of the viewport element reflects the height/width value of the panel after completing the movement.<ko>목적 패널로 이동한 후 그 패널의 높이(horizontal)/너비(vertical)값을 뷰포트 요소의 높이/너비값에 반영할지 여부.</ko>
+ * @property - z-index value for viewport element.<ko>뷰포트 엘리먼트의 z-index 값.</ko>
+ * @property - Prevent view from going out of first/last panel. Only can be enabled when `circular=false`.<ko>뷰가 첫번째와 마지막 패널 밖으로 나가는 것을 막아준다. `circular=false`인 경우에만 사용할 수 있다.</ko>
+ * @property - Disables CSS property `overflow: hidden` in viewport if `true`.<ko>`true`로 설정시 뷰포트에 `overflow: hidden` 속성을 해제한다.</ko>
+ * @property - Reference position of hanger in viewport, which hangs panel anchors should be stopped at.<br>Should be provided in px or % value of viewport size.<br>You can combinate those values with plus/minus sign<br>ex) "50", "100px", "0%", "25% + 100px"<ko>뷰포트 내부의 행어의 위치. 패널의 앵커들이 뷰포트 내에서 멈추는 지점에 해당한다.<br>px값이나, 뷰포트의 크기 대비 %값을 사용할 수 있고, 이를 + 혹은 - 기호로 연계하여 사용할 수도 있다.<br>예) "50", "100px", "0%", "25% + 100px"</ko>
+ * @property - Reference position of anchor in panels, which can be hanged by viewport hanger.<br>Should be provided in px or % value of panel size.<br>You can combinate those values with plus/minus sign<br>ex) "50", "100px", "0%", "25% + 100px"<ko>패널 내부의 앵커의 위치. 뷰포트의 행어와 연계하여 패널이 화면 내에서 멈추는 지점을 설정할 수 있다.<br>px값이나, 패널의 크기 대비 %값을 사용할 수 있고, 이를 + 혹은 - 기호로 연계하여 사용할 수도 있다.<br>예) "50", "100px", "0%", "25% + 100px"</ko>
+ * @property - Space value between panels. Should be given in number.(px)<ko>패널간에 부여할 간격의 크기를 나타내는 숫자.(px)</ko>
+ * @property - Movement style by user input.(ex: snap, freeScroll)<ko>사용자 입력에 의한 이동 방식.(ex: snap, freeScroll)</ko>
+ */
+export interface FlickingOptions {
+  classPrefix: string;
+  deceleration: number;
+  horizontal: boolean;
+  circular: boolean;
+  infinite: boolean;
+  infiniteThreshold: number | string;
+  lastIndex: number;
+  threshold: number;
+  duration: number;
+  panelEffect: (x: number) => number;
+  defaultIndex: number;
+  inputType: string[];
+  thresholdAngle: number;
+  bounce: number | string | [number | string, number | string];
+  autoResize: boolean;
+  adaptive: boolean;
+  zIndex: number;
+  bound: boolean;
+  overflow: boolean;
+  hanger: string;
+  anchor: string;
+  gap: number;
+  moveType: MoveTypeOption;
+}
+
+/**
+ * Movement style by user input.
+ * @ko 사용자 입력에 의한 이동 방식.
+ * @typedef {"snap" | "freeScroll" | eg.Flicking.MoveTypeSnapOption | eg.Flicking.MoveTypeFreeScrollOption}
+ * @memberof eg.Flicking
+ */
+export type MoveTypeOption =
+  "snap" | "freeScroll"
+  | MoveTypeSnapOption | MoveTypeFreeScrollOption;
+export type MoveTypeObjectOption = MoveTypeSnapOption | MoveTypeFreeScrollOption;
+
+/**
+ * With "snap" move type, momentum is applied while choosing destination panel at release time.<br>You can set how many panels can go after relase.
+ * @ko 입력을 중단한 시점의 가속도에 영향받아 도달할 패널을 계산하는 이동 방식.<br>입력 중단 이후 최대 몇 개까지의 패널을 통과하여 이동할지 설정할 수 있다.
+ * @typedef
+ * @memberof eg.Flicking
+ * @property - Should be `"snap"` to enable snap mode.<ko>`"snap"`을 지정하여 snap 모드를 활성화할 수 있다.</ko>
+ * @property {number} [count=1] - Maximum number of panels can go after release.<ko>입력 중단 이후 통과하여 이동할 수 있는 패널의 최대 갯수.</ko>
+ */
+export interface MoveTypeSnapOption {
+  type: "snap";
+  count: number;
+}
+
+/**
+ * With "freeScroll" move type, it can be scrolled freely without alignment.
+ * @ko 패널이 정해진 지점에 정렬되지 않고, 자유롭게 스크롤할 수 있는 이동 방식.
+ * @typedef
+ * @memberof eg.Flicking
+ * @property - Should be `"freeScroll"` to enable free scroll mode.<ko>`"freeScroll"`을 지정하여 free scroll 모드를 활성화할 수 있다.</ko>
+ */
+export interface MoveTypeFreeScrollOption {
+  type: "freeScroll";
+}
+
+// State interface to save instance
+/**
+ * @typedef
+ * @memberof eg.Flicking
+ * @property - Index of current panel.<ko>현재 패널의 인덱스.</ko>
+ * @property panels - Panels Flicking has.<ko>Flicking이 갖고 있는 패널들의 정보.</ko>
+ * @property {string} [panels.html] - `outerHTML` of each panel elements.<ko>각 패널 엘리먼트의 `outerHTML`.</ko>
+ * @property {index} [panels.index] - Index of each panels.<ko>각 패널의 인덱스.</ko>
+ * @property - Camera position of Flicking.<ko>Flicking의 카메라 위치.</ko>
+ */
+export interface FlickingStatus {
+  index: number;
+  panels: Array<{
+    html: string;
+    index: number;
+  }>;
+  position: number;
+}
+
+export interface OriginalStyle {
+  className: string | null;
+  style: string | null;
+}
+
+/**
+ * @typedef
+ * @memberof eg.Flicking
+ * @property - HTML element of panel object.<ko>패널 오브젝트에 지정된 HTML Element.</ko>
+ * @property - Index of panel, zero-based integer.<ko>패널의 인덱스로, 0부터 시작하는 정수.</ko>
+ * @property - Position of panel where it is placed from left(horizontal)/top(vertical).<ko>패널의 위치로, 왼쪽(horizontal)/위(vertical)을 기준으로 얼마나 떨어져 있는지를 나타내는 값.</ko>
+ * @property - Position of panel anchor where it is actually stopped interacting with hanger position.<ko>Hanger와 상호작용하여 패널에 도착했을 때의 위치를 계산하는데 사용되는 패널 내부 Anchor의 위치.</ko>
+ * @property - Size of panel, width(horizontal)/height(vertical) in `px`.<ko>`px`단위의 패널의 크기, horizontal일 때는 너비, vertical일 때는 높이에 해당한다.</ko>
+ * @property - Progress of movement between previous or next panel relative to current panel.<ko> 현재 패널로부터 이전/다음 패널으로의 이동 진행률.</ko>
+ * @property - Progress of movement between points that panel is completely invisible outside of viewport.(prev direction: -1, selected point: 0, next direction: 1) <ko>현재 패널이 뷰포트 영역 밖으로 완전히 사라지는 지점을 기준으로 하는 진행도.(prev방향: -1, 선택 지점: 0, next방향: 1)</ko>
+ * @property - Percentage of area where panel is visible in the viewport.<ko>뷰포트 안에서 패널이 보이는 영역의 비율.</ko>
+ * @property focus - Move to this panel.<ko>이 패널로 이동한다.</ko>
+ * @property {number} [focus.duration] Duration of the panel movement. (unit: ms)<ko>패널 이동 애니메이션 진행 시간.(단위: ms)</ko>
+ * @property update - Update panel element with given function.<ko>패널 요소를 주어진 함수를 이용하여 업데이트한다.</ko>
+ * @property {function} [update.updateFunction] Callback function to update panel element. argument is panel's element.<ko>패널 요소를 업데이트하기 위한 콜백 함수. 패널의 HTMLElement를 인자로 갖는다.</ko>
+ * @property - Return previous panel of current panel, `null` if it doesn't exist.<ko>현재 패널의 이전 패널을 반환한다. 패널이 존재하지 않을 시 `null`을 반환한다.</ko>
+ * @property - Return next panel of current panel, `null` if it doesn't exist.<ko>현재 패널의 다음 패널을 반환한다. 패널이 존재하지 않을 시 `null`을 반환한다.</ko>
+ * @property - Insert new panels before reference panel. Return inserted panels.<ko>새로운 패널들을 해당 패널 앞에 추가한다. 새로 추가된 패널들을 반환한다.</ko>
+ * @property - Insert new panels after reference panel. Return inserted panels.<ko>새로운 패널들을 해당 패널 뒤에 추가한다. 새로 추가된 패널들을 반환한다.</ko>
+ * @property - Remove this panel.<ko>이 패널을 제거한다.</ko>
+ * @example
+ * - **Updating panel**
+ * ```javascript
+ * // As panel elements can be cloned in circular mode, `element` parameter is provided as read-only.
+ * // You should use `update()` function to consistently update all panel elements cloned.
+ *
+ * // Don't
+ * panel.element.classList.add("foo");
+ * // Do
+ * panel.update(el => {
+ *   el.classList.add("foo");
+ * });
+ * ```
+ */
+
+export interface FlickingPanel {
+  getElement: () => HTMLElement;
+  getIndex: () => number;
+  getPosition: () => number;
+  getAnchorPosition: () => number;
+  getSize: () => number;
+  getProgress: () => number;
+  getOutsetProgress: () => number;
+  getVisibleRatio: () => number;
+  focus: (duration?: number) => void;
+  update: (updateFunction: (element: HTMLElement) => void) => void;
+  prev: () => FlickingPanel | null;
+  next: () => FlickingPanel | null;
+  insertBefore: (element: ElementLike | ElementLike[]) => FlickingPanel[];
+  insertAfter: (element: ElementLike | ElementLike[]) => FlickingPanel[];
+  remove: () => void;
+}
+
+/**
+ * @typedef
+ * @memberof eg.Flicking
+ * @property - ⬅️(horizontal) or ⬆️(vertical).<ko>⬅️(horizontal) 또는 ⬆️(vertical).</ko>
+ * @property - ➡️(horizontal) or ⬇️(vertical).<ko>➡️(horizontal) 또는 ⬇️(vertical).</ko>
+ */
+export interface Direction {
+  readonly PREV: "PREV";
+  readonly NEXT: "NEXT";
+}
+
+/**
+ * Event triggered when user started dragging.
+ * @ko 사용자가 드래그를 시작했을 떄 발생하는 이벤트
+ * @event eg.Flicking#holdStart
+ * @type eg.Flicking.FlickingEvent
+ */
+
+/**
+ * Event triggered when user stopped dragging.
+ * @ko 사용자가 드래그를 중단했을 때 발생하는 이벤트.
+ * @event eg.Flicking#holdEnd
+ * @type eg.Flicking.FlickingEvent
+ */
+
+/**
+ * Event triggered once before first [move]{@link eg.Flicking#event:move} event.
+ * @ko 첫 번째 [move]{@link eg.Flicking#event:move}이벤트 직전에 단 한번 발생하는 이벤트.
+ * @event eg.Flicking#moveStart
+ * @type eg.Flicking.FlickingEvent
+ */
+
+/**
+ * Event triggered while moving to the destination panel.
+ * @ko 목적 패널로의 이동 도중에 발생하는 이벤트.
+ * @event eg.Flicking#move
+ * @type eg.Flicking.FlickingEvent
+ */
+
+/**
+ * Event triggered after finish moving to the destination panel.
+ * @ko 목적 패널로의 이동을 완료한 다음 발생하는 이벤트.
+ * @event eg.Flicking#moveEnd
+ * @type eg.Flicking.FlickingEvent
+ */
+
+/**
+ * Event triggered when flicking starts to move to the destination panel.<br>It can be triggered when user finished input, or flicking start to mvoe by method.<br>It won't be triggered when moving to same panel, unless it's circulated more than one cycle in circular mode.<br>Calling `stop()` in event will prevent index changing & panel moving.<br><br>`event` doesn't have `axesEvent` property when triggered by [moveTo()]{@link eg.Flicking#moveTo}, [prev()]{@link eg.Flicking#prev}, [next()]{@link eg.Flicking#next} method.
+ * @ko 목적 패널로 이동하기 시작할 때 발생하는 이벤트.<br>사용자가 입력을 마쳤을 때, 혹은 메소드를 통해 이동을 시작했을 때 발생한다.<br>동일 패널로 이동시에는 발생되지 않지만, circular 모드에서 한 바퀴 이상 순환하여 동일 패널로 도착했을 때에도 발생된다.<br>이벤트의 `stop()`을 호출시 패널로의 이동을 막는다.<br><br>[moveTo()]{@link eg.Flicking#moveTo}, [prev()]{@link eg.Flicking#prev}, [next()]{@link eg.Flicking#next}와 같은 메소드에 의해 호출되었을 경우 `event`내의 `axesEvent` 프로퍼티 값은 undefined이다.
+ * @event eg.Flicking#change
+ * @type eg.Flicking.FlickingEvent
+ */
+
+/**
+ * Event triggered when user drag amount not reached `threshold` in [FlickingOptions]{@link eg.Flicking.FlickingOptions}.
+ * @ko 사용자가 드래그한 정도가 [FlickingOptions]{@link eg.Flicking.FlickingOptions}의 `threshold`값보다 작을 때 발생하는 이벤트.
+ * @event eg.Flicking#restore
+ * @type eg.Flicking.FlickingEvent
+ */
+
+/**
+ * Event triggered when user statically selected(clicked) panel.
+ * @ko 사용자가 패널을 정적으로 선택(클릭)했을 때 발생하는 이벤트.
+ * @event eg.Flicking#select
+ * @type eg.Flicking.SelectEvent
+ */
+
+ /**
+  * Event triggered when Flicking confronts panels don't have successive indexes, so it need more content to draw panel in infinite mode.
+  * @ko 무한 모드에서, Flicking이 인덱스가 연속하지 않은 패널들을 만나 새로운 패널이 필요함을 알리고자 할 때 발생시키는 이벤트.
+  * @event eg.Flicking#needPanel
+  * @type eg.Flicking.NeedPanelEvent
+  */
+
+/**
+ * @typedef
+ * @memberof eg.Flicking
+ * @property - holdStart 이벤트
+ * @property - holdEnd 이벤트
+ * @property - moveStart 이벤트
+ * @property - move 이벤트
+ * @property - moveEnd 이벤트
+ * @property - change 이벤트
+ * @property - restore 이벤트
+ * @property - select 이벤트
+ * @property - needPanel 이벤트
+ */
+export interface EventType {
+  readonly HOLD_START: "holdStart";
+  readonly HOLD_END: "holdEnd";
+  readonly MOVE_START: "moveStart";
+  readonly MOVE: "move";
+  readonly MOVE_END: "moveEnd";
+  readonly CHANGE: "change";
+  readonly RESTORE: "restore";
+  readonly SELECT: "select";
+  readonly NEED_PANEL: "needPanel";
+}
+
+/**
+ * @typedef
+ * @memberof eg.Flicking
+ * @property - Name of the event.<ko>이벤트명</ko>
+ * @property - Index number of the current panel.<ko>현재 패널의 인덱스 번호.</ko>
+ * @property - Current panel.<ko> 현재 패널.</ko>
+ * @property - Absolute progress of how much it proceed from first panel. 0 at first panel, and 1 at last panel.<ko>첫 번째 패널로부터 얼마만큼 진행했는지를 나타내는 진행도. 첫번째 패널에서 0, 마지막 패널에서 1의 값을 갖는다.</ko>
+ * @property - `true` when the event was generated by a user action("mouse" or "touch") otherwise `false`.<ko>사용자 액션("mouse" 또는 "touch")에 의해 이벤트가 생성된 경우 `true`. 그 외는 `false`.</ko>
+ * @property - Whether the user is inputting through the input device. (Whether it is 'mousedown' for a mouse device or 'touchmove' for a touch device.)<ko>사용자가 입력 장치를 통해 입력중인지 여부. (마우스 장치라면 'mousedown' 여부, 터치 장치라면 'touchmove' 여부)</ko>
+ * @property - Cancel the default action, and prevents every events after it.<br>Not effective with events postfixed with `-End`<ko>이벤트의 기본동작을 취소하고, 해당 이벤트 뒤에 발생할 이벤트들을 전부 발생하지 않도록 한다.<br>`-End`가 접미사로 붙은 이벤트에서는 유효한 동작을 하지 않는다.</ko>
+ * @property - Direction of the panel movement. `null` if not moved at all.<ko>패널 이동 방향. 아직 움직이지 않았을 경우 `null`이다.</ko>
+ * @property - Original event emitted from {@link https://naver.github.io/egjs-axes/release/latest/doc/ Axes} instance.<ko>내부의 {@link https://naver.github.io/egjs-axes/release/latest/doc Axes} 인스턴스로부터 발생된 원본 이벤트.</ko>
+ * @property - Flicking instance that triggered event.<ko>이벤트를 발생시킨 Flicking의 인스턴스</ko>
+ */
+export interface FlickingEvent {
+  type: string;
+  index: number;
+  panel: FlickingPanel | null;
+  progress: number;
+  isTrusted: boolean;
+  holding: boolean;
+  stop: () => void;
+  direction: ValueOf<Direction> | null;
+  axesEvent?: any;
+  currentTarget: Flicking;
+}
+
+/**
+ * Event that indicates index will be changed, and isn't restoring. Index will be changed at `moveEnd` event.
+ * @ko - `restore`되지 않고, 인덱스가 변경될 것임을 나타내는 이벤트. 실제 인덱스는 `moveEnd`이벤트에서 변경된다.
+ * @typedef
+ * @memberof eg.Flicking
+ * @property - Name of the event.<ko>이벤트명</ko>
+ * @property - Expected panel's index that will arrive at animation end.<ko>애니메이션 종료 시점에 도착할 것으로 예측되는 패널의 인덱스.</ko>
+ * @property - Expected panel that will arrive at animation end.<ko>애니메이션 종료 시점에 도착할 것으로 예측되는 패널.</ko>
+ * @property - Absolute progress of how much it proceed from first panel. 0 at first panel, and 1 at last panel.<ko>첫 번째 패널로부터 얼마만큼 진행했는지를 나타내는 진행도. 첫번째 패널에서 0, 마지막 패널에서 1의 값을 갖는다.</ko>
+ * @property - `true` when the event was generated by a user action("mouse" or "touch") otherwise `false`.<ko>사용자 액션("mouse" 또는 "touch")에 의해 이벤트가 생성된 경우 `true`. 그 외는 `false`.</ko>
+ * @property - Whether the user is inputting through the input device. (Whether it is 'mousedown' for a mouse device or 'touchmove' for a touch device.)<ko>사용자가 입력 장치를 통해 입력중인지 여부. (마우스 장치라면 'mousedown' 여부, 터치 장치라면 'touchmove' 여부)</ko>
+ * @property - Cancel the default action, and prevents every events after it.<br>Not effective with events postfixed with `-End`<ko>이벤트의 기본동작을 취소하고, 해당 이벤트 뒤에 발생할 이벤트들을 전부 발생하지 않도록 한다.<br>`-End`가 접미사로 붙은 이벤트에서는 유효한 동작을 하지 않는다.</ko>
+ * @property - Expected direction of the panel movement.<ko>예측되는 패널 이동 방향.</ko>
+ * @property - Original event emitted from {@link https://naver.github.io/egjs-axes/release/latest/doc/ Axes} instance.<ko>내부의 {@link https://naver.github.io/egjs-axes/release/latest/doc Axes} 인스턴스로부터 발생된 원본 이벤트.</ko>
+ * @property - Flicking instance that triggered event.<ko>이벤트를 발생시킨 Flicking의 인스턴스</ko>
+ */
+export interface ChangeEvent {
+  type: string;
+  index: number;
+  panel: FlickingPanel | null;
+  progress: number;
+  isTrusted: boolean;
+  holding: boolean;
+  stop: () => void;
+  direction: ValueOf<Direction> | null;
+  axesEvent?: any;
+  currentTarget: Flicking;
+}
+
+/**
+ * Event will be triggered when panel is statically click / touched.
+ * @ko - 패널이 정적으로 클릭(혹은 터치)되었을 때 발생되는 이벤트.
+ * @typedef
+ * @memberof eg.Flicking
+ * @property - Name of the event.<ko>이벤트명</ko>
+ * @property - Selected panel's index.<ko>선택된 패널의 인덱스.</ko>.
+ * @property - Selected panel.<ko>선택된 패널.</ko>.
+ * @property - Absolute progress of how much it proceed from first panel. 0 at first panel, and 1 at last panel.<ko>첫 번째 패널로부터 얼마만큼 진행했는지를 나타내는 진행도. 첫번째 패널에서 0, 마지막 패널에서 1의 값을 갖는다.</ko>
+ * @property - `true` when the event was generated by a user action("mouse" or "touch") otherwise `false`.<ko>사용자 액션("mouse" 또는 "touch")에 의해 이벤트가 생성된 경우 `true`. 그 외는 `false`.</ko>
+ * @property - Whether the user is inputting through the input device. (Whether it is 'mousedown' for a mouse device or 'touchmove' for a touch device.)<ko>사용자가 입력 장치를 통해 입력중인지 여부. (마우스 장치라면 'mousedown' 여부, 터치 장치라면 'touchmove' 여부)</ko>
+ * @property - Expected direction of the panel movement.<ko>예측되는 패널 이동 방향.</ko>
+ * @property - Original event emitted from {@link https://naver.github.io/egjs-axes/release/latest/doc/ Axes} instance.<ko>내부의 {@link https://naver.github.io/egjs-axes/release/latest/doc Axes} 인스턴스로부터 발생된 원본 이벤트.</ko>
+ * @property - Flicking instance that triggered event.<ko>이벤트를 발생시킨 Flicking의 인스턴스</ko>
+ */
+export interface SelectEvent {
+  type: string;
+  index: number;
+  panel: FlickingPanel | null;
+  progress: number;
+  isTrusted: boolean;
+  holding: boolean;
+  direction: ValueOf<Direction> | null;
+  axesEvent?: any;
+  currentTarget: Flicking;
+}
+
+/**
+ * Event can be triggered in infinite mode. When camera element reaches at infinite threshold, this event can be triggered to indicate there should be more content to be displayed.
+ * @ko - 무한 모드에서 발생될 수 있는 이벤트. 화면의 양 끝, 혹은 불연속적인 인덱스를 가진 패널을 기준으로 `infiniteThreshold`만큼 떨어진 지점에 도달하였을 때 발생될 수 있다.
+ * @typedef
+ * @memberof eg.Flicking
+ * @property - Name of the event.<ko>이벤트명</ko>
+ * @property - Index of panel that needs panel before or after.<ko>앞 또는 뒤에 패널이 필요한 패널의 인덱스.</ko>.
+ * @property - Reference panel that needs panel before or after it.<ko>앞 또는 뒤에 패널이 필요한 기준 패널.</ko>.
+ * @property - Absolute progress of how much it proceed from first panel. 0 at first panel, and 1 at last panel.<ko>첫 번째 패널로부터 얼마만큼 진행했는지를 나타내는 진행도. 첫번째 패널에서 0, 마지막 패널에서 1의 값을 갖는다.</ko>
+ * @property - `true` when the event was generated by a user action("mouse" or "touch") otherwise `false`.<ko>사용자 액션("mouse" 또는 "touch")에 의해 이벤트가 생성된 경우 `true`. 그 외는 `false`.</ko>
+ * @property - Whether the user is inputting through the input device. (Whether it is 'mousedown' for a mouse device or 'touchmove' for a touch device.)<ko>사용자가 입력 장치를 통해 입력중인지 여부. (마우스 장치라면 'mousedown' 여부, 터치 장치라면 'touchmove' 여부)</ko>
+ * @property - Direction of panel is needed from reference panel. `null` if no panel exists.<ko>기준 패널로부터 패널이 필요한 방향. 패널이 하나도 없을 경우 `null`이다.</ko>
+ * @property - Original event emitted from {@link https://naver.github.io/egjs-axes/release/latest/doc/ Axes} instance.<ko>내부의 {@link https://naver.github.io/egjs-axes/release/latest/doc Axes} 인스턴스로부터 발생된 원본 이벤트.</ko>
+ * @property - Flicking instance that triggered event.<ko>이벤트를 발생시킨 Flicking의 인스턴스</ko>
+ * @property range - Range of indexes that is emtpy.<ko>패널이 존재하지 않는 인덱스의 범위.</ko>
+ * @property {number} [range.min] - Minimum index of panels needed.<ko>필요한 패널들의 최소 인덱스.</ko>.
+ * @property {number} [range.max] - Maximum index of panels needed.<ko>필요한 패널들의 최대 인덱스.</ko>.
+ * @property {number} [range.length] - How many panels are needed to fill empty spaces.<ko>몇 개의 패널이 필요한지를 나타내는 정수.</ko>
+ */
+export interface NeedPanelEvent {
+  type: string;
+  index: number;
+  panel: FlickingPanel | null;
+  progress: number;
+  isTrusted: boolean;
+  holding: boolean;
+  direction: ValueOf<Direction> | null;
+  axesEvent?: any;
+  currentTarget: Flicking;
+  range: {
+    min: number;
+    max: number;
+    length: number;
+  };
+}
+
+export interface StateType {
+  readonly IDLE: 0;
+  readonly HOLDING: 1;
+  readonly DRAGGING: 2;
+  readonly ANIMATING: 3;
+  readonly DISABLED: 4;
+}
+
+export interface AxesEventType {
+  readonly HOLD: "hold";
+  readonly CHANGE: "change";
+  readonly RELEASE: "release";
+  readonly ANIMATION_END: "animationEnd";
+  readonly FINISH: "finish";
+}
+
+export interface TriggerCallback {
+  onSuccess(callback: () => any): TriggerCallback;
+  onStopped(callback: () => any): TriggerCallback;
+}
+
+export interface FlickingContext {
+  flicking: Flicking;
+  viewport: Viewport;
+  transitTo: StateMachine["transitTo"];
+  triggerEvent: Flicking["triggerEvent"];
+  moveCamera: Flicking["moveCamera"];
+  stopCamera: Viewport["stopCamera"];
+}
+
+/**
+ * @typedef
+ * @memberof eg.Flicking
+ * @property - Method called when plugin is added.<ko>플러그인을 추가했을 때 발생하는 메소드.</ko>
+ * @property - Method called when plugin is removed.<ko>플러그인을 제거했을 때 발생하는 메소드.</ko>
+ */
+export interface Plugin {
+  init(flicking: Flicking): void;
+  destroy(flicking: Flicking): void;
+}

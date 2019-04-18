@@ -1,2 +1,2 @@
-Simulator.setType('touch');
+Simulator.setType("touch");
 Simulator.events.touch.fakeSupport();

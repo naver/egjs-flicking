@@ -1,55 +1,55 @@
 {
-	"tags": {
-		"allowUnknownTags" : true,
-		"dictionaries": ["jsdoc","closure"]
-	},
-	"source": {
-			"include": ["src", "README.md", "node_modules/@egjs/component/src/component.js"],
-			"includePattern": ".+\\.js(doc|x)?$",
-			"excludePattern": "(^|\\/|\\\\)_"
-	},
-	"opts": {
-			"template": "node_modules/egjs-jsdoc-template",
-			"destination": "./doc/",
-			"ignores": ["eg.Component"],
-			"expendsItemMembers": true,
-			"recurse": true
-	},
-	"plugins": [
-		"plugins/markdown",
-		"node_modules/egjs-jsdoc-template/jsdoc-plugin/ko", 
-		"node_modules/egjs-jsdoc-template/jsdoc-plugin/group",
-		"node_modules/egjs-jsdoc-template/jsdoc-plugin/support"
-	],
-	"templates": {
-		"cleverLinks": true,
-		"monospaceLinks": true,
-		"default": {
-			"outputSourceFiles" : true
-		},
-		"applicationName": "eg.Flicking",
-		"disqus": "egjs",
-		"googleAnalytics": "UA-70842526-17",
-		"openGraph": {
-			"title": "",
-			"type": "website",
-			"image": "",
-			"site_name": "",
-			"url": ""
-		},
-		"meta": {
-			"title": "egjs::Flicking - API",
-			"description": "A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.",
-			"keyword": "UI Component, egjs, flicking, carousel"
-		},
-		"linenums": true,
-		"link": {
-			"canonical": "https://naver.github.io/egjs-flicking/release/latest/doc/"
-		}
-	},
-	"markdown": {
-		"parser": "gfm",
-		"hardwrap": true,
-		"tags": ["examples", "ko"]
-	}
+  "tags": {
+    "allowUnknownTags" : true,
+    "dictionaries": ["jsdoc","closure"]
+  },
+  "source": {
+      "include": ["src", "README.md", "node_modules/@egjs/component/src/component.js"],
+      "includePattern": ".+\\.(j|t)s(doc|x)?$",
+      "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "opts": {
+      "template": "node_modules/egjs-jsdoc-template",
+      "destination": "./doc/",
+      "ignores": ["eg.Component"],
+      "expendsItemMembers": true,
+      "recurse": true
+  },
+  "plugins": [
+    "plugins/markdown",
+    "node_modules/egjs-jsdoc-template/jsdoc-plugin/ko", 
+    "node_modules/egjs-jsdoc-template/jsdoc-plugin/group",
+    "node_modules/egjs-jsdoc-template/jsdoc-plugin/support"
+  ],
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": true,
+    "default": {
+      "outputSourceFiles" : true
+    },
+    "applicationName": "eg.Flicking",
+    "disqus": "egjs",
+    "googleAnalytics": "UA-70842526-17",
+    "openGraph": {
+      "title": "",
+      "type": "website",
+      "image": "",
+      "site_name": "",
+      "url": ""
+    },
+    "meta": {
+      "title": "egjs::Flicking - API",
+      "description": "A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.",
+      "keyword": "UI Component, egjs, flicking, carousel"
+    },
+    "linenums": true,
+    "link": {
+      "canonical": "https://naver.github.io/egjs-flicking/release/latest/doc/"
+    }
+  },
+  "markdown": {
+    "parser": "gfm",
+    "hardwrap": true,
+    "tags": ["examples", "ko"]
+  }
 }
