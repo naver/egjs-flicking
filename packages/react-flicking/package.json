@@ -16,10 +16,10 @@
     "react"
   ],
   "description": "A react component that can easily use @egjs/flicking",
-  "homepage": "https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking",
+  "homepage": "https://github.com/naver/egjs-flicking/tree/2.x/packages/react-flicking",
   "repository": {
     "type": "git",
-    "url": "https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking"
+    "url": "https://github.com/naver/egjs-flicking/tree/2.x/packages/react-flicking"
   },
   "author": {
 		"name": "NAVER Corp."
