@@ -304,12 +304,6 @@ function pause() {
   clearTimeout(playTimerId);
 }
 
-
-
-
-document.querySelector(".page1 .download").addEventListener("click", function () {
-  scroll(4);
-});
 var featuresFlicking = new eg.Flicking(".page2 .features", {
   hanger: 0,
   anchor: 0,
