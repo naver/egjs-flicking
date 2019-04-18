@@ -13,6 +13,14 @@ With this module, you can make flicking gestures, which are ways to navigate lef
 
 Download dist files from repo directly or install it via npm.
 
+### Installation with npm
+
+The following command shows how to install egjs-flicking using npm.
+
+```bash
+$ npm install @egjs/flicking
+```
+
 ### For development (Uncompressed)
 
 You can download the uncompressed files for development
@@ -38,25 +46,16 @@ You can download the compressed files for production
     - https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.js
     - https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.min.js
 
-### Nightly version
-
-Nightly version is the latest build from the master branch.
-With nightly, you can try upcoming changes prior the official release.
-
-- https://github.com/naver/egjs-flicking/tree/nightly/dist
-
-> The version info will be given as the build datetime: `x.x.x-nightly-yyyymmddhhmmss`
-
 ### Plugins
 
-Go to [**@ejgs/flicking-plugins**](https://github.com/naver/egjs-flicking/tree/master/packages/flicking-plugins)
+Go to [**@ejgs/flicking-plugins**](https://github.com/naver/egjs-flicking-plugins)
 
 Using npm:
 ```
 npm install @egjs/flicking-plugins
 ```
 ```js
-import {OpacityEffect, ParallaxEffect} from "@egjs/flicking-plugins";
+import {Fade, Parallax, AutoPlay} from "@egjs/flicking-plugins";
 ```
 
 Download necessary plugins to use.
@@ -78,13 +77,6 @@ Download necessary plugins to use.
     - https://naver.github.io/egjs-flicking-plugins/release/[PLUGIN-VERSION]/dist/[PLUGIN-NAME].js
     - https://naver.github.io/egjs-flicking-plugins/release/[PLUGIN-VERSION]/dist/[PLUGIN-NAME].min.js
 
-### Installation with npm
-
-The following command shows how to install egjs-flicking using npm.
-
-```bash
-$ npm install @egjs/flicking
-```
 
 ### Using CDN
 
