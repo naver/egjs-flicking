@@ -82,7 +82,7 @@ class HoldingState extends State {
       triggerEvent(EVENTS.SELECT, null, true, {
         direction, // Direction to the clicked panel
         index: clickedPanel.getIndex(),
-        panel: viewport.castToFlickingPanel(clickedPanel),
+        panel: clickedPanel,
       });
     }
   }

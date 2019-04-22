@@ -213,7 +213,6 @@ class Flicking extends Component {
       panel,
       eventType,
       null,
-      offset,
       duration,
     );
     return this;
@@ -246,7 +245,7 @@ class Flicking extends Component {
     const viewport = this.viewport;
     const panel = viewport.getCurrentPanel();
     return panel
-      ? viewport.castToFlickingPanel(panel)
+      ? panel
       : null;
   }
 
@@ -259,7 +258,7 @@ class Flicking extends Component {
     const viewport = this.viewport;
     const panel = viewport.panelManager.get(index);
     return panel
-      ? viewport.castToFlickingPanel(panel)
+      ? panel
       : null;
   }
 
@@ -277,8 +276,7 @@ class Flicking extends Component {
       : panelManager.originalPanels();
 
     return panels
-      .filter(panel => !!panel)
-      .map(panel => viewport.castToFlickingPanel(panel));
+      .filter(panel => !!panel);
   }
 
   /**

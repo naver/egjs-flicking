@@ -92,7 +92,7 @@ class PanelManager {
     const range = this.range;
     if (lastPanel.getIndex() > lastIndex) {
       const removingPanels = this.panels.splice(lastIndex + 1);
-      removingPanels.forEach(panel => panel.remove());
+      removingPanels.forEach(panel => panel.removeElement());
       this.length -= removingPanels.length;
 
       const firstRemovedPanel = removingPanels.filter(panel => !!panel)[0];
@@ -166,7 +166,7 @@ class PanelManager {
       if (panels.length > lastIndex + 1) {
         const removedPanels = panels.splice(lastIndex + 1)
           .filter(panel => Boolean(panel));
-        removedPanels.forEach(panel => panel.remove());
+        removedPanels.forEach(panel => panel.removeElement());
         this.length -= removedPanels.length;
       }
     }
@@ -221,7 +221,7 @@ class PanelManager {
     const wasNonEmptyCount = replacedPanels.filter(panel => Boolean(panel)).length;
     replacedPanels.forEach(panel => {
       if (panel) {
-        panel.remove();
+        panel.removeElement();
       }
     });
 
@@ -247,7 +247,7 @@ class PanelManager {
       .filter(panel => !!panel);
 
     deletedPanels.forEach(panel => {
-      panel.remove();
+      panel.removeElement();
     });
 
     if (isCircular) {
@@ -366,8 +366,7 @@ class PanelManager {
   // Clear both original & cloned
   public clear(): void {
     this.panels.forEach(panel => {
-      panel.remove();
-      panel.removeClonedPanelsAfter(0);
+      panel.removeElement();
     });
 
     this.panels = [];

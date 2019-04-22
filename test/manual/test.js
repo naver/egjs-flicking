@@ -156,7 +156,7 @@ setTimeout(function() {
       gap: 10,
       duration: 300,
       autoResize: true
-    })
+    });
     f2c = createFlicking("#flick2-3", {
       circular: true,
       autoResize: true
