@@ -1,9 +1,10 @@
+import { spy } from "sinon";
+
 import Flicking from "../../src/Flicking";
 import { FlickingEvent, FlickingPanel, NeedPanelEvent } from "../../src/types";
 import { horizontal } from "./assets/fixture";
 import { createFlicking, cleanup, simulate, waitFor, createHorizontalElement, waitEvent } from "./assets/utils";
 import { EVENTS, DIRECTION } from "../../src/consts";
-import { spy } from "sinon";
 import { counter } from "../../src/utils";
 
 declare var viewport: any;
@@ -53,26 +54,29 @@ describe("Methods call", () => {
 
   describe("next()", () => {
     beforeEach(() => {
-      flickingInfo = createFlicking(horizontal.half, {
+      flickingInfo = createFlicking(horizontal.fixedTo100, {
         anchor: "0%",
         hanger: "0%",
       });
     });
 
     it("can move to next panel correctly", async () => {
+      // Given
+      const flicking = flickingInfo.instance;
       const cameraElement = flickingInfo.element.querySelector(".eg-flick-camera") as HTMLElement;
 
-      const beforeCameraPos = cameraElement.getBoundingClientRect().left;
-      const firstPanelElement = cameraElement.querySelector(".eg-flick-panel");
-      const firstPanelSize = firstPanelElement.getBoundingClientRect().width;
+      const beforeCameraPos = -cameraElement.getBoundingClientRect().left; // position is set multiplied by -1
+      const beforePanelPos = flicking.getCurrentPanel().getPosition();
 
-      const flicking = flickingInfo.instance;
+      // When
       flicking.next(200);
-      await waitFor(1000);
+      await waitEvent(flicking, "moveEnd");
 
-      const afterCameraPos = cameraElement.getBoundingClientRect().left;
+      // Then
+      const afterCameraPos = -cameraElement.getBoundingClientRect().left; // position is set multiplied by -1
+      const afterPanelPos = flicking.getCurrentPanel().getPosition();
 
-      expect(Math.abs(afterCameraPos - beforeCameraPos)).equals(firstPanelSize);
+      expect(Math.abs(afterCameraPos - beforeCameraPos)).equals(afterPanelPos - beforePanelPos);
     });
 
     it("changes index correctly", async () => {
@@ -106,7 +110,7 @@ describe("Methods call", () => {
 
   describe("prev()", () => {
     beforeEach(() => {
-      flickingInfo = createFlicking(horizontal.half, {
+      flickingInfo = createFlicking(horizontal.fixedTo100, {
         anchor: "100%",
         hanger: "100%",
         defaultIndex: 2,
@@ -114,19 +118,22 @@ describe("Methods call", () => {
     });
 
     it("can move to prev panel correctly", async () => {
+      // Given
+      const flicking = flickingInfo.instance;
       const cameraElement = flickingInfo.element.querySelector(".eg-flick-camera") as HTMLElement;
 
-      const beforeCameraPos = cameraElement.getBoundingClientRect().left;
-      const firstPanelElement = cameraElement.querySelector(".eg-flick-panel");
-      const firstPanelSize = firstPanelElement.getBoundingClientRect().width;
+      const beforeCameraPos = -cameraElement.getBoundingClientRect().left; // position is set multiplied by -1
+      const beforePanelPos = flicking.getCurrentPanel().getPosition();
 
-      const flicking = flickingInfo.instance;
+      // When
       flicking.prev(200);
-      await waitFor(1000);
+      await waitEvent(flicking, "moveEnd");
 
-      const afterCameraPos = cameraElement.getBoundingClientRect().left;
+      // Then
+      const afterCameraPos = -cameraElement.getBoundingClientRect().left; // position is set multiplied by -1
+      const afterPanelPos = flicking.getCurrentPanel().getPosition();
 
-      expect(Math.abs(afterCameraPos - beforeCameraPos)).equals(firstPanelSize);
+      expect(afterCameraPos - beforeCameraPos).equals(afterPanelPos - beforePanelPos);
     });
 
     it("changes index correctly", async () => {
