@@ -11,7 +11,6 @@ class IdleState extends State {
     this.direction = null;
     this.targetPanel = null;
     this.delta = 0;
-    this.targetOffset = 0;
     this.lastPosition = 0;
   }
 

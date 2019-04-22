@@ -69,7 +69,7 @@ class DraggingState extends State {
 
     if (!overThreshold && this.targetPanel) {
       // Interrupted while animating
-      viewport.moveTo(this.targetPanel, "", e, this.targetOffset);
+      viewport.moveTo(this.targetPanel, "", e);
       transitTo(STATE_TYPE.ANIMATING);
       return;
     }
@@ -146,7 +146,6 @@ class DraggingState extends State {
       panelToMove,
       eventType,
       e,
-      offset,
       duration,
     ).onSuccess(() => {
       transitTo(STATE_TYPE.ANIMATING);

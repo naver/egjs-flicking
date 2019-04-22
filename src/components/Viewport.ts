@@ -6,7 +6,7 @@ import PanelManager from "./PanelManager";
 import StateMachine from "./StateMachine";
 import { FlickingOptions, FlickingPanel, FlickingStatus, ElementLike, EventType, TriggerCallback, NeedPanelEvent, FlickingEvent, MoveTypeObjectOption } from "../types";
 import { DEFAULT_VIEWPORT_CSS, DEFAULT_CAMERA_CSS, TRANSFORM, DEFAULT_OPTIONS, EVENTS, DIRECTION, STATE_TYPE } from "../consts";
-import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement, getProgress } from "../utils";
+import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement } from "../utils";
 
 export default class Viewport {
   public options: FlickingOptions;
@@ -77,7 +77,6 @@ export default class Viewport {
     panel: Panel,
     eventType: EventType["CHANGE"] | EventType["RESTORE"] | "",
     axesEvent: any,
-    offset: number = 0,
     duration: number = this.options.duration,
   ): TriggerCallback {
     const state = this.state;
@@ -85,9 +84,8 @@ export default class Viewport {
     const freeScroll = (this.options.moveType as MoveTypeObjectOption).type === "freeScroll";
 
     const currentPosition = state.position;
-    const castedPanel = this.castToFlickingPanel(panel, offset);
 
-    let estimatedPosition = castedPanel.getAnchorPosition() - state.relativeHangerPosition;
+    let estimatedPosition = panel.getAnchorPosition() - state.relativeHangerPosition;
     estimatedPosition = this.canSetBoundMode()
       ? clamp(estimatedPosition, state.scrollArea.prev, state.scrollArea.next)
       : estimatedPosition;
@@ -103,7 +101,7 @@ export default class Viewport {
     if (eventType === EVENTS.CHANGE) {
       eventResult = this.triggerEvent(EVENTS.CHANGE, axesEvent, isTrusted, {
         index: panel.getIndex(),
-        panel: castedPanel,
+        panel,
         direction,
       });
     } else if (eventType === EVENTS.RESTORE) {
@@ -122,7 +120,6 @@ export default class Viewport {
 
     eventResult.onSuccess(() => {
       currentState.targetPanel = panel;
-      currentState.targetOffset = offset;
       currentState.direction = estimatedPosition > currentPosition
         ? DIRECTION.NEXT
         : DIRECTION.PREV;
@@ -324,7 +321,7 @@ export default class Viewport {
     const parsedElements = parseElement(element);
 
     const panels = parsedElements
-      .map((el, idx) => new Panel(el, index + idx, this.options))
+      .map((el, idx) => new Panel(el, index + idx, this))
       .slice(0, lastIndex - index + 1);
 
     if (panels.length <= 0) {
@@ -352,7 +349,7 @@ export default class Viewport {
 
     this.resize();
 
-    return panels.map(panel => this.castToFlickingPanel(panel));
+    return panels;
   }
 
   public replace(index: number, element: ElementLike | ElementLike[]): FlickingPanel[] {
@@ -367,7 +364,7 @@ export default class Viewport {
     const state = this.state;
     const parsedElements = parseElement(element);
     const panels = parsedElements
-      .map((el, idx) => new Panel(el, index + idx, this.options))
+      .map((el, idx) => new Panel(el, index + idx, this))
       .slice(0, lastIndex - index + 1);
 
     if (panels.length <= 0) {
@@ -396,7 +393,7 @@ export default class Viewport {
 
     this.resize();
 
-    return panels.map(panel => this.castToFlickingPanel(panel));
+    return panels;
   }
 
   public remove(index: number, deleteCount: number = 1): FlickingPanel[] {
@@ -415,7 +412,7 @@ export default class Viewport {
     }
     this.resize();
 
-    return removedPanels.map(panel => this.castToFlickingPanel(panel));
+    return removedPanels;
   }
 
   public updateAdaptiveSize(): void {
@@ -642,156 +639,6 @@ export default class Viewport {
     axes.on(handlers);
   }
 
-  public castToFlickingPanel = (panel: Panel, offset = 0): FlickingPanel => {
-    const viewport = this;
-    const options = viewport.options;
-
-    return {
-      getElement() {
-        return panel.getElement();
-      },
-      getIndex() {
-        return panel.getIndex();
-      },
-      getPosition() {
-        return panel.getPosition() + offset;
-      },
-      getAnchorPosition() {
-        return this.getPosition() + panel.getRelativeAnchorPosition();
-      },
-      getSize() {
-        return panel.getSize();
-      },
-      getProgress() {
-        let progress: number = NaN;
-
-        // single
-        const panelCount = viewport.panelManager.getPanelCount();
-        const scrollAreaSize = viewport.getScrollAreaSize();
-        const relativeIndex = (options.circular ? Math.floor(this.getPosition() / scrollAreaSize) * panelCount : 0) + this.getIndex();
-
-        progress = relativeIndex - viewport.getCurrentProgress();
-        return progress;
-      },
-      getOutsetProgress(this: FlickingPanel) {
-        let outsetProgress: number = NaN;
-
-        const outsetRange = [
-          -this.getSize(),
-          viewport.getRelativeHangerPosition() - panel.getRelativeAnchorPosition(),
-          viewport.getSize(),
-        ];
-        const relativePanelPosition = this.getPosition() - viewport.getCameraPosition();
-
-        outsetProgress = getProgress(relativePanelPosition, outsetRange);
-
-        return outsetProgress;
-      },
-      getVisibleRatio(this: FlickingPanel) {
-        let visibleRatio = 0;
-
-        const panelSize = panel.getSize();
-        const relativePanelPosition = this.getPosition() - viewport.getCameraPosition();
-        const rightRelativePanelPosition = relativePanelPosition + panelSize;
-        const visibleSize = Math.min(viewport.getSize(), rightRelativePanelPosition) - Math.max(relativePanelPosition, 0);
-
-        visibleRatio = visibleSize >= 0
-          ? visibleSize / panelSize
-          : 0;
-
-        return visibleRatio;
-      },
-      focus(this: FlickingPanel, duration?: number): void {
-        const currentPanel = viewport.getCurrentPanel();
-        const hangerPosition = viewport.getHangerPosition();
-        const anchorPosition = panel.getAnchorPosition();
-        if (hangerPosition === anchorPosition || !currentPanel) {
-          return;
-        }
-
-        const currentPosition = currentPanel.getPosition();
-        const eventType = currentPosition === this.getPosition()
-          ? ""
-          : EVENTS.CHANGE;
-        viewport.moveTo(panel, eventType, null, offset, duration);
-      },
-      update(this: FlickingPanel, updateFunction: (element: HTMLElement) => any): void {
-        panel.getIdenticalPanels()
-          .forEach(eachPanel => updateFunction(eachPanel.getElement()));
-      },
-      prev(this: FlickingPanel): FlickingPanel | null {
-        const prevSibling = panel.prevSibling;
-
-        if (!prevSibling) {
-          return null;
-        }
-
-        const currentIndex = this.getIndex();
-        const prevIndex = prevSibling.getIndex();
-
-        const hasEmptyPanelBetween = currentIndex - prevIndex > 1;
-        const notYetMinPanel = options.infinite
-          && currentIndex > 0
-          && prevIndex > currentIndex;
-
-        if (hasEmptyPanelBetween || notYetMinPanel) {
-          // Empty panel exists between
-          return null;
-        }
-
-        const prevPanelSize = prevSibling.getSize();
-        const newPosition = this.getPosition() - prevPanelSize - options.gap;
-        const newOffset = newPosition - prevSibling.getPosition();
-
-        return viewport.castToFlickingPanel(prevSibling, newOffset);
-      },
-      next(this: FlickingPanel): FlickingPanel | null {
-        const nextSibling = panel.nextSibling;
-        const lastIndex = viewport.panelManager.getLastIndex();
-
-        if (!nextSibling) {
-          return null;
-        }
-
-        const currentIndex = this.getIndex();
-        const nextIndex = nextSibling.getIndex();
-
-        const hasEmptyPanelBetween = nextIndex - currentIndex > 1;
-        const notYetMaxPanel = options.infinite
-          && currentIndex < lastIndex
-          && nextIndex < currentIndex;
-
-        if (hasEmptyPanelBetween || notYetMaxPanel) {
-          return null;
-        }
-
-        const newPosition = this.getPosition() + panel.getSize() + options.gap;
-        const newOffset = newPosition - nextSibling.getPosition();
-
-        return viewport.castToFlickingPanel(nextSibling, newOffset);
-      },
-      insertBefore(this: FlickingPanel, element: ElementLike | ElementLike[]): FlickingPanel[] {
-        const parsedElements = parseElement(element);
-        const firstPanel = viewport.panelManager.firstPanel()!;
-        const prevSibling = panel.prevSibling;
-        // Finding correct inserting index
-        // While it should insert removing empty spaces,
-        // It also should have to be bigger than prevSibling' s index
-        const targetIndex = prevSibling && firstPanel.getIndex() !== this.getIndex()
-          ? Math.max(prevSibling.getIndex() + 1, panel.getIndex() - parsedElements.length)
-          : Math.max(panel.getIndex() - parsedElements.length, 0);
-
-        return viewport.insert(targetIndex, parsedElements);
-      },
-      insertAfter(this: FlickingPanel, element: ElementLike | ElementLike[]): FlickingPanel[] {
-        return viewport.insert(panel.getIndex() + 1, element);
-      },
-      remove(this: FlickingPanel): FlickingPanel {
-        return viewport.remove(panel.getIndex())[0];
-      },
-    };
-  }
-
   private build(): void {
     this.applyCSSValue();
     this.setAxesInstance();
@@ -856,7 +703,7 @@ export default class Viewport {
 
     // Initialize panels
     const panels = toArray(panelElements).map(
-      (el: HTMLElement, idx: number) => new Panel(el, idx, this.options),
+      (el: HTMLElement, idx: number) => new Panel(el, idx, this),
     );
 
     if (panels.length > 0) {
@@ -1055,6 +902,7 @@ export default class Viewport {
       const clonedPanelPos = cloneBasePos + origPanel.getPosition();
 
       panel.setPosition(clonedPanelPos);
+      panel.setLoopIndex(cloneIndex + 1);
     }
 
     let lastReplacePosition = firstPanel.getPosition();
@@ -1062,6 +910,9 @@ export default class Viewport {
     for (const panel of clonedPanels.concat().reverse()) {
       const panelSize = panel.getSize();
       const replacePosition = lastReplacePosition - panelSize - options.gap;
+      const cloneIndex = panel.getCloneIndex();
+      const maxCloneCount = panelManager.getCloneCount();
+      const loopIndex = cloneIndex - maxCloneCount;
 
       if (replacePosition + panelSize <= scrollArea.prev) {
         // Replace is not meaningful, as it won't be seen in current scroll area
@@ -1069,6 +920,7 @@ export default class Viewport {
       }
 
       panel.setPosition(replacePosition);
+      panel.setLoopIndex(loopIndex);
       lastReplacePosition = replacePosition;
     }
   }
@@ -1177,7 +1029,7 @@ export default class Viewport {
       // There're no panels
       this.triggerNeedPanel({
         axesEvent,
-        index: 0,
+        siblingPanel: null,
         direction: null,
         indexRange: {
           min: 0,
@@ -1214,7 +1066,6 @@ export default class Viewport {
       if (emptyPanelExistsBetween && overThreshold) {
         this.triggerNeedPanel({
           axesEvent,
-          index: checkingPanel.getIndex(),
           siblingPanel: checkingPanel,
           direction: DIRECTION.NEXT,
           indexRange: {
@@ -1233,7 +1084,6 @@ export default class Viewport {
         if (firstIndex > 0) {
           this.triggerNeedPanel({
             axesEvent,
-            index: checkingPanel.getIndex(),
             siblingPanel: checkingPanel,
             direction: DIRECTION.NEXT,
             indexRange: {
@@ -1277,7 +1127,6 @@ export default class Viewport {
       if (emptyPanelExistsBetween && overThreshold) {
         this.triggerNeedPanel({
           axesEvent,
-          index: checkingPanel.getIndex(),
           siblingPanel: checkingPanel,
           direction: DIRECTION.PREV,
           indexRange: {
@@ -1296,7 +1145,6 @@ export default class Viewport {
         if (lastIndex < maxLastIndex) {
           this.triggerNeedPanel({
             axesEvent,
-            index: checkingPanel.getIndex(),
             siblingPanel: checkingPanel,
             direction: DIRECTION.PREV,
             indexRange: {
@@ -1323,12 +1171,11 @@ export default class Viewport {
 
   private triggerNeedPanel(params: {
     axesEvent: any;
-    index: number;
-    siblingPanel?: Panel,
+    siblingPanel: Panel | null,
     direction: FlickingEvent["direction"];
     indexRange: NeedPanelEvent["range"];
   }): void {
-    const { axesEvent, index, siblingPanel, direction, indexRange } = params;
+    const { axesEvent, siblingPanel, direction, indexRange } = params;
     const checkedIndexes = this.state.checkedIndexes;
     const alreadyTriggered = checkedIndexes.some(([min, max]) => min === indexRange.min || max === indexRange.max);
     const hasHandler = this.flicking.hasOn(EVENTS.NEED_PANEL);
@@ -1340,12 +1187,12 @@ export default class Viewport {
     // Should done before triggering event, as we can directly add panels by event callback
     checkedIndexes.push([indexRange.min, indexRange.max]);
 
+    const index = siblingPanel
+      ? siblingPanel.getIndex()
+      : 0;
     const isTrusted = axesEvent
       ? axesEvent.isTrusted
       : false;
-    const panel = siblingPanel
-      ? this.castToFlickingPanel(siblingPanel)
-      : null;
 
     this.triggerEvent(
       EVENTS.NEED_PANEL,
@@ -1353,10 +1200,10 @@ export default class Viewport {
       isTrusted,
       {
         index,
-        panel,
+        panel: siblingPanel,
         direction,
         range: indexRange,
-      } as NeedPanelEvent,
+      } as Partial<NeedPanelEvent>,
     );
   }
 }
