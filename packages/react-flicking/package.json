@@ -1,6 +1,6 @@
 {
   "name": "@egjs/react-flicking",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "main": "dist/flicking.cjs.js",
   "module": "dist/flicking.esm.js",
   "types": "declaration/index.d.ts",
@@ -22,12 +22,12 @@
     "url": "https://github.com/naver/egjs-flicking/tree/2.x/packages/react-flicking"
   },
   "author": {
-		"name": "NAVER Corp."
-	},
-	"namespace": {
-		"eg": "eg"
-	},
-	"license": "MIT",
+    "name": "NAVER Corp."
+  },
+  "namespace": {
+    "eg": "eg"
+  },
+  "license": "MIT",
   "dependencies": {
     "@egjs/flicking": "^2.4.2"
   },
