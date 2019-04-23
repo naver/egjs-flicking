@@ -132,7 +132,6 @@ class DraggingState extends State {
         : EVENTS.RESTORE
       : EVENTS.CHANGE;
 
-
     viewport.moveTo(
       panelToMove,
       eventType,

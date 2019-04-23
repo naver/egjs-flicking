@@ -216,7 +216,7 @@ export function circulate(value: number, min: number, max: number): number {
     value = max + offset;
   } else if (value > max) {
     const offset = (value - max - 1) % size;
-    value = min + offset
+    value = min + offset;
   }
 
   return value;

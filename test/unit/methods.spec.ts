@@ -636,15 +636,15 @@ describe("Methods call", () => {
       await waitFor(100);
 
       // Then
-      expect(restore.callCount).to.be.equals(0);
-      expect(change.callCount).to.be.equals(0);
-      expect(moveEnd.callCount).to.be.equals(2);
-      expect(index).to.be.equals(0);
-      expect(flickingInfo.instance.getIndex()).to.be.equals(0);
+      expect(restore.callCount).to.be.equal(0);
+      expect(change.callCount).to.be.equal(0);
+      expect(moveEnd.callCount).to.be.equal(2);
+      expect(index).to.be.equal(0);
+      expect(flicking.getIndex()).to.be.equal(0);
       // progress1
-      expect(moveEnd.args[0][0].progress).to.be.not.equals(0);
+      expect(moveEnd.args[0][0].progress).to.be.not.equal(0);
       // progress2
-      expect(moveEnd.args[1][0].progress).to.be.equals(0);
+      expect(moveEnd.args[1][0].progress).to.be.equal(0);
     });
 
     it("should check 'freeScroll' option(strong snap)", async () => {

@@ -515,7 +515,8 @@ describe("Initialization", () => {
     afterEach(() => cleanup());
 
     describe("Maximum panel changes per snap value", () => {
-      const snapCounts = [1, 2, 3, 4, 5];
+      // Snap is effective only when above 1
+      const snapCounts = [2, 3, 4, 5];
       const deltaValues = [-80, -110, -140, -170, -200];
       const panelWidth = 100;
 
@@ -539,19 +540,26 @@ describe("Initialization", () => {
               duration: 50,
             });
 
-            const destPos = await waitEvent(flicking, "change")
-              .then((e: any) => e.axesEvent.destPos.flick);
+            const [destPos, nearestPanel] = await waitEvent(flicking, "change")
+              .then((e: any) => {
+                const viewport = (flicking as any).viewport;
+
+                return [
+                  e.axesEvent.destPos.flick,
+                  viewport.getNearestPanel(),
+                ];
+              });
 
             await waitEvent(flicking, "moveEnd");
 
             const endIndex = flicking.getIndex();
             const indexAtDestPos = Math.floor(destPos / panelWidth);
             // As all delta is above threshold, it should change panel at least once
-            const expectedIndex = Math.min(snapCount, Math.max(1, indexAtDestPos));
+            const expectedIndex = Math.min(nearestPanel.getIndex() + snapCount, Math.max(1, indexAtDestPos));
 
             expect(startIndex).equals(0);
             expect(expectedIndex).equals(endIndex);
-            expect(endIndex).to.be.not.gt(snapCount);
+            expect(endIndex).to.be.not.gt(snapCount + nearestPanel.getIndex());
           });
         });
       });

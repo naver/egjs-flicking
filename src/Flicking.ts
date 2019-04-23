@@ -110,27 +110,19 @@ class Flicking extends Component {
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
   public prev(duration?: number): this {
-    const options = this.options;
-    const viewport = this.viewport;
-    const panelManager = viewport.panelManager;
-    const currentIndex = viewport.getCurrentIndex();
-    const indexRange = panelManager.getRange();
-    const panelCount = panelManager.getPanelCount();
-    const lastIndex = panelManager.getLastIndex();
-    const minimumRange = options.infinite
-      ? 0
-      : indexRange.min;
-    let prevIndex = currentIndex - 1;
+    const currentPanel = this.getCurrentPanel();
+    const currentState = this.viewport.stateMachine.getState();
 
-    if (prevIndex < minimumRange) {
-      prevIndex = this.options.circular && panelCount > 0
-        ? options.infinite
-          ? lastIndex
-          : indexRange.max
-        : -1;
+    if (!currentPanel || currentState.type !== STATE_TYPE.IDLE) {
+      return this;
     }
 
-    return this.moveTo(prevIndex, duration);
+    const prevPanel = currentPanel.prev();
+    if (prevPanel) {
+      prevPanel.focus(duration);
+    }
+
+    return this;
   }
 
   /**
@@ -140,27 +132,19 @@ class Flicking extends Component {
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
   public next(duration?: number): this {
-    const options = this.options;
-    const viewport = this.viewport;
-    const panelManager = viewport.panelManager;
-    const currentIndex = viewport.getCurrentIndex();
-    const indexRange = panelManager.getRange();
-    const panelCount = panelManager.getPanelCount();
-    const lastIndex = panelManager.getLastIndex();
-    const maximumRange = options.infinite
-      ? lastIndex
-      : indexRange.max;
-    let nextIndex = currentIndex + 1;
+    const currentPanel = this.getCurrentPanel();
+    const currentState = this.viewport.stateMachine.getState();
 
-    if (nextIndex > maximumRange) {
-      nextIndex = options.circular && panelCount > 0
-        ? options.infinite
-          ? 0
-          : indexRange.min
-        : -1;
+    if (!currentPanel || currentState.type !== STATE_TYPE.IDLE) {
+      return this;
     }
 
-    return this.moveTo(nextIndex, duration);
+    const nextPanel = currentPanel.next();
+    if (nextPanel) {
+      nextPanel.focus(duration);
+    }
+
+    return this;
   }
 
   /**
@@ -182,7 +166,7 @@ class Flicking extends Component {
     const anchorPosition = panel.getAnchorPosition();
     const hangerPosition = viewport.getHangerPosition();
 
-    let offset = 0;
+    let targetPanel = panel;
     if (this.options.circular) {
       const scrollAreaSize = viewport.getScrollAreaSize();
       // Check all three possible locations, find the nearest position among them.
@@ -195,13 +179,24 @@ class Flicking extends Component {
         return (Math.abs(current - hangerPosition) < Math.abs(nearest - hangerPosition))
           ? current
           : nearest;
-      }, Infinity);
+      }, Infinity) - panel.getRelativeAnchorPosition();
 
-      offset = nearestPosition - anchorPosition;
+      const identicals = panel.getIdenticalPanels();
+      const offset = nearestPosition - anchorPosition;
+      if (offset > 0) {
+        // First cloned panel is nearest
+        targetPanel = identicals[1];
+      } else if (offset < 0) {
+        // Last cloned panel is nearest
+        targetPanel = identicals[identicals.length - 1];
+      }
+
+      targetPanel = targetPanel.clone(targetPanel.getCloneIndex(), true);
+      targetPanel.setPosition(nearestPosition, true);
     }
     const currentIndex = this.getIndex();
 
-    if (hangerPosition === anchorPosition + offset && currentIndex === index) {
+    if (hangerPosition === targetPanel.getAnchorPosition() && currentIndex === index) {
       return this;
     }
 
@@ -210,7 +205,7 @@ class Flicking extends Component {
       : EVENTS.CHANGE;
 
     viewport.moveTo(
-      panel,
+      targetPanel,
       eventType,
       null,
       duration,
