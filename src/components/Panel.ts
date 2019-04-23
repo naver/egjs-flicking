@@ -12,7 +12,6 @@ class Panel implements FlickingPanel {
   private state: {
     index: number;
     position: number;
-    loop: number;
     relativeAnchorPosition: number;
     size: number;
     isClone: boolean;
@@ -38,7 +37,6 @@ class Panel implements FlickingPanel {
     this.state = {
       index,
       position: 0,
-      loop: 0,
       relativeAnchorPosition: 0,
       size: 0,
       clonedPanels: [],
@@ -172,9 +170,6 @@ class Panel implements FlickingPanel {
     if (prevPanelPosition >= currentPosition) {
       prevPanel = prevSibling.clone(prevSibling.getCloneIndex(), true);
       prevPanel.setPosition(newPosition, true);
-      if (prevPanelIndex >= currentIndex) {
-        prevPanel.setLoopIndex(this.getLoopIndex() - 1);
-      }
     }
 
     return prevPanel;
@@ -210,9 +205,6 @@ class Panel implements FlickingPanel {
     if (nextPanelPosition <= currentPosition) {
       nextPanel = nextSibling.clone(nextSibling.getCloneIndex(), true);
       nextPanel.setPosition(newPosition, true);
-      if (nextPanelIndex <= currentIndex) {
-        nextPanel.setLoopIndex(this.getLoopIndex() + 1);
-      }
     }
 
     return nextPanel;
@@ -280,10 +272,6 @@ class Panel implements FlickingPanel {
     return this.state.position;
   }
 
-  public getLoopIndex(): number {
-    return this.state.loop;
-  }
-
   public getSize(): number {
     return this.state.size;
   }
@@ -344,10 +332,6 @@ class Panel implements FlickingPanel {
         ? elementStyle.left = `${pos}px`
         : elementStyle.top = `${pos}px`;
     }
-  }
-
-  public setLoopIndex(index: number): void {
-    this.state.loop = index;
   }
 
   public clone(cloneIndex: number, virtual: boolean = false): Panel {
