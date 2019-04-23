@@ -376,11 +376,12 @@ export default class Viewport {
     panelManager.replace(index, panels);
 
     const currentPanel = this.currentPanel;
-    if (!currentPanel) {
+    const wasEmpty = !currentPanel;
+    if (wasEmpty) {
       this.currentPanel = panels[0];
-    } else if (isBetween(currentPanel.getIndex(), index, index + panels.length - 1)) {
+    } else if (isBetween(currentPanel!.getIndex(), index, index + panels.length - 1)) {
       // Current panel is replaced
-      this.currentPanel = panelManager.get(currentPanel.getIndex());
+      this.currentPanel = panelManager.get(currentPanel!.getIndex());
     }
 
     // Update checked indexes in infinite mode
@@ -394,6 +395,11 @@ export default class Viewport {
     });
 
     this.resize();
+
+    const isFreeScroll = (this.options.moveType as MoveTypeObjectOption).type === "freeScroll";
+    if (isFreeScroll && wasEmpty) {
+      this.moveTo(this.currentPanel!, "", null, 0);
+    }
 
     return panels;
   }
@@ -844,7 +850,7 @@ export default class Viewport {
     // Update panel position && fit to wrapper
     let nextPanelPos = firstPanel.getPosition();
     let maintainingPanel: Panel = firstPanel;
-    if ((currentState.holding || currentState.playing) && nearestPanel) {
+    if (nearestPanel) {
       // We should maintain nearestPanel's position
       const looped = !isBetween(currentState.lastPosition + currentState.delta, scrollArea.prev, scrollArea.next);
 
@@ -981,8 +987,9 @@ export default class Viewport {
     const axes = this.axes;
     const currentPanel = this.getCurrentPanel();
     const currentState = this.stateMachine.getState();
+    const isFreeScroll = (this.options.moveType as MoveTypeObjectOption).type === "freeScroll";
 
-    if (!currentPanel || currentState.holding || currentState.playing) {
+    if (!currentPanel || currentState.holding || currentState.playing || isFreeScroll) {
       return;
     }
 
@@ -1043,6 +1050,7 @@ export default class Viewport {
     let checkingPanel: Panel | null = !currentState.holding && !currentState.playing
       ? currentPanel
       : nearestPanel;
+
     while (checkingPanel) {
       const currentIndex = checkingPanel.getIndex();
       const nextSibling = checkingPanel.nextSibling;
