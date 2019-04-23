@@ -91,16 +91,13 @@ class DraggingState extends State {
 
     let duration = defaultDuration;
     let panelToMove: Panel;
-    let offset: number = 0;
 
     if (overThreshold) {
       if (snapCount > 1 && eventDelta > minimumDistanceToChange) {
-        const basePanel = isFreeScroll
-          ? nearestPanel
-          : viewport.findNearestIdenticalPanel(currentPanel);
+        const basePanel = nearestPanel;
 
         // FreeScroll & snap
-        const { panelAtDestPos, snapOffset, indexDiff } = this.findPanelWhenSnapIsOn({
+        const { panelAtDestPos, indexDiff } = this.findPanelWhenSnapIsOn({
           isNextDirection,
           e,
           viewport,
@@ -108,7 +105,6 @@ class DraggingState extends State {
         });
 
         panelToMove = panelAtDestPos;
-        offset = snapOffset;
         duration = clamp(e.duration, defaultDuration, defaultDuration * indexDiff);
       } else if (
         !isFreeScroll
@@ -128,7 +124,7 @@ class DraggingState extends State {
         : currentPanel;
     }
 
-    const panelPosition = panelToMove.getPosition() + offset;
+    const panelPosition = panelToMove.getPosition();
     const movingToSamePanel = panelPosition === currentPanel.getPosition();
     const eventType = (!overThreshold || movingToSamePanel)
       ? isFreeScroll
@@ -172,23 +168,19 @@ class DraggingState extends State {
     basePanel: Panel,
   }): {
     panelAtDestPos: Panel,
-    snapOffset: number,
     indexDiff: number,
   } {
     const { isNextDirection, e, viewport, basePanel } = params;
 
     const options = viewport.options;
     const scrollAreaSize = viewport.getScrollAreaSize();
-    const indexRange = viewport.panelManager.getRange();
     const halfGap = options.gap / 2;
     const estimatedHangerPos = e.destPos.flick + viewport.getRelativeHangerPosition();
     const moveType = options.moveType as MoveTypeObjectOption;
     const snapCount = moveType.type === "freeScroll" ? Infinity : moveType.count;
     let panelToMove = basePanel;
     let passedPanelCount = 0;
-    let cycleIndex = panelToMove.getIndex() === indexRange.min
-      ? basePanel.getCloneIndex() + 1
-      : 0;
+    let cycleIndex = basePanel.getCloneIndex() + 1; // 0(original) or 1(clone)
 
     while (passedPanelCount < snapCount) {
       const siblingPanel = isNextDirection
@@ -215,21 +207,25 @@ class DraggingState extends State {
       const panelPosition = originalPanel.getPosition() + cycleIndex * scrollAreaSize;
       const panelSize = originalPanel.getSize();
 
+      const panelNextPosition = panelPosition + panelSize + halfGap;
+      const panelPrevPosition = panelPosition - halfGap;
+
       // Current panelToMove contains destPos
       if (
-        (isNextDirection && (panelPosition + panelSize + halfGap) > estimatedHangerPos)
-        || (!isNextDirection && (panelPosition - halfGap) < estimatedHangerPos)
+        (isNextDirection && panelNextPosition > estimatedHangerPos)
+        || (!isNextDirection && panelPrevPosition < estimatedHangerPos)
       ) {
         break;
       }
     }
 
     const originalPosition = panelToMove.getOriginalPanel().getPosition();
-    const offset = cycleIndex * scrollAreaSize - (panelToMove.getPosition() - originalPosition);
+
+    panelToMove = panelToMove.clone(panelToMove.getCloneIndex(), true);
+    panelToMove.setPosition(originalPosition + cycleIndex * scrollAreaSize, true);
 
     return {
       panelAtDestPos: panelToMove,
-      snapOffset: offset,
       indexDiff: passedPanelCount,
     };
   }

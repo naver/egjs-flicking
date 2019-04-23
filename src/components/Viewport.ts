@@ -904,7 +904,6 @@ export default class Viewport {
       const clonedPanelPos = cloneBasePos + origPanel.getPosition();
 
       panel.setPosition(clonedPanelPos);
-      panel.setLoopIndex(cloneIndex + 1);
     }
 
     let lastReplacePosition = firstPanel.getPosition();
@@ -912,9 +911,6 @@ export default class Viewport {
     for (const panel of clonedPanels.concat().reverse()) {
       const panelSize = panel.getSize();
       const replacePosition = lastReplacePosition - panelSize - options.gap;
-      const cloneIndex = panel.getCloneIndex();
-      const maxCloneCount = panelManager.getCloneCount();
-      const loopIndex = cloneIndex - maxCloneCount;
 
       if (replacePosition + panelSize <= scrollArea.prev) {
         // Replace is not meaningful, as it won't be seen in current scroll area
@@ -922,7 +918,6 @@ export default class Viewport {
       }
 
       panel.setPosition(replacePosition);
-      panel.setLoopIndex(loopIndex);
       lastReplacePosition = replacePosition;
     }
   }
