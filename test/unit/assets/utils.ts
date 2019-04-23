@@ -1,8 +1,7 @@
 import Component from "@egjs/component";
 import Flicking from "../../../src/Flicking";
-import Panel from "../../../src/components/Panel";
 import { merge, counter } from "../../../src/utils";
-import { EVENTS, DEFAULT_OPTIONS } from "../../../src/consts";
+import { EVENTS } from "../../../src/consts";
 import { FlickingEvent, FlickingOptions } from "../../../src/types";
 
 export function createFixture(type: string): HTMLElement {
@@ -57,18 +56,6 @@ export function createFlicking(type: string, option: Partial<FlickingOptions> = 
     eventFired,
     eventDirection,
   };
-}
-
-export function createPanel(idx: number, parentElement?: HTMLElement): Panel {
-  // Parent element should be exist,
-  // as panel element can be removed when remove() is called
-  if (!parentElement) {
-    parentElement = document.createElement("div");
-  }
-  const panelElement = document.createElement("div");
-  parentElement.appendChild(panelElement);
-
-  return new Panel(panelElement, idx, merge({}, DEFAULT_OPTIONS) as FlickingOptions);
 }
 
 export function cleanup() {

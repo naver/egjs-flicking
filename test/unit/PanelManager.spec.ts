@@ -1,29 +1,55 @@
 import { SinonStatic } from "sinon";
 
+import Flicking from "../../src/Flicking";
 import Panel from "../../src/components/Panel";
+import Viewport from "../../src/components/Viewport";
 import PanelManager from "../../src/components/PanelManager";
-import { createPanel } from "./assets/utils";
 import { DEFAULT_OPTIONS } from "../../src/consts";
 import { counter, merge } from "../../src/utils";
-import { FlickingOptions } from "../../src/types";
+import { FlickingOptions, FlickingEvent } from "../../src/types";
+import { cleanup, createFlicking } from "./assets/utils";
+import { horizontal } from "./assets/fixture";
 
 declare var sinon: SinonStatic;
 
 describe("PanelManager", () => {
   let panelManager: PanelManager;
+  let viewport: Viewport;
   let cameraElement: HTMLElement;
+  let flickingInfo: {
+    element: HTMLElement,
+    instance: Flicking,
+    events: FlickingEvent[],
+    eventFired: string[],
+    eventDirection: string[],
+  };
 
   beforeEach(() => {
-    cameraElement = document.createElement("div");
-    panelManager = new PanelManager(cameraElement, DEFAULT_OPTIONS);
+    flickingInfo = createFlicking(horizontal.none);
+
+    const flicking = flickingInfo.instance;
+    viewport = (flicking as any).viewport as Viewport;
+    cameraElement = (viewport as any).cameraElement as HTMLElement;
+    panelManager = viewport.panelManager;
   });
 
+  afterEach(() => cleanup());
+
   // Helpers
-  const createPanels = (count: number, baseIdx: number = 0, parentElement?: HTMLElement): Panel[] => {
+  const createPanel = (idx: number) => {
+    // Parent element should be exist,
+    // as panel element can be removed when remove() is called
+    const panelElement = document.createElement("div");
+    cameraElement.appendChild(panelElement);
+
+    return new Panel(panelElement, idx, viewport);
+  }
+
+  const createPanels = (count: number, baseIdx: number = 0): Panel[] => {
     const panels = new Array(count)
       .fill(undefined)
       .map((val, idx) => {
-        return createPanel(baseIdx + idx, parentElement);
+        return createPanel(baseIdx + idx);
       });
     return panels;
   };
@@ -40,10 +66,14 @@ describe("PanelManager", () => {
     expect(range.max).equals(max);
   };
   const useCircularMode = () => {
-    cameraElement = document.createElement("div");
-    panelManager = new PanelManager(cameraElement, merge({}, DEFAULT_OPTIONS, {
+    flickingInfo = createFlicking(horizontal.none, {
       circular: true,
-    }) as FlickingOptions);
+    });
+
+    const flicking = flickingInfo.instance;
+    viewport = (flicking as any).viewport as Viewport;
+    cameraElement = (viewport as any).cameraElement as HTMLElement;
+    panelManager = viewport.panelManager;
   };
 
   describe("Initial State", () => {
@@ -280,13 +310,13 @@ describe("PanelManager", () => {
       it("can insert new panels correctly in circular mode", () => {
         // Given
         useCircularMode();
-        const panelAt0 = createPanel(0, cameraElement);
+        const panelAt0 = createPanel(0);
         panelManager.append([panelAt0]); // [0]
         const clonePanel = panelAt0.clone(0);
         cameraElement.appendChild(clonePanel.getElement());
         panelManager.insertClones(0, 0, [clonePanel], 0);
 
-        const panelsAt5 = createPanels(5, 5, cameraElement); // [0, x, x, x, x, 5, 6, 7, 8, 9]
+        const panelsAt5 = createPanels(5, 5); // [0, x, x, x, x, 5, 6, 7, 8, 9]
         panelManager.insert(5, panelsAt5);
 
         // When
@@ -494,25 +524,13 @@ describe("PanelManager", () => {
 
     it("can clear all panels and clonedPanels", () => {
       // Given
-      const originalPanels = createPanels(5);
-      const maxCloneCount = 3;
-      const clonedPanels: Panel[] = [];
+      const panelElements = counter(5).map(() => "<div></div>");
+      const flicking = flickingInfo.instance;
+      flicking.append(panelElements);
 
-      const removeCloneSpies = originalPanels.map(() => sinon.spy());
-      const removeSpies = originalPanels.map(() => sinon.spy());
-
-      originalPanels.forEach((panel, idx) => {
-        panel.remove = removeSpies[idx];
-        panel.removeClonedPanelsAfter = removeCloneSpies[idx];
-      });
-      for (let i = 0; i < maxCloneCount; i++) {
-        originalPanels.forEach(panel => {
-          clonedPanels.push(panel.clone(i));
-        });
-      }
-
-      panelManager.insert(0, originalPanels);
-      panelManager.insertClones(0, 0, clonedPanels);
+      const originalPanels = flicking.getAllPanels() as Panel[];
+      const removeCloneSpies = originalPanels.map(panel => sinon.spy(panel, "removeElement"));
+      const removeSpies = originalPanels.map(panel => sinon.spy(panel, "removeClonedPanelsAfter"));
 
       // When
       panelManager.clear();

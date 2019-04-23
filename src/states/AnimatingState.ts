@@ -13,7 +13,7 @@ class AnimatingState extends State {
     const scrollAreaSize = viewport.getScrollAreaSize();
     const loopCount = Math.floor((this.lastPosition + this.delta - scrollArea.prev) / scrollAreaSize);
 
-    let targetPanel = this.targetPanel;
+    const targetPanel = this.targetPanel;
     if (loopCount !== 0 && targetPanel) {
       const cloneCount = viewport.panelManager.getCloneCount();
       const originalTargetPosition = targetPanel.getPosition();
