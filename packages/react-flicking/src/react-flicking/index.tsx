@@ -83,9 +83,9 @@ export default class Flicking extends React.Component<IFlickingProps> {
 
     if (this.props.circular) {
       flicking._arrangePanels();
-      const deleteCount = panel.no - panel.index;
-      const isAppend = deleteCount >= 0;
-      flicking._movePanelPosition(isAppend ? deleteCount : -deleteCount, isAppend);
+      const moveCount = panel.no - panel.index;
+      const isAppend = moveCount >= 0;
+      flicking._movePanelPosition(isAppend ? moveCount : -moveCount, isAppend);
     }
     panel.$list.forEach((el: HTMLElement) => {
       if (hasClass(el, className)) {
