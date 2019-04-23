@@ -10,11 +10,6 @@ class DraggingState extends State {
   public readonly holding = true;
   public readonly playing = true;
 
-  public onEnter(prevState: State): void {
-    super.onEnter(prevState);
-    this.delta = 0;
-  }
-
   public onChange(e: any, { moveCamera, transitTo }: FlickingContext): void {
     if (!e.delta.flick) {
       return;
@@ -64,7 +59,6 @@ class DraggingState extends State {
 
     // Update last position to cope with Axes's animating behavior
     // Axes uses start position when animation start
-    this.lastPosition = viewport.getCameraPosition();
     triggerEvent(EVENTS.HOLD_END, e, true);
 
     if (!overThreshold && this.targetPanel) {
@@ -141,6 +135,7 @@ class DraggingState extends State {
         ? ""
         : EVENTS.RESTORE
       : EVENTS.CHANGE;
+
 
     viewport.moveTo(
       panelToMove,

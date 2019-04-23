@@ -1,20 +1,38 @@
 import State from "./State";
 import { STATE_TYPE, EVENTS } from "../consts";
 import { FlickingContext } from "../types";
+import { circulate } from "../utils";
 
 class AnimatingState extends State {
   public readonly type = STATE_TYPE.ANIMATING;
   public readonly holding = false;
   public readonly playing = true;
 
-  public onEnter(e: any): void {
-    super.onEnter(e);
-    this.delta = 0;
-  }
-
   public onHold(e: any, { viewport, triggerEvent, transitTo }: FlickingContext): void {
-    // Update current panel as current nearest panel
+    const scrollArea = viewport.getScrollArea();
+    const scrollAreaSize = viewport.getScrollAreaSize();
+    const loopCount = Math.floor((this.lastPosition + this.delta - scrollArea.prev) / scrollAreaSize);
+
+    let targetPanel = this.targetPanel;
+    if (loopCount !== 0 && targetPanel) {
+      const cloneCount = viewport.panelManager.getCloneCount();
+      const originalTargetPosition = targetPanel.getPosition();
+
+      // cloneIndex is from -1 to cloneCount - 1
+      const newCloneIndex = circulate(targetPanel.getCloneIndex() - loopCount, -1, cloneCount - 1);
+      const newTargetPosition = originalTargetPosition - loopCount * scrollAreaSize;
+      const newTargetPanel = targetPanel.getIdenticalPanels()[newCloneIndex + 1].clone(newCloneIndex, true);
+
+      // Set new target panel considering looped count
+      newTargetPanel.setPosition(newTargetPosition, true);
+      this.targetPanel = newTargetPanel;
+    }
+
+    // Reset last position and delta
+    this.delta = 0;
     this.lastPosition = viewport.getCameraPosition();
+
+    // Update current panel as current nearest panel
     viewport.setCurrentPanel(viewport.getNearestPanel()!);
     triggerEvent(EVENTS.HOLD_START, e, true)
       .onSuccess(() => {
