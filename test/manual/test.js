@@ -154,9 +154,9 @@ setTimeout(function() {
     f2b = createFlicking("#flick2-2", {
       circular: true,
       gap: 10,
-      duration: 300,
+      duration: 3000,
       autoResize: true
-    });
+    }).on("select", e => e.panel.prev().prev().prev().focus(3000));
     f2c = createFlicking("#flick2-3", {
       circular: true,
       autoResize: true

@@ -133,7 +133,6 @@ class Panel implements FlickingPanel {
       ? ""
       : EVENTS.CHANGE;
 
-    console.log(duration);
     viewport.moveTo(this, eventType, null, duration);
   }
 

@@ -207,3 +207,17 @@ export function counter(max: number): number[] {
   }
   return counterArray;
 }
+
+// Circulate number between range [min, max]
+export function circulate(value: number, min: number, max: number): number {
+  const size = max - min + 1;
+  if (value < min) {
+    const offset = (value - min + 1) % size; // is minus value
+    value = max + offset;
+  } else if (value > max) {
+    const offset = (value - max - 1) % size;
+    value = min + offset
+  }
+
+  return value;
+}

@@ -119,6 +119,8 @@ export default class Viewport {
     }
 
     eventResult.onSuccess(() => {
+      currentState.delta = 0;
+      currentState.lastPosition = this.getCameraPosition();
       currentState.targetPanel = panel;
       currentState.direction = estimatedPosition > currentPosition
         ? DIRECTION.NEXT
