@@ -6,6 +6,7 @@ import { horizontal } from "./assets/fixture";
 import { createFlicking, cleanup, simulate, waitFor, createHorizontalElement, waitEvent } from "./assets/utils";
 import { EVENTS, DIRECTION } from "../../src/consts";
 import { counter } from "../../src/utils";
+import Viewport from "../../src/components/Viewport";
 
 declare var viewport: any;
 
@@ -739,6 +740,28 @@ describe("Methods call", () => {
         { width: 500, expected: 7 },
         50,
       );
+    });
+
+    it("shouldn't move camera position when it's freeScroll mode", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.full, {
+        moveType: "freeScroll",
+      });
+      const flicking = flickingInfo.instance;
+      const viewport = (flicking as any).viewport as Viewport;
+      await simulate(flickingInfo.element, {
+        deltaX: -200,
+        duration: 100,
+      });
+      await waitEvent(flicking, "moveEnd");
+      const prevCameraPosition = viewport.getCameraPosition();
+
+      // When
+      flicking.resize();
+
+      // Then
+      const afterCameraPosition = viewport.getCameraPosition();
+      expect(prevCameraPosition).equals(afterCameraPosition);
     });
   });
 
