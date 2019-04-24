@@ -167,7 +167,7 @@ class Panel implements FlickingPanel {
     const newPosition = currentPosition - prevPanelSize - options.gap;
 
     let prevPanel = prevSibling;
-    if (prevPanelPosition >= currentPosition) {
+    if (prevPanelPosition !== newPosition) {
       prevPanel = prevSibling.clone(prevSibling.getCloneIndex(), true);
       prevPanel.setPosition(newPosition, true);
     }
@@ -202,7 +202,7 @@ class Panel implements FlickingPanel {
     const newPosition = currentPosition + this.getSize() + options.gap;
 
     let nextPanel = nextSibling;
-    if (nextPanelPosition <= currentPosition) {
+    if (nextPanelPosition !== newPosition) {
       nextPanel = nextSibling.clone(nextSibling.getCloneIndex(), true);
       nextPanel.setPosition(newPosition, true);
     }
