@@ -443,7 +443,7 @@ class Flicking extends Component {
     const viewport = this.viewport;
 
     viewport.panelManager.allPanels()
-      .forEach(panel => panel.reset());
+      .forEach(panel => panel.unCacheBbox());
     viewport.resize();
 
     return this;
