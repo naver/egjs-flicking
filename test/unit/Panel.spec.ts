@@ -1,8 +1,13 @@
+import { SinonStatic } from "sinon";
+
 import Flicking from "../../src/Flicking";
 import { FlickingEvent, FlickingOptions } from "../../src/types";
 import { cleanup, createFlicking } from "./assets/utils";
 import { horizontal } from "./assets/fixture";
 import { counter } from "../../src/utils";
+import Panel from "../../src/components/Panel";
+
+declare var sinon: SinonStatic;
 
 describe("Panel", () => {
   let flickingInfo: {
@@ -152,6 +157,48 @@ describe("Panel", () => {
       // Then
       expect(prevPanel.getPosition())
         .equals(virtualNextPanel.getPosition() - prevPanel.getSize());
+    });
+  });
+
+  describe("update()", () => {
+    it("can alter panel's element", () => {
+      // Given
+      const panel = flicking.getCurrentPanel();
+      const element = panel.getElement();
+      const expectedHTML = "<p>THIS IS NEW INNERHTML</p>";
+
+      // When
+      panel.update(el => el.innerHTML = expectedHTML);
+
+      // Then
+      expect(element.innerHTML).equals(expectedHTML);
+    });
+
+    it("will be applied also on cloned panels", () => {
+      // Given
+      initFlicking(horizontal.full, { circular: true });
+      const currentPanel = flicking.getCurrentPanel() as Panel;
+      const randomText = new Date().toString();
+
+      // When
+      currentPanel.update(el => el.innerHTML = randomText);
+
+      // Then
+      currentPanel.getIdenticalPanels().forEach(panel => {
+        expect(panel.getElement().innerHTML).equals(randomText);
+      });
+    });
+
+    it("should be resized after it", () => {
+      // Given
+      const panel = flicking.getCurrentPanel() as Panel;
+      const resizeSpy = sinon.spy(panel, "resize");
+
+      // When
+      panel.update(el => el);
+
+      // Then
+      expect(resizeSpy.calledOnce).to.be.true;
     });
   });
 });
