@@ -5,7 +5,7 @@
 	"main": "dist/flicking.js",
 	"module": "dist/flicking.esm.js",
 	"sideEffects": false,
-	"es2015": "src/Flicking.js",
+	"es2015": "dist/flicking.esm.js",
 	"types": "declaration/index.d.ts",
 	"scripts": {
 		"start": "rollup -c -w",
