@@ -74,7 +74,7 @@ class Panel implements FlickingPanel {
     }
   }
 
-  public reset(): void {
+  public unCacheBbox(): void {
     this.state.cachedBbox = null;
   }
 
@@ -136,7 +136,11 @@ class Panel implements FlickingPanel {
 
   public update(updateFunction: (element: HTMLElement) => any): void {
     this.getIdenticalPanels()
-      .forEach(eachPanel => updateFunction(eachPanel.getElement()));
+      .forEach(eachPanel => {
+        updateFunction(eachPanel.getElement());
+        eachPanel.unCacheBbox();
+      });
+    this.viewport.resize();
   }
 
   public prev(): FlickingPanel | null {

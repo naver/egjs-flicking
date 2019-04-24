@@ -168,7 +168,7 @@ export interface FlickingPanel {
   getOutsetProgress: () => number;
   getVisibleRatio: () => number;
   focus: (duration?: number) => void;
-  update: (updateFunction: (element: HTMLElement) => void) => void;
+  update: (updateFunction: (element: HTMLElement) => any) => void;
   prev: () => FlickingPanel | null;
   next: () => FlickingPanel | null;
   insertBefore: (element: ElementLike | ElementLike[]) => FlickingPanel[];
