@@ -4,9 +4,8 @@ import Flicking from "../../src/Flicking";
 import Panel from "../../src/components/Panel";
 import Viewport from "../../src/components/Viewport";
 import PanelManager from "../../src/components/PanelManager";
-import { DEFAULT_OPTIONS } from "../../src/consts";
-import { counter, merge } from "../../src/utils";
-import { FlickingOptions, FlickingEvent } from "../../src/types";
+import { counter } from "../../src/utils";
+import { FlickingEvent } from "../../src/types";
 import { cleanup, createFlicking } from "./assets/utils";
 import { horizontal } from "./assets/fixture";
 
