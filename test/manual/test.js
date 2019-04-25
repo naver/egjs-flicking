@@ -16,8 +16,25 @@ var methodLog = function(element, v) {
     elLog1.innerHTML = element.innerHTML + " ==> " + JSON.stringify(v);
   } catch (e) {
     // Circular structure
-    elLog1.innerHTML = element.innerHTML + " ==> " + v.varructor;
+    elLog1.innerHTML = element.innerHTML + " ==> " + v.toString();
   }
+}
+
+var logPanel = function(panel) {
+  var elLog1 = document.querySelector("#log1");
+  var panelInfo = "{\n";
+  panelInfo += "  index: " + panel.getIndex() + ",\n";
+  panelInfo += "  position: " + panel.getPosition() + ",\n";
+  panelInfo += "  anchorPosition: " + panel.getAnchorPosition() + ",\n";
+  panelInfo += "  relativeAnchorPosition: " + panel.getRelativeAnchorPosition() + ",\n";
+  panelInfo += "  size: " + panel.getSize() + ",\n";
+  panelInfo += "  isClone: " + panel.isClone() + ",\n";
+  panelInfo += "  progress: " + panel.getProgress() + ",\n";
+  panelInfo += "  outsetProgress: " + panel.getOutsetProgress() + ",\n";
+  panelInfo += "  visibleRatio: " + panel.getVisibleRatio() + ",\n";
+  panelInfo += "}";
+
+  elLog1.innerHTML = "Panel " + panel.getIndex() + " ==> " + panelInfo;
 }
 
 var log = function(e) {
@@ -405,8 +422,10 @@ setTimeout(function() {
         fe[method]();
       } else if(method === "moveTo") {
         fe[method](+document.querySelector('#moveTo_no').value);
+      } else if (method === "getCurrentPanel") {
+        logPanel(fe[method]());
       } else if (method === "getPanel") {
-        methodLog(el, fe[method](+document.querySelector('#getPanel_no').value));
+        logPanel(fe[method](+document.querySelector('#getPanel_no').value));
       } else if (method === "append") {
         var index = fe.getPanelCount();
         var elementToAdd = document.createElement("div");

@@ -481,6 +481,7 @@ export default class Viewport {
 
   public restore(status: FlickingStatus): void {
     const panels = status.panels;
+    const defaultIndex = this.options.defaultIndex;
     const cameraElement = this.cameraElement;
     const panelManager = this.panelManager;
 
@@ -489,12 +490,17 @@ export default class Viewport {
     cameraElement.innerHTML = status.panels.map(panel => panel.html).join("");
 
     this.createPanels();
-    this.currentPanel = panelManager.get(status.index);
 
     // Reset panel index
     panelManager.originalPanels().forEach((panel, idx) => {
       panel.setIndex(panels[idx].index);
     });
+
+    this.currentPanel = panelManager.has(status.index)
+      ? panelManager.get(status.index)
+      : panelManager.has(defaultIndex)
+        ? panelManager.get(defaultIndex)
+        : panelManager.firstPanel();
 
     this.resize();
 
