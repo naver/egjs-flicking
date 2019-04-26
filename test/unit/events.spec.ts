@@ -1,4 +1,4 @@
-import { SinonStatic } from "sinon";
+import { SinonStatic, SinonFakeTimers } from "sinon";
 
 import Flicking from "../../src/Flicking";
 import { EVENTS, DIRECTION } from "../../src/consts";
@@ -11,7 +11,9 @@ import Viewport from "../../src/components/Viewport";
 declare var sinon: SinonStatic;
 
 describe("Events", () => {
-  afterEach(() => cleanup());
+  afterEach(() => {
+    cleanup();
+  });
 
   let flickingInfo: {
     element: HTMLElement,
@@ -131,6 +133,65 @@ describe("Events", () => {
             expect(handler.called).to.be.false;
           });
         }
+      });
+    });
+  });
+
+  describe("events can be stopped almost immediately", () => {
+    let timer: SinonFakeTimers;
+    beforeEach(() => {
+      timer = sinon.useFakeTimers();
+      flickingInfo = createFlicking(horizontal.full);
+    });
+    afterEach(() => {
+      timer.restore();
+    })
+
+    it("holdStart can be stopped almost immediately", () => {
+      // Given
+      let holdCount = 0;
+      const flicking = flickingInfo.instance;
+      flicking.on(EVENTS.HOLD_START, e => {
+        expect(flicking.isPlaying()).to.be.false;
+        holdCount += 1;
+        e.stop();
+      });
+
+      // When
+      simulate(flickingInfo.element, { deltaX: -70, duration: 30 });
+      timer.tick(50);
+
+      simulate(flickingInfo.element, { deltaX: -70, duration: 30 });
+      timer.tick(500);
+
+      // Then
+      expect(holdCount).equals(2);
+    });
+
+    const testingEvents = [
+      EVENTS.MOVE_START,
+      EVENTS.MOVE,
+    ]
+
+    testingEvents.forEach(event => {
+      it(`${event} can be stopped almost immediately`, () => {
+        // Given
+        let eventCount = 0;
+        const flicking = flickingInfo.instance;
+        flicking.on(event, e => {
+          e.stop();
+          eventCount += 1;
+        });
+
+        // When
+        simulate(flickingInfo.element, { deltaX: -70, duration: 30 });
+        timer.tick(50);
+
+        simulate(flickingInfo.element, { deltaX: -70, duration: 30 });
+        timer.tick(500);
+
+        // Then
+        expect(eventCount).equals(2);
       });
     });
   });

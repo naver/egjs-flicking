@@ -993,7 +993,9 @@ export default class Viewport {
       return;
     }
 
-    let newPosition = currentPanel.getAnchorPosition() - state.relativeHangerPosition;
+    let newPosition = currentPanel
+      ? currentPanel.getAnchorPosition() - state.relativeHangerPosition
+      : this.getCameraPosition();
 
     if (this.canSetBoundMode()) {
       newPosition = clamp(newPosition, state.scrollArea.prev, state.scrollArea.next);
