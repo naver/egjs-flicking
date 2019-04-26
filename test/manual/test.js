@@ -250,7 +250,8 @@ setTimeout(function() {
       autoResize: true
     }).on({
       holdStart: function(e) {
-        e.stop()
+        e.stop();
+        console.log(e);
       }
     });
     s2 = createFlicking("#stop-moveStart", {
@@ -258,7 +259,8 @@ setTimeout(function() {
       autoResize: true
     }).on({
       moveStart: function(e) {
-        e.stop()
+        e.stop();
+        console.log(e);
       }
     });
     s3 = createFlicking("#stop-move", {
@@ -266,7 +268,8 @@ setTimeout(function() {
       autoResize: true
     }).on({
       move: function(e) {
-        e.stop()
+        e.stop();
+        console.log(e);
       }
     });
     s4 = createFlicking("#stop-change", {
@@ -274,7 +277,11 @@ setTimeout(function() {
       autoResize: true
     }).on({
       change: function(e) {
-        e.stop()
+        e.stop();
+        console.log(e);
+      },
+      restore: function(e) {
+        console.log(e);
       }
     });
     s5 = createFlicking("#stop-restore", {
@@ -283,7 +290,11 @@ setTimeout(function() {
       autoResize: true
     }).on({
       restore: function(e) {
-        e.stop()
+        e.stop();
+        console.log(e);
+      },
+      change: function(e) {
+        console.log(e);
       }
     });
 
