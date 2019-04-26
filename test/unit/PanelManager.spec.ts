@@ -548,6 +548,28 @@ describe("PanelManager", () => {
       lengthShouldBe(0);
     });
 
+    it("won't fill empty at last positions of panels array", () => {
+      // Given
+      const flicking = flickingInfo.instance;
+      flicking.setLastIndex(3);
+      flicking.replace(0, "<div></div>");
+      flicking.replace(3, "<div></div>");
+      /*
+       *   [PANEL, empty, empty, PANEL]
+       */
+
+      // When
+      flicking.prepend("<div></div>");
+
+      // Then
+      /* It should be
+       * [PANEL, PANEL]
+       * Not [PANEL, PANEL, empty, empty]
+       */
+      expect(panelManager.allPanels().length).equals(2);
+      expect(panelManager.lastPanel()).not.to.be.empty;
+    });
+
     describe("Panel chaining", () => {
       it("can chain panels correctly in non-circular mode", () => {
         // Given
