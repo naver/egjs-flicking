@@ -1153,10 +1153,10 @@ describe("Methods call", () => {
       // Given
       const givenLastIndex = 5;
       const flicking = flickingInfo.instance;
-      flicking.setLastIndex(givenLastIndex);
 
       // When
-      await simulate(flickingInfo.element, { deltaX: -1000, duration: 50 });
+      flicking.setLastIndex(-1);
+      flicking.setLastIndex(givenLastIndex);
 
       // Then
       expect(needPanelEvents.length).equals(1);
@@ -1167,7 +1167,7 @@ describe("Methods call", () => {
       expect(event.range.length).equals(givenLastIndex + 1);
     });
 
-    it("can still trigger events when empty panels exists where index below maximum panel count", async () => {
+    it("can still trigger events when empty panels exist where index below maximum panel count", async () => {
       // Given
       const givenLastIndex = 5;
       const flicking = flickingInfo.instance;
@@ -1177,9 +1177,10 @@ describe("Methods call", () => {
       flicking.replace(givenLastIndex, createHorizontalElement(50));
 
       // Then
-      expect(needPanelEvents.length).equals(1);
+      // This should be happened twice, after setLastIndex, and after replace
+      expect(needPanelEvents.length).equals(2);
 
-      const event = needPanelEvents[0];
+      const event = needPanelEvents[1];
       expect(event.direction).equals(DIRECTION.PREV);
       expect(event.range.min).equals(0);
       expect(event.range.max).equals(givenLastIndex - 1);
@@ -1187,9 +1188,11 @@ describe("Methods call", () => {
 
     it("can't insert more panels after lastIndex", () => {
       // Given
-      const givenLastIndex = 5;
+      flickingInfo = createFlicking(horizontal.none, {
+        infinite: true,
+        lastIndex: 5
+      });
       const flicking = flickingInfo.instance;
-      flicking.setLastIndex(givenLastIndex);
 
       // When
       const panels = counter(7).map(() => {
