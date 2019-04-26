@@ -280,6 +280,7 @@ setTimeout(function() {
     // Non-successive indexes to test needPanel event
     n1 = createFlicking("#needPanel-addOnClick", {
       infinite: true,
+      lastIndex: 5,
       autoResize: true
     }).on({
       needPanel: function(e) {
@@ -290,7 +291,7 @@ setTimeout(function() {
       }
     });
     n1.replace(0, createPanelElement(0));
-    n1.replace(100, createPanelElement(100));
+    n1.replace(5, createPanelElement(5));
 
     n2 = createFlicking("#needPanel-insert1by1", {
       circular: true,

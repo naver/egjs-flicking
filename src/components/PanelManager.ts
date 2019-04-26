@@ -168,6 +168,13 @@ class PanelManager {
           .filter(panel => Boolean(panel));
         removedPanels.forEach(panel => panel.removeElement());
         this.length -= removedPanels.length;
+
+        // Find first
+        const newLastIndex = lastIndex - findIndex(this.panels.concat().reverse(), panel => !!panel);
+
+        // Can be filled with empty after newLastIndex
+        this.panels.splice(newLastIndex + 1);
+        this.range.max = newLastIndex;
       }
     }
 
