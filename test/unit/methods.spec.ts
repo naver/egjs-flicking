@@ -881,6 +881,22 @@ describe("Methods call", () => {
       // Then
       expect(flickingInfo.eventFired).to.be.empty;
     });
+
+    it("current panel can be set correctly", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.none);
+
+      const flicking = flickingInfo.instance;
+      flicking.replace(2, "<div><p></p></div>");
+
+      // When
+      // Check issue #180 https://github.com/naver/egjs-flicking/issues/180
+      flicking.setStatus(flicking.getStatus());
+
+      // Then
+      expect(flicking.getCurrentPanel()).not.to.be.null;
+      expect(flicking.getCurrentPanel().getIndex()).equals(2);
+    });
   });
 
   describe("append()", () => {
