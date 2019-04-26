@@ -11,6 +11,12 @@ class DisabledState extends State {
     transitTo(STATE_TYPE.IDLE);
   }
 
+  public onChange(e: any, { transitTo }: FlickingContext): void {
+    // Can stop Axes's change event
+    e.stop();
+    transitTo(STATE_TYPE.IDLE);
+  }
+
   public onRelease(e: any, { transitTo }: FlickingContext): void {
     // This is needed when stopped hold start event
     if (e.delta.flick === 0) {
