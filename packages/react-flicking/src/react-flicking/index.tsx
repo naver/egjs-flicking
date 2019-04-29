@@ -53,6 +53,7 @@ export default class Flicking extends React.Component<IFlickingProps> {
     tag: "div",
   };
   private flicking: NativeFlicking;
+  private timer: number;
   public render() {
     const props = this.props;
     const defaultProps = Flicking.defaultProps;
@@ -128,7 +129,7 @@ export default class Flicking extends React.Component<IFlickingProps> {
       this.props.onRestore(e);
     });
 
-    window.addEventListener("resize", this.resize);
+    window.addEventListener("resize", this.onResize);
   }
   public moveTo(no: number, duration?: number) {
     this.flicking.moveTo(no, duration);
@@ -178,6 +179,12 @@ export default class Flicking extends React.Component<IFlickingProps> {
   }
   public componentWillUnmount() {
     this.flicking.destroy();
-    window.removeEventListener("resize", this.resize);
+    window.removeEventListener("resize", this.onResize);
+  }
+  private onResize = () => {
+    clearTimeout(this.timer);
+
+    // 60ms is sufficient time to resize
+    this.timer = window.setTimeout(this.resize, 60);
   }
 }
