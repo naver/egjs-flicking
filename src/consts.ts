@@ -1,6 +1,14 @@
 import { FlickingOptions, EventType, Direction, AxesEventType, StateType, MoveTypeSnapOption, MoveTypeFreeScrollOption } from "./types";
 import { checkTranslateSupport } from "./utils";
 
+export const MOVE_TYPE: {
+  SNAP: "snap";
+  FREE_SCROLL: "freeScroll";
+} = {
+  SNAP: "snap",
+  FREE_SCROLL: "freeScroll",
+};
+
 export const DEFAULT_MOVE_TYPE_OPTIONS: {
   snap: MoveTypeSnapOption,
   freeScroll: MoveTypeFreeScrollOption,

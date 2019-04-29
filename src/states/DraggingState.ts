@@ -1,9 +1,6 @@
 import State from "./State";
-import Panel from "../components/Panel";
-import { STATE_TYPE, EVENTS } from "../consts";
-import { FlickingContext, MoveTypeObjectOption, MoveTypeSnapOption } from "../types";
-import { clamp } from "../utils";
-import Viewport from "../components/Viewport";
+import { STATE_TYPE, EVENTS, MOVE_TYPE } from "../consts";
+import { FlickingContext } from "../types";
 
 class DraggingState extends State {
   public readonly type = STATE_TYPE.DRAGGING;
@@ -27,13 +24,10 @@ class DraggingState extends State {
     const delta = this.delta;
     const options = flicking.options;
     const horizontal = options.horizontal;
-    const defaultDuration = options.duration;
     const halfGap = options.gap / 2;
-    const moveType = options.moveType as MoveTypeObjectOption;
-    const isFreeScroll = moveType.type === "freeScroll";
-    const snapCount = isFreeScroll ? Infinity : (moveType as MoveTypeSnapOption).count;
+    const moveType = viewport.moveType;
+    const isFreeScroll = moveType.is(MOVE_TYPE.FREE_SCROLL);
     const inputEvent = e.inputEvent;
-    const eventDelta = Math.abs(e.delta.flick);
 
     const velocity = horizontal
       ? inputEvent.velocityX
@@ -61,9 +55,13 @@ class DraggingState extends State {
     // Axes uses start position when animation start
     triggerEvent(EVENTS.HOLD_END, e, true);
 
-    if (!overThreshold && this.targetPanel) {
+    const targetPanel = this.targetPanel;
+    if (!overThreshold && targetPanel) {
       // Interrupted while animating
-      viewport.moveTo(this.targetPanel, "", e);
+      const destPos = isFreeScroll
+        ? e.destPos.flick
+        : viewport.findEstimatedPosition(targetPanel);
+      viewport.moveTo(targetPanel, destPos, "", e);
       transitTo(STATE_TYPE.ANIMATING);
       return;
     }
@@ -84,176 +82,53 @@ class DraggingState extends State {
      * |--------|--------------|
      * [][      |<-Anchor    ][] <- Panel + Half-Gap
      */
-    let minimumDistanceToChange = isNextDirection
-      ? currentPanel.getSize() - currentPanel.getRelativeAnchorPosition() + halfGap
-      : currentPanel.getRelativeAnchorPosition() + halfGap;
-    minimumDistanceToChange = Math.max(minimumDistanceToChange, options.threshold);
+    const currentPanelPosition = currentPanel.getPosition();
+    const currentPanelSize = currentPanel.getSize();
 
-    let duration = defaultDuration;
-    let panelToMove: Panel;
+    let minimumDistanceToChange: number;
+    if (isFreeScroll) {
+      // As camera can stop anywhere in free scroll mode,
+      // minimumDistanceToChange should be calculated differently.
+      // Ref #191(https://github.com/naver/egjs-flicking/issues/191)
+      const lastHangerPosition = this.lastPosition + viewport.getRelativeHangerPosition();
 
-    if (overThreshold) {
-      if (snapCount > 1 && eventDelta > minimumDistanceToChange) {
-        const basePanel = nearestPanel;
-
-        // FreeScroll & snap
-        const { panelAtDestPos, indexDiff } = this.findPanelWhenSnapIsOn({
-          isNextDirection,
-          e,
-          viewport,
-          basePanel,
-        });
-
-        panelToMove = panelAtDestPos;
-        duration = clamp(e.duration, defaultDuration, defaultDuration * indexDiff);
-      } else if (
-        !isFreeScroll
-        && !viewport.isOutOfBound()
-        && (
-          swipeDistance <= minimumDistanceToChange
-          || (!options.circular && nearestPanel.getIndex() === currentPanel.getIndex())
-        )
-      ) {
-        panelToMove = this.findAdjacentPanel(isNextDirection, viewport);
-      } else {
-        panelToMove = nearestPanel;
-      }
+      minimumDistanceToChange = isNextDirection
+        ? currentPanelPosition + currentPanelSize - lastHangerPosition + halfGap
+        : lastHangerPosition - currentPanelPosition + halfGap;
     } else {
-      panelToMove = options.circular
-        ? this.findRestorePanelInCircularMode(isNextDirection, viewport)
-        : currentPanel;
+      const relativeAnchorPosition = currentPanel.getRelativeAnchorPosition();
+
+      minimumDistanceToChange = isNextDirection
+        ? currentPanelSize - relativeAnchorPosition + halfGap
+        : relativeAnchorPosition + halfGap;
     }
 
-    const panelPosition = panelToMove.getPosition();
-    const movingToSamePanel = panelPosition === currentPanel.getPosition();
-    const eventType = (!overThreshold || movingToSamePanel)
-      ? isFreeScroll
-        ? ""
-        : EVENTS.RESTORE
-      : EVENTS.CHANGE;
+    minimumDistanceToChange = Math.max(minimumDistanceToChange, options.threshold);
+
+    const moveTypeContext = {
+      viewport,
+      axesEvent: e,
+      minimumDistanceToChange,
+      swipeDistance,
+      isNextDirection,
+    };
+
+    const destInfo = overThreshold
+      ? moveType.findTargetPanel(moveTypeContext)
+      : moveType.findRestorePanel(moveTypeContext);
 
     viewport.moveTo(
-      panelToMove,
-      eventType,
+      destInfo.panel,
+      destInfo.destPos,
+      destInfo.eventType,
       e,
-      duration,
+      destInfo.duration,
     ).onSuccess(() => {
       transitTo(STATE_TYPE.ANIMATING);
     }).onStopped(() => {
       transitTo(STATE_TYPE.DISABLED);
       stopCamera(e);
     });
-  }
-
-  private findRestorePanelInCircularMode(isNextDirection: boolean, viewport: Viewport): Panel {
-    const originalPanel = viewport.getCurrentPanel()!.getOriginalPanel();
-    const hangerPosition = viewport.getHangerPosition();
-
-    const firstClonedPanel = originalPanel.getIdenticalPanels()[1];
-    const lapped = Math.abs(originalPanel.getAnchorPosition() - hangerPosition)
-      > Math.abs(firstClonedPanel.getAnchorPosition() - hangerPosition);
-
-    const panelToMove = (!isNextDirection && lapped)
-      ? firstClonedPanel
-      : originalPanel;
-
-    return panelToMove;
-  }
-
-  private findPanelWhenSnapIsOn(params: {
-    isNextDirection: boolean,
-    e: any,
-    viewport: Viewport,
-    basePanel: Panel,
-  }): {
-    panelAtDestPos: Panel,
-    indexDiff: number,
-  } {
-    const { isNextDirection, e, viewport, basePanel } = params;
-
-    const options = viewport.options;
-    const scrollAreaSize = viewport.getScrollAreaSize();
-    const halfGap = options.gap / 2;
-    const estimatedHangerPos = e.destPos.flick + viewport.getRelativeHangerPosition();
-    const moveType = options.moveType as MoveTypeObjectOption;
-    const snapCount = moveType.type === "freeScroll" ? Infinity : moveType.count;
-    let panelToMove = basePanel;
-    let passedPanelCount = 0;
-    let cycleIndex = basePanel.getCloneIndex() + 1; // 0(original) or 1(clone)
-
-    while (passedPanelCount < snapCount) {
-      const siblingPanel = isNextDirection
-        ? panelToMove.nextSibling
-        : panelToMove.prevSibling;
-      if (!siblingPanel) {
-        break;
-      }
-
-      const panelIndex = panelToMove.getIndex();
-      const siblingIndex = siblingPanel.getIndex();
-      if ((isNextDirection && siblingIndex <= panelIndex)
-        || (!isNextDirection && siblingIndex >= panelIndex)
-      ) {
-        cycleIndex = isNextDirection
-          ? cycleIndex + 1
-          : cycleIndex - 1;
-      }
-      panelToMove = siblingPanel;
-      passedPanelCount += 1;
-
-      // Since panlToMove holds also cloned panels, we should use original panel's position
-      const originalPanel = panelToMove.getOriginalPanel();
-      const panelPosition = originalPanel.getPosition() + cycleIndex * scrollAreaSize;
-      const panelSize = originalPanel.getSize();
-
-      const panelNextPosition = panelPosition + panelSize + halfGap;
-      const panelPrevPosition = panelPosition - halfGap;
-
-      // Current panelToMove contains destPos
-      if (
-        (isNextDirection && panelNextPosition > estimatedHangerPos)
-        || (!isNextDirection && panelPrevPosition < estimatedHangerPos)
-      ) {
-        break;
-      }
-    }
-
-    const originalPosition = panelToMove.getOriginalPanel().getPosition();
-
-    panelToMove = panelToMove.clone(panelToMove.getCloneIndex(), true);
-    panelToMove.setPosition(originalPosition + cycleIndex * scrollAreaSize, true);
-
-    return {
-      panelAtDestPos: panelToMove,
-      indexDiff: passedPanelCount,
-    };
-  }
-
-  private findAdjacentPanel(isNextDirection: boolean, viewport: Viewport): Panel {
-    const options = viewport.options;
-    const currentIndex = viewport.getCurrentIndex();
-    const currentPanel = viewport.panelManager.get(currentIndex)!;
-    const hangerPosition = viewport.getHangerPosition();
-
-    const firstClonedPanel = currentPanel.getIdenticalPanels()[1];
-    const lapped = options.circular
-      && (Math.abs(currentPanel.getAnchorPosition() - hangerPosition)
-        > Math.abs(firstClonedPanel.getAnchorPosition() - hangerPosition));
-
-    // If lapped in circular mode, use first cloned panel as base panel
-    const basePanel = lapped
-      ? firstClonedPanel
-      : currentPanel;
-
-    const adjacentPanel = isNextDirection
-      ? basePanel.nextSibling
-      : basePanel.prevSibling;
-
-    const panelToMove = adjacentPanel
-      ? adjacentPanel
-      : basePanel;
-
-    return panelToMove;
   }
 }
 
