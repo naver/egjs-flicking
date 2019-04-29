@@ -4,14 +4,18 @@ import Flicking from "../Flicking";
 import Panel from "./Panel";
 import PanelManager from "./PanelManager";
 import StateMachine from "./StateMachine";
+import MoveType from "../moves/MoveType";
 import { FlickingOptions, FlickingPanel, FlickingStatus, ElementLike, EventType, TriggerCallback, NeedPanelEvent, FlickingEvent, MoveTypeObjectOption } from "../types";
-import { DEFAULT_VIEWPORT_CSS, DEFAULT_CAMERA_CSS, TRANSFORM, DEFAULT_OPTIONS, EVENTS, DIRECTION, STATE_TYPE } from "../consts";
+import { DEFAULT_VIEWPORT_CSS, DEFAULT_CAMERA_CSS, TRANSFORM, DEFAULT_OPTIONS, EVENTS, DIRECTION, STATE_TYPE, MOVE_TYPE } from "../consts";
 import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement } from "../utils";
+import Snap from "../moves/Snap";
+import FreeScroll from "../moves/FreeScroll";
 
 export default class Viewport {
   public options: FlickingOptions;
   public stateMachine: StateMachine;
   public panelManager: PanelManager;
+  public moveType: MoveType;
 
   private flicking: Flicking;
   private axes: Axes;
@@ -75,27 +79,23 @@ export default class Viewport {
 
   public moveTo(
     panel: Panel,
+    destPos: number,
     eventType: EventType["CHANGE"] | EventType["RESTORE"] | "",
     axesEvent: any,
     duration: number = this.options.duration,
   ): TriggerCallback {
     const state = this.state;
     const currentState = this.stateMachine.getState();
-    const freeScroll = (this.options.moveType as MoveTypeObjectOption).type === "freeScroll";
-
     const currentPosition = state.position;
-
-    let estimatedPosition = panel.getAnchorPosition() - state.relativeHangerPosition;
-    estimatedPosition = this.canSetBoundMode()
-      ? clamp(estimatedPosition, state.scrollArea.prev, state.scrollArea.next)
-      : estimatedPosition;
 
     const isTrusted = axesEvent
       ? axesEvent.isTrusted
       : false;
-    const direction = estimatedPosition > currentPosition
-      ? DIRECTION.NEXT
-      : DIRECTION.PREV;
+    const direction = destPos === currentPosition
+      ? null
+      : destPos > currentPosition
+        ? DIRECTION.NEXT
+        : DIRECTION.PREV;
 
     let eventResult: TriggerCallback;
     if (eventType === EVENTS.CHANGE) {
@@ -122,11 +122,13 @@ export default class Viewport {
       currentState.delta = 0;
       currentState.lastPosition = this.getCameraPosition();
       currentState.targetPanel = panel;
-      currentState.direction = estimatedPosition > currentPosition
-        ? DIRECTION.NEXT
-        : DIRECTION.PREV;
+      currentState.direction = destPos === currentPosition
+        ? null
+        : destPos > currentPosition
+            ? DIRECTION.NEXT
+            : DIRECTION.PREV;
 
-      if (estimatedPosition === currentPosition) {
+      if (destPos === currentPosition) {
         // no move
         this.nearestPanel = panel;
         this.currentPanel = panel;
@@ -134,9 +136,9 @@ export default class Viewport {
 
       if (axesEvent && axesEvent.setTo) {
         // freeScroll only occurs in release events
-        axesEvent.setTo({ flick: freeScroll ? axesEvent.destPos.flick : estimatedPosition }, duration);
+        axesEvent.setTo({ flick: destPos }, duration);
       } else {
-        this.axes.setTo({ flick: estimatedPosition }, duration);
+        this.axes.setTo({ flick: destPos }, duration);
       }
     });
 
@@ -301,6 +303,17 @@ export default class Viewport {
           // NEXT TO PREV
           : anchorPosition - state.relativeHangerPosition + scrollAreaSize;
     }
+  }
+
+  public findEstimatedPosition(panel: Panel): number {
+    const scrollArea = this.getScrollArea();
+
+    let estimatedPosition = panel.getAnchorPosition() - this.getRelativeHangerPosition();
+    estimatedPosition = this.canSetBoundMode()
+      ? clamp(estimatedPosition, scrollArea.prev, scrollArea.next)
+      : estimatedPosition;
+
+    return estimatedPosition;
   }
 
   public enable(): void {
@@ -606,6 +619,22 @@ export default class Viewport {
       && options.bound
       && (state.position <= scrollArea.prev || state.position >= scrollArea.next);
   }
+
+  public canSetBoundMode(): boolean {
+    const state = this.state;
+    const options = this.options;
+    const lastPanel = this.panelManager.lastPanel();
+    if (!lastPanel) {
+      return false;
+    }
+
+    const summedPanelSize = lastPanel.getPosition() + lastPanel.getSize();
+
+    return options.bound
+      && !options.circular
+      && summedPanelSize >= state.size;
+  }
+
   public getScrollAreaSize(): number {
     const scrollArea = this.state.scrollArea;
 
@@ -649,6 +678,7 @@ export default class Viewport {
 
   private build(): void {
     this.applyCSSValue();
+    this.setMoveType();
     this.setAxesInstance();
     this.createPanels();
     this.setDefaultPanel();
@@ -674,6 +704,21 @@ export default class Viewport {
     }
     if (options.overflow) {
       viewportElement.style.overflow = "visible";
+    }
+  }
+
+  private setMoveType(): void {
+    const moveType = this.options.moveType as MoveTypeObjectOption;
+
+    switch (moveType.type) {
+      case MOVE_TYPE.SNAP:
+        this.moveType = new Snap(moveType.count);
+        break;
+      case MOVE_TYPE.FREE_SCROLL:
+        this.moveType = new FreeScroll();
+        break;
+      default:
+        throw new Error("moveType is not correct!");
     }
   }
 
@@ -786,21 +831,6 @@ export default class Viewport {
 
     this.moveCamera(defaultPosition);
     this.axes.setTo({ flick: defaultPosition }, 0);
-  }
-
-  private canSetBoundMode(): boolean {
-    const state = this.state;
-    const options = this.options;
-    const lastPanel = this.panelManager.lastPanel();
-    if (!lastPanel) {
-      return false;
-    }
-
-    const summedPanelSize = lastPanel.getPosition() + lastPanel.getSize();
-
-    return options.bound
-      && !options.circular
-      && summedPanelSize >= state.size;
   }
 
   private updateSize(): void {

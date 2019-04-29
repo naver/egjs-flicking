@@ -209,13 +209,25 @@ export function counter(max: number): number[] {
 }
 
 // Circulate number between range [min, max]
-export function circulate(value: number, min: number, max: number): number {
-  const size = max - min + 1;
+/*
+ * "indexed" means min and max is not same, so if it's true "min - 1" should be max
+ * While if it's false, "min - 1" should be "max - 1"
+ * use `indexed: true` when it should be used for circulating integers like index
+ * or `indexed: false` when it should be used for something like positions.
+ */
+export function circulate(value: number, min: number, max: number, indexed: boolean): number {
+  const size = indexed
+    ? max - min + 1
+    : max - min;
   if (value < min) {
-    const offset = (value - min + 1) % size; // is minus value
-    value = max + offset;
+    const offset = indexed
+      ? (min - value - 1) % size
+      : (min - value) % size;
+    value = max - offset;
   } else if (value > max) {
-    const offset = (value - max - 1) % size;
+    const offset = indexed
+      ? (value - max - 1) % size
+      : (value - max) % size;
     value = min + offset;
   }
 

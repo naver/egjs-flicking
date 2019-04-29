@@ -1,6 +1,7 @@
 import Flicking from "./Flicking";
 import Viewport from "./components/Viewport";
 import StateMachine from "./components/StateMachine";
+import Panel from "./components/Panel";
 
 export type ValueOf<T> = T[keyof T];
 /**
@@ -64,16 +65,36 @@ export interface FlickingOptions {
   moveType: MoveTypeOption;
 }
 
+export type MoveTypeObjectOption = MoveTypeSnapOption | MoveTypeFreeScrollOption;
+export type MoveTypeStringOption = MoveTypeObjectOption["type"];
+
+export interface MoveTypeContext {
+  viewport: Viewport;
+  axesEvent: {
+    delta: { flick: number };
+    depaPos: { flick: number };
+    destPos: { flick: number };
+    duration: number;
+  };
+  swipeDistance: number;
+  minimumDistanceToChange: number;
+  isNextDirection: boolean;
+}
+
+export interface DestinationInfo {
+  panel: Panel;
+  destPos: number;
+  duration: number;
+  eventType: EventType["CHANGE"] | EventType["RESTORE"] | "";
+}
+
 /**
  * Movement style by user input.
  * @ko 사용자 입력에 의한 이동 방식.
  * @typedef {"snap" | "freeScroll" | eg.Flicking.MoveTypeSnapOption | eg.Flicking.MoveTypeFreeScrollOption}
  * @memberof eg.Flicking
  */
-export type MoveTypeOption =
-  "snap" | "freeScroll"
-  | MoveTypeSnapOption | MoveTypeFreeScrollOption;
-export type MoveTypeObjectOption = MoveTypeSnapOption | MoveTypeFreeScrollOption;
+export type MoveTypeOption = MoveTypeStringOption | MoveTypeObjectOption;
 
 /**
  * With "snap" move type, momentum is applied while choosing destination panel at release time.<br>You can set how many panels can go after relase.

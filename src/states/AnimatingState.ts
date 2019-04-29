@@ -19,7 +19,7 @@ class AnimatingState extends State {
       const originalTargetPosition = targetPanel.getPosition();
 
       // cloneIndex is from -1 to cloneCount - 1
-      const newCloneIndex = circulate(targetPanel.getCloneIndex() - loopCount, -1, cloneCount - 1);
+      const newCloneIndex = circulate(targetPanel.getCloneIndex() - loopCount, -1, cloneCount - 1, true);
       const newTargetPosition = originalTargetPosition - loopCount * scrollAreaSize;
       const newTargetPanel = targetPanel.getIdenticalPanels()[newCloneIndex + 1].clone(newCloneIndex, true);
 

@@ -206,6 +206,7 @@ class Flicking extends Component {
 
     viewport.moveTo(
       targetPanel,
+      viewport.findEstimatedPosition(targetPanel),
       eventType,
       null,
       duration,
