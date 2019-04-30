@@ -145,14 +145,16 @@ describe("Events", () => {
     });
     afterEach(() => {
       timer.restore();
-    })
+    });
 
     it("holdStart can be stopped almost immediately", () => {
       // Given
       let holdCount = 0;
+      const isPlayingInHoldStart: boolean[] = [];
+
       const flicking = flickingInfo.instance;
       flicking.on(EVENTS.HOLD_START, e => {
-        expect(flicking.isPlaying()).to.be.false;
+        isPlayingInHoldStart.push(flicking.isPlaying());
         holdCount += 1;
         e.stop();
       });
@@ -165,6 +167,7 @@ describe("Events", () => {
       timer.tick(500);
 
       // Then
+      expect(isPlayingInHoldStart.every(val => val === false)).to.be.true;
       expect(holdCount).equals(2);
     });
 
