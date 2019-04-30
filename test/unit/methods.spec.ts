@@ -1174,7 +1174,7 @@ describe("Methods call", () => {
       // Given
       flickingInfo = createFlicking(horizontal.none, {
         infinite: true,
-        lastIndex: 5
+        lastIndex: 5,
       });
       const flicking = flickingInfo.instance;
 

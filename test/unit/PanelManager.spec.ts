@@ -42,7 +42,7 @@ describe("PanelManager", () => {
     cameraElement.appendChild(panelElement);
 
     return new Panel(panelElement, idx, viewport);
-  }
+  };
 
   const createPanels = (count: number, baseIdx: number = 0): Panel[] => {
     const panels = new Array(count)
