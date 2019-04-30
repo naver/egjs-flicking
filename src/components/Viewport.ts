@@ -590,6 +590,16 @@ export default class Viewport {
     return startIndex + progressBetween;
   }
 
+  // Update axes flick position without triggering event
+  public updateAxesPosition(position: number) {
+    const axes = this.axes;
+    axes.off();
+    axes.setTo({
+      flick: position,
+    }, 0);
+    axes.on(this.axesHandlers);
+  }
+
   public getSize(): number {
     return this.state.size;
   }
@@ -984,7 +994,6 @@ export default class Viewport {
   // Update camera position after resizing
   private updateCameraPosition(): void {
     const state = this.state;
-    const axes = this.axes;
     const currentPanel = this.getCurrentPanel();
     const currentState = this.stateMachine.getState();
     const isFreeScroll = (this.options.moveType as MoveTypeObjectOption).type === "freeScroll";
@@ -1003,11 +1012,8 @@ export default class Viewport {
 
     // Pause & resume axes to prevent axes's "change" event triggered
     // This should be done before moveCamera, as moveCamera can trigger needPanel
-    this.axes.off();
-    axes.setTo({
-      flick: newPosition,
-    }, 0);
-    this.axes.on(this.axesHandlers);
+    this.updateAxesPosition(newPosition);
+
     this.moveCamera(newPosition);
   }
 

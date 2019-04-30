@@ -11,9 +11,12 @@ class DisabledState extends State {
     transitTo(STATE_TYPE.IDLE);
   }
 
-  public onChange(e: any, { transitTo }: FlickingContext): void {
+  public onChange(e: any, { viewport, transitTo }: FlickingContext): void {
     // Can stop Axes's change event
     e.stop();
+
+    // Should update axes position as it's already changed at this moment
+    viewport.updateAxesPosition(viewport.getCameraPosition());
     transitTo(STATE_TYPE.IDLE);
   }
 
