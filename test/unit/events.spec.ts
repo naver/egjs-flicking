@@ -174,7 +174,7 @@ describe("Events", () => {
     const testingEvents = [
       EVENTS.MOVE_START,
       EVENTS.MOVE,
-    ]
+    ];
 
     testingEvents.forEach(event => {
       it(`${event} can be stopped almost immediately`, () => {

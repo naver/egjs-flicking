@@ -28,7 +28,7 @@ describe("Panel", () => {
   const initFlicking = (type: string, options?: Partial<FlickingOptions>) => {
     flickingInfo = createFlicking(type, options);
     flicking = flickingInfo.instance;
-  }
+  };
 
   describe("next()", () => {
     it("can return correct next panel", () => {
