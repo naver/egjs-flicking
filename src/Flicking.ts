@@ -661,7 +661,7 @@ class Flicking extends Component {
       if (options.circular && looped) {
         // Reached at max/min range of axes
         const scrollAreaSize = viewport.getScrollAreaSize();
-        cameraChange = -Math.sign(cameraChange) * (scrollAreaSize - Math.abs(cameraChange));
+        cameraChange = (cameraChange > 0 ? -1 : 1) * (scrollAreaSize - Math.abs(cameraChange));
       }
 
       const currentDirection = cameraChange === 0
