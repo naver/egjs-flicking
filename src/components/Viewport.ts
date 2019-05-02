@@ -496,11 +496,9 @@ export default class Viewport {
       panel.setIndex(panels[idx].index);
     });
 
-    this.currentPanel = panelManager.has(status.index)
-      ? panelManager.get(status.index)
-      : panelManager.has(defaultIndex)
-        ? panelManager.get(defaultIndex)
-        : panelManager.firstPanel();
+    this.currentPanel = panelManager.get(status.index)
+      || panelManager.get(defaultIndex)
+      || panelManager.firstPanel();
 
     this.resize();
 
