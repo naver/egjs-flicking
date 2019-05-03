@@ -13,11 +13,12 @@ class Snap extends MoveType {
   }
 
   public findTargetPanel(ctx: MoveTypeContext): DestinationInfo {
-    const { viewport, axesEvent, swipeDistance, minimumDistanceToChange } = ctx;
+    const { viewport, axesEvent, swipeDistance } = ctx;
     const snapCount = this.count;
     const eventDelta = Math.abs(axesEvent.delta.flick);
     const currentPanel = viewport.getCurrentPanel()!;
     const nearestPanel = viewport.getNearestPanel()!;
+    const minimumDistanceToChange = this.calcBrinkOfChange(ctx);
 
     // This can happen when bounce is 0
     const shouldMoveWhenBounceIs0 = viewport.canSetBoundMode()

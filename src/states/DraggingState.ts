@@ -24,7 +24,6 @@ class DraggingState extends State {
     const delta = this.delta;
     const options = flicking.options;
     const horizontal = options.horizontal;
-    const halfGap = options.gap / 2;
     const moveType = viewport.moveType;
     const isFreeScroll = moveType.is(MOVE_TYPE.FREE_SCROLL);
     const inputEvent = e.inputEvent;
@@ -76,39 +75,9 @@ class DraggingState extends State {
       return;
     }
 
-    // Minimum distance needed to decide prev/next panel as nearest
-    /*
-     * |  Prev  |     Next     |
-     * |--------|--------------|
-     * [][      |<-Anchor    ][] <- Panel + Half-Gap
-     */
-    const currentPanelPosition = currentPanel.getPosition();
-    const currentPanelSize = currentPanel.getSize();
-
-    let minimumDistanceToChange: number;
-    if (isFreeScroll) {
-      // As camera can stop anywhere in free scroll mode,
-      // minimumDistanceToChange should be calculated differently.
-      // Ref #191(https://github.com/naver/egjs-flicking/issues/191)
-      const lastHangerPosition = this.lastPosition + viewport.getRelativeHangerPosition();
-
-      minimumDistanceToChange = isNextDirection
-        ? currentPanelPosition + currentPanelSize - lastHangerPosition + halfGap
-        : lastHangerPosition - currentPanelPosition + halfGap;
-    } else {
-      const relativeAnchorPosition = currentPanel.getRelativeAnchorPosition();
-
-      minimumDistanceToChange = isNextDirection
-        ? currentPanelSize - relativeAnchorPosition + halfGap
-        : relativeAnchorPosition + halfGap;
-    }
-
-    minimumDistanceToChange = Math.max(minimumDistanceToChange, options.threshold);
-
     const moveTypeContext = {
       viewport,
       axesEvent: e,
-      minimumDistanceToChange,
       swipeDistance,
       isNextDirection,
     };
