@@ -9,12 +9,13 @@ class AnimatingState extends State {
   public readonly playing = true;
 
   public onHold(e: any, { viewport, triggerEvent, transitTo }: FlickingContext): void {
+    const options = viewport.options;
     const scrollArea = viewport.getScrollArea();
     const scrollAreaSize = viewport.getScrollAreaSize();
     const loopCount = Math.floor((this.lastPosition + this.delta - scrollArea.prev) / scrollAreaSize);
 
     const targetPanel = this.targetPanel;
-    if (loopCount !== 0 && targetPanel) {
+    if (options.circular && loopCount !== 0 && targetPanel) {
       const cloneCount = viewport.panelManager.getCloneCount();
       const originalTargetPosition = targetPanel.getPosition();
 
