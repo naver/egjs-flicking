@@ -164,7 +164,7 @@ describe("Events", () => {
       timer.tick(50);
 
       simulate(flickingInfo.element, { deltaX: -70, duration: 30 });
-      timer.tick(500);
+      timer.tick(500); // Make sure animation ends after second simulate()
 
       // Then
       expect(isPlayingInHoldStart.every(val => val === false)).to.be.true;

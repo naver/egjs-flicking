@@ -998,7 +998,7 @@ export default class Viewport {
     const currentState = this.stateMachine.getState();
     const isFreeScroll = (this.options.moveType as MoveTypeObjectOption).type === "freeScroll";
 
-    if (!currentPanel || currentState.holding || currentState.playing || isFreeScroll) {
+    if (currentState.holding || currentState.playing || isFreeScroll) {
       return;
     }
 
