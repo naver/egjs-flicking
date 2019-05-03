@@ -748,19 +748,19 @@ describe("Methods call", () => {
         moveType: "freeScroll",
       });
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any).viewport as Viewport;
+      const flickingViewport = (flicking as any).viewport as Viewport;
       await simulate(flickingInfo.element, {
         deltaX: -200,
         duration: 100,
       });
       await waitEvent(flicking, "moveEnd");
-      const prevCameraPosition = viewport.getCameraPosition();
+      const prevCameraPosition = flickingViewport.getCameraPosition();
 
       // When
       flicking.resize();
 
       // Then
-      const afterCameraPosition = viewport.getCameraPosition();
+      const afterCameraPosition = flickingViewport.getCameraPosition();
       expect(prevCameraPosition).equals(afterCameraPosition);
     });
   });
