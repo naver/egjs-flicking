@@ -27,6 +27,31 @@ abstract class MoveType {
     };
   }
 
+  // Calculate minimum distance to "change" panel
+  protected calcBrinkOfChange(ctx: MoveTypeContext): number {
+    const { viewport, isNextDirection } = ctx;
+
+    const options = viewport.options;
+    const currentPanel = viewport.getCurrentPanel()!;
+    const halfGap = options.gap / 2;
+
+    const relativeAnchorPosition = currentPanel.getRelativeAnchorPosition();
+
+    // Minimum distance needed to decide prev/next panel as nearest
+    /*
+     * |  Prev  |     Next     |
+     * |--------|--------------|
+     * [][      |<-Anchor    ][] <- Panel + Half-Gap
+     */
+    let minimumDistanceToChange = isNextDirection
+      ? currentPanel.getSize() - relativeAnchorPosition + halfGap
+      : relativeAnchorPosition + halfGap;
+
+    minimumDistanceToChange = Math.max(minimumDistanceToChange, options.threshold);
+
+    return minimumDistanceToChange;
+  }
+
   private findRestorePanelInCircularMode(ctx: MoveTypeContext): Panel {
     const viewport = ctx.viewport;
     const originalPanel = viewport.getCurrentPanel()!.getOriginalPanel();

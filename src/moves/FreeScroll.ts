@@ -12,8 +12,9 @@ class FreeScroll extends Snap {
   }
 
   public findTargetPanel(ctx: MoveTypeContext): DestinationInfo {
-    const { axesEvent, viewport, swipeDistance, minimumDistanceToChange } = ctx;
+    const { axesEvent, viewport, swipeDistance } = ctx;
     const destPos = axesEvent.destPos.flick;
+    const minimumDistanceToChange = this.calcBrinkOfChange(ctx);
 
     const eventDelta = Math.abs(axesEvent.delta.flick);
     if (eventDelta > minimumDistanceToChange) {
@@ -42,6 +43,30 @@ class FreeScroll extends Snap {
 
   public findRestorePanel(ctx: MoveTypeContext): DestinationInfo {
     return this.findTargetPanel(ctx);
+  }
+
+  protected calcBrinkOfChange(ctx: MoveTypeContext): number {
+    const { viewport, isNextDirection } = ctx;
+
+    const options = viewport.options;
+    const currentPanel = viewport.getCurrentPanel()!;
+    const halfGap = options.gap / 2;
+
+    const lastPosition = viewport.stateMachine.getState().lastPosition;
+    const currentPanelPosition = currentPanel.getPosition();
+
+    // As camera can stop anywhere in free scroll mode,
+    // minimumDistanceToChange should be calculated differently.
+    // Ref #191(https://github.com/naver/egjs-flicking/issues/191)
+    const lastHangerPosition = lastPosition + viewport.getRelativeHangerPosition();
+
+    let minimumDistanceToChange = isNextDirection
+      ? currentPanelPosition + currentPanel.getSize() - lastHangerPosition + halfGap
+      : lastHangerPosition - currentPanelPosition + halfGap;
+
+    minimumDistanceToChange = Math.max(minimumDistanceToChange, options.threshold);
+
+    return minimumDistanceToChange;
   }
 }
 

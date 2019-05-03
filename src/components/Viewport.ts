@@ -411,7 +411,7 @@ export default class Viewport {
 
     const isFreeScroll = (this.options.moveType as MoveTypeObjectOption).type === "freeScroll";
     if (isFreeScroll && wasEmpty) {
-      this.moveTo(this.currentPanel!, "", null, 0);
+      this.moveTo(this.currentPanel!, this.findEstimatedPosition(this.currentPanel!), "", null, 0);
     }
 
     return panels;

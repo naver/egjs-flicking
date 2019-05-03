@@ -77,7 +77,6 @@ export interface MoveTypeContext {
     duration: number;
   };
   swipeDistance: number;
-  minimumDistanceToChange: number;
   isNextDirection: boolean;
 }
 
