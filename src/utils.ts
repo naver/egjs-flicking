@@ -1,4 +1,4 @@
-import { ElementLike } from "./types";
+import { ElementLike, OriginalStyle } from "./types";
 
 export function merge(target: object, ...srcs: object[]): object {
   srcs.forEach(source => {
@@ -232,4 +232,23 @@ export function circulate(value: number, min: number, max: number, indexed: bool
   }
 
   return value;
+}
+
+export function hasClass(element: HTMLElement | null, className: string): boolean {
+  if (!element) {
+    return false;
+  }
+
+  const classes = classList(element);
+
+  return findIndex(classes, name => name === className) > -1;
+}
+
+export function restoreStyle(element: HTMLElement, originalStyle: OriginalStyle): void {
+  originalStyle.className
+    ? element.setAttribute("class", originalStyle.className)
+    : element.removeAttribute("class");
+  originalStyle.style
+    ? element.setAttribute("style", originalStyle.style)
+    : element.removeAttribute("style");
 }

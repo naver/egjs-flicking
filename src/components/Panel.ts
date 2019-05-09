@@ -1,7 +1,7 @@
 import Viewport from "./Viewport";
 import { OriginalStyle, FlickingPanel, ElementLike } from "../types";
 import { DEFAULT_PANEL_CSS, EVENTS } from "../consts";
-import { addClass, applyCSS, parseArithmeticExpression, parseElement, getProgress } from "../utils";
+import { addClass, applyCSS, parseArithmeticExpression, parseElement, getProgress, restoreStyle } from "../utils";
 
 class Panel implements FlickingPanel {
   public prevSibling: Panel | null;
@@ -43,8 +43,8 @@ class Panel implements FlickingPanel {
       isClone: false,
       cloneIndex: -1,
       originalStyle: {
-        className: element.getAttribute("class") || null,
-        style: element.getAttribute("style") || null,
+        className: element.getAttribute("class"),
+        style: element.getAttribute("style"),
       },
       cachedBbox: null,
     };
@@ -240,15 +240,9 @@ class Panel implements FlickingPanel {
   }
 
   public destroy(): void {
-    const el = this.element;
     const originalStyle = this.state.originalStyle;
 
-    originalStyle.className
-      ? el.setAttribute("class", originalStyle.className)
-      : el.removeAttribute("class");
-    originalStyle.style
-      ? el.setAttribute("style", originalStyle.style)
-      : el.removeAttribute("style");
+    restoreStyle(this.element, originalStyle);
 
     // release resources
     for (const x in this) {
