@@ -5,9 +5,9 @@ import Panel from "./Panel";
 import PanelManager from "./PanelManager";
 import StateMachine from "./StateMachine";
 import MoveType from "../moves/MoveType";
-import { FlickingOptions, FlickingPanel, FlickingStatus, ElementLike, EventType, TriggerCallback, NeedPanelEvent, FlickingEvent, MoveTypeObjectOption } from "../types";
+import { FlickingOptions, FlickingPanel, FlickingStatus, ElementLike, EventType, TriggerCallback, NeedPanelEvent, FlickingEvent, MoveTypeObjectOption, OriginalStyle } from "../types";
 import { DEFAULT_VIEWPORT_CSS, DEFAULT_CAMERA_CSS, TRANSFORM, DEFAULT_OPTIONS, EVENTS, DIRECTION, STATE_TYPE, MOVE_TYPE } from "../consts";
-import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement } from "../utils";
+import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement, hasClass, restoreStyle } from "../utils";
 import Snap from "../moves/Snap";
 import FreeScroll from "../moves/FreeScroll";
 
@@ -44,18 +44,18 @@ export default class Viewport {
     };
     infiniteThreshold: number;
     checkedIndexes: Array<[number, number]>;
+    isViewportGiven: boolean;
+    isCameraGiven: boolean;
+    originalViewportStyle: OriginalStyle;
+    originalCameraStyle: OriginalStyle;
   };
 
   constructor(
     flicking: Flicking,
-    viewportElement: HTMLElement,
-    cameraElement: HTMLElement,
     options: FlickingOptions,
     triggerEvent: Flicking["triggerEvent"],
   ) {
     this.flicking = flicking;
-    this.viewportElement = viewportElement;
-    this.cameraElement = cameraElement;
     this.triggerEvent = triggerEvent;
 
     this.state = {
@@ -69,10 +69,19 @@ export default class Viewport {
       translate: TRANSFORM,
       infiniteThreshold: 0,
       checkedIndexes: [],
+      isViewportGiven: false,
+      isCameraGiven: false,
+      originalViewportStyle: {
+        className: null,
+        style: null,
+      },
+      originalCameraStyle: {
+        className: null,
+        style: null,
+      },
     };
     this.options = options;
     this.stateMachine = new StateMachine();
-    this.panelManager = new PanelManager(cameraElement, options);
 
     this.build();
   }
@@ -473,16 +482,35 @@ export default class Viewport {
   }
 
   public destroy(): void {
+    const state = this.state;
+    const wrapper = this.flicking.getElement();
     const viewportElement = this.viewportElement;
-    const wrapper = viewportElement.parentElement;
+    const cameraElement = this.cameraElement;
 
-    wrapper!.removeChild(viewportElement);
+    const originalPanels = this.panelManager.originalPanels();
+
+    restoreStyle(viewportElement, state.originalViewportStyle);
+    restoreStyle(cameraElement, state.originalCameraStyle);
+
+    if (!state.isCameraGiven) {
+      const topmostElement = state.isViewportGiven
+        ? viewportElement
+        : wrapper;
+      const deletingElement = state.isViewportGiven
+        ? cameraElement
+        : viewportElement;
+
+      originalPanels.forEach(panel => {
+        topmostElement.appendChild(panel.getElement());
+      });
+
+      topmostElement.removeChild(deletingElement);
+    }
 
     this.axes.destroy();
     this.panInput.destroy();
 
-    this.panelManager.originalPanels().forEach(panel => {
-      wrapper!.appendChild(panel.getElement());
+    originalPanels.forEach(panel => {
       panel.destroy();
     });
 
@@ -691,6 +719,7 @@ export default class Viewport {
   }
 
   private build(): void {
+    this.setElements();
     this.applyCSSValue();
     this.setMoveType();
     this.setAxesInstance();
@@ -700,16 +729,78 @@ export default class Viewport {
     this.moveToDefaultPanel();
   }
 
+  private setElements(): void {
+    const state = this.state;
+    const options = this.options;
+    const wrapper = this.flicking.getElement();
+    const classPrefix = options.classPrefix;
+
+    const viewportCandidate = wrapper.children[0] as HTMLElement;
+    const hasViewportElement = hasClass(viewportCandidate, `${classPrefix}-viewport`);
+
+    const viewportElement = hasViewportElement
+      ? viewportCandidate
+      : document.createElement("div");
+
+    const cameraCandidate = hasViewportElement
+      ? viewportElement.children[0] as HTMLElement
+      : wrapper.children[0] as HTMLElement;
+    const hasCameraElement = hasClass(cameraCandidate, `${classPrefix}-camera`);
+
+    const cameraElement = hasCameraElement
+      ? cameraCandidate
+      : document.createElement("div");
+
+    if (!hasCameraElement) {
+      cameraElement.className = `${classPrefix}-camera`;
+
+      const panelElements = hasViewportElement
+        ? viewportElement.children
+        : wrapper.children;
+
+      // Make all panels to be a child of camera element
+      // wrapper <- viewport <- camera <- panels[1...n]
+      toArray(panelElements).forEach(child => {
+        cameraElement.appendChild(child);
+      });
+    } else {
+      state.originalCameraStyle = {
+        className: cameraElement.getAttribute("class"),
+        style: cameraElement.getAttribute("style"),
+      };
+    }
+
+    if (!hasViewportElement) {
+      viewportElement.className = `${classPrefix}-viewport`;
+
+      // Add viewport element to wrapper
+      wrapper.appendChild(viewportElement);
+    } else {
+      state.originalViewportStyle = {
+        className: viewportElement.getAttribute("class"),
+        style: viewportElement.getAttribute("style"),
+      };
+    }
+
+    if (!hasCameraElement || !hasViewportElement) {
+      viewportElement.appendChild(cameraElement);
+    }
+
+    this.viewportElement = viewportElement;
+    this.cameraElement = cameraElement;
+    state.isViewportGiven = hasViewportElement;
+    state.isCameraGiven = hasCameraElement;
+
+    // Create PanelManager instance
+    this.panelManager = new PanelManager(cameraElement, options);
+  }
+
   private applyCSSValue(): void {
     const options = this.options;
     const viewportElement = this.viewportElement;
     const cameraElement = this.cameraElement;
-    const classPrefix = options.classPrefix;
 
     // Set default css values for each element
-    viewportElement.className = `${classPrefix}-viewport`;
-    cameraElement.className = `${classPrefix}-camera`;
-
     applyCSS(viewportElement, DEFAULT_VIEWPORT_CSS);
     applyCSS(cameraElement, DEFAULT_CAMERA_CSS);
 

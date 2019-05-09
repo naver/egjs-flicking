@@ -81,7 +81,9 @@ var createFlicking = function(el, options) {
     tagGroup.appendChild(tagControl);
   }
 
-  var optionKeys = Object.keys(options);
+  var optionKeys = options
+    ? Object.keys(options)
+    : {};
 
   if (!options || !optionKeys.length) {
     tagGroup.innerHTML = '\
@@ -237,6 +239,11 @@ setTimeout(function() {
       el.className = "column is-half eg-flick-panel has-background-" + PANEL_COLORS[e.panel.getIndex()];
       el.innerHTML = "<p>RESIZED</p>";
     }));
+
+    // Initializing
+    f6 = createFlicking("#flick6");
+    f6a = createFlicking("#flick6-1");
+    f6b = createFlicking("#flick6-2");
 
     // Events & Methods
     fe = createFlicking("#flick-event", {

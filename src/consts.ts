@@ -53,7 +53,6 @@ export const DEFAULT_VIEWPORT_CSS = {
   zIndex: DEFAULT_OPTIONS.zIndex,
   width: "100%",
   height: "100%",
-  // willChange: "transform",
   overflow: "hidden",
 };
 

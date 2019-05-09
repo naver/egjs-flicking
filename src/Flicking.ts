@@ -1,7 +1,7 @@
 import Component from "@egjs/component";
 import Viewport from "./components/Viewport";
 
-import { merge, getProgress, toArray, parseElement, isString } from "./utils";
+import { merge, getProgress, parseElement, isString } from "./utils";
 import { DEFAULT_OPTIONS, EVENTS, DIRECTION, AXES_EVENTS, STATE_TYPE, DEFAULT_MOVE_TYPE_OPTIONS } from "./consts";
 import { FlickingOptions, FlickingEvent, Direction, EventType, FlickingPanel, TriggerCallback, FlickingContext, FlickingStatus, Plugin, ElementLike } from "./types";
 
@@ -100,7 +100,11 @@ class Flicking extends Component {
     if (moveType in DEFAULT_MOVE_TYPE_OPTIONS) {
       currentOptions.moveType = DEFAULT_MOVE_TYPE_OPTIONS[moveType as keyof typeof DEFAULT_MOVE_TYPE_OPTIONS];
     }
-    this.build();
+
+    // Make viewport instance with panel container element
+    this.viewport = new Viewport(this, this.options, this.triggerEvent);
+    this.listenInput();
+    this.listenResize();
   }
 
   /**
@@ -529,34 +533,6 @@ class Flicking extends Component {
    */
   public remove(index: number, deleteCount: number = 1): FlickingPanel[] {
     return this.viewport.remove(index, deleteCount);
-  }
-
-  private build(): void {
-    this.initViewport();
-    this.listenInput();
-    this.listenResize();
-  }
-
-  private initViewport(): void {
-    const wrapper = this.wrapper;
-    const options = this.options;
-    const cameraElement = document.createElement("div");
-
-    // Make all panels to be a child of camera element
-    // wrapper <- viewport <- camera <- panels[1...n]
-    toArray(wrapper.children).forEach(child => {
-      cameraElement.appendChild(child);
-    });
-
-    // Clipping area for camera element
-    const viewportElement = document.createElement("div");
-    viewportElement.appendChild(cameraElement);
-
-    // Add viewport element to wrapper
-    wrapper.appendChild(viewportElement);
-
-    // Make viewport instance with panel container element
-    this.viewport = new Viewport(this, viewportElement, cameraElement, options, this.triggerEvent);
   }
 
   private listenInput(): void {
