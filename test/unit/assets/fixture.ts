@@ -1,4 +1,5 @@
 // UI fixture
+import { DEFAULT_OPTIONS } from "../../../src/consts";
 
 const colors = [
   "#296EB4",
@@ -8,13 +9,30 @@ const colors = [
   "#420217",
   "#565264",
 ];
+const defaultClassPrefix = DEFAULT_OPTIONS.classPrefix;
 
-const wrapper = (...panels: any[]) => `
+export const wrapper = (...panels: any[]) => `
   <div class="wrapper">
+    ${typeof panels[0] === "object"
+      ? panels.map(([panelFunc, args], index) => panelFunc(index, args)).join("\n")
+      : panels[0]
+    }
+  </div>`;
+
+export const viewport = (...panels: any[]) => `
+  <div class="${defaultClassPrefix}-viewport">
+    ${typeof panels[0] === "object"
+      ? panels.map(([panelFunc, args], index) => panelFunc(index, args)).join("\n")
+      : panels[0]
+    }
+  </div>`;
+
+export const camera = (...panels: any[]) => `
+  <div class="${defaultClassPrefix}-camera">
     ${panels.map(([panelFunc, args], index) => panelFunc(index, args)).join("\n")}
   </div>`;
 
-const panel = (index: number, className: string) => `
+export const panel = (index: number, className: string) => `
   <div class="${className}" style="background-color:${colors[index % colors.length]}">
     <p>Layer ${index}</p>
   </div>`;
@@ -67,6 +85,29 @@ export const horizontal = {
     [panel, "panel-horizontal-30"],
   ),
   none: wrapper(),
+  hasViewport: wrapper(
+    viewport(
+      [panel, "panel-horizontal-full"],
+      [panel, "panel-horizontal-full"],
+      [panel, "panel-horizontal-full"],
+    ),
+  ),
+  hasCamera: wrapper(
+    camera(
+      [panel, "panel-horizontal-full"],
+      [panel, "panel-horizontal-full"],
+      [panel, "panel-horizontal-full"],
+    ),
+  ),
+  hasViewportCamera: wrapper(
+    viewport(
+      camera(
+        [panel, "panel-horizontal-full"],
+        [panel, "panel-horizontal-full"],
+        [panel, "panel-horizontal-full"],
+      ),
+    ),
+  ),
 };
 
 export const vertical = {
