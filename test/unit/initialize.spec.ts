@@ -1,8 +1,11 @@
 import Flicking from "../../src/Flicking";
+import { DEFAULT_OPTIONS } from "../../src/consts";
 import { FlickingEvent, FlickingPanel } from "../../src/types";
 import { horizontal, vertical } from "./assets/fixture";
 import { createFlicking, cleanup, simulate, waitFor, waitEvent } from "./assets/utils";
 import { EVENTS } from "../../src/consts";
+
+const defaultClassPrefix = DEFAULT_OPTIONS.classPrefix;
 
 describe("Initialization", () => {
   let flickingInfo: {
@@ -41,6 +44,57 @@ describe("Initialization", () => {
 
     it("should throw error when no element is given", () => {
       expect(() => new Flicking("#NO-ELEMENT")).to.throw(Error);
+    });
+
+    it("can initialize using existing viewport element", () => {
+      // Given
+      /* NOTHING */
+
+      // When
+      flickingInfo = createFlicking(horizontal.hasViewport);
+
+      // Then
+      const flickingWrapper = flickingInfo.instance.getElement();
+      const viewportElements = flickingWrapper.querySelectorAll(`.${defaultClassPrefix}-viewport`);
+      const cameraElements = flickingWrapper.querySelectorAll(`.${defaultClassPrefix}-camera`);
+
+      expect(viewportElements.length).equals(1);
+      expect(cameraElements.length).equals(1);
+      expect(cameraElements[0].parentElement).equals(viewportElements[0]);
+    });
+
+    it("can initialize using existing camera element", () => {
+      // Given
+      /* NOTHING */
+
+      // When
+      flickingInfo = createFlicking(horizontal.hasCamera);
+
+      // Then
+      const flickingWrapper = flickingInfo.instance.getElement();
+      const viewportElements = flickingWrapper.querySelectorAll(`.${defaultClassPrefix}-viewport`);
+      const cameraElements = flickingWrapper.querySelectorAll(`.${defaultClassPrefix}-camera`);
+
+      expect(viewportElements.length).equals(1);
+      expect(cameraElements.length).equals(1);
+      expect(cameraElements[0].parentElement).equals(viewportElements[0]);
+    });
+
+    it("can initialize using existing both viewport and camera element", () => {
+      // Given
+      /* NOTHING */
+
+      // When
+      flickingInfo = createFlicking(horizontal.hasViewportCamera);
+
+      // Then
+      const flickingWrapper = flickingInfo.instance.getElement();
+      const viewportElements = flickingWrapper.querySelectorAll(`.${defaultClassPrefix}-viewport`);
+      const cameraElements = flickingWrapper.querySelectorAll(`.${defaultClassPrefix}-camera`);
+
+      expect(viewportElements.length).equals(1);
+      expect(cameraElements.length).equals(1);
+      expect(cameraElements[0].parentElement).equals(viewportElements[0]);
     });
   });
 
