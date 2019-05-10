@@ -509,12 +509,12 @@ export default class Viewport {
     this.axes.destroy();
     this.panInput.destroy();
 
-    originalPanels.forEach(panel => { panel.destroy(); });
-
     if (!this.options.renderExternal) {
       wrapper.removeChild(viewportElement);
       originalPanels.forEach(panel => { wrapper.appendChild(panel.getElement()); });
     }
+
+    originalPanels.forEach(panel => { panel.destroy(); });
 
     // release resources
     for (const x in this) {
