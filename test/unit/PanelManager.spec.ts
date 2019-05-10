@@ -483,7 +483,7 @@ describe("PanelManager", () => {
       panelManager.insertClones(0, 0, createPanels(5));
 
       // Then
-      const clones = panelManager.clonedPanels();
+      const clones = panelManager.clonedPanels()[0];
       expect(clones.length).equals(5);
     });
 
@@ -516,7 +516,7 @@ describe("PanelManager", () => {
       removeCloneSpies.forEach(spy => {
         expect(spy.calledOnce).to.be.true;
       });
-      expect(panelManager.clonedPanels().length).equals(originalPanels.length);
+      expect(panelManager.clonedPanels()[0].length).equals(originalPanels.length);
       rangeShouldBe(previousRange.min, previousRange.max);
       lengthShouldBe(previousLength);
     });
