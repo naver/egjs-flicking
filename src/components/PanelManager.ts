@@ -42,7 +42,7 @@ class PanelManager {
   public allPanels(): ReadonlyArray<Panel> {
     return [
       ...this.panels,
-      ...this.clonedPanels(),
+      ...this.clones.reduce((allClones, clones) => [...allClones, ...clones], []),
     ];
   }
 
@@ -50,8 +50,19 @@ class PanelManager {
     return this.panels;
   }
 
-  public clonedPanels(): ReadonlyArray<Panel> {
-    return this.clones.reduce((allClones, clones) => [...allClones, ...clones], []);
+  public clonedPanels(): ReadonlyArray<Panel[]> {
+    return this.clones;
+  }
+
+  public replacePanels(newPanels: Panel[], newClones: Panel[][]): void {
+    this.panels = newPanels;
+    this.clones = newClones;
+
+    this.range = {
+      min: findIndex(newPanels, panel => Boolean(panel)),
+      max: newPanels.length - 1,
+    };
+    this.length = newPanels.filter(panel => Boolean(panel)).length;
   }
 
   public has(index: number): boolean {

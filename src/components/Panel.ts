@@ -316,6 +316,10 @@ class Panel implements FlickingPanel {
       : this;
   }
 
+  public setElement(element: HTMLElement): void {
+    this.element = element;
+  }
+
   public setIndex(index: number): void {
     const state = this.state;
 
@@ -345,7 +349,7 @@ class Panel implements FlickingPanel {
     const cloneElement = virtual
       ? this.element
       : viewport.options.renderExternal
-        ? null
+        ? null // For handling combined situation of renderExternal & resizing
         : this.element!.cloneNode(true) as HTMLElement;
     const clonedPanel = new Panel(cloneElement, state.index, viewport);
     const clonedState = clonedPanel.state;

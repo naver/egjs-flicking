@@ -1026,7 +1026,8 @@ export default class Viewport {
     const options = this.options;
     const panelManager = this.panelManager;
     const clonedPanels = panelManager.clonedPanels()
-      .filter(panel => !!panel);
+      .reduce((allClones, clones) => [...allClones, ...clones], [])
+      .filter(panel => Boolean(panel));
 
     const scrollArea = state.scrollArea;
 
@@ -1041,10 +1042,6 @@ export default class Viewport {
 
     // Locate all cloned panels linearly first
     for (const panel of clonedPanels) {
-      if (!panel) {
-        continue;
-      }
-
       const origPanel = panel.getOriginalPanel();
       const cloneIndex = panel.getCloneIndex();
       const cloneBasePos = sumOriginalPanelSize * (cloneIndex + 1);

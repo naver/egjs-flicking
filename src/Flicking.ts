@@ -1,9 +1,10 @@
 import Component from "@egjs/component";
 import Viewport from "./components/Viewport";
 
-import { merge, getProgress, parseElement, isString } from "./utils";
+import { merge, getProgress, parseElement, isString, counter } from "./utils";
 import { DEFAULT_OPTIONS, EVENTS, DIRECTION, AXES_EVENTS, STATE_TYPE, DEFAULT_MOVE_TYPE_OPTIONS } from "./consts";
 import { FlickingOptions, FlickingEvent, Direction, EventType, FlickingPanel, TriggerCallback, FlickingContext, FlickingStatus, Plugin, ElementLike } from "./types";
+import Panel from "./components/Panel";
 
 /**
  * @memberof eg
@@ -542,6 +543,76 @@ class Flicking extends Component {
    */
   public remove(index: number, deleteCount: number = 1): FlickingPanel[] {
     return this.viewport.remove(index, deleteCount);
+  }
+
+  /**
+   * Synchronize info of panels instance with info given by external rendering.
+   * @ko 외부 렌더링 방식에 의해 입력받은 패널의 정보와 현재 플리킹이 갖는 패널 정보를 동기화한다.
+   * @param diffInfo - Info object of how panel elements are changed.<ko>패널의 DOM 요소들의 변경 정보를 담는 오브젝트.</ko>
+   * @param {HTMLElement[]} [diffInfo.list] - DOM elements list after update.<ko>업데이트 이후 DOM 요소들의 리스트</ko>
+   * @param {number[][]} [diffInfo.maintained] - Index tuple array of DOM elements maintained. Formatted with `[before, after]`.<ko>변경 전후에 유지된 DOM 요소들의 인덱스 튜플 배열. `[이전, 이후]`의 형식을 갖고 있어야 한다.</ko>
+   * @param {number[]} [diffInfo.added] - Index array of DOM elements added to `list`.<ko>`list`에서 추가된 DOM 요소들의 인덱스 배열.</ko>
+   */
+  public sync(diffInfo: {
+    list: HTMLElement[],
+    maintained: number[][],
+    added: number[],
+  }) {
+    const { list, added, maintained } = diffInfo;
+
+    const viewport = this.viewport;
+    const panelManager = viewport.panelManager;
+    const indexRange = panelManager.getRange();
+    const isCircular = this.options.circular;
+
+    // Make sure that new "list" should include cloned elements
+    const originalPanelCount = (list.length / (panelManager.getCloneCount() + 1)) >> 0; // Make sure it's integer. Same with Math.floor, but faster
+    const shouldCloneCount = ((list.length / originalPanelCount) >> 0) - 1;
+
+    const originalPanels = panelManager.originalPanels();
+    const clonedPanels = panelManager.clonedPanels();
+
+    const newOriginalElements = list.slice(0, originalPanelCount);
+    const newClonedElements = list.slice(originalPanelCount);
+
+    const newPanels: Panel[] = [];
+    const newClones: Panel[][] = counter(shouldCloneCount).map(() => []);
+
+    // For maintained panels after external rendering, they should be maintained in newPanels.
+    const originalMaintained = maintained.filter(([beforeIdx, afterIdx]) => beforeIdx <= indexRange.max);
+    // For newly added panels after external rendering, they will be added with their elements.
+    const originalAdded = added.filter(index => index < originalPanelCount);
+
+    originalMaintained.forEach(([beforeIdx, afterIdx]) => {
+      newPanels[afterIdx] = originalPanels[beforeIdx];
+    });
+
+    originalAdded.forEach(addIndex => {
+      newPanels[addIndex] = new Panel(newOriginalElements[addIndex], addIndex, viewport);
+    });
+
+    if (isCircular) {
+      counter(shouldCloneCount).forEach(groupIndex => {
+        const originalCloneGroup = clonedPanels[groupIndex];
+        const newCloneGroup = newClones[groupIndex];
+
+        originalMaintained.forEach(([beforeIdx, afterIdx]) => {
+          newCloneGroup[afterIdx] = originalCloneGroup[beforeIdx];
+          newCloneGroup[afterIdx].setElement(newClonedElements[originalPanelCount * groupIndex + afterIdx]);
+        });
+
+        originalAdded.forEach(addIndex => {
+          const newPanel = newPanels[addIndex];
+
+          newCloneGroup[addIndex] = newPanel.clone(groupIndex);
+          newCloneGroup[addIndex].setElement(newClonedElements[originalPanelCount * groupIndex + addIndex]);
+        });
+      });
+    }
+
+    // Replace current info of panels this holds
+    panelManager.replacePanels(newPanels, newClones);
+    viewport.resize();
   }
 
   private listenInput(): void {
