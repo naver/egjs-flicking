@@ -46,6 +46,7 @@ export const DEFAULT_OPTIONS: Readonly<FlickingOptions> = {
   anchor: "50%",
   gap: 0,
   moveType: DEFAULT_MOVE_TYPE_OPTIONS.snap,
+  renderExternal: false,
 };
 
 export const DEFAULT_VIEWPORT_CSS = {
