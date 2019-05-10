@@ -486,7 +486,6 @@ export default class Viewport {
     const wrapper = this.flicking.getElement();
     const viewportElement = this.viewportElement;
     const cameraElement = this.cameraElement;
-
     const originalPanels = this.panelManager.originalPanels();
 
     restoreStyle(viewportElement, state.originalViewportStyle);
@@ -510,9 +509,12 @@ export default class Viewport {
     this.axes.destroy();
     this.panInput.destroy();
 
-    originalPanels.forEach(panel => {
-      panel.destroy();
-    });
+    originalPanels.forEach(panel => { panel.destroy(); });
+
+    if (!this.options.renderExternal) {
+      wrapper.removeChild(viewportElement);
+      originalPanels.forEach(panel => { wrapper.appendChild(panel.getElement()); });
+    }
 
     // release resources
     for (const x in this) {
@@ -880,6 +882,7 @@ export default class Viewport {
 
   private clonePanels() {
     const state = this.state;
+    const options = this.options;
     const panelManager = this.panelManager;
 
     const viewportSize = state.size;
@@ -906,7 +909,10 @@ export default class Viewport {
         const clones = panels.map(origPanel => {
           const clonedPanel = origPanel.clone(cloneIndex);
 
-          this.cameraElement.appendChild(clonedPanel.getElement());
+          if (!options.renderExternal) {
+            this.cameraElement.appendChild(clonedPanel.getElement());
+          }
+
           return clonedPanel;
         });
         panelManager.insertClones(cloneIndex, 0, clones);

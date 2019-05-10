@@ -122,7 +122,6 @@ class PanelManager {
   public insert(index: number, newPanels: Panel[]): number {
     const panels = this.panels;
     const range = this.range;
-    const cameraElement = this.cameraElement;
     const isCircular = this.options.circular;
     const lastIndex = this.lastIndex;
 
@@ -139,9 +138,7 @@ class PanelManager {
         : null;
 
     // Insert panels before sibling element
-    const fragment = document.createDocumentFragment();
-    newPanels.forEach(panel => fragment.appendChild(panel.getElement()));
-    cameraElement.insertBefore(fragment, siblingElement);
+    this.insertNewPanels(newPanels, siblingElement);
 
     let pushedIndex = newPanels.length;
     // Like when setting index 50 while visible panels are 0, 1, 2
@@ -199,7 +196,6 @@ class PanelManager {
   public replace(index: number, newPanels: Panel[]): void {
     const panels = this.panels;
     const range = this.range;
-    const cameraElement = this.cameraElement;
     const isCircular = this.options.circular;
 
     // Find first panel that index is greater than inserting index
@@ -215,9 +211,7 @@ class PanelManager {
         : null;
 
     // Insert panels before sibling element
-    const fragment = document.createDocumentFragment();
-    newPanels.forEach(panel => fragment.appendChild(panel.getElement()));
-    cameraElement.insertBefore(fragment, siblingElement);
+    this.insertNewPanels(newPanels, siblingElement);
 
     if (index > range.max) {
       // Temporarily insert null at index to use splice()
@@ -437,7 +431,10 @@ class PanelManager {
       const newClones = originalPanels.map(panel => {
         const clone = panel.clone(cloneIndex);
 
-        cameraElement.insertBefore(clone.getElement(), cloneSiblingElement);
+        if (!this.options.renderExternal) {
+          cameraElement.insertBefore(clone.getElement(), cloneSiblingElement);
+        }
+
         return clone;
       });
 
@@ -455,6 +452,14 @@ class PanelManager {
     }
     if (insertingIndex < range.min || range.min < 0) {
       range.min = insertingIndex;
+    }
+  }
+
+  private insertNewPanels(newPanels: Panel[], siblingElement: HTMLElement | null) {
+    if (!this.options.renderExternal) {
+      const fragment = document.createDocumentFragment();
+      newPanels.forEach(panel => fragment.appendChild(panel.getElement()));
+      this.cameraElement.insertBefore(fragment, siblingElement);
     }
   }
 }
