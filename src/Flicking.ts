@@ -302,6 +302,15 @@ class Flicking extends Component {
   }
 
   /**
+   * Return how many groups of clones are created.
+   * @ko 몇 개의 클론 그룹이 생성되었는지를 반환한다.
+   * @return Length of cloned panel groups.<ko>클론된 패널 그룹의 개수</ko>
+   */
+  public getCloneCount(): number {
+    return this.viewport.panelManager.getCloneCount();
+  }
+
+  /**
    * Set last panel index for `infinite' mode.<br>[needPanel]{@link eg.Flicking#events:needPanel} won't be triggered anymore when last panel's index reaches it.<br>Also, you can't add more panels after it.
    * @ko `infinite` 모드에서 적용되는 패널의 최대 인덱스를 설정한다.<br>마지막 패널의 인덱스가 설정한 값에 도달할 경우 더 이상 [needPanel]{@link eg.Flicking#events:needPanel} 이벤트가 발생되지 않는다.<br>또한, 설정한 인덱스 이후로 새로운 패널을 추가할 수 없다.
    * @param - Last panel index.
