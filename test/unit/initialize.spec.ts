@@ -594,12 +594,13 @@ describe("Initialization", () => {
               duration: 50,
             });
 
-            const [destPos, nearestPanel] = await waitEvent(flicking, "change")
+            const [destPos, eventDelta, nearestPanel] = await waitEvent(flicking, "change")
               .then((e: any) => {
                 const viewport = (flicking as any).viewport;
 
                 return [
                   e.axesEvent.destPos.flick,
+                  Math.abs(e.axesEvent.delta.flick),
                   viewport.getNearestPanel(),
                 ];
               });
@@ -609,9 +610,8 @@ describe("Initialization", () => {
             const endIndex = flicking.getIndex();
             const indexAtDestPos = Math.floor(destPos / panelWidth);
             // As all delta is above threshold, it should change panel at least once
-            const expectedIndex = destPos >= 100
+            const expectedIndex = eventDelta >= 50
               ? Math.min(nearestPanel.getIndex() + snapCount, Math.max(1, indexAtDestPos))
-              // Sometimes, simulation won't return proper dest position for given delta.
               : 0;
 
             expect(startIndex).equals(0);
