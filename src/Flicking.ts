@@ -566,25 +566,25 @@ class Flicking extends Component {
     const isCircular = this.options.circular;
 
     // Make sure that new "list" should include cloned elements
-    const originalPanelCount = (list.length / (panelManager.getCloneCount() + 1)) >> 0; // Make sure it's integer. Same with Math.floor, but faster
-    const shouldCloneCount = ((list.length / originalPanelCount) >> 0) - 1;
+    const newOriginalPanelCount = (list.length / (panelManager.getCloneCount() + 1)) >> 0; // Make sure it's integer. Same with Math.floor, but faster
+    const newCloneCount = ((list.length / newOriginalPanelCount) >> 0) - 1;
 
-    const originalPanels = panelManager.originalPanels();
-    const clonedPanels = panelManager.clonedPanels();
+    const prevOriginalPanels = panelManager.originalPanels();
+    const prevClonedPanels = panelManager.clonedPanels();
 
-    const newOriginalElements = list.slice(0, originalPanelCount);
-    const newClonedElements = list.slice(originalPanelCount);
+    const newOriginalElements = list.slice(0, newOriginalPanelCount);
+    const newClonedElements = list.slice(newOriginalPanelCount);
 
     const newPanels: Panel[] = [];
-    const newClones: Panel[][] = counter(shouldCloneCount).map(() => []);
+    const newClones: Panel[][] = counter(newCloneCount).map(() => []);
 
     // For maintained panels after external rendering, they should be maintained in newPanels.
     const originalMaintained = maintained.filter(([beforeIdx, afterIdx]) => beforeIdx <= indexRange.max);
     // For newly added panels after external rendering, they will be added with their elements.
-    const originalAdded = added.filter(index => index < originalPanelCount);
+    const originalAdded = added.filter(index => index < newOriginalPanelCount);
 
     originalMaintained.forEach(([beforeIdx, afterIdx]) => {
-      newPanels[afterIdx] = originalPanels[beforeIdx];
+      newPanels[afterIdx] = prevOriginalPanels[beforeIdx];
     });
 
     originalAdded.forEach(addIndex => {
@@ -592,20 +592,20 @@ class Flicking extends Component {
     });
 
     if (isCircular) {
-      counter(shouldCloneCount).forEach(groupIndex => {
-        const originalCloneGroup = clonedPanels[groupIndex];
+      counter(newCloneCount).forEach(groupIndex => {
+        const prevCloneGroup = prevClonedPanels[groupIndex];
         const newCloneGroup = newClones[groupIndex];
 
         originalMaintained.forEach(([beforeIdx, afterIdx]) => {
-          newCloneGroup[afterIdx] = originalCloneGroup[beforeIdx];
-          newCloneGroup[afterIdx].setElement(newClonedElements[originalPanelCount * groupIndex + afterIdx]);
+          newCloneGroup[afterIdx] = prevCloneGroup[beforeIdx];
+          newCloneGroup[afterIdx].setElement(newClonedElements[newOriginalPanelCount * groupIndex + afterIdx]);
         });
 
         originalAdded.forEach(addIndex => {
           const newPanel = newPanels[addIndex];
 
           newCloneGroup[addIndex] = newPanel.clone(groupIndex);
-          newCloneGroup[addIndex].setElement(newClonedElements[originalPanelCount * groupIndex + addIndex]);
+          newCloneGroup[addIndex].setElement(newClonedElements[newOriginalPanelCount * groupIndex + addIndex]);
         });
       });
     }
