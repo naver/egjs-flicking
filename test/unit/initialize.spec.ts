@@ -610,6 +610,9 @@ describe("Initialization", () => {
             const endIndex = flicking.getIndex();
             const indexAtDestPos = Math.floor(destPos / panelWidth);
             // As all delta is above threshold, it should change panel at least once
+            // But, if simulate fails and returns wrong dest position,
+            // check eventDelta if it's over 50 as it's minimum distance to change index(half of panel size as anchor is 50%)
+            // If it's not, expected index will be 0 as it's restoring.
             const expectedIndex = eventDelta >= 50
               ? Math.min(nearestPanel.getIndex() + snapCount, Math.max(1, indexAtDestPos))
               : 0;
