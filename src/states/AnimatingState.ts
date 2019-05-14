@@ -30,7 +30,7 @@ class AnimatingState extends State {
       const newTargetPanel = targetPanel.getIdenticalPanels()[newCloneIndex + 1].clone(newCloneIndex, true);
 
       // Set new target panel considering looped count
-      newTargetPanel.setPosition(newTargetPosition, true);
+      newTargetPanel.setPosition(newTargetPosition);
       this.targetPanel = newTargetPanel;
     }
 

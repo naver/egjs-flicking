@@ -908,15 +908,18 @@ export default class Viewport {
     const cloneCount = Math.ceil(visibleAreaSize / sumOriginalPanelSize);
     const prevCloneCount = panelManager.getCloneCount();
 
+    if (options.renderExternal) {
+      panelManager.setCloneCount(cloneCount);
+      return;
+    }
+
     if (cloneCount > prevCloneCount) {
       // should clone more
       for (let cloneIndex = prevCloneCount; cloneIndex < cloneCount; cloneIndex++) {
         const clones = panels.map(origPanel => {
           const clonedPanel = origPanel.clone(cloneIndex);
 
-          if (!options.renderExternal) {
-            this.cameraElement.appendChild(clonedPanel.getElement());
-          }
+          this.cameraElement.appendChild(clonedPanel.getElement());
 
           return clonedPanel;
         });

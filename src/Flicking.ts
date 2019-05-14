@@ -202,7 +202,7 @@ class Flicking extends Component {
       }
 
       targetPanel = targetPanel.clone(targetPanel.getCloneIndex(), true);
-      targetPanel.setPosition(nearestPosition, true);
+      targetPanel.setPosition(nearestPosition);
     }
     const currentIndex = this.getIndex();
 
@@ -590,6 +590,7 @@ class Flicking extends Component {
 
     originalMaintained.forEach(([beforeIdx, afterIdx]) => {
       newPanels[afterIdx] = prevOriginalPanels[beforeIdx];
+      newPanels[afterIdx].setIndex(afterIdx);
     });
 
     originalAdded.forEach(addIndex => {
@@ -598,19 +599,20 @@ class Flicking extends Component {
 
     if (isCircular) {
       counter(newCloneCount).forEach(groupIndex => {
+        const cloneGroupOffset = newOriginalPanelCount * groupIndex;
         const prevCloneGroup = prevClonedPanels[groupIndex];
         const newCloneGroup = newClones[groupIndex];
 
         originalMaintained.forEach(([beforeIdx, afterIdx]) => {
-          newCloneGroup[afterIdx] = prevCloneGroup[beforeIdx];
-          newCloneGroup[afterIdx].setElement(newClonedElements[newOriginalPanelCount * groupIndex + afterIdx]);
+          newCloneGroup[afterIdx] = prevCloneGroup
+            ? prevCloneGroup[beforeIdx]
+            : newPanels[afterIdx].cloneExternal(groupIndex, newClonedElements[cloneGroupOffset + afterIdx]);
         });
 
         originalAdded.forEach(addIndex => {
           const newPanel = newPanels[addIndex];
 
-          newCloneGroup[addIndex] = newPanel.clone(groupIndex);
-          newCloneGroup[addIndex].setElement(newClonedElements[newOriginalPanelCount * groupIndex + addIndex]);
+          newCloneGroup[addIndex] = newPanel.cloneExternal(groupIndex, newClonedElements[cloneGroupOffset + addIndex]);
         });
       });
     }
