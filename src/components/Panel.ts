@@ -346,6 +346,7 @@ class Panel implements FlickingPanel {
 
     clonedPanel.original = this;
     clonedState.isClone = true;
+    clonedState.isVirtual = virtual;
     clonedState.cloneIndex = cloneIndex;
     // Inherit some state values
     clonedState.size = state.size;
