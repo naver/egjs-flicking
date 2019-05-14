@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+
 import Viewport from "./Viewport";
 import { OriginalStyle, FlickingPanel, ElementLike } from "../types";
 import { DEFAULT_PANEL_CSS, EVENTS } from "../consts";

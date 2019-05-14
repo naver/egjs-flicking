@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+
 import State from "./State";
 import { STATE_TYPE, EVENTS } from "../consts";
 import { FlickingContext } from "../types";

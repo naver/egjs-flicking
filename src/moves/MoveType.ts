@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+
 import { MoveTypeStringOption, MoveTypeContext, DestinationInfo } from "../types";
 import Panel from "../components/Panel";
 import { EVENTS } from "../consts";

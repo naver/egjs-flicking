@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+
 import Snap from "./Snap";
 import { MOVE_TYPE, EVENTS } from "../consts";
 import { MoveTypeContext, DestinationInfo } from "../types";

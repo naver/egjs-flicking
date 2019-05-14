@@ -2,7 +2,7 @@ var pkg = require("../package.json");
 
 module.exports = {
 	common: [
-		"Copyright (c) 2017 " + pkg.author.name,
+		"Copyright (c) 2015-present " + pkg.author.name,
 		pkg.name + " JavaScript library",
 		pkg.name + " project is licensed under the " + pkg.license + " license",
 		"",

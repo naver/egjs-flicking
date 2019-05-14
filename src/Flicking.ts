@@ -1,10 +1,15 @@
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+
 import Component from "@egjs/component";
 import Viewport from "./components/Viewport";
+import Panel from "./components/Panel";
 
 import { merge, getProgress, parseElement, isString, counter } from "./utils";
 import { DEFAULT_OPTIONS, EVENTS, DIRECTION, AXES_EVENTS, STATE_TYPE, DEFAULT_MOVE_TYPE_OPTIONS } from "./consts";
 import { FlickingOptions, FlickingEvent, Direction, EventType, FlickingPanel, TriggerCallback, FlickingContext, FlickingStatus, Plugin, ElementLike } from "./types";
-import Panel from "./components/Panel";
 
 /**
  * @memberof eg
