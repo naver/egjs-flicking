@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+
 import State from "../states/State";
 import { AxesEventType, ValueOf, FlickingContext, StateType } from "../types";
 import { AXES_EVENTS, STATE_TYPE } from "../consts";

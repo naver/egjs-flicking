@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+
 import { ElementLike, OriginalStyle } from "./types";
 
 export function merge(target: object, ...srcs: object[]): object {

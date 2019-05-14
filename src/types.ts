@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+
 import Flicking from "./Flicking";
 import Viewport from "./components/Viewport";
 import StateMachine from "./components/StateMachine";

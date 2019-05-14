@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+
 import Axes, { PanInput } from "@egjs/axes";
 
 import Flicking from "../Flicking";
