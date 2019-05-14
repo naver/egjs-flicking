@@ -1225,20 +1225,14 @@ describe("Methods call", () => {
     });
   });
 
-  describe("sync() in non-circular mode", () => {
-    it("can sync with externally rendered elements when there are no panels", () => {
-      // Given
-      flickingInfo = createFlicking(horizontal.none, {
-        renderExternal: true,
-      });
+  describe("sync()", () => {
+    const renderOriginalElement = (count: number, className: string): HTMLElement[] => {
       const flicking = flickingInfo.instance;
       const cameraElement = (flicking as any).viewport.cameraElement as HTMLElement;
-
-      // When
-      const newElements = counter(3).map(index => {
+      const newElements = counter(count).map(index => {
         const tempElement = document.createElement("div");
         // Fix its size to 100px
-        tempElement.innerHTML = createPanelElement(index, "panel-horizontal-100px");
+        tempElement.innerHTML = createPanelElement(index, className);
 
         const newElement = tempElement.children[0];
         cameraElement.appendChild(newElement);
@@ -1246,97 +1240,13 @@ describe("Methods call", () => {
         return newElement as HTMLElement;
       });
 
-      flicking.sync({
-        list: newElements,
-        maintained: [],
-        added: [0, 1, 2],
-      });
+      return newElements;
+    };
 
-      // Then
-      const panelSize = 100;
-      expect(flicking.getPanelCount()).equals(3);
-      expect(flicking.getCloneCount()).equals(0);
-      flicking.getAllPanels().forEach(panel => {
-        expect(panel.getElement()).not.to.be.null;
-        expect(panel.getPosition()).equals(panelSize * panel.getIndex());
-      });
-    });
-
-    it("can sync with externally rendered elements", () => {
-      // Given
-      flickingInfo = createFlicking(horizontal.full, {
-        renderExternal: true,
-      });
+    const renderClonedElement = (cloneCount: number): HTMLElement[] => {
       const flicking = flickingInfo.instance;
       const cameraElement = (flicking as any).viewport.cameraElement as HTMLElement;
-      const originalLastPanel = flicking.getAllPanels()[flicking.getPanelCount() - 1];
-      const originalElements = flicking.getAllPanels().map(panel => panel.getElement());
-
-      // When
-      const newElements = counter(3).map(index => {
-        const tempElement = document.createElement("div");
-        // Fix its size to 100px
-        tempElement.innerHTML = createPanelElement(index, "panel-horizontal-100px");
-
-        const newElement = tempElement.children[0];
-        cameraElement.appendChild(newElement);
-
-        return newElement as HTMLElement;
-      });
-
-      flicking.sync({
-        list: [...originalElements, ...newElements],
-        maintained: [[0, 0], [1, 1], [2, 2]],
-        added: [3, 4, 5],
-      });
-
-      // Then
-      const panelSize = 100;
-      expect(flicking.getPanelCount()).equals(6);
-      expect(flicking.getCloneCount()).equals(0);
-      // Check size of newly added panels
-      flicking.getAllPanels().forEach(panel => {
-        expect(panel.getElement()).not.to.be.null;
-      });
-      flicking.getAllPanels().slice(3).forEach((panel, idx) => {
-        expect(panel.getPosition())
-          .equals(originalLastPanel.getPosition() + originalLastPanel.getSize() + panelSize * idx);
-      });
-    });
-  });
-
-  describe("sync() in circular mode", () => {
-    it("can sync with externally rendered elements when there are no panels", () => {
-      // Given
-      flickingInfo = createFlicking(horizontal.none, {
-        renderExternal: true,
-        circular: true,
-      });
-      const flicking = flickingInfo.instance;
-      const cameraElement = (flicking as any).viewport.cameraElement as HTMLElement;
-
-      // When
-      const newElements = counter(3).map(index => {
-        const tempElement = document.createElement("div");
-        // Fix its size to 100px
-        tempElement.innerHTML = createPanelElement(index, "panel-horizontal-100px");
-
-        const newElement = tempElement.children[0];
-        cameraElement.appendChild(newElement);
-
-        return newElement as HTMLElement;
-      });
-
-      // In circular mode, flicking must be syned if clone count is changed
-      flicking.sync({
-        list: newElements,
-        maintained: [],
-        added: [0, 1, 2],
-      });
-
-      const calcedCloneCount = flicking.getCloneCount();
-      const originalElements = flicking.getAllPanels().map(panel => panel.getElement());
-      const clonedElements = counter(calcedCloneCount).reduce((elements: HTMLElement[]) => {
+      const clonedElements = counter(cloneCount).reduce((elements: HTMLElement[]) => {
         flicking.getAllPanels().forEach(panel => {
           const clonedElement = panel.getElement().cloneNode(true);
           cameraElement.appendChild(clonedElement);
@@ -1345,66 +1255,209 @@ describe("Methods call", () => {
         return elements;
       }, []);
 
-      flicking.sync({
-        list: [...originalElements, ...clonedElements],
-        maintained: [[0, 0], [1, 1], [2, 2]],
-        added: [...counter(calcedCloneCount * originalElements.length).map(index => 3 + index)],
-      });
-      const finalCloneCount = flicking.getCloneCount();
+      return clonedElements;
+    };
 
-      // Then
-      expect(flicking.getPanelCount()).equals(3);
-      expect(flicking.getCloneCount()).equals(calcedCloneCount);
-      expect(calcedCloneCount).equals(finalCloneCount);
-      flicking.getAllPanels(true).forEach((panel, idx) => {
-        expect(panel.getElement()).not.to.be.null;
-        // As cloned position shouldn't have to be prev + 100
-        // Just make sure that panel is re-positioned.
-        expect(panel.getPosition()).not.equals((panel as Panel).prevSibling.getPosition());
+    describe("sync() in non-circular mode", () => {
+      it("can sync with externally rendered elements when there are no panels", () => {
+        // Given
+        flickingInfo = createFlicking(horizontal.none, {
+          renderExternal: true,
+        });
+        const flicking = flickingInfo.instance;
+
+        // When
+        const newElements = renderOriginalElement(3, "panel-horizontal-100px");
+        flicking.sync({
+          list: newElements,
+          maintained: [],
+          added: [0, 1, 2],
+        });
+
+        // Then
+        const panelSize = 100;
+        expect(flicking.getPanelCount()).equals(3);
+        expect(flicking.getCloneCount()).equals(0);
+        flicking.getAllPanels().forEach(panel => {
+          expect(panel.getElement()).not.to.be.null;
+          expect(panel.getPosition()).equals(panelSize * panel.getIndex());
+        });
+      });
+
+      it("can sync with externally rendered elements", () => {
+        // Given
+        flickingInfo = createFlicking(horizontal.full, {
+          renderExternal: true,
+        });
+        const flicking = flickingInfo.instance;
+        const originalLastPanel = flicking.getAllPanels()[flicking.getPanelCount() - 1];
+        const originalElements = flicking.getAllPanels().map(panel => panel.getElement());
+
+        // When
+        const newElements = renderOriginalElement(3, "panel-horizontal-100px");
+        flicking.sync({
+          list: [...originalElements, ...newElements],
+          maintained: [[0, 0], [1, 1], [2, 2]],
+          added: [3, 4, 5],
+        });
+
+        // Then
+        const panelSize = 100;
+        expect(flicking.getPanelCount()).equals(6);
+        expect(flicking.getCloneCount()).equals(0);
+        // Check size of newly added panels
+        flicking.getAllPanels().forEach(panel => {
+          expect(panel.getElement()).not.to.be.null;
+        });
+        flicking.getAllPanels().slice(3).forEach((panel, idx) => {
+          expect(panel.getPosition())
+            .equals(originalLastPanel.getPosition() + originalLastPanel.getSize() + panelSize * idx);
+        });
+      });
+
+      it("can sync with externally rendered elements when prepended", () => {
+        // Given
+        flickingInfo = createFlicking(horizontal.full, {
+          renderExternal: true,
+        });
+        const flicking = flickingInfo.instance;
+
+        // When
+        const originalElements = flicking.getAllPanels().map(panel => panel.getElement());
+        const newElements = renderOriginalElement(1, "panel-horizontal-100px");
+        flicking.sync({
+          list: [...newElements, ...originalElements],
+          maintained: [[0, 1], [1, 2], [2, 3]],
+          added: [0],
+        });
+
+        // Then
+        expect(flicking.getPanelCount()).equals(4);
+        expect(flicking.getCloneCount()).equals(0);
+        expect(flicking.getAllPanels().length).equals(4);
+        flicking.getAllPanels().forEach((panel, idx) => {
+          expect(panel.getIndex()).equals(idx);
+          expect(panel.getElement()).not.to.be.null;
+        });
+        flicking.getAllPanels().slice(1).forEach((panel, idx) => {
+          const prevPanel = flicking.getPanel(panel.getIndex() - 1);
+          expect(panel.getPosition()).is.greaterThan(prevPanel.getPosition());
+        });
       });
     });
 
-    it("can sync with externally rendered clone elements", () => {
-      // Given
-      flickingInfo = createFlicking(horizontal.full, {
-        renderExternal: true,
-        circular: true,
-      });
-      const flicking = flickingInfo.instance;
-      const cameraElement = (flicking as any).viewport.cameraElement as HTMLElement;
-
-      // When
-      const originalElements = flicking.getAllPanels().map(panel => panel.getElement());
-      // No cloned elements at this moment
-      const originalCloneCount = flicking.getCloneCount();
-      const clonedElements = counter(originalCloneCount).reduce((elements: HTMLElement[]) => {
-        flicking.getAllPanels().forEach(panel => {
-          const clonedElement = panel.getElement().cloneNode(true);
-          cameraElement.appendChild(clonedElement);
-          elements.push(clonedElement as HTMLElement);
+    describe("sync() in circular mode", () => {
+      it("can sync with externally rendered elements when there are no panels", () => {
+        // Given
+        flickingInfo = createFlicking(horizontal.none, {
+          renderExternal: true,
+          circular: true,
         });
-        return elements;
-      }, []);
+        const flicking = flickingInfo.instance;
 
-      flicking.sync({
-        list: [...originalElements, ...clonedElements],
-        maintained: [
-          ...originalElements.map((val, idx) => [idx, idx]),
-        ],
-        added: [
-          ...clonedElements.map((val, idx) => originalElements.length + idx),
-        ],
+        // When
+        const newElements = renderOriginalElement(3, "panel-horizontal-100px");
+
+        // In circular mode, flicking must be syned if clone count is changed
+        flicking.sync({
+          list: newElements,
+          maintained: [],
+          added: [0, 1, 2],
+        });
+
+        const calcedCloneCount = flicking.getCloneCount();
+        const originalElements = flicking.getAllPanels().map(panel => panel.getElement());
+        const clonedElements = renderClonedElement(calcedCloneCount);
+
+        flicking.sync({
+          list: [...originalElements, ...clonedElements],
+          maintained: [[0, 0], [1, 1], [2, 2]],
+          added: [...counter(calcedCloneCount * originalElements.length).map(index => 3 + index)],
+        });
+        const finalCloneCount = flicking.getCloneCount();
+
+        // Then
+        expect(flicking.getPanelCount()).equals(3);
+        expect(flicking.getCloneCount()).equals(calcedCloneCount);
+        expect(calcedCloneCount).equals(finalCloneCount);
+        flicking.getAllPanels(true).forEach(panel => {
+          expect(panel.getElement()).not.to.be.null;
+          // As cloned position shouldn't have to be prev + 100
+          // Just make sure that panel is re-positioned.
+          expect(panel.getPosition()).not.equals((panel as Panel).prevSibling.getPosition());
+        });
       });
 
-      // Then
-      const finalCloneCount = flicking.getCloneCount();
-      expect(flicking.getPanelCount()).equals(3);
-      expect(finalCloneCount).equals(originalCloneCount);
-      flicking.getAllPanels(true).forEach(panel => {
-        expect(panel.getElement()).not.to.be.null;
-        // As cloned position shouldn't have to be prev + 100
-        // Just make sure that panel is re-positioned.
-        expect(panel.getPosition()).not.equals((panel as Panel).prevSibling.getPosition());
+      it("can sync with externally rendered clone elements", () => {
+        // Given
+        flickingInfo = createFlicking(horizontal.full, {
+          renderExternal: true,
+          circular: true,
+        });
+        const flicking = flickingInfo.instance;
+
+        // When
+        const originalElements = flicking.getAllPanels().map(panel => panel.getElement());
+        // No cloned elements at this moment
+        const originalCloneCount = flicking.getCloneCount();
+        const clonedElements = renderClonedElement(originalCloneCount);
+
+        flicking.sync({
+          list: [...originalElements, ...clonedElements],
+          maintained: [
+            ...originalElements.map((val, idx) => [idx, idx]),
+          ],
+          added: [
+            ...clonedElements.map((val, idx) => originalElements.length + idx),
+          ],
+        });
+
+        // Then
+        const finalCloneCount = flicking.getCloneCount();
+        expect(flicking.getPanelCount()).equals(3);
+        expect(finalCloneCount).equals(originalCloneCount);
+        flicking.getAllPanels(true).forEach(panel => {
+          expect(panel.getElement()).not.to.be.null;
+          // As cloned position shouldn't have to be prev + 100
+          // Just make sure that panel is re-positioned.
+          expect(panel.getPosition()).not.equals((panel as Panel).prevSibling.getPosition());
+        });
+      });
+
+      it("can apply css to externally rendered elements", () => {
+        // Given
+        flickingInfo = createFlicking(horizontal.none, {
+          renderExternal: true,
+          circular: true,
+        });
+        const flicking = flickingInfo.instance;
+
+        // When
+        const newElements = renderOriginalElement(3, "panel-horizontal-100px");
+
+        // In circular mode, flicking must be syned if clone count is changed
+        flicking.sync({
+          list: newElements,
+          maintained: [],
+          added: [0, 1, 2],
+        });
+
+        const calcedCloneCount = flicking.getCloneCount();
+        const originalElements = flicking.getAllPanels().map(panel => panel.getElement());
+        const clonedElements = renderClonedElement(calcedCloneCount);
+
+        flicking.sync({
+          list: [...originalElements, ...clonedElements],
+          maintained: [[0, 0], [1, 1], [2, 2]],
+          added: [...counter(calcedCloneCount * originalElements.length).map(index => 3 + index)],
+        });
+        const finalCloneCount = flicking.getCloneCount();
+
+        // Then
+        const panelClassName = `${flicking.options.classPrefix}-panel`;
+        flicking.getAllPanels(true).forEach(panel => {
+          expect(panel.getElement().classList.contains(panelClassName)).to.be.true;
+        });
       });
     });
   });
