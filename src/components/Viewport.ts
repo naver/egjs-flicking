@@ -432,6 +432,8 @@ export default class Viewport {
   }
 
   public remove(index: number, deleteCount: number = 1): FlickingPanel[] {
+    const state = this.state;
+
     // Index should not below 0
     index = Math.max(index, 0);
 
@@ -445,6 +447,19 @@ export default class Viewport {
       const newCurrentIndex = Math.max(index - 1, panelManager.getRange().min);
       this.currentPanel = panelManager.get(newCurrentIndex);
     }
+
+    // Update checked indexes in infinite mode
+    if (deleteCount > 0) {
+      state.checkedIndexes.forEach((indexes, idx) => {
+        const [min, max] = indexes;
+        // Can fill part of indexes in range
+        if (isBetween(index, min, max)) {
+          // Remove checked index from list
+          state.checkedIndexes.splice(idx, 1);
+        }
+      });
+    }
+
     this.resize();
 
     return removedPanels;
@@ -1198,8 +1213,8 @@ export default class Viewport {
     while (checkingPanel) {
       const currentIndex = checkingPanel.getIndex();
       const nextSibling = checkingPanel.nextSibling;
-      let lastPanel = panelManager.lastPanel()!;
-      let atLastPanel = currentIndex === lastPanel.getIndex();
+      const lastPanel = panelManager.lastPanel()!;
+      const atLastPanel = currentIndex === lastPanel.getIndex();
       const nextIndex = !atLastPanel && nextSibling
         ? nextSibling.getIndex()
         : maxLastIndex + 1;
@@ -1227,8 +1242,10 @@ export default class Viewport {
 
       // Trigger needPanel in circular & at max panel index
       if (options.circular && currentIndex === maxLastIndex && overThreshold) {
-        const firstPanel = panelManager.firstPanel()!;
-        const firstIndex = firstPanel.getIndex();
+        const firstPanel = panelManager.firstPanel();
+        const firstIndex = firstPanel
+          ? firstPanel.getIndex()
+          : -1;
 
         if (firstIndex > 0) {
           this.triggerNeedPanel({
@@ -1244,11 +1261,11 @@ export default class Viewport {
         }
       }
 
-      // Check whether insertion happened
-      lastPanel = panelManager.lastPanel()!;
-      atLastPanel = currentIndex === lastPanel.getIndex();
+      // Check whether panels are changed
+      const lastPanelAfterNeed = panelManager.lastPanel()!;
+      const atLastPanelAfterNeed = lastPanelAfterNeed && currentIndex === lastPanelAfterNeed.getIndex();
 
-      if (atLastPanel || !overThreshold) {
+      if (atLastPanelAfterNeed || !overThreshold) {
         break;
       }
 
@@ -1261,8 +1278,8 @@ export default class Viewport {
       const cameraPrev = state.position;
       const checkingIndex = checkingPanel.getIndex();
       const prevSibling = checkingPanel.prevSibling;
-      let firstPanel = panelManager.firstPanel()!;
-      let atFirstPanel = checkingIndex === firstPanel.getIndex();
+      const firstPanel = panelManager.firstPanel()!;
+      const atFirstPanel = checkingIndex === firstPanel.getIndex();
       const prevIndex = !atFirstPanel && prevSibling
         ? prevSibling.getIndex()
         : -1;
@@ -1288,10 +1305,11 @@ export default class Viewport {
 
       // Trigger needPanel in circular & at panel 0
       if (options.circular && checkingIndex === 0 && overThreshold) {
-        const lastPanel = panelManager.lastPanel()!;
-        const lastIndex = lastPanel.getIndex();
+        const lastPanel = panelManager.lastPanel();
 
-        if (lastIndex < maxLastIndex) {
+        if (lastPanel && lastPanel.getIndex() < maxLastIndex) {
+          const lastIndex = lastPanel.getIndex();
+
           this.triggerNeedPanel({
             axesEvent,
             siblingPanel: checkingPanel,
@@ -1305,12 +1323,12 @@ export default class Viewport {
         }
       }
 
-      // Check whether insertion happened
-      firstPanel = panelManager.firstPanel()!;
-      atFirstPanel = checkingIndex === firstPanel.getIndex();
+      // Check whether panels were changed
+      const firstPanelAfterNeed = panelManager.firstPanel();
+      const atFirstPanelAfterNeed = firstPanelAfterNeed && checkingIndex === firstPanelAfterNeed.getIndex();
 
       // Looped in circular mode
-      if (atFirstPanel || !overThreshold) {
+      if (atFirstPanelAfterNeed || !overThreshold) {
         break;
       }
 
