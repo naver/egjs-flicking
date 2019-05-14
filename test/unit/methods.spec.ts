@@ -1336,11 +1336,15 @@ describe("Methods call", () => {
 
       const calcedCloneCount = flicking.getCloneCount();
       const originalElements = flicking.getAllPanels().map(panel => panel.getElement());
-      const clonedElements = flicking.getAllPanels().map(panel => {
-        const clonedElement = panel.getElement().cloneNode(true);
-        cameraElement.appendChild(clonedElement);
-        return clonedElement as HTMLElement;
-      });
+      const clonedElements = counter(calcedCloneCount).reduce((elements: HTMLElement[]) => {
+        flicking.getAllPanels().forEach(panel => {
+          const clonedElement = panel.getElement().cloneNode(true);
+          cameraElement.appendChild(clonedElement);
+          elements.push(clonedElement as HTMLElement);
+        });
+        return elements;
+      }, []);
+
       flicking.sync({
         list: [...originalElements, ...clonedElements],
         maintained: [[0, 0], [1, 1], [2, 2]],
@@ -1360,7 +1364,7 @@ describe("Methods call", () => {
       });
     });
 
-    it("can sync with externally rendered elements", () => {
+    it("can sync with externally rendered clone elements", () => {
       // Given
       flickingInfo = createFlicking(horizontal.full, {
         renderExternal: true,
@@ -1370,54 +1374,31 @@ describe("Methods call", () => {
       const cameraElement = (flicking as any).viewport.cameraElement as HTMLElement;
 
       // When
-      const allPanels = flicking.getAllPanels(true);
-      const originalElements = allPanels.slice(0, flicking.getPanelCount())
-        .map(panel => panel.getElement());
-      const clonedElements = allPanels.slice(flicking.getPanelCount())
-        .map(panel => panel.getElement());
+      const originalElements = flicking.getAllPanels().map(panel => panel.getElement());
+      // No cloned elements at this moment
       const originalCloneCount = flicking.getCloneCount();
-
-      const addCount = 3;
-      const newOriginalElements = counter(addCount).map(index => {
-        const tempElement = document.createElement("div");
-        // Fix its size to 100px
-        tempElement.innerHTML = createPanelElement(index, "panel-horizontal-100px");
-
-        const newElement = tempElement.children[0];
-        cameraElement.appendChild(newElement);
-
-        return newElement as HTMLElement;
-      });
-      const newClonedElements = counter(flicking.getCloneCount()).reduce((totalPanels: HTMLElement[]) => {
-        return [
-          ...totalPanels,
-          ...newOriginalElements.map(originalElement => {
-            const newCloneElement = originalElement.cloneNode(true);
-            cameraElement.appendChild(newCloneElement);
-            return newCloneElement as HTMLElement;
-          }),
-        ];
+      const clonedElements = counter(originalCloneCount).reduce((elements: HTMLElement[]) => {
+        flicking.getAllPanels().forEach(panel => {
+          const clonedElement = panel.getElement().cloneNode(true);
+          cameraElement.appendChild(clonedElement);
+          elements.push(clonedElement as HTMLElement);
+        });
+        return elements;
       }, []);
 
-      // Clone count won't be changed(as there're full-sized panels)
-      // So, only one sync() call will be needed
       flicking.sync({
-        list: [...originalElements, ...newOriginalElements, ...clonedElements, ...newClonedElements],
+        list: [...originalElements, ...clonedElements],
         maintained: [
           ...originalElements.map((val, idx) => [idx, idx]),
-          ...clonedElements.map((val, idx) => [idx, idx + addCount]),
         ],
         added: [
-          ...newOriginalElements.map((val, idx) => originalElements.length + idx),
-          ...newClonedElements.map((val, idx) => originalElements.length + newOriginalElements.length + clonedElements.length + idx),
+          ...clonedElements.map((val, idx) => originalElements.length + idx),
         ],
       });
 
       // Then
       const finalCloneCount = flicking.getCloneCount();
-      const cloneLength = flicking.getAllPanels(true).length - flicking.getPanelCount();
-      expect(flicking.getPanelCount()).equals(6);
-      expect(cloneLength).equals(newOriginalElements.length + newClonedElements.length);
+      expect(flicking.getPanelCount()).equals(3);
       expect(finalCloneCount).equals(originalCloneCount);
       flicking.getAllPanels(true).forEach(panel => {
         expect(panel.getElement()).not.to.be.null;

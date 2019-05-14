@@ -9,6 +9,7 @@ import { findIndex, counter } from "../utils";
 
 class PanelManager {
   private cameraElement: HTMLElement;
+  private options: FlickingOptions;
   private panels: Panel[];
   private clones: Panel[][];
   // index range of existing panels
@@ -18,7 +19,7 @@ class PanelManager {
   };
   private length: number;
   private lastIndex: number;
-  private options: FlickingOptions;
+  private cloneCount: number;
 
   constructor(
     cameraElement: HTMLElement,
@@ -32,6 +33,7 @@ class PanelManager {
       max: -1,
     };
     this.length = 0;
+    this.cloneCount = 0;
     this.options = options;
     this.lastIndex = options.lastIndex;
   }
@@ -91,7 +93,7 @@ class PanelManager {
   }
 
   public getCloneCount(): number {
-    return this.clones.length;
+    return this.cloneCount;
   }
 
   public setLastIndex(lastIndex: number): void {
@@ -120,6 +122,10 @@ class PanelManager {
         range.max = -1;
       }
     }
+  }
+
+  public setCloneCount(cloneCount: number): void {
+    this.cloneCount = cloneCount;
   }
 
   public append(newPanels: Panel[]): void {

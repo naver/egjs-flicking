@@ -99,7 +99,7 @@ class Snap extends MoveType {
     const originalPosition = panelToMove.getOriginalPanel().getPosition();
 
     panelToMove = panelToMove.clone(panelToMove.getCloneIndex(), true);
-    panelToMove.setPosition(originalPosition + cycleIndex * scrollAreaSize, true);
+    panelToMove.setPosition(originalPosition + cycleIndex * scrollAreaSize);
 
     const defaultDuration = viewport.options.duration;
     const duration = clamp(axesEvent.duration, defaultDuration, defaultDuration * passedPanelCount);
