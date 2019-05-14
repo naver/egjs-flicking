@@ -557,13 +557,15 @@ class Flicking extends Component {
    * @param {HTMLElement[]} [diffInfo.list] - DOM elements list after update.<ko>업데이트 이후 DOM 요소들의 리스트</ko>
    * @param {number[][]} [diffInfo.maintained] - Index tuple array of DOM elements maintained. Formatted with `[before, after]`.<ko>변경 전후에 유지된 DOM 요소들의 인덱스 튜플 배열. `[이전, 이후]`의 형식을 갖고 있어야 한다.</ko>
    * @param {number[]} [diffInfo.added] - Index array of DOM elements added to `list`.<ko>`list`에서 추가된 DOM 요소들의 인덱스 배열.</ko>
+   * @param {number[]} [diffInfo.removed] - Index array of DOM elements removed from previous element list.<ko>이전 리스트에서 제거된 DOM 요소들의 인덱스 배열.</ko>
    */
   public sync(diffInfo: {
     list: HTMLElement[],
     maintained: number[][],
     added: number[],
+    removed: number[],
   }) {
-    const { list, added, maintained } = diffInfo;
+    const { list, maintained, added, removed } = diffInfo;
 
     const viewport = this.viewport;
     const panelManager = viewport.panelManager;
@@ -618,8 +620,18 @@ class Flicking extends Component {
     }
 
     // Replace current info of panels this holds
+    added.forEach(index => { viewport.updateCheckedIndexes({ min: index, max: index }); });
+    removed.forEach(index => { viewport.updateCheckedIndexes({ min: index - 1, max: index + 1 }); });
+
+    const checkedIndexes = viewport.getCheckedIndexes();
+    checkedIndexes.forEach(([min, max], idx) => {
+      const pushedIndex = added.filter(index => index < min).length
+        - removed.filter(index => index < min).length;
+      checkedIndexes.splice(idx, 1, [min + pushedIndex, max + pushedIndex]);
+    });
+
     panelManager.replacePanels(newPanels, newClones);
-    viewport.resize();
+    this.resize();
   }
 
   private listenInput(): void {

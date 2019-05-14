@@ -364,13 +364,10 @@ export default class Viewport {
     }
 
     // Update checked indexes in infinite mode
+    this.updateCheckedIndexes({ min: index, max: index });
     state.checkedIndexes.forEach((indexes, idx) => {
       const [min, max] = indexes;
-      // Can fill part of indexes in range
-      if (isBetween(index, min, max)) {
-        // Remove checked index from list
-        state.checkedIndexes.splice(idx, 1);
-      } else if (index < min) {
+      if (index < min) {
         // Push checked index
         state.checkedIndexes.splice(idx, 1, [min + pushedIndex, max + pushedIndex]);
       }
@@ -390,7 +387,6 @@ export default class Viewport {
       return [];
     }
 
-    const state = this.state;
     const parsedElements = parseElement(element);
     const panels = parsedElements
       .map((el, idx) => new Panel(el, index + idx, this))
@@ -412,14 +408,7 @@ export default class Viewport {
     }
 
     // Update checked indexes in infinite mode
-    state.checkedIndexes.forEach((indexes, idx) => {
-      const [min, max] = indexes;
-      // Can fill part of indexes in range
-      if (index <= max && index + panels.length > min) {
-        // Remove checked index from list
-        state.checkedIndexes.splice(idx, 1);
-      }
-    });
+    this.updateCheckedIndexes({ min: index, max: index + panels.length - 1 });
 
     this.resize();
 
@@ -432,8 +421,6 @@ export default class Viewport {
   }
 
   public remove(index: number, deleteCount: number = 1): FlickingPanel[] {
-    const state = this.state;
-
     // Index should not below 0
     index = Math.max(index, 0);
 
@@ -450,14 +437,9 @@ export default class Viewport {
 
     // Update checked indexes in infinite mode
     if (deleteCount > 0) {
-      state.checkedIndexes.forEach((indexes, idx) => {
-        const [min, max] = indexes;
-        // Can fill part of indexes in range
-        if (isBetween(index, min, max)) {
-          // Remove checked index from list
-          state.checkedIndexes.splice(idx, 1);
-        }
-      });
+      // Check whether removing index will affect checked indexes
+      // Suppose index 0 is empty and removed index 1, then checked index 0 should be deleted and vice versa.
+      this.updateCheckedIndexes({ min: index - 1, max: index + deleteCount });
     }
 
     this.resize();
@@ -717,6 +699,10 @@ export default class Viewport {
     return this.state.position;
   }
 
+  public getCheckedIndexes(): Array<[number, number]> {
+    return this.state.checkedIndexes;
+  }
+
   public setCurrentPanel(panel: Panel): void {
     this.currentPanel = panel;
   }
@@ -738,6 +724,19 @@ export default class Viewport {
 
     this.axesHandlers = handlers;
     axes.on(handlers);
+  }
+
+  public updateCheckedIndexes(changedRange: { min: number, max: number }): void {
+    const state = this.state;
+
+    state.checkedIndexes.forEach((indexes, idx) => {
+      const [min, max] = indexes;
+      // Can fill part of indexes in range
+      if (changedRange.min <= max && changedRange.max >= min) {
+        // Remove checked index from list
+        state.checkedIndexes.splice(idx, 1);
+      }
+    });
   }
 
   private build(): void {
