@@ -22,6 +22,9 @@ class IdleState extends State {
   public onHold(e: any, { flicking, viewport, triggerEvent, transitTo }: FlickingContext): void {
     // Shouldn't do any action until any panels on flicking area
     if (flicking.getPanelCount() <= 0) {
+      if (viewport.options.infinite) {
+        viewport.moveCamera(viewport.getCameraPosition(), e);
+      }
       transitTo(STATE_TYPE.DISABLED);
       return;
     }
