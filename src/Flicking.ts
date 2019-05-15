@@ -626,10 +626,13 @@ class Flicking extends Component {
     const checkedIndexes = viewport.getCheckedIndexes();
     checkedIndexes.forEach(([min, max], idx) => {
       // Push checked indexes backward
-      const pushedIndex = added.filter(index => index < min).length
+      const pushedIndex = added.filter(index => index < min && panelManager.has(index)).length
         - removed.filter(index => index < min).length;
       checkedIndexes.splice(idx, 1, [min + pushedIndex, max + pushedIndex]);
     });
+
+    // Removed checked index by changed ones after pushing
+    maintained.forEach(([prev, next]) => { viewport.updateCheckedIndexes({ min: next, max: next }); });
 
     panelManager.replacePanels(newPanels, newClones);
     this.resize();
