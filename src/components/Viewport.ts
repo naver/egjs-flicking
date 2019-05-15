@@ -681,6 +681,14 @@ export default class Viewport {
       && summedPanelSize >= state.size;
   }
 
+  public getViewportElement(): HTMLElement {
+    return this.viewportElement;
+  }
+
+  public getCameraElement(): HTMLElement {
+    return this.cameraElement;
+  }
+
   public getScrollAreaSize(): number {
     const scrollArea = this.state.scrollArea;
 
@@ -729,12 +737,14 @@ export default class Viewport {
   public updateCheckedIndexes(changedRange: { min: number, max: number }): void {
     const state = this.state;
 
-    state.checkedIndexes.forEach((indexes, idx) => {
+    let removed = 0;
+    state.checkedIndexes.concat().forEach((indexes, idx) => {
       const [min, max] = indexes;
       // Can fill part of indexes in range
       if (changedRange.min <= max && changedRange.max >= min) {
         // Remove checked index from list
-        state.checkedIndexes.splice(idx, 1);
+        state.checkedIndexes.splice(idx - removed, 1);
+        removed++;
       }
     });
   }

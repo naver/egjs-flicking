@@ -49,8 +49,8 @@ class Panel implements FlickingPanel {
       isVirtual: false,
       cloneIndex: -1,
       originalStyle: {
-        className: element ? element.getAttribute("class") : null,
-        style: element ? element.getAttribute("style") : null,
+        className: element.getAttribute("class"),
+        style: element.getAttribute("style"),
       },
       cachedBbox: null,
     };

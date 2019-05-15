@@ -625,6 +625,7 @@ class Flicking extends Component {
 
     const checkedIndexes = viewport.getCheckedIndexes();
     checkedIndexes.forEach(([min, max], idx) => {
+      // Push checked indexes backward
       const pushedIndex = added.filter(index => index < min).length
         - removed.filter(index => index < min).length;
       checkedIndexes.splice(idx, 1, [min + pushedIndex, max + pushedIndex]);
