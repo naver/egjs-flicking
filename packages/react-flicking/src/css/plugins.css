@@ -1,0 +1,46 @@
+.plugins h1  {
+  line-height: 1;
+}
+.plugins h1 a {
+  font-size: 20px;
+  vertical-align: bottom;
+  margin-left: 10px;
+  /* color: #55e; */
+}
+.plugins .flicking {
+  width: 500px;
+  height: 200px;
+  margin: 0px auto;
+  background: #eee;
+  background: rgba(55, 55, 55 0.1);
+  border-radius: 5px;
+}
+.plugins .flicking .panel {
+  position: relative;
+  display: block;
+  border-radius: 5px;
+  width: 400px;
+  margin-top: 5px;
+  background: #f55;
+  height: 200px;
+  text-align: center;
+  line-height: 200px;
+  overflow: hidden;
+}
+.plugins .panel:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.1);
+}
+.plugins .panel img {
+  top: -100%;
+  bottom: -100%;
+  margin: auto;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+}

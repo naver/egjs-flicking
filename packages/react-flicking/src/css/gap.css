@@ -1,0 +1,13 @@
+#gap .flicking1 .panel:before {
+  position: absolute;
+  width: 20px;
+  content: "2 0 p x";
+  word-break: break-all;
+  font-weight: bold;
+  color: #333;
+  left: 200px;
+  top: 50%;
+  transform: translateY(-50%);
+  line-height: 1.2;
+  text-align: center;
+}
