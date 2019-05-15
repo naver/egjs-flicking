@@ -493,7 +493,7 @@ export default class Viewport {
     restoreStyle(viewportElement, state.originalViewportStyle);
     restoreStyle(cameraElement, state.originalCameraStyle);
 
-    if (!state.isCameraGiven) {
+    if (!state.isCameraGiven && !this.options.renderExternal) {
       const topmostElement = state.isViewportGiven
         ? viewportElement
         : wrapper;
@@ -510,11 +510,6 @@ export default class Viewport {
 
     this.axes.destroy();
     this.panInput.destroy();
-
-    if (!this.options.renderExternal) {
-      wrapper.removeChild(viewportElement);
-      originalPanels.forEach(panel => { wrapper.appendChild(panel.getElement()); });
-    }
 
     originalPanels.forEach(panel => { panel.destroy(); });
 

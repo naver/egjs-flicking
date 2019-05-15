@@ -1,3 +1,5 @@
+import { counter } from "../../../src/utils";
+
 // UI fixture
 import { DEFAULT_OPTIONS } from "../../../src/consts";
 
@@ -42,6 +44,9 @@ export const horizontal = {
     [panel, "panel-horizontal-full"],
     [panel, "panel-horizontal-full"],
     [panel, "panel-horizontal-full"],
+  ),
+  fullN: (count: number) =>  wrapper(
+    ...counter(count).map(() => [panel, "panel-horizontal.full"]),
   ),
   half: wrapper(
     [panel, "panel-horizontal-50"],
