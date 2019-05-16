@@ -19,7 +19,6 @@ import AutoPlayDemo from "./plugins/AutoPlay";
 
 export default class App extends Component<{}> {
   public render() {
-    // [3, 4, 0, 1, 2, 5, 6, 7, 8]
     return (
       <div>
         <InfiniteFlicking/>

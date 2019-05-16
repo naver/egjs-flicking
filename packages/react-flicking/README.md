@@ -79,7 +79,7 @@ react-infinitegrid is released under the [MIT license](https://github.com/naver/
 
 
 ```
-Copyright (c) 2015 NAVER Corp.
+Copyright (c) 2015-present NAVER Corp.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

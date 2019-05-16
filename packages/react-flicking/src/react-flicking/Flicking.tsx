@@ -58,7 +58,7 @@ export default class Flicking extends React.Component<Partial<FlickingProps & Fl
     this.flicking!.sync(result as ChildrenDiffResult<HTMLElement>);
     this.checkPlugins();
     this.checkCloneCount();
-    if (this.props.lastIndex! >= -1) {
+    if (typeof this.props.lastIndex === "number") {
       this.setLastIndex(this.props.lastIndex!);
     }
   }
