@@ -14,14 +14,14 @@ export interface FlickingProps {
   tag: keyof JSX.IntrinsicElements;
   status?: FlickingStatus;
   plugins: Plugin[];
-  onHoldStart: (e: FlickingEvent) => void;
-  onHoldEnd: (e: FlickingEvent) => void;
-  onMoveStart: (e: FlickingEvent) => void;
-  onMove: (e: FlickingEvent) => void;
-  onMoveEnd: (e: FlickingEvent) => void;
-  onRestore: (e: FlickingEvent) => void;
-  onSelect: (e: SelectEvent) => void;
-  onChange: (e: ChangeEvent) => void;
-  onNeedPanel: (e: NeedPanelEvent) => void;
+  onHoldStart: (e: FlickingEvent) => any;
+  onHoldEnd: (e: FlickingEvent) => any;
+  onMoveStart: (e: FlickingEvent) => any;
+  onMove: (e: FlickingEvent) => any;
+  onMoveEnd: (e: FlickingEvent) => any;
+  onRestore: (e: FlickingEvent) => any;
+  onSelect: (e: SelectEvent) => any;
+  onChange: (e: ChangeEvent) => any;
+  onNeedPanel: (e: NeedPanelEvent) => any;
   [key: string]: any;
 }
