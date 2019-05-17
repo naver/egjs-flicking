@@ -333,11 +333,11 @@ class Panel implements FlickingPanel {
     return this;
   }
 
-  public clone(cloneIndex: number, virtual: boolean = false): Panel {
+  public clone(cloneIndex: number, isVirtual: boolean = false): Panel {
     const state = this.state;
     const viewport = this.viewport;
 
-    const cloneElement = virtual
+    const cloneElement = isVirtual
       ? this.element
       : this.element.cloneNode(true) as HTMLElement;
 
@@ -346,7 +346,7 @@ class Panel implements FlickingPanel {
 
     clonedPanel.original = this;
     clonedState.isClone = true;
-    clonedState.isVirtual = virtual;
+    clonedState.isVirtual = isVirtual;
     clonedState.cloneIndex = cloneIndex;
     // Inherit some state values
     clonedState.size = state.size;
@@ -354,7 +354,7 @@ class Panel implements FlickingPanel {
     clonedState.originalStyle = state.originalStyle;
     clonedState.cachedBbox = state.cachedBbox;
 
-    if (!virtual) {
+    if (!isVirtual) {
       this.clonedPanels.push(clonedPanel);
     } else {
       clonedPanel.prevSibling = this.prevSibling;
