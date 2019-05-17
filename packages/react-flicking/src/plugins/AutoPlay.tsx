@@ -9,10 +9,10 @@ export default class AutoPlayDemo extends React.Component<{}> {
   public render() {
     return (
       <div id="autoplay" className="plugins container">
-      <h1>Fade<a href="https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.Flicking.plugins.Fade.html"
+      <h1>AutoPlay<a href="https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.Flicking.plugins.AutoPlay.html"
               target="_blank">API</a></h1>
       <ul className="extra">
-          <li>You can give fade in / out effect while moving panels. </li>
+          <li>You can set flicking to move to the next/previous panel periodically.</li>
       </ul>
       <Flicking
         className="flicking"
