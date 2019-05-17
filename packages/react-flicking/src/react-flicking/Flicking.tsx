@@ -23,7 +23,6 @@ export default class Flicking extends React.Component<Partial<FlickingProps & Fl
   // Flicking
   private flicking?: NativeFlicking | null;
   // differ
-  private differ?: ChildrenDiffer;
   private pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
   // life cycle
   public render() {
@@ -44,7 +43,7 @@ export default class Flicking extends React.Component<Partial<FlickingProps & Fl
       <Tag {...attributes}>
         <div className="eg-flick-viewport">
           <div className="eg-flick-camera">
-            <ChildrenDiffer ref={e => { this.differ = e as ChildrenDiffer; }}>
+            <ChildrenDiffer onUpdate={this.onUpdate}>
               {this.renderPanels()}
             </ChildrenDiffer>
           </div>
@@ -52,15 +51,13 @@ export default class Flicking extends React.Component<Partial<FlickingProps & Fl
       </Tag>
     );
   }
-  public componentDidUpdate() {
-    const result = this.differ!.update();
-
-    this.flicking!.sync(result as ChildrenDiffResult<HTMLElement>);
-    this.checkPlugins();
-    this.checkCloneCount();
+  public onUpdate = (result: ChildrenDiffResult<HTMLElement>) => {
     if (typeof this.props.lastIndex === "number") {
       this.setLastIndex(this.props.lastIndex!);
     }
+    this.flicking!.sync(result as ChildrenDiffResult<HTMLElement>);
+    this.checkPlugins();
+    this.checkCloneCount();
   }
   public componentDidMount() {
     this.flicking = new NativeFlicking(
