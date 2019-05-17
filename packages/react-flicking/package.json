@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@egjs/flicking": "^3.0.1",
-    "@egjs/react-children-differ": "0.0.1"
+    "@egjs/react-children-differ": "^0.0.2"
   },
   "devDependencies": {
     "@egjs/build-helper": "0.0.5",

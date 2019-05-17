@@ -29,6 +29,7 @@ export default class Flicking extends React.Component<Partial<FlickingProps & Fl
     const props = this.props;
     // tslint:disable-next-line:naming-convention
     const Tag = props.tag as any;
+    const classPrefix = props.classPrefix;
     const options = this.options;
     const attributes: { [key: string]: any } = {};
 
@@ -41,8 +42,8 @@ export default class Flicking extends React.Component<Partial<FlickingProps & Fl
     }
     return (
       <Tag {...attributes}>
-        <div className="eg-flick-viewport">
-          <div className="eg-flick-camera">
+        <div className={`${classPrefix}-viewport`}>
+          <div className={`${classPrefix}-camera`}>
             <ChildrenDiffer onUpdate={this.onUpdate}>
               {this.renderPanels()}
             </ChildrenDiffer>
