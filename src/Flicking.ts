@@ -563,9 +563,15 @@ class Flicking extends Component {
     list: HTMLElement[],
     maintained: number[][],
     added: number[],
+    changed: number[][],
     removed: number[],
-  }) {
-    const { list, maintained, added, removed } = diffInfo;
+  }): this {
+    const { list, maintained, added, changed, removed } = diffInfo;
+
+    // Did not changed at all
+    if (added.length + removed.length + changed.length === 0) {
+      return this;
+    }
 
     const viewport = this.viewport;
     const panelManager = viewport.panelManager;
@@ -631,11 +637,16 @@ class Flicking extends Component {
       checkedIndexes.splice(idx, 1, [min + pushedIndex, max + pushedIndex]);
     });
 
-    // Removed checked index by changed ones after pushing
-    maintained.forEach(([prev, next]) => { viewport.updateCheckedIndexes({ min: next, max: next }); });
+    // Only effective only when there are least one panel which have changed its index
+    if (changed.length > 0) {
+      // Removed checked index by changed ones after pushing
+      maintained.forEach(([prev, next]) => { viewport.updateCheckedIndexes({ min: next, max: next }); });
+    }
 
     panelManager.replacePanels(newPanels, newClones);
     this.resize();
+
+    return this;
   }
 
   private listenInput(): void {
