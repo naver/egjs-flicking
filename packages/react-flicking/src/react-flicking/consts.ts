@@ -30,6 +30,7 @@ export const DEFAULT_OPTIONS: FlickingOptions = {
 
 export const FLICKING_PROPS: FlickingProps = {
   tag: "div",
+  classPrefix: "eg-flick",
   plugins: [],
   onNeedPanel: (e: NeedPanelEvent) => {},
   onMoveStart: (e: FlickingEvent) => {},
