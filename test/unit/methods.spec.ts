@@ -1272,6 +1272,7 @@ describe("Methods call", () => {
           list: newElements,
           maintained: [],
           added: [0, 1, 2],
+          changed: [],
           removed: [],
         });
 
@@ -1300,6 +1301,7 @@ describe("Methods call", () => {
           list: [...originalElements, ...newElements],
           maintained: [[0, 0], [1, 1], [2, 2]],
           added: [3, 4, 5],
+          changed: [],
           removed: [],
         });
 
@@ -1331,6 +1333,7 @@ describe("Methods call", () => {
           list: [...newElements, ...originalElements],
           maintained: [[0, 1], [1, 2], [2, 3]],
           added: [0],
+          changed: [[0, 1], [1, 2], [2, 3]],
           removed: [],
         });
 
@@ -1366,6 +1369,7 @@ describe("Methods call", () => {
           list: newElements,
           maintained: [],
           added: [0, 1, 2],
+          changed: [],
           removed: [],
         });
 
@@ -1377,6 +1381,7 @@ describe("Methods call", () => {
           list: [...originalElements, ...clonedElements],
           maintained: [[0, 0], [1, 1], [2, 2]],
           added: [...counter(calcedCloneCount * originalElements.length).map(index => 3 + index)],
+          changed: [],
           removed: [],
         });
         const finalCloneCount = flicking.getCloneCount();
@@ -1415,6 +1420,7 @@ describe("Methods call", () => {
           added: [
             ...clonedElements.map((val, idx) => originalElements.length + idx),
           ],
+          changed: [],
           removed: [],
         });
 
@@ -1446,6 +1452,7 @@ describe("Methods call", () => {
           list: newElements,
           maintained: [],
           added: [0, 1, 2],
+          changed: [],
           removed: [],
         });
 
@@ -1457,6 +1464,7 @@ describe("Methods call", () => {
           list: [...originalElements, ...clonedElements],
           maintained: [[0, 0], [1, 1], [2, 2]],
           added: [...counter(calcedCloneCount * originalElements.length).map(index => 3 + index)],
+          changed: [],
           removed: [],
         });
 

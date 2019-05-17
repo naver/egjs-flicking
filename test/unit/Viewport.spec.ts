@@ -131,6 +131,7 @@ describe("Viewport", () => {
       flicking.sync({
         list: [newElement],
         added: [0],
+        changed: [],
         removed: [],
         maintained: [],
       });
@@ -155,6 +156,7 @@ describe("Viewport", () => {
       flicking.sync({
         list: [],
         added: [],
+        changed: [],
         removed: [0],
         maintained: [],
       });
@@ -185,6 +187,7 @@ describe("Viewport", () => {
         list: [flicking.getPanel(0).getElement(), ...newElements],
         added: [0, 1, 2],
         removed: [],
+        changed: [[0, 3]],
         maintained: [[0, 3]],
       });
       const checkedAfterAdd = viewport.getCheckedIndexes();
@@ -218,6 +221,7 @@ describe("Viewport", () => {
         list: [...newElements, flicking.getPanel(0).getElement(), flicking.getPanel(2).getElement()],
         added: [0, 1],
         removed: [1],
+        changed: [[0, 2], [2, 3]],
         maintained: [[0, 2], [2, 3]],
       });
       const checkedAfterAdd = viewport.getCheckedIndexes();
