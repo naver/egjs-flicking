@@ -80,6 +80,8 @@ export const horizontal = {
     [panel, "panel-horizontal-100px"],
     [panel, "panel-horizontal-100px"],
     [panel, "panel-horizontal-100px"],
+    [panel, "panel-horizontal-100px"],
+    [panel, "panel-horizontal-100px"],
   ),
   panel30: wrapper(
     [panel, "panel-horizontal-30"],

@@ -5,7 +5,7 @@ import Flicking from "../../src/Flicking";
 import { createFlicking, cleanup, simulate, createHorizontalElement } from "./assets/utils";
 import { FlickingOptions } from "../../src/types";
 import { horizontal } from "./assets/fixture";
-import { EVENTS, DEFAULT_OPTIONS } from "../../src/consts";
+import { DEFAULT_OPTIONS } from "../../src/consts";
 import { counter } from "../../src/utils";
 
 declare var sinon: SinonStatic;
