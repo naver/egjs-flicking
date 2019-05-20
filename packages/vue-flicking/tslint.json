@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "../../tslint.json"
+  ],
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.vue",
+    "./test/**/*.ts"
+  ],
+  "linterOptions": {
+    "exclude": [
+      "./node_modules/**/*.ts"
+    ]
+  }
+}

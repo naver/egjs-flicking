@@ -1,0 +1,49 @@
+{
+ "name": "@egjs/vue-flicking",
+ "version": "0.0.1",
+ "description": "A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.",
+ "main": "dist/flicking.js",
+ "module": "dist/flicking.esm.js",
+ "types": "declaration/index.d.ts",
+ "sideEffects": false,
+ "scripts": {
+  "build": "rm -rf dist && rollup -c && npm run declaration",
+  "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
+  "test": "vue-cli-service test:unit",
+  "lint": "vue-cli-service lint --no-fix",
+  "demo": "vue-cli-service demo"
+ },
+ "repository": {
+  "type": "git",
+  "url": "https://github.com/naver/egjs-flicking"
+ },
+ "author": {
+  "name": "NAVER Corp."
+ },
+ "namespace": {
+  "eg": "eg"
+ },
+ "homepage": "https://github.com/naver/egjs-flicking",
+ "bugs": {
+  "url": "https://github.com/naver/egjs-flicking/issues"
+ },
+ "license": "MIT",
+ "dependencies": {},
+ "devDependencies": {
+  "@egjs/build-helper": "0.0.5",
+  "@types/chai": "^4.1.0",
+  "@types/mocha": "^5.2.4",
+  "@vue/cli-plugin-typescript": "^3.7.0",
+  "@vue/cli-plugin-unit-mocha": "^3.7.0",
+  "@vue/cli-service": "^3.7.0",
+  "@vue/test-utils": "1.0.0-beta.29",
+  "chai": "^4.1.2",
+  "rollup-plugin-vue": "^5.0.0",
+  "typescript": "^3.4.3",
+  "vue": "^2.6.10",
+  "vue-class-component": "^7.0.2",
+  "vue-cli-plugin-p11n": "^0.3.0",
+  "vue-property-decorator": "^8.1.0",
+  "vue-template-compiler": "^2.5.21"
+ }
+}
