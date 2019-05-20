@@ -10,6 +10,7 @@
     "skipLibCheck": true,
     "strictNullChecks": true,
     "esModuleInterop": true,
+    "experimentalDecorators": true,
     "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,

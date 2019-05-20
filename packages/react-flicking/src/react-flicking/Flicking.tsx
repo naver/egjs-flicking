@@ -1,4 +1,4 @@
-import NativeFlicking, { FlickingOptions, FlickingPanel, FlickingStatus, Plugin, FlickingEvent, NeedPanelEvent } from "@egjs/flicking";
+import NativeFlicking, { FlickingOptions, Plugin, FlickingEvent, NeedPanelEvent, withFlickingMethods } from "@egjs/flicking";
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import ChildrenDiffer from "@egjs/react-children-differ";
@@ -8,7 +8,8 @@ import { FlickingProps, FlickingType } from "./types";
 import ListDiffer from "@egjs/list-differ";
 import { ChildrenDiffResult } from "@egjs/children-differ";
 
-export default class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> implements FlickingType<Flicking> {
+@withFlickingMethods
+class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = FLICKING_PROPS;
   public state: {
     cloneCount: number,
@@ -83,79 +84,6 @@ export default class Flicking extends React.Component<Partial<FlickingProps & Fl
   public componentWillUnmount() {
     this.destroy();
   }
-
-  // public method
-  public setLastIndex(index: number): this {
-    this.flicking!.setLastIndex(index);
-    return this;
-  }
-  public prev(duration?: number) {
-    this.flicking!.prev(duration);
-    return this;
-  }
-  public next(duration?: number) {
-    this.flicking!.next(duration);
-    return this;
-  }
-  public moveTo(index: number, duration?: number) {
-    this.flicking!.moveTo(index, duration);
-    return this;
-  }
-  public getIndex(): number {
-    return this.flicking!.getIndex();
-  }
-  public getElement(): HTMLElement {
-    return this.flicking!.getElement();
-  }
-  public getCurrentPanel(): FlickingPanel | null {
-    return this.flicking!.getCurrentPanel();
-  }
-  public getPanel(index: number): FlickingPanel | null {
-    return this.flicking!.getPanel(index);
-  }
-  public getAllPanels(includeClone?: boolean): FlickingPanel[] {
-    return this.flicking!.getAllPanels(includeClone);
-  }
-  public getVisiblePanels(): FlickingPanel[] {
-    return this.flicking!.getVisiblePanels();
-  }
-  public getPanelCount(): number {
-    return this.flicking!.getPanelCount();
-  }
-  public isPlaying(): boolean {
-    return this.flicking!.isPlaying();
-  }
-  public enableInput(): this {
-    this.flicking!.enableInput();
-    return this;
-  }
-  public disableInput(): this {
-    this.flicking!.disableInput();
-    return this;
-  }
-  public getStatus(): Readonly<FlickingStatus> {
-    return this.flicking!.getStatus();
-  }
-  public setStatus(status: FlickingStatus): void {
-    this.flicking!.setStatus(status);
-  }
-  public addPlugins(plugins: Plugin | Plugin[]): this {
-    this.flicking!.addPlugins(plugins);
-    return this;
-  }
-  public removePlugins(plugins: Plugin | Plugin[]): this {
-    this.flicking!.removePlugins(plugins);
-    return this;
-
-  }
-  public destroy(): void {
-    this.flicking!.destroy();
-  }
-  public resize(): this {
-    this.flicking!.resize();
-    return this;
-  }
-
   // private
   private checkPlugins() {
     const { list, added, removed, prevList } = this.pluginsDiffer.update(this.props.plugins!);
@@ -185,3 +113,5 @@ export default class Flicking extends React.Component<Partial<FlickingProps & Fl
     return arr;
   }
 }
+interface Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>, FlickingType<Flicking> {}
+export default Flicking;
