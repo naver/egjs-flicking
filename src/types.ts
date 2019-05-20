@@ -7,6 +7,7 @@ import Flicking from "./Flicking";
 import Viewport from "./components/Viewport";
 import StateMachine from "./components/StateMachine";
 import Panel from "./components/Panel";
+import Component from "@egjs/component";
 
 export type ValueOf<T> = T[keyof T];
 /**
@@ -463,3 +464,7 @@ export interface Plugin {
   update?(flicking: Flicking): void;
   destroy(flicking: Flicking): void;
 }
+
+export type ExcludeKeys = keyof Component | "replace" | "append" | "remove" | "prepend" | "sync" | "getCloneCount";
+export type FlickingMethodsKeys = Exclude<keyof Flicking, ExcludeKeys>;
+export type FlickingMethods = Pick<Flicking, FlickingMethodsKeys>;

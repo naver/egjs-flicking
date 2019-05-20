@@ -4,6 +4,8 @@
  */
 
 import { ElementLike, OriginalStyle } from "./types";
+import Flicking from "./Flicking";
+import { FLICKING_METHODS } from "./consts";
 
 export function merge(target: object, ...srcs: object[]): object {
   srcs.forEach(source => {
@@ -256,4 +258,39 @@ export function restoreStyle(element: HTMLElement, originalStyle: OriginalStyle)
   originalStyle.style
     ? element.setAttribute("style", originalStyle.style)
     : element.removeAttribute("style");
+}
+
+/**
+ * Decorator that makes the method of flicking available in the framework.
+ * @ko 프레임워크에서 플리킹의 메소드를 사용할 수 있게 하는 데코레이터.
+ * @memberof eg.Flicking
+ * @private
+ * @example
+ * ```js
+ * import Flicking, { withFlickingMethods } from "@egjs/flicking";
+ *
+ * &#64;withFlickingMethods
+ * class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
+ *  private flicking: Flicking;
+ * }
+ * ```
+ */
+export function withFlickingMethods<T extends new (...args: any[]) => {}>(target: T) {
+  const prototype = target.prototype;
+
+  Object.keys(FLICKING_METHODS).forEach((name: keyof Flicking) => {
+    if (prototype[name]) {
+      return;
+    }
+    prototype[name] = function(...args) {
+      const result = this.flicking[name](...args);
+
+      // fix `this` type to return your own `flicking` instance to the instance using the decorator.
+      if (result === this.flicking) {
+        return this;
+      } else {
+        return result;
+      }
+    };
+  });
 }

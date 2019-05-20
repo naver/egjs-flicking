@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 
-import { FlickingOptions, EventType, Direction, AxesEventType, StateType, MoveTypeSnapOption, MoveTypeFreeScrollOption } from "./types";
+import { FlickingOptions, EventType, Direction, AxesEventType, StateType, MoveTypeSnapOption, MoveTypeFreeScrollOption, FlickingMethodsKeys } from "./types";
 import { checkTranslateSupport } from "./utils";
 
 export const MOVE_TYPE: {
@@ -27,6 +27,12 @@ export const DEFAULT_MOVE_TYPE_OPTIONS: {
   },
 };
 
+/**
+ * Default options for creating Flicking.
+ * @ko 플리킹을 만들 때 사용하는 기본 옵션들
+ * @private
+ * @memberof eg.Flicking
+ */
 export const DEFAULT_OPTIONS: Readonly<FlickingOptions> = {
   classPrefix: "eg-flick",
   deceleration: 0.0075,
@@ -104,5 +110,26 @@ export const DIRECTION: Direction = {
   PREV: "PREV",
   NEXT: "NEXT",
 };
-
+export const FLICKING_METHODS: {[key in FlickingMethodsKeys]: true} = {
+  prev: true,
+  next: true,
+  moveTo: true,
+  getIndex: true,
+  getAllPanels: true,
+  getCurrentPanel: true,
+  getElement: true,
+  getPanel: true,
+  getPanelCount: true,
+  getStatus: true,
+  getVisiblePanels: true,
+  setLastIndex: true,
+  enableInput: true,
+  disableInput: true,
+  destroy: true,
+  resize: true,
+  setStatus: true,
+  addPlugins: true,
+  removePlugins: true,
+  isPlaying: true,
+};
 export const TRANSFORM = checkTranslateSupport();
