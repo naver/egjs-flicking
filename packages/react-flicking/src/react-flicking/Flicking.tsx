@@ -10,11 +10,6 @@ import { ChildrenDiffResult } from "@egjs/children-differ";
 
 export default class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> implements FlickingType<Flicking> {
   public static defaultProps: FlickingProps = FLICKING_PROPS;
-  // Flicking
-  public options: FlickingOptions = {
-    ...DEFAULT_OPTIONS,
-    autoResize: true,
-  };
   public state: {
     cloneCount: number,
   } = {
@@ -22,6 +17,9 @@ export default class Flicking extends React.Component<Partial<FlickingProps & Fl
     };
   // Flicking
   private flicking?: NativeFlicking | null;
+  private options: FlickingOptions = {
+    ...DEFAULT_OPTIONS,
+  };
   // differ
   private pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
   // life cycle
