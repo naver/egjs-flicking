@@ -67,8 +67,8 @@ export interface FlickingOptions {
   zIndex: number;
   bound: boolean;
   overflow: boolean;
-  hanger: string;
-  anchor: string;
+  hanger: number | string;
+  anchor: number | string;
   gap: number;
   moveType: MoveTypeOption;
   renderExternal: boolean;
