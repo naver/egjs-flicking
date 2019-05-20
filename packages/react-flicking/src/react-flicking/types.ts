@@ -1,13 +1,11 @@
-import NativeComponent from "@egjs/component";
-import { ChangeEvent, FlickingEvent, SelectEvent, Plugin, NeedPanelEvent, FlickingStatus } from "@egjs/flicking";
+import { ChangeEvent, FlickingEvent, SelectEvent, Plugin, NeedPanelEvent, FlickingStatus, FlickingMethods } from "@egjs/flicking";
 import NativeFlicking from "@egjs/flicking";
 
-export type ExcludeKeys = keyof NativeComponent | "replace" | "append" | "remove" | "prepend" | "sync" | "getCloneCount";
-export type PureFlicking = Pick<NativeFlicking, Exclude<keyof NativeFlicking, ExcludeKeys>>;
+export type ParametersType<T, R> = T extends (...params: infer U) => any ? (...params: U) => R : never;
 export type FlickingType<T> = {
-  [key in keyof PureFlicking]:
-    PureFlicking[key] extends (...params: any) => NativeFlicking ?
-      (...params: Parameters<PureFlicking[key]>) => T : PureFlicking[key]
+  [key in keyof FlickingMethods]:
+    FlickingMethods[key] extends (...params: any[]) => NativeFlicking ?
+    ParametersType<FlickingMethods[key], T> : FlickingMethods[key]
 };
 
 export interface FlickingProps {
