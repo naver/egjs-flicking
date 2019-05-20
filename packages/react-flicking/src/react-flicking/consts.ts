@@ -15,7 +15,7 @@ export const DEFAULT_OPTIONS: FlickingOptions = {
   inputType: ["touch", "mouse"],
   thresholdAngle: 45,
   bounce: 10,
-  autoResize: true,
+  autoResize: false,
   adaptive: false,
   zIndex: 2000,
   bound: false,
