@@ -569,7 +569,7 @@ class Flicking extends Component {
     const { list, maintained, added, changed, removed } = diffInfo;
 
     // Did not changed at all
-    if (added.length + removed.length + changed.length === 0) {
+    if (added.length <= 0 && removed.length <= 0 && changed.length <= 0) {
       return this;
     }
 
