@@ -10,7 +10,7 @@ import Panel from "./Panel";
 import PanelManager from "./PanelManager";
 import StateMachine from "./StateMachine";
 import MoveType from "../moves/MoveType";
-import { FlickingOptions, FlickingPanel, FlickingStatus, ElementLike, EventType, TriggerCallback, NeedPanelEvent, FlickingEvent, MoveTypeObjectOption, OriginalStyle } from "../types";
+import { FlickingOptions, FlickingPanel, FlickingStatus, ElementLike, EventType, TriggerCallback, NeedPanelEvent, FlickingEvent, MoveTypeObjectOption, OriginalStyle, Plugin } from "../types";
 import { DEFAULT_VIEWPORT_CSS, DEFAULT_CAMERA_CSS, TRANSFORM, DEFAULT_OPTIONS, EVENTS, DIRECTION, STATE_TYPE, MOVE_TYPE } from "../consts";
 import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement, hasClass, restoreStyle } from "../utils";
 import Snap from "../moves/Snap";
@@ -35,6 +35,7 @@ export default class Viewport {
   private currentPanel: Panel | undefined;
   private nearestPanel: Panel | undefined;
 
+  private plugins: Plugin[] = [];
   private state: {
     size: number;
     position: number;
@@ -216,6 +217,7 @@ export default class Viewport {
 
     panelManager.chainAllPanels();
     this.updateCameraPosition();
+    this.updatePlugins();
   }
   // Find nearest anchor from current hanger position
   public findNearestPanel(): Panel | undefined {
@@ -490,6 +492,7 @@ export default class Viewport {
     const cameraElement = this.cameraElement;
     const originalPanels = this.panelManager.originalPanels();
 
+    this.removePlugins(this.plugins);
     restoreStyle(viewportElement, state.originalViewportStyle);
     restoreStyle(cameraElement, state.originalCameraStyle);
 
@@ -728,7 +731,31 @@ export default class Viewport {
     this.axesHandlers = handlers;
     axes.on(handlers);
   }
+  public addPlugins(plugins: Plugin | Plugin[]) {
+    const newPlugins = ([] as Plugin[]).concat(plugins);
 
+    newPlugins.forEach(plugin => {
+      plugin.init(this.flicking);
+    });
+
+    this.plugins = this.plugins.concat(newPlugins);
+    return this;
+  }
+  public removePlugins(plugins: Plugin | Plugin[]) {
+    const currentPlugins = this.plugins;
+    const removedPlugins = ([] as Plugin[]).concat(plugins);
+
+    removedPlugins.forEach(plugin => {
+      const index = currentPlugins.indexOf(plugin);
+
+      if (index > -1) {
+        currentPlugins.splice(index, 1);
+      }
+
+      plugin.destroy(this.flicking);
+    });
+    return this;
+  }
   public updateCheckedIndexes(changedRange: { min: number, max: number }): void {
     const state = this.state;
 
@@ -1170,6 +1197,13 @@ export default class Viewport {
     this.updateAxesPosition(newPosition);
 
     this.moveCamera(newPosition);
+  }
+
+  private updatePlugins(): void {
+    // update for resize
+    this.plugins.forEach(plugin => {
+      plugin.update && plugin.update(this.flicking);
+    });
   }
 
   private checkNeedPanel(axesEvent?: any): void {

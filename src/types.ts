@@ -455,9 +455,11 @@ export interface FlickingContext {
  * @typedef
  * @memberof eg.Flicking
  * @property - Method called when plugin is added.<ko>플러그인을 추가했을 때 발생하는 메소드.</ko>
+ * @property - Method called when `resize` or `update` in flicking.<ko>플리킹에서 `resize`가 발생하거나 `update`를 했을 때 발생하는 메소드.</ko>
  * @property - Method called when plugin is removed.<ko>플러그인을 제거했을 때 발생하는 메소드.</ko>
  */
 export interface Plugin {
   init(flicking: Flicking): void;
+  update?(flicking: Flicking): void;
   destroy(flicking: Flicking): void;
 }
