@@ -1,9 +1,9 @@
-import NativeFlicking, { FlickingOptions, Plugin, FlickingEvent, NeedPanelEvent, withFlickingMethods } from "@egjs/flicking";
+import NativeFlicking, { FlickingOptions, Plugin, FlickingEvent, NeedPanelEvent, withFlickingMethods, DEFAULT_OPTIONS } from "@egjs/flicking";
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import ChildrenDiffer from "@egjs/react-children-differ";
 import { CloneComponent } from "./Clone";
-import { DEFAULT_OPTIONS, FLICKING_PROPS } from "./consts";
+import { FLICKING_PROPS } from "./consts";
 import { FlickingProps, FlickingType } from "./types";
 import ListDiffer from "@egjs/list-differ";
 import { ChildrenDiffResult } from "@egjs/children-differ";
