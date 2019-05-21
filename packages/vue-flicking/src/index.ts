@@ -11,7 +11,7 @@ const version = "#__VERSION__#";
 
 // tslint:disable-next-line: naming-convention
 const install = (Vue: VueConstructor): void => {
-  Vue.component("flicking", Flicking);
+  Vue.component(Flicking.name, Flicking);
 };
 
 const plugin: PluginObject<VueConstructor> = {

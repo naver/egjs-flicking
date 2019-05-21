@@ -1,6 +1,6 @@
 {
  "name": "@egjs/vue-flicking",
- "version": "0.0.1",
+ "version": "3.0.0-beta",
  "description": "A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.",
  "main": "dist/flicking.js",
  "module": "dist/flicking.esm.js",
@@ -28,9 +28,13 @@
   "url": "https://github.com/naver/egjs-flicking/issues"
  },
  "license": "MIT",
- "dependencies": {},
+ "dependencies": {
+  "@egjs/flicking": "^3.0.1",
+  "@egjs/vue-children-differ": "0.0.1"
+ },
  "devDependencies": {
   "@egjs/build-helper": "0.0.5",
+  "@egjs/flicking-plugins": "^3.0.1-rc",
   "@types/chai": "^4.1.0",
   "@types/mocha": "^5.2.4",
   "@vue/cli-plugin-typescript": "^3.7.0",
