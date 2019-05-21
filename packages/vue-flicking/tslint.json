@@ -2,6 +2,9 @@
   "extends": [
     "../../tslint.json"
   ],
+  "rules": {
+    "no-string-literal": false,
+  },
   "include": [
     "./src/**/*.ts",
     "./src/**/*.vue",
