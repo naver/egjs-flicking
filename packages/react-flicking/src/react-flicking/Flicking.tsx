@@ -40,7 +40,6 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const classPrefix = props.classPrefix;
     const attributes: { [key: string]: any } = {};
 
-    console.log(1);
     for (const name in props) {
       if (!(name in FLICKING_PROPS) && !(name in DEFAULT_OPTIONS)) {
         attributes[name] = props[name];
