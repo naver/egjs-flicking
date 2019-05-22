@@ -24,18 +24,25 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   // differ
   private pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
   // life cycle
+  constructor(props: Partial<FlickingProps & FlickingOptions>) {
+    super(props);
+    const options = this.options;
+    for (const name in props) {
+      if (name in DEFAULT_OPTIONS) {
+        options[name] = props[name];
+      }
+    }
+  }
   public render() {
     const props = this.props;
     // tslint:disable-next-line:naming-convention
     const Tag = props.tag as any;
     const classPrefix = props.classPrefix;
-    const options = this.options;
     const attributes: { [key: string]: any } = {};
 
+    console.log(1);
     for (const name in props) {
-      if (name in DEFAULT_OPTIONS) {
-        options[name] = props[name];
-      } else if (!(name in FLICKING_PROPS)) {
+      if (!(name in FLICKING_PROPS) && !(name in DEFAULT_OPTIONS)) {
         attributes[name] = props[name];
       }
     }
@@ -101,11 +108,11 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     }
   }
   private renderPanels() {
-    const length = this.state.cloneCount;
+    const cloneCount = this.state.cloneCount;
     const children = React.Children.toArray(this.props.children) as Array<React.ReactElement<any>>;
     let arr: Array<React.ReactElement<any>> = [...children];
 
-    for (let i = 0; i < length; ++i) {
+    for (let i = 0; i < cloneCount; ++i) {
       arr = arr.concat(children.map(el => {
         return <CloneComponent key={`clone${i}${el.key}`}>{el}</CloneComponent>;
       }));
