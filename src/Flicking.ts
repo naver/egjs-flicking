@@ -316,9 +316,19 @@ class Flicking extends Component {
   }
 
   /**
-   * Set last panel index for `infinite' mode.<br>[needPanel]{@link eg.Flicking#events:needPanel} won't be triggered anymore when last panel's index reaches it.<br>Also, you can't add more panels after it.
+   * Get maximum panel index for `infinite` mode.
+   * @ko `infinite` 모드에서 적용되는 추가 가능한 패널의 최대 인덱스 값을 반환한다.
+   * @see {@link eg.Flicking.FlickingOptions}
+   * @return Maximum index of panel that can be added.<ko>최대 추가 가능한 패널의 인덱스.</ko>
+   */
+  public getLastIndex(): number {
+    return this.viewport.panelManager.getLastIndex();
+  }
+
+  /**
+   * Set maximum panel index for `infinite' mode.<br>[needPanel]{@link eg.Flicking#events:needPanel} won't be triggered anymore when last panel's index reaches it.<br>Also, you can't add more panels after it.
    * @ko `infinite` 모드에서 적용되는 패널의 최대 인덱스를 설정한다.<br>마지막 패널의 인덱스가 설정한 값에 도달할 경우 더 이상 [needPanel]{@link eg.Flicking#events:needPanel} 이벤트가 발생되지 않는다.<br>또한, 설정한 인덱스 이후로 새로운 패널을 추가할 수 없다.
-   * @param - Last panel index.
+   * @param - Maximum panel index.
    * @see {@link eg.Flicking.FlickingOptions}
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
