@@ -4,6 +4,8 @@
   ],
   "rules": {
     "no-string-literal": false,
+    "member-access": false,
+    "naming-convention": false
   },
   "include": [
     "./src/**/*.ts",
