@@ -1,6 +1,6 @@
 
 import * as React from "react";
-import Flicking from "../react-flicking/Flicking";
+import Flicking from "../../react-flicking/Flicking";
 import "../css/infinite.css";
 import PlaceHolderItem from "./PlaceHolderItem";
 import { insertCode } from "../utils";

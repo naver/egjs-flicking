@@ -1,5 +1,5 @@
 import * as React from "react";
-import Flicking from "../react-flicking/Flicking";
+import Flicking from "../../react-flicking/Flicking";
 import { insertCode } from "../utils";
 import { Parallax } from "@egjs/flicking-plugins";
 import "../css/plugins.css";

@@ -1,4 +1,4 @@
-import { ChangeEvent, FlickingEvent, FlickingOptions, SelectEvent, NeedPanelEvent } from "@egjs/flicking";
+import { ChangeEvent, FlickingEvent, SelectEvent, NeedPanelEvent } from "@egjs/flicking";
 import { FlickingProps } from "./types";
 
 export const FLICKING_PROPS: FlickingProps = {
