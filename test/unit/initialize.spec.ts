@@ -782,10 +782,10 @@ describe("Initialization", () => {
       }
       const flicking: any = new TestFlicking();
 
-      expect(flicking.sync).to.be.not.ok;
-      expect(flicking.getCloneCount).to.be.not.ok;
-      expect(flicking.append).to.be.not.ok;
-      expect(flicking.prepend).to.be.not.ok;
+      expect(flicking.sync).to.be.undefined;
+      expect(flicking.getCloneCount).to.be.undefined;
+      expect(flicking.append).to.be.undefined;
+      expect(flicking.prepend).to.be.undefined;
       expect(flicking.addPlugins([])).to.be.equals(flicking);
       expect(flicking.getPanelCount()).to.be.equals(2);
     });
