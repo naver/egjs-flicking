@@ -770,7 +770,7 @@ describe("Initialization", () => {
       class TestFlicking {
         private flicking: Flicking;
         constructor() {
-          const flickingInfo = createFlicking(horizontal.shouldClone4, {
+          flickingInfo = createFlicking(horizontal.shouldClone4, {
             gap: 10,
             anchor: "0",
             hanger: "0",
