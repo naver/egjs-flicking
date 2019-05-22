@@ -49,8 +49,13 @@ export default class Flicking extends Vue {
     viewportData.class[`${classPrefix}-viewport`] = true;
     cameraData.class[`${classPrefix}-camera`] = true;
 
-    const panels = this.$slots.default
-      ? [...this.$slots.default, ...this.$_getClonedVNodes()]
+    const lastIndex = this.$_nativeFlicking.getLastIndex();
+    const children = this.$slots.default
+      ? this.$slots.default.slice(0, lastIndex + 1)
+      : undefined;
+
+    const panels = children
+      ? [...children, ...this.$_getClonedVNodes()]
       : undefined;
 
     return h(this.tag,
