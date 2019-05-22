@@ -122,13 +122,11 @@ class Flicking extends Component {
     const currentPanel = this.getCurrentPanel();
     const currentState = this.viewport.stateMachine.getState();
 
-    if (!currentPanel || currentState.type !== STATE_TYPE.IDLE) {
-      return this;
-    }
-
-    const prevPanel = currentPanel.prev();
-    if (prevPanel) {
-      prevPanel.focus(duration);
+    if (currentPanel && currentState.type === STATE_TYPE.IDLE) {
+      const prevPanel = currentPanel.prev();
+      if (prevPanel) {
+        prevPanel.focus(duration);
+      }
     }
 
     return this;
@@ -144,13 +142,11 @@ class Flicking extends Component {
     const currentPanel = this.getCurrentPanel();
     const currentState = this.viewport.stateMachine.getState();
 
-    if (!currentPanel || currentState.type !== STATE_TYPE.IDLE) {
-      return this;
-    }
-
-    const nextPanel = currentPanel.next();
-    if (nextPanel) {
-      nextPanel.focus(duration);
+    if (currentPanel && currentState.type === STATE_TYPE.IDLE) {
+      const nextPanel = currentPanel.next();
+      if (nextPanel) {
+        nextPanel.focus(duration);
+      }
     }
 
     return this;
