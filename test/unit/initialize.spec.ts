@@ -1,9 +1,10 @@
 import Flicking from "../../src/Flicking";
 import { DEFAULT_OPTIONS } from "../../src/consts";
-import { FlickingEvent, FlickingPanel } from "../../src/types";
+import { FlickingEvent, FlickingPanel, Plugin } from "../../src/types";
 import { horizontal, vertical } from "./assets/fixture";
 import { createFlicking, cleanup, simulate, waitFor, waitEvent } from "./assets/utils";
 import { EVENTS } from "../../src/consts";
+import * as sinon from "sinon";
 
 const defaultClassPrefix = DEFAULT_OPTIONS.classPrefix;
 
@@ -667,6 +668,99 @@ describe("Initialization", () => {
 
       // It should place panel next lastPanel correctly
       expect(lastPanel.next().getPosition() - (lastPanel.getPosition() + lastPanel.getSize())).equals(gap);
+    });
+  });
+  describe("plugin interface", () => {
+    beforeEach(() => {
+      flickingInfo = createFlicking(horizontal.shouldClone4, {
+        anchor: "0",
+        hanger: "0",
+        circular: true,
+        defaultIndex: 0,
+      });
+    });
+    afterEach(() => cleanup());
+    it("should check plugin's init lifecycle", () => {
+      // Given
+      const plugin: Plugin = {
+        init: sinon.spy(),
+        update: sinon.spy(),
+        destroy: sinon.spy(),
+      };
+
+      // When
+      // init
+      flickingInfo.instance.addPlugins(plugin);
+
+      // Then
+      expect((plugin.init as sinon.SinonSpy).callCount).to.be.equals(1);
+      expect((plugin.update as sinon.SinonSpy).callCount).to.be.equals(0);
+      expect((plugin.destroy as sinon.SinonSpy).callCount).to.be.equals(0);
+    });
+    it("should check plugin's destroy lifecycle", () => {
+      // Given
+      const plugin: Plugin = {
+        init: sinon.spy(),
+        update: sinon.spy(),
+        destroy: sinon.spy(),
+      };
+
+      // When
+      // init
+      flickingInfo.instance.addPlugins(plugin);
+      // destroy
+      flickingInfo.instance.removePlugins(plugin);
+
+      // Then
+      expect((plugin.init as sinon.SinonSpy).callCount).to.be.equals(1);
+      expect((plugin.update as sinon.SinonSpy).callCount).to.be.equals(0);
+      expect((plugin.destroy as sinon.SinonSpy).callCount).to.be.equals(1);
+    });
+
+    it("should check flicking's destroy for plugin's destroy lifecycle", () => {
+      // Given
+      const plugin: Plugin = {
+        init: sinon.spy(),
+        update: sinon.spy(),
+        destroy: sinon.spy(),
+      };
+
+      // When
+      // init
+      flickingInfo.instance.addPlugins(plugin);
+      // destory
+      flickingInfo.instance.destroy();
+
+      // Then
+      expect((plugin.init as sinon.SinonSpy).callCount).to.be.equals(1);
+      expect((plugin.update as sinon.SinonSpy).callCount).to.be.equals(0);
+      expect((plugin.destroy as sinon.SinonSpy).callCount).to.be.equals(1);
+    });
+    it("should check plugin's update lifecycle", () => {
+      // Given
+      const plugin: Plugin = {
+        init: sinon.spy(),
+        destroy: sinon.spy(),
+        update: sinon.spy(),
+      };
+
+      // When
+      // init
+      flickingInfo.instance.addPlugins(plugin);
+
+      // update
+      flickingInfo.instance.getPanel(0).update(() => {});
+
+      // update 2
+      flickingInfo.instance.resize();
+
+      // destory
+      flickingInfo.instance.removePlugins(plugin);
+
+      // Then
+      expect((plugin.init as sinon.SinonSpy).callCount).to.be.equals(1);
+      expect((plugin.update as sinon.SinonSpy).callCount).to.be.equals(2);
+      expect((plugin.destroy as sinon.SinonSpy).callCount).to.be.equals(1);
     });
   });
 });

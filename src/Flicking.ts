@@ -48,7 +48,6 @@ class Flicking extends Component {
   private wrapper: HTMLElement;
   private viewport: Viewport;
   private eventContext: FlickingContext;
-  private plugins: Plugin[] = [];
 
   /**
    * @param element A base element for the eg.Flicking module. When specifying a value as a `string` type, you must specify a css selector string to select the element.<ko>eg.Flicking 모듈을 사용할 기준 요소. `string`타입으로 값 지정시 요소를 선택하기 위한 css 선택자 문자열을 지정해야 한다.</ko>
@@ -400,13 +399,7 @@ class Flicking extends Component {
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
   public addPlugins(plugins: Plugin | Plugin[]) {
-    const newPlugins = ([] as Plugin[]).concat(plugins);
-
-    newPlugins.forEach(plugin => {
-      plugin.init(this);
-    });
-
-    this.plugins = this.plugins.concat(newPlugins);
+    this.viewport.addPlugins(plugins);
     return this;
   }
   /**
@@ -416,18 +409,7 @@ class Flicking extends Component {
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
   public removePlugins(plugins: Plugin | Plugin[]) {
-    const currentPlugins = this.plugins;
-    const removedPlugins = ([] as Plugin[]).concat(plugins);
-
-    removedPlugins.forEach(plugin => {
-      const index = currentPlugins.indexOf(plugin);
-
-      if (index > -1) {
-        currentPlugins.splice(index, 1);
-      }
-
-      plugin.destroy(this);
-    });
+    this.viewport.removePlugins(plugins);
     return this;
   }
 
@@ -443,10 +425,6 @@ class Flicking extends Component {
     this.off();
 
     this.viewport.destroy();
-
-    this.plugins.forEach(plugin => {
-      plugin.destroy(this);
-    });
 
     // release resources
     for (const x in this) {
