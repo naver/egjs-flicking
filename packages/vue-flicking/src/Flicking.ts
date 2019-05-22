@@ -38,6 +38,7 @@ export default class Flicking extends Vue {
   }
 
   public render(h: CreateElement) {
+    // FIXME: "eg-flick" => DEFAULT_OPTIONS
     const classPrefix = this.options.classPrefix || "eg-flick";
     const viewportData: VNodeData = {
       class: {},
@@ -49,14 +50,7 @@ export default class Flicking extends Vue {
     viewportData.class[`${classPrefix}-viewport`] = true;
     cameraData.class[`${classPrefix}-camera`] = true;
 
-    const lastIndex = this.$_nativeFlicking.getLastIndex();
-    const children = this.$slots.default
-      ? this.$slots.default.slice(0, lastIndex + 1)
-      : undefined;
-
-    const panels = children
-      ? [...children, ...this.$_getClonedVNodes()]
-      : undefined;
+    const panels = this.$_getPanels();
 
     return h(this.tag,
       [h("div", viewportData,
@@ -85,7 +79,8 @@ export default class Flicking extends Vue {
 
     events.forEach(eventName => {
       this.$_nativeFlicking.on(eventName, e => {
-        this.$emit(eventName.replace(/([A-Z])/g, '-$1').toLowerCase(), e);
+        e.currentTarget = this;
+        this.$emit(eventName.replace(/([A-Z])/g, "-$1").toLowerCase(), e);
       });
     });
   }
@@ -106,6 +101,18 @@ export default class Flicking extends Vue {
     }
   }
 
+  private $_getPanels() {
+    const lastIndex = this.$_nativeFlicking
+      ? this.$_nativeFlicking.getLastIndex()
+      // FIXME: Inifnity => DEFAULT_OPTIONS
+      : this.options.lastIndex || Infinity;
+    const panels = this.$slots.default
+      ? [...this.$slots.default.slice(0, lastIndex + 1), ...this.$_getClonedVNodes()]
+      : undefined;
+
+    return panels;
+  }
+
   private $_getClonedVNodes() {
     const h = this.$createElement;
     const cloneCount = this.$_cloneCount;
@@ -113,8 +120,8 @@ export default class Flicking extends Vue {
     const clones: VNode[] = [];
 
     for (let cloneIndex = 0; cloneIndex < cloneCount; cloneIndex++) {
-      // clones.push(h("clone", { key: `clone${cloneIndex}` }, children));
-      clones.push(...children.map(child => this.$_cloneVNode(child, h, `clone${cloneIndex}-${child.key}`)));
+      const childKeys = children.map((child, childIdx) => child.key ? child.key : childIdx);
+      clones.push(...children.map((child, childIdx) => this.$_cloneVNode(child, h, `clone${cloneIndex}-${childKeys[childIdx]}`)));
     }
     return clones;
   }
