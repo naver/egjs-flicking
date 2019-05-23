@@ -9,7 +9,7 @@ body {
   right: 0;
   background: rgba(255, 255, 255, 0.5);
   height: 40px;
-  z-index: 10;
+  z-index: 2010;
   margin: 0;
   padding: 10px;
   list-style: none;
