@@ -27,3 +27,4 @@ node_modules/
 .github
 .babelrc
 mocha.opts
+packages/

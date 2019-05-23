@@ -4,7 +4,7 @@ name: @egjs/flicking
 license: MIT
 author: NAVER Corp.
 repository: https://github.com/naver/egjs-flicking
-version: 3.1.0
+version: 3.1.1
 */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('@egjs/component'), require('@egjs/axes')) :
@@ -4081,7 +4081,7 @@ version: 3.1.0
        */
 
 
-      Flicking.VERSION = "3.1.0";
+      Flicking.VERSION = "3.1.1";
       /**
        * Direction constant - "PREV" or "NEXT"
        * @ko 방향 상수 - "PREV" 또는 "NEXT"
