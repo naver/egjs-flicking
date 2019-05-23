@@ -269,24 +269,23 @@ export function restoreStyle(element: HTMLElement, originalStyle: OriginalStyle)
  * ```js
  * import Flicking, { withFlickingMethods } from "@egjs/flicking";
  *
- * &#64;withFlickingMethods
  * class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
- *  private flicking: Flicking;
+ *   &#64;withFlickingMethods
+ *   private flicking: Flicking;
  * }
  * ```
  */
-export function withFlickingMethods<T extends new (...args: any[]) => {}>(target: T) {
-  const prototype = target.prototype;
+export function withFlickingMethods(prototype: any, flickingName: string) {
 
   Object.keys(FLICKING_METHODS).forEach((name: keyof Flicking) => {
     if (prototype[name]) {
       return;
     }
     prototype[name] = function(...args) {
-      const result = this.flicking[name](...args);
+      const result = this[flickingName][name](...args);
 
       // fix `this` type to return your own `flicking` instance to the instance using the decorator.
-      if (result === this.flicking) {
+      if (result === this[flickingName]) {
         return this;
       } else {
         return result;

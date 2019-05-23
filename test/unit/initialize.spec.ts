@@ -766,9 +766,9 @@ describe("Initialization", () => {
   });
   describe("initialize component with decorator", () => {
     it("should check if the method of the class created with the decorator is properly entered.", () => {
-      @withFlickingMethods
       class TestFlicking {
-        private flicking: Flicking;
+        @withFlickingMethods
+        private nativeFlicking: Flicking;
         constructor() {
           flickingInfo = createFlicking(horizontal.shouldClone4, {
             gap: 10,
@@ -777,7 +777,7 @@ describe("Initialization", () => {
             circular: false,
             defaultIndex: 0,
           });
-          this.flicking = flickingInfo.instance;
+          this.nativeFlicking = flickingInfo.instance;
         }
       }
       const flicking: any = new TestFlicking();
