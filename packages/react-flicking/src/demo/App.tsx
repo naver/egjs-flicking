@@ -16,11 +16,13 @@ import Bound from "./features/Bound";
 import ParallaxDemo from "./plugins/Parallax";
 import FadeDemo from "./plugins/Fade";
 import AutoPlayDemo from "./plugins/AutoPlay";
+import Header from "./Header";
 
 export default class App extends Component<{}> {
   public render() {
     return (
       <div>
+        <Header/>
         <InfiniteFlicking/>
         <FreeScroll/>
         <VariableSize/>
