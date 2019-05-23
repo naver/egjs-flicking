@@ -9,7 +9,6 @@ declare global {
 
 const version = "#__VERSION__#";
 
-// tslint:disable-next-line: naming-convention
 const install = (Vue: VueConstructor): void => {
   Vue.component(Flicking.name, Flicking);
 };

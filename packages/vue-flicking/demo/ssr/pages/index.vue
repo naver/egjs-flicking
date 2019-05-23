@@ -1,34 +1,34 @@
 <template>
-  <div>
-    <header>
-      <div>
-        <span>Features:</span>
-        <router-link to="/align">Align</router-link>
-        <router-link to="/bound">Bound</router-link>
-        <router-link to="/freeScroll">FreeScroll</router-link>
-        <router-link to="/gap">Gap</router-link>
-        <router-link to="/progress">Progress</router-link>
-        <router-link to="/snap">Snap</router-link>
-        <router-link to="/variable">VariableSize</router-link>
-        <router-link to="/infinite">Infinite</router-link>
+  <section class="container">
+    <div>
+      <app-logo/>
+      <h1 class="title">
+        ssr
+      </h1>
+      <h2 class="subtitle">
+        Nuxt.js project
+      </h2>
+      <div class="links">
+        <a
+          href="https://nuxtjs.org/"
+          target="_blank"
+          class="button--green">Documentation</a>
+        <a
+          href="https://github.com/nuxt/nuxt.js"
+          target="_blank"
+          class="button--grey">GitHub</a>
       </div>
-      <div>
-        <span>Plugins:</span>
-        <router-link to="/autoplay">AutoPlay</router-link>
-        <router-link to="/fade">Fade</router-link>
-        <router-link to="/parallax">Parallax</router-link>
-      </div>
-    </header>
-    <transition name="component-fade" mode="out-in">
-      <router-view></router-view>
-    </transition>
-  </div>
+    </div>
+  </section>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({})
-export default class Demo extends Vue {}
+class Demo extends Vue {
+}
+
+export default Demo;
 </script>
 <style>
   @import url('https://fonts.googleapis.com/css?family=Nanum+Gothic&subset=korean');
@@ -263,3 +263,4 @@ export default class Demo extends Vue {}
     opacity: 0;
   }
 </style>
+

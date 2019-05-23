@@ -29,8 +29,8 @@
  },
  "license": "MIT",
  "dependencies": {
-  "@egjs/flicking": "^3.0.1",
-  "@egjs/vue-children-differ": "0.0.1"
+  "@egjs/flicking": "^3.1.1-rc",
+  "@egjs/vue-children-differ": "^0.0.1"
  },
  "devDependencies": {
   "@egjs/build-helper": "0.0.5",

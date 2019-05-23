@@ -200,6 +200,9 @@ GitHub.sublime-settings
 !.vscode/launch.json
 !.vscode/extensions.json
 
+### Nuxt ###
+.nuxt
+
 ### Custom ###
 doc/
 report/
