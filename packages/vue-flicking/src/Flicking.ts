@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 
-import NativeFlicking, { Plugin, FlickingOptions } from "@egjs/flicking";
+import NativeFlicking, { Plugin, FlickingOptions, withFlickingMethods } from "@egjs/flicking";
 import ChildrenDiffer from "@egjs/vue-children-differ";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
@@ -20,16 +20,14 @@ export default class Flicking extends Vue {
   @Prop({ type: Object, default: () => ({}), required: false }) options!: Partial<FlickingOptions>;
   @Prop({ type: Array, default: () => ([]), required: false }) plugins!: Plugin[];
 
+  @withFlickingMethods
   private $_nativeFlicking!: NativeFlicking;
   private $_pluginsDiffer!: ListDiffer<Plugin>;
   private $_cloneCount!: number;
 
-  public beforeCreate() {
+  public mounted() {
     this.$_pluginsDiffer = new ListDiffer<Plugin>();
     this.$_cloneCount = 0;
-  }
-
-  public mounted() {
     this.options.renderExternal = true;
     this.$_nativeFlicking = new NativeFlicking(this.$el as HTMLElement, this.options);
 
