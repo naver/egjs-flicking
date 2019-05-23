@@ -1,7 +1,12 @@
 {
-  "name": "react-flicking",
+  "name": "@egjs/react-flicking",
   "version": "3.0.0-beta",
-  "private": true,
+  "description": "A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.",
+	"main": "dist/flicking.cjs.js",
+	"module": "dist/flicking.esm.js",
+	"sideEffects": false,
+	"es2015": "dist/flicking.esm.js",
+	"types": "declaration/index.d.ts",
   "dependencies": {
     "@egjs/flicking": "^3.1.1",
     "@egjs/react-children-differ": "^0.0.2"
@@ -34,6 +39,7 @@
   "bugs": {
     "url": "https://github.com/naver/egjs-flicking/issues"
   },
+  "license": "MIT",
   "scripts": {
     "start": "react-scripts start",
     "build": "rollup -c && npm run declaration",
