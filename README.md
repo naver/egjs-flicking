@@ -9,6 +9,10 @@ With this module, you can make flicking gestures, which are ways to navigate lef
 - [Get Started and Demos](https://naver.github.io/egjs-flicking/)
 - [API documentation](https://naver.github.io/egjs-flicking/release/latest/doc/)
 
+## Related Projects
+* [**@egjs/react-flicking**](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking): A React component that can easily use @egjs/flicking
+* [**@egjs/flicking-plugins**](https://github.com/naver/egjs-flicking-plugins): This is plugins for @egjs/flicking
+
 ## Download and Installation
 
 Download dist files from repo directly or install it via npm.
