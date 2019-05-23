@@ -8,7 +8,6 @@ import { FlickingProps, FlickingType } from "./types";
 import ListDiffer from "@egjs/list-differ";
 import { ChildrenDiffResult } from "@egjs/children-differ";
 
-@withFlickingMethods
 class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = FLICKING_PROPS;
   public state: {
@@ -17,6 +16,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       cloneCount: 0,
     };
   // Flicking
+  @withFlickingMethods
   private flicking?: NativeFlicking | null;
   private options: FlickingOptions = {
     ...DEFAULT_OPTIONS,
