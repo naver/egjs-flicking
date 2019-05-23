@@ -5,6 +5,9 @@ import "../css/progress.css";
 
 export default class Progress extends React.Component<{}> {
   private thumb: HTMLElement;
+  private flicking1: Flicking;
+  private flicking2: Flicking;
+  private flicking3: Flicking;
   public render() {
     return (
       <div id="progress" className="container">
@@ -37,6 +40,7 @@ export default class Progress extends React.Component<{}> {
           gap={10}
           circular={true}
           moveType={{type: "snap", count: 5}}
+          ref={e => { this.flicking1 = e as Flicking; }}
           onMove={e => {
             const flicking = e.currentTarget;
 
@@ -61,6 +65,7 @@ export default class Progress extends React.Component<{}> {
           gap={10}
           circular={true}
           moveType={{type: "snap", count: 5}}
+          ref={e => { this.flicking2 = e as Flicking; }}
           onMove={e => {
             const flicking = e.currentTarget;
 
@@ -85,6 +90,7 @@ export default class Progress extends React.Component<{}> {
           gap={10}
           circular={true}
           moveType={{type: "snap", count: 5}}
+          ref={e => { this.flicking3 = e as Flicking; }}
           onMove={e => {
             const flicking = e.currentTarget;
 
@@ -103,6 +109,15 @@ export default class Progress extends React.Component<{}> {
 </div >);
   }
   public componentDidMount() {
+    this.flicking1.getAllPanels(true).forEach(panel => {
+      panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
+    });
+    this.flicking2.getAllPanels(true).forEach(panel => {
+      panel.getElement().innerHTML = panel.getOutsetProgress().toFixed(2);
+    });
+    this.flicking3.getAllPanels(true).forEach(panel => {
+      panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
+    });
     insertCode("progress", 0, `
   <Flicking className="flicking flicking0"
     gap={10}
