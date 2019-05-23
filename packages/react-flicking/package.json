@@ -1,0 +1,59 @@
+{
+  "name": "react-flicking",
+  "version": "3.0.0-beta",
+  "private": true,
+  "dependencies": {
+    "@egjs/flicking": "^3.1.1",
+    "@egjs/react-children-differ": "^0.0.2"
+  },
+  "devDependencies": {
+    "@egjs/build-helper": "0.0.5",
+    "@egjs/flicking-plugins": "^3.1.0",
+    "@types/highlight.js": "^9.12.3",
+    "@types/jest": "24.0.12",
+    "@types/node": "12.0.0",
+    "@types/react": "16.8.17",
+    "@types/react-dom": "16.8.4",
+    "highlight.js": "^9.15.6",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "3.0.1",
+    "typescript": "^3.4.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/naver/egjs-flicking"
+  },
+  "author": {
+    "name": "NAVER Corp."
+  },
+  "namespace": {
+    "eg": "eg"
+  },
+  "homepage": "https://github.com/naver/egjs-flicking",
+  "bugs": {
+    "url": "https://github.com/naver/egjs-flicking/issues"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "rollup -c && npm run declaration",
+    "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
