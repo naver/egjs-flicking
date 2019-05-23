@@ -12,33 +12,45 @@ $ npm install @egjs/react-flicking --save
 ```
 
 ## How to use
-```jsx
+```tsx
+import { FlickingEvent, SelectEvent, ChangeEvent, NeedPanelEvent } from "@egjs/flicking";
 import Flicking from "@egjs/react-flicking";
 import { Parallax, Fade, AutoPlay } from "@egjs/flicking-plugins";
 
 <Flicking
   tag = "div"
-  onFlick = {e => {}}
-  onFlickEnd = {e => {}}
-  onBeforeFlickStart = {e => {}}
-  onBeforeRestore = {e => {}}
-  onRestore = {e => {}}
-  hwAccelerable = {true}
-  prefix = "eg-flick"
-  deceleration = {0.0006}
+  onNeedPanel = {(e: NeedPanelEvent) => {}}
+  onMoveStart = {(e: FlickingEvent) => {}}
+  onMove = {(e: FlickingEvent) => {}}
+  onMoveEnd = {(e: FlickingEvent) => {}}
+  onHoldStart = {(e: FlickingEvent) => {}}
+  onHoldEnd = {(e: FlickingEvent) => {}}
+  onRestore = {(e: FlickingEvent) => {}}
+  onSelect = {(e: SelectEvent) => {}}
+  onChange = {(e: ChangeEvent) => {}}
+  classPrefix = "eg-flick"
+  deceleration = {0.0075}
   horizontal = {true}
   circular = {false}
-  previewPadding = {[0, 0]}
-  bounce = {[10, 10]}
-  threhold = {40}
+  infinite = {false}
+  infiniteThreshold = {0}
+  lastIndex = {Infinity}
+  threshold = {40}
   duration = {100}
   panelEffect = {x => 1 - Math.pow(1 - x, 3)}
   defaultIndex = {0}
-  inputType = {["pointer", "touch", "mouse"]}
+  inputType = {["touch", "mouse"]}
   thresholdAngle = {45}
-  adaptiveHeight = {false}
+  bounce = {10}
+  autoResize = {false}
+  adaptive = {false}
   zIndex = {2000}
-  useTranslate = {true}
+  bound = {false}
+  overflow = {false}
+  hanger = {"50%"}
+  anchor = {"50%"}
+  gap = {0}
+  moveType = {{type: "snap", count: 1}}
 >
   <div>panel 0</div>
   <div>panel 1</div>
@@ -48,16 +60,16 @@ import { Parallax, Fade, AutoPlay } from "@egjs/flicking-plugins";
 
 
 ## More examples
-* [Infinite Flicking](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/features/InfiniteFlicking.tsx)
-* [Progress](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/features/Progress.tsx)
-* [Snap](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/features/Snap.tsx)
-* [Variable Size](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/features/VariableSize.tsx)
-* [Flexible Align](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/features/Align.tsx)
-* [Bound](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/features/Bound.tsx)
-* [Gap](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/features/Gap.tsx)
-* [Use Parallax Plugin](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/plugins/Parallax.tsx)
-* [Use Fade Plugin](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/plugins/Fade.tsx)
-* [Use AutoPlay Plugin](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/plugins/AutoPlay.tsx)
+* [Infinite Flicking](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/features/InfiniteFlicking.tsx)
+* [Progress](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/features/Progress.tsx)
+* [Snap](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/features/Snap.tsx)
+* [Variable Size](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/features/VariableSize.tsx)
+* [Flexible Align](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/features/Align.tsx)
+* [Bound](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/features/Bound.tsx)
+* [Gap](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/features/Gap.tsx)
+* [Use Parallax Plugin](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/plugins/Parallax.tsx)
+* [Use Fade Plugin](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/plugins/Fade.tsx)
+* [Use AutoPlay Plugin](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/plugins/AutoPlay.tsx)
 
 ## Development
 
