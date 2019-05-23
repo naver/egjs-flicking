@@ -5,6 +5,7 @@ import { horizontal, vertical } from "./assets/fixture";
 import { createFlicking, cleanup, simulate, waitFor, waitEvent } from "./assets/utils";
 import { EVENTS } from "../../src/consts";
 import * as sinon from "sinon";
+import { withFlickingMethods } from "../../src/utils";
 
 const defaultClassPrefix = DEFAULT_OPTIONS.classPrefix;
 
@@ -761,6 +762,32 @@ describe("Initialization", () => {
       expect((plugin.init as sinon.SinonSpy).callCount).to.be.equals(1);
       expect((plugin.update as sinon.SinonSpy).callCount).to.be.equals(2);
       expect((plugin.destroy as sinon.SinonSpy).callCount).to.be.equals(1);
+    });
+  });
+  describe("initialize component with decorator", () => {
+    it("should check if the method of the class created with the decorator is properly entered.", () => {
+      class TestFlicking {
+        @withFlickingMethods
+        private nativeFlicking: Flicking;
+        constructor() {
+          flickingInfo = createFlicking(horizontal.shouldClone4, {
+            gap: 10,
+            anchor: "0",
+            hanger: "0",
+            circular: false,
+            defaultIndex: 0,
+          });
+          this.nativeFlicking = flickingInfo.instance;
+        }
+      }
+      const flicking: any = new TestFlicking();
+
+      expect(flicking.sync).to.be.undefined;
+      expect(flicking.getCloneCount).to.be.undefined;
+      expect(flicking.append).to.be.undefined;
+      expect(flicking.prepend).to.be.undefined;
+      expect(flicking.addPlugins([])).to.be.equals(flicking);
+      expect(flicking.getPanelCount()).to.be.equals(2);
     });
   });
 });
