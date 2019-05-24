@@ -3,11 +3,12 @@
  * egjs projects are licensed under the MIT license
  */
 
-import NativeFlicking, { Plugin, FlickingOptions, withFlickingMethods } from "@egjs/flicking";
+import NativeFlicking, { Plugin, FlickingOptions, withFlickingMethods, DEFAULT_OPTIONS } from "@egjs/flicking";
 import ChildrenDiffer from "@egjs/vue-children-differ";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { CreateElement, VNodeData, VNode } from "vue";
+import { merge } from "./utils";
 
 @Component({
   name: "Flicking",
@@ -21,23 +22,23 @@ export default class Flicking extends Vue {
   @Prop({ type: Array, default: () => ([]), required: false }) plugins!: Plugin[];
 
   @withFlickingMethods
-  private $_nativeFlicking!: NativeFlicking;
-  private $_pluginsDiffer!: ListDiffer<Plugin>;
-  private $_cloneCount!: number;
+  private nativeFlicking!: NativeFlicking;
+  private pluginsDiffer!: ListDiffer<Plugin>;
+  private cloneCount!: number;
 
   public mounted() {
-    this.$_pluginsDiffer = new ListDiffer<Plugin>();
-    this.$_cloneCount = 0;
-    this.options.renderExternal = true;
-    this.$_nativeFlicking = new NativeFlicking(this.$el as HTMLElement, this.options);
+    this.pluginsDiffer = new ListDiffer<Plugin>();
+    this.cloneCount = 0;
 
-    this.$_bindEvents();
-    this.$_checkUpdate();
+    const options = merge({}, this.options, { renderExternal: true });
+    this.nativeFlicking = new NativeFlicking(this.$el as HTMLElement, options);
+
+    this.bindEvents();
+    this.checkUpdate();
   }
 
   public render(h: CreateElement) {
-    // FIXME: "eg-flick" => DEFAULT_OPTIONS
-    const classPrefix = this.options.classPrefix || "eg-flick";
+    const classPrefix = this.options.classPrefix || DEFAULT_OPTIONS.classPrefix;
     const viewportData: VNodeData = {
       class: {},
     };
@@ -48,7 +49,7 @@ export default class Flicking extends Vue {
     viewportData.class[`${classPrefix}-viewport`] = true;
     cameraData.class[`${classPrefix}-camera`] = true;
 
-    const panels = this.$_getPanels();
+    const panels = this.getPanels();
 
     return h(this.tag,
       [h("div", viewportData,
@@ -60,73 +61,72 @@ export default class Flicking extends Vue {
   }
 
   public onUpdate(diffResult: DiffResult<HTMLElement>) {
-    this.$_nativeFlicking.sync(diffResult as DiffResult<HTMLElement>);
+    this.nativeFlicking.sync(diffResult as DiffResult<HTMLElement>);
     this.$nextTick(() => {
-      this.$_checkUpdate();
+      this.checkUpdate();
     });
   }
 
-  private $_checkUpdate() {
-    this.$_checkPlugins();
-    this.$_checkCloneCount();
+  private checkUpdate() {
+    this.checkPlugins();
+    this.checkCloneCount();
   }
 
-  private $_bindEvents() {
+  private bindEvents() {
     const events = Object.keys(NativeFlicking.EVENTS)
       .map(key => NativeFlicking.EVENTS[key]);
 
     events.forEach(eventName => {
-      this.$_nativeFlicking.on(eventName, e => {
+      this.nativeFlicking.on(eventName, e => {
         e.currentTarget = this;
         this.$emit(eventName.replace(/([A-Z])/g, "-$1").toLowerCase(), e);
       });
     });
   }
 
-  private $_checkPlugins() {
-    const { list, added, removed, prevList } = this.$_pluginsDiffer.update(this.plugins);
+  private checkPlugins() {
+    const { list, added, removed, prevList } = this.pluginsDiffer.update(this.plugins);
 
-    this.$_nativeFlicking.addPlugins(added.map(index => list[index]));
-    this.$_nativeFlicking.removePlugins(removed.map(index => prevList[index]));
+    this.nativeFlicking.addPlugins(added.map(index => list[index]));
+    this.nativeFlicking.removePlugins(removed.map(index => prevList[index]));
   }
 
-  private $_checkCloneCount() {
-    const newCloneCount = this.$_nativeFlicking.getCloneCount();
+  private checkCloneCount() {
+    const newCloneCount = this.nativeFlicking.getCloneCount();
 
-    if (this.$_cloneCount !== newCloneCount) {
-      this.$_cloneCount = newCloneCount;
+    if (this.cloneCount !== newCloneCount) {
+      this.cloneCount = newCloneCount;
       this.$forceUpdate();
     }
   }
 
-  private $_getPanels() {
-    const lastIndex = this.$_nativeFlicking
-      ? this.$_nativeFlicking.getLastIndex()
-      // FIXME: Inifnity => DEFAULT_OPTIONS
-      : this.options.lastIndex || Infinity;
+  private getPanels() {
+    const lastIndex = this.nativeFlicking
+      ? this.nativeFlicking.getLastIndex()
+      : this.options.lastIndex || DEFAULT_OPTIONS.lastIndex;
     const panels = this.$slots.default
-      ? [...this.$slots.default.slice(0, lastIndex + 1), ...this.$_getClonedVNodes()]
+      ? [...this.$slots.default.slice(0, lastIndex + 1), ...this.getClonedVNodes()]
       : undefined;
 
     return panels;
   }
 
-  private $_getClonedVNodes() {
+  private getClonedVNodes() {
     const h = this.$createElement;
-    const cloneCount = this.$_cloneCount;
+    const cloneCount = this.cloneCount;
     const children = this.$slots.default!;
     const clones: VNode[] = [];
 
     for (let cloneIndex = 0; cloneIndex < cloneCount; cloneIndex++) {
       const childKeys = children.map((child, childIdx) => child.key ? child.key : childIdx);
-      clones.push(...children.map((child, childIdx) => this.$_cloneVNode(child, h, `clone${cloneIndex}-${childKeys[childIdx]}`)));
+      clones.push(...children.map((child, childIdx) => this.cloneVNode(child, h, `clone${cloneIndex}-${childKeys[childIdx]}`)));
     }
     return clones;
   }
 
-  private $_cloneVNode(vnode: VNode, h: CreateElement, key?: string | number): VNode {
+  private cloneVNode(vnode: VNode, h: CreateElement, key?: string | number): VNode {
     const clonedChilds = vnode.children
-      ? vnode.children.map(child => this.$_cloneVNode(child, h))
+      ? vnode.children.map(child => this.cloneVNode(child, h))
       : undefined;
     const clone = h(vnode.tag, vnode.data, clonedChilds);
     clone.text = vnode.text;

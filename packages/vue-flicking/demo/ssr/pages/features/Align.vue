@@ -1,5 +1,4 @@
 <template>
-<no-ssr>
   <div id="align" class="container">
     <h1>Flexible Align</h1>
       <ul class="extra">
@@ -49,7 +48,6 @@
     <div class="pagination pagination2"></div>
     <pre><code class="hljs html" data-script="flicking2">{{ code2 }}</code></pre>
   </div>
-</no-ssr>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";

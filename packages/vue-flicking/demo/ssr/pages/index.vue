@@ -1,7 +1,6 @@
 <template>
   <section class="container">
     <div>
-      <app-logo/>
       <h1 class="title">
         ssr
       </h1>
@@ -19,11 +18,19 @@
           class="button--grey">GitHub</a>
       </div>
     </div>
+    <div>
+      <flicking>
+        <div>PANEL</div>
+        <div>PANEL</div>
+        <div>PANEL</div>
+        <div>PANEL</div>
+        <div>PANEL</div>
+      </flicking>
+    </div>
   </section>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-
 @Component({})
 class Demo extends Vue {
 }

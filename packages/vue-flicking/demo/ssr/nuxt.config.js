@@ -20,10 +20,16 @@ module.exports = {
   /*
   ** Build configuration
   */
-  build: {},
-  plugins: [
-    {src: '~/plugins/install', mode: 'client' }
-  ],
+  build: {
+    loaders: {
+      vue: {
+        compilerOptions: {
+          preserveWhitespace: false
+        }
+      }
+    }
+  },
+  plugins: [{ src: '~/plugins/install', ssr: true }],
   css: [
     '~assets/common.css'
   ]
