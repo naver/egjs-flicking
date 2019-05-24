@@ -1,4 +1,4 @@
-import { VueConstructor, PluginObject } from "vue";
+import { VueConstructor } from "vue";
 import Flicking from "./Flicking";
 
 declare global {
@@ -13,13 +13,9 @@ const install = (Vue: VueConstructor): void => {
   Vue.component(Flicking.name, Flicking);
 };
 
-const plugin: PluginObject<VueConstructor> = {
+const plugin = {
   Flicking,
   install,
   version,
 };
 export default plugin;
-
-if (typeof window !== "undefined" && window.Vue) {
-  window.Vue.use(plugin);
-}

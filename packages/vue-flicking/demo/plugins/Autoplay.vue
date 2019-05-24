@@ -8,7 +8,7 @@
     <flicking
       class="flicking"
       :options="{ circular: true, gap: 10, duration: 500 }"
-      :plugins="this.plugins"
+      :plugins="plugins"
     >
       <div class="panel">
         <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
