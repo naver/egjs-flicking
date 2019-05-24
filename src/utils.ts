@@ -50,10 +50,7 @@ export let checkTranslateSupport = () => {
   };
 
   if (typeof document === "undefined") {
-    return {
-      name: "",
-      has3d: false,
-    };
+    return;
   }
   const supportedStyle = document.documentElement.style;
   let transformName = "";
