@@ -17,10 +17,12 @@ import { merge } from "./utils";
   },
 })
 export default class Flicking extends Vue {
+  // Tag of wrapper element
   @Prop({ type: String, default: "div", required: false }) tag!: string;
   @Prop({ type: Object, default: () => ({}), required: false }) options!: Partial<FlickingOptions>;
   @Prop({ type: Array, default: () => ([]), required: false }) plugins!: Plugin[];
 
+  // Following decorator will inject native Flicking's method into Vue-Flicking
   @withFlickingMethods
   private nativeFlicking!: NativeFlicking;
   private pluginsDiffer!: ListDiffer<Plugin>;
@@ -79,6 +81,7 @@ export default class Flicking extends Vue {
     events.forEach(eventName => {
       this.nativeFlicking.on(eventName, e => {
         e.currentTarget = this;
+        // Make events from camelCase to kebab-case
         this.$emit(eventName.replace(/([A-Z])/g, "-$1").toLowerCase(), e);
       });
     });

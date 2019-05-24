@@ -1,5 +1,3 @@
-We suppose you're using [nuxt.js](https://nuxtjs.org/)
-
 ## Global Registration
 ### SSR
 ```js
@@ -22,6 +20,16 @@ Then, in nuxt.config.js
 ```js
 // CAUTION: No "ssr: false" or "mode: 'client'" is needed
 plugins: ['~/plugins/install'],
+build: {
+  loaders: {
+    vue: {
+      compilerOptions: {
+        // This option is highly recommended
+        preserveWhitespace: false
+      }
+    }
+  }
+},
 ```
 
 ## More Examples
