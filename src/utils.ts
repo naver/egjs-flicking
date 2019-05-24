@@ -49,6 +49,12 @@ export let checkTranslateSupport = () => {
     transform: "transform",
   };
 
+  if (typeof document === "undefined") {
+    return {
+      name: "",
+      has3d: false,
+    };
+  }
   const supportedStyle = document.documentElement.style;
   let transformName = "";
   for (const prefixedTransform in transforms) {
