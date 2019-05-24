@@ -1,12 +1,13 @@
 {
  "name": "@egjs/vue-flicking",
- "version": "3.0.0-beta",
+ "version": "3.0.0-beta2",
  "description": "A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.",
  "main": "dist/flicking.cjs.js",
  "module": "dist/flicking.esm.js",
  "types": "declaration/index.d.ts",
  "sideEffects": false,
  "scripts": {
+  "start": "vue-cli-service demo",
   "build": "rm -rf dist && rollup -c && npm run declaration",
   "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
   "test": "vue-cli-service test:unit",
