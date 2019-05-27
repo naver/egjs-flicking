@@ -8,6 +8,7 @@ import Viewport from "./components/Viewport";
 import StateMachine from "./components/StateMachine";
 import Panel from "./components/Panel";
 import Component from "@egjs/component";
+import State from "./states/State";
 
 export type ValueOf<T> = T[keyof T];
 /**
@@ -84,6 +85,7 @@ export interface MoveTypeContext {
     destPos: { flick: number };
     duration: number;
   };
+  state: State;
   swipeDistance: number;
   isNextDirection: boolean;
 }

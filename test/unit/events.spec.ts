@@ -828,4 +828,38 @@ describe("Events", () => {
       expect(scrollAreaBefore.prev).not.equals(scrollAreaAfter.prev);
     });
   });
+
+  describe("change event", () => {
+    it("shouldn't be triggered when going out of bound area", async () => {
+      // Issue: https://github.com/naver/egjs-flicking/issues/208
+      // Given
+      flickingInfo = createFlicking(horizontal.full, {
+        defaultIndex: 2,
+        bound: true,
+        moveType: "freeScroll",
+      });
+
+      // When
+      await simulate(flickingInfo.element, { deltaX: -500, duration: 100 });
+      await waitFor(1000);
+
+      // Then
+      expect(flickingInfo.eventFired.every(evtName => evtName !== EVENTS.CHANGE)).to.be.true;
+    });
+
+    it("shouldn't be triggered when going from original panel 0 to cloned panel 0", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.fixedTo100, {
+        circular: true,
+        moveType: "freeScroll",
+      });
+
+      // When
+      await simulate(flickingInfo.element, { deltaX: 25, duration: 100 });
+      await waitFor(1000);
+
+      // Then
+      expect(flickingInfo.eventFired.every(evtName => evtName !== EVENTS.CHANGE)).to.be.true;
+    });
+  });
 });

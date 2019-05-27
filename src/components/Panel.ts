@@ -344,7 +344,9 @@ class Panel implements FlickingPanel {
     const clonedPanel = new Panel(cloneElement, state.index, viewport);
     const clonedState = clonedPanel.state;
 
-    clonedPanel.original = this;
+    clonedPanel.original = state.isClone
+      ? this.original
+      : this;
     clonedState.isClone = true;
     clonedState.isVirtual = isVirtual;
     clonedState.cloneIndex = cloneIndex;

@@ -32,6 +32,18 @@ abstract class MoveType {
     };
   }
 
+  public findPanelWhenInterrupted(ctx: MoveTypeContext): DestinationInfo {
+    const { state, viewport } = ctx;
+    const targetPanel = state.targetPanel!;
+
+    return {
+      panel: targetPanel,
+      destPos: viewport.findEstimatedPosition(targetPanel),
+      duration: viewport.options.duration,
+      eventType: "",
+    };
+  }
+
   // Calculate minimum distance to "change" panel
   protected calcBrinkOfChange(ctx: MoveTypeContext): number {
     const { viewport, isNextDirection } = ctx;

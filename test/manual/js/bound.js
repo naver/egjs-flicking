@@ -1,0 +1,19 @@
+setTimeout(function() {
+  document.body.style.display = "";
+
+  // Resizing
+  f1 = createFlicking("#flick1", {
+    // bounce: 0,
+    bound: true,
+    // circular: true,
+    duration: 1000,
+    defaultIndex: 2,
+    moveType: "freeScroll"
+  }).on("change", e => {
+    console.log(e);
+  }).on("restore", e => {
+    console.log(e);
+  }).on("moveEnd", e => {
+    console.log(e);
+  });
+}, 500);

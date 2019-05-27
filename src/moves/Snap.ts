@@ -48,18 +48,37 @@ class Snap extends MoveType {
   }
 
   protected findSnappedPanel(ctx: MoveTypeContext): DestinationInfo {
-    const { axesEvent, viewport, isNextDirection } = ctx;
+    const { axesEvent, viewport, state, isNextDirection } = ctx;
 
+    const eventDelta = Math.abs(axesEvent.delta.flick);
+    const minimumDistanceToChange = this.calcBrinkOfChange(ctx);
     const snapCount = this.count;
     const options = viewport.options;
     const scrollAreaSize = viewport.getScrollAreaSize();
     const halfGap = options.gap / 2;
     const estimatedHangerPos = axesEvent.destPos.flick + viewport.getRelativeHangerPosition();
+
     let panelToMove = viewport.getNearestPanel()!;
     let cycleIndex = panelToMove.getCloneIndex() + 1; // 0(original) or 1(clone)
     let passedPanelCount = 0;
 
     while (passedPanelCount < snapCount) {
+      // Since panelToMove holds also cloned panels, we should use original panel's position
+      const originalPanel = panelToMove.getOriginalPanel();
+      const panelPosition = originalPanel.getPosition() + cycleIndex * scrollAreaSize;
+      const panelSize = originalPanel.getSize();
+
+      const panelNextPosition = panelPosition + panelSize + halfGap;
+      const panelPrevPosition = panelPosition - halfGap;
+
+      // Current panelToMove contains destPos
+      if (
+        (isNextDirection && panelNextPosition > estimatedHangerPos)
+        || (!isNextDirection && panelPrevPosition < estimatedHangerPos)
+      ) {
+        break;
+      }
+
       const siblingPanel = isNextDirection
         ? panelToMove.nextSibling
         : panelToMove.prevSibling;
@@ -78,28 +97,14 @@ class Snap extends MoveType {
       }
       panelToMove = siblingPanel;
       passedPanelCount += 1;
-
-      // Since panlToMove holds also cloned panels, we should use original panel's position
-      const originalPanel = panelToMove.getOriginalPanel();
-      const panelPosition = originalPanel.getPosition() + cycleIndex * scrollAreaSize;
-      const panelSize = originalPanel.getSize();
-
-      const panelNextPosition = panelPosition + panelSize + halfGap;
-      const panelPrevPosition = panelPosition - halfGap;
-
-      // Current panelToMove contains destPos
-      if (
-        (isNextDirection && panelNextPosition > estimatedHangerPos)
-        || (!isNextDirection && panelPrevPosition < estimatedHangerPos)
-      ) {
-        break;
-      }
     }
 
     const originalPosition = panelToMove.getOriginalPanel().getPosition();
 
-    panelToMove = panelToMove.clone(panelToMove.getCloneIndex(), true);
-    panelToMove.setPosition(originalPosition + cycleIndex * scrollAreaSize);
+    if (cycleIndex !== 0) {
+      panelToMove = panelToMove.clone(panelToMove.getCloneIndex(), true);
+      panelToMove.setPosition(originalPosition + cycleIndex * scrollAreaSize);
+    }
 
     const defaultDuration = viewport.options.duration;
     const duration = clamp(axesEvent.duration, defaultDuration, defaultDuration * passedPanelCount);
@@ -108,7 +113,7 @@ class Snap extends MoveType {
       panel: panelToMove,
       destPos: viewport.findEstimatedPosition(panelToMove),
       duration,
-      eventType: passedPanelCount > 0
+      eventType: Math.max(eventDelta, state.delta) > minimumDistanceToChange
         ? EVENTS.CHANGE
         : EVENTS.RESTORE,
     };

@@ -725,7 +725,7 @@ export default class Viewport {
   }
 
   public setCurrentPanel(panel: Panel): void {
-    this.currentPanel = panel;
+    this.currentPanel = panel.getOriginalPanel();
   }
 
   public setLastIndex(index: number): void {

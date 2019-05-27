@@ -4,7 +4,7 @@
  */
 
 import State from "./State";
-import { STATE_TYPE, EVENTS, MOVE_TYPE } from "../consts";
+import { STATE_TYPE, EVENTS } from "../consts";
 import { FlickingContext } from "../types";
 
 class DraggingState extends State {
@@ -27,10 +27,10 @@ class DraggingState extends State {
     const { flicking, viewport, triggerEvent, transitTo, stopCamera } = context;
 
     const delta = this.delta;
+    const absDelta = Math.abs(delta);
     const options = flicking.options;
     const horizontal = options.horizontal;
     const moveType = viewport.moveType;
-    const isFreeScroll = moveType.is(MOVE_TYPE.FREE_SCROLL);
     const inputEvent = e.inputEvent;
 
     const velocity = horizontal
@@ -41,11 +41,13 @@ class DraggingState extends State {
       : inputEvent.deltaY;
     const isNextDirection = Math.abs(velocity) > 1
       ? velocity < 0
-      : Math.abs(delta) > 0
+      : absDelta > 0
         ? delta > 0
         : inputDelta < 0;
 
-    const swipeDistance = Math.max(Math.abs(delta), Math.abs(inputDelta));
+    const swipeDistance = viewport.options.bound
+      ? Math.max(absDelta, Math.abs(inputDelta))
+      : absDelta;
     const swipeAngle = inputEvent.deltaX
       ? Math.abs(180 * Math.atan(inputEvent.deltaY / inputEvent.deltaX) / Math.PI)
       : 90;
@@ -55,6 +57,14 @@ class DraggingState extends State {
     const overThreshold = swipeDistance >= options.threshold
       && belowAngleThreshold;
 
+    const moveTypeContext = {
+      viewport,
+      axesEvent: e,
+      state: this,
+      swipeDistance,
+      isNextDirection,
+    };
+
     // Update last position to cope with Axes's animating behavior
     // Axes uses start position when animation start
     triggerEvent(EVENTS.HOLD_END, e, true);
@@ -62,10 +72,15 @@ class DraggingState extends State {
     const targetPanel = this.targetPanel;
     if (!overThreshold && targetPanel) {
       // Interrupted while animating
-      const destPos = isFreeScroll
-        ? e.destPos.flick
-        : viewport.findEstimatedPosition(targetPanel);
-      viewport.moveTo(targetPanel, destPos, "", e);
+      const interruptDestInfo = moveType.findPanelWhenInterrupted(moveTypeContext);
+
+      viewport.moveTo(
+        interruptDestInfo.panel,
+        interruptDestInfo.destPos,
+        interruptDestInfo.eventType,
+        e,
+        interruptDestInfo.duration,
+      );
       transitTo(STATE_TYPE.ANIMATING);
       return;
     }
@@ -79,13 +94,6 @@ class DraggingState extends State {
       transitTo(STATE_TYPE.IDLE);
       return;
     }
-
-    const moveTypeContext = {
-      viewport,
-      axesEvent: e,
-      swipeDistance,
-      isNextDirection,
-    };
 
     const destInfo = overThreshold
       ? moveType.findTargetPanel(moveTypeContext)
