@@ -1066,12 +1066,9 @@ export default class Viewport {
 
     panels.forEach(panel => {
       const newPosition = nextPanelPos;
-      const currentPosition = panel.getPosition();
       const panelSize = panel.getSize();
 
-      if (currentPosition !== newPosition) {
-        panel.setPosition(newPosition);
-      }
+      panel.setPosition(newPosition);
       nextPanelPos += panelSize + gap;
     });
   }
