@@ -1007,7 +1007,8 @@ export default class Viewport {
     if (!options.horizontal) {
       // Don't preserve previous width for adaptive resizing
       viewportElement.style.width = "";
-      viewportElement.style.minWidth = "";
+    } else {
+      viewportElement.style.height = "";
     }
 
     const bbox = viewportElement.getBoundingClientRect();
