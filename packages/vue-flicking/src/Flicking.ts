@@ -117,7 +117,10 @@ export default class Flicking extends Vue {
   private $_getClonedVNodes() {
     const h = this.$createElement;
     const cloneCount = this.$_cloneCount;
-    const children = this.$slots.default!;
+    const lastIndex = this.$_nativeFlicking
+      ? this.$_nativeFlicking.getLastIndex()
+      : this.options.lastIndex || DEFAULT_OPTIONS.lastIndex;
+    const children = this.$slots.default!.slice(0, lastIndex + 1);
     const clones: VNode[] = [];
 
     for (let cloneIndex = 0; cloneIndex < cloneCount; cloneIndex++) {
