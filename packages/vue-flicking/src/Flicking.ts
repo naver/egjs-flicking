@@ -24,19 +24,19 @@ export default class Flicking extends Vue {
 
   // Following decorator will inject native Flicking's method into Vue-Flicking
   @withFlickingMethods
-  private nativeFlicking!: NativeFlicking;
-  private pluginsDiffer!: ListDiffer<Plugin>;
-  private cloneCount!: number;
+  private $_nativeFlicking!: NativeFlicking;
+  private $_pluginsDiffer!: ListDiffer<Plugin>;
+  private $_cloneCount!: number;
 
   public mounted() {
-    this.pluginsDiffer = new ListDiffer<Plugin>();
-    this.cloneCount = 0;
+    this.$_pluginsDiffer = new ListDiffer<Plugin>();
+    this.$_cloneCount = 0;
 
     const options = merge({}, this.options, { renderExternal: true });
-    this.nativeFlicking = new NativeFlicking(this.$el as HTMLElement, options);
+    this.$_nativeFlicking = new NativeFlicking(this.$el as HTMLElement, options);
 
-    this.bindEvents();
-    this.checkUpdate();
+    this.$_bindEvents();
+    this.$_checkUpdate();
   }
 
   public render(h: CreateElement) {
@@ -51,7 +51,7 @@ export default class Flicking extends Vue {
     viewportData.class[`${classPrefix}-viewport`] = true;
     cameraData.class[`${classPrefix}-camera`] = true;
 
-    const panels = this.getPanels();
+    const panels = this.$_getPanels();
 
     return h(this.tag,
       [h("div", viewportData,
@@ -63,23 +63,23 @@ export default class Flicking extends Vue {
   }
 
   public onUpdate(diffResult: DiffResult<HTMLElement>) {
-    this.nativeFlicking.sync(diffResult as DiffResult<HTMLElement>);
+    this.$_nativeFlicking.sync(diffResult as DiffResult<HTMLElement>);
     this.$nextTick(() => {
-      this.checkUpdate();
+      this.$_checkUpdate();
     });
   }
 
-  private checkUpdate() {
-    this.checkPlugins();
-    this.checkCloneCount();
+  private $_checkUpdate() {
+    this.$_checkPlugins();
+    this.$_checkCloneCount();
   }
 
-  private bindEvents() {
+  private $_bindEvents() {
     const events = Object.keys(NativeFlicking.EVENTS)
       .map(key => NativeFlicking.EVENTS[key]);
 
     events.forEach(eventName => {
-      this.nativeFlicking.on(eventName, e => {
+      this.$_nativeFlicking.on(eventName, e => {
         e.currentTarget = this;
         // Make events from camelCase to kebab-case
         this.$emit(eventName.replace(/([A-Z])/g, "-$1").toLowerCase(), e);
@@ -87,49 +87,49 @@ export default class Flicking extends Vue {
     });
   }
 
-  private checkPlugins() {
-    const { list, added, removed, prevList } = this.pluginsDiffer.update(this.plugins);
+  private $_checkPlugins() {
+    const { list, added, removed, prevList } = this.$_pluginsDiffer.update(this.plugins);
 
-    this.nativeFlicking.addPlugins(added.map(index => list[index]));
-    this.nativeFlicking.removePlugins(removed.map(index => prevList[index]));
+    this.$_nativeFlicking.addPlugins(added.map(index => list[index]));
+    this.$_nativeFlicking.removePlugins(removed.map(index => prevList[index]));
   }
 
-  private checkCloneCount() {
-    const newCloneCount = this.nativeFlicking.getCloneCount();
+  private $_checkCloneCount() {
+    const newCloneCount = this.$_nativeFlicking.getCloneCount();
 
-    if (this.cloneCount !== newCloneCount) {
-      this.cloneCount = newCloneCount;
+    if (this.$_cloneCount !== newCloneCount) {
+      this.$_cloneCount = newCloneCount;
       this.$forceUpdate();
     }
   }
 
-  private getPanels() {
-    const lastIndex = this.nativeFlicking
-      ? this.nativeFlicking.getLastIndex()
+  private $_getPanels() {
+    const lastIndex = this.$_nativeFlicking
+      ? this.$_nativeFlicking.getLastIndex()
       : this.options.lastIndex || DEFAULT_OPTIONS.lastIndex;
     const panels = this.$slots.default
-      ? [...this.$slots.default.slice(0, lastIndex + 1), ...this.getClonedVNodes()]
+      ? [...this.$slots.default.slice(0, lastIndex + 1), ...this.$_getClonedVNodes()]
       : undefined;
 
     return panels;
   }
 
-  private getClonedVNodes() {
+  private $_getClonedVNodes() {
     const h = this.$createElement;
-    const cloneCount = this.cloneCount;
+    const cloneCount = this.$_cloneCount;
     const children = this.$slots.default!;
     const clones: VNode[] = [];
 
     for (let cloneIndex = 0; cloneIndex < cloneCount; cloneIndex++) {
       const childKeys = children.map((child, childIdx) => child.key ? child.key : childIdx);
-      clones.push(...children.map((child, childIdx) => this.cloneVNode(child, h, `clone${cloneIndex}-${childKeys[childIdx]}`)));
+      clones.push(...children.map((child, childIdx) => this.$_cloneVNode(child, h, `clone${cloneIndex}-${childKeys[childIdx]}`)));
     }
     return clones;
   }
 
-  private cloneVNode(vnode: VNode, h: CreateElement, key?: string | number): VNode {
+  private $_cloneVNode(vnode: VNode, h: CreateElement, key?: string | number): VNode {
     const clonedChilds = vnode.children
-      ? vnode.children.map(child => this.cloneVNode(child, h))
+      ? vnode.children.map(child => this.$_cloneVNode(child, h))
       : undefined;
     const clone = h(vnode.tag, vnode.data, clonedChilds);
     clone.text = vnode.text;
