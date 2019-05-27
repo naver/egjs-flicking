@@ -98,6 +98,18 @@ describe("Initialization", () => {
       expect(cameraElements.length).equals(1);
       expect(cameraElements[0].parentElement).equals(viewportElements[0]);
     });
+
+    it("should init with panels all have left style enabled on it", () => {
+      // Given
+      /* NOTHING */
+
+      // When
+      flickingInfo = createFlicking(horizontal.full);
+
+      // Then
+      const allPanels = flickingInfo.instance.getAllPanels();
+      expect(allPanels.every(panel => panel.getElement().style.left !== "")).to.be.true;
+    });
   });
 
   describe("circular", () => {
