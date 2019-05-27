@@ -6,7 +6,7 @@
 import Snap from "./Snap";
 import { MOVE_TYPE, EVENTS } from "../consts";
 import { MoveTypeContext, DestinationInfo } from "../types";
-import { circulate } from "../utils";
+import { circulate, isBetween } from "../utils";
 
 class FreeScroll extends Snap {
   protected readonly type: string = MOVE_TYPE.FREE_SCROLL;
@@ -17,37 +17,61 @@ class FreeScroll extends Snap {
   }
 
   public findTargetPanel(ctx: MoveTypeContext): DestinationInfo {
-    const { axesEvent, viewport, swipeDistance } = ctx;
+    const { axesEvent, state, viewport, isNextDirection } = ctx;
     const destPos = axesEvent.destPos.flick;
     const minimumDistanceToChange = this.calcBrinkOfChange(ctx);
+    const scrollArea = viewport.getScrollArea();
+    const scrollAreaSize = viewport.getScrollAreaSize();
+    const currentPanel = viewport.getCurrentPanel()!;
+    const options = viewport.options;
+    const looped = !isBetween(state.lastPosition + state.delta, scrollArea.prev, scrollArea.next);
 
-    const eventDelta = Math.abs(axesEvent.delta.flick);
+    // Sometimes, delta has wrong value
+    // https://github.com/naver/egjs-axes/issues/136
+    const origDestPos = axesEvent.destPos.flick;
+    const eventDestPos = looped
+      ? isNextDirection
+        // Adjust value for circular mode, only for when looped
+        ? origDestPos + scrollAreaSize
+        : origDestPos - scrollAreaSize
+      : origDestPos;
+    const eventDelta = Math.abs(eventDestPos - state.lastPosition);
+
     if (eventDelta > minimumDistanceToChange) {
       const destInfo = super.findSnappedPanel(ctx);
       destInfo.destPos = destPos;
-      destInfo.eventType = destInfo.eventType === EVENTS.RESTORE
+      destInfo.eventType = !options.circular && destInfo.panel === currentPanel
         ? ""
         : EVENTS.CHANGE;
 
       return destInfo;
     } else {
-      const scrollArea = viewport.getScrollArea();
       const estimatedPosition = circulate(destPos, scrollArea.prev, scrollArea.next, false)
         + viewport.getRelativeHangerPosition();
+      const estimatedPanel = viewport.findNearestPanelAt(estimatedPosition)!;
 
       return {
-        panel: viewport.findNearestPanelAt(estimatedPosition)!,
+        panel: estimatedPanel,
         destPos,
         duration: viewport.options.duration,
-        eventType: swipeDistance > minimumDistanceToChange
-          ? EVENTS.CHANGE
-          : "",
+        eventType: "",
       };
     }
   }
 
   public findRestorePanel(ctx: MoveTypeContext): DestinationInfo {
     return this.findTargetPanel(ctx);
+  }
+
+  public findPanelWhenInterrupted(ctx: MoveTypeContext): DestinationInfo {
+    const { viewport } = ctx;
+
+    return {
+      panel: viewport.getNearestPanel()!,
+      destPos: viewport.getCameraPosition(),
+      duration: viewport.options.duration,
+      eventType: "",
+    };
   }
 
   protected calcBrinkOfChange(ctx: MoveTypeContext): number {
@@ -65,13 +89,13 @@ class FreeScroll extends Snap {
     // Ref #191(https://github.com/naver/egjs-flicking/issues/191)
     const lastHangerPosition = lastPosition + viewport.getRelativeHangerPosition();
 
+    const scrollAreaSize = viewport.getScrollAreaSize();
     let minimumDistanceToChange = isNextDirection
       ? currentPanelPosition + currentPanel.getSize() - lastHangerPosition + halfGap
       : lastHangerPosition - currentPanelPosition + halfGap;
+    minimumDistanceToChange = Math.abs(minimumDistanceToChange % scrollAreaSize);
 
-    minimumDistanceToChange = Math.max(minimumDistanceToChange, options.threshold);
-
-    return minimumDistanceToChange;
+    return Math.min(minimumDistanceToChange, scrollAreaSize - minimumDistanceToChange);
   }
 }
 

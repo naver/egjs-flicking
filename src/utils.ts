@@ -276,7 +276,6 @@ export function restoreStyle(element: HTMLElement, originalStyle: OriginalStyle)
  * ```
  */
 export function withFlickingMethods(prototype: any, flickingName: string) {
-
   Object.keys(FLICKING_METHODS).forEach((name: keyof Flicking) => {
     if (prototype[name]) {
       return;
