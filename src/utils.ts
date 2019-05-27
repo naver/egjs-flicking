@@ -49,6 +49,9 @@ export let checkTranslateSupport = () => {
     transform: "transform",
   };
 
+  if (typeof document === "undefined") {
+    return;
+  }
   const supportedStyle = document.documentElement.style;
   let transformName = "";
   for (const prefixedTransform in transforms) {
