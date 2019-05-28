@@ -38,7 +38,7 @@
           panel.getElement().innerHTML = panel.getProgress().toFixed(2);
         });
       }"
-      ref="flicking1">
+      ref="flick1">
       <div class="panel"></div>
       <div class="panel"></div>
       <div class="panel"></div>
@@ -64,7 +64,8 @@
         flicking.getAllPanels(true).forEach(panel => {
           panel.getElement().innerHTML = panel.getOutsetProgress().toFixed(2);
         });
-      }">
+      }"
+      ref="flick2">
       <div class="panel"></div>
       <div class="panel"></div>
       <div class="panel"></div>
@@ -90,7 +91,8 @@
         flicking.getAllPanels(true).forEach(panel => {
           panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
         });
-      }">
+      }"
+      ref="flick3">
       <div class="panel"></div>
       <div class="panel"></div>
       <div class="panel"></div>
@@ -102,6 +104,7 @@
   </div >
 </template>
 <script lang="ts">
+import { Flicking } from "../../src/index";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({})
@@ -176,6 +179,20 @@ export default class Progress extends Vue {
   <div class="panel"></div>
   <div class="panel"></div>
 </flicking>`;
+
+  mounted() {
+    this.$nextTick(() => {
+      (this.$refs.flick1 as Flicking).getAllPanels(true).forEach(panel => {
+        panel.getElement().innerHTML = panel.getProgress().toFixed(2);
+      });
+      (this.$refs.flick2 as Flicking).getAllPanels(true).forEach(panel => {
+        panel.getElement().innerHTML = panel.getOutsetProgress().toFixed(2);
+      });
+      (this.$refs.flick3 as Flicking).getAllPanels(true).forEach(panel => {
+        panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
+      });
+    });
+  }
 }
 </script>
 <style scoped>

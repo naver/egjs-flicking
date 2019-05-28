@@ -53,6 +53,33 @@ Steps to submit your pull request:
     When your contribution is well enough to be accepted, then will be merged to our branch.
 11. All done!
 
-
 ## License
 By contributing to egjs-flicking, you're agreeing that your contributions will be licensed under its [MIT](https://opensource.org/licenses/MIT) license.
+
+## Local development
+### Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads demo
+```sh
+npm run start
+# or
+npm run demo
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Run your tests
+```
+npm run test
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
