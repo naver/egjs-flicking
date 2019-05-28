@@ -39,6 +39,7 @@ export default class Viewport {
   private state: {
     size: number;
     position: number;
+    relativePosition: number;
     relativeHangerPosition: number;
     scrollArea: {
       prev: number;
@@ -67,6 +68,7 @@ export default class Viewport {
     this.state = {
       size: 0,
       position: 0,
+      relativePosition: 0,
       relativeHangerPosition: 0,
       scrollArea: {
         prev: 0,
@@ -168,11 +170,24 @@ export default class Viewport {
     // Update position & nearestPanel
     state.position = pos;
     this.nearestPanel = this.findNearestPanel();
-
     const nearestPanel = this.nearestPanel;
     const originalNearestPosition = nearestPanel
       ? nearestPanel.getPosition()
       : 0;
+
+    // From 0(panel position) to 1(panel position + panel size)
+    // When it's on gap area value will be (val > 1 || val < 0)
+    if (nearestPanel) {
+      const hangerPosition = this.getHangerPosition();
+      const panelPosition = nearestPanel.getPosition();
+      const panelSize = nearestPanel.getSize();
+      const halfGap = options.gap / 2;
+
+      // As panel's range is from panel position - half gap ~ panel pos + panel size + half gap
+      state.relativePosition = (hangerPosition - panelPosition + halfGap) / (panelSize +  2 * halfGap);
+    } else {
+      state.relativePosition = 0;
+    }
 
     this.checkNeedPanel(axesEvent);
 
@@ -1176,15 +1191,26 @@ export default class Viewport {
     const state = this.state;
     const currentPanel = this.getCurrentPanel();
     const currentState = this.stateMachine.getState();
-    const isFreeScroll = (this.options.moveType as MoveTypeObjectOption).type === "freeScroll";
+    const isFreeScroll = this.moveType.is(MOVE_TYPE.FREE_SCROLL);
+    const relativeHangerPosition = this.getRelativeHangerPosition();
+    const halfGap = this.options.gap / 2;
 
-    if (currentState.holding || currentState.playing || isFreeScroll) {
+    if (currentState.holding || currentState.playing) {
       return;
     }
 
-    let newPosition = currentPanel
-      ? currentPanel.getAnchorPosition() - state.relativeHangerPosition
-      : this.getCameraPosition();
+    let newPosition = 0;
+    if (isFreeScroll) {
+      const nearestPanel = this.getNearestPanel();
+
+      newPosition = nearestPanel
+        ? nearestPanel.getPosition() - halfGap + (nearestPanel.getSize() + 2 * halfGap) * state.relativePosition - relativeHangerPosition
+        : this.getCameraPosition();
+    } else {
+      newPosition = currentPanel
+        ? currentPanel.getAnchorPosition() - relativeHangerPosition
+        : this.getCameraPosition();
+    }
 
     if (this.canSetBoundMode()) {
       newPosition = clamp(newPosition, state.scrollArea.prev, state.scrollArea.next);
