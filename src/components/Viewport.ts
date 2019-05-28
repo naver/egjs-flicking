@@ -39,7 +39,7 @@ export default class Viewport {
   private state: {
     size: number;
     position: number;
-    relativePosition: number;
+    panelMaintainRatio: number;
     relativeHangerPosition: number;
     scrollArea: {
       prev: number;
@@ -68,7 +68,7 @@ export default class Viewport {
     this.state = {
       size: 0,
       position: 0,
-      relativePosition: 0,
+      panelMaintainRatio: 0,
       relativeHangerPosition: 0,
       scrollArea: {
         prev: 0,
@@ -184,9 +184,9 @@ export default class Viewport {
       const halfGap = options.gap / 2;
 
       // As panel's range is from panel position - half gap ~ panel pos + panel size + half gap
-      state.relativePosition = (hangerPosition - panelPosition + halfGap) / (panelSize +  2 * halfGap);
+      state.panelMaintainRatio = (hangerPosition - panelPosition + halfGap) / (panelSize +  2 * halfGap);
     } else {
-      state.relativePosition = 0;
+      state.panelMaintainRatio = 0;
     }
 
     this.checkNeedPanel(axesEvent);
@@ -1201,12 +1201,12 @@ export default class Viewport {
       return;
     }
 
-    let newPosition = 0;
+    let newPosition: number;
     if (isFreeScroll) {
       const nearestPanel = this.getNearestPanel();
 
       newPosition = nearestPanel
-        ? nearestPanel.getPosition() - halfGap + (nearestPanel.getSize() + 2 * halfGap) * state.relativePosition - relativeHangerPosition
+        ? nearestPanel.getPosition() - halfGap + (nearestPanel.getSize() + 2 * halfGap) * state.panelMaintainRatio - relativeHangerPosition
         : this.getCameraPosition();
     } else {
       newPosition = currentPanel
