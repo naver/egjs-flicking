@@ -6,7 +6,7 @@
 import Snap from "./Snap";
 import { MOVE_TYPE, EVENTS } from "../consts";
 import { MoveTypeContext, DestinationInfo } from "../types";
-import { circulate, isBetween } from "../utils";
+import { circulate, clamp } from "../utils";
 
 class FreeScroll extends Snap {
   protected readonly type: string = MOVE_TYPE.FREE_SCROLL;
@@ -17,27 +17,15 @@ class FreeScroll extends Snap {
   }
 
   public findTargetPanel(ctx: MoveTypeContext): DestinationInfo {
-    const { axesEvent, state, viewport, isNextDirection } = ctx;
+    const { axesEvent, state, viewport } = ctx;
     const destPos = axesEvent.destPos.flick;
     const minimumDistanceToChange = this.calcBrinkOfChange(ctx);
     const scrollArea = viewport.getScrollArea();
-    const scrollAreaSize = viewport.getScrollAreaSize();
     const currentPanel = viewport.getCurrentPanel()!;
     const options = viewport.options;
-    const looped = !isBetween(state.lastPosition + state.delta, scrollArea.prev, scrollArea.next);
 
-    // Sometimes, delta has wrong value
-    // https://github.com/naver/egjs-axes/issues/136
-    const origDestPos = axesEvent.destPos.flick;
-    const eventDestPos = looped
-      ? isNextDirection
-        // Adjust value for circular mode, only for when looped
-        ? origDestPos + scrollAreaSize
-        : origDestPos - scrollAreaSize
-      : origDestPos;
-    const eventDelta = Math.abs(eventDestPos - state.lastPosition);
-
-    if (eventDelta > minimumDistanceToChange) {
+    const delta = Math.abs(axesEvent.delta.flick + state.delta);
+    if (delta > minimumDistanceToChange) {
       const destInfo = super.findSnappedPanel(ctx);
       destInfo.destPos = destPos;
       destInfo.eventType = !options.circular && destInfo.panel === currentPanel
@@ -46,8 +34,12 @@ class FreeScroll extends Snap {
 
       return destInfo;
     } else {
-      const estimatedPosition = circulate(destPos, scrollArea.prev, scrollArea.next, false)
-        + viewport.getRelativeHangerPosition();
+      let estimatedPosition = options.circular
+        ? circulate(destPos, scrollArea.prev, scrollArea.next, false)
+        : destPos;
+      estimatedPosition = clamp(estimatedPosition, scrollArea.prev, scrollArea.next);
+      estimatedPosition += viewport.getRelativeHangerPosition();
+
       const estimatedPanel = viewport.findNearestPanelAt(estimatedPosition)!;
 
       return {
