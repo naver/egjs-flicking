@@ -18,7 +18,7 @@ Vue.use(VueFlicking);
 
 Then, in nuxt.config.js
 ```js
-// CAUTION: No "ssr: false" or "mode: 'client'" is needed
+// ❗ CAUTION: No "ssr: false" or "mode: 'client'" is needed
 plugins: ['~/plugins/install'],
 build: {
   loaders: {

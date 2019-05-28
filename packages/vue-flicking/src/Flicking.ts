@@ -3,12 +3,11 @@
  * egjs projects are licensed under the MIT license
  */
 
-import NativeFlicking, { Plugin, FlickingOptions, withFlickingMethods, DEFAULT_OPTIONS } from "@egjs/flicking";
+import NativeFlicking, { Plugin, FlickingOptions, DestroyOption, withFlickingMethods, DEFAULT_OPTIONS } from "@egjs/flicking";
 import ChildrenDiffer from "@egjs/vue-children-differ";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { CreateElement, VNodeData, VNode } from "vue";
-import { merge } from "./utils";
 
 @Component({
   name: "Flicking",
@@ -32,11 +31,15 @@ export default class Flicking extends Vue {
     this.$_pluginsDiffer = new ListDiffer<Plugin>();
     this.$_cloneCount = 0;
 
-    const options = merge({}, this.options, { renderExternal: true });
+    const options = {...this.options, ...{ renderExternal: true }};
     this.$_nativeFlicking = new NativeFlicking(this.$el as HTMLElement, options);
 
     this.$_bindEvents();
     this.$_checkUpdate();
+  }
+
+  public beforeDestroy() {
+    this.destroy({ preserveUI: true });
   }
 
   public render(h: CreateElement) {
@@ -63,10 +66,15 @@ export default class Flicking extends Vue {
   }
 
   public onUpdate(diffResult: DiffResult<HTMLElement>) {
-    this.$_nativeFlicking.sync(diffResult as DiffResult<HTMLElement>);
+    this.$_nativeFlicking.sync(diffResult);
     this.$nextTick(() => {
       this.$_checkUpdate();
     });
+  }
+
+  // overrides
+  public destroy(option: Partial<DestroyOption> = {}) {
+    this.$_nativeFlicking.destroy(option);
   }
 
   private $_checkUpdate() {

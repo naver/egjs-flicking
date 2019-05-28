@@ -48,5 +48,7 @@ export default class AutoPlayDemo extends Vue {
 }
 </script>
 <style scoped>
-
+#parallax .flicking .panel {
+  width: 500px;
+}
 </style>
