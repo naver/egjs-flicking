@@ -762,7 +762,7 @@ describe("Methods call", () => {
 
       // Then
       const afterCameraPosition = flickingViewport.getCameraPosition();
-      expect(prevCameraPosition).equals(afterCameraPosition);
+      expect(prevCameraPosition).closeTo(afterCameraPosition, 0.001);
     });
   });
 
