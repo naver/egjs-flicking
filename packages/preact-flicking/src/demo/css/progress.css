@@ -1,0 +1,16 @@
+#progress .progress {
+  position: relative;
+  width: 400px;
+  height: 10px;
+  border-radius: 5px;
+  background: #eee;
+  margin: 10px auto;
+  overflow: hidden;
+}
+#progress .thumb {
+  position: relative;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: #ccc;
+}

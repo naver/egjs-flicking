@@ -1,0 +1,49 @@
+.flicking {
+  width: 500px;
+  height: 130px;
+  margin: 0px auto;
+  background: #eee;
+  background: rgba(55, 55, 55 0.1);
+  border-radius: 5px;
+}
+.flicking .panel, .flicking .infinite {
+  position: relative;
+  display: block;
+  border-radius: 5px;
+  width: 200px;
+  margin-top: 5px;
+  background: #f55;
+  height: 120px;
+  text-align: center;
+  line-height: 120px;
+}
+.flicking .panel:nth-child(5n + 1) {
+  background: #F47071;
+}
+.flicking .panel:nth-child(5n + 2) {
+  background: #F69462;
+}
+.flicking .panel:nth-child(5n + 3) {
+  background: #EDE484;
+}
+.flicking .panel:nth-child(5n + 4) {
+  background: #90F290;
+}
+.flicking .panel:nth-child(5n + 5) {
+  background: #78CAFF;
+}
+.flicking .infinite0 {
+  background: #F47071;
+}
+.flicking .infinite1 {
+  background: #F69462;
+}
+.flicking .infinite2 {
+  background: #EDE484;
+}
+.flicking .infinite3 {
+  background: #90F290;
+}
+.flicking .infinite4 {
+  background: #78CAFF;
+}

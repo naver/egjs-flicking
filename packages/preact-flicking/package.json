@@ -1,0 +1,46 @@
+{
+  "name": "@egjs/preact-flicking",
+  "version": "3.0.0-beta",
+  "description": "A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.",
+  "main": "dist/flicking.cjs.js",
+  "module": "dist/flicking.esm.js",
+  "sideEffects": false,
+  "es2015": "dist/flicking.esm.js",
+  "types": "declaration/index.d.ts",
+  "scripts": {
+    "start": "rollup -c rollup.config.demo.js -w",
+    "build": "rollup -c && npm run declaration",
+    "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/naver/egjs-flicking"
+  },
+  "author": {
+    "name": "NAVER Corp."
+  },
+  "namespace": {
+    "eg": "eg"
+  },
+  "homepage": "https://github.com/naver/egjs-flicking",
+  "bugs": {
+    "url": "https://github.com/naver/egjs-flicking/issues"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@egjs/build-helper": "^0.0.5",
+    "@egjs/flicking-plugins": "^3.1.0",
+    "highlight.js": "^9.15.7",
+    "preact": "^8.4.2",
+    "preact-cli": "^2.2.1",
+    "preact-compat": "^3.18.5",
+    "rollup-plugin-css-only": "^1.0.0",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "@egjs/children-differ": "0.0.0",
+    "@egjs/flicking": "^3.1.1",
+    "@egjs/list-differ": "0.0.1"
+  }
+}
