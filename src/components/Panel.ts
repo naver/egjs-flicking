@@ -239,7 +239,7 @@ class Panel implements FlickingPanel {
   }
 
   public destroy(option: Partial<DestroyOption>): void {
-    if (!option.preserveStyle) {
+    if (!option.preserveUI) {
       const originalStyle = this.state.originalStyle;
 
       restoreStyle(this.element, originalStyle);
