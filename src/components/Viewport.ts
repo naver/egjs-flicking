@@ -508,7 +508,7 @@ export default class Viewport {
     const originalPanels = this.panelManager.originalPanels();
 
     this.removePlugins(this.plugins);
-    if (!option.preserveStyle) {
+    if (!option.preserveUI) {
       restoreStyle(viewportElement, state.originalViewportStyle);
       restoreStyle(cameraElement, state.originalCameraStyle);
 

@@ -472,5 +472,5 @@ export type FlickingMethodsKeys = Exclude<keyof Flicking, ExcludeKeys>;
 export type FlickingMethods = Pick<Flicking, FlickingMethodsKeys>;
 
 export interface DestroyOption {
-  preserveStyle: boolean;
+  preserveUI: boolean;
 }

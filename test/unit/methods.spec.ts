@@ -311,13 +311,13 @@ describe("Methods call", () => {
       expect(flickingElement.children.length).equals(2);
     });
 
-    describe("With preserveStyle option", () => {
+    describe("With preserveUI option", () => {
       beforeEach(() => {
         // Given
         flickingInfo = createFlicking(horizontal.full);
 
         // When
-        flickingInfo.instance.destroy({ preserveStyle: true });
+        flickingInfo.instance.destroy({ preserveUI: true });
       });
 
       it("should have viewport & camera element", () => {
