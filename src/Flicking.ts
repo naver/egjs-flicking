@@ -9,7 +9,7 @@ import Panel from "./components/Panel";
 
 import { merge, getProgress, parseElement, isString, counter } from "./utils";
 import { DEFAULT_OPTIONS, EVENTS, DIRECTION, AXES_EVENTS, STATE_TYPE, DEFAULT_MOVE_TYPE_OPTIONS } from "./consts";
-import { FlickingOptions, FlickingEvent, Direction, EventType, FlickingPanel, TriggerCallback, FlickingContext, FlickingStatus, Plugin, ElementLike } from "./types";
+import { FlickingOptions, FlickingEvent, Direction, EventType, FlickingPanel, TriggerCallback, FlickingContext, FlickingStatus, Plugin, ElementLike, DestroyOption } from "./types";
 
 /**
  * @memberof eg
@@ -427,10 +427,10 @@ class Flicking extends Component {
    * flick.destroy();
    * console.log(flick.moveTo); // null
    */
-  public destroy(): void {
+  public destroy(option: Partial<DestroyOption> = {}): void {
     this.off();
 
-    this.viewport.destroy();
+    this.viewport.destroy(option);
 
     // release resources
     for (const x in this) {

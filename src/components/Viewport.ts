@@ -10,7 +10,7 @@ import Panel from "./Panel";
 import PanelManager from "./PanelManager";
 import StateMachine from "./StateMachine";
 import MoveType from "../moves/MoveType";
-import { FlickingOptions, FlickingPanel, FlickingStatus, ElementLike, EventType, TriggerCallback, NeedPanelEvent, FlickingEvent, MoveTypeObjectOption, OriginalStyle, Plugin } from "../types";
+import { FlickingOptions, FlickingPanel, FlickingStatus, ElementLike, EventType, TriggerCallback, NeedPanelEvent, FlickingEvent, MoveTypeObjectOption, OriginalStyle, Plugin, DestroyOption } from "../types";
 import { DEFAULT_VIEWPORT_CSS, DEFAULT_CAMERA_CSS, TRANSFORM, DEFAULT_OPTIONS, EVENTS, DIRECTION, STATE_TYPE, MOVE_TYPE } from "../consts";
 import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement, hasClass, restoreStyle } from "../utils";
 import Snap from "../moves/Snap";
@@ -500,7 +500,7 @@ export default class Viewport {
     }
   }
 
-  public destroy(): void {
+  public destroy(option: Partial<DestroyOption>): void {
     const state = this.state;
     const wrapper = this.flicking.getElement();
     const viewportElement = this.viewportElement;
@@ -508,28 +508,30 @@ export default class Viewport {
     const originalPanels = this.panelManager.originalPanels();
 
     this.removePlugins(this.plugins);
-    restoreStyle(viewportElement, state.originalViewportStyle);
-    restoreStyle(cameraElement, state.originalCameraStyle);
+    if (!option.preserveStyle) {
+      restoreStyle(viewportElement, state.originalViewportStyle);
+      restoreStyle(cameraElement, state.originalCameraStyle);
 
-    if (!state.isCameraGiven && !this.options.renderExternal) {
-      const topmostElement = state.isViewportGiven
-        ? viewportElement
-        : wrapper;
-      const deletingElement = state.isViewportGiven
-        ? cameraElement
-        : viewportElement;
+      if (!state.isCameraGiven && !this.options.renderExternal) {
+        const topmostElement = state.isViewportGiven
+          ? viewportElement
+          : wrapper;
+        const deletingElement = state.isViewportGiven
+          ? cameraElement
+          : viewportElement;
 
-      originalPanels.forEach(panel => {
-        topmostElement.appendChild(panel.getElement());
-      });
+        originalPanels.forEach(panel => {
+          topmostElement.appendChild(panel.getElement());
+        });
 
-      topmostElement.removeChild(deletingElement);
+        topmostElement.removeChild(deletingElement);
+      }
     }
 
     this.axes.destroy();
     this.panInput.destroy();
 
-    originalPanels.forEach(panel => { panel.destroy(); });
+    originalPanels.forEach(panel => { panel.destroy(option); });
 
     // release resources
     for (const x in this) {
