@@ -430,6 +430,10 @@ class Flicking extends Component {
   public destroy(option: Partial<DestroyOption> = {}): void {
     this.off();
 
+    if (this.options.autoResize) {
+      window.removeEventListener("resize", this.resize);
+    }
+
     this.viewport.destroy(option);
 
     // release resources
@@ -661,9 +665,7 @@ class Flicking extends Component {
 
   private listenResize(): void {
     if (this.options.autoResize) {
-      window.addEventListener("resize", () => {
-        this.resize();
-      });
+      window.addEventListener("resize", this.resize);
     }
   }
 
