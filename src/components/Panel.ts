@@ -4,7 +4,7 @@
  */
 
 import Viewport from "./Viewport";
-import { OriginalStyle, FlickingPanel, ElementLike } from "../types";
+import { OriginalStyle, FlickingPanel, ElementLike, DestroyOption } from "../types";
 import { DEFAULT_PANEL_CSS, EVENTS } from "../consts";
 import { addClass, applyCSS, parseArithmeticExpression, parseElement, getProgress, restoreStyle } from "../utils";
 
@@ -238,10 +238,12 @@ class Panel implements FlickingPanel {
     return this;
   }
 
-  public destroy(): void {
-    const originalStyle = this.state.originalStyle;
+  public destroy(option: Partial<DestroyOption>): void {
+    if (!option.preserveStyle) {
+      const originalStyle = this.state.originalStyle;
 
-    restoreStyle(this.element, originalStyle);
+      restoreStyle(this.element, originalStyle);
+    }
 
     // release resources
     for (const x in this) {

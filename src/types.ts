@@ -470,3 +470,7 @@ export interface Plugin {
 export type ExcludeKeys = keyof Component | "replace" | "append" | "remove" | "prepend" | "sync" | "getCloneCount";
 export type FlickingMethodsKeys = Exclude<keyof Flicking, ExcludeKeys>;
 export type FlickingMethods = Pick<Flicking, FlickingMethodsKeys>;
+
+export interface DestroyOption {
+  preserveStyle: boolean;
+}

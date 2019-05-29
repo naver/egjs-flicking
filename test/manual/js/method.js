@@ -116,6 +116,8 @@ setTimeout(function() {
             methodLog(el, status);
         } else if (method === "setStatus") {
             methodLog(el, fe[method](status));
+        } else if (method === "destroy") {
+            methodLog(el, fe[method]({ preserveStyle: true }))
         } else {
             methodLog(el, fe[method]());
         }
