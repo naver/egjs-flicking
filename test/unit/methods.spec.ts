@@ -5,7 +5,7 @@ import { FlickingEvent, FlickingPanel, NeedPanelEvent } from "../../src/types";
 import { horizontal, panel as createPanelElement } from "./assets/fixture";
 import { createFlicking, cleanup, simulate, waitFor, createHorizontalElement, waitEvent } from "./assets/utils";
 import { EVENTS, DIRECTION } from "../../src/consts";
-import { counter } from "../../src/utils";
+import { counter, toArray } from "../../src/utils";
 import Viewport from "../../src/components/Viewport";
 import Panel from "../../src/components/Panel";
 
@@ -309,6 +309,42 @@ describe("Methods call", () => {
 
       const flickingElement = flickingInfo.element;
       expect(flickingElement.children.length).equals(2);
+    });
+
+    describe("With preserveStyle option", () => {
+      beforeEach(() => {
+        // Given
+        flickingInfo = createFlicking(horizontal.full);
+
+        // When
+        flickingInfo.instance.destroy({ preserveStyle: true });
+      });
+
+      it("should have viewport & camera element", () => {
+        // Then
+        const flickingElement = flickingInfo.element;
+        const viewportElement = flickingElement.querySelector(".eg-flick-viewport");
+        const cameraElement = flickingElement.querySelector(".eg-flick-camera");
+
+        expect(viewportElement).not.to.be.null;
+        expect(cameraElement).not.to.be.null;
+      });
+
+      it("should maintain classes on panels", () => {
+        // Then
+        const flickingElement = flickingInfo.element;
+        const panelElements = flickingElement.querySelectorAll(".eg-flick-panel");
+
+        expect(panelElements.length).not.equals(0);
+      });
+
+      it("should maintain styles on panels", () => {
+        // Then
+        const flickingElement = flickingInfo.element;
+        const panels = toArray(flickingElement.querySelectorAll(".eg-flick-panel")) as HTMLElement[];
+
+        expect(panels.every(panelEl => panelEl.style.left !== "")).to.be.true;
+      });
     });
   });
 
