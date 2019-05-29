@@ -58,12 +58,12 @@ class FreeScroll extends Snap {
   }
 
   public findPanelWhenInterrupted(ctx: MoveTypeContext): DestinationInfo {
-    const { viewport, axesEvent } = ctx;
+    const { viewport } = ctx;
 
     return {
       panel: viewport.getNearestPanel()!,
       destPos: viewport.getCameraPosition(),
-      duration: Math.max(axesEvent.duration, viewport.options.duration),
+      duration: 0,
       eventType: "",
     };
   }
