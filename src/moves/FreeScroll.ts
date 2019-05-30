@@ -27,6 +27,8 @@ class FreeScroll extends Snap {
     const delta = Math.abs(axesEvent.delta.flick + state.delta);
     if (delta > minimumDistanceToChange) {
       const destInfo = super.findSnappedPanel(ctx);
+
+      destInfo.duration = axesEvent.duration;
       destInfo.destPos = destPos;
       destInfo.eventType = !options.circular && destInfo.panel === currentPanel
         ? ""
@@ -45,7 +47,7 @@ class FreeScroll extends Snap {
       return {
         panel: estimatedPanel,
         destPos,
-        duration: viewport.options.duration,
+        duration: axesEvent.duration,
         eventType: "",
       };
     }
@@ -61,7 +63,7 @@ class FreeScroll extends Snap {
     return {
       panel: viewport.getNearestPanel()!,
       destPos: viewport.getCameraPosition(),
-      duration: viewport.options.duration,
+      duration: 0,
       eventType: "",
     };
   }
