@@ -33,7 +33,7 @@ requestUrl(location.href, function (res) {
   html.innerHTML = res;
 
   var cssFiles = $("link[href]", html);
-  var scriptFiles = $(`script[src]:not([src*="codepen"])`, html);
+  var scriptFiles = $(`script[src]:not([src*="codepen"]):not([src*="analytics"])`, html);
   var inlineScripts = $("script:not([src])", html);
   var inlineStyles = $("style", html);
   var titleEl = $("title", document);
