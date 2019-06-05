@@ -4,14 +4,8 @@ Angular wrapper of [@egjs/flicking](https://github.com/naver/egjs-flicking)
 
 ## Install
 ```sh
-npm install --save @egjs/vue-flicking
+npm install --save @egjs/ngx-flicking
 ```
-
-## ❗Changes from @egjs/flicking
-- All `camelCased` event names became **`kebab-case`**
-  - e.g., `moveEnd` => **`move-end`**
-- You can't use methods that manipulates DOM directly
-  - e.g., `append()`, `remove()`, ...
 
 ## Quick Start
 ### Module definition
@@ -83,8 +77,6 @@ npm install
 ### Compiles and hot-reloads demo
 ```sh
 npm run start
-# or
-npm run demo
 ```
 
 ### Compiles and minifies for production
