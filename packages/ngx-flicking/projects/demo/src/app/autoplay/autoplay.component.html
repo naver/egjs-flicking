@@ -1,0 +1,26 @@
+<div id="autoplay" class="plugins container" v-highlight>
+  <h1>AutoPlay<a href="https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.Flicking.plugins.AutoPlay.html"
+    target="_blank">API</a></h1>
+  <ul class="extra">
+    <li>You can set Flicking to move to the next/previous panel periodically.</li>
+  </ul>
+  <eg-flicking
+    class="flicking"
+    [options]="{ circular: true, gap: 10, duration: 500 }"
+    [plugins]="plugins"
+  >
+    <ng-template>
+      <div class="panel">
+        <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
+      </div>
+      <div class="panel">
+        <img src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
+      </div>
+      <div class="panel">
+        <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
+      </div>
+    </ng-template>
+  </eg-flicking>
+  <div class="pagination"></div>
+  <pre><code class="hljs html" data-script="flicking0">{{ code0 }}</code></pre>
+</div>

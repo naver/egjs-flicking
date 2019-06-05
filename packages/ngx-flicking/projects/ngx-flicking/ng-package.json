@@ -1,0 +1,11 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/ngx-flicking",
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  },
+  "whitelistedNonPeerDependencies": [
+    "@egjs/flicking",
+    "@egjs/ngx-children-differ"
+  ]
+}

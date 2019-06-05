@@ -1,0 +1,34 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<h2>Flicking Example</h2>
+<h3>Notice</h3>
+<ol>
+  <li>Add Item: click the 'ADD' Button</li>
+  <li>Remove Item: double click on a target item</li>
+  <li>Log: Open developer tools to show logs</li>
+</ol>
+<button (click)="appendItem()">Append</button>
+<button (click)="prependItem()">Prepend</button>
+<button (click)="addCloneCount()">Add Panel Count</button>
+<!--div id="axes-target">
+  <div class="wrapper" [ngChildrenDiffer]="list" (update)="onUpdate($event)">
+    <div class="panel" *ngFor="let val of list">{{val}}</div>
+  </div>
+</div-->
+
+<eg-flicking class="flicking" [options]="{circular:true, moveType: 'freeScroll'}">
+  <ng-template>
+    <div class="panel" *ngFor="let val of list">hello {{val.num}}</div>
+  </ng-template>
+</eg-flicking>
+
+<!-- <eg-flicking class="flicking" [panels]="list" [options]="{circular:true}" [testCloneCount]="testCloneCount"> -->
+    <!-- <lib-test-panel #test class="panel"></lib-test-panel> -->
+    <!-- <div #test>Hello1</div>
+    <div #test>Hello2</div> -->
+    <!-- <div egNgxFlickingPanel class="panel" *ngFor="let val of list">hello {{val.num}}</div> -->
+    <!-- <div egNgxFlickingPanel class="panel">hello</div> -->
+
+    <!-- <div class="panel">hello 0</div>
+    <div class="panel">hello 1</div>
+    <div class="panel">hello 3</div> -->
+  <!-- </eg-flicking> -->
