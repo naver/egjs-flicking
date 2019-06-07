@@ -19,7 +19,9 @@ describe("Methods call", () => {
     eventFired: string[],
     eventDirection: string[],
   };
-  // afterEach(() => cleanup());
+  afterEach(() => {
+    cleanup()
+  });
 
   describe("getIndex()", () => {
     const maximumIndex = 2;
