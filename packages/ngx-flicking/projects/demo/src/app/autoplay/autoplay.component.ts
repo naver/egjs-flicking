@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Fade, AutoPlay} from '@egjs/flicking-plugins';
 import { Plugin } from '@egjs/flicking';
 

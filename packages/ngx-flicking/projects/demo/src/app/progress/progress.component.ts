@@ -1,5 +1,5 @@
 // import { MOVE_TYPE, EVENTS } from './../../../../../../../src/consts';
-import Flicking, { FlickingEvent } from '@egjs/flicking';
+import { FlickingEvent } from '@egjs/flicking';
 import { Component, OnInit, ViewChild, ViewContainerRef, AfterViewInit } from '@angular/core';
 import { NgxFlickingComponent } from 'projects/ngx-flicking/src/lib/ngx-flicking.component';
 

@@ -1,6 +1,4 @@
-import { AlignComponent } from './align/align.component';
 import { Component, ElementRef } from '@angular/core';
-import { CustomComponent } from './custom/custom.component';
 
 @Component({
   selector: 'app-root',

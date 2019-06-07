@@ -1,4 +1,3 @@
-import { NeedPanelEvent } from './../../../../../../../declaration/types.d';
 import { EVENTS } from './../../../../../../../src/consts';
 import { Component, OnInit, Input, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
 

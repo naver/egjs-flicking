@@ -16,7 +16,6 @@ import { VariablesizeComponent } from './variablesize/variablesize.component';
 import { AutoplayComponent } from './autoplay/autoplay.component';
 import { FadeComponent } from './fade/fade.component';
 import { ParallaxComponent } from './parallax/parallax.component';
-import { NgxFlickingPanelDirective } from 'projects/ngx-flicking/src/lib/ngx-flicking-panel.directive';
 
 const appRoutes: Routes = [
   { path: 'align', component: AlignComponent },
