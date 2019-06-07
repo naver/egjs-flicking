@@ -28,13 +28,13 @@ export class InfiniteComponent implements OnInit {
     this.list0.push(end + 1, end + 2);
   }
 
-  handleEvents1(e) {
+  onNeedPanel1(e) {
     if (e.type === EVENTS.NEED_PANEL) {
       const end = this.list1[this.list1.length - 1] || 0;
       this.list1.push(end + 1, end + 2);
     }
   }
-  handleEvents2(e) {
+  onNeedPanel2(e) {
     if (e.type === EVENTS.NEED_PANEL) {
       const end = this.list2[this.list2.length - 1] || 0;
       this.list2.push(end + 1, end + 2);

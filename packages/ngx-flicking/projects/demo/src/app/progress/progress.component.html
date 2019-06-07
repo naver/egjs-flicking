@@ -5,7 +5,7 @@
   </ul>
   <ngx-flicking class="flicking flicking0"
     [options]="{ gap: 10, circular: true, moveType: { type: 'snap', count: 5 }}"
-    (handleEvents)="onHandleEvents0($event)">
+    (move)="onMove0($event)">
     <ng-template>
       <div class="panel"></div>
       <div class="panel"></div>
@@ -27,7 +27,7 @@
       gap: 10,
       circular: true
     }"
-    (handleEvents)="onHandleEvents1($event)"
+    (move)="onMove1($event)"
     ref="flicking1">
     <ng-template>
       <div class="panel"></div>
@@ -49,7 +49,7 @@
       gap: 10,
       circular: true
     }"
-    (handleEvents)="onHandleEvents2($event)">
+    (move)="onMove2($event)">
     <ng-template>
       <div class="panel"></div>
       <div class="panel"></div>
@@ -72,7 +72,7 @@
       moveType: { type: 'snap', count: 5}
     }"
 
-    (handleEvents)="onHandleEvents3($event)">
+    (move)="onMove3($event)">
     <ng-template>
       <div class="panel"></div>
       <div class="panel"></div>

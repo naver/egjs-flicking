@@ -2,7 +2,9 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import NativeFlicking, { Plugin, FlickingOptions, withFlickingMethods, DEFAULT_OPTIONS, FlickingEvent } from '@egjs/flicking';
+
+// tslint:disable-next-line: max-line-length
+import NativeFlicking, { Plugin, FlickingOptions, withFlickingMethods, DEFAULT_OPTIONS, FlickingEvent, NeedPanelEvent, SelectEvent, ChangeEvent } from '@egjs/flicking';
 // tslint:disable-next-line: max-line-length
 import { Component, OnInit, Input, AfterViewInit, ElementRef, OnChanges, Output, EventEmitter, OnDestroy, ContentChild, TemplateRef } from '@angular/core';
 import ListDiffer, { DiffResult } from '@egjs/list-differ';
@@ -29,8 +31,16 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
   @Input() options: Partial<FlickingOptions> = {};
   @Input() plugins: Plugin[] = [];
 
-  // Reference Flicking.EventType
-  @Output() handleEvents = new EventEmitter<Partial<FlickingEvent>>();
+  // TODO: Can @Output be added dynamically?
+  @Output() holdStart = new EventEmitter<Partial<FlickingEvent>>();
+  @Output() holdEnd = new EventEmitter<Partial<FlickingEvent>>();
+  @Output() moveStart = new EventEmitter<Partial<FlickingEvent>>();
+  @Output() move = new EventEmitter<Partial<FlickingEvent>>();
+  @Output() moveEnd = new EventEmitter<Partial<FlickingEvent>>();
+  @Output() change = new EventEmitter<ChangeEvent>();
+  @Output() restore = new EventEmitter<Partial<FlickingEvent>>();
+  @Output() select = new EventEmitter<SelectEvent>();
+  @Output() needPanel = new EventEmitter<NeedPanelEvent>();
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
   @withFlickingMethods
@@ -71,7 +81,6 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
   ngOnDestroy() {
     if (this.flicking) {
       this.flicking.destroy();
-      // TODO: unbindEvents
     }
   }
 
@@ -121,7 +130,8 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
       this.flicking.on(eventName, e => {
         e.currentTarget = this;
 
-        this.handleEvents.emit(e); // type is camelCase
+        // Style guide: Event - https://angular.io/guide/styleguide#dont-prefix-output-properties
+        this[eventName].emit(e);
       });
     });
   }

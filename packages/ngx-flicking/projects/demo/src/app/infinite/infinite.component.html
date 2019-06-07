@@ -24,7 +24,7 @@
   </ul>
   <ngx-flicking
     class="flicking flicking1" [options]="{ gap: 10, infinite: true, infiniteThreshold: 50 }"
-    (handleEvents)="handleEvents1($event)">
+    (needPanel)="onNeedPanel1($event)">
     <ng-template>
       <div *ngFor="let num of list1" class='infinite infinite{{ math.abs(num) % 5 }}' [attr.key]="num">
         {{ num }}
@@ -38,7 +38,7 @@
   </ul>
   <ngx-flicking
     class="flicking flicking2" [options]="{ gap: 10, infinite: true, moveType: 'freeScroll' }"
-    (handleEvents)="handleEvents2($event)">
+    (needPanel)="onNeedPanel2($event)">
     <ng-template>
       <place-holder class="infinite" *ngFor="let num of list2" [num]="num" [attr.key]="num">
         {{ num }}

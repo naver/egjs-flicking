@@ -50,27 +50,19 @@ export class ProgressComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onHandleEvents0(e: FlickingEvent) {
-    if (e.type === Flicking.EVENTS.MOVE) {
-      this.updateProgressThumb(e.progress * 100);
-    }
+  onMove0(e: FlickingEvent) {
+    this.updateProgressThumb(e.progress * 100);
   }
 
-  onHandleEvents1(e: FlickingEvent) {
-    if (e.type === Flicking.EVENTS.MOVE) {
-      this.updateAllProgress(e.currentTarget);
-    }
+  onMove1(e: FlickingEvent) {
+    this.updateAllProgress(e.currentTarget);
   }
 
-  onHandleEvents2(e: FlickingEvent) {
-    if (e.type === Flicking.EVENTS.MOVE) {
-      this.updateAllOutsetProgress(e.currentTarget);
-    }
+  onMove2(e: FlickingEvent) {
+    this.updateAllOutsetProgress(e.currentTarget);
   }
 
-  onHandleEvents3(e) {
-    if (e.type === Flicking.EVENTS.MOVE) {
-      this.updateAllVisibleRatio(e.currentTarget);
-    }
+  onMove3(e) {
+    this.updateAllVisibleRatio(e.currentTarget);
   }
 }
