@@ -8,7 +8,7 @@ import { Component, OnInit, Input, AfterViewInit, ElementRef, OnChanges, Output,
 import ListDiffer, { DiffResult } from '@egjs/list-differ';
 
 @Component({
-  selector: 'eg-flicking',
+  selector: 'ngx-flicking',
   template: `
     <div>
       <div class={{classPrefix}}-viewport>

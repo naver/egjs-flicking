@@ -25,7 +25,7 @@ import { NgModule } from '@angular/core';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { } /* Your app */
 ```
 
 ### Template & Script
@@ -33,7 +33,7 @@ export class AppModule { }
 @Component({
   selector: 'autoplay-plugin-demo',
   template: `
-  <eg-flicking
+  <ngx-flicking
     [options]="{ circular: true, gap: 10, duration: 500 }"
     [plugins]="plugins"
   >
@@ -48,7 +48,7 @@ export class AppModule { }
         <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
       </div>
     </ng-template>
-  </eg-flicking>
+  </ngx-flicking>
   `,
   styleUrls: ['./autoplay.component.css']
 })

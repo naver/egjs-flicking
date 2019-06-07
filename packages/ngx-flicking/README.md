@@ -4,14 +4,8 @@ Angular wrapper of [@egjs/flicking](https://github.com/naver/egjs-flicking)
 
 ## Install
 ```sh
-npm install --save @egjs/vue-flicking
+npm install --save @egjs/ngx-flicking
 ```
-
-## ❗Changes from @egjs/flicking
-- All `camelCased` event names became **`kebab-case`**
-  - e.g., `moveEnd` => **`move-end`**
-- You can't use methods that manipulates DOM directly
-  - e.g., `append()`, `remove()`, ...
 
 ## Quick Start
 ### Module definition
@@ -31,7 +25,7 @@ import { NgModule } from '@angular/core';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { } /* Your app */
 ```
 
 ### Template & Script
@@ -39,7 +33,7 @@ export class AppModule { }
 @Component({
   selector: 'autoplay-plugin-demo',
   template: `
-  <eg-flicking
+  <ngx-flicking
     [options]="{ circular: true, gap: 10, duration: 500 }"
     [plugins]="plugins"
   >
@@ -54,7 +48,7 @@ export class AppModule { }
         <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
       </div>
     </ng-template>
-  </eg-flicking>
+  </ngx-flicking>
   `,
   styleUrls: ['./autoplay.component.css']
 })
@@ -83,8 +77,6 @@ npm install
 ### Compiles and hot-reloads demo
 ```sh
 npm run start
-# or
-npm run demo
 ```
 
 ### Compiles and minifies for production

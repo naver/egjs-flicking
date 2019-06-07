@@ -6,13 +6,13 @@
     <li>The panel's indexes are zero-based integer.</li>
     <li>Note: The number displayed above each panel is not panel's index.</li>
   </ul>
-  <eg-flicking class="flicking flicking0" [options]="{ gap: 10 }">
+  <ngx-flicking class="flicking flicking0" [options]="{ gap: 10 }">
     <ng-template>
       <div *ngFor="let num of list0" class='infinite infinite{{ math.abs(num) % 5 }}' [attr.key]="num">
         {{ num }}
       </div>
     </ng-template>
-  </eg-flicking>
+  </ngx-flicking>
   <div class="buttons">
     <button id="prepend" (click)="onPrepend()">Prepend</button>
     <button id="append" (click)="onAppend()">Append</button>
@@ -22,7 +22,7 @@
   <ul class="extra">
     <li>Enabling the infinite option can make <strong>needPanel</strong> event to be triggered when more panels at moving direction should be fetched within <strong>infiniteThreshold</strong> value.</li>
   </ul>
-  <eg-flicking
+  <ngx-flicking
     class="flicking flicking1" [options]="{ gap: 10, infinite: true, infiniteThreshold: 50 }"
     (handleEvents)="handleEvents1($event)">
     <ng-template>
@@ -30,13 +30,13 @@
         {{ num }}
       </div>
     </ng-template>
-  </eg-flicking>
+  </ngx-flicking>
   <pre><code class="hljs html" data-script="flicking1">{{ code1 }}</code></pre>
   <h2>infinite: true &amp; placeholder</h2>
   <ul class="extra">
     <li>You can make continuous carousel UI with asynchronous data by adding placeholder panel first, then update panel with fetched data later.</li>
   </ul>
-  <eg-flicking
+  <ngx-flicking
     class="flicking flicking2" [options]="{ gap: 10, infinite: true, moveType: 'freeScroll' }"
     (handleEvents)="handleEvents2($event)">
     <ng-template>
@@ -44,6 +44,6 @@
         {{ num }}
       </place-holder>
     </ng-template>
-  </eg-flicking>
+  </ngx-flicking>
   <pre><code class="hljs html" data-script="flicking2">{{ code2 }}</code></pre>
 </div>

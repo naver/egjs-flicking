@@ -15,13 +15,13 @@
   </div>
 </div-->
 
-<eg-flicking class="flicking" [options]="{circular:true, moveType: 'freeScroll'}">
+<ngx-flicking class="flicking" [options]="{circular:true, moveType: 'freeScroll'}">
   <ng-template>
     <div class="panel" *ngFor="let val of list">hello {{val.num}}</div>
   </ng-template>
-</eg-flicking>
+</ngx-flicking>
 
-<!-- <eg-flicking class="flicking" [panels]="list" [options]="{circular:true}" [testCloneCount]="testCloneCount"> -->
+<!-- <ngx-flicking class="flicking" [panels]="list" [options]="{circular:true}" [testCloneCount]="testCloneCount"> -->
     <!-- <lib-test-panel #test class="panel"></lib-test-panel> -->
     <!-- <div #test>Hello1</div>
     <div #test>Hello2</div> -->
@@ -31,4 +31,4 @@
     <!-- <div class="panel">hello 0</div>
     <div class="panel">hello 1</div>
     <div class="panel">hello 3</div> -->
-  <!-- </eg-flicking> -->
+  <!-- </ngx-flicking> -->

@@ -4,7 +4,7 @@
     <li>You can decide how many panels can be passed on a single snap.</li>
   </ul>
   <h2>Default (count: 1)</h2>
-  <eg-flicking class="flicking flicking0" [options]="{ gap: 10, circular: true }">
+  <ngx-flicking class="flicking flicking0" [options]="{ gap: 10, circular: true }">
     <ng-template>
       <div class="panel"></div>
       <div class="panel"></div>
@@ -12,11 +12,11 @@
       <div class="panel"></div>
       <div class="panel"></div>
     </ng-template>
-  </eg-flicking>
+  </ngx-flicking>
   <div class="pagination pagination0"></div>
   <pre><code class="hljs html" data-script="flicking0">{{ code0 }}</code></pre>
   <h2>count: 3</h2>
-  <eg-flicking class="flicking flicking1" [options]="{ gap: 10, circular: true, moveType: { type: 'snap', count: 3 } }">
+  <ngx-flicking class="flicking flicking1" [options]="{ gap: 10, circular: true, moveType: { type: 'snap', count: 3 } }">
     <ng-template>
       <div class="panel"></div>
       <div class="panel"></div>
@@ -24,11 +24,11 @@
       <div class="panel"></div>
       <div class="panel"></div>
     </ng-template>
-  </eg-flicking>
+  </ngx-flicking>
   <div class="pagination pagination1"></div>
   <pre><code class="hljs html" data-script="flicking1">{{ code1 }}</code></pre>
   <h2>count: Infinity</h2>
-  <eg-flicking class="flicking flicking2" [options]="{ gap: 10, circular: true, moveType: { type: 'snap', count: 100 } }">
+  <ngx-flicking class="flicking flicking2" [options]="{ gap: 10, circular: true, moveType: { type: 'snap', count: 100 } }">
     <ng-template>
       <div class="panel"></div>
       <div class="panel"></div>
@@ -36,7 +36,7 @@
       <div class="panel"></div>
       <div class="panel"></div>
     </ng-template>
-  </eg-flicking>
+  </ngx-flicking>
   <div class="pagination pagination2"></div>
   <pre><code class="hljs html" data-script="flicking2">{{ code2 }}</code></pre>
 </div>
