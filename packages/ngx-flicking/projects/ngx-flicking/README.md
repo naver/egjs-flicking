@@ -1,12 +1,12 @@
 <h1 align=center>
-  <img src="https://dummyimage.com/1000x400/ffffff/000000&text=Flicking" alt="Flicking Image" /><br/>
-  <img alt="Angular" src="https://angular.io/assets/images/logos/angular/shield-large.svg" width="36" valign="middle">
+  <img width="800" alt="Flicking Logo" src="https://naver.github.io/egjs-flicking/images/flicking.svg"><br/>
+  <img alt="Angular" src="https://naver.github.io/egjs-flicking/images/angular.svg" width="36" valign="middle">
   @egjs/ngx-flicking
 </h1>
 
 <p align=center>
   <a href="https://www.npmjs.com/package/@egjs/ngx-flicking" target="_blank">
-    <img src="https://img.shields.io/npm/v/@egjs/ngx-flicking.svg?style=flat-square&color=42b883&label=version&logo=NPM">
+    <img src="https://img.shields.io/npm/v/@egjs/ngx-flicking.svg?style=flat-square&color=dd0031&label=version&logo=NPM">
   </a>
   <a href="https://www.npmjs.com/package/@egjs/ngx-flicking" target="_blank">
     <img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@egjs/ngx-flicking.svg?style=flat-square&label=%F0%9F%92%BE%20gzipped&color=007acc">
@@ -25,11 +25,11 @@
 </p>
 
 <p align=center>
-  <img alt="Angular" src="https://angular.io/assets/images/logos/angular/shield-large.svg" width="15" valign="middle"> Angular wrapper of <a href="https://github.com/naver/egjs-flicking">@egjs/flicking</a>
+  <img alt="Angular" src="https://naver.github.io/egjs-flicking/images/angular.svg" width="15" valign="middle"> Angular wrapper of <a href="https://github.com/naver/egjs-flicking">@egjs/flicking</a>
 </p>
 
 <p align=center>
-  <a href="https://naver.github.io/egjs-flicking/">Demo</a> / <a href="https://naver.github.io/egjs-flicking/release/latest/doc/index.html">Documentation</a> / <a href="https://naver.github.io/egjs/" />Other components</a>
+  <a href="https://codesandbox.io/s/egjsngx-flicking-examples-czb2g">Demo</a> / <a href="https://naver.github.io/egjs-flicking/release/latest/doc/index.html">Documentation</a> / <a href="https://naver.github.io/egjs/" />Other components</a>
 </p>
 
 ## ⚙️ Installation
@@ -106,19 +106,18 @@ export class AutoplayComponent implements OnInit {
 > TODO
 
 ## 📖 More Examples
-See `demo/` for more implementation examples.
+See our code sandbox [examples](https://codesandbox.io/s/egjsngx-flicking-examples-czb2g).
 
 ## 📦 Packages
 You can use all plugins just like native @egjs/flicking.
 
 Check [**@egjs/flicking-plugins**](https://github.com/naver/egjs-flicking-plugins) for readymade effects we're providing.
 
-## 📝 Bug Report
-
-If you find a bug, please report to us opening a new [Issues](https://github.com/naver/egjs-flicking/issues) on GitHub.
+## 📝 Feedback
+Please file an [Issue](https://github.com/naver/egjs-flicking/issues) with label "Angular".
 
 ## 🙌 Contributing
-See [CONTRIBUTING.md]((https://github.com/naver/egjs-flicking/blob/master/CONTRIBUTING.md))
+See [CONTRIBUTING.md](https://github.com/naver/egjs-flicking/blob/master/CONTRIBUTING.md)
 
 ## Local development
 ### Project setup
@@ -167,3 +166,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ```
+
+<p align=center>
+  <a href="https://naver.github.io/egjs/"><img height="50" src="https://naver.github.io/egjs/img/logotype1_black.svg" ></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/naver"><img height="50" src="https://naver.github.io/OpenSourceGuide/book/assets/naver_logo.png" /></a>
+</p>
+

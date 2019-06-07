@@ -1,17 +1,43 @@
-# @egjs/react-flicking [![npm version](https://badge.fury.io/js/%40egjs%2Freact-flicking.svg)](https://badge.fury.io/js/%40egjs%2Freact-flicking)
+<h1 align=center>
+  <img width="800" alt="Flicking Logo" src="https://naver.github.io/egjs-flicking/images/flicking.svg"><br/>
+  <img alt="React" src="https://naver.github.io/egjs-flicking/images/react.svg" width="36" valign="middle">
+  @egjs/react-flicking
+</h1>
 
+<p align=center>
+  <a href="https://www.npmjs.com/package/@egjs/react-flicking" target="_blank">
+    <img src="https://img.shields.io/npm/v/@egjs/react-flicking.svg?style=flat-square&color=00d8ff&label=version&logo=NPM">
+  </a>
+  <a href="https://www.npmjs.com/package/@egjs/react-flicking" target="_blank">
+    <img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@egjs/react-flicking.svg?style=flat-square&label=%F0%9F%92%BE%20gzipped&color=007acc">
+  </a>
+  <a href="https://github.com/naver/egjs-flicking/graphs/commit-activity">
+    <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/naver/egjs-flicking.svg?style=flat-square&label=%E2%AC%86%20commits&color=08CE5D">
+  </a>
+  <a href="https://www.npmjs.com/package/@egjs/react-flicking" target="_blank">
+    <img src="https://img.shields.io/npm/dm/@egjs/react-flicking.svg?style=flat-square&label=%E2%AC%87%20downloads&color=08CE5D" alt="npm downloads per month">
+  </a>
+  <a href="https://github.com/naver/egjs-flicking/graphs/contributors" target="_blank">
+    <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/naver/egjs-flicking.svg?label=%F0%9F%91%A5%20contributors&style=flat-square&color=08CE5D"></a>
+  <a href="https://github.com/naver/egjs-flicking/blob/master/LICENSE" target="_blank">
+    <img alt="GitHub" src="https://img.shields.io/github/license/naver/egjs-flicking.svg?style=flat-square&label=%F0%9F%93%9C%20license&color=08CE5D">
+  </a>
+</p>
 
-A react component that can easily use [@egjs/flicking](https://github.com/naver/egjs-flicking)
+<p align=center>
+  <img alt="React" src="https://naver.github.io/egjs-flicking/images/react.svg" width="15" valign="middle"> React wrapper of <a href="https://github.com/naver/egjs-flicking">@egjs/flicking</a>
+</p>
 
-* [API documentation for **@egjs/flicking**](https://naver.github.io/egjs-flicking/release/latest/doc/)
+<p align=center>
+  <a href="https://naver.github.io/egjs-flicking/">Demo</a> / <a href="https://naver.github.io/egjs-flicking/release/latest/doc/index.html">Documentation</a> / <a href="https://naver.github.io/egjs/" />Other components</a>
+</p>
 
-
-## Install
+## ⚙️ Installation
+```sh
+npm install --save @egjs/react-flicking
 ```
-$ npm install @egjs/react-flicking --save
-```
 
-## How to use
+## 🏃 Quick Start
 ```tsx
 import { FlickingEvent, SelectEvent, ChangeEvent, NeedPanelEvent } from "@egjs/flicking";
 import Flicking from "@egjs/react-flicking";
@@ -59,36 +85,22 @@ import { Parallax, Fade, AutoPlay } from "@egjs/flicking-plugins";
 ```
 
 
-## More examples
-* [Infinite Flicking](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/features/InfiniteFlicking.tsx)
-* [Progress](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/features/Progress.tsx)
-* [Snap](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/features/Snap.tsx)
-* [Variable Size](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/features/VariableSize.tsx)
-* [Flexible Align](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/features/Align.tsx)
-* [Bound](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/features/Bound.tsx)
-* [Gap](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/features/Gap.tsx)
-* [Use Parallax Plugin](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/plugins/Parallax.tsx)
-* [Use Fade Plugin](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/plugins/Fade.tsx)
-* [Use AutoPlay Plugin](https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking/src/demo/plugins/AutoPlay.tsx)
+## 📦 Packages
+You can use all plugins just like native @egjs/flicking.
 
-## Development
+Check [**@egjs/flicking-plugins**](https://github.com/naver/egjs-flicking-plugins) for readymade effects we're providing.
 
-### `npm start`
+## 📖 More Examples
+See our code sandbox [examples](https://codesandbox.io/s/react-flicking-examples-rnqm8).
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 🙌 Contributing
+See [CONTRIBUTING.md](https://github.com/naver/egjs-flicking/blob/master/CONTRIBUTING.md).
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## 📝 Feedback
+Please file an [Issue](https://github.com/naver/egjs-flicking/issues) with label "React".
 
-## Bug Report
-
-If you find a bug, please report it to us using the [Issues](https://github.com/naver/egjs-flicking/issues) page on GitHub.
-
-
-## License
-react-infinitegrid is released under the [MIT license](https://github.com/naver/egjs-flicking/blob/master/LICENSE).
-
+## 📜 License
+egjs-flicking is released under the [MIT license](http://naver.github.io/egjs/license.txt).
 
 ```
 Copyright (c) 2015-present NAVER Corp.
@@ -111,3 +123,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ```
+
+<p align=center>
+  <a href="https://naver.github.io/egjs/"><img height="50" src="https://naver.github.io/egjs/img/logotype1_black.svg" ></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/naver"><img height="50" src="https://naver.github.io/OpenSourceGuide/book/assets/naver_logo.png" /></a>
+</p>

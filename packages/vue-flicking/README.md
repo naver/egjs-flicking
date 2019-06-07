@@ -1,5 +1,6 @@
 <h1 align=center>
-  <img src="https://dummyimage.com/1000x400/ffffff/000000&text=Flicking" alt="Flicking Image" /><br/>
+  <img width="800" alt="Flicking Logo" src="https://naver.github.io/egjs-flicking/images/flicking.svg"><br/>
+  <img alt="Vue" src="https://naver.github.io/egjs-flicking/images/vue.svg" width="36" valign="middle">
   @egjs/vue-flicking
 </h1>
 
@@ -24,7 +25,7 @@
 </p>
 
 <p align=center>
-  <img width="15" src="https://kr.vuejs.org/images/logo.png" alt="Vue.js" /> Vue wrapper of <a href="https://github.com/naver/egjs-flicking">@egjs/flicking</a>
+  <img width="15" src="https://naver.github.io/egjs-flicking/images/vue.svg" alt="Vue.js" /> Vue wrapper of <a href="https://github.com/naver/egjs-flicking">@egjs/flicking</a>
 </p>
 
 <p align=center>
@@ -99,7 +100,7 @@ You can use all plugins just like native @egjs/flicking.
 Check [**@egjs/flicking-plugins**](https://github.com/naver/egjs-flicking-plugins) for readymade effects we're providing.
 
 ## 📖 More Examples
-See `demo/` for more implementation examples.
+See our code sandbox [examples](https://codesandbox.io/s/egjsvue-flicking-examples-ghbes).
 
 ## 🙌 Contributing
 See [CONTRIBUTING.md]((https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/CONTRIBUTING.md))
@@ -108,4 +109,27 @@ See [CONTRIBUTING.md]((https://github.com/naver/egjs-flicking/blob/master/packag
 Please file an [Issue](https://github.com/naver/egjs-flicking/issues) with label "Vue".
 
 ## 📜 License
-@egjs/flicking is released under the [MIT license](http://naver.github.io/egjs/license.txt).
+egjs-flicking is released under the [MIT license](http://naver.github.io/egjs/license.txt).
+
+```
+Copyright (c) 2015-present NAVER Corp.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+```
+
+<p align=center>
+  <a href="https://naver.github.io/egjs/"><img height="50" src="https://naver.github.io/egjs/img/logotype1_black.svg" ></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/naver"><img height="50" src="https://naver.github.io/OpenSourceGuide/book/assets/naver_logo.png" /></a>
+</p>

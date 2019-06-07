@@ -1,5 +1,5 @@
-<h1 align=center style="max-width: 100%;">
-  <img width="800" alt="Flicking Logo" src="https://naver.github.io/egjs-flicking/images/flicking.svg" style="max-width: 100%;"><br/>
+<h1 align=center>
+  <img width="800" alt="Flicking Logo" src="https://naver.github.io/egjs-flicking/images/flicking.svg"><br/>
   <a href="https://naver.github.io/egjs-flicking/">@egjs/flicking</a>
 </h1>
 
@@ -21,11 +21,11 @@
 </p>
 
 <h3 align=center>
-  <a href="https://naver.github.io/egjs-flicking/">Demo</a> / <a href="https://naver.github.io/egjs-flicking/release/latest/doc/index.html">Documentation</a> / <a href="https://naver.github.io/egjs/"><img height="20" src="https://naver.github.io/egjs/img/logo.svg"/> Other components</a>
+  <a href="https://naver.github.io/egjs-flicking/">데모</a> / <a href="https://naver.github.io/egjs-flicking/release/latest/doc/index.html">API 문서</a> / <a href="https://naver.github.io/egjs/"><img height="20" src="https://naver.github.io/egjs/img/logo.svg"/> 다른 컴포넌트들</a>
 </h3>
 
 <p align=center>
-  <b>Everyday 30 million people experience. It's reliable, flexible and extendable carousel. </b><br>📱💻🖥
+  <b>매일 3천만명이 사용하는 믿을 수 있는, 유연한, 그리고 확장 가능한 캐로셀 컴포넌트</b><br>📱💻🖥
 </p>
 
 <p align=center>
@@ -34,7 +34,7 @@
   <a href="https://github.com/naver/egjs-flicking/blob/master/README_KR.md">🇰🇷</a>
 </p>
 <p align=center>
-  <b>Supported Frameworks</b><br/>
+  <b>지원하는 프레임워크들</b><br/>
   <a href="https://github.com/naver/egjs-flicking/blob/master/packages/ngx-flicking/README.md"><img width="45" src="https://naver.github.io/egjs-flicking/images/angular.svg" alt="AngularJS" /></a>&nbsp;&nbsp;
   <a href="https://github.com/naver/egjs-flicking/blob/master/packages/react-flicking/README.md"><img width="45" src="https://naver.github.io/egjs-flicking/images/react.svg" alt="React" /></a>&nbsp;&nbsp;
   <a href="https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md"><img width="45" src="https://naver.github.io/egjs-flicking/images/vue.svg" alt="Vue.js" /></a>
@@ -57,22 +57,22 @@
   </tbody>
 </table>
 <h6 align=center>
-  🖱️Click each images to see its source or check our <a href="https://naver.github.io/egjs-flicking/">full demos</a>.
+  🖱️각 이미지를 클릭해서 소스를 확인하거나 <a href="https://naver.github.io/egjs-flicking/">다른 데모들</a>을 확인해보세요.
 </h6>
 
 <p align=center>
   <img width="300" src="https://user-images.githubusercontent.com/26213435/59832831-cebaf780-937f-11e9-84cd-e21f8cf1fd07.gif" />
 </p>
 
-- Easy-to-use infinite carousel(slider).
-- Every options are compatible with each others.
-  - Except for mutual exclusive options (like `circular` and `bound`).
-- Provides various scroll movement types that you can choose.
-- Ready-to-use plugins you can grab right away.
-- Supports all major frameworks(Angular, React, Vue).
+- 사용하기 쉬운 무한 캐로셀을 지원합니다.
+- 모든 옵션을 결합하여 사용 가능합니다.
+  - 옵션들이 상호배타적이지만 경우를 제외합니다 (`circular`와 `bound` 같은 경우).
+- 다양한 스크롤 동작 방식을 제공합니다.
+- 쉽고 빠르게 적용 가능한 플러그인들을 제공합니다.
+- 주요 프레임워크들을 지원합니다 (Angular, React, Vue).
 
-## ⚙️ Installation
-#### npm
+## ⚙️ 설치방법
+### npm
 ```bash
 $ npm install --save @egjs/flicking
 ```
@@ -82,7 +82,7 @@ $ npm install --save @egjs/flicking
 - unpkg: https://unpkg.com/@egjs/flicking/dist/
 - cdnjs: https://cdnjs.com/libraries/egjs-flicking
 
-## 🏃 Quick Start
+## 🏃 시작하기
 #### Typescript
 ```ts
 import Flicking from "@egjs/flicking";
@@ -98,36 +98,36 @@ const flicking = new Flicking("#el", { circular: true });
 var flicking = new eg.Flicking("#el", { circular: true });
 ```
 
-## 📦 Packages
+## 📦 관련 패키지
 |Package|Version|Description|
 |:-----:|:-----:|:-----:|
-|[**@egjs/flicking-plugins**](https://github.com/naver/egjs-flicking-plugins)|<a href="https://www.npmjs.com/package/@egjs/flicking-plugins" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/flicking-plugins.svg?style=flat-square&color=007acc&label=%F0%9F%94%96" alt="version" /></a>|Readymade effects for your carousel|
-|[**@egjs/ngx-flicking**](https://github.com/naver/egjs-flicking/blob/master/packages/ngx-flicking/README.md)|<a href="https://www.npmjs.com/package/@egjs/ngx-flicking" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/ngx-flicking.svg?style=flat-square&color=dd0031&label=%F0%9F%94%96" alt="version" /></a>|<img width="15" src="https://naver.github.io/egjs-flicking/images/angular.svg" valign="middle" alt="Angular" /> [Angular](https://angular.io/) port of @egjs/flicking|
-|[**@egjs/react-flicking**](https://github.com/naver/egjs-flicking/blob/master/packages/react-flicking/README.md)|<a href="https://www.npmjs.com/package/@egjs/react-flicking" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/react-flicking.svg?style=flat-square&color=00d8ff&label=%F0%9F%94%96" alt="version" /></a>|<img width="15" src="https://naver.github.io/egjs-flicking/images/react.svg" valign="middle" alt="React" /> [React](https://reactjs.org/) port of @egjs/flicking|
-|[**@egjs/vue-flicking**](https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md)|<a href="https://www.npmjs.com/package/@egjs/vue-flicking" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/vue-flicking.svg?style=flat-square&color=42b883&label=%F0%9F%94%96" alt="version" /></a>|<img width="15" src="https://naver.github.io/egjs-flicking/images/vue.svg" valign="middle" alt="Vue.js" /> [Vue.js](https://vuejs.org/v2/guide/index.html) port of @egjs/flicking|
+|[**@egjs/flicking-plugins**](https://github.com/naver/egjs-flicking-plugins)|<a href="https://www.npmjs.com/package/@egjs/flicking" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/flicking.svg?style=flat-square&color=007acc&label=%F0%9F%94%96" alt="version" /></a>|쉽게 붙여쓸 수 있는 캐로셀 효과 모음|
+|[**@egjs/ngx-flicking**](https://github.com/naver/egjs-flicking/blob/master/packages/ngx-flicking/README.md)|<a href="https://www.npmjs.com/package/@egjs/ngx-flicking" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/ngx-flicking.svg?style=flat-square&color=b52e31&label=%F0%9F%94%96" alt="version" /></a>|<img width="15" src="https://naver.github.io/egjs-flicking/images/angular.svg" valign="middle" alt="Angular" /> [Angular](https://angular.io/) 버젼의 @egjs/flicking|
+|[**@egjs/react-flicking**](https://github.com/naver/egjs-flicking/blob/master/packages/react-flicking/README.md)|<a href="https://www.npmjs.com/package/@egjs/react-flicking" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/react-flicking.svg?style=flat-square&color=00d8ff&label=%F0%9F%94%96" alt="version" /></a>|<img width="15" src="https://naver.github.io/egjs-flicking/images/react.svg" valign="middle" alt="React" /> [React](https://reactjs.org/) 버젼의 @egjs/flicking|
+|[**@egjs/vue-flicking**](https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md)|<a href="https://www.npmjs.com/package/@egjs/vue-flicking" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/vue-flicking.svg?style=flat-square&color=42b883&label=%F0%9F%94%96" alt="version" /></a>|<img width="15" src="https://naver.github.io/egjs-flicking/images/vue.svg" valign="middle" alt="Vue.js" /> [Vue.js](https://vuejs.org/v2/guide/index.html) 버젼의 @egjs/flicking|
 
-## 🌐 Supported Browsers
-|<img width="20" src="https://simpleicons.org/icons/internetexplorer.svg" alt="IE" />|<img width="20" src="https://simpleicons.org/icons/googlechrome.svg" alt="Chrome" />|<img width="20" src="https://simpleicons.org/icons/mozillafirefox.svg" alt="Firefox" />|<img width="20" src="https://simpleicons.org/icons/safari.svg" alt="Safari" />|<img width="20" src="https://simpleicons.org/icons/apple.svg" alt="iOS" />|<img width="20" src="https://simpleicons.org/icons/android.svg" alt="Android">|
+## 🌐 지원 브라우저
+|<img width="20" src="https://simpleicons.org/icons/internetexplorer.svg" alt="Internet Explorer" />|<img width="20" src="https://simpleicons.org/icons/googlechrome.svg" alt="Chrome" />|<img width="20" src="https://simpleicons.org/icons/mozillafirefox.svg" alt="Firefox" />|<img width="20" src="https://simpleicons.org/icons/safari.svg" alt="Safari" />|<img width="20" src="https://simpleicons.org/icons/apple.svg" alt="iOS" />|<img width="20" src="https://simpleicons.org/icons/android.svg" alt="Android">|
 |:---:|:---:|:---:|:---:|:---:|:---:|
 |10+|Latest|Latest|Latest|7+|4+|
 
-## 📼 Demos
-Check our [Demos](https://naver.github.io/egjs-flicking/).
+## 📼 데모
+[데모](https://naver.github.io/egjs-flicking/) 페이지를 확인해보세요!
 
-## 📖 Documentation
-See [Documentation](https://naver.github.io/egjs-flicking/release/latest/doc/index.html) page.
+## 📖 문서
+[API 문서](https://naver.github.io/egjs-flicking/release/latest/doc/index.html) 페이지를 확인해보세요!
 
-## 🙌 Contributing
-See [CONTRIBUTING.md](https://github.com/naver/egjs-flicking/blob/master/CONTRIBUTING.md).
+## 🙌 기여하기
+[CONTRIBUTING.md](https://github.com/naver/egjs-flicking/blob/master/CONTRIBUTING.md)를 확인해보세요!
 
-## 📝 Feedback
-Please file an [Issue](https://github.com/naver/egjs-flicking/issues).
+## 📝 피드백
+[이슈](https://github.com/naver/egjs-flicking/issues)를 남겨주세요!
 
-## 🛣️ Roadmap
-See our [Roadmap](https://github.com/naver/egjs-flicking/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%F0%9F%9B%A3%EF%B8%8FRoadmap+).
+## 🛣️ 로드맵
+저희 [로드맵](https://github.com/naver/egjs-flicking/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%F0%9F%9B%A3%EF%B8%8FRoadmap+)을 확인해보세요!
 
-## 📜 License
-@egjs/flicking is released under the [MIT license](https://github.com/naver/egjs-flicking/blob/master/LICENSE).
+## 📜 라이센스
+egjs-flicking은 [MIT license](https://github.com/naver/egjs-flicking/blob/master/LICENSE) 하에 배포됩니다.
 
 ```
 Copyright (c) 2015-present NAVER Corp.

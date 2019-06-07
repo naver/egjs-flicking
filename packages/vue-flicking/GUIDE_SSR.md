@@ -7,7 +7,7 @@ if (process.browser) {
 }
 ```
 
-### Nuxt.js
+### <img height="20" src="../../demo/images/nuxt.svg" alt="Nuxt" /> Nuxt.js
 ```js
 // Suppose this file is /plugins/install
 import Vue from "vue";
@@ -32,8 +32,8 @@ build: {
 },
 ```
 
-## More Examples
-See `demo/ssr/` for more implementation examples.
+## 📖 More Examples for <img height="20" src="../../demo/images/nuxt.svg" alt="Nuxt" /> Nuxt.js
+See our code sandbox [examples](https://codesandbox.io/s/egjsvue-flicking-nuxt-examples-p72nw).
 
 ## Local development
 ### Project setup
