@@ -2706,7 +2706,7 @@ version: 3.2.0
     @egjs/axes JavaScript library
     https://github.com/naver/egjs-axes
 
-    @version 2.5.12
+    @version 2.5.13
     */
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
@@ -2896,6 +2896,12 @@ version: 3.2.0
       caf(key);
     }
 
+    function mapToFixed(obj) {
+      return map(obj, function (value) {
+        return toFixed(value);
+      });
+    }
+
     function map(obj, callback) {
       var tranformed = {};
 
@@ -2952,7 +2958,7 @@ version: 3.2.0
     function getDuration(distance, deceleration) {
       var duration = Math.sqrt(distance / deceleration * 2); // when duration is under 100, then value is zero
 
-      return duration < 20 ? 0 : duration;
+      return duration < 100 ? 0 : duration;
     }
 
     function isCircularable(destPos, range, circular) {
@@ -3105,24 +3111,43 @@ version: 3.2.0
           var info_1 = this._animateParam;
           var self_1 = this;
           var prevPos_1 = info_1.depaPos;
-          info_1.startTime = new Date().getTime();
+          var prevEasingPer_1 = 0;
+          var directions_1 = map(prevPos_1, function (value, key) {
+            return value <= info_1.destPos[key] ? 1 : -1;
+          });
+          var prevTime_1 = new Date().getTime();
+          info_1.startTime = prevTime_1;
 
           (function loop() {
             self_1._raf = null;
-            var easingPer = self_1.easing((new Date().getTime() - info_1.startTime) / param.duration);
-            var toPos = map(info_1.depaPos, function (pos, key) {
-              return pos + info_1.delta[key] * easingPer;
+            var currentTime = new Date().getTime();
+            var easingPer = self_1.easing((currentTime - info_1.startTime) / param.duration);
+            var toPos = map(prevPos_1, function (pos, key) {
+              return pos + info_1.delta[key] * (easingPer - prevEasingPer_1);
             });
-            var isCanceled = !self_1.em.triggerChange(toPos, false, prevPos_1);
-            prevPos_1 = map(toPos, function (v) {
-              return toFixed(v);
+            toPos = self_1.axm.map(toPos, function (pos, options, key) {
+              // fix absolute position to relative position
+              // fix the bouncing phenomenon by changing the range.
+              var nextPos = getCirculatedPos(pos, options.range, options.circular, true);
+
+              if (pos !== nextPos) {
+                // circular
+                param.destPos[key] += -directions_1[key] * (options.range[1] - options.range[0]);
+                prevPos_1[key] += -directions_1[key] * (options.range[1] - options.range[0]);
+              }
+
+              return nextPos;
             });
+            var isCanceled = !self_1.em.triggerChange(toPos, false, mapToFixed(prevPos_1));
+            prevPos_1 = toPos;
+            prevTime_1 = currentTime;
+            prevEasingPer_1 = easingPer;
 
             if (easingPer >= 1) {
               var destPos = param.destPos;
 
               if (!equal(destPos, self_1.axm.get(Object.keys(destPos)))) {
-                self_1.em.triggerChange(destPos, true, prevPos_1);
+                self_1.em.triggerChange(destPos, true, mapToFixed(prevPos_1));
               }
 
               complete();
@@ -3824,8 +3849,7 @@ version: 3.2.0
       __proto.release = function (input, event, offset, inputDuration) {
         if (this.isStopped || !this.itm.isInterrupting() || !this.moveDistance) {
           return;
-        } // console.log(offset);
-
+        }
 
         var pos = this.axm.get(input.axes);
         var depaPos = this.axm.get();
@@ -3837,7 +3861,6 @@ version: 3.2.0
           }
         }));
         var duration = this.am.getDuration(destPos, pos, inputDuration);
-        console.log(destPos, pos, duration);
 
         if (duration === 0) {
           destPos = __assign({}, depaPos);
@@ -3982,6 +4005,10 @@ version: 3.2.0
       function Axes(axis, options, startPos) {
         if (axis === void 0) {
           axis = {};
+        }
+
+        if (options === void 0) {
+          options = {};
         }
 
         var _this = _super.call(this) || this;
@@ -4270,7 +4297,7 @@ version: 3.2.0
        */
 
 
-      Axes.VERSION = "2.5.12";
+      Axes.VERSION = "2.5.13";
       /**
        * @name eg.Axes.TRANSFORM
        * @desc Returns the transform attribute with CSS vendor prefixes.
@@ -4411,11 +4438,10 @@ version: 3.2.0
       return toAngle > thresholdAngle && toAngle < 180 - thresholdAngle ? DIRECTION_VERTICAL : DIRECTION_HORIZONTAL;
     }
 
-    function getNextOffset(v, deceleration) {
-      var normalSpeed = Math.sqrt(v[0] * v[0] + v[1] * v[1]);
-      var t = Math.abs(normalSpeed / deceleration); // console.log("DUR", t);
-
-      return [v[0] * t / 2, v[1] * t / 2];
+    function getNextOffset(speeds, deceleration) {
+      var normalSpeed = Math.sqrt(speeds[0] * speeds[0] + speeds[1] * speeds[1]);
+      var duration = Math.abs(normalSpeed / -deceleration);
+      return [speeds[0] / 2 * duration, speeds[1] / 2 * duration];
     }
 
     function useDirection(checkType, direction, userDirection) {
@@ -4666,42 +4692,13 @@ version: 3.2.0
           event.srcEvent.stopPropagation();
         }
 
-        !this.xx && (this.xx = []);
-        !this.tt && (this.tt = []);
-
-        if (this.dir < 0 && event.velocityX > 0 || this.dir > 0 && event.velocityX < 0) {
-          this.xx = [];
-          this.tt = [];
-        }
-
-        this.xx.push(event.srcEvent.clientX || event.srcEvent.changedTouches[0].clientX);
-        this.tt.push(Date.now());
-        this.dir = event.velocityX;
         event.preventSystemEvent = prevent;
         prevent && this.observer.change(this, event, toAxis(this.axes, offset));
       };
 
       __proto.onPanend = function (event) {
-        var v = event.velocityX;
-        var v2 = (event.deltaX - this.prevX) / (Date.now() - this.prevTime);
-        v[v.length - 1];
-        var xx = this.xx.map(function (v, i, vv) {
-          return v - vv[i - 1] || 0;
-        });
-        var tt = this.tt.map(function (t, i, tt) {
-          return t - tt[i - 1] || 0;
-        });
-        var vv = xx.map(function (v, i) {
-          return v / tt[i] || 0;
-        });
-        this.xx = [];
-        this.tt = [];
         var offset = this.getOffset([Math.abs(event.velocityX) * (event.deltaX < 0 ? -1 : 1), Math.abs(event.velocityY) * (event.deltaY < 0 ? -1 : 1)], [useDirection(DIRECTION_HORIZONTAL, this._direction), useDirection(DIRECTION_VERTICAL, this._direction)]);
-        var a = (vv[vv.length - 1] - vv[vv.length - 2] || 0) / tt[tt.length - 1] || 0; // console.log(offset[0]);
-
-        offset = getNextOffset(offset, this.observer.options.deceleration); // console.log(offset[0])
-        // console.log(event.velocityX, deltaX / deltaTime , deltaX, deltaTime);
-
+        offset = getNextOffset(offset, this.observer.options.deceleration);
         this.observer.release(this, event, toAxis(this.axes, offset));
       };
 
