@@ -9,8 +9,8 @@ npm install --save @egjs/ngx-flicking
 
 ## Quick Start
 ### Module definition
-```js
-import { NgxFlickingModule } from '@egjs/ngx-flicking'; // import
+```diff
++import { NgxFlickingModule } from '@egjs/ngx-flicking'; // import
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
  
@@ -20,7 +20,7 @@ import { NgModule } from '@angular/core';
   ],
   imports: [
     BrowserModule,
-    NgxFlickingModule /* Add in imports */
++   NgxFlickingModule /* Add in imports */
   ],
   providers: [],
   bootstrap: [AppComponent]
