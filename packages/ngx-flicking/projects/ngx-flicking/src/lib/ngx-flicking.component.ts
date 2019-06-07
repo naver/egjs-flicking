@@ -129,9 +129,11 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
     events.forEach(eventName => {
       this.flicking.on(eventName, e => {
         e.currentTarget = this;
+        const emitter = this[eventName]; // Style guide: Event - https://angular.io/guide/styleguide#dont-prefix-output-properties
 
-        // Style guide: Event - https://angular.io/guide/styleguide#dont-prefix-output-properties
-        this[eventName].emit(e);
+        if (emitter) {
+          emitter.emit(e);
+        }
       });
     });
   }
