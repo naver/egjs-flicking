@@ -1,5 +1,5 @@
 <h1 align=center>
-  <img src="https://dummyimage.com/600x400/ffffff/000000&text=Flicking" alt="Flicking Image" />
+  <img src="https://dummyimage.com/1000x400/ffffff/000000&text=Flicking" alt="Flicking Image" /><br/>
   @egjs/vue-flicking
 </h1>
 
@@ -8,18 +8,18 @@
     <img src="https://img.shields.io/npm/v/@egjs/vue-flicking.svg?style=flat-square&color=42b883&label=version&logo=NPM">
   </a>
   <a href="https://www.npmjs.com/package/@egjs/vue-flicking" target="_blank">
-    <img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@egjs/vue-flicking.svg?style=flat-square&label=💾%20gzipped&color=007acc">
+    <img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@egjs/vue-flicking.svg?style=flat-square&label=%F0%9F%92%BE%20gzipped&color=007acc">
   </a>
   <a href="https://github.com/naver/egjs-flicking/graphs/commit-activity">
-    <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/naver/egjs-flicking.svg?style=flat-square&label=⬆️%20commits&color=08CE5D">
+    <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/naver/egjs-flicking.svg?style=flat-square&label=%E2%AC%86%20commits&color=08CE5D">
   </a>
   <a href="https://www.npmjs.com/package/@egjs/vue-flicking" target="_blank">
-    <img src="https://img.shields.io/npm/dm/@egjs/vue-flicking.svg?style=flat-square&label=⬇️%20downloads&color=08CE5D" alt="npm downloads per month">
+    <img src="https://img.shields.io/npm/dm/@egjs/vue-flicking.svg?style=flat-square&label=%E2%AC%87%20downloads&color=08CE5D" alt="npm downloads per month">
   </a>
   <a href="https://github.com/naver/egjs-flicking/graphs/contributors" target="_blank">
-    <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/naver/egjs-flicking.svg?label=👥%20contributors&style=flat-square&color=08CE5D"></a>
+    <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/naver/egjs-flicking.svg?label=%F0%9F%91%A5%20contributors&style=flat-square&color=08CE5D"></a>
   <a href="https://github.com/naver/egjs-flicking/blob/master/LICENSE" target="_blank">
-    <img alt="GitHub" src="https://img.shields.io/github/license/naver/egjs-flicking.svg?style=flat-square&label=📜%20license&color=08CE5D">
+    <img alt="GitHub" src="https://img.shields.io/github/license/naver/egjs-flicking.svg?style=flat-square&label=%F0%9F%93%9C%20license&color=08CE5D">
   </a>
 </p>
 
@@ -96,7 +96,7 @@ Check [GUIDE_SSR.md](https://github.com/naver/egjs-flicking/blob/master/packages
 ## 📦 Packages
 You can use all plugins just like native @egjs/flicking.
 
-Check [**@egjs/flicking-plugins**](https://github.com/naver/egjs-flicking-plugins) for list.
+Check [**@egjs/flicking-plugins**](https://github.com/naver/egjs-flicking-plugins) for readymade effects we're providing.
 
 ## 📖 More Examples
 See `demo/` for more implementation examples.
