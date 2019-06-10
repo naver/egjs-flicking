@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/naver/egjs-flicking"
+    "url": "https://github.com/naver/egjs-flicking/tree/master/packages/ngx-flicking"
   },
   "author": {
     "name": "NAVER Corp."
@@ -20,7 +20,7 @@
   "namespace": {
     "eg": "eg"
   },
-  "homepage": "https://github.com/naver/egjs-flicking",
+  "homepage": "https://naver.github.io/egjs-flicking/",
   "bugs": {
     "url": "https://github.com/naver/egjs-flicking/issues"
   },
