@@ -641,7 +641,7 @@ export default class Viewport {
     } else {
       basePosition = prevPanel
         ? prevPanel.getAnchorPosition()
-        : basePosition = nearestAnchorPos - nearestSize - gap;
+        : nearestAnchorPos - nearestSize - gap;
     }
 
     const progressBetween = (hangerPosition - basePosition) / (targetPosition - basePosition);
@@ -971,8 +971,8 @@ export default class Viewport {
     const cloneCount = Math.ceil(visibleAreaSize / sumOriginalPanelSize);
     const prevCloneCount = panelManager.getCloneCount();
 
+    panelManager.setCloneCount(cloneCount);
     if (options.renderExternal) {
-      panelManager.setCloneCount(cloneCount);
       return;
     }
 
