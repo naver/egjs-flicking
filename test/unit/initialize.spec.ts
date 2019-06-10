@@ -116,40 +116,60 @@ describe("Initialization", () => {
     afterEach(() => cleanup());
 
     it("should not clone panels in non-circular, horizontal mode", () => {
+      // Given & When
       flickingInfo = createFlicking(horizontal.shouldClone4);
+      const flicking = flickingInfo.instance;
 
+      // Then
       const panelElements = flickingInfo.element.querySelectorAll(".eg-flick-panel");
 
       expect(panelElements.length).equals(2);
+      expect(flicking.getPanelCount()).equals(2);
+      expect(flicking.getCloneCount()).equals(0);
     });
 
     it("should clone panels needed in circular, horizontal mode", () => {
+      // Given & When
       flickingInfo = createFlicking(horizontal.shouldClone4, { circular: true });
+      const flicking = flickingInfo.instance;
 
+      // Then
       const panelElements = flickingInfo.element.querySelectorAll(".eg-flick-panel");
 
       expect(panelElements.length).equals(6);
+      expect(flicking.getPanelCount()).equals(2);
+      expect(flicking.getCloneCount()).equals(2); // It will create 4 panels (2 * 2)
     });
 
     it("should not clone panels in non-circular, vertical mode", () => {
+      // Given & When
       flickingInfo = createFlicking(vertical.shouldClone4, {
         horizontal: false,
       });
+      const flicking = flickingInfo.instance;
 
+      // Then
       const panelElements = flickingInfo.element.querySelectorAll(".eg-flick-panel");
 
       expect(panelElements.length).equals(2);
+      expect(flicking.getPanelCount()).equals(2);
+      expect(flicking.getCloneCount()).equals(0);
     });
 
     it("should clone panels needed in circular, vertical mode", () => {
+      // Given & When
       flickingInfo = createFlicking(vertical.shouldClone4, {
         horizontal: false,
         circular: true,
       });
+      const flicking = flickingInfo.instance;
 
+      // Then
       const panelElements = flickingInfo.element.querySelectorAll(".eg-flick-panel");
 
       expect(panelElements.length).equals(6);
+      expect(flicking.getPanelCount()).equals(2);
+      expect(flicking.getCloneCount()).equals(2); // It will create 4 panels (2 * 2)
     });
   });
 
