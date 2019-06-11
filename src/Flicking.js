@@ -280,7 +280,6 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		const bounce = options.bounce;
 
 		this._setPadding(padding, true);
-		const sizeValue = this._getDataByDirection([panel.size, "100%"]);
 
 		// container element style
 		const cssValue = {
@@ -308,18 +307,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		}
 
 		// panels' css values
-		$children.forEach(v => {
-			utils.classList(v, `${prefix}-panel`, true);
-
-			utils.css(v, {
-				position: "absolute",
-				width: utils.getUnitValue(sizeValue[0]),
-				height: utils.getUnitValue(sizeValue[1]),
-				boxSizing: "border-box",
-				top: 0,
-				left: 0
-			});
-		});
+		this._initOriginalPanelStyle($children);
 
 		if (this._addClonePanels()) {
 			panelCount = panel.count = (
@@ -340,6 +328,24 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		});
 
 		this._setDefaultPanel(options.defaultIndex);
+	}
+
+	_initOriginalPanelStyle(panels) {
+		const panel = this._conf.panel;
+		const sizeValue = this._getDataByDirection([panel.size, "100%"]);
+
+		panels.forEach(v => {
+			utils.classList(v, `${this.options.prefix}-panel`, true);
+
+			utils.css(v, {
+				position: "absolute",
+				width: utils.getUnitValue(sizeValue[0]),
+				height: utils.getUnitValue(sizeValue[1]),
+				boxSizing: "border-box",
+				top: 0,
+				left: 0
+			});
+		});
 	}
 
 	/**
@@ -384,6 +390,13 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		);
 	}
 
+	_clonePanel(v) {
+		const clone = v.cloneNode(true);
+		clone.classList.add(this.options.prefix + "-clone");
+
+		return clone;
+	}
+
 	/**
 	 * To fulfill minimum panel count cloning original node when circular or previewPadding option are set
 	 * @private
@@ -398,11 +411,11 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 		// if panels are given less than required when circular option is set, then clone node to apply circular mode
 		if (this.options.circular && panelCount < panel.minCount) {
-			cloneNodes = list.map(v => v.cloneNode(true));
+			cloneNodes = list.map(v => this._clonePanel(v));
 
 			while (cloneNodes.length < cloneCount) {
 				cloneNodes = cloneNodes.concat(
-					list.map(v => v.cloneNode(true))
+					list.map(v => this._clonePanel(v))
 				);
 			}
 
@@ -1739,6 +1752,38 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 				this.plugins.push(p.$componentWillMount(this));
 			}
 		});
+
+		return this;
+	}
+
+	/**
+	 * Rebuild/Initialize panels by current DOM of panels.
+	 * @ko 현재 패널 DOM 을 기준으로 패널을 재구성/초기화한다.
+	 * @method eg.Flicking#rebuild
+	 * @example
+	 * 		flicking.rebuild();
+	 *
+	 * @return {eg.Flicking} An instance of a module itself <ko>모듈 자신의 인스턴스</ko>
+	 */
+	rebuild() {
+		const panel = this._conf.panel;
+		const options = this.options;
+		const prefix = options.prefix;
+
+		// filter original panel (remove clones)
+		utils.toArray(this.$wrapper.querySelectorAll("." + prefix + "-clone")).forEach(el => el.remove());
+		panel.$list = utils.toArray(this.$container.children);
+
+		// panels' css values
+		this._initOriginalPanelStyle(panel.$list);
+
+		// Add clones
+		if (this._addClonePanels()) {
+			panel.$list = utils.toArray(this.$container.children);
+		}
+
+		this._setDefaultPanel(options.defaultIndex);
+		this._arrangePanels();
 
 		return this;
 	}
