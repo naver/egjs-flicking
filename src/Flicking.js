@@ -392,8 +392,8 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 
 	_clonePanel(v) {
 		const clone = v.cloneNode(true);
-		clone.classList.add(this.options.prefix + "-clone");
 
+		clone.classList.add(`${this.options.prefix}-clone`);
 		return clone;
 	}
 
@@ -1771,7 +1771,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 		const prefix = options.prefix;
 
 		// filter original panel (remove clones)
-		utils.toArray(this.$wrapper.querySelectorAll("." + prefix + "-clone")).forEach(el => el.remove());
+		utils.toArray(this.$wrapper.querySelectorAll(`.${prefix}-clone`)).forEach(el => el.remove());
 		panel.$list = utils.toArray(this.$container.children);
 
 		// panels' css values
