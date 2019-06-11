@@ -953,22 +953,63 @@ export default class Viewport {
     const options = this.options;
     const panelManager = this.panelManager;
 
+    const gap = options.gap;
     const viewportSize = state.size;
     const firstPanel = panelManager.firstPanel();
-    const lastPanel = panelManager.lastPanel() as Panel;
+    const lastPanel = panelManager.lastPanel()!;
 
     // There're no panels exist
     if (!firstPanel) {
       return;
     }
 
-    const sumOriginalPanelSize = lastPanel.getPosition() + lastPanel.getSize() - firstPanel.getPosition() + this.options.gap;
-    const visibleAreaSize = viewportSize + firstPanel.getRelativeAnchorPosition();
-
     // For each panels, clone itself while last panel's position + size is below viewport size
     const panels = panelManager.originalPanels();
+    const reversedPanels = panels.concat().reverse();
 
-    const cloneCount = Math.ceil(visibleAreaSize / sumOriginalPanelSize);
+    const sumOriginalPanelSize = lastPanel.getPosition() + lastPanel.getSize() - firstPanel.getPosition() + gap;
+    const relativeAnchorPosition = firstPanel.getRelativeAnchorPosition();
+    const relativeHangerPosition = this.getRelativeHangerPosition();
+
+    const areaPrev = (relativeHangerPosition - relativeAnchorPosition) % sumOriginalPanelSize;
+    let sizeSum = 0;
+    let panelAtLeftBoundary!: Panel;
+    for (const panel of reversedPanels) {
+      if (!panel) {
+        continue;
+      }
+      sizeSum += panel.getSize() + gap;
+      if (sizeSum >= areaPrev) {
+        panelAtLeftBoundary = panel;
+        break;
+      }
+    }
+
+    const areaNext = (viewportSize - relativeHangerPosition + relativeAnchorPosition) % sumOriginalPanelSize;
+    sizeSum = 0;
+    let panelAtRightBoundary!: Panel;
+    for (const panel of panels) {
+      if (!panel) {
+        continue;
+      }
+      sizeSum += panel.getSize() + gap;
+      if (sizeSum >= areaNext) {
+        panelAtRightBoundary = panel;
+        break;
+      }
+    }
+
+    // Need one more set of clones on prev area of original panel 0
+    const needCloneOnPrev = panelAtLeftBoundary.getIndex() <= panelAtRightBoundary.getIndex()
+      && panelAtLeftBoundary.getIndex() !== 0;
+
+    // Visible count of panel 0 on first screen
+    const panel0OnFirstscreen = Math.ceil((relativeHangerPosition + firstPanel.getSize() - relativeAnchorPosition) / sumOriginalPanelSize)
+      + Math.ceil((viewportSize - relativeHangerPosition + relativeAnchorPosition) / sumOriginalPanelSize)
+      - 1;
+
+    const cloneCount = panel0OnFirstscreen
+      + (needCloneOnPrev ? 1 : 0);
     const prevCloneCount = panelManager.getCloneCount();
 
     panelManager.setCloneCount(cloneCount);
