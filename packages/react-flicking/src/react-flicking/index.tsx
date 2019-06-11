@@ -177,8 +177,8 @@ export default class Flicking extends React.Component<IFlickingProps> {
     return this;
   }
 
-  public rebuild = () => {
-    return this.flicking.rebuild();
+  public rebuild = (param?: object) => {
+    return this.flicking.rebuild(param);
   }
 
   public componentWillUnmount() {

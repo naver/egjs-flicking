@@ -109,7 +109,7 @@ describe("Methods call", function() {
 	describe("getPrevElement()", function() {
 		tutils.hooks.run();
 
-// Given
+		// Given
 		const inst = tutils.create("#mflick2", {
 			circular : true
 		});
@@ -581,11 +581,12 @@ describe("Methods call", function() {
 			</div>
 			`;
 
-			inst.rebuild();
+			inst.rebuild({defaultIndex: 2});
 
 			// Then
 			expect(container.children.length).to.equal(10);
 			expect(container.querySelectorAll(".eg-flick-clone").length).to.equal(5);
+			expect(inst.getIndex()).to.equal(2);
 
 			inst.destroy();
 		});

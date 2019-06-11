@@ -393,7 +393,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	_clonePanel(v) {
 		const clone = v.cloneNode(true);
 
-		clone.classList.add(`${this.options.prefix}-clone`);
+		utils.classList(clone, `${this.options.prefix}-clone`, true);
 		return clone;
 	}
 
@@ -1765,24 +1765,27 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 *
 	 * @return {eg.Flicking} An instance of a module itself <ko>모듈 자신의 인스턴스</ko>
 	 */
-	rebuild() {
+	rebuild(param = {defaultIndex: this.options.defaultIndex}) {
+		const container = this.$container;
 		const panel = this._conf.panel;
 		const options = this.options;
 		const prefix = options.prefix;
 
 		// filter original panel (remove clones)
-		utils.toArray(this.$wrapper.querySelectorAll(`.${prefix}-clone`)).forEach(el => el.remove());
-		panel.$list = utils.toArray(this.$container.children);
+		utils.toArray(container.querySelectorAll(`.${prefix}-clone`)).forEach(el => {
+			container.removeChild(el);
+		});
+		panel.$list = utils.toArray(container.children);
 
 		// panels' css values
 		this._initOriginalPanelStyle(panel.$list);
 
 		// Add clones
 		if (this._addClonePanels()) {
-			panel.$list = utils.toArray(this.$container.children);
+			panel.$list = utils.toArray(container.children);
 		}
 
-		this._setDefaultPanel(options.defaultIndex);
+		this._setDefaultPanel(param.defaultIndex);
 		this._arrangePanels();
 
 		return this;

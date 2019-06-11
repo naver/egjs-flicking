@@ -27,7 +27,7 @@ export default class App extends React.Component<{horizontal?: boolean, previewP
 
               // `rebuild()` should be called after rendered.
               setTimeout(() => {
-                this.flick.rebuild()
+                this.flick.rebuild();
               });
             }
           }>Update</button>
