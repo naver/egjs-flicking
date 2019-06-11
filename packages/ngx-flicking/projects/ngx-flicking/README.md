@@ -1,13 +1,43 @@
-# @egjs/ngx-flicking [![version](https://img.shields.io/npm/v/@egjs/ngx-flicking.svg?style=flat)](https://www.npmjs.com/package/@egjs/ngx-flicking)
-> 🎠 A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.
-Angular wrapper of [@egjs/flicking](https://github.com/naver/egjs-flicking)
+<h1 align=center>
+  <img src="https://dummyimage.com/1000x400/ffffff/000000&text=Flicking" alt="Flicking Image" /><br/>
+  <img alt="Angular" src="https://angular.io/assets/images/logos/angular/shield-large.svg" width="36" valign="middle">
+  @egjs/ngx-flicking
+</h1>
 
-## Install
+<p align=center>
+  <a href="https://www.npmjs.com/package/@egjs/ngx-flicking" target="_blank">
+    <img src="https://img.shields.io/npm/v/@egjs/ngx-flicking.svg?style=flat-square&color=42b883&label=version&logo=NPM">
+  </a>
+  <a href="https://www.npmjs.com/package/@egjs/ngx-flicking" target="_blank">
+    <img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@egjs/ngx-flicking.svg?style=flat-square&label=%F0%9F%92%BE%20gzipped&color=007acc">
+  </a>
+  <a href="https://github.com/naver/egjs-flicking/graphs/commit-activity">
+    <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/naver/egjs-flicking.svg?style=flat-square&label=%E2%AC%86%20commits&color=08CE5D">
+  </a>
+  <a href="https://www.npmjs.com/package/@egjs/ngx-flicking" target="_blank">
+    <img src="https://img.shields.io/npm/dm/@egjs/ngx-flicking.svg?style=flat-square&label=%E2%AC%87%20downloads&color=08CE5D" alt="npm downloads per month">
+  </a>
+  <a href="https://github.com/naver/egjs-flicking/graphs/contributors" target="_blank">
+    <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/naver/egjs-flicking.svg?label=%F0%9F%91%A5%20contributors&style=flat-square&color=08CE5D"></a>
+  <a href="https://github.com/naver/egjs-flicking/blob/master/LICENSE" target="_blank">
+    <img alt="GitHub" src="https://img.shields.io/github/license/naver/egjs-flicking.svg?style=flat-square&label=%F0%9F%93%9C%20license&color=08CE5D">
+  </a>
+</p>
+
+<p align=center>
+  <img alt="Angular" src="https://angular.io/assets/images/logos/angular/shield-large.svg" width="15" valign="middle"> Angular wrapper of <a href="https://github.com/naver/egjs-flicking">@egjs/flicking</a>
+</p>
+
+<p align=center>
+  <a href="https://naver.github.io/egjs-flicking/">Demo</a> / <a href="https://naver.github.io/egjs-flicking/release/latest/doc/index.html">Documentation</a> / <a href="https://naver.github.io/egjs/" />Other components</a>
+</p>
+
+## ⚙️ Installation
 ```sh
 npm install --save @egjs/ngx-flicking
 ```
 
-## Quick Start
+## 🏃 Quick Start
 ### Module definition
 ```diff
 +import { NgxFlickingModule } from '@egjs/ngx-flicking'; // import
@@ -36,6 +66,8 @@ export class AppModule { } /* Your app */
   <ngx-flicking
     [options]="{ circular: true, gap: 10, duration: 500 }"
     [plugins]="plugins"
+    (needPanel)="onNeedPanel($event)"
+    (moveEnd)="onMoveEnd($event)"
   >
     <ng-template>
       <div class="panel">
@@ -59,14 +91,34 @@ export class AutoplayComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  onNeedPanel(e) {
+    // ADD PANELS
+  }
+
+  onMoveEnd(e) {
+    // HANDLE INDEX CHANGE
+  }
 }
 ```
 
-### SSR(Server Side Rendering)
+### 🔍 SSR(Server Side Rendering)
 > TODO
 
-## More Examples
+## 📖 More Examples
 See `demo/` for more implementation examples.
+
+## 📦 Packages
+You can use all plugins just like native @egjs/flicking.
+
+Check [**@egjs/flicking-plugins**](https://github.com/naver/egjs-flicking-plugins) for readymade effects we're providing.
+
+## 📝 Bug Report
+
+If you find a bug, please report to us opening a new [Issues](https://github.com/naver/egjs-flicking/issues) on GitHub.
+
+## 🙌 Contributing
+See [CONTRIBUTING.md]((https://github.com/naver/egjs-flicking/blob/master/CONTRIBUTING.md))
 
 ## Local development
 ### Project setup
@@ -94,11 +146,7 @@ npm run test
 npm run lint
 ```
 
-## Bug Report
-
-If you find a bug, please report to us opening a new [Issues](https://github.com/naver/egjs-flicking/issues) on GitHub.
-
-## License
+## 📜 License
 egjs-flicking is released under the [MIT license](http://naver.github.io/egjs/license.txt).
 
 ```
