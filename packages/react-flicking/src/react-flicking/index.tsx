@@ -176,6 +176,11 @@ export default class Flicking extends React.Component<IFlickingProps> {
     });
     return this;
   }
+
+  public rebuild = () => {
+    return this.flicking.rebuild();
+  }
+
   public componentWillUnmount() {
     this.flicking.destroy();
     window.removeEventListener("resize", this.resize);
