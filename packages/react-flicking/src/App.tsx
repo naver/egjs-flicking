@@ -7,6 +7,7 @@ import CusomEvents from "./customevents";
 import InfiniteFlicking from "./infiniteflicking";
 import Normal from "./normal";
 import OpacityEffect from './OpacityEffect';
+import PanelRebuild from "./PanelRebuild";
 import ParallaxEffect from "./ParallaxEffect";
 import Preview from "./preview";
 
@@ -54,6 +55,11 @@ class App extends React.Component {
           <ParallaxEffect />
           <p>Combined plugins</p>
           <Combined />
+        </div>
+        <h2>Panel Rebuild</h2>
+        <div className="horizontal">
+          <p>Panels should be updated from [0, 1, 2] to [3, 4, 5] when `Update` button is clicked.</p>
+          <PanelRebuild/>
         </div>
       </div>
     );

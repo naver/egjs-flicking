@@ -549,4 +549,46 @@ describe("Methods call", function() {
 			expect(has).to.be.false;
 		});
 	});
+
+	describe("rebuild()", function() {
+		tutils.hooks.run();
+
+		it("Should rebuild panels after panel update", () => {
+			// Given
+			const inst = tutils.create("#mflick1", {
+				circular : true,
+				previewPadding: [30, 50]
+			});
+
+			const container = inst.$wrapper.children[0];
+
+			// When
+			container.innerHTML = `
+			<div style="background-color:#CC66CC">
+				<p>Layer 0</p>
+			</div>
+			<div style="background-color:#66cccc">
+				<p>Layer 1</p>
+			</div>
+			<div style="background-color:#ffc000">
+				<p>Layer 2</p>
+			</div>
+			<div style="background-color:green">
+				<p>Layer 3</p>
+			</div>
+			<div style="background-color:maroon">
+				<p>Layer 4</p>
+			</div>
+			`;
+
+			inst.rebuild({defaultIndex: 2});
+
+			// Then
+			expect(container.children.length).to.equal(10);
+			expect(container.querySelectorAll(".eg-flick-clone").length).to.equal(5);
+			expect(inst.getIndex()).to.equal(2);
+
+			inst.destroy();
+		});
+	});
 });

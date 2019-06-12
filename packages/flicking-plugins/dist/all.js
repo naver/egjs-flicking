@@ -168,7 +168,7 @@ https://github.com/naver/egjs-flicking
 
     Plugin.utils = utils;
     Plugin.consts = consts;
-    Plugin.VERSION = "2.4.4";
+    Plugin.VERSION = "2.5.1";
     return Plugin;
   }();
 
