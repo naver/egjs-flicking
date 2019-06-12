@@ -164,7 +164,7 @@ function () {
 
   Plugin.utils = utils;
   Plugin.consts = consts;
-  Plugin.VERSION = "2.4.4";
+  Plugin.VERSION = "2.5.0";
   return Plugin;
 }();
 

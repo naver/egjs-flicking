@@ -1,6 +1,6 @@
 {
 	"name": "@egjs/flicking",
-	"version": "2.5.0-snapshot",
+	"version": "2.5.0",
 	"main": "dist/flicking.js",
 	"module": "dist/flicking.esm.js",
 	"sideEffects": false,
