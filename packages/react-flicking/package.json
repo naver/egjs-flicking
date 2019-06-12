@@ -29,7 +29,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@egjs/flicking": "^2.5.0"
+    "@egjs/flicking": "^2.5.1"
   },
   "scripts": {
     "start": "react-scripts-ts start",
