@@ -5,7 +5,7 @@ Copyright (c) 2017 NAVER Corp.
 @egjs/flicking JavaScript library
 https://github.com/naver/egjs-flicking
 
-@version 2.5.0
+@version 2.5.1
 
 All-in-one packaged file for ease use of '@egjs/flicking' with below dependencies.
 - @egjs/axes ^2.5.10, @egjs/component ^2.1.2
@@ -7590,7 +7590,7 @@ All-in-one packaged file for ease use of '@egjs/flicking' with below dependencie
     }(Mixin(Component)["with"](eventHandler));
 
     Flicking.utils = utils;
-    Flicking.VERSION = "2.5.0";
+    Flicking.VERSION = "2.5.1";
     Flicking.consts = {
       EVENTS: EVENTS,
       TRANSFORM: TRANSFORM$1,

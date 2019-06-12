@@ -5,7 +5,7 @@ Copyright (c) 2017 NAVER Corp.
 @egjs/flicking JavaScript library
 https://github.com/naver/egjs-flicking
 
-@version 2.5.0
+@version 2.5.1
 */
 import Component from '@egjs/component';
 import Axes, { PanInput } from '@egjs/axes';
@@ -2502,7 +2502,7 @@ function () {
   }(Mixin(Component)["with"](eventHandler));
 
   Flicking.utils = utils;
-  Flicking.VERSION = "2.5.0";
+  Flicking.VERSION = "2.5.1";
   Flicking.consts = {
     EVENTS: EVENTS,
     TRANSFORM: TRANSFORM,
