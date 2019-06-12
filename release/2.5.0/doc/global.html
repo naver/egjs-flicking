@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Global | egjs::Flicking - API</title>
+    
+    <meta name="description" content="A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side." />
+    
+        <meta name="keywords" content="UI Component, egjs, flicking, carousel" />
+        <meta name="keyword" content="UI Component, egjs, flicking, carousel" />
+    
+    
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    
+    <meta property="og:url" content=""/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <link rel="canonical" href="https://naver.github.io/egjs-flicking/release/latest/doc/"/>
+    
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":true,"cleverLinks":true,"default":{"outputSourceFiles":true},"applicationName":"eg.Flicking","disqus":"egjs","googleAnalytics":"UA-70842526-17","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"egjs::Flicking - API","description":"A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.","keyword":"UI Component, egjs, flicking, carousel"},"linenums":true,"link":{"canonical":"https://naver.github.io/egjs-flicking/release/latest/doc/"}};
+    </script>
+    
+
+    
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', config.googleAnalytics]);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName">
+        <a href="//naver.github.io/egjs/"><img style="width:40px; height:20px;" src="img/type_white.svg"/></a>
+
+        <!-- Homepage link (prefer link.home than applicationName) -->
+        
+        <a href="//naver.github.io/egjs-flicking/">Flicking</a>
+        
+    </h3>
+
+    <div class="search">
+        <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
+    </div>
+    <ul class="list">
+        <li class="item">
+            <span class="title">
+                <a href="index.html">README</a>
+            </span>
+        </li>
+    
+        <!-- Non Grouping Version -->
+        
+            
+
+        
+            
+
+<li class="item" data-name="eg.Flicking">
+    <span class="title">
+        <a href="eg.Flicking.html">eg.Flicking</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    <span class="subtitle">Members</span>
+    
+        <li data-name="eg.Flicking.DIRECTION_ALL"><a href="eg.Flicking.html#.DIRECTION_ALL">DIRECTION_ALL</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_DOWN"><a href="eg.Flicking.html#.DIRECTION_DOWN">DIRECTION_DOWN</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_HORIZONTAL"><a href="eg.Flicking.html#.DIRECTION_HORIZONTAL">DIRECTION_HORIZONTAL</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_LEFT"><a href="eg.Flicking.html#.DIRECTION_LEFT">DIRECTION_LEFT</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_NONE"><a href="eg.Flicking.html#.DIRECTION_NONE">DIRECTION_NONE</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_RIGHT"><a href="eg.Flicking.html#.DIRECTION_RIGHT">DIRECTION_RIGHT</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_UP"><a href="eg.Flicking.html#.DIRECTION_UP">DIRECTION_UP</a></li>
+    
+        <li data-name="eg.Flicking.DIRECTION_VERTICAL"><a href="eg.Flicking.html#.DIRECTION_VERTICAL">DIRECTION_VERTICAL</a></li>
+    
+        <li data-name="eg.Flicking.VERSION"><a href="eg.Flicking.html#.VERSION">VERSION</a></li>
+    
+        <li data-name="eg.Flicking.VERSION"><a href="eg.Flicking.html#.VERSION">VERSION</a></li>
+    
+        <li data-name="eg.Flicking#plugins"><a href="eg.Flicking.html#plugins">plugins</a></li>
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    <span class="subtitle">Methods</span>
+    
+        <li data-name="eg.Flicking#destroy"><a href="eg.Flicking.html#destroy">destroy</a></li>
+    
+        <li data-name="eg.Flicking#disableInput"><a href="eg.Flicking.html#disableInput">disableInput</a></li>
+    
+        <li data-name="eg.Flicking#enableInput"><a href="eg.Flicking.html#enableInput">enableInput</a></li>
+    
+        <li data-name="eg.Flicking#getAllElements"><a href="eg.Flicking.html#getAllElements">getAllElements</a></li>
+    
+        <li data-name="eg.Flicking#getElement"><a href="eg.Flicking.html#getElement">getElement</a></li>
+    
+        <li data-name="eg.Flicking#getIndex"><a href="eg.Flicking.html#getIndex">getIndex</a></li>
+    
+        <li data-name="eg.Flicking#getNextElement"><a href="eg.Flicking.html#getNextElement">getNextElement</a></li>
+    
+        <li data-name="eg.Flicking#getNextIndex"><a href="eg.Flicking.html#getNextIndex">getNextIndex</a></li>
+    
+        <li data-name="eg.Flicking#getPrevElement"><a href="eg.Flicking.html#getPrevElement">getPrevElement</a></li>
+    
+        <li data-name="eg.Flicking#getPrevIndex"><a href="eg.Flicking.html#getPrevIndex">getPrevIndex</a></li>
+    
+        <li data-name="eg.Flicking#getStatus"><a href="eg.Flicking.html#getStatus">getStatus</a></li>
+    
+        <li data-name="eg.Flicking#hasOn"><a href="eg.Flicking.html#hasOn">hasOn</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#isPlaying"><a href="eg.Flicking.html#isPlaying">isPlaying</a></li>
+    
+        <li data-name="eg.Flicking#moveTo"><a href="eg.Flicking.html#moveTo">moveTo</a></li>
+    
+        <li data-name="eg.Flicking#next"><a href="eg.Flicking.html#next">next</a></li>
+    
+        <li data-name="eg.Flicking#off"><a href="eg.Flicking.html#off">off</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#on"><a href="eg.Flicking.html#on">on</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#once"><a href="eg.Flicking.html#once">once</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#plugin"><a href="eg.Flicking.html#plugin">plugin</a></li>
+    
+        <li data-name="eg.Flicking#prev"><a href="eg.Flicking.html#prev">prev</a></li>
+    
+        <li data-name="eg.Flicking#rebuild"><a href="eg.Flicking.html#rebuild">rebuild</a></li>
+    
+        <li data-name="eg.Flicking#resize"><a href="eg.Flicking.html#resize">resize</a></li>
+    
+        <li data-name="eg.Flicking#restore"><a href="eg.Flicking.html#restore">restore</a></li>
+    
+        <li data-name="eg.Flicking#setStatus"><a href="eg.Flicking.html#setStatus">setStatus</a></li>
+    
+        <li data-name="eg.Flicking#trigger"><a href="eg.Flicking.html#trigger">trigger</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    <span class="subtitle">Events</span>
+    
+        <li data-name="eg.Flicking#event:beforeFlickStart"><a href="eg.Flicking.html#event:beforeFlickStart">beforeFlickStart</a></li>
+    
+        <li data-name="eg.Flicking#event:beforeRestore"><a href="eg.Flicking.html#event:beforeRestore">beforeRestore</a></li>
+    
+        <li data-name="eg.Flicking#event:flick"><a href="eg.Flicking.html#event:flick">flick</a></li>
+    
+        <li data-name="eg.Flicking#event:flickEnd"><a href="eg.Flicking.html#event:flickEnd">flickEnd</a></li>
+    
+        <li data-name="eg.Flicking#event:restore"><a href="eg.Flicking.html#event:restore">restore</a></li>
+    
+    </ul>
+
+    
+</li>
+
+        
+            
+
+<li class="item" data-name="eg.Flicking.plugin.OpacityEffect">
+    <span class="title">
+        <a href="eg.Flicking.plugin.OpacityEffect.html">eg.Flicking.plugin.OpacityEffect</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    </ul>
+
+    
+</li>
+
+        
+            
+
+<li class="item" data-name="eg.Flicking.plugin.ParallaxEffect">
+    <span class="title">
+        <a href="eg.Flicking.plugin.ParallaxEffect.html">eg.Flicking.plugin.ParallaxEffect</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    </ul>
+
+    
+</li>
+
+        
+    
+    </ul>
+</div>
+
+    <div class="main">
+        <h1 class="page-title" data-filename="global.html">Global</h1>
+        
+
+
+
+<section>
+
+<header>
+    <h2>
+        
+    </h2>
+    <button id="toggle">
+        
+            English
+        
+    </button>
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+        
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+        
+    
+    </div>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="$componentDidMount">
+            
+            $componentDidMount<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="Plugin.html">Plugin</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_plugin_Plugin.js.html">Plugin.js</a>, <a href="src_plugin_Plugin.js.html#line59">line 59</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>After mounting</p>
+	</div>
+	
+	
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        <a href="Plugin.html">Plugin</a>
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="$componentWillMount">
+            
+            $componentWillMount<span class="signature">(instance)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="Plugin.html">Plugin</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_plugin_Plugin.js.html">Plugin.js</a>, <a href="src_plugin_Plugin.js.html#line41">line 41</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Before mounting. It's init point from Flicking instance</p>
+	</div>
+	
+	
+
+    
+    
+    
+    
+    
+        
+
+<ul class="parameters">
+    
+    <li>
+        <!-- parameter name -->
+        <div>
+            <strong>instance</strong>
+            
+
+            
+        </div>
+        <!-- parameter type -->
+        
+        <div>Type: 
+<span class="param-type">Flicking</span>
+
+</div>
+        
+    
+        <!-- Description -->
+        <div>
+            
+            <div class="description en"><p>Flicking instance</p></div>
+            <div class="description ko"><p>Flicking instance</p></div>
+            
+        </div>
+
+        <!-- Sub parameters -->
+        
+    </li>
+    
+</ul>
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                    	
+                        <a href="Plugin.html">Plugin</a>
+                        
+                        
+                    
+            </td>
+            <td class="description last">
+                
+
+                
+            </td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="$componentWillUnmount">
+            
+            $componentWillUnmount<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_plugin_Plugin.js.html">Plugin.js</a>, <a href="src_plugin_Plugin.js.html#line66">line 66</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Before the destroy</p>
+	</div>
+	
+	
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="bindEvents">
+            
+            bindEvents<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_plugin_Plugin.js.html">Plugin.js</a>, <a href="src_plugin_Plugin.js.html#line79">line 79</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Bind flicking custom events</p>
+	</div>
+	
+	
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="isUndefined">
+            
+            isUndefined<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="node_modules_@egjs_component_src_component.js.html">component.js</a>, <a href="node_modules_@egjs_component_src_component.js.html#line7">line 7</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+	<div class="description en">
+		<p>Copyright (c) 2015 NAVER Corp.<br>egjs projects are licensed under the MIT license</p>
+	</div>
+	
+	
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        <dl>
+                
+
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="Status">Status<span class="type-signature type object">Object</span> </h4>
+    </div>
+    
+</dt>
+<dd>
+    
+    <div class="description en">
+        <p>The return value specification of the getStatus () method.</p>
+    </div>
+    
+    
+    <div class="description ko">
+        <p>getStatus() 메서드의 반환값 명세.</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>panel</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>current panel position</p></div>
+                <div class="ko"><p>현재 패널 위치</p></div>
+                
+
+                
+                    <h6>Properties</h6>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Physical index number.</p></div>
+                <div class="ko"><p>물리적 인덱스 번호.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>currIndex</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Current physical index number.</p></div>
+                <div class="ko"><p>현재 물리적 인덱스 번호.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>no</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Logical index number.</p></div>
+                <div class="ko"><p>논리적 인덱스 번호.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>currNo</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Current logical index number.</p></div>
+                <div class="ko"><p>현재 논리적 인덱스 번호.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>$list</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;{style: String, className: String, html: String}></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>panel's html</p></div>
+                <div class="ko"><p>패널 정보</p></div>
+                
+
+                
+                    <h6>Properties</h6>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>obj</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>For convenience, the element is denoted by obj.</p></div>
+                <div class="ko"><p>편의상 원소를 obj로 표기함</p></div>
+                
+
+                
+                    <h6>Properties</h6>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>style</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>The value of the style attribute of the panel element. ('transform', 'left', 'top', 'will-change', 'box-sizing', 'width' style has been deleted.)</p></div>
+                <div class="ko"><p>패널 요소의 style 속성 값. ('transform', 'left', 'top', 'will-change', 'box-sizing', 'width' style은 삭제됨)</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>className</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>The class name of the panel element.</p></div>
+                <div class="ko"><p>패널 요소의 class 이름.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>html</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>The innerHTML value of the panel element.</p></div>
+                <div class="ko"><p>패널 요소의 innerHTML 값.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>
+                <div class="en"><a href="eg.Flicking.html#getIndex">eg.Flicking#getIndex</a></div>
+                <div class="ko"><a href="eg.Flicking.html#getIndex">eg.Flicking#getIndex</a></div>
+            </li>
+        </ul>
+    </dd>
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+
+    
+</dd>
+
+            </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+        
+        <!-- disqus code -->
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        <!-- // disqus code -->
+        
+
+        <footer>
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Jun 12 2019 14:58:41 GMT+0900 (KST)
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/main.js"></script>
+</body>
+</html>
