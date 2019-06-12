@@ -1000,13 +1000,13 @@ export default class Viewport {
     }
 
     // Need one more set of clones on prev area of original panel 0
-    const needCloneOnPrev = panelAtLeftBoundary.getIndex() <= panelAtRightBoundary.getIndex()
-      && panelAtLeftBoundary.getIndex() !== 0;
+    const needCloneOnPrev = panelAtLeftBoundary.getIndex() !== 0
+      && panelAtLeftBoundary.getIndex() <= panelAtRightBoundary.getIndex();
 
     // Visible count of panel 0 on first screen
     const panel0OnFirstscreen = Math.ceil((relativeHangerPosition + firstPanel.getSize() - relativeAnchorPosition) / sumOriginalPanelSize)
       + Math.ceil((viewportSize - relativeHangerPosition + relativeAnchorPosition) / sumOriginalPanelSize)
-      - 1;
+      - 1; // duplication
 
     const cloneCount = panel0OnFirstscreen
       + (needCloneOnPrev ? 1 : 0);
