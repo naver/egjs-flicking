@@ -60,4 +60,5 @@ export default class Flicking extends Component {
   resize(): this;
   restore(duration?: number): this;
   setStatus(status: FlickingStatus | string): void;
+  rebuild(param?: any): this;
 }
