@@ -207,4 +207,4 @@ temp/
 demo/release
 demo/_data/version.yml
 packages/*/dist/
-# dist/
+dist/
