@@ -294,6 +294,18 @@ class Flicking extends Component {
   }
 
   /**
+   * Return nearest panel from hanger. `null` if no panel exists.
+   * @ko 행어로부터 가장 가까운 패널을 반환한다. 패널이 하나도 없을 경우 `null`을 반환한다.
+   * @return Nearest panel from hanger.<ko>행어로부터 가장 가까운 패널.</ko>
+   */
+  public getNearestPanel(): FlickingPanel | null {
+    const nearestPanel = this.viewport.getNearestPanel();
+    return nearestPanel
+      ? nearestPanel
+      : null;
+  }
+
+  /**
    * Return length of original panels.
    * @ko 원본 패널의 개수를 반환한다.
    * @return Length of original panels.<ko>원본 패널의 개수</ko>
