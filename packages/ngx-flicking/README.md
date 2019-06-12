@@ -1,0 +1,169 @@
+<h1 align=center>
+  <img src="https://dummyimage.com/1000x400/ffffff/000000&text=Flicking" alt="Flicking Image" /><br/>
+  <img alt="Angular" src="https://angular.io/assets/images/logos/angular/shield-large.svg" width="36" valign="middle">
+  @egjs/ngx-flicking
+</h1>
+
+<p align=center>
+  <a href="https://www.npmjs.com/package/@egjs/ngx-flicking" target="_blank">
+    <img src="https://img.shields.io/npm/v/@egjs/ngx-flicking.svg?style=flat-square&color=42b883&label=version&logo=NPM">
+  </a>
+  <a href="https://www.npmjs.com/package/@egjs/ngx-flicking" target="_blank">
+    <img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@egjs/ngx-flicking.svg?style=flat-square&label=%F0%9F%92%BE%20gzipped&color=007acc">
+  </a>
+  <a href="https://github.com/naver/egjs-flicking/graphs/commit-activity">
+    <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/naver/egjs-flicking.svg?style=flat-square&label=%E2%AC%86%20commits&color=08CE5D">
+  </a>
+  <a href="https://www.npmjs.com/package/@egjs/ngx-flicking" target="_blank">
+    <img src="https://img.shields.io/npm/dm/@egjs/ngx-flicking.svg?style=flat-square&label=%E2%AC%87%20downloads&color=08CE5D" alt="npm downloads per month">
+  </a>
+  <a href="https://github.com/naver/egjs-flicking/graphs/contributors" target="_blank">
+    <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/naver/egjs-flicking.svg?label=%F0%9F%91%A5%20contributors&style=flat-square&color=08CE5D"></a>
+  <a href="https://github.com/naver/egjs-flicking/blob/master/LICENSE" target="_blank">
+    <img alt="GitHub" src="https://img.shields.io/github/license/naver/egjs-flicking.svg?style=flat-square&label=%F0%9F%93%9C%20license&color=08CE5D">
+  </a>
+</p>
+
+<p align=center>
+  <img alt="Angular" src="https://angular.io/assets/images/logos/angular/shield-large.svg" width="15" valign="middle"> Angular wrapper of <a href="https://github.com/naver/egjs-flicking">@egjs/flicking</a>
+</p>
+
+<p align=center>
+  <a href="https://naver.github.io/egjs-flicking/">Demo</a> / <a href="https://naver.github.io/egjs-flicking/release/latest/doc/index.html">Documentation</a> / <a href="https://naver.github.io/egjs/" />Other components</a>
+</p>
+
+## ⚙️ Installation
+```sh
+npm install --save @egjs/ngx-flicking
+```
+
+## 🏃 Quick Start
+### Module definition
+```diff
++import { NgxFlickingModule } from '@egjs/ngx-flicking'; // import
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+ 
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
++   NgxFlickingModule /* Add in imports */
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { } /* Your app */
+```
+
+### Template & Script
+```ts
+@Component({
+  selector: 'autoplay-plugin-demo',
+  template: `
+  <ngx-flicking
+    [options]="{ circular: true, gap: 10, duration: 500 }"
+    [plugins]="plugins"
+    (needPanel)="onNeedPanel($event)"
+    (moveEnd)="onMoveEnd($event)"
+  >
+    <ng-template>
+      <div class="panel">
+        <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
+      </div>
+      <div class="panel">
+        <img src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
+      </div>
+      <div class="panel">
+        <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
+      </div>
+    </ng-template>
+  </ngx-flicking>
+  `,
+  styleUrls: ['./autoplay.component.css']
+})
+export class AutoplayComponent implements OnInit {
+  plugins: Plugin[] = [new Fade(), new AutoPlay(2000, 'NEXT')];
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+  onNeedPanel(e) {
+    // ADD PANELS
+  }
+
+  onMoveEnd(e) {
+    // HANDLE INDEX CHANGE
+  }
+}
+```
+
+### 🔍 SSR(Server Side Rendering)
+> TODO
+
+## 📖 More Examples
+See `demo/` for more implementation examples.
+
+## 📦 Packages
+You can use all plugins just like native @egjs/flicking.
+
+Check [**@egjs/flicking-plugins**](https://github.com/naver/egjs-flicking-plugins) for readymade effects we're providing.
+
+## 📝 Bug Report
+
+If you find a bug, please report to us opening a new [Issues](https://github.com/naver/egjs-flicking/issues) on GitHub.
+
+## 🙌 Contributing
+See [CONTRIBUTING.md]((https://github.com/naver/egjs-flicking/blob/master/CONTRIBUTING.md))
+
+## Local development
+### Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads demo
+```sh
+npm run start
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Run your tests
+```
+npm run test
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+## 📜 License
+egjs-flicking is released under the [MIT license](http://naver.github.io/egjs/license.txt).
+
+```
+Copyright (c) 2015-present NAVER Corp.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+```

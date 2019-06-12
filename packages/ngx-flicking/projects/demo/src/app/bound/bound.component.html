@@ -1,0 +1,33 @@
+<div id="bound" class="container" v-highlight>
+  <h1>Bound <img src="https://naver.github.io/egjs-flicking/images/bound-dog.png" width="40px" /></h1>
+  <ul class="extra">
+    <li>Bound the panels so that they are not out of the flicking area.</li>
+    <li>This prevents unwanted free space within the flicking area.</li>
+  </ul>
+  <h2>bound: false</h2>
+  <div class="hanger hanger0"></div>
+  <ngx-flicking class="flicking flicking0" [options]="{ gap: 10 }">
+    <ng-template>
+      <div class="panel"><div class="anchor"></div></div>
+      <div class="panel"><div class="anchor"></div></div>
+      <div class="panel"><div class="anchor"></div></div>
+      <div class="panel"><div class="anchor"></div></div>
+      <div class="panel"><div class="anchor"></div></div>
+      <div class="panel"><div class="anchor"></div></div>
+    </ng-template>
+  </ngx-flicking>
+  <h2>bound: true</h2>
+  <div class="hanger hanger0"></div>
+  <ngx-flicking class="flicking flicking1" [options]="{ gap: 10, bound: true }">
+    <ng-template>
+      <div class="panel"><div class="anchor"></div></div>
+      <div class="panel"><div class="anchor"></div></div>
+      <div class="panel"><div class="anchor"></div></div>
+      <div class="panel"><div class="anchor"></div></div>
+      <div class="panel"><div class="anchor"></div></div>
+      <div class="panel"><div class="anchor"></div></div>
+    </ng-template>
+  </ngx-flicking>
+  <div class="pagination pagination2"></div>
+  <pre><code class="hljs html" data-script="flicking1">{{ code1 }}</code></pre>
+</div>
