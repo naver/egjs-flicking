@@ -447,7 +447,7 @@ class Flicking extends Component {
    * @ko 패널들을 현재 상태에 맞춰 갱신한다.
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
-  public resize(): this {
+  public resize = (): this => {
     const viewport = this.viewport;
 
     viewport.panelManager.allPanels()
