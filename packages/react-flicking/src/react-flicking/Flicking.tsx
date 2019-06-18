@@ -20,6 +20,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   private flicking?: NativeFlicking | null;
   private options: FlickingOptions = {
     ...DEFAULT_OPTIONS,
+    renderExternal: true,
   };
   // differ
   private pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
@@ -88,7 +89,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     this.checkCloneCount();
   }
   public componentWillUnmount() {
-    this.destroy();
+    this.destroy({ preserveUI: true });
   }
   // private
   private checkPlugins() {
