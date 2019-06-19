@@ -16,4 +16,8 @@ setTimeout(function() {
   }).on("moveEnd", e => {
     console.log(e);
   });
+
+  f2 = createFlicking("#flick2", {
+    bound: true,
+  })
 }, 500);

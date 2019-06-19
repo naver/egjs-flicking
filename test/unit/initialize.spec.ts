@@ -796,6 +796,7 @@ describe("Initialization", () => {
       expect((plugin.destroy as sinon.SinonSpy).callCount).to.be.equals(1);
     });
   });
+
   describe("initialize component with decorator", () => {
     it("should check if the method of the class created with the decorator is properly entered.", () => {
       class TestFlicking {
@@ -820,6 +821,56 @@ describe("Initialization", () => {
       expect(flicking.prepend).to.be.undefined;
       expect(flicking.addPlugins([])).to.be.equals(flicking);
       expect(flicking.getPanelCount()).to.be.equals(2);
+    });
+  });
+
+  describe("bound", () => {
+    it("should clamp dest position when moving prev to adjacent panel #219", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.panel30, {
+        bound: true,
+        anchor: 50,
+        hanger: 50,
+        threshold: 40,
+        defaultIndex: 5,
+        moveType: { type: "snap", count: 1},
+      });
+      const moves = [];
+      flickingInfo.instance.on("move", e => moves.push(e.axesEvent.pos.flick));
+
+      // When
+      simulate(flickingInfo.element, {
+        deltaX: 40,
+        duration: 200,
+      });
+      await waitFor(1000);
+
+      // Then
+      const scrollArea = (flickingInfo.instance as any).viewport.getScrollArea();
+      expect(moves.every(move => move <= scrollArea.next)).to.be.true;
+    });
+
+    it("should clamp dest position when moving next to adjacent panel #219", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.panel30, {
+        bound: true,
+        threshold: 40,
+        defaultIndex: 0,
+        moveType: { type: "snap", count: 1},
+      });
+      const moves = [];
+      flickingInfo.instance.on("move", e => moves.push(e.axesEvent.pos.flick));
+
+      // When
+      simulate(flickingInfo.element, {
+        deltaX: -40,
+        duration: 500,
+      });
+      await waitFor(1000);
+
+      // Then
+      const scrollArea = (flickingInfo.instance as any).viewport.getScrollArea();
+      expect(moves.every(move => move >= scrollArea.prev)).to.be.true;
     });
   });
 });

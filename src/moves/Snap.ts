@@ -126,6 +126,7 @@ class Snap extends MoveType {
     const currentIndex = viewport.getCurrentIndex();
     const currentPanel = viewport.panelManager.get(currentIndex)!;
     const hangerPosition = viewport.getHangerPosition();
+    const scrollArea = viewport.getScrollArea();
 
     const firstClonedPanel = currentPanel.getIdenticalPanels()[1];
     const lapped = options.circular
@@ -156,10 +157,13 @@ class Snap extends MoveType {
         : basePosition - (panelToMove.getSize() - targetRelativeAnchorPosition) - options.gap
       : panelToMove.getAnchorPosition();
     const estimatedPosition = estimatedPanelPosition - viewport.getRelativeHangerPosition();
+    const destPos = viewport.canSetBoundMode()
+      ? clamp(estimatedPosition, scrollArea.prev, scrollArea.next)
+      : estimatedPosition;
 
     return {
       panel: panelToMove,
-      destPos: estimatedPosition,
+      destPos,
       duration: options.duration,
       eventType,
     };
