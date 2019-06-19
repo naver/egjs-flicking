@@ -1,0 +1,45 @@
+import Panel from "./Panel";
+import { FlickingOptions } from "../types";
+declare class PanelManager {
+    private cameraElement;
+    private options;
+    private panels;
+    private clones;
+    private range;
+    private length;
+    private lastIndex;
+    private cloneCount;
+    constructor(cameraElement: HTMLElement, options: FlickingOptions);
+    firstPanel(): Panel | undefined;
+    lastPanel(): Panel | undefined;
+    allPanels(): ReadonlyArray<Panel>;
+    originalPanels(): ReadonlyArray<Panel>;
+    clonedPanels(): ReadonlyArray<Panel[]>;
+    replacePanels(newPanels: Panel[], newClones: Panel[][]): void;
+    has(index: number): boolean;
+    get(index: number): Panel | undefined;
+    getPanelCount(): number;
+    getLastIndex(): number;
+    getRange(): Readonly<{
+        min: number;
+        max: number;
+    }>;
+    getCloneCount(): number;
+    setLastIndex(lastIndex: number): void;
+    setCloneCount(cloneCount: number): void;
+    append(newPanels: Panel[]): void;
+    insert(index: number, newPanels: Panel[]): number;
+    replace(index: number, newPanels: Panel[]): void;
+    remove(index: number, deleteCount?: number): Panel[];
+    chainAllPanels(): void;
+    insertClones(cloneIndex: number, index: number, clonedPanels: Panel[], deleteCount?: number): void;
+    removeClonesAfter(cloneIndex: number): void;
+    clear(): void;
+    clearClone(): void;
+    findPanelOf(element: HTMLElement): Panel | undefined;
+    findFirstPanelFrom(index: number): Panel | undefined;
+    private addNewClones(index, originalPanels, deleteCount, nextSibling);
+    private updateIndex(insertingIndex);
+    private insertNewPanels(newPanels, siblingElement);
+}
+export default PanelManager;

@@ -1,38 +1,38 @@
 # egjs-flicking
 
-[![version][badge-version]][link-version] [![Build Status][badge-build-status]][link-build-status] [![Coverage Status][badge-coverage]][link-coverage] [![Greenkeeper][badge-gk]][link-gk] 
+[![version][badge-version]][link-version] [![Build Status][badge-build-status]][link-build-status] [![Coverage Status][badge-coverage]][link-coverage] [![Greenkeeper][badge-gk]][link-gk]
 
 A module used to implement flicking interactions.
-With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side. 
+With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.
 
 ## Documents
 - [Get Started and Demos](https://naver.github.io/egjs-flicking/)
-- [API documentation](https://naver.github.io/egjs-flicking/release/latest/doc/)
+- [API documentation](https://naver.github.io/egjs-flicking/release/2.5.1/doc/)
 
 ## Download and Installation
 
-Download dist files from repo directly or install it via npm. 
+Download dist files from repo directly or install it via npm.
 
 ### For development (Uncompressed)
 
 You can download the uncompressed files for development
 
-- Latest : https://naver.github.io/egjs-flicking/release/latest/dist/flicking.js
+- Latest : https://naver.github.io/egjs-flicking/release/2.5.1/dist/flicking.js
 - Specific version : https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.js
 
 ### For production (Compressed)
 
 You can download the compressed files for production
 
-- Latest : https://naver.github.io/egjs-flicking/release/latest/dist/flicking.min.js
+- Latest : https://naver.github.io/egjs-flicking/release/2.5.1/dist/flicking.min.js
 - Specific version : https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.min.js
 
 ### Packaged version (with Dependencies)
 > Packaged version is to provide for ease use of 'egjs-flicking' with dependency.
 
  - **Latest**
-    - https://naver.github.io/egjs-flicking/release/latest/dist/flicking.pkgd.js
-    - https://naver.github.io/egjs-flicking/release/latest/dist/flicking.pkgd.min.js
+    - https://naver.github.io/egjs-flicking/release/2.5.1/dist/flicking.pkgd.js
+    - https://naver.github.io/egjs-flicking/release/2.5.1/dist/flicking.pkgd.min.js
 
  - **Specific version**
     - https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.js
@@ -49,7 +49,7 @@ With nightly, you can try upcoming changes prior the official release.
 
 ### Plugins
 
-Go to [**@ejgs/flicking-plugins**](https://github.com/naver/egjs-flicking/tree/master/packages/flicking-plugins)
+Go to [**@ejgs/flicking-plugins**](https://github.com/naver/egjs-flicking/tree/2.x/packages/flicking-plugins)
 
 Using npm:
 ```
@@ -63,8 +63,8 @@ Download necessary plugins to be used
 
 #### List of plugins:
 >  - **all** : all plugins
->  - [OpacityEffect](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.plugin.OpacityEffect.html): Add opacity effect attached with flicking interaction.
->  - [ParallaxEffect](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.plugin.ParallaxEffect.html): Add horizontal parallax effect attached with flicking interaction.
+>  - [OpacityEffect](https://naver.github.io/egjs-flicking/release/2.5.1/doc/eg.Flicking.plugin.OpacityEffect.html): Add opacity effect attached with flicking interaction.
+>  - [ParallaxEffect](https://naver.github.io/egjs-flicking/release/2.5.1/doc/eg.Flicking.plugin.ParallaxEffect.html): Add horizontal parallax effect attached with flicking interaction.
 
  - **Latest**
     - https://naver.github.io/egjs-flicking/release/plugins/latest/dist/all.js (all)
@@ -172,7 +172,7 @@ Running `npm test` command will start [Mocha](https://mochajs.org/) tests via [K
 
 ## Bug Report
 
-If you find a bug, please report to us opening a new [Issues](https://github.com/naver/egjs-flicking/issues) on GitHub.
+If you find a bug, please report to us opening a new [Issues](https://github.com/naver/egjs-flicking/issues) on GitHub with label `2.x`.
 
 
 ## License
@@ -202,12 +202,12 @@ THE SOFTWARE.
 
 <!-- badges -->
 [badge-version]: https://img.shields.io/npm/v/@egjs/flicking.svg?style=flat
-[badge-build-status]: https://travis-ci.org/naver/egjs-flicking.svg?branch=master
-[badge-coverage]: https://coveralls.io/repos/github/naver/egjs-flicking/badge.svg?branch=master
+[badge-build-status]: https://travis-ci.org/naver/egjs-flicking.svg?branch=2.x
+[badge-coverage]: https://coveralls.io/repos/github/naver/egjs-flicking/badge.svg?branch=2.x
 [badge-gk]: https://badges.greenkeeper.io/naver/egjs-flicking.svg
 
 <!-- links -->
 [link-version]: https://www.npmjs.com/package/@egjs/flicking
 [link-build-status]: https://travis-ci.org/naver/egjs-flicking
-[link-coverage]: https://coveralls.io/github/naver/egjs-flicking?branch=master
+[link-coverage]: https://coveralls.io/github/naver/egjs-flicking?branch=2.x
 [link-gk]: https://greenkeeper.io/
