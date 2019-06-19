@@ -1,9 +1,9 @@
 # @egjs/flicking-plugins [![version][badge-version]][link-version]
 
-This is plugins for [@egjs/flicking](https://github.com/naver/egjs-flicking)
+This is plugins for [@egjs/flicking](https://github.com/naver/egjs-flicking/tree/2.x)
 
-  - [OpacityEffect](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.plugin.OpacityEffect.html): Add opacity effect attached with flicking interaction.
-  - [ParallaxEffect](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.plugin.ParallaxEffect.html): Add horizontal parallax effect attached with flicking interaction.
+  - [OpacityEffect](https://naver.github.io/egjs-flicking/release/2.5.1/doc/eg.Flicking.plugin.OpacityEffect.html): Add opacity effect attached with flicking interaction.
+  - [ParallaxEffect](https://naver.github.io/egjs-flicking/release/2.5.1/doc/eg.Flicking.plugin.ParallaxEffect.html): Add horizontal parallax effect attached with flicking interaction.
 
 
 ## How to use
@@ -21,8 +21,8 @@ Download necessary plugins to be used
 
 #### List of plugins:
 >  - **all** : All plugins
->  - [OpacityEffect](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.plugin.OpacityEffect.html): Add opacity effect attached with flicking interaction.
->  - [ParallaxEffect](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.plugin.ParallaxEffect.html): Add horizontal parallax effect attached with flicking interaction.
+>  - [OpacityEffect](https://naver.github.io/egjs-flicking/release/2.5.1/doc/eg.Flicking.plugin.OpacityEffect.html): Add opacity effect attached with flicking interaction.
+>  - [ParallaxEffect](https://naver.github.io/egjs-flicking/release/2.5.1/doc/eg.Flicking.plugin.ParallaxEffect.html): Add horizontal parallax effect attached with flicking interaction.
 
  - **Latest**
     - https://naver.github.io/egjs-flicking/release/plugins/latest/dist/all.js (all)
