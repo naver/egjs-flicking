@@ -1,6 +1,6 @@
 {
 	"name": "@egjs/flicking",
-	"version": "3.2.0-snapshot",
+	"version": "3.2.1",
 	"description": "A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.",
 	"main": "dist/flicking.js",
 	"module": "dist/flicking.esm.js",
