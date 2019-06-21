@@ -1,3 +1,4 @@
+import { ImportMock } from "ts-mock-imports";
 import Flicking from "../../src/Flicking";
 import { DEFAULT_OPTIONS } from "../../src/consts";
 import { FlickingEvent, FlickingPanel, Plugin } from "../../src/types";
@@ -6,6 +7,7 @@ import { createFlicking, cleanup, simulate, waitFor, waitEvent } from "./assets/
 import { EVENTS } from "../../src/consts";
 import * as sinon from "sinon";
 import { withFlickingMethods } from "../../src/utils";
+import * as ga from "../../src/ga/ga";
 
 const defaultClassPrefix = DEFAULT_OPTIONS.classPrefix;
 
@@ -109,6 +111,17 @@ describe("Initialization", () => {
       // Then
       const allPanels = flickingInfo.instance.getAllPanels();
       expect(allPanels.every(panel => panel.getElement().style.left !== "")).to.be.true;
+    });
+    it.only("shoulde init with useStatistics(true)", () => {
+      // Given
+      const mockGa = ImportMock.mockFunction(ga, "sendEvent");
+
+      // When
+      flickingInfo = createFlicking(horizontal.full, { useStatistics: true });
+      mockGa.restore();
+
+      // Then
+      expect(mockGa.callCount).to.be.equals(1);
     });
   });
 

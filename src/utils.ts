@@ -5,7 +5,7 @@
 
 import { ElementLike, OriginalStyle } from "./types";
 import Flicking from "./Flicking";
-import { FLICKING_METHODS } from "./consts";
+import { FLICKING_METHODS, isBrowser } from "./consts";
 
 export function merge(target: object, ...srcs: object[]): object {
   srcs.forEach(source => {
@@ -49,7 +49,7 @@ export let checkTranslateSupport = () => {
     transform: "transform",
   };
 
-  if (typeof document === "undefined") {
+  if (!isBrowser) {
     return {
       name: transforms.transform,
       has3d: true,
