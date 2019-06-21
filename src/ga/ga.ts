@@ -1,6 +1,6 @@
 import { isBrowser } from "../consts";
 
-const tid = "UA-70842526-17";
+const tid = "UA-70842526-24";
 const cid = (Math.random() * Math.pow(10, 20)) / Math.pow(10, 10);
 
 export function sendEvent(category: string, action: string, label: any) {
