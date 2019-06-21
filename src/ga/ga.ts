@@ -17,7 +17,7 @@ export function sendEvent(category: string, action: string, label: any) {
     `ul=${(navigator.language || "en-us").toLowerCase()}`,
     `de=${document.charset || document.inputEncoding || document.characterSet || "utf-8"}`,
     `dt=${document.title}`,
-    `sr=$${screen.width}x${screen.height}`,
+    `sr=${screen.width}x${screen.height}`,
     `vp=${innerWidth}x${innerHeight}`,
     `ec=${category}`,
     `ea=${action}`,
