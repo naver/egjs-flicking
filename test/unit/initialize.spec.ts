@@ -112,7 +112,7 @@ describe("Initialization", () => {
       const allPanels = flickingInfo.instance.getAllPanels();
       expect(allPanels.every(panel => panel.getElement().style.left !== "")).to.be.true;
     });
-    it.only("shoulde init with useStatistics(true)", () => {
+    it("shoulde init with useStatistics(true)", () => {
       // Given
       const mockGa = ImportMock.mockFunction(ga, "sendEvent");
 
