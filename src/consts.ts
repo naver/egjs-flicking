@@ -59,7 +59,7 @@ export const DEFAULT_OPTIONS: Readonly<FlickingOptions> = {
   gap: 0,
   moveType: DEFAULT_MOVE_TYPE_OPTIONS.snap,
   renderExternal: false,
-  useStatistics: true,
+  collectStatistics: true,
 };
 
 export const DEFAULT_VIEWPORT_CSS = {
