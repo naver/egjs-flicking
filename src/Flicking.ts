@@ -10,6 +10,7 @@ import Panel from "./components/Panel";
 import { merge, getProgress, parseElement, isString, counter } from "./utils";
 import { DEFAULT_OPTIONS, EVENTS, DIRECTION, AXES_EVENTS, STATE_TYPE, DEFAULT_MOVE_TYPE_OPTIONS } from "./consts";
 import { FlickingOptions, FlickingEvent, Direction, EventType, FlickingPanel, TriggerCallback, FlickingContext, FlickingStatus, Plugin, ElementLike, DestroyOption } from "./types";
+import { sendEvent } from "./ga/ga";
 
 /**
  * @memberof eg
@@ -75,6 +76,7 @@ class Flicking extends Component {
    * @param {string} [options.anchor="50%"] Reference position of anchor in panels, which can be hanged by viewport hanger.<br>Should be provided in px or % value of panel size.<br>You can combinate those values with plus/minus sign<br>ex) "50", "100px", "0%", "25% + 100px"<ko>패널 내부의 앵커의 위치. 뷰포트의 행어와 연계하여 패널이 화면 내에서 멈추는 지점을 설정할 수 있다.<br>px값이나, 패널의 크기 대비 %값을 사용할 수 있고, 이를 + 혹은 - 기호로 연계하여 사용할 수도 있다.<br>예) "50", "100px", "0%", "25% + 100px"</ko>
    * @param {number} [options.gap=0] Space between each panels. Should be given in number.(px).<ko>패널간에 부여할 간격의 크기를 나타내는 숫자.(px)</ko>
    * @param {eg.Flicking.MoveTypeOption} [options.moveType="snap"] Movement style by user input.(ex: snap, freeScroll)<ko>사용자 입력에 의한 이동 방식.(ex: snap, freeScroll)</ko>
+   * @param {boolean} [options.collectStatistics=true] Whether to collect statistics on how you are using `Flicking`. These statistical data do not contain any personal information and are used only as a basis for the development of a user-friendly product.<ko>어떻게 `Flicking`을 사용하고 있는지에 대한 통계 수집 여부를 나타낸다. 이 통계자료는 개인정보를 포함하고 있지 않으며 오직 사용자 친화적인 제품으로 발전시키기 위한 근거자료로서 활용한다.</ko>
    */
   constructor(
     element: string | HTMLElement,
@@ -110,6 +112,10 @@ class Flicking extends Component {
     this.viewport = new Viewport(this, this.options, this.triggerEvent);
     this.listenInput();
     this.listenResize();
+
+    if (this.options.collectStatistics) {
+      sendEvent("usage", "options", options);
+    }
   }
 
   /**

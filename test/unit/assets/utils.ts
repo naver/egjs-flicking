@@ -51,7 +51,7 @@ export function createFlicking(type: string, option: Partial<FlickingOptions> = 
 
   return {
     element: el,
-    instance: new Flicking(el, option || {}).on(handlerMappedEvents),
+    instance: new Flicking(el, { collectStatistics: false, ...(option || {}) }).on(handlerMappedEvents),
     events,
     eventFired,
     eventDirection,
