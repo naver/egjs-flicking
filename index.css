@@ -105,6 +105,9 @@ html, body {
   transform: translate(-50%, -50%);
   align-items: center;
 }
+.page .flicking-logo {
+  width: 100%;
+}
 .page .article h1 {
   font-weight: 100;
   font-size: 50px;
@@ -841,8 +844,8 @@ body.scroll .pages {
     display: none;
   }
 }
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 800px) {
   .page1 {
-    min-height: 900px;
+    min-height: 1000px;
   }
 }
