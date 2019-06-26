@@ -32,6 +32,9 @@ class Flicking extends Component {
   /**
    * Direction constant - "PREV" or "NEXT"
    * @ko 방향 상수 - "PREV" 또는 "NEXT"
+   * @type {object}
+   * @property {"PREV"} PREV - Prev direction from current hanger position.<br/>It's `left(←️)` direction when `horizontal: true`.<br/>Or, `up(↑️)` direction when `horizontal: false`.<ko>현재 행어를 기준으로 이전 방향.<br/>`horizontal: true`일 경우 `왼쪽(←️)` 방향.<br/>`horizontal: false`일 경우 `위쪽(↑️)`방향이다.</ko>
+   * @property {"NEXT"} NEXT - Next direction from current hanger position.<br/>It's `right(→)` direction when `horizontal: true`.<br/>Or, `down(↓️)` direction when `horizontal: false`.<ko>현재 행어를 기준으로 다음 방향.<br/>`horizontal: true`일 경우 `오른쪽(→)` 방향.<br/>`horizontal: false`일 경우 `아래쪽(↓️)`방향이다.</ko>
    * @example
    * eg.Flicking.DIRECTION.PREV; // "PREV"
    * eg.Flicking.DIRECTION.NEXT; // "NEXT"
@@ -39,8 +42,20 @@ class Flicking extends Component {
   public static DIRECTION: Direction = DIRECTION;
 
   /**
-   * Event type object
+   * Event type object with event name strings.
    * @ko 이벤트 이름 문자열들을 담은 객체
+   * @type {object}
+   * @property {"holdStart"} HOLD_START - holdStart event<ko>holdStart 이벤트</ko>
+   * @property {"holdEnd"} HOLD_END - holdEnd event<ko>holdEnd 이벤트</ko>
+   * @property {"moveStart"} MOVE_START - moveStart event<ko>moveStart 이벤트</ko>
+   * @property {"move"} MOVE - move event<ko>move 이벤트</ko>
+   * @property {"moveEnd"} MOVE_END - moveEnd event<ko>moveEnd 이벤트</ko>
+   * @property {"change"} CHANGE - change event<ko>change 이벤트</ko>
+   * @property {"restore"} RESTORE - restore event<ko>restore 이벤트</ko>
+   * @property {"select"} SELECT - select event<ko>select 이벤트</ko>
+   * @property {"needPanel"} NEED_PANEL - needPanel event<ko>needPanel 이벤트</ko>
+   * @example
+   * eg.Flicking.EVENTS.MOVE_START; // "MOVE_START"
    */
   public static EVENTS: EventType = EVENTS;
 

@@ -208,12 +208,6 @@ export interface FlickingPanel {
   remove: () => void;
 }
 
-/**
- * @typedef
- * @memberof eg.Flicking
- * @property - ⬅️(horizontal) or ⬆️(vertical).<ko>⬅️(horizontal) 또는 ⬆️(vertical).</ko>
- * @property - ➡️(horizontal) or ⬇️(vertical).<ko>➡️(horizontal) 또는 ⬇️(vertical).</ko>
- */
 export interface Direction {
   readonly PREV: "PREV";
   readonly NEXT: "NEXT";
@@ -255,10 +249,10 @@ export interface Direction {
  */
 
 /**
- * Event triggered when flicking starts to move to the destination panel.<br>It can be triggered when user finished input, or flicking start to mvoe by method.<br>It won't be triggered when moving to same panel, unless it's circulated more than one cycle in circular mode.<br>Calling `stop()` in event will prevent index changing & panel moving.<br><br>`event` doesn't have `axesEvent` property when triggered by [moveTo()]{@link eg.Flicking#moveTo}, [prev()]{@link eg.Flicking#prev}, [next()]{@link eg.Flicking#next} method.
- * @ko 목적 패널로 이동하기 시작할 때 발생하는 이벤트.<br>사용자가 입력을 마쳤을 때, 혹은 메소드를 통해 이동을 시작했을 때 발생한다.<br>동일 패널로 이동시에는 발생되지 않지만, circular 모드에서 한 바퀴 이상 순환하여 동일 패널로 도착했을 때에도 발생된다.<br>이벤트의 `stop()`을 호출시 패널로의 이동을 막는다.<br><br>[moveTo()]{@link eg.Flicking#moveTo}, [prev()]{@link eg.Flicking#prev}, [next()]{@link eg.Flicking#next}와 같은 메소드에 의해 호출되었을 경우 `event`내의 `axesEvent` 프로퍼티 값은 undefined이다.
+ * Event that indicates index will be changed, and isn't restoring. Index will be changed at `moveEnd` event.<br>It can be triggered when user finished input, or flicking start to mvoe by method.<br>It won't be triggered when moving to same panel, unless it's circulated more than one cycle in circular mode.<br>Calling `stop()` in event will prevent index changing & panel moving.<br><br>`event` doesn't have `axesEvent` property when triggered by [moveTo()]{@link eg.Flicking#moveTo}, [prev()]{@link eg.Flicking#prev}, [next()]{@link eg.Flicking#next} method.
+ * @ko `restore`되지 않고, 인덱스가 변경될 것임을 나타내는 이벤트. 실제 인덱스는 `moveEnd` 이벤트에서 변경된다.<br>사용자가 입력을 마쳤을 때, 혹은 메소드를 통해 이동을 시작했을 때 발생한다.<br>동일 패널로 이동시에는 발생되지 않지만, circular 모드에서 한 바퀴 이상 순환하여 동일 패널로 도착했을 때에도 발생된다.<br>이벤트의 `stop()`을 호출시 패널로의 이동을 막는다.<br><br>[moveTo()]{@link eg.Flicking#moveTo}, [prev()]{@link eg.Flicking#prev}, [next()]{@link eg.Flicking#next}와 같은 메소드에 의해 호출되었을 경우 `event`내의 `axesEvent` 프로퍼티 값은 undefined이다.
  * @event eg.Flicking#change
- * @type eg.Flicking.FlickingEvent
+ * @type eg.Flicking.ChangeEvent
  */
 
 /**
@@ -282,19 +276,6 @@ export interface Direction {
   * @type eg.Flicking.NeedPanelEvent
   */
 
-/**
- * @typedef
- * @memberof eg.Flicking
- * @property - holdStart 이벤트
- * @property - holdEnd 이벤트
- * @property - moveStart 이벤트
- * @property - move 이벤트
- * @property - moveEnd 이벤트
- * @property - change 이벤트
- * @property - restore 이벤트
- * @property - select 이벤트
- * @property - needPanel 이벤트
- */
 export interface EventType {
   readonly HOLD_START: "holdStart";
   readonly HOLD_END: "holdEnd";
@@ -347,7 +328,7 @@ export interface FlickingEvent {
  * @property - Whether the user is inputting through the input device. (Whether it is 'mousedown' for a mouse device or 'touchmove' for a touch device.)<ko>사용자가 입력 장치를 통해 입력중인지 여부. (마우스 장치라면 'mousedown' 여부, 터치 장치라면 'touchmove' 여부)</ko>
  * @property - Cancel the default action, and prevents every events after it.<br>Not effective with events postfixed with `-End`<ko>이벤트의 기본동작을 취소하고, 해당 이벤트 뒤에 발생할 이벤트들을 전부 발생하지 않도록 한다.<br>`-End`가 접미사로 붙은 이벤트에서는 유효한 동작을 하지 않는다.</ko>
  * @property - Expected direction of the panel movement.<ko>예측되는 패널 이동 방향.</ko>
- * @property - Original event emitted from {@link https://naver.github.io/egjs-axes/release/latest/doc/ Axes} instance.<ko>내부의 {@link https://naver.github.io/egjs-axes/release/latest/doc Axes} 인스턴스로부터 발생된 원본 이벤트.</ko>
+ * @property - Original event emitted from {@link https://naver.github.io/egjs-axes/release/latest/doc/ Axes} instance.<br/>Is undefined when when triggered by [moveTo()]{@link eg.Flicking#moveTo}, [prev()]{@link eg.Flicking#prev}, [next()]{@link eg.Flicking#next}.<ko>내부의 {@link https://naver.github.io/egjs-axes/release/latest/doc Axes} 인스턴스로부터 발생된 원본 이벤트.<br/>[moveTo()]{@link eg.Flicking#moveTo}, [prev()]{@link eg.Flicking#prev}, [next()]{@link eg.Flicking#next}와 같은 메소드에 의해 발생되었을 경우 undefined.</ko>
  * @property - Flicking instance that triggered event.<ko>이벤트를 발생시킨 Flicking의 인스턴스</ko>
  */
 export interface ChangeEvent {
