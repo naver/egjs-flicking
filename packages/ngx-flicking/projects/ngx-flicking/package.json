@@ -1,7 +1,7 @@
 {
   "name": "@egjs/ngx-flicking",
   "version": "3.0.0-beta",
-  "description": "A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.",
+  "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
   "peerDependencies": {
     "@angular/common": "^7.2.0",
     "@angular/core": "^7.2.15"

@@ -25,7 +25,7 @@
 </h3>
 
 <p align=center>
-  <b>Everyday 30 million people experience. It's reliable, flexible and extendable carousel. </b><br>📱💻🖥
+  <b>Everyday 30 million people experience. It's reliable, flexible and extendable carousel.</b><br>📱💻🖥
 </p>
 
 <p align=center>
