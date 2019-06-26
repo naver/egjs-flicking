@@ -451,6 +451,7 @@ class Flicking extends Component {
   /**
    * Update panels to current state.
    * @ko 패널들을 현재 상태에 맞춰 갱신한다.
+   * @method
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
   public resize = (): this => {
