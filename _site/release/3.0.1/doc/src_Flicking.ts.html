@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Source: src/Flicking.ts | egjs::Flicking - API</title>
+    
+    <meta name="description" content="A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side." />
+    
+        <meta name="keywords" content="UI Component, egjs, flicking, carousel" />
+        <meta name="keyword" content="UI Component, egjs, flicking, carousel" />
+    
+    
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    
+    <meta property="og:url" content=""/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <link rel="canonical" href="https://naver.github.io/egjs-flicking/release/latest/doc/"/>
+    
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":true,"cleverLinks":true,"default":{"outputSourceFiles":true},"applicationName":"eg.Flicking","disqus":"egjs","googleAnalytics":"UA-70842526-17","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"egjs::Flicking - API","description":"A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.","keyword":"UI Component, egjs, flicking, carousel"},"linenums":true,"link":{"canonical":"https://naver.github.io/egjs-flicking/release/latest/doc/"}};
+    </script>
+    
+
+    
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', config.googleAnalytics]);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName">
+        <a href="//naver.github.io/egjs/"><img style="width:40px; height:20px;" src="img/type_white.svg"/></a>
+
+        <!-- Homepage link (prefer link.home than applicationName) -->
+        
+        <a href="//naver.github.io/egjs-flicking/">Flicking</a>
+        
+    </h3>
+
+    <div class="search">
+        <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
+    </div>
+    <ul class="list">
+        <li class="item">
+            <span class="title">
+                <a href="index.html">README</a>
+            </span>
+        </li>
+    
+        <!-- Non Grouping Version -->
+        
+            
+
+<li class="item" data-name="eg.Flicking">
+    <span class="title">
+        <a href="eg.Flicking.html">eg.Flicking</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    <span class="subtitle">Members</span>
+    
+        <li data-name="eg.Flicking.DIRECTION"><a href="eg.Flicking.html#.DIRECTION">DIRECTION</a></li>
+    
+        <li data-name="eg.Flicking.EVENTS"><a href="eg.Flicking.html#.EVENTS">EVENTS</a></li>
+    
+        <li data-name="eg.Flicking.VERSION"><a href="eg.Flicking.html#.VERSION">VERSION</a></li>
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    <span class="subtitle">Typedefs</span>
+    
+        <li data-name="eg.Flicking.ChangeEvent"><a href="eg.Flicking.html#.ChangeEvent">ChangeEvent</a></li>
+    
+        <li data-name="eg.Flicking.Direction"><a href="eg.Flicking.html#.Direction">Direction</a></li>
+    
+        <li data-name="eg.Flicking.ElementLike"><a href="eg.Flicking.html#.ElementLike">ElementLike</a></li>
+    
+        <li data-name="eg.Flicking.EventType"><a href="eg.Flicking.html#.EventType">EventType</a></li>
+    
+        <li data-name="eg.Flicking.FlickingEvent"><a href="eg.Flicking.html#.FlickingEvent">FlickingEvent</a></li>
+    
+        <li data-name="eg.Flicking.FlickingOptions"><a href="eg.Flicking.html#.FlickingOptions">FlickingOptions</a></li>
+    
+        <li data-name="eg.Flicking.FlickingPanel"><a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a></li>
+    
+        <li data-name="eg.Flicking.FlickingStatus"><a href="eg.Flicking.html#.FlickingStatus">FlickingStatus</a></li>
+    
+        <li data-name="eg.Flicking.MoveTypeFreeScrollOption"><a href="eg.Flicking.html#.MoveTypeFreeScrollOption">MoveTypeFreeScrollOption</a></li>
+    
+        <li data-name="eg.Flicking.MoveTypeOption"><a href="eg.Flicking.html#.MoveTypeOption">MoveTypeOption</a></li>
+    
+        <li data-name="eg.Flicking.MoveTypeSnapOption"><a href="eg.Flicking.html#.MoveTypeSnapOption">MoveTypeSnapOption</a></li>
+    
+        <li data-name="eg.Flicking.NeedPanelEvent"><a href="eg.Flicking.html#.NeedPanelEvent">NeedPanelEvent</a></li>
+    
+        <li data-name="eg.Flicking.Plugin"><a href="eg.Flicking.html#.Plugin">Plugin</a></li>
+    
+        <li data-name="eg.Flicking.SelectEvent"><a href="eg.Flicking.html#.SelectEvent">SelectEvent</a></li>
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    <span class="subtitle">Methods</span>
+    
+        <li data-name="eg.Flicking#addPlugins"><a href="eg.Flicking.html#addPlugins">addPlugins</a></li>
+    
+        <li data-name="eg.Flicking#append"><a href="eg.Flicking.html#append">append</a></li>
+    
+        <li data-name="eg.Flicking#destroy"><a href="eg.Flicking.html#destroy">destroy</a></li>
+    
+        <li data-name="eg.Flicking#disableInput"><a href="eg.Flicking.html#disableInput">disableInput</a></li>
+    
+        <li data-name="eg.Flicking#enableInput"><a href="eg.Flicking.html#enableInput">enableInput</a></li>
+    
+        <li data-name="eg.Flicking#getAllPanels"><a href="eg.Flicking.html#getAllPanels">getAllPanels</a></li>
+    
+        <li data-name="eg.Flicking#getCurrentPanel"><a href="eg.Flicking.html#getCurrentPanel">getCurrentPanel</a></li>
+    
+        <li data-name="eg.Flicking#getElement"><a href="eg.Flicking.html#getElement">getElement</a></li>
+    
+        <li data-name="eg.Flicking#getIndex"><a href="eg.Flicking.html#getIndex">getIndex</a></li>
+    
+        <li data-name="eg.Flicking#getPanel"><a href="eg.Flicking.html#getPanel">getPanel</a></li>
+    
+        <li data-name="eg.Flicking#getPanelCount"><a href="eg.Flicking.html#getPanelCount">getPanelCount</a></li>
+    
+        <li data-name="eg.Flicking#getStatus"><a href="eg.Flicking.html#getStatus">getStatus</a></li>
+    
+        <li data-name="eg.Flicking#getVisiblePanels"><a href="eg.Flicking.html#getVisiblePanels">getVisiblePanels</a></li>
+    
+        <li data-name="eg.Flicking#hasOn"><a href="eg.Flicking.html#hasOn">hasOn</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#isPlaying"><a href="eg.Flicking.html#isPlaying">isPlaying</a></li>
+    
+        <li data-name="eg.Flicking#moveTo"><a href="eg.Flicking.html#moveTo">moveTo</a></li>
+    
+        <li data-name="eg.Flicking#next"><a href="eg.Flicking.html#next">next</a></li>
+    
+        <li data-name="eg.Flicking#off"><a href="eg.Flicking.html#off">off</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#on"><a href="eg.Flicking.html#on">on</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#once"><a href="eg.Flicking.html#once">once</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#prepend"><a href="eg.Flicking.html#prepend">prepend</a></li>
+    
+        <li data-name="eg.Flicking#prev"><a href="eg.Flicking.html#prev">prev</a></li>
+    
+        <li data-name="eg.Flicking#remove"><a href="eg.Flicking.html#remove">remove</a></li>
+    
+        <li data-name="eg.Flicking#removePlugins"><a href="eg.Flicking.html#removePlugins">removePlugins</a></li>
+    
+        <li data-name="eg.Flicking#replace"><a href="eg.Flicking.html#replace">replace</a></li>
+    
+        <li data-name="eg.Flicking#resize"><a href="eg.Flicking.html#resize">resize</a></li>
+    
+        <li data-name="eg.Flicking#setLastIndex"><a href="eg.Flicking.html#setLastIndex">setLastIndex</a></li>
+    
+        <li data-name="eg.Flicking#setStatus"><a href="eg.Flicking.html#setStatus">setStatus</a></li>
+    
+        <li data-name="eg.Flicking#trigger"><a href="eg.Flicking.html#trigger">trigger</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    <span class="subtitle">Events</span>
+    
+        <li data-name="eg.Flicking#event:change"><a href="eg.Flicking.html#event:change">change</a></li>
+    
+        <li data-name="eg.Flicking#event:holdEnd"><a href="eg.Flicking.html#event:holdEnd">holdEnd</a></li>
+    
+        <li data-name="eg.Flicking#event:holdStart"><a href="eg.Flicking.html#event:holdStart">holdStart</a></li>
+    
+        <li data-name="eg.Flicking#event:move"><a href="eg.Flicking.html#event:move">move</a></li>
+    
+        <li data-name="eg.Flicking#event:moveEnd"><a href="eg.Flicking.html#event:moveEnd">moveEnd</a></li>
+    
+        <li data-name="eg.Flicking#event:moveStart"><a href="eg.Flicking.html#event:moveStart">moveStart</a></li>
+    
+        <li data-name="eg.Flicking#event:needPanel"><a href="eg.Flicking.html#event:needPanel">needPanel</a></li>
+    
+        <li data-name="eg.Flicking#event:restore"><a href="eg.Flicking.html#event:restore">restore</a></li>
+    
+        <li data-name="eg.Flicking#event:select"><a href="eg.Flicking.html#event:select">select</a></li>
+    
+    </ul>
+
+    
+</li>
+
+        
+            
+
+        
+    
+    </ul>
+</div>
+
+    <div class="main">
+        <h1 class="page-title" data-filename="src_Flicking.ts.html">Source: src/Flicking.ts</h1>
+        
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import Component from "@egjs/component";
+import Viewport from "./components/Viewport";
+
+import { merge, getProgress, toArray, parseElement, isString } from "./utils";
+import { DEFAULT_OPTIONS, EVENTS, DIRECTION, AXES_EVENTS, STATE_TYPE, DEFAULT_MOVE_TYPE_OPTIONS } from "./consts";
+import { FlickingOptions, FlickingEvent, Direction, EventType, FlickingPanel, TriggerCallback, FlickingContext, FlickingStatus, Plugin, ElementLike } from "./types";
+
+/**
+ * @memberof eg
+ * @extends eg.Component
+ * @support {"ie": "10+", "ch" : "latest", "ff" : "latest",  "sf" : "latest" , "edge" : "latest", "ios" : "7+", "an" : "4.X+"}
+ * @requires {@link https://github.com/naver/egjs-component|eg.Component}
+ * @requires {@link https://github.com/naver/egjs-axes|eg.Axes}
+ * @see Easing Functions Cheat Sheet {@link http://easings.net/} &lt;ko>이징 함수 Cheat Sheet {@link http://easings.net/}&lt;/ko>
+ */
+class Flicking extends Component {
+  /**
+   * Version info string
+   * @ko 버전정보 문자열
+   * @example
+   * eg.Flicking.VERSION;  // ex) 3.0.0
+   * @memberof eg.Flicking
+   */
+  public static VERSION: string = "#__VERSION__#";
+  /**
+   * Direction constant - "PREV" or "NEXT"
+   * @ko 방향 상수 - "PREV" 또는 "NEXT"
+   * @example
+   * eg.Flicking.DIRECTION.PREV; // "PREV"
+   * eg.Flicking.DIRECTION.NEXT; // "NEXT"
+   */
+  public static DIRECTION: Direction = DIRECTION;
+
+  /**
+   * Event type object
+   * @ko 이벤트 이름 문자열들을 담은 객체
+   */
+  public static EVENTS: EventType = EVENTS;
+
+  public options: FlickingOptions;
+
+  private wrapper: HTMLElement;
+  private viewport: Viewport;
+  private eventContext: FlickingContext;
+  private plugins: Plugin[] = [];
+
+  /**
+   * @param element A base element for the eg.Flicking module. When specifying a value as a `string` type, you must specify a css selector string to select the element.&lt;ko>eg.Flicking 모듈을 사용할 기준 요소. `string`타입으로 값 지정시 요소를 선택하기 위한 css 선택자 문자열을 지정해야 한다.&lt;/ko>
+   * @param options An option object of the eg.Flicking module&lt;ko>eg.Flicking 모듈의 옵션 객체&lt;/ko>
+   * @param {string} [options.classPrefix="eg-flick"] A prefix of class name will be added for the panels, viewport and camera.&lt;ko>패널들과 뷰포트, 카메라에 추가될 클래스 이름의 접두사.&lt;/ko>
+   * @param {number} [options.deceleration=0.0075] Deceleration value for panel movement animation for animation triggered by manual user input. Higher value means shorter running time.&lt;ko>사용자의 동작으로 가속도가 적용된 패널 이동 애니메이션의 감속도. 값이 높을수록 애니메이션 실행 시간이 짧아진다.&lt;/ko>
+   * @param {boolean} [options.horizontal=true] Direction of panel movement. (true: horizontal, false: vertical)&lt;ko>패널 이동 방향. (true: 가로방향, false: 세로방향)&lt;/ko>
+   * @param {boolean} [options.circular=false] Enables circular mode, which connects first/last panel for continuous scrolling&lt;ko>순환 모드를 활성화한다. 순환 모드에서는 양 끝의 패널이 서로 연결되어 끊김없는 스크롤이 가능하다.&lt;/ko>
+   * @param {boolean} [options.infinite=false] Enables infinite mode, which can automatically trigger needPanel until reaching last panel's index reaches lastIndex&lt;ko>무한 모드를 활성화한다. 무한 모드에서는 needPanel 이벤트를 자동으로 트리거한다. 해당 동작은 마지막 패널의 인덱스가 lastIndex와 일치할때까지 일어난다.&lt;/ko>
+   * @param {number} [options.infiniteThreshold=0] A Threshold from viewport edge before triggering `needPanel` event in infinite mode.&lt;ko>무한 모드에서 `needPanel`이벤트가 발생하기 위한 뷰포트 끝으로부터의 최대 거리.&lt;/ko>
+   * @param {number} [options.lastIndex=Infinity] Maximum panel index that Flicking can set. Flicking won't trigger `needPanel` when event's panel index is greater than it.&lt;br>Also, if last panel's index reached given index, you can't add more panels.&lt;ko>Flicking이 설정 가능한 패널의 최대 인덱스. `needPanel` 이벤트에 지정된 인덱스가 최대 패널의 개수보다 같거나 커야 하는 경우에 이벤트를 트리거하지 않게 한다.&lt;br>또한, 마지막 패널의 인덱스가 주어진 인덱스와 동일할 경우, 새로운 패널을 더 이상 추가할 수 없다.&lt;/ko>
+   * @param {number} [options.threshold=40] Movement threshold to change panel(unit: pixel). It should be dragged above the threshold to change current panel.&lt;ko>패널 변경을 위한 이동 임계값 (단위: 픽셀). 주어진 값 이상으로 스크롤해야만 패널 변경이 가능하다.&lt;/ko>
+   * @param {number} [options.duration=100] Duration of the panel movement animation.(unit: ms)&lt;ko>패널 이동 애니메이션 진행 시간.(단위: ms)&lt;/ko>
+   * @param {function} [options.panelEffect=x => 1 - Math.pow(1 - x, 3)] An easing function applied to the panel movement animation. Default value is `easeOutCubic`.&lt;ko>패널 이동 애니메이션에 적용할 easing함수. 기본값은 `easeOutCubic`이다.&lt;/ko>
+   * @param {number} [options.defaultIndex=0] Index of panel to set as default when initializing. A zero-based integer.&lt;ko>초기화시 지정할 디폴트 패널의 인덱스로, 0부터 시작하는 정수.&lt;/ko>
+   * @param {string[]} [options.inputType=["touch,"mouse"]] Types of input devices to enable.({@link https://naver.github.io/egjs-axes/release/latest/doc/global.html#PanInputOption Reference})&lt;ko>활성화할 입력 장치 종류. ({@link https://naver.github.io/egjs-axes/release/latest/doc/global.html#PanInputOption 참고})&lt;/ko>
+   * @param {number} [options.thresholdAngle=45] The threshold angle value(0 ~ 90).&lt;br>If input angle from click/touched position is above or below this value in horizontal and vertical mode each, scrolling won't happen.&lt;ko>스크롤 동작을 막기 위한 임계각(0 ~ 90).&lt;br>클릭/터치한 지점으로부터 계산된 사용자 입력의 각도가 horizontal/vertical 모드에서 각각 크거나 작으면, 스크롤 동작이 이루어지지 않는다.&lt;/ko>
+   * @param {number|string|number[]|string[]} [options.bounce=[10,10]] The size value of the bounce area. Only can be enabled when `circular=false`.&lt;br>You can set different bounce value for prev/next direction by using array.&lt;br>`number` for px value, and `string` for px, and % value relative to viewport size.(ex - 0, "10px", "20%")&lt;ko>바운스 영역의 크기값. `circular=false`인 경우에만 사용할 수 있다.&lt;br>배열을 통해 prev/next 방향에 대해 서로 다른 바운스 값을 지정 가능하다.&lt;br>`number`를 통해 px값을, `stirng`을 통해 px 혹은 뷰포트 크기 대비 %값을 사용할 수 있다.(ex - 0, "10px", "20%")&lt;/ko>
+   * @param {boolean} [options.autoResize=false] Whether resize() method should be called automatically after window resize event.&lt;ko>window의 `resize` 이벤트 이후 자동으로 resize()메소드를 호출할지의 여부.&lt;/ko>
+   * @param {boolean} [options.adaptive=false] Whether the height(horizontal)/width(vertical) of the viewport element reflects the height/width value of the panel after completing the movement.&lt;ko>목적 패널로 이동한 후 그 패널의 높이(horizontal)/너비(vertical)값을 뷰포트 요소의 높이/너비값에 반영할지 여부.&lt;/ko>
+   * @param {number} [options.zIndex=2000] z-index value for viewport element.&lt;ko>뷰포트 엘리먼트의 z-index 값.&lt;/ko>
+   * @param {boolean} [options.bound=false] Prevent view from going out of first/last panel. Only can be enabled when `circular=false`.&lt;ko>뷰가 첫번째와 마지막 패널 밖으로 나가는 것을 막아준다. `circular=false`인 경우에만 사용할 수 있다.&lt;/ko>
+   * @param {boolean} [options.overflow=false] Disables CSS property `overflow: hidden` in viewport if `true`.&lt;ko>`true`로 설정시 뷰포트에 `overflow: hidden` 속성을 해제한다.&lt;/ko>
+   * @param {string} [options.hanger="50%"] Reference position of hanger in viewport, which hangs panel anchors should be stopped at.&lt;br>Should be provided in px or % value of viewport size.&lt;br>You can combinate those values with plus/minus sign&lt;br>ex) "50", "100px", "0%", "25% + 100px"&lt;ko>뷰포트 내부의 행어의 위치. 패널의 앵커들이 뷰포트 내에서 멈추는 지점에 해당한다.&lt;br>px값이나, 뷰포트의 크기 대비 %값을 사용할 수 있고, 이를 + 혹은 - 기호로 연계하여 사용할 수도 있다.&lt;br>예) "50", "100px", "0%", "25% + 100px"&lt;/ko>
+   * @param {string} [options.anchor="50%"] Reference position of anchor in panels, which can be hanged by viewport hanger.&lt;br>Should be provided in px or % value of panel size.&lt;br>You can combinate those values with plus/minus sign&lt;br>ex) "50", "100px", "0%", "25% + 100px"&lt;ko>패널 내부의 앵커의 위치. 뷰포트의 행어와 연계하여 패널이 화면 내에서 멈추는 지점을 설정할 수 있다.&lt;br>px값이나, 패널의 크기 대비 %값을 사용할 수 있고, 이를 + 혹은 - 기호로 연계하여 사용할 수도 있다.&lt;br>예) "50", "100px", "0%", "25% + 100px"&lt;/ko>
+   * @param {number} [options.gap=0] Space between each panels. Should be given in number.(px).&lt;ko>패널간에 부여할 간격의 크기를 나타내는 숫자.(px)&lt;/ko>
+   * @param {eg.Flicking.MoveTypeOption} [options.moveType="snap"] Movement style by user input.(ex: snap, freeScroll)&lt;ko>사용자 입력에 의한 이동 방식.(ex: snap, freeScroll)&lt;/ko>
+   */
+  constructor(
+    element: string | HTMLElement,
+    options: Partial&lt;FlickingOptions> = {},
+  ) {
+    super();
+
+    // Set flicking wrapper user provided
+    let wrapper: HTMLElement | null;
+    if (isString(element)) {
+      wrapper = document.querySelector(element);
+      if (!wrapper) {
+        throw new Error("Base element doesn't exist.");
+      }
+    } else if (element.nodeName &amp;&amp; element.nodeType === 1) {
+      wrapper = element;
+    } else {
+      throw new Error("Element should be provided in string or HTMLElement.");
+    }
+
+    this.wrapper = wrapper;
+    // Override default options
+    this.options = merge({}, DEFAULT_OPTIONS, options) as FlickingOptions;
+    // Override moveType option
+    const currentOptions = this.options;
+    const moveType = currentOptions.moveType;
+
+    if (moveType in DEFAULT_MOVE_TYPE_OPTIONS) {
+      currentOptions.moveType = DEFAULT_MOVE_TYPE_OPTIONS[moveType as keyof typeof DEFAULT_MOVE_TYPE_OPTIONS];
+    }
+    this.build();
+  }
+
+  /**
+   * Move to the previous panel if it exists.
+   * @ko 이전 패널이 존재시 해당 패널로 이동한다.
+   * @param [duration=options.duration] Duration of the panel movement animation.(unit: ms)&lt;ko>패널 이동 애니메이션 진행 시간.(단위: ms)&lt;/ko>
+   * @return {eg.Flicking} The instance itself.&lt;ko>인스턴스 자기 자신.&lt;/ko>
+   */
+  public prev(duration?: number): this {
+    const currentPanel = this.getCurrentPanel();
+    const currentState = this.viewport.stateMachine.getState();
+
+    if (!currentPanel || currentState.type !== STATE_TYPE.IDLE) {
+      return this;
+    }
+
+    const prevPanel = currentPanel.prev();
+    if (prevPanel) {
+      prevPanel.focus(duration);
+    }
+
+    return this;
+  }
+
+  /**
+   * Move to the next panel if it exists.
+   * @ko 다음 패널이 존재시 해당 패널로 이동한다.
+   * @param [duration=options.duration] Duration of the panel movement animation(unit: ms).&lt;ko>패널 이동 애니메이션 진행 시간.(단위: ms)&lt;/ko>
+   * @return {eg.Flicking} The instance itself.&lt;ko>인스턴스 자기 자신.&lt;/ko>
+   */
+  public next(duration?: number): this {
+    const currentPanel = this.getCurrentPanel();
+    const currentState = this.viewport.stateMachine.getState();
+
+    if (!currentPanel || currentState.type !== STATE_TYPE.IDLE) {
+      return this;
+    }
+
+    const nextPanel = currentPanel.next();
+    if (nextPanel) {
+      nextPanel.focus(duration);
+    }
+
+    return this;
+  }
+
+  /**
+   * Move to the panel of given index.
+   * @ko 주어진 인덱스에 해당하는 패널로 이동한다.
+   * @param index The index number of the panel to move.&lt;ko>이동할 패널의 인덱스 번호.&lt;/ko>
+   * @param duration [duration=options.duration] Duration of the panel movement.(unit: ms)&lt;ko>패널 이동 애니메이션 진행 시간.(단위: ms)&lt;/ko>
+   * @return {eg.Flicking} The instance itself.&lt;ko>인스턴스 자기 자신.&lt;/ko>
+   */
+  public moveTo(index: number, duration?: number): this {
+    const viewport = this.viewport;
+    const panel = viewport.panelManager.get(index);
+    const state = viewport.stateMachine.getState();
+
+    if (!panel || state.type !== STATE_TYPE.IDLE) {
+      return this;
+    }
+
+    const anchorPosition = panel.getAnchorPosition();
+    const hangerPosition = viewport.getHangerPosition();
+
+    let targetPanel = panel;
+    if (this.options.circular) {
+      const scrollAreaSize = viewport.getScrollAreaSize();
+      // Check all three possible locations, find the nearest position among them.
+      const possiblePositions = [
+        anchorPosition - scrollAreaSize,
+        anchorPosition,
+        anchorPosition + scrollAreaSize,
+      ];
+      const nearestPosition = possiblePositions.reduce((nearest, current) => {
+        return (Math.abs(current - hangerPosition) &lt; Math.abs(nearest - hangerPosition))
+          ? current
+          : nearest;
+      }, Infinity) - panel.getRelativeAnchorPosition();
+
+      const identicals = panel.getIdenticalPanels();
+      const offset = nearestPosition - anchorPosition;
+      if (offset > 0) {
+        // First cloned panel is nearest
+        targetPanel = identicals[1];
+      } else if (offset &lt; 0) {
+        // Last cloned panel is nearest
+        targetPanel = identicals[identicals.length - 1];
+      }
+
+      targetPanel = targetPanel.clone(targetPanel.getCloneIndex(), true);
+      targetPanel.setPosition(nearestPosition, true);
+    }
+    const currentIndex = this.getIndex();
+
+    if (hangerPosition === targetPanel.getAnchorPosition() &amp;&amp; currentIndex === index) {
+      return this;
+    }
+
+    const eventType = panel.getIndex() === viewport.getCurrentIndex()
+      ? ""
+      : EVENTS.CHANGE;
+
+    viewport.moveTo(
+      targetPanel,
+      viewport.findEstimatedPosition(targetPanel),
+      eventType,
+      null,
+      duration,
+    );
+    return this;
+  }
+
+  /**
+   * Return index of the current panel. `-1` if no panel exists.
+   * @ko 현재 패널의 인덱스 번호를 반환한다. 패널이 하나도 없을 경우 `-1`을 반환한다.
+   * @return Current panel's index, zero-based integer.&lt;ko>현재 패널의 인덱스 번호. 0부터 시작하는 정수.&lt;/ko>
+   */
+  public getIndex(): number {
+    return this.viewport.getCurrentIndex();
+  }
+
+  /**
+   * Return the wrapper element user provided in constructor.
+   * @ko 사용자가 생성자에서 제공한 래퍼 엘리먼트를 반환한다.
+   * @return Wrapper element user provided.&lt;ko>사용자가 제공한 래퍼 엘리먼트.&lt;/ko>
+   */
+  public getElement(): HTMLElement {
+    return this.wrapper;
+  }
+
+  /**
+   * Return current panel. `null` if no panel exists.
+   * @ko 현재 패널을 반환한다. 패널이 하나도 없을 경우 `null`을 반환한다.
+   * @return Current panel.&lt;ko>현재 패널.&lt;/ko>
+   */
+  public getCurrentPanel(): FlickingPanel | null {
+    const viewport = this.viewport;
+    const panel = viewport.getCurrentPanel();
+    return panel
+      ? panel
+      : null;
+  }
+
+  /**
+   * Return the panel of given index. `null` if it doesn't exists.
+   * @ko 주어진 인덱스에 해당하는 패널을 반환한다. 해당 패널이 존재하지 않을 시 `null`이다.
+   * @return Panel of given index.&lt;ko>주어진 인덱스에 해당하는 패널.&lt;/ko>
+   */
+  public getPanel(index: number): FlickingPanel | null {
+    const viewport = this.viewport;
+    const panel = viewport.panelManager.get(index);
+    return panel
+      ? panel
+      : null;
+  }
+
+  /**
+   * Return all panels.
+   * @ko 모든 패널들을 반환한다.
+   * @param - Should include cloned panels or not.&lt;ko>복사된 패널들을 포함할지의 여부.&lt;/ko>
+   * @return All panels.&lt;ko>모든 패널들.&lt;/ko>
+   */
+  public getAllPanels(includeClone?: boolean): FlickingPanel[] {
+    const viewport = this.viewport;
+    const panelManager = viewport.panelManager;
+    const panels = includeClone
+      ? panelManager.allPanels()
+      : panelManager.originalPanels();
+
+    return panels
+      .filter(panel => !!panel);
+  }
+
+  /**
+   * Return the panels currently shown in viewport area.
+   * @ko 현재 뷰포트 영역에서 보여지고 있는 패널들을 반환한다.
+   * @return Panels currently shown in viewport area.&lt;ko>현재 뷰포트 영역에 보여지는 패널들&lt;/ko>
+   */
+  public getVisiblePanels(): FlickingPanel[] {
+    return this.getAllPanels(true).filter(panel => {
+      const outsetProgress = panel.getOutsetProgress();
+
+      return outsetProgress > -1 &amp;&amp; outsetProgress &lt; 1;
+    });
+  }
+
+  /**
+   * Return length of original panels.
+   * @ko 원본 패널의 개수를 반환한다.
+   * @return Length of original panels.&lt;ko>원본 패널의 개수&lt;/ko>
+   */
+  public getPanelCount(): number {
+    return this.viewport.panelManager.getPanelCount();
+  }
+
+  /**
+   * Set last panel index for `infinite' mode.&lt;br>[needPanel]{@link eg.Flicking#events:needPanel} won't be triggered anymore when last panel's index reaches it.&lt;br>Also, you can't add more panels after it.
+   * @ko `infinite` 모드에서 적용되는 패널의 최대 인덱스를 설정한다.&lt;br>마지막 패널의 인덱스가 설정한 값에 도달할 경우 더 이상 [needPanel]{@link eg.Flicking#events:needPanel} 이벤트가 발생되지 않는다.&lt;br>또한, 설정한 인덱스 이후로 새로운 패널을 추가할 수 없다.
+   * @param - Last panel index.
+   * @see {@link eg.Flicking.FlickingOptions}
+   * @return {eg.Flicking} The instance itself.&lt;ko>인스턴스 자기 자신.&lt;/ko>
+   */
+  public setLastIndex(index: number): this {
+    this.viewport.setLastIndex(index);
+
+    return this;
+  }
+
+  /**
+   * Return panel movement animation.
+   * @ko 현재 패널 이동 애니메이션이 진행 중인지를 반환한다.
+   * @return Is animating or not.&lt;ko>애니메이션 진행 여부.&lt;/ko>
+   */
+  public isPlaying(): boolean {
+    return this.viewport.stateMachine.getState().playing;
+  }
+
+  /**
+   * Unblock input devices.
+   * @ko 막았던 입력 장치로부터의 입력을 푼다.
+   * @return {eg.Flicking} The instance itself.&lt;ko>인스턴스 자기 자신.&lt;/ko>
+   */
+  public enableInput(): this {
+    this.viewport.enable();
+
+    return this;
+  }
+
+  /**
+   * Block input devices.
+   * @ko 입력 장치로부터의 입력을 막는다.
+   * @return {eg.Flicking} The instance itself.&lt;ko>인스턴스 자기 자신.&lt;/ko>
+   */
+  public disableInput(): this {
+    this.viewport.disable();
+
+    return this;
+  }
+
+  /**
+   * Get current flicking status. You can restore current state by giving returned value to [setStatus()]{@link eg.Flicking#setStatus}.
+   * @ko 현재 상태 값을 반환한다. 반환받은 값을 [setStatus()]{@link eg.Flicking#setStatus} 메소드의 인자로 지정하면 현재 상태를 복원할 수 있다.
+   * @return An object with current status value information.&lt;ko>현재 상태값 정보를 가진 객체.&lt;/ko>
+   */
+  public getStatus(): FlickingStatus {
+    const viewport = this.viewport;
+
+    const panels = viewport.panelManager.originalPanels()
+      .filter(panel => !!panel)
+      .map(panel => {
+        return {
+          html: panel.getElement().outerHTML,
+          index: panel.getIndex(),
+        };
+      });
+
+    return {
+      index: viewport.getCurrentIndex(),
+      panels,
+      position: viewport.getCameraPosition(),
+    };
+  }
+
+  /**
+   * Restore to the state of the `status`.
+   * @ko `status`의 상태로 복원한다.
+   * @param status Status value to be restored. You can specify the return value of the [getStatus()]{@link eg.Flicking#getStatus} method.&lt;ko>복원할 상태 값. [getStatus()]{@link eg.Flicking#getStatus}메서드의 반환값을 지정하면 된다.&lt;/ko>
+   */
+  public setStatus(status: FlickingStatus): void {
+    this.viewport.restore(status);
+  }
+
+  /**
+   * Add plugins that can have different effects on Flicking.
+   * @ko 플리킹에 다양한 효과를 부여할 수 있는 플러그인을 추가한다.
+   * @param - The plugin(s) to add.&lt;ko>추가할 플러그인(들).&lt;/ko>
+   * @return {eg.Flicking} The instance itself.&lt;ko>인스턴스 자기 자신.&lt;/ko>
+   */
+  public addPlugins(plugins: Plugin | Plugin[]) {
+    const newPlugins = ([] as Plugin[]).concat(plugins);
+
+    newPlugins.forEach(plugin => {
+      plugin.init(this);
+    });
+
+    this.plugins = this.plugins.concat(newPlugins);
+    return this;
+  }
+  /**
+   * Remove plugins from Flicking.
+   * @ko 플리킹으로부터 플러그인들을 제거한다.
+   * @param - The plugin(s) to remove.&lt;ko>제거 플러그인(들).&lt;/ko>
+   * @return {eg.Flicking} The instance itself.&lt;ko>인스턴스 자기 자신.&lt;/ko>
+   */
+  public removePlugins(plugins: Plugin | Plugin[]) {
+    const currentPlugins = this.plugins;
+    const removedPlugins = ([] as Plugin[]).concat(plugins);
+
+    removedPlugins.forEach(plugin => {
+      const index = currentPlugins.indexOf(plugin);
+
+      if (index > -1) {
+        currentPlugins.splice(index, 1);
+      }
+
+      plugin.destroy(this);
+    });
+    return this;
+  }
+
+  /**
+   * Return the reference element and all its children to the state they were in before the instance was created. Remove all attached event handlers. Specify `null` for all attributes of the instance (including inherited attributes).
+   * @ko 기준 요소와 그 하위 패널들을 인스턴스 생성전의 상태로 되돌린다. 부착된 모든 이벤트 핸들러를 탈거한다. 인스턴스의 모든 속성(상속받은 속성포함)에 `null`을 지정한다.
+   * @example
+   * const flick = new eg.Flicking("#flick");
+   * flick.destroy();
+   * console.log(flick.moveTo); // null
+   */
+  public destroy(): void {
+    this.off();
+
+    this.viewport.destroy();
+
+    this.plugins.forEach(plugin => {
+      plugin.destroy(this);
+    });
+
+    // release resources
+    for (const x in this) {
+      (this as any)[x] = null;
+    }
+  }
+
+  /**
+   * Update panels to current state.
+   * @ko 패널들을 현재 상태에 맞춰 갱신한다.
+   * @return {eg.Flicking} The instance itself.&lt;ko>인스턴스 자기 자신.&lt;/ko>
+   */
+  public resize(): this {
+    const viewport = this.viewport;
+
+    viewport.panelManager.allPanels()
+      .forEach(panel => panel.unCacheBbox());
+    viewport.resize();
+
+    return this;
+  }
+
+  /**
+   * Add new panels at the beginning of panels.
+   * @ko 제일 앞에 새로운 패널을 추가한다.
+   * @param element - Either HTMLElement, HTML string, or array of them.&lt;br>It can be also HTML string of multiple elements with same depth.&lt;ko>HTMLElement 혹은 HTML 문자열, 혹은 그것들의 배열도 가능하다.&lt;br>또한, 같은 depth의 여러 개의 엘리먼트에 해당하는 HTML 문자열도 가능하다.&lt;/ko>
+   * @return Array of appended panels.&lt;ko>추가된 패널들의 배열&lt;/ko>
+   * @example
+   * // Suppose there were no panels at initialization
+   * const flicking = new eg.Flicking("#flick");
+   * flicking.replace(3, document.createElement("div")); // Add new panel at index 3
+   * flicking.prepend("\&lt;div\>Panel\&lt;/div\>"); // Prepended at index 2
+   * flicking.prepend(["\&lt;div\>Panel\&lt;/div\>", document.createElement("div")]); // Prepended at index 0, 1
+   * flicking.prepend("\&lt;div\>Panel\&lt;/div\>"); // Prepended at index 0, pushing every panels behind it.
+   */
+  public prepend(element: ElementLike | ElementLike[]): FlickingPanel[] {
+    const viewport = this.viewport;
+    const parsedElements = parseElement(element);
+
+    const insertingIndex = Math.max(viewport.panelManager.getRange().min - parsedElements.length, 0);
+    return viewport.insert(insertingIndex, parsedElements);
+  }
+
+  /**
+   * Add new panels at the end of panels.
+   * @ko 제일 끝에 새로운 패널을 추가한다.
+   * @param element - Either HTMLElement, HTML string, or array of them.&lt;br>It can be also HTML string of multiple elements with same depth.&lt;ko>HTMLElement 혹은 HTML 문자열, 혹은 그것들의 배열도 가능하다.&lt;br>또한, 같은 depth의 여러 개의 엘리먼트에 해당하는 HTML 문자열도 가능하다.&lt;/ko>
+   * @return Array of appended panels.&lt;ko>추가된 패널들의 배열&lt;/ko>
+   * @example
+   * // Suppose there were no panels at initialization
+   * const flicking = new eg.Flicking("#flick");
+   * flicking.append(document.createElement("div")); // Appended at index 0
+   * flicking.append("\&lt;div\>Panel\&lt;/div\>"); // Appended at index 1
+   * flicking.append(["\&lt;div\>Panel\&lt;/div\>", document.createElement("div")]); // Appended at index 2, 3
+   * // Even this is possible
+   * flicking.append("\&lt;div\>Panel 1\&lt;/div\>\&lt;div\>Panel 2\&lt;/div\>"); // Appended at index 4, 5
+   */
+  public append(element: ElementLike | ElementLike[]): FlickingPanel[] {
+    const viewport = this.viewport;
+
+    return viewport.insert(viewport.panelManager.getRange().max + 1, element);
+  }
+
+  /**
+   * Replace existing panels with new panels from given index. If target index is empty, add new panel at target index.
+   * @ko 주어진 인덱스로부터의 패널들을 새로운 패널들로 교체한다. 인덱스에 해당하는 자리가 비어있다면, 새로운 패널을 해당 자리에 집어넣는다.
+   * @param index - Start index to replace new panels.&lt;ko>새로운 패널들로 교체할 시작 인덱스&lt;/ko>
+   * @param element - Either HTMLElement, HTML string, or array of them.&lt;br>It can be also HTML string of multiple elements with same depth.&lt;ko>HTMLElement 혹은 HTML 문자열, 혹은 그것들의 배열도 가능하다.&lt;br>또한, 같은 depth의 여러 개의 엘리먼트에 해당하는 HTML 문자열도 가능하다.&lt;/ko>
+   * @return Array of created panels by replace.&lt;ko>교체되어 새롭게 추가된 패널들의 배열&lt;/ko>
+   * @example
+   * // Suppose there were no panels at initialization
+   * const flicking = new eg.Flicking("#flick");
+   *
+   * // This will add new panel at index 3,
+   * // Index 0, 1, 2 is empty at this moment.
+   * // [empty, empty, empty, PANEL]
+   * flicking.replace(3, document.createElement("div"));
+   *
+   * // As index 2 was empty, this will also add new panel at index 2.
+   * // [empty, empty, PANEL, PANEL]
+   * flicking.replace(2, "\&lt;div\>Panel\&lt;/div\>");
+   *
+   * // Index 3 was not empty, so it will replace previous one.
+   * // It will also add new panels at index 4 and 5.
+   * // before - [empty, empty, PANEL, PANEL]
+   * // after - [empty, empty, PANEL, NEW_PANEL, NEW_PANEL, NEW_PANEL]
+   * flicking.replace(3, ["\&lt;div\>Panel\&lt;/div\>", "\&lt;div\>Panel\&lt;/div\>", "\&lt;div\>Panel\&lt;/div\>"])
+   */
+  public replace(index: number, element: ElementLike | ElementLike[]): FlickingPanel[] {
+    return this.viewport.replace(index, element);
+  }
+
+  /**
+   * Remove panel at target index. This will decrease index of panels behind it.
+   * @ko `index`에 해당하는 자리의 패널을 제거한다. 수행시 `index` 이후의 패널들의 인덱스가 감소된다.
+   * @param index - Index of panel to remove.&lt;ko>제거할 패널의 인덱스&lt;/ko>
+   * @param {number} [deleteCount=1] - Number of panels to remove from index.&lt;ko>`index` 이후로 제거할 패널의 개수.&lt;/ko>
+   * @return Array of removed panels&lt;ko>제거된 패널들의 배열&lt;/ko>
+   */
+  public remove(index: number, deleteCount: number = 1): FlickingPanel[] {
+    return this.viewport.remove(index, deleteCount);
+  }
+
+  private build(): void {
+    this.initViewport();
+    this.listenInput();
+    this.listenResize();
+  }
+
+  private initViewport(): void {
+    const wrapper = this.wrapper;
+    const options = this.options;
+    const cameraElement = document.createElement("div");
+
+    // Make all panels to be a child of camera element
+    // wrapper &lt;- viewport &lt;- camera &lt;- panels[1...n]
+    toArray(wrapper.children).forEach(child => {
+      cameraElement.appendChild(child);
+    });
+
+    // Clipping area for camera element
+    const viewportElement = document.createElement("div");
+    viewportElement.appendChild(cameraElement);
+
+    // Add viewport element to wrapper
+    wrapper.appendChild(viewportElement);
+
+    // Make viewport instance with panel container element
+    this.viewport = new Viewport(this, viewportElement, cameraElement, options, this.triggerEvent);
+  }
+
+  private listenInput(): void {
+    const flicking = this;
+    const viewport = flicking.viewport;
+    const stateMachine = viewport.stateMachine;
+
+    // Set event context
+    flicking.eventContext = {
+      flicking,
+      viewport: flicking.viewport,
+      transitTo: stateMachine.transitTo,
+      triggerEvent: flicking.triggerEvent,
+      moveCamera: flicking.moveCamera,
+      stopCamera: viewport.stopCamera,
+    };
+
+    const handlers = {};
+    for (const key in AXES_EVENTS) {
+      const eventType = AXES_EVENTS[key];
+
+      handlers[eventType] = (e: any) => stateMachine.fire(eventType, e, flicking.eventContext);
+    }
+
+    // Connect Axes instance with PanInput
+    flicking.viewport.connectAxesHandler(handlers);
+  }
+
+  private listenResize(): void {
+    if (this.options.autoResize) {
+      window.addEventListener("resize", () => {
+        this.resize();
+      });
+    }
+  }
+
+  private triggerEvent = &lt;T extends FlickingEvent>(
+    eventName: string,
+    axesEvent: any,
+    isTrusted: boolean,
+    params: Partial&lt;T> = {},
+  ): TriggerCallback => {
+    const viewport = this.viewport;
+
+    let canceled: boolean = true;
+
+    // Ignore events before viewport is initialized
+    if (viewport) {
+      const state = viewport.stateMachine.getState();
+      const { prev, next } = viewport.getScrollArea();
+      const pos = viewport.getCameraPosition();
+      let progress = getProgress(pos, [prev, prev, next]);
+
+      if (this.options.circular) {
+        progress %= 1;
+      }
+      canceled = !super.trigger(eventName, merge({
+        type: eventName,
+        index: this.getIndex(),
+        panel: this.getCurrentPanel(),
+        direction: state.direction,
+        holding: state.holding,
+        progress,
+        axesEvent,
+        isTrusted,
+      }, params));
+    }
+
+    return {
+      onSuccess(callback: () => void): TriggerCallback {
+        if (!canceled) {
+          callback();
+        }
+        return this;
+      },
+      onStopped(callback: () => void): TriggerCallback {
+        if (canceled) {
+          callback();
+        }
+        return this;
+      },
+    } as TriggerCallback;
+  }
+
+  // Return result of "move" event triggered
+  private moveCamera = (axesEvent: any): TriggerCallback => {
+    const viewport = this.viewport;
+    const state = viewport.stateMachine.getState();
+    const options = this.options;
+
+    const pos = axesEvent.pos.flick;
+    const previousPosition = viewport.getCameraPosition();
+
+    if (axesEvent.isTrusted &amp;&amp; state.holding) {
+      const inputOffset = options.horizontal
+        ? axesEvent.inputEvent.offsetX
+        : axesEvent.inputEvent.offsetY;
+
+      const isNextDirection = inputOffset &lt; 0;
+
+      let cameraChange = pos - previousPosition;
+      const looped = isNextDirection === (pos &lt; previousPosition);
+      if (options.circular &amp;&amp; looped) {
+        // Reached at max/min range of axes
+        const scrollAreaSize = viewport.getScrollAreaSize();
+        cameraChange = (cameraChange > 0 ? -1 : 1) * (scrollAreaSize - Math.abs(cameraChange));
+      }
+
+      const currentDirection = cameraChange === 0
+        ? state.direction
+        : cameraChange > 0
+          ? DIRECTION.NEXT
+          : DIRECTION.PREV;
+
+      state.direction = currentDirection;
+    }
+    state.delta += axesEvent.delta.flick;
+
+    viewport.moveCamera(pos, axesEvent);
+    return this.triggerEvent(EVENTS.MOVE, axesEvent, axesEvent.isTrusted)
+      .onStopped(() => {
+        // Undo camera movement
+        viewport.moveCamera(previousPosition, axesEvent);
+      });
+  }
+}
+
+export default Flicking;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+
+        
+        <!-- disqus code -->
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        <!-- // disqus code -->
+        
+
+        <footer>
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 0.3.7</a> on Fri May 03 2019 17:53:26 GMT+0900 (대한민국 표준시)
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/main.js"></script>
+</body>
+</html>

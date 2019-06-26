@@ -111,6 +111,9 @@ html, body {
   margin: 0px 0px 10px;
   letter-spacing: 3px;
 }
+.page .article .logo {
+  width: 500px;
+}
 .page .article p {
   font-size: 18px;
   font-weight: 300;
@@ -135,6 +138,18 @@ html, body {
 .page .article .download:hover {
   background: rgba(0, 0, 0, 0.4);
 }
+.page .article .button-icon {
+  height: 18px;
+  margin-right: 5px;
+}
+.page .article .framework-header {
+  display: block;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  font-weight: 300;
+  font-size: 18px;
+}
+
 .page .article p.description {
   line-height: 1.4;
 }
@@ -487,7 +502,8 @@ body.scroll .pages {
   z-index: 2002;
 }
 
-.page1 .downloads .target {
+.page1 .downloads .target,
+.page1 .downloads .frameworks {
   margin-left: -5px;
 }
 
@@ -506,6 +522,9 @@ body.scroll .pages {
   /* width: 300px;
   padding-right: 100px; */
   min-height: 150px;
+}
+.page2 .article .frameworks {
+  padding: 0px 0px 20px;
 }
 .page2 .article .feature {
   max-width: 500px;

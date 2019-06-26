@@ -1,0 +1,34 @@
+.highlighter-rouge {
+	display:none !important;
+}
+
+.docs {
+	padding : 20px 0;
+}
+
+.docs .docs-inner {
+    padding: 1px 30px 30px 30px;
+}
+
+.moreBtn {
+	float: right;
+    background: #000;
+    border-radius: 42px;
+    border: none;
+	margin-top:6px;
+    display: inline-block;
+    cursor: pointer;
+    color: rgb(255, 255, 255);
+    font-size: 14px;
+    font-weight: bold;
+    padding: 4px 6px;
+    text-decoration: none;
+}
+
+h3 {
+    padding-left: 10px;
+    border: 0px;
+    border-left-width: 10px;
+    border-color: #eebf3f;
+    border-style: solid;
+}

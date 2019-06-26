@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Index | egjs::Flicking - API</title>
+    
+    <meta name="description" content="A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side." />
+    
+        <meta name="keywords" content="UI Component, egjs, flicking, carousel" />
+        <meta name="keyword" content="UI Component, egjs, flicking, carousel" />
+    
+    
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    
+    <meta property="og:url" content=""/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <link rel="canonical" href="https://naver.github.io/egjs-flicking/release/latest/doc/"/>
+    
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":true,"cleverLinks":true,"default":{"outputSourceFiles":true},"applicationName":"eg.Flicking","disqus":"egjs","googleAnalytics":"UA-70842526-17","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"egjs::Flicking - API","description":"A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.","keyword":"UI Component, egjs, flicking, carousel"},"linenums":true,"link":{"canonical":"https://naver.github.io/egjs-flicking/release/latest/doc/"}};
+    </script>
+    
+
+    
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', config.googleAnalytics]);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName">
+        <a href="//naver.github.io/egjs/"><img style="width:40px; height:20px;" src="img/type_white.svg"/></a>
+
+        <!-- Homepage link (prefer link.home than applicationName) -->
+        
+        <a href="//naver.github.io/egjs-flicking/">Flicking</a>
+        
+    </h3>
+
+    <div class="search">
+        <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
+    </div>
+    <ul class="list">
+        <li class="item">
+            <span class="title">
+                <a href="index.html">README</a>
+            </span>
+        </li>
+    
+        <!-- Non Grouping Version -->
+        
+            
+
+<li class="item" data-name="eg.Flicking">
+    <span class="title">
+        <a href="eg.Flicking.html">eg.Flicking</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    <span class="subtitle">Members</span>
+    
+        <li data-name="eg.Flicking.DIRECTION"><a href="eg.Flicking.html#.DIRECTION">DIRECTION</a></li>
+    
+        <li data-name="eg.Flicking.EVENTS"><a href="eg.Flicking.html#.EVENTS">EVENTS</a></li>
+    
+        <li data-name="eg.Flicking.VERSION"><a href="eg.Flicking.html#.VERSION">VERSION</a></li>
+    
+        <li data-name="eg.Flicking#resize"><a href="eg.Flicking.html#resize">resize</a></li>
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    <span class="subtitle">Typedefs</span>
+    
+        <li data-name="eg.Flicking.ChangeEvent"><a href="eg.Flicking.html#.ChangeEvent">ChangeEvent</a></li>
+    
+        <li data-name="eg.Flicking.Direction"><a href="eg.Flicking.html#.Direction">Direction</a></li>
+    
+        <li data-name="eg.Flicking.ElementLike"><a href="eg.Flicking.html#.ElementLike">ElementLike</a></li>
+    
+        <li data-name="eg.Flicking.EventType"><a href="eg.Flicking.html#.EventType">EventType</a></li>
+    
+        <li data-name="eg.Flicking.FlickingEvent"><a href="eg.Flicking.html#.FlickingEvent">FlickingEvent</a></li>
+    
+        <li data-name="eg.Flicking.FlickingOptions"><a href="eg.Flicking.html#.FlickingOptions">FlickingOptions</a></li>
+    
+        <li data-name="eg.Flicking.FlickingPanel"><a href="eg.Flicking.html#.FlickingPanel">FlickingPanel</a></li>
+    
+        <li data-name="eg.Flicking.FlickingStatus"><a href="eg.Flicking.html#.FlickingStatus">FlickingStatus</a></li>
+    
+        <li data-name="eg.Flicking.MoveTypeFreeScrollOption"><a href="eg.Flicking.html#.MoveTypeFreeScrollOption">MoveTypeFreeScrollOption</a></li>
+    
+        <li data-name="eg.Flicking.MoveTypeOption"><a href="eg.Flicking.html#.MoveTypeOption">MoveTypeOption</a></li>
+    
+        <li data-name="eg.Flicking.MoveTypeSnapOption"><a href="eg.Flicking.html#.MoveTypeSnapOption">MoveTypeSnapOption</a></li>
+    
+        <li data-name="eg.Flicking.NeedPanelEvent"><a href="eg.Flicking.html#.NeedPanelEvent">NeedPanelEvent</a></li>
+    
+        <li data-name="eg.Flicking.Plugin"><a href="eg.Flicking.html#.Plugin">Plugin</a></li>
+    
+        <li data-name="eg.Flicking.SelectEvent"><a href="eg.Flicking.html#.SelectEvent">SelectEvent</a></li>
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    <span class="subtitle">Methods</span>
+    
+        <li data-name="eg.Flicking#addPlugins"><a href="eg.Flicking.html#addPlugins">addPlugins</a></li>
+    
+        <li data-name="eg.Flicking#append"><a href="eg.Flicking.html#append">append</a></li>
+    
+        <li data-name="eg.Flicking#destroy"><a href="eg.Flicking.html#destroy">destroy</a></li>
+    
+        <li data-name="eg.Flicking#disableInput"><a href="eg.Flicking.html#disableInput">disableInput</a></li>
+    
+        <li data-name="eg.Flicking#enableInput"><a href="eg.Flicking.html#enableInput">enableInput</a></li>
+    
+        <li data-name="eg.Flicking#getAllPanels"><a href="eg.Flicking.html#getAllPanels">getAllPanels</a></li>
+    
+        <li data-name="eg.Flicking#getCloneCount"><a href="eg.Flicking.html#getCloneCount">getCloneCount</a></li>
+    
+        <li data-name="eg.Flicking#getCurrentPanel"><a href="eg.Flicking.html#getCurrentPanel">getCurrentPanel</a></li>
+    
+        <li data-name="eg.Flicking#getElement"><a href="eg.Flicking.html#getElement">getElement</a></li>
+    
+        <li data-name="eg.Flicking#getIndex"><a href="eg.Flicking.html#getIndex">getIndex</a></li>
+    
+        <li data-name="eg.Flicking#getLastIndex"><a href="eg.Flicking.html#getLastIndex">getLastIndex</a></li>
+    
+        <li data-name="eg.Flicking#getPanel"><a href="eg.Flicking.html#getPanel">getPanel</a></li>
+    
+        <li data-name="eg.Flicking#getPanelCount"><a href="eg.Flicking.html#getPanelCount">getPanelCount</a></li>
+    
+        <li data-name="eg.Flicking#getStatus"><a href="eg.Flicking.html#getStatus">getStatus</a></li>
+    
+        <li data-name="eg.Flicking#getVisiblePanels"><a href="eg.Flicking.html#getVisiblePanels">getVisiblePanels</a></li>
+    
+        <li data-name="eg.Flicking#hasOn"><a href="eg.Flicking.html#hasOn">hasOn</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#isPlaying"><a href="eg.Flicking.html#isPlaying">isPlaying</a></li>
+    
+        <li data-name="eg.Flicking#moveTo"><a href="eg.Flicking.html#moveTo">moveTo</a></li>
+    
+        <li data-name="eg.Flicking#next"><a href="eg.Flicking.html#next">next</a></li>
+    
+        <li data-name="eg.Flicking#off"><a href="eg.Flicking.html#off">off</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#on"><a href="eg.Flicking.html#on">on</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#once"><a href="eg.Flicking.html#once">once</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="eg.Flicking#prepend"><a href="eg.Flicking.html#prepend">prepend</a></li>
+    
+        <li data-name="eg.Flicking#prev"><a href="eg.Flicking.html#prev">prev</a></li>
+    
+        <li data-name="eg.Flicking#remove"><a href="eg.Flicking.html#remove">remove</a></li>
+    
+        <li data-name="eg.Flicking#removePlugins"><a href="eg.Flicking.html#removePlugins">removePlugins</a></li>
+    
+        <li data-name="eg.Flicking#replace"><a href="eg.Flicking.html#replace">replace</a></li>
+    
+        <li data-name="eg.Flicking#setLastIndex"><a href="eg.Flicking.html#setLastIndex">setLastIndex</a></li>
+    
+        <li data-name="eg.Flicking#setStatus"><a href="eg.Flicking.html#setStatus">setStatus</a></li>
+    
+        <li data-name="eg.Flicking#sync"><a href="eg.Flicking.html#sync">sync</a></li>
+    
+        <li data-name="eg.Flicking#trigger"><a href="eg.Flicking.html#trigger">trigger</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    <span class="subtitle">Events</span>
+    
+        <li data-name="eg.Flicking#event:change"><a href="eg.Flicking.html#event:change">change</a></li>
+    
+        <li data-name="eg.Flicking#event:holdEnd"><a href="eg.Flicking.html#event:holdEnd">holdEnd</a></li>
+    
+        <li data-name="eg.Flicking#event:holdStart"><a href="eg.Flicking.html#event:holdStart">holdStart</a></li>
+    
+        <li data-name="eg.Flicking#event:move"><a href="eg.Flicking.html#event:move">move</a></li>
+    
+        <li data-name="eg.Flicking#event:moveEnd"><a href="eg.Flicking.html#event:moveEnd">moveEnd</a></li>
+    
+        <li data-name="eg.Flicking#event:moveStart"><a href="eg.Flicking.html#event:moveStart">moveStart</a></li>
+    
+        <li data-name="eg.Flicking#event:needPanel"><a href="eg.Flicking.html#event:needPanel">needPanel</a></li>
+    
+        <li data-name="eg.Flicking#event:restore"><a href="eg.Flicking.html#event:restore">restore</a></li>
+    
+        <li data-name="eg.Flicking#event:select"><a href="eg.Flicking.html#event:select">select</a></li>
+    
+    </ul>
+
+    
+</li>
+
+        
+            
+
+        
+    
+    </ul>
+</div>
+
+    <div class="main">
+        <h1 class="page-title" data-filename="index.html">Index</h1>
+        
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article class="readme"><h1>egjs-flicking</h1>
+<p><a href="https://www.npmjs.com/package/@egjs/flicking"><img src="https://img.shields.io/npm/v/@egjs/flicking.svg?style=flat" alt="version"></a> <a href="https://travis-ci.org/naver/egjs-flicking"><img src="https://travis-ci.org/naver/egjs-flicking.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/naver/egjs-flicking?branch=master"><img src="https://coveralls.io/repos/github/naver/egjs-flicking/badge.svg?branch=master" alt="Coverage Status"></a> <a href="https://greenkeeper.io/"><img src="https://badges.greenkeeper.io/naver/egjs-flicking.svg" alt="Greenkeeper"></a></p>
+<p>A module used to implement flicking interactions.<br>
+With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.</p>
+<h2>Documents</h2>
+<ul>
+<li><a href="https://naver.github.io/egjs-flicking/">Get Started and Demos</a></li>
+<li><a href="https://naver.github.io/egjs-flicking/release/latest/doc/">API documentation</a></li>
+</ul>
+<h2>Related Projects</h2>
+<ul>
+<li><a href="https://github.com/naver/egjs-flicking/tree/master/packages/react-flicking"><strong>@egjs/react-flicking</strong></a>: A React component that can easily use @egjs/flicking</li>
+<li><a href="https://github.com/naver/egjs-flicking-plugins"><strong>@egjs/flicking-plugins</strong></a>: This is plugins for @egjs/flicking</li>
+</ul>
+<h2>Download and Installation</h2>
+<p>Download dist files from repo directly or install it via npm.</p>
+<h3>Installation with npm</h3>
+<p>The following command shows how to install egjs-flicking using npm.</p>
+<pre class="prettyprint source lang-bash"><code>$ npm install @egjs/flicking
+</code></pre>
+<h3>For development (Uncompressed)</h3>
+<p>You can download the uncompressed files for development</p>
+<ul>
+<li>Latest : https://naver.github.io/egjs-flicking/release/latest/dist/flicking.js</li>
+<li>Specific version : https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.js</li>
+</ul>
+<h3>For production (Compressed)</h3>
+<p>You can download the compressed files for production</p>
+<ul>
+<li>Latest : https://naver.github.io/egjs-flicking/release/latest/dist/flicking.min.js</li>
+<li>Specific version : https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.min.js</li>
+</ul>
+<h3>Packaged version (with Dependencies)</h3>
+<blockquote>
+<p>Packaged version is to provide for ease use of 'egjs-flicking' with dependency.</p>
+</blockquote>
+<ul>
+<li>
+<p><strong>Latest</strong></p>
+<ul>
+<li>https://naver.github.io/egjs-flicking/release/latest/dist/flicking.pkgd.js</li>
+<li>https://naver.github.io/egjs-flicking/release/latest/dist/flicking.pkgd.min.js</li>
+</ul>
+</li>
+<li>
+<p><strong>Specific version</strong></p>
+<ul>
+<li>https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.js</li>
+<li>https://naver.github.io/egjs-flicking/release/[VERSION]/dist/flicking.pkgd.min.js</li>
+</ul>
+</li>
+</ul>
+<h3>Plugins</h3>
+<p>Go to <a href="https://github.com/naver/egjs-flicking-plugins"><strong>@ejgs/flicking-plugins</strong></a></p>
+<p>Using npm:</p>
+<pre class="prettyprint source"><code>npm install @egjs/flicking-plugins
+</code></pre>
+<pre class="prettyprint source lang-js"><code>import {Fade, Parallax, AutoPlay} from &quot;@egjs/flicking-plugins&quot;;
+</code></pre>
+<p>Download necessary plugins to use.</p>
+<h4>List of plugins:</h4>
+<ul>
+<li>
+<p><a href="https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.Flicking.plugins.Fade.html">Fade</a>: Add fade effect attached with flicking interaction.</p>
+</li>
+<li>
+<p><a href="https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.Flicking.plugins.Parallax.html">Parallax</a>: Add parallax effect attached with flicking interaction.</p>
+</li>
+<li>
+<p><a href="https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.Flicking.plugins.AutoPlay.html">AutoPlay</a>: Add autoplay to move to the next/previous panel periodically.</p>
+</li>
+<li>
+<p><strong>Latest</strong></p>
+<ul>
+<li>https://naver.github.io/egjs-flicking-plugins/release/latest/dist/plugins.js (all)</li>
+<li>https://naver.github.io/egjs-flicking-plugins/release/latest/dist/plugins.min.js (all)</li>
+<li>https://naver.github.io/egjs-flicking-plugins/release/latest/dist/[PLUGIN-NAME].js</li>
+<li>https://naver.github.io/egjs-flicking-plugins/release/latest/dist/[PLUGIN-NAME].min.js</li>
+</ul>
+</li>
+<li>
+<p><strong>Specific version</strong></p>
+<ul>
+<li>https://naver.github.io/egjs-flicking-plugins/release/[PLUGIN-VERSION]/dist/plugins.js (all)</li>
+<li>https://naver.github.io/egjs-flicking-plugins/release/[PLUGIN-VERSION]/dist/plugins.min.js (all)</li>
+<li>https://naver.github.io/egjs-flicking-plugins/release/[PLUGIN-VERSION]/dist/[PLUGIN-NAME].js</li>
+<li>https://naver.github.io/egjs-flicking-plugins/release/[PLUGIN-VERSION]/dist/[PLUGIN-NAME].min.js</li>
+</ul>
+</li>
+</ul>
+<h3>Using CDN</h3>
+<p>If you want to load files using CDN, check the files URL provided by the CDN service.</p>
+<ul>
+<li>jsDelivr: https://cdn.jsdelivr.net/npm/@egjs/flicking/dist/</li>
+<li>cdnjs: https://cdnjs.com/libraries/egjs-flicking</li>
+<li>unpkg: https://unpkg.com/@egjs/flicking/dist/</li>
+</ul>
+<h2>Supported Browsers</h2>
+<p>The following are the supported browsers.</p>
+<table>
+<thead>
+<tr>
+<th>Internet Explorer</th>
+<th>Chrome</th>
+<th>Firefox</th>
+<th>Safari</th>
+<th>iOS</th>
+<th>Android</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10+</td>
+<td>Latest</td>
+<td>Latest</td>
+<td>Latest</td>
+<td>7+</td>
+<td>4+</td>
+</tr>
+</tbody>
+</table>
+<h2>Dependency</h2>
+<p>egjs-flicking has the dependencies for the following libraries:</p>
+<table>
+<thead>
+<tr>
+<th><a href="https://github.com/naver/egjs-component">eg.Component</a></th>
+<th><a href="https://github.com/naver/egjs-axes">eg.Axes</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.0.0+</td>
+<td>2.0.0+</td>
+</tr>
+</tbody>
+</table>
+<h2>How to start developing egjs-flicking?</h2>
+<p>For anyone interested to develop egjs-flicking, follow the instructions below.</p>
+<h3>Development Environment</h3>
+<h4>1. Clone the repository</h4>
+<p>Clone the egjs-flicking repository and install the dependency modules.</p>
+<pre class="prettyprint source lang-bash"><code># Clone the repository.
+$ git clone https://github.com/naver/egjs-flicking.git
+</code></pre>
+<h4>2. Install dependencies</h4>
+<pre class="prettyprint source"><code># Install the dependency modules.
+$ npm install
+</code></pre>
+<h4>3. Build</h4>
+<p>Use npm script to build eg.Flicking</p>
+<pre class="prettyprint source lang-bash"><code># Run webpack-dev-server for development
+$ npm start
+
+# Build
+$ npm run build
+
+# Generate jsdoc
+$ npm run jsdoc
+</code></pre>
+<p>Two folders will be created after complete build is completed.</p>
+<ul>
+<li><strong>dist</strong> folder: Includes the <strong>flicking.js</strong> and <strong>flicking.min.js</strong> files.</li>
+<li><strong>doc</strong> folder: Includes API documentation. The home page for the documentation is <strong>doc/index.html</strong>.</li>
+</ul>
+<h3>Linting</h3>
+<p>To keep the same code style, we adopted <a href="https://palantir.github.io/tslint/">TSLint</a> to maintain our code quality.<br>
+Setup your editor, or run below command to lint.</p>
+<pre class="prettyprint source lang-bash"><code>$ npm run lint
+</code></pre>
+<h3>Test</h3>
+<p>Once you created a branch and done with development, you must perform a test running with <code>npm test</code> command before your push the code to a remote repository.</p>
+<pre class="prettyprint source lang-bash"><code>$ npm run test
+</code></pre>
+<p>Running <code>npm test</code> command will start <a href="https://mochajs.org/">Mocha</a> tests via <a href="https://karma-runner.github.io/">Karma-runner</a>.</p>
+<h2>Bug Report</h2>
+<p>If you find a bug, please report to us opening a new <a href="https://github.com/naver/egjs-flicking/issues">Issues</a> on GitHub.</p>
+<h2>License</h2>
+<p>egjs-flicking is released under the <a href="http://naver.github.io/egjs/license.txt">MIT license</a>.</p>
+<pre class="prettyprint source"><code>Copyright (c) 2015-present NAVER Corp.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+</code></pre>
+<!-- badges -->
+<!-- links --></article>
+    </section>
+
+
+
+
+
+
+        
+        <!-- disqus code -->
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        <!-- // disqus code -->
+        
+
+        <footer>
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 0.3.7</a> on Thu Jun 20 2019 18:02:42 GMT+0900 (대한민국 표준시)
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/main.js"></script>
+</body>
+</html>
