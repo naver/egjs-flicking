@@ -98,6 +98,14 @@ const flicking = new Flicking("#el", { circular: true });
 var flicking = new eg.Flicking("#el", { circular: true });
 ```
 
+#### 사용자 지표의 수집
+
+Flicking 은 Google Analytics(GA) 를 통해 사용자가 어떤 기능들을 유용하게 활용하고 있는지 지표를 수집하고 있습니다. 예를 들어 `freeScroll` 옵션의 사용 유무 혹은 `gap` 옵션의 수치 값이 수집 지표에 해당합니다. GA 를 통해 수집하는 지표는 오직 사용 통계만을 수집하며 더 좋은 제품을 만들기 위한 기준 지표로 활용될 예정입니다. 또한 수집 지표는 개인을 식별할 수 있는 어떠한 정보도 포함하고 있지 않습니다. GA 를 비활성화 하기 위해서는 다음과 같이 `collectStatistics` 옵션을 `false` 로 설정합니다.
+
+```js
+var flicking = new eg.Flicking("#el", { collectStatistics: false });
+```
+
 ## 📦 관련 패키지
 |Package|Version|Description|
 |:-----:|:-----:|:-----:|
