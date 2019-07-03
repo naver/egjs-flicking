@@ -55,6 +55,7 @@ export default class Viewport {
     isCameraGiven: boolean;
     originalViewportStyle: OriginalStyle;
     originalCameraStyle: OriginalStyle;
+    cachedBbox: ClientRect | null;
   };
 
   constructor(
@@ -87,6 +88,7 @@ export default class Viewport {
         className: null,
         style: null,
       },
+      cachedBbox: null,
     };
     this.options = options;
     this.stateMachine = new StateMachine();
@@ -199,6 +201,8 @@ export default class Viewport {
     pos += (modifiedNearestPosition - originalNearestPosition);
     state.position = pos;
 
+    this.checkVisibility();
+
     const moveVector = options.horizontal
       ? [-pos, 0] : [0, -pos];
     const moveCoord = moveVector.map(coord => `${Math.round(coord)}px`).join(", ");
@@ -214,6 +218,10 @@ export default class Viewport {
     }
 
     this.stateMachine.transitTo(STATE_TYPE.IDLE);
+  }
+
+  public unCacheBbox(): void {
+    this.state.cachedBbox = null;
   }
 
   public resize(): void {
@@ -773,6 +781,7 @@ export default class Viewport {
     });
     return this;
   }
+
   public updateCheckedIndexes(changedRange: { min: number, max: number }): void {
     const state = this.state;
 
@@ -786,6 +795,14 @@ export default class Viewport {
         removed++;
       }
     });
+  }
+
+  private getBbox(): ClientRect {
+    const state = this.state;
+    if (!state.cachedBbox) {
+      state.cachedBbox = this.viewportElement.getBoundingClientRect();
+    }
+    return state.cachedBbox!;
   }
 
   private build(): void {
@@ -1067,7 +1084,7 @@ export default class Viewport {
       viewportElement.style.height = "";
     }
 
-    const bbox = viewportElement.getBoundingClientRect();
+    const bbox = this.getBbox();
 
     // Update size & hanger position
     state.size = options.horizontal
@@ -1475,5 +1492,9 @@ export default class Viewport {
         range: indexRange,
       } as Partial<NeedPanelEvent>,
     );
+  }
+
+  private checkVisibility() {
+
   }
 }
