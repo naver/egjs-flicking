@@ -474,6 +474,7 @@ class Flicking extends Component {
 
     viewport.panelManager.allPanels()
       .forEach(panel => panel.unCacheBbox());
+    viewport.unCacheBbox();
     viewport.resize();
 
     return this;
