@@ -65,7 +65,7 @@ export default {
 ```vue
 <template>
   <flicking
-    :options="{ gap: 10, moveType='freeScroll' }"
+    :options="{ gap: 10, moveType: 'freeScroll' }"
     :tag="'div'"
     :plugins="plugins"
     @need-panel="e => {
