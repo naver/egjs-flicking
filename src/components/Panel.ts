@@ -238,14 +238,6 @@ class Panel implements FlickingPanel {
     return this;
   }
 
-  public show(): void {
-
-  }
-
-  public hide(): void {
-
-  }
-
   public destroy(option: Partial<DestroyOption>): void {
     if (!option.preserveUI) {
       const originalStyle = this.state.originalStyle;
