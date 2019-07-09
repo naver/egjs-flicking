@@ -20,6 +20,7 @@ setTimeout(function() {
     n2 = createFlicking("#needPanel-insert1by1", {
         circular: true,
         infinite: true,
+        // infiniteThreshold: 100,
         moveType: "freeScroll",
         lastIndex: 50,
         duration: 3000,
@@ -106,5 +107,6 @@ setTimeout(function() {
                 : e.panel.insertBefore(createPanelElement(e.index - 1));
         }
     });
+    console.log("APPENDING");
     n5.replace(0, createPanelElement(0));
 }, 500);

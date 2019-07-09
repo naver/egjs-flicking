@@ -12,7 +12,7 @@ import StateMachine from "./StateMachine";
 import MoveType from "../moves/MoveType";
 import { FlickingOptions, FlickingPanel, FlickingStatus, ElementLike, EventType, TriggerCallback, NeedPanelEvent, FlickingEvent, MoveTypeObjectOption, OriginalStyle, Plugin, DestroyOption } from "../types";
 import { DEFAULT_VIEWPORT_CSS, DEFAULT_CAMERA_CSS, TRANSFORM, DEFAULT_OPTIONS, EVENTS, DIRECTION, STATE_TYPE, MOVE_TYPE } from "../consts";
-import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement, hasClass, restoreStyle, counter } from "../utils";
+import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement, hasClass, restoreStyle, counter, circulate } from "../utils";
 import Snap from "../moves/Snap";
 import FreeScroll from "../moves/FreeScroll";
 
@@ -394,6 +394,13 @@ export default class Viewport {
 
     if (!this.currentPanel) {
       this.currentPanel = panels[0];
+      this.nearestPanel = panels[0];
+
+      const newCenterPanel = panels[0];
+      const newPanelPosition = this.findEstimatedPosition(newCenterPanel);
+      state.position = newPanelPosition;
+      this.updateAxesPosition(newPanelPosition);
+      state.panelMaintainRatio = newCenterPanel.getRelativeAnchorPosition() / newCenterPanel.getSize();
     }
 
     // Update checked indexes in infinite mode
@@ -406,12 +413,19 @@ export default class Viewport {
       }
     });
 
+    // Uncache visible index to refresh panels
+    state.visibleIndex = {
+      min: NaN,
+      max: NaN,
+    };
+
     this.resize();
 
     return panels;
   }
 
   public replace(index: number, element: ElementLike | ElementLike[]): FlickingPanel[] {
+    const state = this.state;
     const panelManager = this.panelManager;
     const lastIndex = panelManager.getLastIndex();
 
@@ -435,6 +449,13 @@ export default class Viewport {
     const wasEmpty = !currentPanel;
     if (wasEmpty) {
       this.currentPanel = panels[0];
+      this.nearestPanel = panels[0];
+
+      const newCenterPanel = panels[0];
+      const newPanelPosition = this.findEstimatedPosition(newCenterPanel);
+      state.position = newPanelPosition;
+      this.updateAxesPosition(newPanelPosition);
+      state.panelMaintainRatio = newCenterPanel.getRelativeAnchorPosition() / newCenterPanel.getSize();
     } else if (isBetween(currentPanel!.getIndex(), index, index + panels.length - 1)) {
       // Current panel is replaced
       this.currentPanel = panelManager.get(currentPanel!.getIndex());
@@ -443,17 +464,19 @@ export default class Viewport {
     // Update checked indexes in infinite mode
     this.updateCheckedIndexes({ min: index, max: index + panels.length - 1 });
 
-    this.resize();
+    // Uncache visible index to refresh panels
+    state.visibleIndex = {
+      min: NaN,
+      max: NaN,
+    };
 
-    const isFreeScroll = (this.options.moveType as MoveTypeObjectOption).type === "freeScroll";
-    if (isFreeScroll && wasEmpty) {
-      this.moveTo(this.currentPanel!, this.findEstimatedPosition(this.currentPanel!), "", null, 0);
-    }
+    this.resize();
 
     return panels;
   }
 
   public remove(index: number, deleteCount: number = 1): FlickingPanel[] {
+    const state = this.state;
     // Index should not below 0
     index = Math.max(index, 0);
 
@@ -473,9 +496,21 @@ export default class Viewport {
       // Check whether removing index will affect checked indexes
       // Suppose index 0 is empty and removed index 1, then checked index 0 should be deleted and vice versa.
       this.updateCheckedIndexes({ min: index - 1, max: index + deleteCount });
+      // Uncache visible index to refresh panels
+      state.visibleIndex = {
+        min: NaN,
+        max: NaN,
+      };
     }
 
     this.resize();
+
+    const scrollArea = state.scrollArea;
+    if (state.position < scrollArea.prev || state.position > scrollArea.next) {
+      const newPosition = circulate(state.position, scrollArea.prev, scrollArea.next, false);
+      this.moveCamera(newPosition);
+      this.updateAxesPosition(newPosition);
+    }
 
     return removedPanels;
   }
@@ -1528,7 +1563,7 @@ export default class Viewport {
     };
 
     const lastPanelOfNextDir = checkLastPanel(basePanel, panel => {
-      const nextPanel = panel.next() as Panel;
+      const nextPanel = panel.nextSibling;
 
       if (!nextPanel || nextPanel.getPosition() < panel.getPosition()) {
         return null;
@@ -1538,7 +1573,7 @@ export default class Viewport {
     });
 
     const lastPanelOfPrevDir = checkLastPanel(basePanel, panel => {
-      const prevPanel = panel.prev() as Panel;
+      const prevPanel = panel.prevSibling;
 
       if (!prevPanel || prevPanel.getPosition() > panel.getPosition()) {
         return null;
@@ -1547,39 +1582,44 @@ export default class Viewport {
       }
     });
 
-    // Relative index including clone
-    visibleIndex.max = lastPanelOfNextDir.getIndex()
-      + allPanelCount * (lastPanelOfNextDir.getCloneIndex() + 1);
+    const minPanelCloneIndex = lastPanelOfPrevDir.getCloneIndex();
+    const maxPanelCloneOffset = allPanelCount * (lastPanelOfNextDir.getCloneIndex() + 1);
+    const minPanelCloneOffset = minPanelCloneIndex > -1
+      ? allPanelCount * (cloneCount - minPanelCloneIndex)
+      : 0;
 
-    // Relative index including clone, can be negative number
-    const cloneIndex = lastPanelOfPrevDir.getCloneIndex();
-    visibleIndex.min = lastPanelOfPrevDir.getIndex()
-      - (cloneIndex > -1
-        ? allPanelCount * (cloneCount - cloneIndex)
-        : 0);
-    // Stopped on first cloned first panel
-    if (lastPanelOfPrevDir.getIndex() === 0 && lastPanelOfPrevDir.getCloneIndex() === 0) {
-      visibleIndex.min = allPanelCount;
-    }
-
-    const allPanels = panelManager.allPanels();
-    const getPanelFromRelativeIndex = (index: number) => {
-      index = index < 0
-        ? allPanels.length + index
-        : index;
-      return allPanels[index];
+    const newVisibleIndex = {
+      // Relative index including clone, can be negative number
+      min: lastPanelOfPrevDir.getIndex() - minPanelCloneOffset,
+      // Relative index including clone
+      max: lastPanelOfNextDir.getIndex() + maxPanelCloneOffset,
     };
 
-    const visiblePanels = counter(visibleIndex.max - visibleIndex.min + 1).map(offset => {
-      const index = visibleIndex.min + offset;
-      return getPanelFromRelativeIndex(index);
-    });
+    // Stopped on first cloned first panel
+    if (lastPanelOfPrevDir.getIndex() === 0 && lastPanelOfPrevDir.getCloneIndex() === 0) {
+      newVisibleIndex.min = allPanelCount;
+    }
 
-    const fragment = document.createDocumentFragment();
-    visiblePanels.forEach(panel => fragment.appendChild(panel.getElement()));
+    if (newVisibleIndex.min !== visibleIndex.min || newVisibleIndex.max !== visibleIndex.max) {
+      this.state.visibleIndex = newVisibleIndex;
+      const allPanels = panelManager.allPanels();
+      const getPanelFromRelativeIndex = (index: number) => {
+        index = index < 0
+          ? allPanels.length + index
+          : index;
+        return allPanels[index];
+      };
 
-    this.cameraElement.innerHTML = "";
-    this.cameraElement.appendChild(fragment);
-    // console.log(visibleIndex);
+      const visiblePanels = counter(newVisibleIndex.max - newVisibleIndex.min + 1).map(offset => {
+        const index = newVisibleIndex.min + offset;
+        return getPanelFromRelativeIndex(index);
+      }).filter(panel => panel);
+
+      const fragment = document.createDocumentFragment();
+      visiblePanels.forEach(panel => fragment.appendChild(panel.getElement()));
+
+      this.cameraElement.innerHTML = "";
+      this.cameraElement.appendChild(fragment);
+    }
   }
 }

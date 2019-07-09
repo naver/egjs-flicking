@@ -152,12 +152,8 @@ class PanelManager {
 
     // if it's null, element will be inserted at last position
     // https://developer.mozilla.org/ko/docs/Web/API/Node/insertBefore#Syntax
-    const firstPanel = this.firstPanel();
-    const siblingElement = nextSibling
-      ? nextSibling.getElement()
-      : isCircular && firstPanel
-        ? firstPanel.getClonedPanels()[0].getElement()
-        : null;
+    // const firstPanel = this.firstPanel();
+    const siblingElement = null;
 
     // Insert panels before sibling element
     this.insertNewPanels(newPanels, siblingElement);
@@ -423,7 +419,7 @@ class PanelManager {
 
   public findFirstPanelFrom(index: number): Panel | undefined {
     for (const panel of this.panels) {
-      if (panel && panel.getIndex() >= index) {
+      if (panel && panel.getIndex() >= index && panel.getElement().parentNode) {
         return panel;
       }
     }
@@ -432,29 +428,29 @@ class PanelManager {
   private addNewClones(index: number, originalPanels: Panel[], deleteCount: number, nextSibling: Panel | undefined) {
     const cameraElement = this.cameraElement;
     const cloneCount = this.getCloneCount();
-    const lastPanel = this.lastPanel();
-    const lastPanelClones: Panel[] = lastPanel
-      ? lastPanel.getClonedPanels()
-      : [];
-    const nextSiblingClones: Panel[] = nextSibling
-      ? nextSibling.getClonedPanels()
-      : [];
+    // const lastPanel = this.lastPanel();
+    // const lastPanelClones: Panel[] = lastPanel
+    //   ? lastPanel.getClonedPanels()
+    //   : [];
+    // const nextSiblingClones: Panel[] = nextSibling
+    //   ? nextSibling.getClonedPanels()
+    //   : [];
 
     for (const cloneIndex of counter(cloneCount)) {
-      const cloneNextSibling = nextSiblingClones[cloneIndex];
-      const lastPanelSibling = lastPanelClones[cloneIndex];
+      // const cloneNextSibling = nextSiblingClones[cloneIndex];
+      // const lastPanelSibling = lastPanelClones[cloneIndex];
 
-      const cloneSiblingElement = cloneNextSibling
-        ? cloneNextSibling.getElement()
-        : lastPanelSibling
-          ? lastPanelSibling.getElement().nextElementSibling
-          : null;
+      // const cloneSiblingElement = cloneNextSibling
+      //   ? cloneNextSibling.getElement()
+      //   : lastPanelSibling
+      //     ? lastPanelSibling.getElement().nextElementSibling
+      //     : null;
 
       const newClones = originalPanels.map(panel => {
         const clone = panel.clone(cloneIndex);
 
         if (!this.options.renderExternal) {
-          cameraElement.insertBefore(clone.getElement(), cloneSiblingElement);
+          cameraElement.appendChild(clone.getElement());
         }
 
         return clone;
