@@ -278,6 +278,9 @@ class Panel implements FlickingPanel {
   public getBbox(): ClientRect {
     const state = this.state;
     if (!state.cachedBbox) {
+      if (!this.element.parentNode) {
+        this.viewport.getCameraElement().appendChild(this.element);
+      }
       state.cachedBbox = this.element.getBoundingClientRect();
     }
     return state.cachedBbox!;
@@ -377,8 +380,8 @@ class Panel implements FlickingPanel {
   }
 
   public removeElement(): void {
-    if (!this.viewport.options.renderExternal) {
-      const element = this.element;
+    const element = this.element;
+    if (!this.viewport.options.renderExternal && element.parentNode) {
       element.parentNode!.removeChild(element);
     }
 
@@ -407,6 +410,7 @@ class Panel implements FlickingPanel {
 
     // Update size info after applying panel css
     applyCSS(this.element, DEFAULT_PANEL_CSS);
+    this.resize();
   }
 }
 
