@@ -37,6 +37,7 @@ setTimeout(function() {
         }
     }).on({
         needPanel: function(e) {
+            console.log(e.index);
             e.direction === eg.Flicking.DIRECTION.NEXT
                 ? e.panel.insertAfter([
                     createCat(e.index + 1),

@@ -472,8 +472,16 @@ class Flicking extends Component {
   public resize = (): this => {
     const viewport = this.viewport;
 
-    viewport.panelManager.allPanels()
-      .forEach(panel => panel.unCacheBbox());
+    const allPanels = viewport.panelManager.allPanels();
+    allPanels.forEach(panel => panel.unCacheBbox());
+
+    const fragment = document.createDocumentFragment();
+    allPanels.forEach(panel => fragment.appendChild(panel.getElement()));
+
+    const cameraElement = viewport.getCameraElement();
+    cameraElement.innerHTML = "";
+    cameraElement.appendChild(fragment);
+
     viewport.unCacheBbox();
     viewport.resize();
 
