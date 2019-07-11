@@ -65,7 +65,7 @@ export interface FlickingOptions {
   bounce: number | string | [number | string, number | string];
   autoResize: boolean;
   adaptive: boolean;
-  zIndex: number;
+  zIndex: number | "";
   bound: boolean;
   overflow: boolean;
   hanger: number | string;

@@ -874,9 +874,7 @@ export default class Viewport {
     applyCSS(viewportElement, DEFAULT_VIEWPORT_CSS);
     applyCSS(cameraElement, DEFAULT_CAMERA_CSS);
 
-    if (options.zIndex) {
-      viewportElement.style.zIndex = `${options.zIndex}`;
-    }
+    viewportElement.style.zIndex = `${options.zIndex}`;
     if (options.overflow) {
       viewportElement.style.overflow = "visible";
     }
