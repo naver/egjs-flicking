@@ -15,7 +15,7 @@ var PANEL_COLORS = [
 var createCat = function (idx) {
     var element = document.createElement("div");
     element.className = "column is-half " + 'has-background-' + PANEL_COLORS[Math.abs(idx % PANEL_COLORS.length)];
-    element.innerHTML = "<p>PANEL " + idx + "<br/><img src=\"" + cats[idx] + "\" /></p>";
+    element.innerHTML = "<p>PANEL " + idx + "<br/><img src=\"" + cats[idx % 1000] + "\" /></p>";
     return element;
 }
 
@@ -31,13 +31,13 @@ setTimeout(function() {
         autoResize: true,
         adaptive: true,
         infinite: true,
+        duration: 30,
         moveType: {
             type: "snap",
             count: 3
         }
     }).on({
         needPanel: function(e) {
-            console.log(e.index);
             e.direction === eg.Flicking.DIRECTION.NEXT
                 ? e.panel.insertAfter([
                     createCat(e.index + 1),
@@ -51,7 +51,12 @@ setTimeout(function() {
                 ]);
         }
     });
-    f1.append(createCat(0));
+    var cats = [];
+    for (var i = 0; i < 3000; i += 1) {
+        cats.push(createCat(i));
+    }
+    f1.append(cats);
+    f1.moveTo(2999, 0);
     f1.on("moveEnd", function() { f1.next() });
     f1.next();
 

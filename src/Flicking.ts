@@ -307,11 +307,7 @@ class Flicking extends Component {
    * @return Panels currently shown in viewport area.<ko>현재 뷰포트 영역에 보여지는 패널들</ko>
    */
   public getVisiblePanels(): FlickingPanel[] {
-    return this.getAllPanels(true).filter(panel => {
-      const outsetProgress = panel.getOutsetProgress();
-
-      return outsetProgress > -1 && outsetProgress < 1;
-    });
+    return this.viewport.getVisiblePanels();
   }
 
   /**

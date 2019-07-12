@@ -2,6 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import CallTimer from "call-timer";
 
 import Axes, { PanInput } from "@egjs/axes";
 
@@ -236,7 +237,8 @@ export default class Viewport {
     const panelManager = this.panelManager;
 
     this.updateSize();
-    this.updateOriginalPanelPositions();
+    CallTimer.call(this.updateOriginalPanelPositions.bind(this));
+    // this.updateOriginalPanelPositions();
     this.updateAdaptiveSize();
     this.updateScrollArea();
 
@@ -249,7 +251,11 @@ export default class Viewport {
     panelManager.chainAllPanels();
     this.updateCameraPosition();
     this.updatePlugins();
+    if (this.panelManager.getPanelCount() === 4002) {
+      CallTimer.printAll();
+    }
   }
+
   // Find nearest anchor from current hanger position
   public findNearestPanel(): Panel | undefined {
     const state = this.state;
@@ -775,6 +781,24 @@ export default class Viewport {
 
   public getCheckedIndexes(): Array<[number, number]> {
     return this.state.checkedIndexes;
+  }
+
+  public getVisiblePanels(): Panel[] {
+    const visibleIndex = this.state.visibleIndex;
+    const allPanels = this.panelManager.allPanels();
+    const getPanelFromRelativeIndex = (index: number) => {
+      index = index < 0
+        ? allPanels.length + index
+        : index;
+      return allPanels[index];
+    };
+
+    const visiblePanels = counter(visibleIndex.max - visibleIndex.min + 1).map(offset => {
+      const index = visibleIndex.min + offset;
+      return getPanelFromRelativeIndex(index);
+    }).filter(panel => panel);
+
+    return visiblePanels;
   }
 
   public setCurrentPanel(panel: Panel): void {
@@ -1602,21 +1626,13 @@ export default class Viewport {
 
     if (newVisibleIndex.min !== visibleIndex.min || newVisibleIndex.max !== visibleIndex.max) {
       this.state.visibleIndex = newVisibleIndex;
-      const allPanels = panelManager.allPanels();
-      const getPanelFromRelativeIndex = (index: number) => {
-        index = index < 0
-          ? allPanels.length + index
-          : index;
-        return allPanels[index];
-      };
 
-      const visiblePanels = counter(newVisibleIndex.max - newVisibleIndex.min + 1).map(offset => {
-        const index = newVisibleIndex.min + offset;
-        return getPanelFromRelativeIndex(index);
-      }).filter(panel => panel);
-
+      const visiblePanels = this.getVisiblePanels();
       const fragment = document.createDocumentFragment();
-      visiblePanels.forEach(panel => fragment.appendChild(panel.getElement()));
+      visiblePanels.forEach(panel => {
+        panel.setPositionCSS();
+        fragment.appendChild(panel.getElement());
+      });
 
       this.cameraElement.innerHTML = "";
       this.cameraElement.appendChild(fragment);
