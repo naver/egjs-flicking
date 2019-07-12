@@ -324,18 +324,22 @@ class Panel implements FlickingPanel {
   }
 
   public setPosition(pos: number): this {
+    this.state.position = pos;
+
+    return this;
+  }
+
+  public setPositionCSS(): void {
     const state = this.state;
+    const pos = state.position;
     const options = this.viewport.options;
 
-    state.position = pos;
     if (!state.isVirtual) {
       const elementStyle = this.element.style;
       options.horizontal
         ? elementStyle.left = `${pos}px`
         : elementStyle.top = `${pos}px`;
     }
-
-    return this;
   }
 
   public clone(cloneIndex: number, isVirtual: boolean = false): Panel {
@@ -410,7 +414,6 @@ class Panel implements FlickingPanel {
 
     // Update size info after applying panel css
     applyCSS(this.element, DEFAULT_PANEL_CSS);
-    this.resize();
   }
 }
 

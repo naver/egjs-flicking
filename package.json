@@ -49,6 +49,7 @@
 		"@types/karma-chai": "^0.1.1",
 		"@types/mocha": "^5.2.5",
 		"@types/sinon": "^7.0.3",
+		"call-timer": "^0.1.0",
 		"chai": "^4.2.0",
 		"chalk": "^2.4.2",
 		"coveralls": "^3.0.2",
