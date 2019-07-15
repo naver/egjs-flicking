@@ -2,9 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import CallTimer from "call-timer";
-
-import CallTimer from "call-timer";
+// import CallTimer from "call-timer";
 import Axes, { PanInput } from "@egjs/axes";
 
 import Flicking from "../Flicking";
@@ -238,7 +236,6 @@ export default class Viewport {
     const panelManager = this.panelManager;
 
     this.updateSize();
-    // CallTimer.call(this.updateSize.bind(this));
     this.updateOriginalPanelPositions();
     this.updateAdaptiveSize();
     this.updateScrollArea();
@@ -387,6 +384,7 @@ export default class Viewport {
     }
 
     const state = this.state;
+    const options = this.options;
     const parsedElements = parseElement(element);
 
     const panels = parsedElements
@@ -398,6 +396,7 @@ export default class Viewport {
     }
 
     const pushedIndex = this.panelManager.insert(index, panels);
+    panels.forEach(panel => panel.resize());
 
     if (!this.currentPanel) {
       this.currentPanel = panels[0];
@@ -407,7 +406,7 @@ export default class Viewport {
       const newPanelPosition = this.findEstimatedPosition(newCenterPanel);
       state.position = newPanelPosition;
       this.updateAxesPosition(newPanelPosition);
-      state.panelMaintainRatio = newCenterPanel.getRelativeAnchorPosition() / newCenterPanel.getSize();
+      state.panelMaintainRatio = (newCenterPanel.getRelativeAnchorPosition() + options.gap / 2 ) / (newCenterPanel.getSize() + options.gap);
     }
 
     // Update checked indexes in infinite mode
@@ -433,6 +432,7 @@ export default class Viewport {
 
   public replace(index: number, element: ElementLike | ElementLike[]): FlickingPanel[] {
     const state = this.state;
+    const options = this.options;
     const panelManager = this.panelManager;
     const lastIndex = panelManager.getLastIndex();
 
@@ -451,6 +451,7 @@ export default class Viewport {
     }
 
     panelManager.replace(index, panels);
+    panels.forEach(panel => panel.resize());
 
     const currentPanel = this.currentPanel;
     const wasEmpty = !currentPanel;
@@ -462,7 +463,7 @@ export default class Viewport {
       const newPanelPosition = this.findEstimatedPosition(newCenterPanel);
       state.position = newPanelPosition;
       this.updateAxesPosition(newPanelPosition);
-      state.panelMaintainRatio = newCenterPanel.getRelativeAnchorPosition() / newCenterPanel.getSize();
+      state.panelMaintainRatio = (newCenterPanel.getRelativeAnchorPosition() + options.gap / 2 ) / (newCenterPanel.getSize() + options.gap);
     } else if (isBetween(currentPanel!.getIndex(), index, index + panels.length - 1)) {
       // Current panel is replaced
       this.currentPanel = panelManager.get(currentPanel!.getIndex());
