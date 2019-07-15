@@ -310,7 +310,7 @@ describe("PanelManager", () => {
         // Given
         useCircularMode();
         const panelAt0 = createPanel(0);
-        panelManager.append([panelAt0]); // [0]
+        panelManager.replacePanels([panelAt0], []); // [0]
         const clonePanel = panelAt0.clone(0);
         cameraElement.appendChild(clonePanel.getElement());
         panelManager.insertClones(0, 0, [clonePanel], 0);
@@ -492,12 +492,6 @@ describe("PanelManager", () => {
       const originalPanels = createPanels(5);
       const maxCloneCount = 3;
 
-      const removeCloneSpies = originalPanels.map(() => sinon.spy());
-
-      originalPanels.forEach((panel, idx) => {
-        panel.removeClonedPanelsAfter = removeCloneSpies[idx];
-      });
-
       panelManager.insert(0, originalPanels);
       counter(maxCloneCount).forEach(cloneIdx => {
         const clones = originalPanels.map(panel => {
@@ -513,39 +507,9 @@ describe("PanelManager", () => {
       panelManager.removeClonesAfter(1); // Should leave only one set of cloned panels(all clonedIndex 0)
 
       // Then
-      removeCloneSpies.forEach(spy => {
-        expect(spy.calledOnce).to.be.true;
-      });
       expect(panelManager.clonedPanels()[0].length).equals(originalPanels.length);
       rangeShouldBe(previousRange.min, previousRange.max);
       lengthShouldBe(previousLength);
-    });
-
-    it("can clear all panels and clonedPanels", () => {
-      // Given
-      const panelElements = counter(5).map(() => "<div></div>");
-      const flicking = flickingInfo.instance;
-      flicking.append(panelElements);
-
-      const originalPanels = flicking.getAllPanels() as Panel[];
-      const removeCloneSpies = originalPanels.map(panel => sinon.spy(panel, "removeElement"));
-      const removeSpies = originalPanels.map(panel => sinon.spy(panel, "removeClonedPanelsAfter"));
-
-      // When
-      panelManager.clear();
-
-      // Then
-      removeCloneSpies.forEach(spy => {
-        expect(spy.calledOnce).to.be.true;
-      });
-      removeSpies.forEach(spy => {
-        expect(spy.calledOnce).to.be.true;
-      });
-      expect(panelManager.originalPanels().length).equals(0);
-      expect(panelManager.clonedPanels().length).equals(0);
-      expect(panelManager.allPanels().length).equals(0);
-      rangeShouldBe(-1, -1);
-      lengthShouldBe(0);
     });
 
     it("won't fill empty at last positions of panels array", () => {

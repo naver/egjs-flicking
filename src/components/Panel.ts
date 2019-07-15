@@ -73,7 +73,13 @@ class Panel implements FlickingPanel {
     }
 
     if (!state.isClone) {
-      this.clonedPanels.forEach(panel => panel.resize());
+      this.clonedPanels.forEach(panel => {
+        const cloneState = panel.state;
+
+        cloneState.size = state.size;
+        cloneState.cachedBbox = state.cachedBbox;
+        cloneState.relativeAnchorPosition = state.relativeAnchorPosition;
+      });
     }
   }
 
@@ -385,26 +391,6 @@ class Panel implements FlickingPanel {
     clonedPanel.setElement(element);
 
     return clonedPanel;
-  }
-
-  public removeElement(): void {
-    const element = this.element;
-    if (!this.viewport.options.renderExternal && element.parentNode) {
-      element.parentNode!.removeChild(element);
-    }
-
-    // Do the same thing for clones
-    if (!this.state.isClone) {
-      this.removeClonedPanelsAfter(0);
-    }
-  }
-
-  public removeClonedPanelsAfter(start: number): void {
-    const removingPanels = this.clonedPanels.splice(start);
-
-    removingPanels.forEach(panel => {
-      panel.removeElement();
-    });
   }
 
   private setElement(element: HTMLElement): void {
