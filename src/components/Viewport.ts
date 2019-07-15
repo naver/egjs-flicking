@@ -4,6 +4,7 @@
  */
 import CallTimer from "call-timer";
 
+import CallTimer from "call-timer";
 import Axes, { PanInput } from "@egjs/axes";
 
 import Flicking from "../Flicking";
@@ -237,8 +238,8 @@ export default class Viewport {
     const panelManager = this.panelManager;
 
     this.updateSize();
-    CallTimer.call(this.updateOriginalPanelPositions.bind(this));
-    // this.updateOriginalPanelPositions();
+    // CallTimer.call(this.updateSize.bind(this));
+    this.updateOriginalPanelPositions();
     this.updateAdaptiveSize();
     this.updateScrollArea();
 
@@ -251,9 +252,9 @@ export default class Viewport {
     panelManager.chainAllPanels();
     this.updateCameraPosition();
     this.updatePlugins();
-    if (this.panelManager.getPanelCount() === 4002) {
-      CallTimer.printAll();
-    }
+    // if (this.panelManager.getPanelCount() === 4002) {
+    //   CallTimer.printAll();
+    // }
   }
 
   // Find nearest anchor from current hanger position
