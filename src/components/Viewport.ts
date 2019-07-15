@@ -100,6 +100,7 @@ export default class Viewport {
     };
     this.options = options;
     this.stateMachine = new StateMachine();
+    this.panelManager = new PanelManager(options);
 
     this.build();
   }
@@ -396,6 +397,14 @@ export default class Viewport {
     }
 
     const pushedIndex = this.panelManager.insert(index, panels);
+
+    if (!options.renderExternal) {
+      // First add all panels to camera element
+      const fragment = document.createDocumentFragment();
+      panels.forEach(panel => fragment.appendChild(panel.getElement()));
+      this.cameraElement.appendChild(fragment);
+    }
+    // ...then calc bbox for all panels
     panels.forEach(panel => panel.resize());
 
     if (!this.currentPanel) {
@@ -451,6 +460,14 @@ export default class Viewport {
     }
 
     panelManager.replace(index, panels);
+
+    if (!options.renderExternal) {
+      // First add all panels to camera element
+      const fragment = document.createDocumentFragment();
+      panels.forEach(panel => fragment.appendChild(panel.getElement()));
+      this.cameraElement.appendChild(fragment);
+    }
+    // ...then calc bbox for all panels
     panels.forEach(panel => panel.resize());
 
     const currentPanel = this.currentPanel;
@@ -605,19 +622,32 @@ export default class Viewport {
     const panelManager = this.panelManager;
 
     // Restore index
-    panelManager.clear();
-    cameraElement.innerHTML = status.panels.map(panel => panel.html).join("");
+    cameraElement.innerHTML = panels.map(panel => panel.html).join("");
 
-    this.createPanels();
+    // Create panels first
+    this.refreshPanels();
+    const createdPanels = panelManager.originalPanels();
 
-    // Reset panel index
-    panelManager.originalPanels().forEach((panel, idx) => {
-      panel.setIndex(panels[idx].index);
+    // ...then order it by its index
+    const orderedPanels: Panel[] = [];
+    panels.forEach((panel, idx) => {
+      const createdPanel = createdPanels[idx];
+      createdPanel.setIndex(panel.index);
+      orderedPanels[panel.index] = createdPanel;
     });
+    panelManager.replacePanels(orderedPanels, []);
+    panelManager.setCloneCount(0); // No clones at this point
 
-    this.currentPanel = panelManager.get(status.index)
-      || panelManager.get(defaultIndex)
-      || panelManager.firstPanel();
+    const panelCount = panelManager.getPanelCount();
+    if (panelCount > 0) {
+      this.currentPanel = panelManager.get(status.index)
+        || panelManager.get(defaultIndex)
+        || panelManager.firstPanel();
+      this.nearestPanel = this.currentPanel;
+    } else {
+      this.currentPanel = undefined;
+      this.nearestPanel = undefined;
+    }
 
     this.resize();
 
@@ -879,7 +909,7 @@ export default class Viewport {
     this.applyCSSValue();
     this.setMoveType();
     this.setAxesInstance();
-    this.createPanels();
+    this.refreshPanels();
     this.setDefaultPanel();
     this.resize();
     this.moveToDefaultPanel();
@@ -946,9 +976,6 @@ export default class Viewport {
     this.cameraElement = cameraElement;
     state.isViewportGiven = hasViewportElement;
     state.isCameraGiven = hasCameraElement;
-
-    // Create PanelManager instance
-    this.panelManager = new PanelManager(cameraElement, options);
   }
 
   private applyCSSValue(): void {
@@ -1009,7 +1036,8 @@ export default class Viewport {
     this.axes.connect(horizontal ? ["flick", ""] : ["", "flick"], this.panInput);
   }
 
-  private createPanels(): void {
+  private refreshPanels(): void {
+    const panelManager = this.panelManager;
     // Panel elements were attached to camera element by Flicking class
     const panelElements = this.cameraElement.children;
 
@@ -1018,9 +1046,7 @@ export default class Viewport {
       (el: HTMLElement, idx: number) => new Panel(el, idx, this),
     );
 
-    if (panels.length > 0) {
-      this.panelManager.append(panels);
-    }
+    panelManager.replacePanels(panels, []);
   }
 
   private setDefaultPanel(): void {
