@@ -62,11 +62,15 @@ class Panel implements FlickingPanel {
     const state = this.state;
     const options = this.viewport.options;
     const bbox = this.getBbox();
+    const prevSize = state.size;
 
     state.size = options.horizontal
       ? bbox.width
       : bbox.height;
-    state.relativeAnchorPosition = parseArithmeticExpression(options.anchor, state.size);
+
+    if (prevSize !== state.size) {
+      state.relativeAnchorPosition = parseArithmeticExpression(options.anchor, state.size);
+    }
 
     if (!state.isClone) {
       this.clonedPanels.forEach(panel => panel.resize());

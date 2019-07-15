@@ -51,12 +51,13 @@ setTimeout(function() {
                 ]);
         }
     });
-    var cats = [];
-    for (var i = 0; i < 3000; i += 1) {
-        cats.push(createCat(i));
-    }
-    f1.append(cats);
-    f1.moveTo(2999, 0);
+    // var catArr = Array(3000);
+    // for (var i = 0; i < 3000; i++) {
+    //     catArr[i] = createCat(i);
+    // }
+    // f1.append(catArr);
+    // f1.moveTo(2999, 0);
+    f1.append(createCat(0));
     f1.on("moveEnd", function() { f1.next() });
     f1.next();
 
