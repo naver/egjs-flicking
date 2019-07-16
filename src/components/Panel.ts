@@ -339,7 +339,7 @@ class Panel implements FlickingPanel {
     return this;
   }
 
-  public setPositionCSS(): void {
+  public setPositionCSS(offset: number): void {
     const state = this.state;
     const pos = state.position;
     const options = this.viewport.options;
@@ -347,8 +347,8 @@ class Panel implements FlickingPanel {
     if (!state.isVirtual) {
       const elementStyle = this.element.style;
       options.horizontal
-        ? elementStyle.left = `${pos}px`
-        : elementStyle.top = `${pos}px`;
+        ? elementStyle.left = `${pos - offset}px`
+        : elementStyle.top = `${pos - offset}px`;
     }
   }
 

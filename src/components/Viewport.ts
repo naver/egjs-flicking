@@ -41,6 +41,7 @@ export default class Viewport {
     position: number;
     panelMaintainRatio: number;
     relativeHangerPosition: number;
+    positionOffset: number;
     scrollArea: {
       prev: number;
       next: number;
@@ -75,6 +76,7 @@ export default class Viewport {
       position: 0,
       panelMaintainRatio: 0,
       relativeHangerPosition: 0,
+      positionOffset: 0,
       scrollArea: {
         prev: 0,
         next: 0,
@@ -212,8 +214,9 @@ export default class Viewport {
 
     this.checkVisibility();
 
+    const posOffset = state.positionOffset;
     const moveVector = options.horizontal
-      ? [-pos, 0] : [0, -pos];
+      ? [-(pos - posOffset), 0] : [0, -(pos - posOffset)];
     const moveCoord = moveVector.map(coord => `${Math.round(coord)}px`).join(", ");
 
     this.cameraElement.style[transform] = state.translate.has3d
@@ -1590,7 +1593,8 @@ export default class Viewport {
   }
 
   private checkVisibility() {
-    const visibleIndex = this.state.visibleIndex;
+    const state = this.state;
+    const visibleIndex = state.visibleIndex;
     if (!this.nearestPanel) {
       visibleIndex.min = NaN;
       visibleIndex.max = NaN;
@@ -1653,12 +1657,23 @@ export default class Viewport {
     }
 
     if (newVisibleIndex.min !== visibleIndex.min || newVisibleIndex.max !== visibleIndex.max) {
-      this.state.visibleIndex = newVisibleIndex;
+      state.visibleIndex = newVisibleIndex;
+      if (isNaN(newVisibleIndex.min) || isNaN(newVisibleIndex.max)) {
+        return;
+      }
 
       const visiblePanels = this.getVisiblePanels();
+      if (visiblePanels.length > 0) {
+        const firstPanelPos = panelManager.firstPanel()!.getPosition();
+        const firstVisiblePanelPos = visiblePanels[0].getPosition();
+        if (firstVisiblePanelPos >= firstPanelPos) {
+          state.positionOffset = firstVisiblePanelPos - firstPanelPos;
+        }
+      }
+
       const fragment = document.createDocumentFragment();
       visiblePanels.forEach(panel => {
-        panel.setPositionCSS();
+        panel.setPositionCSS(state.positionOffset);
         fragment.appendChild(panel.getElement());
       });
 
