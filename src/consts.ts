@@ -65,8 +65,6 @@ export const DEFAULT_OPTIONS: Readonly<FlickingOptions> = {
 export const DEFAULT_VIEWPORT_CSS = {
   position: "relative",
   zIndex: DEFAULT_OPTIONS.zIndex,
-  width: "100%",
-  height: "100%",
   overflow: "hidden",
 };
 

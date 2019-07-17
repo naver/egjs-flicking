@@ -56,6 +56,7 @@ export default class Viewport {
       min: number;
       max: number;
     };
+    isAdaptiveCached: boolean;
     isViewportGiven: boolean;
     isCameraGiven: boolean;
     originalViewportStyle: OriginalStyle;
@@ -88,6 +89,7 @@ export default class Viewport {
       translate: TRANSFORM,
       infiniteThreshold: 0,
       checkedIndexes: [],
+      isAdaptiveCached: false,
       isViewportGiven: false,
       isCameraGiven: false,
       originalViewportStyle: {
@@ -233,7 +235,17 @@ export default class Viewport {
   }
 
   public unCacheBbox(): void {
-    this.state.cachedBbox = null;
+    const state = this.state;
+    state.cachedBbox = null;
+
+    const viewportElement = this.viewportElement;
+    if (!this.options.horizontal) {
+      // Don't preserve previous width for adaptive resizing
+      viewportElement.style.width = "";
+    } else {
+      viewportElement.style.height = "";
+    }
+    state.isAdaptiveCached = false;
   }
 
   public resize(): void {
@@ -544,6 +556,7 @@ export default class Viewport {
   }
 
   public updateAdaptiveSize(): void {
+    const state = this.state;
     const options = this.options;
     const horizontal = options.horizontal;
     const currentPanel = this.getCurrentPanel();
@@ -567,15 +580,15 @@ export default class Viewport {
       sizeToApply = maximumPanelSize;
     }
 
+    const shouldApplyAdaptive = options.adaptive || !state.isAdaptiveCached;
     const viewportStyle = this.viewportElement.style;
-    if (horizontal) {
-      viewportStyle.height = `${sizeToApply}px`;
-      viewportStyle.minHeight = "100%";
-      viewportStyle.width = "100%";
-    } else {
-      viewportStyle.width = `${sizeToApply}px`;
-      viewportStyle.minWidth = "100%";
-      viewportStyle.height = "100%";
+    if (shouldApplyAdaptive) {
+      state.isAdaptiveCached = true;
+      if (horizontal) {
+        viewportStyle.height = `${sizeToApply}px`;
+      } else if (!horizontal) {
+        viewportStyle.width = `${sizeToApply}px`;
+      }
     }
   }
 
@@ -985,14 +998,22 @@ export default class Viewport {
     const options = this.options;
     const viewportElement = this.viewportElement;
     const cameraElement = this.cameraElement;
+    const viewportStyle = this.viewportElement.style;
 
     // Set default css values for each element
     applyCSS(viewportElement, DEFAULT_VIEWPORT_CSS);
     applyCSS(cameraElement, DEFAULT_CAMERA_CSS);
 
     viewportElement.style.zIndex = `${options.zIndex}`;
+    if (options.horizontal) {
+      viewportStyle.minHeight = "100%";
+      viewportStyle.width = "100%";
+    } else {
+      viewportStyle.minWidth = "100%";
+      viewportStyle.height = "100%";
+    }
     if (options.overflow) {
-      viewportElement.style.overflow = "visible";
+      viewportStyle.overflow = "visible";
     }
   }
 
@@ -1172,16 +1193,7 @@ export default class Viewport {
   private updateSize(): void {
     const state = this.state;
     const options = this.options;
-    const viewportElement = this.viewportElement;
     const panels = this.panelManager.originalPanels();
-
-    if (!options.horizontal) {
-      // Don't preserve previous width for adaptive resizing
-      viewportElement.style.width = "";
-    } else {
-      viewportElement.style.height = "";
-    }
-
     const bbox = this.getBbox();
 
     // Update size & hanger position
