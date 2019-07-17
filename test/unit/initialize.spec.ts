@@ -46,6 +46,17 @@ describe("Initialization", () => {
       expect(flickingInfo.instance.getIndex()).equals(0);
     });
 
+    it("should have zIndex option", () => {
+      flickingInfo = createFlicking(horizontal.full);
+      expect(flickingInfo.instance.getElement().querySelector<HTMLElement>(".eg-flick-viewport").style.zIndex).equals("2000");
+
+      flickingInfo = createFlicking(horizontal.full, { zIndex: 0 });
+      expect(flickingInfo.instance.getElement().querySelector<HTMLElement>(".eg-flick-viewport").style.zIndex).equals("0");
+
+      flickingInfo = createFlicking(horizontal.full, { zIndex: "" });
+      expect(flickingInfo.instance.getElement().querySelector<HTMLElement>(".eg-flick-viewport").style.zIndex).equals("");
+    });
+
     it("should throw error when no element is given", () => {
       expect(() => new Flicking("#NO-ELEMENT")).to.throw(Error);
     });
