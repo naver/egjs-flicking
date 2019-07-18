@@ -4,7 +4,7 @@
  */
 
 import Viewport from "./Viewport";
-import { OriginalStyle, FlickingPanel, ElementLike, DestroyOption } from "../types";
+import { OriginalStyle, FlickingPanel, ElementLike, DestroyOption, BoundingBox } from "../types";
 import { DEFAULT_PANEL_CSS, EVENTS } from "../consts";
 import { addClass, applyCSS, parseArithmeticExpression, parseElement, getProgress, restoreStyle } from "../utils";
 
@@ -24,7 +24,7 @@ class Panel implements FlickingPanel {
     // if cloneIndex is 0, that means it's first cloned panel of original panel
     cloneIndex: number;
     originalStyle: OriginalStyle;
-    cachedBbox: ClientRect | null;
+    cachedBbox: BoundingBox | null;
   };
   private element: HTMLElement;
   private original?: Panel;
@@ -285,13 +285,17 @@ class Panel implements FlickingPanel {
     return this.state.size;
   }
 
-  public getBbox(): ClientRect {
+  public getBbox(): BoundingBox {
     const state = this.state;
     if (!state.cachedBbox) {
       if (!this.element.parentNode) {
         this.viewport.getCameraElement().appendChild(this.element);
       }
-      state.cachedBbox = this.element.getBoundingClientRect();
+      const bbox = this.element.getBoundingClientRect();
+      state.cachedBbox = {
+        width: bbox.width,
+        height: bbox.height,
+      };
     }
     return state.cachedBbox!;
   }
