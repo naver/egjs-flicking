@@ -387,6 +387,7 @@ describe("PanelManager", () => {
         // When
         const replacePanel = createPanel(0);
         panelManager.replace(0, [replacePanel]);
+        viewport.resize(); // This updates visible panels, and eleminates invisibles
 
         // Then
         rangeShouldBe(0, 0);

@@ -479,11 +479,11 @@ describe("Events", () => {
     });
 
     it("can restore its position after user keeps static clicking", async () => {
-      const cameraElement = flickingInfo.element.querySelector(".eg-flick-camera");
-      const beforePosition = cameraElement.getBoundingClientRect().left;
+      const flicking = flickingInfo.instance;
+      const beforePosition = (flicking as any).viewport.getCameraPosition();
 
-      const firstPanel = flickingInfo.element.querySelector(".eg-flick-panel");
-      const firstSize = firstPanel.getBoundingClientRect().width;
+      const firstPanel = flicking.getPanel(0);
+      const firstSize = firstPanel.getSize();
 
       await simulate(flickingInfo.element, { deltaX: -100, duration: 200 });
       await waitFor(25);
@@ -494,9 +494,9 @@ describe("Events", () => {
       await simulate(flickingInfo.element, { deltaX: 0, duration: 200 });
       await waitFor(1000);
 
-      const afterPosition = cameraElement.getBoundingClientRect().left;
+      const afterPosition = (flicking as any).viewport.getCameraPosition();
 
-      expect(afterPosition).equals(beforePosition - firstSize);
+      expect(afterPosition).equals(beforePosition + firstSize);
     });
 
     it("can interrupt while moving with api calls", async () => {
