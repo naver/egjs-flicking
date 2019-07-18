@@ -437,6 +437,11 @@ export interface FlickingContext {
   stopCamera: Viewport["stopCamera"];
 }
 
+export interface BoundingBox {
+  width: number;
+  height: number;
+}
+
 /**
  * @typedef
  * @memberof eg.Flicking

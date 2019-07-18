@@ -2,7 +2,6 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-// import CallTimer from "call-timer";
 import Axes, { PanInput } from "@egjs/axes";
 
 import Flicking from "../Flicking";
@@ -10,7 +9,7 @@ import Panel from "./Panel";
 import PanelManager from "./PanelManager";
 import StateMachine from "./StateMachine";
 import MoveType from "../moves/MoveType";
-import { FlickingOptions, FlickingPanel, FlickingStatus, ElementLike, EventType, TriggerCallback, NeedPanelEvent, FlickingEvent, MoveTypeObjectOption, OriginalStyle, Plugin, DestroyOption } from "../types";
+import { FlickingOptions, FlickingPanel, FlickingStatus, ElementLike, EventType, TriggerCallback, NeedPanelEvent, FlickingEvent, MoveTypeObjectOption, OriginalStyle, Plugin, DestroyOption, BoundingBox } from "../types";
 import { DEFAULT_VIEWPORT_CSS, DEFAULT_CAMERA_CSS, TRANSFORM, DEFAULT_OPTIONS, EVENTS, DIRECTION, STATE_TYPE, MOVE_TYPE } from "../consts";
 import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement, hasClass, restoreStyle, counter, circulate } from "../utils";
 import Snap from "../moves/Snap";
@@ -61,7 +60,7 @@ export default class Viewport {
     isCameraGiven: boolean;
     originalViewportStyle: OriginalStyle;
     originalCameraStyle: OriginalStyle;
-    cachedBbox: ClientRect | null;
+    cachedBbox: BoundingBox | null;
   };
 
   constructor(
@@ -265,9 +264,6 @@ export default class Viewport {
     panelManager.chainAllPanels();
     this.updateCameraPosition();
     this.updatePlugins();
-    // if (this.panelManager.getPanelCount() === 4002) {
-    //   CallTimer.printAll();
-    // }
   }
 
   // Find nearest anchor from current hanger position
@@ -565,24 +561,27 @@ export default class Viewport {
       return;
     }
 
-    let sizeToApply: number;
-    if (options.adaptive) {
-      const panelBbox = currentPanel.getBbox();
-
-      sizeToApply = horizontal ? panelBbox.height : panelBbox.width;
-    } else {
-      // Find minimum height of panels to maximum panel size
-      const maximumPanelSize = this.panelManager.originalPanels().reduce((maximum, panel) => {
-        const panelBbox = panel.getBbox();
-        return Math.max(maximum, horizontal ? panelBbox.height : panelBbox.width);
-      }, 0);
-
-      sizeToApply = maximumPanelSize;
-    }
-
     const shouldApplyAdaptive = options.adaptive || !state.isAdaptiveCached;
     const viewportStyle = this.viewportElement.style;
     if (shouldApplyAdaptive) {
+      let sizeToApply: number;
+      if (options.adaptive) {
+        const panelBbox = currentPanel.getBbox();
+
+        sizeToApply = horizontal ? panelBbox.height : panelBbox.width;
+      } else {
+        // Find minimum height of panels to maximum panel size
+        const maximumPanelSize = this.panelManager.originalPanels().reduce((maximum, panel) => {
+          const panelBbox = panel.getBbox();
+          return Math.max(maximum, horizontal ? panelBbox.height : panelBbox.width);
+        }, 0);
+
+        sizeToApply = maximumPanelSize;
+      }
+
+      const viewportBbox = this.getBbox();
+      sizeToApply = Math.max(sizeToApply, horizontal ? viewportBbox.height : viewportBbox.width);
+
       state.isAdaptiveCached = true;
       if (horizontal) {
         viewportStyle.height = `${sizeToApply}px`;
@@ -912,10 +911,14 @@ export default class Viewport {
     });
   }
 
-  private getBbox(): ClientRect {
+  private getBbox(): BoundingBox {
     const state = this.state;
     if (!state.cachedBbox) {
-      state.cachedBbox = this.viewportElement.getBoundingClientRect();
+      const bbox = this.viewportElement.getBoundingClientRect();
+      state.cachedBbox = {
+        width: bbox.width,
+        height: bbox.height,
+      };
     }
     return state.cachedBbox!;
   }
@@ -1196,13 +1199,16 @@ export default class Viewport {
     const panels = this.panelManager.originalPanels();
     const bbox = this.getBbox();
 
+    const prevSize = state.size;
     // Update size & hanger position
     state.size = options.horizontal
       ? bbox.width
       : bbox.height;
 
-    state.relativeHangerPosition = parseArithmeticExpression(options.hanger, state.size);
-    state.infiniteThreshold = parseArithmeticExpression(options.infiniteThreshold, state.size);
+    if (prevSize !== state.size) {
+      state.relativeHangerPosition = parseArithmeticExpression(options.hanger, state.size);
+      state.infiniteThreshold = parseArithmeticExpression(options.infiniteThreshold, state.size);
+    }
 
     // Resize all panels
     panels.forEach(panel => {
@@ -1686,10 +1692,16 @@ export default class Viewport {
       const fragment = document.createDocumentFragment();
       visiblePanels.forEach(panel => {
         panel.setPositionCSS(state.positionOffset);
+      });
+      visiblePanels.forEach(panel => {
         fragment.appendChild(panel.getElement());
       });
 
-      this.cameraElement.innerHTML = "";
+      const cameraEl = this.cameraElement;
+      while (cameraEl.firstChild) {
+        cameraEl.removeChild(cameraEl.firstChild);
+      }
+
       this.cameraElement.appendChild(fragment);
     }
   }

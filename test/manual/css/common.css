@@ -8,7 +8,7 @@ body {
     width: 100%;
     color: hsl(0, 0%, 96%);
 }
-.eg-flick-panel p {
+.eg-flick-panel p, .swiper-slide p {
     margin: 0;
     font-size:2.0em;text-align:center;
     width:100%;height:100%;
