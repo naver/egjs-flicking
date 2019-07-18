@@ -112,7 +112,7 @@ describe("Initialization", () => {
       expect(cameraElements[0].parentElement).equals(viewportElements[0]);
     });
 
-    it("should init with panels all have left style enabled on it", () => {
+    it("should init with first panel have left style enabled on it", () => {
       // Given
       /* NOTHING */
 
@@ -120,9 +120,10 @@ describe("Initialization", () => {
       flickingInfo = createFlicking(horizontal.full);
 
       // Then
-      const allPanels = flickingInfo.instance.getAllPanels();
-      expect(allPanels.every(panel => panel.getElement().style.left !== "")).to.be.true;
+      const firstPanel = flickingInfo.instance.getPanel(0);
+      expect(firstPanel.getElement().style.left !== "").to.be.true;
     });
+
     it("should init with collectStatistics(true)", () => {
       // Given
       const mockGa = ImportMock.mockFunction(ga, "sendEvent");
@@ -145,9 +146,6 @@ describe("Initialization", () => {
       const flicking = flickingInfo.instance;
 
       // Then
-      const panelElements = flickingInfo.element.querySelectorAll(".eg-flick-panel");
-
-      expect(panelElements.length).equals(2);
       expect(flicking.getPanelCount()).equals(2);
       expect(flicking.getCloneCount()).equals(0);
     });
@@ -158,9 +156,6 @@ describe("Initialization", () => {
       const flicking = flickingInfo.instance;
 
       // Then
-      const panelElements = flickingInfo.element.querySelectorAll(".eg-flick-panel");
-
-      expect(panelElements.length).equals(6);
       expect(flicking.getPanelCount()).equals(2);
       expect(flicking.getCloneCount()).equals(2); // It will create 4 panels (2 * 2)
     });
@@ -173,9 +168,6 @@ describe("Initialization", () => {
       const flicking = flickingInfo.instance;
 
       // Then
-      const panelElements = flickingInfo.element.querySelectorAll(".eg-flick-panel");
-
-      expect(panelElements.length).equals(2);
       expect(flicking.getPanelCount()).equals(2);
       expect(flicking.getCloneCount()).equals(0);
     });
@@ -189,9 +181,6 @@ describe("Initialization", () => {
       const flicking = flickingInfo.instance;
 
       // Then
-      const panelElements = flickingInfo.element.querySelectorAll(".eg-flick-panel");
-
-      expect(panelElements.length).equals(6);
       expect(flicking.getPanelCount()).equals(2);
       expect(flicking.getCloneCount()).equals(2); // It will create 4 panels (2 * 2)
     });

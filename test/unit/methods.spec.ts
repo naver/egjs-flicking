@@ -67,9 +67,7 @@ describe("Methods call", () => {
     it("can move to next panel correctly", async () => {
       // Given
       const flicking = flickingInfo.instance;
-      const cameraElement = flickingInfo.element.querySelector(".eg-flick-camera") as HTMLElement;
-
-      const beforeCameraPos = -cameraElement.getBoundingClientRect().left; // position is set multiplied by -1
+      const beforeCameraPos = (flicking as any).viewport.getCameraPosition();
       const beforePanelPos = flicking.getCurrentPanel().getPosition();
 
       // When
@@ -77,7 +75,7 @@ describe("Methods call", () => {
       await waitEvent(flicking, "moveEnd");
 
       // Then
-      const afterCameraPos = -cameraElement.getBoundingClientRect().left; // position is set multiplied by -1
+      const afterCameraPos = (flicking as any).viewport.getCameraPosition();
       const afterPanelPos = flicking.getCurrentPanel().getPosition();
 
       expect(Math.abs(afterCameraPos - beforeCameraPos)).equals(afterPanelPos - beforePanelPos);
