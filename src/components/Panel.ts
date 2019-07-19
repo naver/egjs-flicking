@@ -149,7 +149,7 @@ class Panel implements FlickingPanel {
         updateFunction(eachPanel.getElement());
         eachPanel.unCacheBbox();
       });
-    this.viewport.resetVisibleIndex();
+    // this.viewport.resetVisibleIndex();
     this.viewport.resize();
   }
 
@@ -294,6 +294,8 @@ class Panel implements FlickingPanel {
       }
       const bbox = this.element.getBoundingClientRect();
       state.cachedBbox = {
+        x: bbox.left,
+        y: bbox.top,
         width: bbox.width,
         height: bbox.height,
       };
