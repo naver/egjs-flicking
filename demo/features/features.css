@@ -43,19 +43,19 @@
   text-align: center;
   line-height: 120px;
 }
-.flicking .panel:nth-child(5n + 1) {
+.flicking .panel.first {
   background: #F47071;
 }
-.flicking .panel:nth-child(5n + 2) {
+.flicking .panel.second {
   background: #F69462;
 }
-.flicking .panel:nth-child(5n + 3) {
+.flicking .panel.third {
   background: #EDE484;
 }
-.flicking .panel:nth-child(5n + 4) {
+.flicking .panel.fourth {
   background: #90F290;
 }
-.flicking .panel:nth-child(5n + 5) {
+.flicking .panel.fifth {
   background: #78CAFF;
 }
 .flicking .infinite0 {

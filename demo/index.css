@@ -222,16 +222,16 @@ html, body {
   border-radius: 10px;
   background: #f55;
 }
-.iphone .panel:nth-child(4n + 1) {
+.iphone .panel.first {
   background-color:#78CAFF;
 }
-.iphone .panel:nth-child(4n + 2) {
+.iphone .panel.second {
   background-color:#FFD99D;
 }
-.iphone .panel:nth-child(4n + 3) {
+.iphone .panel.third {
   background-color:#FFB0B9;
 }
-.iphone .panel:nth-child(4n) {
+.iphone .panel.fourth {
   background-color:#B5F6B9;
 }
 
