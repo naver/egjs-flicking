@@ -8,20 +8,22 @@
 <script src="../release/latest/dist/flicking.pkgd.js"></script>
 <script src="../common/pagination.js"></script>
 <style>
-
-.flicking .panel:nth-child(5n + 1) {
+.flicking .panel {
+  border-radius: 0px;
+}
+.flicking .panel.first {
   width: 100px;
 }
-.flicking .panel:nth-child(5n + 2) {
+.flicking .panel.second {
   width: 200px;
 }
-.flicking .panel:nth-child(5n + 3) {
+.flicking .panel.third {
   width: 80px;
 }
-.flicking .panel:nth-child(5n + 4) {
+.flicking .panel.fourth {
   width: 250px;
 }
-.flicking .panel:nth-child(5n + 5) {
+.flicking .panel.fifth {
   width: 150px;
 }
 </style>
@@ -32,18 +34,18 @@
       <li>You can specify various sizes for each panel.</li>
   </ul>
   <div class="flicking">
-    <div class="panel"></div>
-    <div class="panel"></div>
-    <div class="panel"></div>
-    <div class="panel"></div>
-    <div class="panel"></div>
+    <div class="panel first"></div>
+    <div class="panel second"></div>
+    <div class="panel third"></div>
+    <div class="panel fourth"></div>
+    <div class="panel fifth"></div>
   </div>
   <div class="pagination"></div>
   <pre><code class="hljs javascript"></code></pre>
 </div>
 <script>
 var flicking = new eg.Flicking(".flicking", {
-  circular: true,
+  circular: true
 });
 </script>
 <script data-script=".">
