@@ -61,6 +61,7 @@ export default class Viewport {
     originalViewportStyle: OriginalStyle;
     originalCameraStyle: OriginalStyle;
     cachedBbox: BoundingBox | null;
+    windowBbox: BoundingBox | null;
   };
 
   constructor(
@@ -100,6 +101,7 @@ export default class Viewport {
         style: null,
       },
       cachedBbox: null,
+      windowBbox: null,
     };
     this.options = options;
     this.stateMachine = new StateMachine();
@@ -236,6 +238,7 @@ export default class Viewport {
   public unCacheBbox(): void {
     const state = this.state;
     state.cachedBbox = null;
+    state.windowBbox = null;
 
     const viewportElement = this.viewportElement;
     if (!this.options.horizontal) {
@@ -925,11 +928,33 @@ export default class Viewport {
     if (!state.cachedBbox) {
       const bbox = this.viewportElement.getBoundingClientRect();
       state.cachedBbox = {
+        x: bbox.left,
+        y: bbox.top,
         width: bbox.width,
         height: bbox.height,
       };
     }
     return state.cachedBbox!;
+  }
+
+  private getWindowBBox(): BoundingBox {
+    const state = this.state;
+    if (!state.windowBbox) {
+      const width = window.innerWidth
+        || document.documentElement.clientWidth
+        || document.body.clientWidth;
+
+      const height = window.innerHeight
+        || document.documentElement.clientHeight
+        || document.body.clientHeight;
+      state.windowBbox = {
+        x: window.pageXOffset,
+        y: window.pageYOffset,
+        width,
+        height,
+      };
+    }
+    return state.windowBbox!;
   }
 
   private build(): void {
@@ -1615,6 +1640,7 @@ export default class Viewport {
 
   private checkVisibility() {
     const state = this.state;
+    const isHorizontal = this.options.horizontal;
     const visibleIndex = state.visibleIndex;
     if (!this.nearestPanel) {
       this.resetVisibleIndex();
@@ -1624,13 +1650,25 @@ export default class Viewport {
     const panelManager = this.panelManager;
     const allPanelCount = panelManager.getRange().max + 1;
     const cloneCount = panelManager.getCloneCount();
+    const cameraPos = this.getCameraPosition();
     const basePanel = this.nearestPanel;
+    const bbox = this.options.overflow
+      ? this.getWindowBBox()
+      : this.getBbox();
+    const viewportBbox = this.getBbox();
+    const viewportPos = isHorizontal
+      ? viewportBbox.x
+      : viewportBbox.y;
 
-    const checkLastPanel = (panel: Panel, getNextPanel: (panel: Panel) => Panel | null): Panel => {
+    const checkLastPanel = (
+      panel: Panel,
+      getNextPanel: (panel: Panel) => Panel | null,
+      isOutOfViewport: (panel: Panel) => boolean,
+    ): Panel => {
       let lastPanel = panel;
       while (true) {
         const nextPanel = getNextPanel(lastPanel);
-        if (!nextPanel || nextPanel.getVisibleRatio() <= 0) {
+        if (!nextPanel || isOutOfViewport(nextPanel)) {
           break;
         }
         lastPanel = nextPanel;
@@ -1646,6 +1684,12 @@ export default class Viewport {
       } else {
         return nextPanel;
       }
+    }, panel => {
+      const panelOffset = panel.getPosition() - cameraPos;
+      const bboxNextPos = isHorizontal
+        ? bbox.x + bbox.width
+        : bbox.y + bbox.height;
+      return viewportPos + panelOffset >= bboxNextPos;
     });
 
     const lastPanelOfPrevDir = checkLastPanel(basePanel, panel => {
@@ -1656,6 +1700,12 @@ export default class Viewport {
       } else {
         return prevPanel;
       }
+    }, panel => {
+      const panelOffset = panel.getPosition() - cameraPos;
+      const bboxPrevPos = isHorizontal
+        ? bbox.x
+        : bbox.y;
+      return viewportPos + panelOffset + panel.getSize() <= bboxPrevPos;
     });
 
     const minPanelCloneIndex = lastPanelOfPrevDir.getCloneIndex();
