@@ -5,7 +5,8 @@
   ],
   "rulesDirectory": [
     "tslint-consistent-codestyle",
-    "tslint-eslint-rules"
+    "tslint-eslint-rules",
+    "tslint-lines-between-class-members"
   ],
   "rules": {
     "jsdoc-format": true,
@@ -20,6 +21,7 @@
     "ordered-imports": false,
     "object-literal-sort-keys": false,
     "no-unused-expression": false,
+    "lines-between-class-members": true,
     "one-line": [true, "check-catch", "check-finally", "check-else", "check-open-brace"],
     "arrow-parens": [
       true,

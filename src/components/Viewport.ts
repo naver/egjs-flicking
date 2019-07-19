@@ -775,6 +775,7 @@ export default class Viewport {
   public getScrollArea(): { prev: number, next: number } {
     return this.state.scrollArea;
   }
+
   public isOutOfBound(): boolean {
     const state = this.state;
     const options = this.options;
@@ -870,6 +871,7 @@ export default class Viewport {
     this.axesHandlers = handlers;
     axes.on(handlers);
   }
+
   public addPlugins(plugins: Plugin | Plugin[]) {
     const newPlugins = ([] as Plugin[]).concat(plugins);
 
@@ -880,6 +882,7 @@ export default class Viewport {
     this.plugins = this.plugins.concat(newPlugins);
     return this;
   }
+
   public removePlugins(plugins: Plugin | Plugin[]) {
     const currentPlugins = this.plugins;
     const removedPlugins = ([] as Plugin[]).concat(plugins);
@@ -909,6 +912,12 @@ export default class Viewport {
         removed++;
       }
     });
+  }
+
+  public resetVisibleIndex(): void {
+    const visibleIndex = this.state.visibleIndex;
+    visibleIndex.min = NaN;
+    visibleIndex.max = NaN;
   }
 
   private getBbox(): BoundingBox {
@@ -1157,13 +1166,7 @@ export default class Viewport {
     if (cloneCount > prevCloneCount) {
       // should clone more
       for (let cloneIndex = prevCloneCount; cloneIndex < cloneCount; cloneIndex++) {
-        const clones = panels.map(origPanel => {
-          const clonedPanel = origPanel.clone(cloneIndex);
-
-          this.cameraElement.appendChild(clonedPanel.getElement());
-
-          return clonedPanel;
-        });
+        const clones = panels.map(origPanel => origPanel.clone(cloneIndex));
         panelManager.insertClones(cloneIndex, 0, clones);
       }
     } else if (cloneCount < prevCloneCount) {
@@ -1614,8 +1617,7 @@ export default class Viewport {
     const state = this.state;
     const visibleIndex = state.visibleIndex;
     if (!this.nearestPanel) {
-      visibleIndex.min = NaN;
-      visibleIndex.max = NaN;
+      this.resetVisibleIndex();
       return;
     }
 
@@ -1702,7 +1704,7 @@ export default class Viewport {
         cameraEl.removeChild(cameraEl.firstChild);
       }
 
-      this.cameraElement.appendChild(fragment);
+      cameraEl.appendChild(fragment);
     }
   }
 }

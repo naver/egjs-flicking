@@ -21,21 +21,27 @@ abstract class State {
     this.targetPanel = prevState.targetPanel;
     this.lastPosition = prevState.lastPosition;
   }
+
   public onExit(nextState: State): void {
     // DO NOTHING
   }
+
   public onHold(e: any, context: FlickingContext): void {
     // DO NOTHING
   }
+
   public onChange(e: any, context: FlickingContext): void {
     // DO NOTHING
   }
+
   public onRelease(e: any, context: FlickingContext): void {
     // DO NOTHING
   }
+
   public onAnimationEnd(e: any, context: FlickingContext): void {
     // DO NOTHING
   }
+
   public onFinish(e: any, context: FlickingContext): void {
     // DO NOTHING
   }

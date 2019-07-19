@@ -425,6 +425,7 @@ class Flicking extends Component {
     this.viewport.addPlugins(plugins);
     return this;
   }
+
   /**
    * Remove plugins from Flicking.
    * @ko 플리킹으로부터 플러그인들을 제거한다.
