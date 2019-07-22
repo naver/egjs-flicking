@@ -149,7 +149,7 @@ class Panel implements FlickingPanel {
         updateFunction(eachPanel.getElement());
         eachPanel.unCacheBbox();
       });
-    // this.viewport.resetVisibleIndex();
+    this.viewport.addVisiblePanel(this);
     this.viewport.resize();
   }
 
