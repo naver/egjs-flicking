@@ -11,7 +11,7 @@ import StateMachine from "./StateMachine";
 import MoveType from "../moves/MoveType";
 import { FlickingOptions, FlickingPanel, FlickingStatus, ElementLike, EventType, TriggerCallback, NeedPanelEvent, FlickingEvent, MoveTypeObjectOption, OriginalStyle, Plugin, DestroyOption, BoundingBox } from "../types";
 import { DEFAULT_VIEWPORT_CSS, DEFAULT_CAMERA_CSS, TRANSFORM, DEFAULT_OPTIONS, EVENTS, DIRECTION, STATE_TYPE, MOVE_TYPE } from "../consts";
-import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement, hasClass, restoreStyle, counter, circulate } from "../utils";
+import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement, hasClass, restoreStyle, counter, circulate, findIndex } from "../utils";
 import Snap from "../moves/Snap";
 import FreeScroll from "../moves/FreeScroll";
 
@@ -33,6 +33,7 @@ export default class Viewport {
 
   private currentPanel: Panel | undefined;
   private nearestPanel: Panel | undefined;
+  private visiblePanels: Panel[];
 
   private plugins: Plugin[] = [];
   private state: {
@@ -106,6 +107,7 @@ export default class Viewport {
     this.options = options;
     this.stateMachine = new StateMachine();
     this.panelManager = new PanelManager(options);
+    this.visiblePanels = [];
 
     this.build();
   }
@@ -215,7 +217,7 @@ export default class Viewport {
     pos += (modifiedNearestPosition - originalNearestPosition);
     state.position = pos;
 
-    this.checkVisibility();
+    this.updateVisiblePanels();
 
     const posOffset = state.positionOffset;
     const moveVector = options.horizontal
@@ -382,6 +384,12 @@ export default class Viewport {
     return estimatedPosition;
   }
 
+  public addVisiblePanel(panel: Panel): void {
+    if (findIndex(this.visiblePanels, visiblePanel => visiblePanel === panel) < 0) {
+      this.visiblePanels.push(panel);
+    }
+  }
+
   public enable(): void {
     this.panInput.enable();
   }
@@ -415,7 +423,10 @@ export default class Viewport {
     if (!options.renderExternal) {
       // First add all panels to camera element
       const fragment = document.createDocumentFragment();
-      panels.forEach(panel => fragment.appendChild(panel.getElement()));
+      panels.forEach(panel => {
+        fragment.appendChild(panel.getElement());
+        this.visiblePanels.push(panel);
+      });
       this.cameraElement.appendChild(fragment);
     }
     // ...then calc bbox for all panels
@@ -478,7 +489,10 @@ export default class Viewport {
     if (!options.renderExternal) {
       // First add all panels to camera element
       const fragment = document.createDocumentFragment();
-      panels.forEach(panel => fragment.appendChild(panel.getElement()));
+      panels.forEach(panel => {
+        fragment.appendChild(panel.getElement());
+        this.visiblePanels.push(panel);
+      });
       this.cameraElement.appendChild(fragment);
     }
     // ...then calc bbox for all panels
@@ -666,11 +680,30 @@ export default class Viewport {
       this.currentPanel = undefined;
       this.nearestPanel = undefined;
     }
+    this.visiblePanels = orderedPanels;
 
     this.resize();
 
     this.axes.setTo({ flick: status.position }, 0);
     this.moveCamera(status.position);
+  }
+
+  public calcVisiblePanels(): Panel[] {
+    const visibleIndex = this.state.visibleIndex;
+    const allPanels = this.panelManager.allPanels();
+    const getPanelFromRelativeIndex = (index: number) => {
+      index = index < 0
+        ? allPanels.length + index
+        : index;
+      return allPanels[index];
+    };
+
+    const visiblePanels = counter(visibleIndex.max - visibleIndex.min + 1).map(offset => {
+      const index = visibleIndex.min + offset;
+      return getPanelFromRelativeIndex(index);
+    }).filter(panel => panel);
+
+    return visiblePanels;
   }
 
   public getCurrentPanel(): Panel | undefined {
@@ -832,24 +865,6 @@ export default class Viewport {
 
   public getCheckedIndexes(): Array<[number, number]> {
     return this.state.checkedIndexes;
-  }
-
-  public getVisiblePanels(): Panel[] {
-    const visibleIndex = this.state.visibleIndex;
-    const allPanels = this.panelManager.allPanels();
-    const getPanelFromRelativeIndex = (index: number) => {
-      index = index < 0
-        ? allPanels.length + index
-        : index;
-      return allPanels[index];
-    };
-
-    const visiblePanels = counter(visibleIndex.max - visibleIndex.min + 1).map(offset => {
-      const index = visibleIndex.min + offset;
-      return getPanelFromRelativeIndex(index);
-    }).filter(panel => panel);
-
-    return visiblePanels;
   }
 
   public setCurrentPanel(panel: Panel): void {
@@ -1108,6 +1123,7 @@ export default class Viewport {
     );
 
     panelManager.replacePanels(panels, []);
+    this.visiblePanels = panels;
   }
 
   private setDefaultPanel(): void {
@@ -1638,7 +1654,7 @@ export default class Viewport {
     );
   }
 
-  private checkVisibility() {
+  private updateVisiblePanels() {
     const state = this.state;
     const isHorizontal = this.options.horizontal;
     const visibleIndex = state.visibleIndex;
@@ -1732,29 +1748,56 @@ export default class Viewport {
         return;
       }
 
-      const visiblePanels = this.getVisiblePanels();
-      if (visiblePanels.length > 0) {
+      const prevVisiblePanels = this.visiblePanels;
+      const newVisiblePanels = this.calcVisiblePanels();
+
+      const prevRefCount = prevVisiblePanels.map(() => 0);
+      const newRefCount = newVisiblePanels.map(() => 0);
+
+      prevVisiblePanels.forEach((prevPanel, prevIndex) => {
+        newVisiblePanels.forEach((newPanel, newIndex) => {
+          if (prevPanel === newPanel) {
+            prevRefCount[prevIndex]++;
+            newRefCount[newIndex]++;
+          }
+        });
+      });
+
+      const removedPanels = prevRefCount.reduce((removed: Panel[], count, index) => {
+        return count === 0
+          ? [...removed, prevVisiblePanels[index]]
+          : removed;
+      }, []);
+      const addedPanels = newRefCount.reduce((added: Panel[], count, index) => {
+        return count === 0
+          ? [...added, newVisiblePanels[index]]
+          : added;
+      }, []);
+
+      if (newVisiblePanels.length > 0) {
         const firstPanelPos = panelManager.firstPanel()!.getPosition();
-        const firstVisiblePanelPos = visiblePanels[0].getPosition();
+        const firstVisiblePanelPos = newVisiblePanels[0].getPosition();
         if (firstVisiblePanelPos >= firstPanelPos) {
           state.positionOffset = firstVisiblePanelPos - firstPanelPos;
         }
       }
 
-      const fragment = document.createDocumentFragment();
-      visiblePanels.forEach(panel => {
+      newVisiblePanels.forEach(panel => {
         panel.setPositionCSS(state.positionOffset);
-      });
-      visiblePanels.forEach(panel => {
-        fragment.appendChild(panel.getElement());
       });
 
       const cameraEl = this.cameraElement;
-      while (cameraEl.firstChild) {
-        cameraEl.removeChild(cameraEl.firstChild);
-      }
+      removedPanels.forEach(panel => {
+        cameraEl.removeChild(panel.getElement());
+      });
+
+      const fragment = document.createDocumentFragment();
+      addedPanels.forEach(panel => {
+        fragment.appendChild(panel.getElement());
+      });
 
       cameraEl.appendChild(fragment);
+      this.visiblePanels = newVisiblePanels;
     }
   }
 }

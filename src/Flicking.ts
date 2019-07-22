@@ -307,7 +307,7 @@ class Flicking extends Component {
    * @return Panels currently shown in viewport area.<ko>현재 뷰포트 영역에 보여지는 패널들</ko>
    */
   public getVisiblePanels(): FlickingPanel[] {
-    return this.viewport.getVisiblePanels();
+    return this.viewport.calcVisiblePanels();
   }
 
   /**
