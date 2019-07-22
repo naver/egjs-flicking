@@ -680,7 +680,7 @@ export default class Viewport {
       this.currentPanel = undefined;
       this.nearestPanel = undefined;
     }
-    this.visiblePanels = orderedPanels;
+    this.visiblePanels = orderedPanels.filter(panel => Boolean(panel));
 
     this.resize();
 
@@ -1123,7 +1123,7 @@ export default class Viewport {
     );
 
     panelManager.replacePanels(panels, []);
-    this.visiblePanels = panels;
+    this.visiblePanels = panels.filter(panel => Boolean(panel));
   }
 
   private setDefaultPanel(): void {

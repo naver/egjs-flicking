@@ -268,27 +268,27 @@ class PanelManager {
     const allPanels = this.allPanels().filter(panel => !!panel);
     const allPanelsCount = allPanels.length;
 
-    if (allPanelsCount <= 0) {
+    if (allPanelsCount <= 1) {
       return;
     }
 
-    allPanels.forEach((panel, idx) => {
-      const prevPanel = (idx > 0)
-        ? allPanels[idx - 1]
-        : null;
-
-      const nextPanel = (idx < allPanelsCount - 1)
-        ? allPanels[idx + 1]
-        : null;
+    allPanels.slice(1, allPanels.length - 1).forEach((panel, idx) => {
+      const prevPanel = allPanels[idx];
+      const nextPanel = allPanels[idx + 2];
 
       panel.prevSibling = prevPanel;
       panel.nextSibling = nextPanel;
     });
 
-    if (this.options.circular) {
-      const firstPanel = allPanels[0];
-      const lastPanel = allPanels[allPanelsCount - 1];
+    const firstPanel = allPanels[0];
+    const lastPanel = allPanels[allPanelsCount - 1];
 
+    firstPanel.prevSibling = null;
+    firstPanel.nextSibling = allPanels[1];
+    lastPanel.prevSibling = allPanels[allPanelsCount - 2];
+    lastPanel.nextSibling = null;
+
+    if (this.options.circular) {
       firstPanel.prevSibling = lastPanel;
       lastPanel.nextSibling = firstPanel;
     }
