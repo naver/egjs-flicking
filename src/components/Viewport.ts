@@ -492,7 +492,9 @@ export default class Viewport {
     const replacedPanels = panelManager.replace(index, panels);
 
     if (!options.renderExternal) {
-      replacedPanels.forEach(panel => panel && panel.removeElement());
+      if (!options.renderOnlyVisible) {
+        replacedPanels.forEach(panel => panel && panel.removeElement());
+      }
 
       const fragment = document.createDocumentFragment();
       panels.forEach(origPanel => {
@@ -566,9 +568,14 @@ export default class Viewport {
       };
     }
 
-    if (!options.renderExternal) {
+    if (!options.renderExternal && !options.renderOnlyVisible) {
       // First add all panels to camera element
       removedPanels.forEach(panel => panel.removeElement());
+    }
+
+    if (panelManager.getPanelCount() <= 0) {
+      this.currentPanel = undefined;
+      this.nearestPanel = undefined;
     }
 
     this.resize();
@@ -704,21 +711,29 @@ export default class Viewport {
   }
 
   public calcVisiblePanels(): Panel[] {
-    const visibleIndex = this.state.visibleIndex;
     const allPanels = this.panelManager.allPanels();
-    const getPanelFromRelativeIndex = (index: number) => {
-      index = index < 0
-        ? allPanels.length + index
-        : index;
-      return allPanels[index];
-    };
+    if (this.options.renderOnlyVisible) {
+      const visibleIndex = this.state.visibleIndex;
+      const getPanelFromRelativeIndex = (index: number) => {
+        index = index < 0
+          ? allPanels.length + index
+          : index;
+        return allPanels[index];
+      };
 
-    const visiblePanels = counter(visibleIndex.max - visibleIndex.min + 1).map(offset => {
-      const index = visibleIndex.min + offset;
-      return getPanelFromRelativeIndex(index);
-    }).filter(panel => panel);
+      const visiblePanels = counter(visibleIndex.max - visibleIndex.min + 1).map(offset => {
+        const index = visibleIndex.min + offset;
+        return getPanelFromRelativeIndex(index);
+      }).filter(panel => panel);
 
-    return visiblePanels;
+      return visiblePanels;
+    } else {
+      return allPanels.filter(panel => {
+        const outsetProgress = panel.getOutsetProgress();
+
+        return outsetProgress > -1 && outsetProgress < 1;
+      });
+    }
   }
 
   public getCurrentPanel(): Panel | undefined {
@@ -1698,9 +1713,18 @@ export default class Viewport {
     const state = this.state;
     const options = this.options;
     const isHorizontal = this.options.horizontal;
+    const cameraElement = this.cameraElement;
     const visibleIndex = state.visibleIndex;
-    if (!this.nearestPanel || !options.renderOnlyVisible) {
+
+    if (!options.renderOnlyVisible) {
+      return;
+    }
+
+    if (!this.nearestPanel) {
       this.resetVisibleIndex();
+      while (cameraElement.firstChild) {
+        cameraElement.removeChild(cameraElement.firstChild);
+      }
       return;
     }
 
@@ -1827,9 +1851,8 @@ export default class Viewport {
         panel.setPositionCSS(state.positionOffset);
       });
 
-      const cameraEl = this.cameraElement;
       removedPanels.forEach(panel => {
-        cameraEl.removeChild(panel.getElement());
+        cameraElement.removeChild(panel.getElement());
       });
 
       const fragment = document.createDocumentFragment();
@@ -1837,7 +1860,7 @@ export default class Viewport {
         fragment.appendChild(panel.getElement());
       });
 
-      cameraEl.appendChild(fragment);
+      cameraElement.appendChild(fragment);
       this.visiblePanels = newVisiblePanels;
     }
   }

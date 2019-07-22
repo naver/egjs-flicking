@@ -20,7 +20,7 @@ describe("Methods call", () => {
     eventDirection: string[],
   };
   afterEach(() => {
-    cleanup()
+    cleanup();
   });
 
   describe("getIndex()", () => {
@@ -1119,6 +1119,8 @@ describe("Methods call", () => {
       expect(flicking.getPanelCount()).equals(0);
       expect(flicking.getCurrentPanel()).to.be.null;
       expect(flicking.getIndex()).equals(-1);
+      // Children of camera element should be empty
+      expect(flicking.getElement().children[0].children[0].children.length).equals(0);
     });
 
     it("should decrease all panel indexes behind it", () => {
