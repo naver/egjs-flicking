@@ -379,7 +379,7 @@ describe("PanelManager", () => {
         lengthShouldBe(5);
       });
 
-      it.only("can replace existing panel at target index", () => {
+      it("can replace existing panel at target index", () => {
         // Given
         const previousPanel = createPanel(0);
         panelManager.replace(0, [previousPanel]);

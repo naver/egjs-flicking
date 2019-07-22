@@ -219,7 +219,10 @@ export default class Viewport {
 
     this.updateVisiblePanels();
 
-    const posOffset = state.positionOffset;
+    // Offset is needed to fix camera layer size in visible-only rendering mode
+    const posOffset = options.renderOnlyVisible
+        ? state.positionOffset
+        : 0;
     const moveVector = options.horizontal
       ? [-(pos - posOffset), 0] : [0, -(pos - posOffset)];
     const moveCoord = moveVector.map(coord => `${Math.round(coord)}px`).join(", ");
@@ -423,10 +426,12 @@ export default class Viewport {
     if (!options.renderExternal) {
       // First add all panels to camera element
       const fragment = document.createDocumentFragment();
-      panels.forEach(panel => {
-        fragment.appendChild(panel.getElement());
-        this.visiblePanels.push(panel);
+      panels.forEach(origPanel => {
+        origPanel.getIdenticalPanels().forEach(panel => {
+          fragment.appendChild(panel.getElement());
+        });
       });
+      this.visiblePanels.push(...panels);
       this.cameraElement.appendChild(fragment);
     }
     // ...then calc bbox for all panels
@@ -484,15 +489,19 @@ export default class Viewport {
       return [];
     }
 
-    panelManager.replace(index, panels);
+    const replacedPanels = panelManager.replace(index, panels);
 
     if (!options.renderExternal) {
-      // First add all panels to camera element
+      replacedPanels.forEach(panel => panel && panel.removeElement());
+
       const fragment = document.createDocumentFragment();
-      panels.forEach(panel => {
-        fragment.appendChild(panel.getElement());
-        this.visiblePanels.push(panel);
+      panels.forEach(origPanel => {
+        origPanel.getIdenticalPanels().forEach(panel => {
+          fragment.appendChild(panel.getElement());
+        });
       });
+
+      this.visiblePanels.push(...panels);
       this.cameraElement.appendChild(fragment);
     }
     // ...then calc bbox for all panels
@@ -530,6 +539,7 @@ export default class Viewport {
 
   public remove(index: number, deleteCount: number = 1): FlickingPanel[] {
     const state = this.state;
+    const options = this.options;
     // Index should not below 0
     index = Math.max(index, 0);
 
@@ -554,6 +564,11 @@ export default class Viewport {
         min: NaN,
         max: NaN,
       };
+    }
+
+    if (!options.renderExternal) {
+      // First add all panels to camera element
+      removedPanels.forEach(panel => panel.removeElement());
     }
 
     this.resize();
@@ -1200,9 +1215,6 @@ export default class Viewport {
     const prevCloneCount = panelManager.getCloneCount();
 
     panelManager.setCloneCount(cloneCount);
-    if (options.renderExternal) {
-      return;
-    }
 
     if (cloneCount > prevCloneCount) {
       // should clone more
@@ -1210,8 +1222,26 @@ export default class Viewport {
         const clones = panels.map(origPanel => origPanel.clone(cloneIndex));
         panelManager.insertClones(cloneIndex, 0, clones);
       }
+      if (!options.renderExternal && !options.renderOnlyVisible) {
+        // Append elements
+        const allPanelElements = document.createDocumentFragment();
+        const allClones = panelManager.clonedPanels();
+
+        counter(cloneCount - prevCloneCount).forEach(idx => {
+          const clones = allClones[prevCloneCount + idx];
+          clones.forEach(panel => {
+            allPanelElements.appendChild(panel.getElement());
+          });
+        });
+        this.cameraElement.appendChild(allPanelElements);
+      }
     } else if (cloneCount < prevCloneCount) {
       // should remove some
+      const origPanels = panelManager.originalPanels();
+      if (!options.renderExternal && !options.renderOnlyVisible) {
+        origPanels.forEach(panel => panel.removeClonedPanelsAfter(cloneCount));
+      }
+
       panelManager.removeClonesAfter(cloneCount);
     }
   }
@@ -1304,6 +1334,10 @@ export default class Viewport {
       panel.setPosition(newPosition);
       nextPanelPos += panelSize + gap;
     });
+
+    if (!this.options.renderOnlyVisible) {
+      panels.forEach(panel => panel.setPositionCSS());
+    }
   }
 
   private updateClonedPanelPositions(): void {
@@ -1348,6 +1382,12 @@ export default class Viewport {
 
       panel.setPosition(replacePosition);
       lastReplacePosition = replacePosition;
+    }
+
+    if (!this.options.renderOnlyVisible) {
+      clonedPanels.forEach(panel => {
+        panel.setPositionCSS();
+      });
     }
   }
 
@@ -1656,9 +1696,10 @@ export default class Viewport {
 
   private updateVisiblePanels() {
     const state = this.state;
+    const options = this.options;
     const isHorizontal = this.options.horizontal;
     const visibleIndex = state.visibleIndex;
-    if (!this.nearestPanel) {
+    if (!this.nearestPanel || !options.renderOnlyVisible) {
       this.resetVisibleIndex();
       return;
     }
@@ -1668,10 +1709,10 @@ export default class Viewport {
     const cloneCount = panelManager.getCloneCount();
     const cameraPos = this.getCameraPosition();
     const basePanel = this.nearestPanel;
+    const viewportBbox = this.getBbox();
     const bbox = this.options.overflow
       ? this.getWindowBBox()
-      : this.getBbox();
-    const viewportBbox = this.getBbox();
+      : viewportBbox;
     const viewportPos = isHorizontal
       ? viewportBbox.x
       : viewportBbox.y;

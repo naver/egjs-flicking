@@ -184,7 +184,7 @@ class PanelManager {
     return pushedIndex;
   }
 
-  public replace(index: number, newPanels: Panel[]): void {
+  public replace(index: number, newPanels: Panel[]): Panel[] {
     const panels = this.panels;
     const range = this.range;
     const isCircular = this.options.circular;
@@ -205,6 +205,8 @@ class PanelManager {
     if (isCircular) {
       this.addNewClones(index, newPanels, newPanels.length);
     }
+
+    return replacedPanels;
   }
 
   public remove(index: number, deleteCount: number = 1): Panel[] {
@@ -259,6 +261,7 @@ class PanelManager {
     if (this.length <= 0) {
       // Reset clones
       this.clones = [];
+      this.cloneCount = 0;
     }
 
     return deletedPanels;
