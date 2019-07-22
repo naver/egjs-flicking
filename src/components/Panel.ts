@@ -346,7 +346,7 @@ class Panel implements FlickingPanel {
     return this;
   }
 
-  public setPositionCSS(offset: number): void {
+  public setPositionCSS(offset: number = 0): void {
     const state = this.state;
     const pos = state.position;
     const options = this.viewport.options;
@@ -398,6 +398,26 @@ class Panel implements FlickingPanel {
     clonedPanel.setElement(element);
 
     return clonedPanel;
+  }
+
+  public removeElement(): void {
+    if (!this.viewport.options.renderExternal) {
+      const element = this.element;
+      element.parentNode!.removeChild(element);
+    }
+
+    // Do the same thing for clones
+    if (!this.state.isClone) {
+      this.removeClonedPanelsAfter(0);
+    }
+  }
+
+  public removeClonedPanelsAfter(start: number): void {
+    const removingPanels = this.clonedPanels.splice(start);
+
+    removingPanels.forEach(panel => {
+      panel.removeElement();
+    });
   }
 
   private setElement(element: HTMLElement): void {
