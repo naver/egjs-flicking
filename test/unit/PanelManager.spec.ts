@@ -489,13 +489,9 @@ describe("PanelManager", () => {
       const originalPanels = createPanels(5);
       const maxCloneCount = 3;
 
+      flickingInfo.instance.options.circular = true;
+      panelManager.setCloneCount(maxCloneCount);
       panelManager.insert(0, originalPanels);
-      counter(maxCloneCount).forEach(cloneIdx => {
-        const clones = originalPanels.map(panel => {
-          return panel.clone(cloneIdx);
-        });
-        panelManager.insertClones(cloneIdx, 0, clones);
-      });
 
       const previousRange = panelManager.getRange();
       const previousLength = panelManager.getPanelCount();

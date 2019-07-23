@@ -8,6 +8,7 @@ import { FlickingOptions } from "../types";
 import { findIndex, counter } from "../utils";
 
 class PanelManager {
+  private cameraElement: HTMLElement;
   private options: FlickingOptions;
   private panels: Panel[];
   private clones: Panel[][];
@@ -21,8 +22,10 @@ class PanelManager {
   private cloneCount: number;
 
   constructor(
+    cameraElement: HTMLElement,
     options: FlickingOptions,
   ) {
+    this.cameraElement = cameraElement;
     this.panels = [];
     this.clones = [];
     this.range = {
@@ -117,6 +120,10 @@ class PanelManager {
         range.min = -1;
         range.max = -1;
       }
+
+      if (this.shouldRender()) {
+        removingPanels.forEach(panel => panel.removeElement());
+      }
     }
   }
 
@@ -131,6 +138,21 @@ class PanelManager {
     const range = this.range;
     const isCircular = this.options.circular;
     const lastIndex = this.lastIndex;
+
+    // Find first panel that index is greater than inserting index
+    const nextSibling = this.findFirstPanelFrom(index);
+
+    // if it's null, element will be inserted at last position
+    // https://developer.mozilla.org/ko/docs/Web/API/Node/insertBefore#Syntax
+    const firstPanel = this.firstPanel();
+    const siblingElement = nextSibling
+      ? nextSibling.getElement()
+      : isCircular && firstPanel
+        ? firstPanel.getClonedPanels()[0].getElement()
+        : null;
+
+    // Insert panels before sibling element
+    this.insertNewPanels(newPanels, siblingElement);
 
     let pushedIndex = newPanels.length;
     // Like when setting index 50 while visible panels are 0, 1, 2
@@ -163,6 +185,12 @@ class PanelManager {
         // Can be filled with empty after newLastIndex
         this.panels.splice(newLastIndex + 1);
         this.range.max = newLastIndex;
+
+        console.log("removed", removedPanels.length);
+
+        if (this.shouldRender()) {
+          removedPanels.forEach(panel => panel.removeElement());
+        }
       }
     }
 
@@ -178,16 +206,32 @@ class PanelManager {
     this.updateIndex(index);
 
     if (isCircular) {
-      this.addNewClones(index, newPanels, newPanels.length - pushedIndex);
+      this.addNewClones(index, newPanels, newPanels.length - pushedIndex, nextSibling);
     }
 
     return pushedIndex;
   }
 
-  public replace(index: number, newPanels: Panel[]): Panel[] {
+  public replace(index: number, newPanels: Panel[]): void {
     const panels = this.panels;
     const range = this.range;
-    const isCircular = this.options.circular;
+    const options = this.options;
+    const isCircular = options.circular;
+
+    // Find first panel that index is greater than inserting index
+    const nextSibling = this.findFirstPanelFrom(index + newPanels.length);
+
+    // if it's null, element will be inserted at last position
+    // https://developer.mozilla.org/ko/docs/Web/API/Node/insertBefore#Syntax
+    const firstPanel = this.firstPanel();
+    const siblingElement = nextSibling
+      ? nextSibling.getElement()
+      : isCircular && firstPanel
+        ? firstPanel.getClonedPanels()[0].getElement()
+        : null;
+
+    // Insert panels before sibling element
+    this.insertNewPanels(newPanels, siblingElement);
 
     if (index > range.max) {
       // Temporarily insert null at index to use splice()
@@ -203,10 +247,12 @@ class PanelManager {
     this.updateIndex(index);
 
     if (isCircular) {
-      this.addNewClones(index, newPanels, newPanels.length);
+      this.addNewClones(index, newPanels, newPanels.length, nextSibling);
     }
 
-    return replacedPanels;
+    if (this.shouldRender()) {
+      replacedPanels.forEach(panel => panel && panel.removeElement());
+    }
   }
 
   public remove(index: number, deleteCount: number = 1): Panel[] {
@@ -219,6 +265,10 @@ class PanelManager {
     const deletedPanels = panels
       .splice(index, deleteCount)
       .filter(panel => !!panel);
+
+    if (this.shouldRender()) {
+      deletedPanels.forEach(panel => panel.removeElement());
+    }
 
     if (isCircular) {
       clones.forEach(cloneSet => {
@@ -327,6 +377,13 @@ class PanelManager {
 
   // clones are operating in set
   public removeClonesAfter(cloneIndex: number): void {
+    const panels = this.panels;
+
+    if (this.shouldRender()) {
+      panels.forEach(panel => {
+        panel.removeClonedPanelsAfter(cloneIndex);
+      });
+    }
     this.clones.splice(cloneIndex);
   }
 
@@ -344,19 +401,42 @@ class PanelManager {
   }
 
   public findFirstPanelFrom(index: number): Panel | undefined {
-    for (const panel of this.panels) {
+    for (const panel of this.panels.slice(index)) {
       if (panel && panel.getIndex() >= index && panel.getElement().parentNode) {
         return panel;
       }
     }
   }
 
-  private addNewClones(index: number, originalPanels: Panel[], deleteCount: number) {
+  private addNewClones(index: number, originalPanels: Panel[], deleteCount: number, nextSibling: Panel | undefined) {
+    const cameraElement = this.cameraElement;
     const cloneCount = this.getCloneCount();
+    const lastPanel = this.lastPanel();
+    const lastPanelClones: Panel[] = lastPanel
+      ? lastPanel.getClonedPanels()
+      : [];
+    const nextSiblingClones: Panel[] = nextSibling
+      ? nextSibling.getClonedPanels()
+      : [];
 
     for (const cloneIndex of counter(cloneCount)) {
+      const cloneNextSibling = nextSiblingClones[cloneIndex];
+      const lastPanelSibling = lastPanelClones[cloneIndex];
+
+      const cloneSiblingElement = cloneNextSibling
+        ? cloneNextSibling.getElement()
+        : lastPanelSibling
+          ? lastPanelSibling.getElement().nextElementSibling
+          : null;
+
       const newClones = originalPanels.map(panel => {
-        return panel.clone(cloneIndex);
+        const clone = panel.clone(cloneIndex);
+
+        if (this.shouldRender()) {
+          cameraElement.insertBefore(clone.getElement(), cloneSiblingElement);
+        }
+
+        return clone;
       });
 
       this.insertClones(cloneIndex, index, newClones, deleteCount);
@@ -374,6 +454,20 @@ class PanelManager {
     if (insertingIndex < range.min || range.min < 0) {
       range.min = insertingIndex;
     }
+  }
+
+  private insertNewPanels(newPanels: Panel[], siblingElement: HTMLElement | null) {
+    if (this.shouldRender()) {
+      const fragment = document.createDocumentFragment();
+      newPanels.forEach(panel => fragment.appendChild(panel.getElement()));
+      this.cameraElement.insertBefore(fragment, siblingElement);
+    }
+  }
+
+  private shouldRender(): boolean {
+    const options = this.options;
+
+    return !options.renderExternal && !options.renderOnlyVisible;
   }
 }
 

@@ -350,12 +350,16 @@ class Panel implements FlickingPanel {
     const state = this.state;
     const pos = state.position;
     const options = this.viewport.options;
+    const elementStyle = this.element.style;
+    const currentElementStyle = options.horizontal
+      ? elementStyle.left
+      : elementStyle.top;
+    const styleToApply = `${pos - offset}px`;
 
-    if (!state.isVirtual) {
-      const elementStyle = this.element.style;
+    if (!state.isVirtual && currentElementStyle !== styleToApply) {
       options.horizontal
-        ? elementStyle.left = `${pos - offset}px`
-        : elementStyle.top = `${pos - offset}px`;
+        ? elementStyle.left = styleToApply
+        : elementStyle.top = styleToApply;
     }
   }
 
