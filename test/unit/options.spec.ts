@@ -716,6 +716,109 @@ describe("Initialization", () => {
       expect(lastPanel.next().getPosition() - (lastPanel.getPosition() + lastPanel.getSize())).equals(gap);
     });
   });
+
+  describe("renderOnlyVisible", () => {
+    afterEach(() => cleanup());
+
+    it("should render only visible panels at init #1", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.panel30, {
+        renderOnlyVisible: true,
+        hanger: "0%",
+        anchor: "0%",
+      });
+
+      // When
+      // => Init
+
+      // Then
+      const flicking = flickingInfo.instance;
+      expect(flicking.getPanelCount()).equals(6);
+      expect(flicking.getElement().querySelectorAll(".eg-flick-panel").length).equals(4);
+    });
+
+    it("should render only visible panels at init #2", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.panel30, {
+        renderOnlyVisible: true,
+        hanger: "50%",
+        anchor: "50%",
+      });
+
+      // When
+      // => Init
+
+      // Then
+      const flicking = flickingInfo.instance;
+      expect(flicking.getPanelCount()).equals(6);
+      expect(flicking.getElement().querySelectorAll(".eg-flick-panel").length).equals(3);
+    });
+
+    it("should render only visible panels after move", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.panel30, {
+        renderOnlyVisible: true,
+        hanger: "50%",
+        anchor: "50%",
+      });
+      const flicking = flickingInfo.instance;
+      const visiblePanelCntBefore = flicking.getElement().querySelectorAll(".eg-flick-panel").length;
+
+      // When
+      flicking.moveTo(2, 100);
+      await waitFor(200);
+
+      // Then
+      const visiblePAnelCntAfter = flicking.getElement().querySelectorAll(".eg-flick-panel").length;
+      expect(flicking.getPanelCount()).equals(6);
+      expect(visiblePanelCntBefore).equals(3);
+      expect(visiblePAnelCntAfter).equals(5);
+    });
+
+    it("should reposition panels to maintain layer size", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.panel30, {
+        renderOnlyVisible: true,
+        hanger: "50%",
+        anchor: "50%",
+      });
+      const flicking = flickingInfo.instance;
+      const prevFirstVisiblePanel = flicking.getVisiblePanels()[0];
+      const prevStyleLeft = prevFirstVisiblePanel.getElement().style.left;
+
+      // When
+      flicking.moveTo(4, 100);
+      await waitFor(200);
+      const nextFirstVisiblePanel = flicking.getVisiblePanels()[0];
+      const nextStyleLeft = nextFirstVisiblePanel.getElement().style.left;
+
+      // Then
+      expect(prevFirstVisiblePanel).not.equals(nextFirstVisiblePanel);
+      expect(prevStyleLeft).to.equal("0px");
+      expect(nextStyleLeft).to.equal("0px");
+    });
+
+    it("should reposition camera to maintain layer size", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.panel30, {
+        renderOnlyVisible: true,
+        hanger: "0%",
+        anchor: "0%",
+      });
+      const flicking = flickingInfo.instance;
+      const cameraElement = flicking.getElement().children[0].children[0] as HTMLElement;
+      const prevCameraTransform = cameraElement.style.transform;
+
+      // When
+      flicking.moveTo(4, 100);
+      await waitFor(200);
+      const nextCameraTransform = cameraElement.style.transform;
+
+      // Then
+      expect(prevCameraTransform).equals(nextCameraTransform);
+    });
+  });
+
   describe("plugin interface", () => {
     beforeEach(() => {
       flickingInfo = createFlicking(horizontal.shouldClone4, {
@@ -726,6 +829,7 @@ describe("Initialization", () => {
       });
     });
     afterEach(() => cleanup());
+
     it("should check plugin's init lifecycle", () => {
       // Given
       const plugin: Plugin = {
@@ -743,6 +847,7 @@ describe("Initialization", () => {
       expect((plugin.update as sinon.SinonSpy).callCount).to.be.equals(0);
       expect((plugin.destroy as sinon.SinonSpy).callCount).to.be.equals(0);
     });
+
     it("should check plugin's destroy lifecycle", () => {
       // Given
       const plugin: Plugin = {
@@ -782,6 +887,7 @@ describe("Initialization", () => {
       expect((plugin.update as sinon.SinonSpy).callCount).to.be.equals(0);
       expect((plugin.destroy as sinon.SinonSpy).callCount).to.be.equals(1);
     });
+
     it("should check plugin's update lifecycle", () => {
       // Given
       const plugin: Plugin = {
@@ -815,6 +921,7 @@ describe("Initialization", () => {
       class TestFlicking {
         @withFlickingMethods
         private nativeFlicking: Flicking;
+
         constructor() {
           flickingInfo = createFlicking(horizontal.shouldClone4, {
             gap: 10,
