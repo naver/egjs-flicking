@@ -106,7 +106,6 @@ export default class Viewport {
     };
     this.options = options;
     this.stateMachine = new StateMachine();
-    this.panelManager = new PanelManager(options);
     this.visiblePanels = [];
 
     this.build();
@@ -423,17 +422,7 @@ export default class Viewport {
 
     const pushedIndex = this.panelManager.insert(index, panels);
 
-    if (!options.renderExternal) {
-      // First add all panels to camera element
-      const fragment = document.createDocumentFragment();
-      panels.forEach(origPanel => {
-        origPanel.getIdenticalPanels().forEach(panel => {
-          fragment.appendChild(panel.getElement());
-        });
-      });
-      this.visiblePanels.push(...panels);
-      this.cameraElement.appendChild(fragment);
-    }
+    this.visiblePanels.push(...panels);
     // ...then calc bbox for all panels
     panels.forEach(panel => panel.resize());
 
@@ -489,23 +478,9 @@ export default class Viewport {
       return [];
     }
 
-    const replacedPanels = panelManager.replace(index, panels);
+    panelManager.replace(index, panels);
 
-    if (!options.renderExternal) {
-      if (!options.renderOnlyVisible) {
-        replacedPanels.forEach(panel => panel && panel.removeElement());
-      }
-
-      const fragment = document.createDocumentFragment();
-      panels.forEach(origPanel => {
-        origPanel.getIdenticalPanels().forEach(panel => {
-          fragment.appendChild(panel.getElement());
-        });
-      });
-
-      this.visiblePanels.push(...panels);
-      this.cameraElement.appendChild(fragment);
-    }
+    this.visiblePanels.push(...panels);
     // ...then calc bbox for all panels
     panels.forEach(panel => panel.resize());
 
@@ -541,7 +516,6 @@ export default class Viewport {
 
   public remove(index: number, deleteCount: number = 1): FlickingPanel[] {
     const state = this.state;
-    const options = this.options;
     // Index should not below 0
     index = Math.max(index, 0);
 
@@ -566,11 +540,6 @@ export default class Viewport {
         min: NaN,
         max: NaN,
       };
-    }
-
-    if (!options.renderExternal && !options.renderOnlyVisible) {
-      // First add all panels to camera element
-      removedPanels.forEach(panel => panel.removeElement());
     }
 
     if (panelManager.getPanelCount() <= 0) {
@@ -1097,6 +1066,8 @@ export default class Viewport {
     if (options.overflow) {
       viewportStyle.overflow = "visible";
     }
+
+    this.panelManager = new PanelManager(this.cameraElement, options);
   }
 
   private setMoveType(): void {
@@ -1234,29 +1205,17 @@ export default class Viewport {
     if (cloneCount > prevCloneCount) {
       // should clone more
       for (let cloneIndex = prevCloneCount; cloneIndex < cloneCount; cloneIndex++) {
-        const clones = panels.map(origPanel => origPanel.clone(cloneIndex));
-        panelManager.insertClones(cloneIndex, 0, clones);
-      }
-      if (!options.renderExternal && !options.renderOnlyVisible) {
-        // Append elements
-        const allPanelElements = document.createDocumentFragment();
-        const allClones = panelManager.clonedPanels();
-
-        counter(cloneCount - prevCloneCount).forEach(idx => {
-          const clones = allClones[prevCloneCount + idx];
-          clones.forEach(panel => {
-            allPanelElements.appendChild(panel.getElement());
-          });
+        const fragment = document.createDocumentFragment();
+        const clones = panels.map(origPanel => {
+          const clonedPanel = origPanel.clone(cloneIndex);
+          fragment.appendChild(clonedPanel.getElement());
+          return clonedPanel;
         });
-        this.cameraElement.appendChild(allPanelElements);
+        this.cameraElement.appendChild(fragment);
+        panelManager.insertClones(cloneIndex, 0, clones);
       }
     } else if (cloneCount < prevCloneCount) {
       // should remove some
-      const origPanels = panelManager.originalPanels();
-      if (!options.renderExternal && !options.renderOnlyVisible) {
-        origPanels.forEach(panel => panel.removeClonedPanelsAfter(cloneCount));
-      }
-
       panelManager.removeClonesAfter(cloneCount);
     }
   }
