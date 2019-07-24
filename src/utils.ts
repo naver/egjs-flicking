@@ -30,6 +30,9 @@ export function parseElement(element: ElementLike | ElementLike[]): HTMLElement[
       tempDiv.innerHTML = el;
 
       elements.push(...toArray(tempDiv.children) as HTMLElement[]);
+      while (tempDiv.firstChild) {
+        tempDiv.removeChild(tempDiv.firstChild);
+      }
     } else {
       elements.push(el as HTMLElement);
     }

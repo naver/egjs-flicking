@@ -240,4 +240,54 @@ describe("Viewport", () => {
       expect(spliceSpy.getCall(0).args).deep.equals([0, 1, [4, Infinity]]);
     });
   });
+
+  describe("insert", () => {
+    it("should guarantee panel element order", () => {
+      // Given
+      createViewport(horizontal.fullN(5), {
+        renderOnlyVisible: false,
+      });
+
+      // When
+      const newPanel = horizontal.fullN(1);
+      const insertedPanel = viewport.insert(3, newPanel)[0];
+
+      // Then
+      expect(insertedPanel.getElement().nextElementSibling).not.to.be.null;
+      const allPanels = flicking.getAllPanels();
+      allPanels.forEach(panel => {
+        const element = panel.getElement();
+        const prevPanel = panel.prev();
+        const nextPanel = panel.next();
+
+        prevPanel && expect(prevPanel.getElement().nextElementSibling).equals(element);
+        nextPanel && expect(nextPanel.getElement().previousElementSibling).equals(element);
+      });
+    });
+  });
+
+  describe("replace", () => {
+    it("should guarantee panel element order", () => {
+      // Given
+      createViewport(horizontal.fullN(5), {
+        renderOnlyVisible: false,
+      });
+
+      // When
+      const newPanel = horizontal.fullN(1);
+      const insertedPanel = viewport.replace(3, newPanel)[0];
+
+      // Then
+      expect(insertedPanel.getElement().nextElementSibling).not.to.be.null;
+      const allPanels = flicking.getAllPanels();
+      allPanels.forEach(panel => {
+        const element = panel.getElement();
+        const prevPanel = panel.prev();
+        const nextPanel = panel.next();
+
+        prevPanel && expect(prevPanel.getElement().nextElementSibling).equals(element);
+        nextPanel && expect(nextPanel.getElement().previousElementSibling).equals(element);
+      });
+    });
+  });
 });

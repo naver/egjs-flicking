@@ -186,8 +186,6 @@ class PanelManager {
         this.panels.splice(newLastIndex + 1);
         this.range.max = newLastIndex;
 
-        console.log("removed", removedPanels.length);
-
         if (this.shouldRender()) {
           removedPanels.forEach(panel => panel.removeElement());
         }
@@ -212,7 +210,7 @@ class PanelManager {
     return pushedIndex;
   }
 
-  public replace(index: number, newPanels: Panel[]): void {
+  public replace(index: number, newPanels: Panel[]): Panel[] {
     const panels = this.panels;
     const range = this.range;
     const options = this.options;
@@ -253,6 +251,8 @@ class PanelManager {
     if (this.shouldRender()) {
       replacedPanels.forEach(panel => panel && panel.removeElement());
     }
+
+    return replacedPanels;
   }
 
   public remove(index: number, deleteCount: number = 1): Panel[] {

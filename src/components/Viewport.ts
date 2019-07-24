@@ -480,8 +480,14 @@ export default class Viewport {
       return [];
     }
 
-    panelManager.replace(index, panels);
+    const replacedPanels = panelManager.replace(index, panels);
 
+    replacedPanels.forEach(panel => {
+      const visibleIndex = findIndex(this.visiblePanels, visiblePanel => visiblePanel === panel);
+      if (visibleIndex > -1) {
+        this.visiblePanels.splice(visibleIndex, 1);
+      }
+    });
     this.visiblePanels.push(...panels);
     // ...then calc bbox for all panels
     panels.forEach(panel => panel.resize());
@@ -1813,7 +1819,8 @@ export default class Viewport {
       });
 
       removedPanels.forEach(panel => {
-        cameraElement.removeChild(panel.getElement());
+        const panelElement = panel.getElement();
+        panelElement.parentNode && cameraElement.removeChild(panelElement);
       });
 
       const fragment = document.createDocumentFragment();
