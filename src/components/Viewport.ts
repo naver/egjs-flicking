@@ -243,6 +243,8 @@ export default class Viewport {
     const state = this.state;
     state.cachedBbox = null;
     state.windowBbox = null;
+    state.visibleIndex = { min: NaN, max: NaN };
+    this.visiblePanels = this.panelManager.allPanels().concat();
 
     const viewportElement = this.viewportElement;
     if (!this.options.horizontal) {
