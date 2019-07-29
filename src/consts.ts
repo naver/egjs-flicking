@@ -89,6 +89,7 @@ export const EVENTS: EventType = {
   RESTORE: "restore",
   SELECT: "select",
   NEED_PANEL: "needPanel",
+  VISIBLE_CHANGE: "visibleChange",
 };
 
 export const AXES_EVENTS: AxesEventType = {
@@ -123,6 +124,7 @@ export const FLICKING_METHODS: {[key in FlickingMethodsKeys]: true} = {
   getPanelCount: true,
   getStatus: true,
   getVisiblePanels: true,
+  getVisibleIndex: true,
   setLastIndex: true,
   enableInput: true,
   disableInput: true,

@@ -426,7 +426,7 @@ class Panel implements FlickingPanel {
     });
   }
 
-  private setElement(element: HTMLElement): void {
+  public setElement(element: HTMLElement): void {
     this.element = element;
 
     const options = this.viewport.options;

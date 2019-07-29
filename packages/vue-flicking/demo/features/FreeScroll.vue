@@ -5,12 +5,8 @@
       <li>The panels are freely scrollable.</li>
     </ul>
     <h2>moveType: "freeScroll", deceleration: 0.0075(default)</h2>
-    <flicking class="flicking flicking0" :options="{ gap: 10, circular: true, moveType: 'freeScroll' }">
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
+    <flicking class="flicking flicking0" :options="{ gap: 10, circular: true, moveType: 'freeScroll', renderOnlyVisible: true }">
+      <div class="panel" v-for="idx in [0, 1, 2, 3, 4]" :key="idx"></div>
     </flicking>
     <pre><code class="hljs html" data-script="flicking0">{{ code0 }}</code></pre>
     <h2>moveType: "freeScroll", deceleration: 0.015</h2>
