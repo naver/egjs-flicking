@@ -26,16 +26,31 @@ export default class Flicking extends Vue {
   private $_nativeFlicking!: NativeFlicking;
   private $_pluginsDiffer!: ListDiffer<Plugin>;
   private $_cloneCount!: number;
+  private $_slotDiffer!: ListDiffer<VNode>;
+  private $_slotDiffResult: DiffResult<VNode> | undefined;
+  private $_visibleIndex!: { min: number; max: number };
 
   public mounted() {
     this.$_pluginsDiffer = new ListDiffer<Plugin>();
     this.$_cloneCount = 0;
+    this.$_visibleIndex = { min: NaN, max: NaN };
 
     const options = {...this.options, ...{ renderExternal: true }};
     this.$_nativeFlicking = new NativeFlicking(this.$el as HTMLElement, options);
+    this.$_slotDiffer = new ListDiffer<VNode>(this.$slots.default, (vnode, idx) => vnode.key || idx);
 
     this.$_bindEvents();
     this.$_checkUpdate();
+
+    if (this.options.renderOnlyVisible) {
+      // Should update once to update visibles
+      const visibleIndex = this.$_nativeFlicking.getVisibleIndex();
+      this.$_visibleIndex = {
+        min: visibleIndex.min,
+        max: visibleIndex.max,
+      };
+      this.$forceUpdate();
+    }
   }
 
   public beforeDestroy() {
@@ -54,7 +69,7 @@ export default class Flicking extends Vue {
     viewportData.class[`${classPrefix}-viewport`] = true;
     cameraData.class[`${classPrefix}-camera`] = true;
 
-    const panels = this.$_getPanels();
+    const panels = this.$_getPanels(h);
 
     return h(this.tag,
       [h("div", viewportData,
@@ -66,7 +81,13 @@ export default class Flicking extends Vue {
   }
 
   public onUpdate(diffResult: DiffResult<HTMLElement>) {
-    this.$_nativeFlicking.sync(diffResult);
+    const flicking = this.$_nativeFlicking;
+    const prevCloneCount = this.$_cloneCount;
+    const newCloneCount = flicking.getCloneCount();
+
+    this.$_nativeFlicking.sync(diffResult, this.$_slotDiffResult, prevCloneCount);
+    this.$_cloneCount = newCloneCount;
+    this.$_slotDiffResult = undefined;
     this.$nextTick(() => {
       this.$_checkUpdate();
     });
@@ -93,6 +114,14 @@ export default class Flicking extends Vue {
         this.$emit(eventName.replace(/([A-Z])/g, "-$1").toLowerCase(), e);
       });
     });
+
+    if (this.options.renderOnlyVisible) {
+      this.$_nativeFlicking.on(NativeFlicking.EVENTS.VISIBLE_CHANGE, e => {
+        this.$_visibleIndex.min = e.range.min;
+        this.$_visibleIndex.max = e.range.max;
+        this.$forceUpdate();
+      });
+    }
   }
 
   private $_checkPlugins() {
@@ -102,29 +131,93 @@ export default class Flicking extends Vue {
     this.$_nativeFlicking.removePlugins(removed.map(index => prevList[index]));
   }
 
-  private $_checkCloneCount() {
+  private $_checkCloneCount(): void {
+    const prevCloneCount = this.$_cloneCount;
     const newCloneCount = this.$_nativeFlicking.getCloneCount();
 
-    if (this.$_cloneCount !== newCloneCount) {
-      this.$_cloneCount = newCloneCount;
+    if (prevCloneCount !== newCloneCount) {
       this.$forceUpdate();
     }
   }
 
-  private $_getPanels() {
-    const lastIndex = this.$_nativeFlicking
-      ? this.$_nativeFlicking.getLastIndex()
+  private $_getPanels(h: CreateElement) {
+    const flicking = this.$_nativeFlicking;
+    const slots = this.$slots.default;
+
+    if (!slots) {
+      return [];
+    }
+
+    const oldCloneCount = this.$_cloneCount;
+    const newCloneCount = flicking
+      ? flicking.getCloneCount()
+      : 0;
+
+    const lastIndex = flicking
+      ? flicking.getLastIndex()
       : this.options.lastIndex || DEFAULT_OPTIONS.lastIndex;
-    const panels = this.$slots.default
-      ? [...this.$slots.default.slice(0, lastIndex + 1), ...this.$_getClonedVNodes()]
-      : undefined;
+
+    let panels: VNode[];
+
+    const visibleIndex = this.$_visibleIndex;
+
+    if (this.options.renderOnlyVisible && this.$_slotDiffer) {
+      this.$_slotDiffResult = this.$_slotDiffer.update(slots || []);
+
+      const slotsDiff = this.$_slotDiffResult;
+      const panelCnt = flicking.getPanelCount();
+
+      const visibles = [...Array(visibleIndex.max - visibleIndex.min + 1).keys()].map(offset => {
+        const index = visibleIndex.min + offset;
+        if (index < 0) {
+          const relativeIndex = panelCnt + ((index + 1) % panelCnt - 1);
+          const cloneIndex = newCloneCount - ((index + 1) % panelCnt + 1);
+          const origSlot = slots[relativeIndex];
+
+          return this.$_cloneVNode(origSlot, h, cloneIndex, relativeIndex);
+        } else if (index >= panelCnt) {
+          const relativeIndex = index % panelCnt;
+          const origSlot = slots[relativeIndex];
+
+          return this.$_cloneVNode(origSlot, h, Math.floor(index / panelCnt) - 1, relativeIndex);
+        } else {
+          return slots[index];
+        }
+      });
+
+      const added = slotsDiff.added.map(addedIndex => slots[addedIndex]);
+
+      const addedClones = [...Array(oldCloneCount).keys()].reduce((clones: VNode[], cloneIndex) => {
+        const newAddedClones = slotsDiff.added.map(addedIdx => {
+          const child = slots[addedIdx];
+
+          return this.$_cloneVNode(child, h, cloneIndex, addedIdx);
+        });
+        return [...clones, ...newAddedClones];
+      }, []);
+
+      const newClones = [...Array(newCloneCount - oldCloneCount).keys()].reduce((clones: VNode[], idxOffset) => {
+        const cloneIndex = oldCloneCount + idxOffset;
+        const childs = slots.map((slot, slotIndex) => {
+          return this.$_cloneVNode(slot, h, cloneIndex, slotIndex);
+        });
+
+        return [...clones, ...childs];
+      }, []);
+
+      panels = [...visibles, ...added, ...addedClones, ...newClones];
+    } else {
+      panels = [...slots.slice(0, lastIndex + 1), ...this.$_getClonedVNodes()];
+    }
 
     return panels;
   }
 
   private $_getClonedVNodes() {
     const h = this.$createElement;
-    const cloneCount = this.$_cloneCount;
+    const cloneCount = this.$_nativeFlicking
+      ? this.$_nativeFlicking.getCloneCount()
+      : 0;
     const lastIndex = this.$_nativeFlicking
       ? this.$_nativeFlicking.getLastIndex()
       : this.options.lastIndex || DEFAULT_OPTIONS.lastIndex;
@@ -132,13 +225,15 @@ export default class Flicking extends Vue {
     const clones: VNode[] = [];
 
     for (let cloneIndex = 0; cloneIndex < cloneCount; cloneIndex++) {
-      const childKeys = children.map((child, childIdx) => child.key ? child.key : childIdx);
-      clones.push(...children.map((child, childIdx) => this.$_cloneVNode(child, h, `clone${cloneIndex}-${childKeys[childIdx]}`)));
+      clones.push(...children.map((child, childIdx) => this.$_cloneVNode(child, h, cloneIndex, childIdx)));
     }
     return clones;
   }
 
-  private $_cloneVNode(vnode: VNode, h: CreateElement, key?: string | number): VNode {
+  private $_cloneVNode(vnode: VNode, h: CreateElement, cloneIndex?: number, childIndex?: number): VNode {
+    const key = cloneIndex
+      ? `clone${cloneIndex}-${vnode.key ? vnode.key : childIndex}`
+      : undefined;
     const clonedChilds = vnode.children
       ? vnode.children.map(child => this.$_cloneVNode(child, h))
       : undefined;

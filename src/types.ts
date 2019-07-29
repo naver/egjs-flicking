@@ -278,6 +278,13 @@ export interface Direction {
   * @type eg.Flicking.NeedPanelEvent
   */
 
+/**
+ * Event triggered when Flicking's visible panel changes. This event only triggered with `renderOnlyVisible` option.
+ * @ko 보이는 패널 정보에 변화가 있을 경우에 발생되는 이벤트. `renderOnlyVisible` 옵션이 활성화된 경우에만 트리거된다.
+ * @event eg.Flicking#visibleChange
+ * @type eg.Flicking.VisibleChangeEvent
+ */
+
 export interface EventType {
   readonly HOLD_START: "holdStart";
   readonly HOLD_END: "holdEnd";
@@ -288,6 +295,7 @@ export interface EventType {
   readonly RESTORE: "restore";
   readonly SELECT: "select";
   readonly NEED_PANEL: "needPanel";
+  readonly VISIBLE_CHANGE: "visibleChange";
 }
 
 /**
@@ -319,7 +327,7 @@ export interface FlickingEvent {
 
 /**
  * Event that indicates index will be changed, and isn't restoring. Index will be changed at `moveEnd` event.
- * @ko - `restore`되지 않고, 인덱스가 변경될 것임을 나타내는 이벤트. 실제 인덱스는 `moveEnd`이벤트에서 변경된다.
+ * @ko `restore`되지 않고, 인덱스가 변경될 것임을 나타내는 이벤트. 실제 인덱스는 `moveEnd`이벤트에서 변경된다.
  * @typedef
  * @memberof eg.Flicking
  * @property - Name of the event.<ko>이벤트명</ko>
@@ -348,7 +356,7 @@ export interface ChangeEvent {
 
 /**
  * Event will be triggered when panel is statically click / touched.
- * @ko - 패널이 정적으로 클릭(혹은 터치)되었을 때 발생되는 이벤트.
+ * @ko 패널이 정적으로 클릭(혹은 터치)되었을 때 발생되는 이벤트.
  * @typedef
  * @memberof eg.Flicking
  * @property - Name of the event.<ko>이벤트명</ko>
@@ -375,7 +383,7 @@ export interface SelectEvent {
 
 /**
  * Event can be triggered in infinite mode. When camera element reaches at infinite threshold, this event can be triggered to indicate there should be more content to be displayed.
- * @ko - 무한 모드에서 발생될 수 있는 이벤트. 화면의 양 끝, 혹은 불연속적인 인덱스를 가진 패널을 기준으로 `infiniteThreshold`만큼 떨어진 지점에 도달하였을 때 발생될 수 있다.
+ * @ko 무한 모드에서 발생될 수 있는 이벤트. 화면의 양 끝, 혹은 불연속적인 인덱스를 가진 패널을 기준으로 `infiniteThreshold`만큼 떨어진 지점에 도달하였을 때 발생될 수 있다.
  * @typedef
  * @memberof eg.Flicking
  * @property - Name of the event.<ko>이벤트명</ko>
@@ -406,6 +414,24 @@ export interface NeedPanelEvent {
     min: number;
     max: number;
     length: number;
+  };
+}
+
+/**
+ * Event triggered when Flicking's visible panel changes. This event only triggered with `renderOnlyVisible` option.
+ * @ko 보이는 패널 정보에 변화가 있을 경우에 발생되는 이벤트. `renderOnlyVisible` 옵션이 활성화된 경우에만 트리거된다.
+ * @typedef
+ * @memberof eg.Flicking
+ * @property - Name of the event.<ko>이벤트명</ko>
+ * @property range - Range of indexes that is newly visible.<ko>새로 보이는 패널의 인덱스 범위.</ko>
+ * @property {number} [range.min] - Minimum index of visible panels.<ko>보이는 패널들 중 최소 인덱스.</ko>.
+ * @property {number} [range.max] - Maximum index of visible panels.<ko>필요한 패널들 중 최대 인덱스.</ko>.
+ */
+export interface VisibleChangeEvent {
+  type: string;
+  range: {
+    min: number;
+    max: number;
   };
 }
 

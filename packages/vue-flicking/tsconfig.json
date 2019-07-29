@@ -10,6 +10,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "suppressImplicitAnyIndexErrors": true,
+    "downlevelIteration": true,
     "sourceMap": true,
     "baseUrl": ".",
     "types": [

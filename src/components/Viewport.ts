@@ -871,8 +871,20 @@ export default class Viewport {
     return this.state.position;
   }
 
+  public getPositionOffset(): number {
+    return this.state.positionOffset;
+  }
+
   public getCheckedIndexes(): Array<[number, number]> {
     return this.state.checkedIndexes;
+  }
+
+  public getVisibleIndex(): { min: number; max: number } {
+    return this.state.visibleIndex;
+  }
+
+  public getVisiblePanels(): Panel[] {
+    return this.visiblePanels;
   }
 
   public setCurrentPanel(panel: Panel): void {
@@ -889,6 +901,10 @@ export default class Viewport {
     }
 
     this.resize();
+  }
+
+  public setVisiblePanels(panels: Panel[]): void {
+    this.visiblePanels = panels;
   }
 
   public connectAxesHandler(handlers: {[key: string]: (event: { [key: string]: any; }) => any}): void {
@@ -1218,13 +1234,13 @@ export default class Viewport {
     if (cloneCount > prevCloneCount) {
       // should clone more
       for (let cloneIndex = prevCloneCount; cloneIndex < cloneCount; cloneIndex++) {
-        const fragment = document.createDocumentFragment();
-        const clones = panels.map(origPanel => {
-          const clonedPanel = origPanel.clone(cloneIndex);
-          fragment.appendChild(clonedPanel.getElement());
-          return clonedPanel;
-        });
-        this.cameraElement.appendChild(fragment);
+        const clones = panels.map(origPanel => origPanel.clone(cloneIndex));
+        if (!options.renderExternal) {
+          const fragment = document.createDocumentFragment();
+          clones.forEach(panel => fragment.appendChild(panel.getElement()));
+
+          this.cameraElement.appendChild(fragment);
+        }
         panelManager.insertClones(cloneIndex, 0, clones);
       }
     } else if (cloneCount < prevCloneCount) {
@@ -1724,18 +1740,28 @@ export default class Viewport {
         panel.setPositionCSS(state.positionOffset);
       });
 
-      removedPanels.forEach(panel => {
-        const panelElement = panel.getElement();
-        panelElement.parentNode && cameraElement.removeChild(panelElement);
-      });
+      if (!options.renderExternal) {
+        removedPanels.forEach(panel => {
+          const panelElement = panel.getElement();
+          panelElement.parentNode && cameraElement.removeChild(panelElement);
+        });
 
-      const fragment = document.createDocumentFragment();
-      addedPanels.forEach(panel => {
-        fragment.appendChild(panel.getElement());
-      });
+        const fragment = document.createDocumentFragment();
+        addedPanels.forEach(panel => {
+          fragment.appendChild(panel.getElement());
+        });
+        cameraElement.appendChild(fragment);
+      }
 
-      cameraElement.appendChild(fragment);
       this.visiblePanels = newVisiblePanels;
+
+      this.flicking.trigger(EVENTS.VISIBLE_CHANGE, {
+        type: EVENTS.VISIBLE_CHANGE,
+        range: {
+          min: newVisibleIndex.min,
+          max: newVisibleIndex.max,
+        },
+      });
     }
   }
 
