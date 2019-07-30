@@ -38,6 +38,7 @@
 var flicking = new eg.Flicking(".flicking", {
     circular: true,
     gap: 10,
+    renderOnlyVisible: true,
 });
 
 flicking.addPlugins(new eg.Flicking.plugins.Parallax("img", 4));
