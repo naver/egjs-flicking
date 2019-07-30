@@ -30,14 +30,14 @@
  },
  "license": "MIT",
  "dependencies": {
-  "@egjs/flicking": "^3.4.0",
+  "@egjs/flicking": "^3.2.0",
   "@egjs/list-differ": "0.0.1",
   "@egjs/vue-children-differ": "^0.0.1",
   "vue-property-decorator": "^8.1.0"
  },
  "devDependencies": {
   "@egjs/build-helper": "0.0.5",
-  "@egjs/flicking-plugins": "^3.0.1-rc",
+  "@egjs/flicking-plugins": "^3.1.0",
   "@types/chai": "^4.1.0",
   "@types/mocha": "^5.2.4",
   "@vue/cli-plugin-typescript": "^3.7.0",

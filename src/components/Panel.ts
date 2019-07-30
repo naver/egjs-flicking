@@ -365,13 +365,15 @@ class Panel implements FlickingPanel {
     }
   }
 
-  public clone(cloneIndex: number, isVirtual: boolean = false): Panel {
+  public clone(cloneIndex: number, isVirtual: boolean = false, element?: HTMLElement): Panel {
     const state = this.state;
     const viewport = this.viewport;
 
-    const cloneElement = isVirtual
-      ? this.element
-      : this.element.cloneNode(true) as HTMLElement;
+    const cloneElement = element
+      ? element
+      : isVirtual
+        ? this.element
+        : this.element.cloneNode(true) as HTMLElement;
 
     const clonedPanel = new Panel(cloneElement, state.index, viewport);
     const clonedState = clonedPanel.state;
@@ -400,8 +402,7 @@ class Panel implements FlickingPanel {
 
   // Clone with external element
   public cloneExternal(cloneIndex: number, element: HTMLElement): Panel {
-    const clonedPanel = this.clone(cloneIndex);
-    clonedPanel.setElement(element);
+    const clonedPanel = this.clone(cloneIndex, false, element);
 
     return clonedPanel;
   }

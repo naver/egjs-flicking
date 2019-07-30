@@ -1230,17 +1230,18 @@ export default class Viewport {
     const prevCloneCount = panelManager.getCloneCount();
 
     panelManager.setCloneCount(cloneCount);
+    if (options.renderExternal) {
+      return;
+    }
 
     if (cloneCount > prevCloneCount) {
       // should clone more
       for (let cloneIndex = prevCloneCount; cloneIndex < cloneCount; cloneIndex++) {
         const clones = panels.map(origPanel => origPanel.clone(cloneIndex));
-        if (!options.renderExternal) {
-          const fragment = document.createDocumentFragment();
-          clones.forEach(panel => fragment.appendChild(panel.getElement()));
+        const fragment = document.createDocumentFragment();
+        clones.forEach(panel => fragment.appendChild(panel.getElement()));
 
-          this.cameraElement.appendChild(fragment);
-        }
+        this.cameraElement.appendChild(fragment);
         this.visiblePanels.push(...clones);
         panelManager.insertClones(cloneIndex, 0, clones);
       }
