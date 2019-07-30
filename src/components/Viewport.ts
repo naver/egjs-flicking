@@ -1241,6 +1241,7 @@ export default class Viewport {
 
           this.cameraElement.appendChild(fragment);
         }
+        this.visiblePanels.push(...clones);
         panelManager.insertClones(cloneIndex, 0, clones);
       }
     } else if (cloneCount < prevCloneCount) {
