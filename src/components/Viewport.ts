@@ -1466,6 +1466,7 @@ export default class Viewport {
     const halfGap = this.options.gap / 2;
 
     if (currentState.holding || currentState.playing) {
+      this.updateVisiblePanels();
       return;
     }
 
