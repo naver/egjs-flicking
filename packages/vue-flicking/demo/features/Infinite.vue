@@ -8,7 +8,7 @@
       <li>Note: The number displayed above each panel is not panel's index.</li>
     </ul>
     <flicking class="flicking flicking0" :options="{ gap: 10, renderOnlyVisible: true }">
-      <div v-for="num in list0" class="infinite" :class="`infinite${Math.abs(num) % 5}`" :key="num">
+      <div v-for="num in list0" class="infinite" :class="`panel${Math.abs(num) % 5}`" :key="num">
         {{ num }}
       </div>
     </flicking>
@@ -33,7 +33,7 @@
         const end = list1[list1.length - 1] || 0;
         list1.push(end + 1, end + 2);
       }">
-      <div v-for="num in list1" class="infinite" :class="`infinite${Math.abs(num) % 5}`" :key="num">
+      <div v-for="num in list1" class="infinite" :class="`panel${Math.abs(num) % 5}`" :key="num">
         {{ num }}
       </div>
     </flicking>
@@ -130,7 +130,7 @@ export default class Infinite extends Vue {
     font-weight: bold;
   }
   #infinite .flicking2 .infinite {
-    transition: all ease 1s;
+    transition: background ease 1s;
   }
   #infinite .flicking .infinite.placeholder {
     background: #ddd;

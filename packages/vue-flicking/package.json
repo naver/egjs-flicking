@@ -50,7 +50,6 @@
   "vue": "^2.6.10",
   "vue-class-component": "^7.0.2",
   "vue-cli-plugin-p11n": "^0.3.0",
-  "vue-hljs": "^1.1.2",
   "vue-router": "^3.0.6",
   "vue-template-compiler": "^2.5.21"
  }

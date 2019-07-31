@@ -13,11 +13,11 @@
       @move="e => {
         this.$refs.thumb.style.width = (e.progress * 100) + '%';
       }">
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
+      <div class="panel0"></div>
+      <div class="panel1"></div>
+      <div class="panel2"></div>
+      <div class="panel3"></div>
+      <div class="panel4"></div>
     </flicking>
     <div class="progress">
       <div class="thumb" ref="thumb"></div>
@@ -39,11 +39,11 @@
         });
       }"
       ref="flick1">
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
+      <div class="panel0"></div>
+      <div class="panel1"></div>
+      <div class="panel2"></div>
+      <div class="panel3"></div>
+      <div class="panel4"></div>
     </flicking>
     <div class="pagination pagination1"></div>
     <pre><code class="hljs html" data-script="flicking1">{{ code1 }}</code></pre>
@@ -66,11 +66,11 @@
         });
       }"
       ref="flick2">
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
+      <div class="panel0"></div>
+      <div class="panel1"></div>
+      <div class="panel2"></div>
+      <div class="panel3"></div>
+      <div class="panel4"></div>
     </flicking>
     <div class="pagination pagination2"></div>
     <pre><code class="hljs html" data-script="flicking2">{{ code2 }}</code></pre>
@@ -93,11 +93,11 @@
         });
       }"
       ref="flick3">
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
+      <div class="panel0"></div>
+      <div class="panel1"></div>
+      <div class="panel2"></div>
+      <div class="panel3"></div>
+      <div class="panel4"></div>
     </flicking>
     <div class="pagination pagination3"></div>
     <pre><code class="hljs html" data-script="flicking3">{{ code3 }}</code></pre>
@@ -118,11 +118,11 @@ export default class Progress extends Vue {
   @move="e => {
     this.$refs.thumb.style.width = (e.progress * 100) + '%';
   }">
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
+  <div class="panel0"></div>
+  <div class="panel1"></div>
+  <div class="panel2"></div>
+  <div class="panel3"></div>
+  <div class="panel4"></div>
 </flicking>`;
   code1 = `<flicking class="flicking flicking1"
   :option="{
@@ -135,11 +135,11 @@ export default class Progress extends Vue {
       panel.getElement().innerHTML = panel.getProgress().toFixed(2);
     });
   }">
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
+  <div class="panel0"></div>
+  <div class="panel1"></div>
+  <div class="panel2"></div>
+  <div class="panel3"></div>
+  <div class="panel4"></div>
 </flicking>`;
   code2 = `<flicking class="flicking flicking2"
   :options="{
@@ -154,11 +154,11 @@ export default class Progress extends Vue {
       panel.getElement().innerHTML = panel.getOutsetProgress().toFixed(2);
     });
   }">
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
+  <div class="panel0"></div>
+  <div class="panel1"></div>
+  <div class="panel2"></div>
+  <div class="panel3"></div>
+  <div class="panel4"></div>
 </flicking>`;
   code3 = `<flicking class="flicking flicking3"
   :options="{
@@ -173,11 +173,11 @@ export default class Progress extends Vue {
       panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
     });
   }">
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
+  <div class="panel0"></div>
+  <div class="panel1"></div>
+  <div class="panel2"></div>
+  <div class="panel3"></div>
+  <div class="panel4"></div>
 </flicking>`;
 
   mounted() {

@@ -8,22 +8,22 @@
   <h2>bound: false</h2>
   <div class="hanger hanger0"></div>
   <flicking class="flicking flicking0" :options="{ gap: 10 }">
-    <div class="panel"><div class="anchor"></div></div>
-    <div class="panel"><div class="anchor"></div></div>
-    <div class="panel"><div class="anchor"></div></div>
-    <div class="panel"><div class="anchor"></div></div>
-    <div class="panel"><div class="anchor"></div></div>
-    <div class="panel"><div class="anchor"></div></div>
+    <div class="panel0"><div class="anchor"></div></div>
+    <div class="panel1"><div class="anchor"></div></div>
+    <div class="panel2"><div class="anchor"></div></div>
+    <div class="panel3"><div class="anchor"></div></div>
+    <div class="panel4"><div class="anchor"></div></div>
+    <div class="panel0"><div class="anchor"></div></div>
   </flicking>
   <h2>bound: true</h2>
   <div class="hanger hanger0"></div>
   <flicking class="flicking flicking1" :options="{ gap: 10, bound: true }">
-    <div class="panel"><div class="anchor"></div></div>
-    <div class="panel"><div class="anchor"></div></div>
-    <div class="panel"><div class="anchor"></div></div>
-    <div class="panel"><div class="anchor"></div></div>
-    <div class="panel"><div class="anchor"></div></div>
-    <div class="panel"><div class="anchor"></div></div>
+    <div class="panel0"><div class="anchor"></div></div>
+    <div class="panel1"><div class="anchor"></div></div>
+    <div class="panel2"><div class="anchor"></div></div>
+    <div class="panel3"><div class="anchor"></div></div>
+    <div class="panel4"><div class="anchor"></div></div>
+    <div class="panel0"><div class="anchor"></div></div>
   </flicking>
   <div class="pagination pagination2"></div>
   <pre><code class="hljs html" data-script="flicking1">{{ code1 }}</code></pre>
@@ -41,12 +41,12 @@ export default class Bound extends Vue {
   }
 
   code1 = `<flicking class="flicking flicking1" gap={10} bound={true}>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
+  <div class="panel0"><div class="anchor"></div></div>
+  <div class="panel1"><div class="anchor"></div></div>
+  <div class="panel2"><div class="anchor"></div></div>
+  <div class="panel3"><div class="anchor"></div></div>
+  <div class="panel4"><div class="anchor"></div></div>
+  <div class="panel0"><div class="anchor"></div></div>
 </flicking>`;
 }
 </script>
