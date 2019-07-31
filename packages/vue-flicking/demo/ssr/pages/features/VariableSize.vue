@@ -6,11 +6,11 @@
       <li>You can specify various sizes for each panel.</li>
     </ul>
     <flicking class="flicking flicking0" :options="{ circular: true, gap: 10 }">
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
+      <div class="panel0"></div>
+      <div class="panel1"></div>
+      <div class="panel2"></div>
+      <div class="panel3"></div>
+      <div class="panel4"></div>
     </flicking>
     <pre><code class="hljs html" data-script="flicking0">{{ code0 }}</code></pre>
   </div>
@@ -20,29 +20,35 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component({})
 export default class VariableSize extends Vue {
+  public mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      (window as any).hljs.highlightBlock(block);
+    });
+  }
+
   code0 = `<flicking class="flicking flicking0" :options="{ circular: true, gap: 10 }">
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
+  <div class="panel0"></div>
+  <div class="panel1"></div>
+  <div class="panel2"></div>
+  <div class="panel3"></div>
+  <div class="panel4"></div>
 </flicking>`;
 }
 </script>
 <style scoped>
-#variable-size .flicking .panel:nth-child(5n + 1) {
+#variable-size .flicking .panel0 {
   width: 100px;
 }
-#variable-size .flicking .panel:nth-child(5n + 2) {
+#variable-size .flicking .panel1 {
   width: 200px;
 }
-#variable-size .flicking .panel:nth-child(5n + 3) {
+#variable-size .flicking .panel2 {
   width: 80px;
 }
-#variable-size .flicking .panel:nth-child(5n + 4) {
+#variable-size .flicking .panel3 {
   width: 250px;
 }
-#variable-size .flicking .panel:nth-child(5n + 5) {
+#variable-size .flicking .panel4 {
   width: 150px;
 }
 </style>

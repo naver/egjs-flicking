@@ -30,6 +30,12 @@ import { Fade, AutoPlay } from "@egjs/flicking-plugins";
 
 @Component({})
 export default class AutoPlayDemo extends Vue {
+  public mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      (window as any).hljs.highlightBlock(block);
+    });
+  }
+
   plugins = [new Fade(), new AutoPlay(2000, "NEXT")];
   code0 = `<flicking
   class="flicking"

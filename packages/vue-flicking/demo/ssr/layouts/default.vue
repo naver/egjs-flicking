@@ -1,5 +1,6 @@
 <template>
   <div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/highlight.min.js"></script>
     <nuxt/>
   </div>
 </template>

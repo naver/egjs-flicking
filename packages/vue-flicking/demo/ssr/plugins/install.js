@@ -1,6 +1,4 @@
 import Vue from "vue";
-import VueFlicking from "@egjs/vue-flicking";
-import VueHljs from "vue-hljs";
+import VueFlicking from "../../../src/index";
 
 Vue.use(VueFlicking);
-Vue.use(VueHljs);

@@ -11,12 +11,12 @@
     <h3>hanger: 50%, anchor: 50%</h3>
     <div class="hanger flicking0"></div>
     <flicking class="flicking flicking0">
-      <div class="panel"><div class="anchor"></div></div>
-      <div class="panel"><div class="anchor"></div></div>
-      <div class="panel"><div class="anchor"></div></div>
-      <div class="panel"><div class="anchor"></div></div>
-      <div class="panel"><div class="anchor"></div></div>
-      <div class="panel"><div class="anchor"></div></div>
+      <div class="panel0"><div class="anchor"></div></div>
+      <div class="panel1"><div class="anchor"></div></div>
+      <div class="panel2"><div class="anchor"></div></div>
+      <div class="panel3"><div class="anchor"></div></div>
+      <div class="panel4"><div class="anchor"></div></div>
+      <div class="panel0"><div class="anchor"></div></div>
     </flicking>
     <pre><code class="hljs html" data-script="flicking0">{{ code0 }}</code></pre>
 
@@ -24,12 +24,12 @@
     <h2>hanger: 0, anchor: 0</h2>
     <div class="hanger hanger1"></div>
     <flicking class="flicking flicking1" :options="{ hanger: 0, anchor: 0 }">
-      <div class="panel"><div class="anchor"></div></div>
-      <div class="panel"><div class="anchor"></div></div>
-      <div class="panel"><div class="anchor"></div></div>
-      <div class="panel"><div class="anchor"></div></div>
-      <div class="panel"><div class="anchor"></div></div>
-      <div class="panel"><div class="anchor"></div></div>
+      <div class="panel0"><div class="anchor"></div></div>
+      <div class="panel1"><div class="anchor"></div></div>
+      <div class="panel2"><div class="anchor"></div></div>
+      <div class="panel3"><div class="anchor"></div></div>
+      <div class="panel4"><div class="anchor"></div></div>
+      <div class="panel0"><div class="anchor"></div></div>
     </flicking>
     <div class="pagination pagination1"></div>
     <pre><code class="hljs html" data-script="flicking1">{{ code1 }}</code></pre>
@@ -38,12 +38,12 @@
     <h3>hanger: 30%, anchor: 50px</h3>
     <div class="hanger hanger2"></div>
     <flicking class="flicking flicking2" :options="{ hanger: '30%', anchor: '50px' }">
-      <div class="panel"><div class="anchor"></div></div>
-      <div class="panel"><div class="anchor"></div></div>
-      <div class="panel"><div class="anchor"></div></div>
-      <div class="panel"><div class="anchor"></div></div>
-      <div class="panel"><div class="anchor"></div></div>
-      <div class="panel"><div class="anchor"></div></div>
+      <div class="panel0"><div class="anchor"></div></div>
+      <div class="panel1"><div class="anchor"></div></div>
+      <div class="panel2"><div class="anchor"></div></div>
+      <div class="panel3"><div class="anchor"></div></div>
+      <div class="panel4"><div class="anchor"></div></div>
+      <div class="panel0"><div class="anchor"></div></div>
     </flicking>
     <div class="pagination pagination2"></div>
     <pre><code class="hljs html" data-script="flicking2">{{ code2 }}</code></pre>
@@ -54,29 +54,35 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component({})
 export default class Align extends Vue {
+  public mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      (window as any).hljs.highlightBlock(block);
+    });
+  }
+
   code0 = `<flicking class="flicking flicking0">
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
+  <div class="panel0"><div class="anchor"></div></div>
+  <div class="panel1"><div class="anchor"></div></div>
+  <div class="panel2"><div class="anchor"></div></div>
+  <div class="panel3"><div class="anchor"></div></div>
+  <div class="panel4"><div class="anchor"></div></div>
+  <div class="panel0"><div class="anchor"></div></div>
 </flicking>`;
   code1 = `<flicking class="flicking flicking1" :options="{ hanger: 0, anchor: 0 }">
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
+  <div class="panel0"><div class="anchor"></div></div>
+  <div class="panel1"><div class="anchor"></div></div>
+  <div class="panel2"><div class="anchor"></div></div>
+  <div class="panel3"><div class="anchor"></div></div>
+  <div class="panel4"><div class="anchor"></div></div>
+  <div class="panel0"><div class="anchor"></div></div>
 </flicking>`;
   code2 = `<flicking class="flicking flicking2" :options="{ hanger: '30%', anchor: '50px' }">
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
-  <div class="panel"><div class="anchor"></div></div>
+  <div class="panel0"><div class="anchor"></div></div>
+  <div class="panel1"><div class="anchor"></div></div>
+  <div class="panel2"><div class="anchor"></div></div>
+  <div class="panel3"><div class="anchor"></div></div>
+  <div class="panel4"><div class="anchor"></div></div>
+  <div class="panel0"><div class="anchor"></div></div>
 </flicking>`;
 }
 </script>

@@ -48,7 +48,12 @@ ul.extra li {
   background: rgba(55, 55, 55 0.1);
   border-radius: 5px;
 }
-.flicking .panel, .flicking .infinite {
+.flicking .panel0,
+.flicking .panel1,
+.flicking .panel2,
+.flicking .panel3,
+.flicking .panel4,
+.flicking .infinite {
   position: relative;
   display: block;
   border-radius: 5px;
@@ -59,34 +64,19 @@ ul.extra li {
   text-align: center;
   line-height: 120px;
 }
-.flicking .panel:nth-child(5n + 1) {
+.flicking .panel0 {
   background: #F47071;
 }
-.flicking .panel:nth-child(5n + 2) {
+.flicking .panel1 {
   background: #F69462;
 }
-.flicking .panel:nth-child(5n + 3) {
+.flicking .panel2 {
   background: #EDE484;
 }
-.flicking .panel:nth-child(5n + 4) {
+.flicking .panel3 {
   background: #90F290;
 }
-.flicking .panel:nth-child(5n + 5) {
-  background: #78CAFF;
-}
-.flicking .infinite0 {
-  background: #F47071;
-}
-.flicking .infinite1 {
-  background: #F69462;
-}
-.flicking .infinite2 {
-  background: #EDE484;
-}
-.flicking .infinite3 {
-  background: #90F290;
-}
-.flicking .infinite4 {
+.flicking .panel4 {
   background: #78CAFF;
 }
 /*

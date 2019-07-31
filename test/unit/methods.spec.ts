@@ -1312,6 +1312,11 @@ describe("Methods call", () => {
           added: [0, 1, 2],
           changed: [],
           removed: [],
+          prevList: [],
+          changedAfterAdded: [],
+          changedBeforeAdded: [],
+          orderedAfterAdded: [],
+          orderedBeforeAdded: [],
         });
 
         // Then
@@ -1341,6 +1346,11 @@ describe("Methods call", () => {
           added: [3, 4, 5],
           changed: [],
           removed: [],
+          prevList: [],
+          changedAfterAdded: [],
+          changedBeforeAdded: [],
+          orderedAfterAdded: [],
+          orderedBeforeAdded: [],
         });
 
         // Then
@@ -1373,6 +1383,11 @@ describe("Methods call", () => {
           added: [0],
           changed: [[0, 1], [1, 2], [2, 3]],
           removed: [],
+          prevList: [],
+          changedAfterAdded: [],
+          changedBeforeAdded: [],
+          orderedAfterAdded: [],
+          orderedBeforeAdded: [],
         });
 
         // Then
@@ -1409,6 +1424,11 @@ describe("Methods call", () => {
           added: [0, 1, 2],
           changed: [],
           removed: [],
+          prevList: [],
+          changedAfterAdded: [],
+          changedBeforeAdded: [],
+          orderedAfterAdded: [],
+          orderedBeforeAdded: [],
         });
 
         const calcedCloneCount = flicking.getCloneCount();
@@ -1421,6 +1441,11 @@ describe("Methods call", () => {
           added: [...counter(calcedCloneCount * originalElements.length).map(index => 3 + index)],
           changed: [],
           removed: [],
+          prevList: [],
+          changedAfterAdded: [],
+          changedBeforeAdded: [],
+          orderedAfterAdded: [],
+          orderedBeforeAdded: [],
         });
         const finalCloneCount = flicking.getCloneCount();
 
@@ -1460,6 +1485,11 @@ describe("Methods call", () => {
           ],
           changed: [],
           removed: [],
+          prevList: [],
+          changedAfterAdded: [],
+          changedBeforeAdded: [],
+          orderedAfterAdded: [],
+          orderedBeforeAdded: [],
         });
 
         // Then
@@ -1492,6 +1522,11 @@ describe("Methods call", () => {
           added: [0, 1, 2],
           changed: [],
           removed: [],
+          prevList: [],
+          changedAfterAdded: [],
+          changedBeforeAdded: [],
+          orderedAfterAdded: [],
+          orderedBeforeAdded: [],
         });
 
         const calcedCloneCount = flicking.getCloneCount();
@@ -1504,6 +1539,11 @@ describe("Methods call", () => {
           added: [...counter(calcedCloneCount * originalElements.length).map(index => 3 + index)],
           changed: [],
           removed: [],
+          prevList: [],
+          changedAfterAdded: [],
+          changedBeforeAdded: [],
+          orderedAfterAdded: [],
+          orderedBeforeAdded: [],
         });
 
         // Then
