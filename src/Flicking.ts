@@ -669,19 +669,18 @@ class Flicking extends Component {
       viewport.resize();
     } else {
       const elements = diffInfo.list;
-      const visibleIndex = viewport.getVisibleIndex();
       const panelCount = viewport.panelManager.getPanelCount();
       const cloneCount = viewport.panelManager.getCloneCount();
       origListInfo = origListInfo!;
 
-      const prevVisibleOrigCount = visibleIndex.max - visibleIndex.min;
       const prevVisiblePanels = viewport.getVisiblePanels();
+      const prevVisibleCount = prevVisiblePanels.length;
 
       if (origListInfo.added.length > 0 || origListInfo.removed.length > 0 || origListInfo.changed.length > 0) {
         // Panel count changed
         const newPanels: Panel[] = [];
         const newClones: Panel[][] = counter(cloneCount).map(() => []);
-        const addedElements = elements.slice(prevVisibleOrigCount, prevVisibleOrigCount + origListInfo.added.length);
+        const addedElements = elements.slice(prevVisibleCount, prevVisibleCount + origListInfo.added.length);
 
         origListInfo.maintained.forEach(([beforeIdx, afterIdx]) => {
           const origPanel = prevOriginalPanels[beforeIdx];
@@ -693,9 +692,9 @@ class Flicking extends Component {
         });
 
         const addedCount = origListInfo.added.length;
-        const addedCloneOffset = prevVisibleOrigCount + addedCount;
+        const addedCloneOffset = prevVisibleCount + addedCount;
         const addedCloneElements = elements.slice(addedCloneOffset, addedCount * cloneCount);
-        const addedPanels = origListInfo.added.reduce((panels, addIndex, index) => {
+        const addedPanels = origListInfo.added.reduce((panels: Panel[], addIndex, index) => {
           newPanels[addIndex] = new Panel(addedElements[index], addIndex, viewport);
           const newPanel = newPanels[addIndex];
           if (isCircular) {
@@ -717,7 +716,7 @@ class Flicking extends Component {
       } else if (cloneCount - prevCloneCount !== 0) {
         // Clone count changed
         if (cloneCount > prevCloneCount) {
-          const newCloneElements = elements.slice(prevVisibleOrigCount, prevVisibleOrigCount + panelCount * (cloneCount - prevCloneCount));
+          const newCloneElements = elements.slice(prevVisibleCount, prevVisibleCount + panelCount * (cloneCount - prevCloneCount));
           const newVisiblePanels = [...prevVisiblePanels];
 
           counter(cloneCount - prevCloneCount).forEach(offset => {
@@ -737,13 +736,14 @@ class Flicking extends Component {
         viewport.resize();
       } else {
         // Visible info changed
-        const visiblePanels = this.viewport.calcVisiblePanels();
+        const visiblePanels = viewport.calcVisiblePanels();
         const positionOffset = viewport.getPositionOffset();
         visiblePanels.forEach((panel, index) => {
           const panelEl = elements[index];
           panel.setElement(panelEl);
           panel.setPositionCSS(positionOffset);
         });
+        viewport.updatePlugins();
       }
     }
 
