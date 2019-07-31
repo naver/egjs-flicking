@@ -1,5 +1,5 @@
 <template>
-  <div id="variable-size" class="container" v-highlight>
+  <div id="variable-size" class="container">
     <h1>Multiple Panel &amp; Variable Size</h1>
     <ul class="extra">
       <li>You can place multiple panels in the flicking area.</li>

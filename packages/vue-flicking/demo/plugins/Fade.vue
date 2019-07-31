@@ -1,5 +1,5 @@
 <template>
-<div id="fade" class="plugins container" v-highlight>
+<div id="fade" class="plugins container">
   <h1>Fade<a href="https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.flicking.plugins.Fade.html"
     target="_blank">API</a></h1>
   <ul class="extra">
@@ -29,6 +29,12 @@ import { Fade } from "@egjs/flicking-plugins";
 
 @Component({})
 export default class FadeDemo extends Vue {
+  public mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      (window as any).hljs.highlightBlock(block);
+    });
+  }
+
   plugins = [new Fade()];
   code0 = `<flicking class="flicking"
   :options="{ circular: true, gap: 10 }"

@@ -1,5 +1,5 @@
 <template>
-  <div id="gap" class="container" v-highlight>
+  <div id="gap" class="container">
     <h1>Gap</h1>
     <ul class="extra">
       <li>You can specify the interval between the frames.</li>

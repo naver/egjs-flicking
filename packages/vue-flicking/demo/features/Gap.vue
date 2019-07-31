@@ -1,5 +1,5 @@
 <template>
-  <div id="gap" class="container" v-highlight>
+  <div id="gap" class="container">
     <h1>Gap</h1>
     <ul class="extra">
       <li>You can specify the interval between the frames.</li>
@@ -33,6 +33,12 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component({})
 export default class Gap extends Vue {
+  public mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      (window as any).hljs.highlightBlock(block);
+    });
+  }
+
   code0 = `<flicking class="flicking flicking0" :options="{ bound: true }">
   <div class="panel"></div>
   <div class="panel"></div>

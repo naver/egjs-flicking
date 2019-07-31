@@ -1,5 +1,5 @@
 <template>
-  <div id="snap" class="container" v-highlight>
+  <div id="snap" class="container">
     <h1>Snap</h1>
     <ul class="extra">
       <li>You can decide how many panels can be passed on a single snap.</li>
@@ -41,6 +41,12 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component({})
 export default class Snap extends Vue {
+  public mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      (window as any).hljs.highlightBlock(block);
+    });
+  }
+
   code0 = `<flicking class="flicking flicking0"
   :options="{ gap: 10, circular: true }">
   <div class="panel"></div>

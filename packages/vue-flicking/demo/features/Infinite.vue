@@ -1,5 +1,5 @@
 <template>
-  <div id="infinite" class="container" v-highlight>
+  <div id="infinite" class="container">
     <h1>Infinite flicking</h1>
     <h2>Append  &amp; Prepend panel dynamically</h2>
     <ul class="extra">
@@ -22,7 +22,7 @@
         list0.push(end + 1, end + 2);
       }">Append</button>
     </div>
-    <!-- <pre><code class="hljs html" data-script="flicking0">{{ code0 }}</code></pre> -->
+    <pre><code class="hljs html" data-script="flicking0">{{ code0 }}</code></pre>
     <h2>infinite: true &amp; needPanel event</h2>
     <ul class="extra">
       <li>Enabling the infinite option can make <strong>needPanel</strong> event to be triggered when more panels at moving direction should be fetched within <strong>infiniteThreshold</strong> value.</li>
@@ -37,7 +37,7 @@
         {{ num }}
       </div>
     </flicking>
-    <!-- <pre><code class="hljs html" data-script="flicking1">{{ code1 }}</code></pre> -->
+    <pre><code class="hljs html" data-script="flicking1">{{ code1 }}</code></pre>
     <h2>infinite: true &amp; placeholder</h2>
     <ul class="extra">
       <li>You can make continuous carousel UI with asynchronous data by adding placeholder panel first, then update panel with fetched data later.</li>
@@ -52,7 +52,7 @@
         {{ num }}
       </place-holder>
     </flicking>
-    <!-- <pre><code class="hljs html" data-script="flicking2">{{ code2 }}</code></pre> -->
+    <pre><code class="hljs html" data-script="flicking2">{{ code2 }}</code></pre>
   </div>
 </template>
 <script lang="ts">
@@ -68,6 +68,12 @@ export default class Infinite extends Vue {
   list0 = [0, 1, 2, 3, 4];
   list1 = [0, 1, 2, 3, 4];
   list2 = [0, 1, 2, 3, 4];
+
+  public mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      (window as any).hljs.highlightBlock(block);
+    });
+  }
 
   code0 = `<flicking class="flicking flicking0" :options="{ gap: 10 }">
   <div v-for="num in list0" class="infinite" :class="\`infinite\${Math.abs(num) % 5}\`" :key="num">

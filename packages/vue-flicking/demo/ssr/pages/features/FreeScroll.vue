@@ -1,5 +1,5 @@
 <template>
-  <div id="free-scroll" class="container" v-highlight>
+  <div id="free-scroll" class="container">
     <h1>Free Scroll</h1>
     <ul class="extra">
       <li>The panels are freely scrollable.</li>

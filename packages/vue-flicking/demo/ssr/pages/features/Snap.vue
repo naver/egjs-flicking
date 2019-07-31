@@ -1,5 +1,5 @@
 <template>
-  <div id="snap" class="container" v-highlight>
+  <div id="snap" class="container">
     <h1>Snap</h1>
     <ul class="extra">
       <li>You can decide how many panels can be passed on a single snap.</li>

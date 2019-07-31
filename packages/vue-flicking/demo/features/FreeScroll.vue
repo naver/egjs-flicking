@@ -1,5 +1,5 @@
 <template>
-  <div id="free-scroll" class="container" v-highlight>
+  <div id="free-scroll" class="container">
     <h1>Free Scroll</h1>
     <ul class="extra">
       <li>The panels are freely scrollable.</li>
@@ -25,6 +25,12 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component({})
 export default class FreeScroll extends Vue {
+  public mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      (window as any).hljs.highlightBlock(block);
+    });
+  }
+
   code0 = `<flicking
   class="flicking flicking0"
   :options="{ gap: 10, circular: true, moveType: 'freeScroll' }">

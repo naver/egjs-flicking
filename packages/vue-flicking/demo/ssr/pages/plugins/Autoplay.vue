@@ -1,5 +1,5 @@
 <template>
-  <div id="autoplay" class="plugins container" v-highlight>
+  <div id="autoplay" class="plugins container">
     <h1>AutoPlay<a href="https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.Flicking.plugins.AutoPlay.html"
       target="_blank">API</a></h1>
     <ul class="extra">

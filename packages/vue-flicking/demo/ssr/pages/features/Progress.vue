@@ -1,5 +1,5 @@
 <template>
-  <div id="progress" class="container" v-highlight>
+  <div id="progress" class="container">
     <h1>e.progress</h1>
     <ul class="extra">
       <li>Indicates the overall progress of the flicking.</li>

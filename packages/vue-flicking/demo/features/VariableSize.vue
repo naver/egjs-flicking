@@ -1,5 +1,5 @@
 <template>
-  <div id="variable-size" class="container" v-highlight>
+  <div id="variable-size" class="container">
     <h1>Multiple Panel &amp; Variable Size</h1>
     <ul class="extra">
       <li>You can place multiple panels in the flicking area.</li>
@@ -20,6 +20,12 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component({})
 export default class VariableSize extends Vue {
+  public mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      (window as any).hljs.highlightBlock(block);
+    });
+  }
+
   code0 = `<flicking class="flicking flicking0" :options="{ circular: true, gap: 10 }">
   <div class="panel"></div>
   <div class="panel"></div>
