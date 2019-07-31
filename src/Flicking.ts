@@ -710,6 +710,24 @@ class Flicking extends Component {
         const newVisiblePanels = [...prevVisiblePanels, ...addedPanels];
         viewport.setVisiblePanels(newVisiblePanels);
 
+        // Replace current info of panels this holds
+        origListInfo.added.forEach(index => { viewport.updateCheckedIndexes({ min: index, max: index }); });
+        origListInfo.removed.forEach(index => { viewport.updateCheckedIndexes({ min: index - 1, max: index + 1 }); });
+
+        const checkedIndexes = viewport.getCheckedIndexes();
+        checkedIndexes.forEach(([min, max], idx) => {
+          // Push checked indexes backward
+          const pushedIndex = origListInfo!.added.filter(index => index < min && panelManager.has(index)).length
+            - origListInfo!.removed.filter(index => index < min).length;
+          checkedIndexes.splice(idx, 1, [min + pushedIndex, max + pushedIndex]);
+        });
+
+        // Only effective only when there are least one panel which have changed its index
+        if (origListInfo.changed.length > 0) {
+          // Removed checked index by changed ones after pushing
+          origListInfo.maintained.forEach(([prev, next]) => { viewport.updateCheckedIndexes({ min: next, max: next }); });
+        }
+
         panelManager.replacePanels(newPanels, newClones);
         viewport.resetVisibleIndex();
         viewport.resize();
