@@ -29,7 +29,8 @@
     </ul>
     <flicking
       class="flicking flicking1" :options="{ gap: 10, infinite: true, infiniteThreshold: 50, renderOnlyVisible: true }"
-      @need-panel="() => {
+      @need-panel="e => {
+        this.onNeedPanel(e);
         const end = list1[list1.length - 1] || 0;
         list1.push(end + 1, end + 2);
       }">
@@ -68,6 +69,10 @@ export default class Infinite extends Vue {
   list0 = [0, 1, 2, 3, 4];
   list1 = [0, 1, 2, 3, 4];
   list2 = [0, 1, 2, 3, 4];
+
+  public onNeedPanel(e) {
+    console.log(e);
+  }
 
   code0 = `<flicking class="flicking flicking0" :options="{ gap: 10 }">
   <div v-for="num in list0" class="infinite" :class="\`infinite\${Math.abs(num) % 5}\`" :key="num">

@@ -8,7 +8,6 @@
   <flicking class="flicking"
     :options="{ circular: true, gap: 10 }"
     :plugins="plugins"
-    @move="onMove"
   >
     <div class="panel">
       <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
@@ -45,9 +44,6 @@ export default class FadeDemo extends Vue {
     <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
   </div>
 </flicking>`;
-  public onMove(e) {
-    console.log(e);
-  }
 }
 </script>
 <style scoped>

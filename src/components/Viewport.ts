@@ -608,6 +608,13 @@ export default class Viewport {
     }
   }
 
+  public updatePlugins(): void {
+    // update for resize
+    this.plugins.forEach(plugin => {
+      plugin.update && plugin.update(this.flicking);
+    });
+  }
+
   public destroy(option: Partial<DestroyOption>): void {
     const state = this.state;
     const wrapper = this.flicking.getElement();
@@ -1484,13 +1491,6 @@ export default class Viewport {
     this.updateAxesPosition(newPosition);
 
     this.moveCamera(newPosition);
-  }
-
-  private updatePlugins(): void {
-    // update for resize
-    this.plugins.forEach(plugin => {
-      plugin.update && plugin.update(this.flicking);
-    });
   }
 
   private checkNeedPanel(axesEvent?: any): void {
