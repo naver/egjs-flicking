@@ -1,5 +1,5 @@
 <template>
-  <div id="parallax" class="plugins container" v-highlight>
+  <div id="parallax" class="plugins container">
     <h1>Parallax <a
       href="https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.flicking.plugins.Parallax.html"
       target="_blank">API</a></h1>

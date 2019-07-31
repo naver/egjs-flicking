@@ -1,5 +1,5 @@
 <template>
-  <div id="progress" class="container" v-highlight>
+  <div id="progress" class="container">
     <h1>e.progress</h1>
     <ul class="extra">
       <li>Indicates the overall progress of the flicking.</li>
@@ -181,6 +181,10 @@ export default class Progress extends Vue {
 </flicking>`;
 
   mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      (window as any).hljs.highlightBlock(block);
+    });
+
     this.$nextTick(() => {
       (this.$refs.flick1 as Flicking).getAllPanels(true).forEach(panel => {
         panel.getElement().innerHTML = panel.getProgress().toFixed(2);

@@ -1,5 +1,5 @@
 <template>
-  <div id="parallax" class="plugins container" v-highlight>
+  <div id="parallax" class="plugins container">
     <h1>Parallax <a
       href="https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.flicking.plugins.Parallax.html"
       target="_blank">API</a></h1>
@@ -30,6 +30,12 @@ import { Parallax } from "@egjs/flicking-plugins";
 
 @Component({})
 export default class AutoPlayDemo extends Vue {
+  public mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      (window as any).hljs.highlightBlock(block);
+    });
+  }
+
   plugins = [new Parallax("img", 4)];
   code0 = `<flicking class="flicking"
   :options="{ gap: 10, circular: true }"

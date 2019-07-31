@@ -1,5 +1,5 @@
 <template>
-<div id="bound" class="container" v-highlight>
+<div id="bound" class="container">
   <h1>Bound <img src="https://naver.github.io/egjs-flicking/images/bound-dog.png" width="40px" /></h1>
   <ul class="extra">
     <li>Bound the panels so that they are not out of the flicking area.</li>

@@ -1,5 +1,5 @@
 <template>
-<div id="fade" class="plugins container" v-highlight>
+<div id="fade" class="plugins container">
   <h1>Fade<a href="https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.flicking.plugins.Fade.html"
     target="_blank">API</a></h1>
   <ul class="extra">

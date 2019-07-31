@@ -1,5 +1,5 @@
 <template>
-  <div id="infinite" class="container" v-highlight>
+  <div id="infinite" class="container">
     <h1>Infinite flicking</h1>
     <h2>Append  &amp; Prepend panel dynamically</h2>
     <ul class="extra">

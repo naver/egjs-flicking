@@ -1,5 +1,5 @@
 <template>
-  <div id="align" class="container" v-highlight>
+  <div id="align" class="container">
     <h1>Flexible Align</h1>
       <ul class="extra">
         <li>Use Hanger and Anchor to provide customizable alignment.</li>
@@ -54,6 +54,12 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component({})
 export default class Align extends Vue {
+  public mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      (window as any).hljs.highlightBlock(block);
+    });
+  }
+
   code0 = `<flicking class="flicking flicking0">
   <div class="panel"><div class="anchor"></div></div>
   <div class="panel"><div class="anchor"></div></div>

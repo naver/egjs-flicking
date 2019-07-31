@@ -1,5 +1,5 @@
 <template>
-<div id="bound" class="container" v-highlight>
+<div id="bound" class="container">
   <h1>Bound <img src="https://naver.github.io/egjs-flicking/images/bound-dog.png" width="40px" /></h1>
   <ul class="extra">
     <li>Bound the panels so that they are not out of the flicking area.</li>
@@ -34,6 +34,12 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component({})
 export default class Bound extends Vue {
+  public mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      (window as any).hljs.highlightBlock(block);
+    });
+  }
+
   code1 = `<flicking class="flicking flicking1" gap={10} bound={true}>
   <div class="panel"><div class="anchor"></div></div>
   <div class="panel"><div class="anchor"></div></div>
