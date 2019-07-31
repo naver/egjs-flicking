@@ -6,23 +6,23 @@
     </ul>
     <h2>Default</h2>
     <flicking class="flicking flicking0" :options="{ bound: true }">
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
+      <div class="panel0"></div>
+      <div class="panel1"></div>
+      <div class="panel2"></div>
+      <div class="panel3"></div>
+      <div class="panel4"></div>
+      <div class="panel0"></div>
     </flicking>
     <div class="pagination pagination0"></div>
     <pre><code class="hljs html" data-script="flicking0">{{ code0 }}</code></pre>
     <h2>gap: 20</h2>
     <flicking class="flicking flicking1" :options="{ gap: 20, bound: true }">
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
+      <div class="panel0"></div>
+      <div class="panel1"></div>
+      <div class="panel2"></div>
+      <div class="panel3"></div>
+      <div class="panel4"></div>
+      <div class="panel0"></div>
     </flicking>
     <div class="pagination pagination1"></div>
     <pre><code class="hljs html" data-script="flicking1">{{ code1 }}</code></pre>
@@ -40,20 +40,20 @@ export default class Gap extends Vue {
   }
 
   code0 = `<flicking class="flicking flicking0" :options="{ bound: true }">
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
+  <div class="panel0"></div>
+  <div class="panel1"></div>
+  <div class="panel2"></div>
+  <div class="panel3"></div>
+  <div class="panel4"></div>
+  <div class="panel0"></div>
 </flicking>`;
   code1 = `<flicking class="flicking flicking1" :options="{ gap: 20, bound: true }">
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
+  <div class="panel0"></div>
+  <div class="panel1"></div>
+  <div class="panel2"></div>
+  <div class="panel3"></div>
+  <div class="panel4"></div>
+  <div class="panel0"></div>
 </flicking>`;
 }
 </script>
