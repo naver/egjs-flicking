@@ -35,6 +35,7 @@ export default class Flicking extends Vue {
     this.$_cloneCount = 0;
     this.$_visibleIndex = { min: NaN, max: NaN };
 
+    this.options.renderOnlyVisible = true;
     const options = {...this.options, ...{ renderExternal: true }};
     this.$_nativeFlicking = new NativeFlicking(this.$el as HTMLElement, options);
     this.$_slotDiffer = new ListDiffer<VNode>(this.$slots.default, (vnode, idx) => vnode.key || idx);
@@ -183,7 +184,8 @@ export default class Flicking extends Vue {
 
       const visibles = [...Array(visibleIndex.max - visibleIndex.min + 1).keys()].map(offset => {
         const index = visibleIndex.min + offset;
-        const panel = this.$_getPanelFromRelativeIndex(index, allPanels);
+        // TODO: use this to apply 'left' CSS
+        // const panel = this.$_getPanelFromRelativeIndex(index, allPanels);
         let node: VNode;
         if (index < 0) {
           const relativeIndex = panelCnt + ((index + 1) % panelCnt - 1);

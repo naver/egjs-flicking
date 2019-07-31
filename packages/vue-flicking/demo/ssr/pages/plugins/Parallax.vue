@@ -30,6 +30,12 @@ import { Parallax } from "@egjs/flicking-plugins";
 
 @Component({})
 export default class AutoPlayDemo extends Vue {
+  public mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      (window as any).hljs.highlightBlock(block);
+    });
+  }
+
   plugins = [new Parallax("img", 4)];
   code0 = `<flicking class="flicking"
   :options="{ gap: 10, circular: true }"

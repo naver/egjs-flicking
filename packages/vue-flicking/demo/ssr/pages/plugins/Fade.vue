@@ -29,6 +29,12 @@ import { Fade } from "@egjs/flicking-plugins";
 
 @Component({})
 export default class FadeDemo extends Vue {
+  public mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      (window as any).hljs.highlightBlock(block);
+    });
+  }
+
   plugins = [new Fade()];
   code0 = `<flicking class="flicking"
   :options="{ circular: true, gap: 10 }"

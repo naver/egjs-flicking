@@ -134,6 +134,11 @@ describe("Viewport", () => {
         changed: [],
         removed: [],
         maintained: [],
+        prevList: [],
+        changedAfterAdded: [],
+        changedBeforeAdded: [],
+        orderedAfterAdded: [],
+        orderedBeforeAdded: [],
       });
 
       // Then
@@ -159,6 +164,11 @@ describe("Viewport", () => {
         changed: [],
         removed: [0],
         maintained: [],
+        prevList: [],
+        changedAfterAdded: [],
+        changedBeforeAdded: [],
+        orderedAfterAdded: [],
+        orderedBeforeAdded: [],
       });
       const checkedAfterRemove = viewport.getCheckedIndexes();
 
@@ -189,6 +199,11 @@ describe("Viewport", () => {
         removed: [],
         changed: [[0, 3]],
         maintained: [[0, 3]],
+        prevList: [],
+        changedAfterAdded: [],
+        changedBeforeAdded: [],
+        orderedAfterAdded: [],
+        orderedBeforeAdded: [],
       });
       const checkedAfterAdd = viewport.getCheckedIndexes();
 
@@ -223,6 +238,11 @@ describe("Viewport", () => {
         removed: [1],
         changed: [[0, 2], [2, 3]],
         maintained: [[0, 2], [2, 3]],
+        prevList: [],
+        changedAfterAdded: [],
+        changedBeforeAdded: [],
+        orderedAfterAdded: [],
+        orderedBeforeAdded: [],
       });
       const checkedAfterAdd = viewport.getCheckedIndexes();
 

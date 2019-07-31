@@ -7,8 +7,8 @@
       <li>The panel's indexes are zero-based integer.</li>
       <li>Note: The number displayed above each panel is not panel's index.</li>
     </ul>
-    <flicking class="flicking flicking0" :options="{ gap: 10 }">
-      <div v-for="num in list0" class="infinite" :class="`infinite${Math.abs(num) % 5}`" :key="num">
+    <flicking class="flicking flicking0" :options="{ gap: 10, renderOnlyVisible: true }">
+      <div v-for="num in list0" class="infinite" :class="`panel${Math.abs(num) % 5}`" :key="num">
         {{ num }}
       </div>
     </flicking>
@@ -28,12 +28,12 @@
       <li>Enabling the infinite option can make <strong>needPanel</strong> event to be triggered when more panels at moving direction should be fetched within <strong>infiniteThreshold</strong> value.</li>
     </ul>
     <flicking
-      class="flicking flicking1" :options="{ gap: 10, infinite: true, infiniteThreshold: 50 }"
+      class="flicking flicking1" :options="{ gap: 10, infinite: true, infiniteThreshold: 50, renderOnlyVisible: true }"
       @need-panel="() => {
         const end = list1[list1.length - 1] || 0;
         list1.push(end + 1, end + 2);
       }">
-      <div v-for="num in list1" class="infinite" :class="`infinite${Math.abs(num) % 5}`" :key="num">
+      <div v-for="num in list1" class="infinite" :class="`panel${Math.abs(num) % 5}`" :key="num">
         {{ num }}
       </div>
     </flicking>
@@ -43,7 +43,7 @@
       <li>You can make continuous carousel UI with asynchronous data by adding placeholder panel first, then update panel with fetched data later.</li>
     </ul>
     <flicking
-      class="flicking flicking2" :options="{ gap: 10, infinite: true, moveType: 'freeScroll' }"
+      class="flicking flicking2" :options="{ gap: 10, infinite: true, moveType: 'freeScroll', renderOnlyVisible: true }"
       @need-panel="() => {
         const end = list2[list2.length - 1] || 0;
         list2.push(end + 1, end + 2);
@@ -66,6 +66,12 @@ import PlaceHolder from "./component/PlaceHolderItem.vue";
   },
 })
 export default class Infinite extends Vue {
+  public mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      (window as any).hljs.highlightBlock(block);
+    });
+  }
+
   list0 = [0, 1, 2, 3, 4];
   list1 = [0, 1, 2, 3, 4];
   list2 = [0, 1, 2, 3, 4];
@@ -125,7 +131,7 @@ export default class Infinite extends Vue {
     font-weight: bold;
   }
   #infinite .flicking2 .infinite {
-    transition: all ease 1s;
+    transition: background ease 1s;
   }
   #infinite .flicking .infinite.placeholder {
     background: #ddd;
