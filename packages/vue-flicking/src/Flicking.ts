@@ -176,11 +176,10 @@ export default class Flicking extends Vue {
     const visibleIndex = this.$_visibleIndex;
 
     if (this.options.renderOnlyVisible && this.$_slotDiffer) {
-      this.$_slotDiffResult = this.$_slotDiffer.update(slots || []);
+      this.$_slotDiffResult = this.$_slotDiffer.update(slots);
 
       const slotsDiff = this.$_slotDiffResult;
       const panelCnt = flicking.getPanelCount();
-      const allPanels = flicking.getAllPanels(true);
 
       const visibles = [...Array(visibleIndex.max - visibleIndex.min + 1).keys()].map(offset => {
         const index = visibleIndex.min + offset;
