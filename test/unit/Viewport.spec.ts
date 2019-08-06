@@ -253,6 +253,7 @@ describe("Viewport", () => {
       const insertedPanel = viewport.insert(3, newPanel)[0];
 
       // Then
+      expect(flicking.getPanel(3)).equals(insertedPanel);
       expect(insertedPanel.getElement().nextElementSibling).not.to.be.null;
       const allPanels = flicking.getAllPanels();
       allPanels.forEach(panel => {
