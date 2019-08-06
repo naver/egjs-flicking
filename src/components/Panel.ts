@@ -289,7 +289,7 @@ class Panel implements FlickingPanel {
   public getBbox(): BoundingBox {
     const state = this.state;
     if (!state.cachedBbox) {
-      if (!this.element.parentNode) {
+      if (!this.element.parentNode && !this.viewport.options.renderExternal) {
         this.viewport.getCameraElement().appendChild(this.element);
       }
       const bbox = this.element.getBoundingClientRect();
