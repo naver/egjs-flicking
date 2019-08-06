@@ -581,8 +581,8 @@ class Flicking extends Component {
    * Synchronize info of panels instance with info given by external rendering.
    * @ko 외부 렌더링 방식에 의해 입력받은 패널의 정보와 현재 플리킹이 갖는 패널 정보를 동기화한다.
    * @param - Info object of how panel elements are changed.<ko>패널의 DOM 요소들의 변경 정보를 담는 오브젝트.</ko>
-   * @param -
-   * @param -
+   * @param - Info object of how the user's original rendering list is changed. This argument is only for the `renderOnlyVisible` option.<ko>사용자의 원본 렌더링 리스트의 변경 정보를 담는 오브젝트. 이 인자는 `renderOnlyVisible` 옵션을 위해서만 사용된다.</ko>
+   * @param - Clone count of the previous sync call. This argument is only for the `renderOnlyVisible` option.<ko>이전 sync() 호출 시점의 클론 횟수. 이 인자는 `renderOnlyVisible` 옵션을 위해서만 사용된다.</ko>
    */
   public sync(diffInfo: DiffResult<HTMLElement>, origListInfo?: DiffResult<any>, prevCloneCount: number = 0): this {
     const viewport = this.viewport;
