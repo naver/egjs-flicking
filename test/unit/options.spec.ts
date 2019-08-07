@@ -9,6 +9,8 @@ import * as sinon from "sinon";
 import { withFlickingMethods } from "../../src/utils";
 import * as ga from "../../src/ga/ga";
 
+declare var viewport: any;
+
 const defaultClassPrefix = DEFAULT_OPTIONS.classPrefix;
 
 describe("Initialization", () => {
@@ -991,6 +993,32 @@ describe("Initialization", () => {
       // Then
       const scrollArea = (flickingInfo.instance as any).viewport.getScrollArea();
       expect(moves.every(move => move >= scrollArea.prev)).to.be.true;
+    });
+  });
+
+  describe("isConstantSize", () => {
+    it("should maintain panel size after resize", () => {
+      // Given
+      viewport.set(1000, 100);
+      flickingInfo = createFlicking(horizontal.variant, { // horizontal.variant panels has width dependency on window width
+        gap: 0,
+        isConstantSize: true,
+      });
+      const flicking = flickingInfo.instance;
+      const allPanels = flicking.getAllPanels();
+      const beforePanelSizes = allPanels.map(panel => panel.getSize());
+
+      // When
+      viewport.set(500, 100);
+      flicking.resize();
+
+      // Then
+      const afterPanelSizes = allPanels.map(panel => panel.getSize());
+      beforePanelSizes.forEach((beforePanelSize, idx) => {
+        const afterPanelSize = afterPanelSizes[idx];
+
+        expect(beforePanelSize).equals(afterPanelSize);
+      });
     });
   });
 });
