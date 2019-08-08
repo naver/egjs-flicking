@@ -1145,6 +1145,38 @@ describe("Initialization", () => {
         });
       });
     });
+
+    it("should put same size for appended panel with existing class", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.half, {
+        isEqualSize: ["panel-horizontal-50"],
+      });
+
+      // When
+      const flicking = flickingInfo.instance;
+      const newPanel = flicking.append("<div style=\"width: 99999px;\"></div>")[0];
+
+      // Then
+      const prevPanel = flicking.getPanel(0);
+      expect(prevPanel.getElement().classList.contains("panel-horizontal-50")).to.be.true;
+      expect(newPanel.getSize()).equals(prevPanel.getSize());
+    });
+
+    it("should put same size for replaced panel with existing class", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.half, {
+        isEqualSize: ["panel-horizontal-50"],
+      });
+
+      // When
+      const flicking = flickingInfo.instance;
+      const prevPanel = flicking.getPanel(0);
+      const newPanel = flicking.replace(0, "<div style=\"width: 99999px;\"></div>")[0];
+
+      // Then
+      expect(prevPanel.getElement().classList.contains("panel-horizontal-50")).to.be.true;
+      expect(newPanel.getSize()).equals(prevPanel.getSize());
+    });
   });
 
   describe("isConstantSize", () => {
