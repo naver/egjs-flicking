@@ -24,7 +24,10 @@ setTimeout(function() {
         moveType: "freeScroll",
         lastIndex: 50,
         duration: 3000,
-        autoResize: true
+        autoResize: true,
+        isConstantSize: true,
+        isEqualSize: true,
+        renderOnlyVisible: true
     }).on({
         needPanel: function(e) {
             console.log("NEED_PANEL", e);
