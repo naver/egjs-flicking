@@ -6,7 +6,7 @@
 import Viewport from "./Viewport";
 import { OriginalStyle, FlickingPanel, ElementLike, DestroyOption, BoundingBox } from "../types";
 import { DEFAULT_PANEL_CSS, EVENTS } from "../consts";
-import { addClass, applyCSS, parseArithmeticExpression, parseElement, getProgress, restoreStyle } from "../utils";
+import { addClass, applyCSS, parseArithmeticExpression, parseElement, getProgress, restoreStyle, classList } from "../utils";
 
 class Panel implements FlickingPanel {
   public viewport: Viewport;
@@ -58,10 +58,12 @@ class Panel implements FlickingPanel {
     this.setElement(element);
   }
 
-  public resize(): void {
+  public resize(givenBbox?: BoundingBox): void {
     const state = this.state;
     const options = this.viewport.options;
-    const bbox = this.getBbox();
+    const bbox = givenBbox
+      ? givenBbox
+      : this.getBbox();
     const prevSize = state.size;
 
     state.size = options.horizontal
@@ -315,6 +317,18 @@ class Panel implements FlickingPanel {
     return this.state.isClone;
   }
 
+  public getOverlappedClass(classes: string[]): string | undefined {
+    const panelClasses = classList(this.element);
+
+    for (const className of panelClasses) {
+      for (const givenClass of classes) {
+        if (className === givenClass) {
+          return className;
+        }
+      }
+    }
+  }
+
   public getCloneIndex(): number {
     return this.state.cloneIndex;
   }
@@ -439,7 +453,6 @@ class Panel implements FlickingPanel {
     this.element = element;
 
     const options = this.viewport.options;
-
     if (options.classPrefix) {
       addClass(element, `${options.classPrefix}-panel`);
     }

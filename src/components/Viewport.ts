@@ -1282,7 +1282,8 @@ export default class Viewport {
   private updateSize(): void {
     const state = this.state;
     const options = this.options;
-    const panels = this.panelManager.originalPanels();
+    const panels = this.panelManager.originalPanels()
+      .filter(panel => Boolean(panel));
     const bbox = this.getBbox();
 
     const prevSize = state.size;
@@ -1296,9 +1297,31 @@ export default class Viewport {
       state.infiniteThreshold = parseArithmeticExpression(options.infiniteThreshold, state.size);
     }
 
+    if (panels.length <= 0) {
+      return;
+    }
+
+    if (options.isEqualSize === true) {
+      const defaultPanel = panels[0];
+      const defaultBbox = defaultPanel.getBbox();
+
+      panels.forEach(panel => {
+        panel.resize(defaultBbox);
+      });
+      return;
+    }
+
+    const equalSizeClasses = options.isEqualSize as string[]; // for readability
+    const cachedBboxes: {[key: string]: BoundingBox} = {};
     // Resize all panels
     panels.forEach(panel => {
-      panel.resize();
+      const overlappedClass = panel.getOverlappedClass(equalSizeClasses);
+      if (overlappedClass) {
+        panel.resize(cachedBboxes[overlappedClass]);
+        cachedBboxes[overlappedClass] = panel.getBbox();
+      } else {
+        panel.resize();
+      }
     });
   }
 
