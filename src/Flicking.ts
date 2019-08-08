@@ -483,16 +483,18 @@ class Flicking extends Component {
       allPanels.forEach(panel => panel.unCacheBbox());
     }
 
-    if (!options.renderExternal && options.renderOnlyVisible) {
-      const fragment = document.createDocumentFragment();
-      allPanels.forEach(panel => fragment.appendChild(panel.getElement()));
-
-      const cameraElement = viewport.getCameraElement();
-      cameraElement.innerHTML = "";
-      cameraElement.appendChild(fragment);
-    }
+    const shouldResetElements = options.renderOnlyVisible
+      && !options.isConstantSize
+      && options.isEqualSize !== true;
 
     viewport.unCacheBbox();
+    // This should be done before adding panels, to lower performance issue
+    viewport.updateBbox();
+
+    if (shouldResetElements) {
+      viewport.appendUncachedPanelElements(allPanels as Panel[]);
+    }
+
     viewport.resize();
 
     return this;

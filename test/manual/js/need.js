@@ -24,10 +24,7 @@ setTimeout(function() {
         moveType: "freeScroll",
         lastIndex: 50,
         duration: 3000,
-        autoResize: true,
-        isConstantSize: true,
-        isEqualSize: true,
-        renderOnlyVisible: true
+        autoResize: true
     }).on({
         needPanel: function(e) {
             console.log("NEED_PANEL", e);
@@ -46,10 +43,7 @@ setTimeout(function() {
         moveType: {
             type: "snap",
             count: 3
-        },
-        isConstantSize: true,
-        isEqualSize: true,
-        renderOnlyVisible: true
+        }
     }).on({
         needPanel: function(e) {
             console.log("NEED_PANEL", e);
@@ -71,9 +65,7 @@ setTimeout(function() {
     n4 = createFlicking("#needPanel-setMax", {
         infinite: true,
         autoResize: true,
-        lastIndex: 51,
-        isConstantSize: true,
-        renderOnlyVisible: true
+        lastIndex: 51
     }).on({
         needPanel: function(e) {
             console.log("NEED_PANEL", e);
@@ -104,10 +96,7 @@ setTimeout(function() {
         circular: true,
         autoResize: true,
         moveType: "freeScroll",
-        lastIndex: 50,
-        isConstantSize: true,
-        isEqualSize: true,
-        renderOnlyVisible: true
+        lastIndex: 50
     }).on({
         needPanel: function(e) {
             console.log("NEED_PANEL", e);
