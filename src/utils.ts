@@ -88,9 +88,11 @@ export let checkTranslateSupport = () => {
 
   return transformInfo;
 };
+
 export function isString(value: any): value is string {
   return typeof value === "string";
 }
+
 // Get class list of element as string array
 export function classList(element: HTMLElement): string[] {
   return element.classList
