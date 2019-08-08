@@ -1154,7 +1154,7 @@ describe("Initialization", () => {
 
       // When
       const flicking = flickingInfo.instance;
-      const newPanel = flicking.append("<div style=\"width: 99999px;\"></div>")[0];
+      const newPanel = flicking.append("<div class=\"panel-horizontal-50\" style=\"width: 99999px;\"></div>")[0];
 
       // Then
       const prevPanel = flicking.getPanel(0);
@@ -1171,7 +1171,7 @@ describe("Initialization", () => {
       // When
       const flicking = flickingInfo.instance;
       const prevPanel = flicking.getPanel(0);
-      const newPanel = flicking.replace(0, "<div style=\"width: 99999px;\"></div>")[0];
+      const newPanel = flicking.replace(0, "<div class=\"panel-horizontal-50\" style=\"width: 99999px;\"></div>")[0];
 
       // Then
       expect(prevPanel.getElement().classList.contains("panel-horizontal-50")).to.be.true;

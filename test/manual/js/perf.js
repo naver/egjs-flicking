@@ -40,6 +40,9 @@ setTimeout(function() {
     f1 = createFlicking("#flick1", {
         // autoResize: true,
         // adaptive: true,
+        renderOnlyVisible: true,
+        isConstantSize: true,
+        isEqualSize: true,
         infinite: true,
         duration: 30,
         moveType: {
@@ -61,15 +64,15 @@ setTimeout(function() {
                 ]);
         }
     });
-    // var catArr = Array(3000);
-    // for (var i = 0; i < 3000; i++) {
-    //     catArr[i] = createCat(i);
-    // }
-    // f1.append(catArr);
-    // f1.moveTo(2999, 0);
-    f1.append(createCat(0));
+    var catArr = Array(3000);
+    for (var i = 0; i < 3000; i++) {
+        catArr[i] = createCat(i);
+    }
+    f1.append(catArr);
+    f1.moveTo(2999, 0);
+    // f1.append(createCat(0));
     f1.on("moveEnd", function() { f1.next() });
-    // f1.next();
+    f1.next();
 
     if (window.requestAnimationFrame) {
         var tick = function() {
@@ -85,57 +88,4 @@ setTimeout(function() {
         }
         tick();
     }
-
-    var panelCnt = 0;
-    var swiper = new Swiper('#swiper', {
-        slidesPerView: 3,
-        centeredSlides: true,
-        spaceBetween: 30,
-        pagination: {
-            el: '.swiper-pagination',
-            type: 'fraction',
-        },
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        on: {
-            init: function() {
-                this.slideNext(30);
-            },
-            slideChangeTransitionEnd: function() {
-                this.slideNext(30);
-            },
-            reachEnd: function() {
-                this.virtual.appendSlide([`
-                    <p>
-                        <span>Panel ${panelCnt}</span>
-                        <img src="${cats[panelCnt++ % 1000]}"/>
-                    </p>
-                `, `
-                    <p>
-                        <span>Panel ${panelCnt}</span>
-                        <img src="${cats[panelCnt++ % 1000]}"/>
-                    </p>
-                `, `
-                    <p>
-                        <span>Panel ${panelCnt}</span>
-                        <img src="${cats[panelCnt++ % 1000]}"/>
-                    </p>
-                `]);
-            }
-        },
-        virtual: {
-            slides: (function () {
-                var slides = [];
-                slides.push(`
-                    <p>
-                        <span>Panel ${panelCnt}</span>
-                        <img src="${cats[panelCnt++ % 1000]}"/>
-                    </p>
-                `);
-                return slides;
-            }()),
-        },
-    });
 }, 500);

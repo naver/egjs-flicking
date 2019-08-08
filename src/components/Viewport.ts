@@ -36,6 +36,7 @@ export default class Viewport {
   private visiblePanels: Panel[];
 
   private plugins: Plugin[] = [];
+  private panelBboxes: {[className: string]: BoundingBox};
   private state: {
     size: number;
     position: number;
@@ -107,6 +108,7 @@ export default class Viewport {
     this.options = options;
     this.stateMachine = new StateMachine();
     this.visiblePanels = [];
+    this.panelBboxes = {};
 
     this.build();
   }
@@ -241,19 +243,25 @@ export default class Viewport {
 
   public unCacheBbox(): void {
     const state = this.state;
+    const options = this.options;
+
     state.cachedBbox = null;
     state.windowBbox = null;
     state.visibleIndex = { min: NaN, max: NaN };
-    this.visiblePanels = this.panelManager.allPanels().concat();
+
+    if (options.renderOnlyVisible) {
+      this.visiblePanels = this.panelManager.allPanels().concat();
+    }
 
     const viewportElement = this.viewportElement;
-    if (!this.options.horizontal) {
+    if (!options.horizontal) {
       // Don't preserve previous width for adaptive resizing
       viewportElement.style.width = "";
     } else {
       viewportElement.style.height = "";
     }
     state.isAdaptiveCached = false;
+    this.panelBboxes = {};
   }
 
   public resize(): void {
@@ -424,9 +432,8 @@ export default class Viewport {
 
     const pushedIndex = this.panelManager.insert(index, panels);
 
-    this.visiblePanels.push(...panels);
     // ...then calc bbox for all panels
-    panels.forEach(panel => panel.resize());
+    this.resizePanels(panels);
 
     if (!this.currentPanel) {
       this.currentPanel = panels[0];
@@ -488,9 +495,9 @@ export default class Viewport {
         this.visiblePanels.splice(visibleIndex, 1);
       }
     });
-    this.visiblePanels.push(...panels);
+
     // ...then calc bbox for all panels
-    panels.forEach(panel => panel.resize());
+    this.resizePanels(panels);
 
     const currentPanel = this.currentPanel;
     const wasEmpty = !currentPanel;
@@ -1301,28 +1308,7 @@ export default class Viewport {
       return;
     }
 
-    if (options.isEqualSize === true) {
-      const defaultPanel = panels[0];
-      const defaultBbox = defaultPanel.getBbox();
-
-      panels.forEach(panel => {
-        panel.resize(defaultBbox);
-      });
-      return;
-    }
-
-    const equalSizeClasses = options.isEqualSize as string[]; // for readability
-    const cachedBboxes: {[key: string]: BoundingBox} = {};
-    // Resize all panels
-    panels.forEach(panel => {
-      const overlappedClass = panel.getOverlappedClass(equalSizeClasses);
-      if (overlappedClass) {
-        panel.resize(cachedBboxes[overlappedClass]);
-        cachedBboxes[overlappedClass] = panel.getBbox();
-      } else {
-        panel.resize();
-      }
-    });
+    this.resizePanels(panels);
   }
 
   private updateOriginalPanelPositions(): void {
@@ -1900,5 +1886,40 @@ export default class Viewport {
     }, []);
 
     return { removedPanels, addedPanels };
+  }
+
+  private resizePanels(panels: Panel[]) {
+    const options = this.options;
+    const panelBboxes = this.panelBboxes;
+
+    if (options.isEqualSize === true) {
+      if (!panelBboxes.default) {
+        const defaultPanel = panels[0];
+        panelBboxes.default = defaultPanel.getBbox();
+      }
+
+      const defaultBbox = panelBboxes.default;
+
+      panels.forEach(panel => {
+        panel.resize(defaultBbox);
+      });
+      return;
+    } else if (options.isEqualSize) {
+      const equalSizeClasses = options.isEqualSize as string[]; // for readability
+
+      panels.forEach(panel => {
+        const overlappedClass = panel.getOverlappedClass(equalSizeClasses);
+        if (overlappedClass) {
+          panel.resize(panelBboxes[overlappedClass]);
+          panelBboxes[overlappedClass] = panel.getBbox();
+        } else {
+          panel.resize();
+        }
+      });
+      return;
+    }
+    panels.forEach(panel => {
+      panel.resize();
+    });
   }
 }

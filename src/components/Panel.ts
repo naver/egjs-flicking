@@ -64,6 +64,7 @@ class Panel implements FlickingPanel {
     const bbox = givenBbox
       ? givenBbox
       : this.getBbox();
+    this.state.cachedBbox = bbox;
     const prevSize = state.size;
 
     state.size = options.horizontal
@@ -298,9 +299,12 @@ class Panel implements FlickingPanel {
 
   public getBbox(): BoundingBox {
     const state = this.state;
+    const viewport = this.viewport;
+
     if (!state.cachedBbox) {
-      if (!this.element.parentNode && !this.viewport.options.renderExternal) {
-        this.viewport.getCameraElement().appendChild(this.element);
+      if (!this.element.parentNode && !viewport.options.renderExternal) {
+        viewport.getCameraElement().appendChild(this.element);
+        viewport.addVisiblePanel(this);
       }
       const bbox = this.element.getBoundingClientRect();
       state.cachedBbox = {
