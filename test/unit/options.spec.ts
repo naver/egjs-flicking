@@ -3,7 +3,7 @@ import Flicking from "../../src/Flicking";
 import { DEFAULT_OPTIONS } from "../../src/consts";
 import { FlickingEvent, FlickingPanel, Plugin } from "../../src/types";
 import { horizontal, vertical } from "./assets/fixture";
-import { createFlicking, cleanup, simulate, waitFor, waitEvent } from "./assets/utils";
+import { createFlicking, cleanup, simulate, waitFor, waitEvent, createFixture } from "./assets/utils";
 import { EVENTS } from "../../src/consts";
 import * as sinon from "sinon";
 import { withFlickingMethods } from "../../src/utils";
@@ -645,12 +645,12 @@ describe("Initialization", () => {
 
             const [destPos, eventDelta, nearestPanel] = await waitEvent(flicking, "change")
               .then((e: any) => {
-                const viewport = (flicking as any).viewport;
+                const viewPort = (flicking as any).viewport;
 
                 return [
                   e.axesEvent.destPos.flick,
                   Math.abs(e.axesEvent.delta.flick),
-                  viewport.getNearestPanel(),
+                  viewPort.getNearestPanel(),
                 ];
               });
 
@@ -993,6 +993,157 @@ describe("Initialization", () => {
       // Then
       const scrollArea = (flickingInfo.instance as any).viewport.getScrollArea();
       expect(moves.every(move => move >= scrollArea.prev)).to.be.true;
+    });
+  });
+
+  describe("isEqualSize", () => {
+    it("should assume all panels have same size based on first panel on init, if true is given", () => {
+      // Given & When(Init)
+      flickingInfo = createFlicking(horizontal.variant, {
+        gap: 0,
+        isEqualSize: true,
+      });
+
+      // Then
+      const flicking = flickingInfo.instance;
+      const firstPanelSize = flicking.getPanel(0).getSize();
+      const allPanels = flicking.getAllPanels();
+
+      allPanels.forEach(panel => {
+        expect(panel.getSize()).equals(firstPanelSize);
+      });
+    });
+
+    it("should assume panels with same class have same size on init", () => {
+      // Given & When(Init)
+      const wrapper = createFixture(horizontal.variant);
+      [].forEach.call(wrapper.children, (el, idx) => {
+        // All 6 panels have different size, but apply same class for 2 of each
+        el.classList.add(`test-panel-${idx % 3}`);
+      });
+      const flicking = new Flicking(wrapper, {
+        isEqualSize: ["test-panel-0", "test-panel-1", "test-panel-2"],
+      });
+      const panelsClassed = flicking.getAllPanels().reduce((panels, panel) => {
+        const className = `test-panel-${panel.getIndex() % 3}`;
+        panels[className]
+          ? panels[className].push(panel)
+          : panels[className] = [panel];
+        return panels;
+      }, {});
+
+      // Then
+      expect(flicking.getPanelCount()).equals(6);
+
+      // For panels with same class name, it shoould have same size
+      for (const className in panelsClassed) {
+        const panelsWithSameClass = panelsClassed[className];
+        const firstPanelSize = panelsWithSameClass[0].getSize();
+
+        expect(panelsWithSameClass.length).equals(2); // Check fixture.ts, every class has 2 panels each
+        expect(panelsWithSameClass.every(panel => panel.getElement().classList.contains(className)));
+        expect(panelsWithSameClass.every(panel => panel.getSize() === firstPanelSize)).to.be.true;
+      }
+      // ...but for panels with different class name should have different size
+      const firstPanelOfEachClass = Object.keys(panelsClassed)
+        .map(className => panelsClassed[className])
+        .map(panels => panels[0]);
+
+      firstPanelOfEachClass.forEach(panel => {
+        firstPanelOfEachClass.forEach(otherPanel => {
+          if (panel !== otherPanel) {
+            expect(panel.getSize()).not.equals(otherPanel.getSize());
+          }
+        });
+      });
+    });
+
+    it("should have same size for each panels based on first panel after resize, but it won't have to be same with previous size if true is given", () => {
+      // Given
+      viewport.set(1000, 100);
+      flickingInfo = createFlicking(horizontal.variant, {
+        gap: 0,
+        isEqualSize: true,
+      });
+      const flicking = flickingInfo.instance;
+      const beforeSize = flicking.getPanel(0).getSize();
+
+      // When
+      viewport.set(2000, 100);
+      flicking.resize();
+
+      // Then
+      const afterSize = flicking.getPanel(0).getSize();
+      const allPanels = flicking.getAllPanels();
+
+      expect(afterSize).not.to.equal(beforeSize);
+      allPanels.forEach(panel => {
+        expect(panel.getSize()).equals(afterSize);
+      });
+    });
+
+    it("should assume panels with same class have same size on resize, but it won't have to be same with previous size", () => {
+      // Given
+      viewport.set(1000, 100);
+      const wrapper = createFixture(horizontal.variant);
+      [].forEach.call(wrapper.children, (el, idx) => {
+        // All 6 panels have different size, but apply same class for 2 of each
+        el.classList.add(`test-panel-${idx % 3}`);
+      });
+      const flicking = new Flicking(wrapper, {
+        isEqualSize: ["test-panel-0", "test-panel-1", "test-panel-2"],
+      });
+      const panelsClassed = flicking.getAllPanels().reduce((panels, panel) => {
+        const className = `test-panel-${panel.getIndex() % 3}`;
+        panels[className]
+          ? panels[className].push(panel)
+          : panels[className] = [panel];
+        return panels;
+      }, {});
+      const beforeSizes = Object.keys(panelsClassed).reduce((sizes, className) => {
+        sizes[className] = panelsClassed[className][0].getSize();
+        return sizes;
+      }, {});
+
+      // When
+      viewport.set(2000, 100);
+      flicking.resize();
+
+      // Then
+      expect(flicking.getPanelCount()).equals(6);
+
+      const afterSizes = Object.keys(panelsClassed).reduce((sizes, className) => {
+        sizes[className] = panelsClassed[className][0].getSize();
+        return sizes;
+      }, {});
+
+      Object.keys(beforeSizes).forEach(className => {
+        expect(beforeSizes[className]).not.to.undefined;
+        expect(afterSizes[className]).not.to.undefined;
+        expect(beforeSizes[className]).not.equals(afterSizes[className]);
+      });
+
+      // For panels with same class name, it shoould have same size
+      for (const className in panelsClassed) {
+        const panelsWithSameClass = panelsClassed[className];
+        const firstPanelSize = panelsWithSameClass[0].getSize();
+
+        expect(panelsWithSameClass.length).equals(2); // Check fixture.ts, every class has 2 panels each
+        expect(panelsWithSameClass.every(panel => panel.getElement().classList.contains(className)));
+        expect(panelsWithSameClass.every(panel => panel.getSize() === firstPanelSize)).to.be.true;
+      }
+      // ...but for panels with different class name should have different size
+      const firstPanelOfEachClass = Object.keys(panelsClassed)
+        .map(className => panelsClassed[className])
+        .map(panels => panels[0]);
+
+      firstPanelOfEachClass.forEach(panel => {
+        firstPanelOfEachClass.forEach(otherPanel => {
+          if (panel !== otherPanel) {
+            expect(panel.getSize()).not.equals(otherPanel.getSize());
+          }
+        });
+      });
     });
   });
 
