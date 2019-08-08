@@ -250,7 +250,8 @@ export default class Viewport {
     state.visibleIndex = { min: NaN, max: NaN };
 
     if (options.renderOnlyVisible) {
-      this.visiblePanels = this.panelManager.allPanels().concat();
+      this.visiblePanels = this.panelManager.allPanels()
+        .filter(panel => Boolean(panel));
     }
 
     const viewportElement = this.viewportElement;
@@ -1256,7 +1257,7 @@ export default class Viewport {
         clones.forEach(panel => fragment.appendChild(panel.getElement()));
 
         this.cameraElement.appendChild(fragment);
-        this.visiblePanels.push(...clones);
+        this.visiblePanels.push(...clones.filter(clone => Boolean(clone)));
         panelManager.insertClones(cloneIndex, 0, clones);
       }
     } else if (cloneCount < prevCloneCount) {
