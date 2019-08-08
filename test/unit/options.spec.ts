@@ -1171,5 +1171,24 @@ describe("Initialization", () => {
         expect(beforePanelSize).equals(afterPanelSize);
       });
     });
+
+    it("should maintain panel size after panel update", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.variant, { // horizontal.variant panels has width dependency on window width
+        gap: 0,
+        isConstantSize: true,
+      });
+      const flicking = flickingInfo.instance;
+      const panel = flicking.getPanel(0);
+      const prevSize = panel.getSize();
+
+      // When
+      panel.update(panelEl => {
+        panelEl.style.width = "99999px";
+      });
+
+      // Then
+      expect(prevSize).equals(panel.getSize());
+    });
   });
 });
