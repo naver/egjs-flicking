@@ -479,7 +479,9 @@ class Flicking extends Component {
     const options = this.options;
 
     const allPanels = viewport.panelManager.allPanels();
-    allPanels.forEach(panel => panel.unCacheBbox());
+    if (!options.isConstantSize) {
+      allPanels.forEach(panel => panel.unCacheBbox());
+    }
 
     if (!options.renderExternal && options.renderOnlyVisible) {
       const fragment = document.createDocumentFragment();
