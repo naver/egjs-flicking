@@ -599,10 +599,11 @@ export default class Viewport {
       sizeToApply = Math.max(sizeToApply, horizontal ? viewportBbox.height : viewportBbox.width);
 
       state.isAdaptiveCached = true;
+      const viewportSize = `${sizeToApply}px`;
       if (horizontal) {
-        viewportStyle.height = `${sizeToApply}px`;
+        viewportStyle.height = viewportSize;
       } else if (!horizontal) {
-        viewportStyle.width = `${sizeToApply}px`;
+        viewportStyle.width = viewportSize;
       }
     }
   }
@@ -1679,7 +1680,6 @@ export default class Viewport {
   private updateVisiblePanels() {
     const state = this.state;
     const options = this.options;
-    const isHorizontal = this.options.horizontal;
     const cameraElement = this.cameraElement;
     const visibleIndex = state.visibleIndex;
 
@@ -1695,11 +1695,50 @@ export default class Viewport {
       return;
     }
 
-    const panelManager = this.panelManager;
-    const allPanelCount = panelManager.getRange().max + 1;
-    const cloneCount = panelManager.getCloneCount();
+    const newVisibleIndex = this.calcNewVisiblePanelIndex();
+
+    if (newVisibleIndex.min !== visibleIndex.min || newVisibleIndex.max !== visibleIndex.max) {
+      state.visibleIndex = newVisibleIndex;
+      if (isNaN(newVisibleIndex.min) || isNaN(newVisibleIndex.max)) {
+        return;
+      }
+
+      const prevVisiblePanels = this.visiblePanels;
+      const newVisiblePanels = this.calcVisiblePanels();
+
+      const { addedPanels, removedPanels } = this.checkVisiblePanelChange(prevVisiblePanels, newVisiblePanels);
+
+      if (newVisiblePanels.length > 0) {
+        const firstPanelPos = this.panelManager.firstPanel()!.getPosition();
+        const firstVisiblePanelPos = newVisiblePanels[0].getPosition();
+        if (firstVisiblePanelPos >= firstPanelPos) {
+          state.positionOffset = firstVisiblePanelPos - firstPanelPos;
+        }
+      }
+
+      newVisiblePanels.forEach(panel => {
+        panel.setPositionCSS(state.positionOffset);
+      });
+
+      removedPanels.forEach(panel => {
+        const panelElement = panel.getElement();
+        panelElement.parentNode && cameraElement.removeChild(panelElement);
+      });
+
+      const fragment = document.createDocumentFragment();
+      addedPanels.forEach(panel => {
+        fragment.appendChild(panel.getElement());
+      });
+
+      cameraElement.appendChild(fragment);
+      this.visiblePanels = newVisiblePanels;
+    }
+  }
+
+  private calcNewVisiblePanelIndex() {
+    const isHorizontal = this.options.horizontal;
     const cameraPos = this.getCameraPosition();
-    const basePanel = this.nearestPanel;
+    const basePanel = this.nearestPanel!;
     const viewportBbox = this.getBbox();
     const bbox = this.options.overflow
       ? this.getWindowBBox()
@@ -1707,6 +1746,9 @@ export default class Viewport {
     const viewportPos = isHorizontal
       ? viewportBbox.x
       : viewportBbox.y;
+    const panelManager = this.panelManager;
+    const allPanelCount = panelManager.getRange().max + 1;
+    const cloneCount = panelManager.getCloneCount();
 
     const checkLastPanel = (
       panel: Panel,
@@ -1727,10 +1769,10 @@ export default class Viewport {
     const lastPanelOfNextDir = checkLastPanel(basePanel, panel => {
       const nextPanel = panel.nextSibling;
 
-      if (!nextPanel || nextPanel.getPosition() < panel.getPosition()) {
-        return null;
-      } else {
+      if (nextPanel && nextPanel.getPosition() >= panel.getPosition()) {
         return nextPanel;
+      } else {
+        return null;
       }
     }, panel => {
       const panelOffset = panel.getPosition() - cameraPos;
@@ -1743,10 +1785,10 @@ export default class Viewport {
     const lastPanelOfPrevDir = checkLastPanel(basePanel, panel => {
       const prevPanel = panel.prevSibling;
 
-      if (!prevPanel || prevPanel.getPosition() > panel.getPosition()) {
-        return null;
-      } else {
+      if (prevPanel && prevPanel.getPosition() <= panel.getPosition()) {
         return prevPanel;
+      } else {
+        return null;
       }
     }, panel => {
       const panelOffset = panel.getPosition() - cameraPos;
@@ -1774,62 +1816,33 @@ export default class Viewport {
       newVisibleIndex.min = allPanelCount;
     }
 
-    if (newVisibleIndex.min !== visibleIndex.min || newVisibleIndex.max !== visibleIndex.max) {
-      state.visibleIndex = newVisibleIndex;
-      if (isNaN(newVisibleIndex.min) || isNaN(newVisibleIndex.max)) {
-        return;
-      }
+    return newVisibleIndex;
+  }
 
-      const prevVisiblePanels = this.visiblePanels;
-      const newVisiblePanels = this.calcVisiblePanels();
+  private checkVisiblePanelChange(prevVisiblePanels: Panel[], newVisiblePanels: Panel[]) {
+    const prevRefCount = prevVisiblePanels.map(() => 0);
+    const newRefCount = newVisiblePanels.map(() => 0);
 
-      const prevRefCount = prevVisiblePanels.map(() => 0);
-      const newRefCount = newVisiblePanels.map(() => 0);
-
-      prevVisiblePanels.forEach((prevPanel, prevIndex) => {
-        newVisiblePanels.forEach((newPanel, newIndex) => {
-          if (prevPanel === newPanel) {
-            prevRefCount[prevIndex]++;
-            newRefCount[newIndex]++;
-          }
-        });
-      });
-
-      const removedPanels = prevRefCount.reduce((removed: Panel[], count, index) => {
-        return count === 0
-          ? [...removed, prevVisiblePanels[index]]
-          : removed;
-      }, []);
-      const addedPanels = newRefCount.reduce((added: Panel[], count, index) => {
-        return count === 0
-          ? [...added, newVisiblePanels[index]]
-          : added;
-      }, []);
-
-      if (newVisiblePanels.length > 0) {
-        const firstPanelPos = panelManager.firstPanel()!.getPosition();
-        const firstVisiblePanelPos = newVisiblePanels[0].getPosition();
-        if (firstVisiblePanelPos >= firstPanelPos) {
-          state.positionOffset = firstVisiblePanelPos - firstPanelPos;
+    prevVisiblePanels.forEach((prevPanel, prevIndex) => {
+      newVisiblePanels.forEach((newPanel, newIndex) => {
+        if (prevPanel === newPanel) {
+          prevRefCount[prevIndex]++;
+          newRefCount[newIndex]++;
         }
-      }
-
-      newVisiblePanels.forEach(panel => {
-        panel.setPositionCSS(state.positionOffset);
       });
+    });
 
-      removedPanels.forEach(panel => {
-        const panelElement = panel.getElement();
-        panelElement.parentNode && cameraElement.removeChild(panelElement);
-      });
+    const removedPanels = prevRefCount.reduce((removed: Panel[], count, index) => {
+      return count === 0
+        ? [...removed, prevVisiblePanels[index]]
+        : removed;
+    }, []);
+    const addedPanels = newRefCount.reduce((added: Panel[], count, index) => {
+      return count === 0
+        ? [...added, newVisiblePanels[index]]
+        : added;
+    }, []);
 
-      const fragment = document.createDocumentFragment();
-      addedPanels.forEach(panel => {
-        fragment.appendChild(panel.getElement());
-      });
-
-      cameraElement.appendChild(fragment);
-      this.visiblePanels = newVisiblePanels;
-    }
+    return { removedPanels, addedPanels };
   }
 }
