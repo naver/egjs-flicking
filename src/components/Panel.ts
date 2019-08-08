@@ -6,7 +6,7 @@
 import Viewport from "./Viewport";
 import { OriginalStyle, FlickingPanel, ElementLike, DestroyOption, BoundingBox } from "../types";
 import { DEFAULT_PANEL_CSS, EVENTS } from "../consts";
-import { addClass, applyCSS, parseArithmeticExpression, parseElement, getProgress, restoreStyle, classList } from "../utils";
+import { addClass, applyCSS, parseArithmeticExpression, parseElement, getProgress, restoreStyle, hasClass } from "../utils";
 
 class Panel implements FlickingPanel {
   public viewport: Viewport;
@@ -322,13 +322,11 @@ class Panel implements FlickingPanel {
   }
 
   public getOverlappedClass(classes: string[]): string | undefined {
-    const panelClasses = classList(this.element);
+    const element = this.element;
 
-    for (const className of panelClasses) {
-      for (const givenClass of classes) {
-        if (className === givenClass) {
-          return className;
-        }
+    for (const className of classes) {
+      if (hasClass(element, className)) {
+        return className;
       }
     }
   }

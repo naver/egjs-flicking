@@ -38,7 +38,7 @@ setTimeout(function() {
     document.body.style.display = "";
 
     f1 = createFlicking("#flick1", {
-        // autoResize: true,
+        autoResize: true,
         // adaptive: true,
         renderOnlyVisible: true,
         isConstantSize: true,

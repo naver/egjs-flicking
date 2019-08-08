@@ -111,6 +111,14 @@ export function addClass(element: HTMLElement, className: string): void {
   }
 }
 
+export function hasClass(element: HTMLElement, className: string): boolean {
+  if (element.classList) {
+    return element.classList.contains(className);
+  } else {
+    return (element.className.indexOf(className) < 0);
+  }
+}
+
 export function applyCSS(element: HTMLElement, cssObj: object): void {
   Object.keys(cssObj).forEach(property => {
     element.style[property] = cssObj[property];
@@ -250,16 +258,6 @@ export function circulate(value: number, min: number, max: number, indexed: bool
   }
 
   return value;
-}
-
-export function hasClass(element: HTMLElement | null, className: string): boolean {
-  if (!element) {
-    return false;
-  }
-
-  const classes = classList(element);
-
-  return findIndex(classes, name => name === className) > -1;
 }
 
 export function restoreStyle(element: HTMLElement, originalStyle: OriginalStyle): void {

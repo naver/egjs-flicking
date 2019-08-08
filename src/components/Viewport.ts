@@ -249,11 +249,6 @@ export default class Viewport {
     state.windowBbox = null;
     state.visibleIndex = { min: NaN, max: NaN };
 
-    if (options.renderOnlyVisible) {
-      this.visiblePanels = this.panelManager.allPanels()
-        .filter(panel => Boolean(panel));
-    }
-
     const viewportElement = this.viewportElement;
     if (!options.horizontal) {
       // Don't preserve previous width for adaptive resizing
@@ -603,7 +598,7 @@ export default class Viewport {
         sizeToApply = maximumPanelSize;
       }
 
-      const viewportBbox = this.getBbox();
+      const viewportBbox = this.updateBbox();
       sizeToApply = Math.max(sizeToApply, horizontal ? viewportBbox.height : viewportBbox.width);
 
       state.isAdaptiveCached = true;
@@ -614,6 +609,21 @@ export default class Viewport {
         viewportStyle.width = viewportSize;
       }
     }
+  }
+
+  public updateBbox(): BoundingBox {
+    const state = this.state;
+    if (!state.cachedBbox) {
+      const bbox = this.viewportElement.getBoundingClientRect();
+      state.cachedBbox = {
+        x: bbox.left,
+        y: bbox.top,
+        width: bbox.width,
+        height: bbox.height,
+      };
+    }
+
+    return state.cachedBbox!;
   }
 
   public updatePlugins(): void {
@@ -977,18 +987,43 @@ export default class Viewport {
     visibleIndex.max = NaN;
   }
 
-  private getBbox(): BoundingBox {
-    const state = this.state;
-    if (!state.cachedBbox) {
-      const bbox = this.viewportElement.getBoundingClientRect();
-      state.cachedBbox = {
-        x: bbox.left,
-        y: bbox.top,
-        width: bbox.width,
-        height: bbox.height,
-      };
+  public appendUncachedPanelElements(panels: Panel[]): void {
+    const options = this.options;
+    const fragment = document.createDocumentFragment();
+
+    if (options.isEqualSize) {
+      const prevVisiblePanels = this.visiblePanels;
+      const equalSizeClasses = options.isEqualSize as string[]; // for readability
+      const cached: {[className: string]: boolean} = {};
+
+      this.visiblePanels = [];
+
+      Object.keys(this.panelBboxes).forEach(className => {
+        cached[className] = true;
+      });
+
+      panels.forEach(panel => {
+        const overlappedClass = panel.getOverlappedClass(equalSizeClasses);
+        if (overlappedClass && !cached[overlappedClass]) {
+          fragment.appendChild(panel.getElement());
+          this.visiblePanels.push(panel);
+          cached[overlappedClass] = true;
+        } else if (!overlappedClass) {
+          fragment.appendChild(panel.getElement());
+          this.visiblePanels.push(panel);
+        }
+      });
+      prevVisiblePanels.forEach(panel => {
+        this.addVisiblePanel(panel);
+      });
+    } else {
+      panels.forEach(panel => fragment.appendChild(panel.getElement()));
+      this.visiblePanels = panels.filter(panel => Boolean(panel));
     }
-    return state.cachedBbox!;
+
+    if (!options.renderExternal) {
+      this.cameraElement.appendChild(fragment);
+    }
   }
 
   private getVisibleIndexOf(panel: Panel): number {
@@ -1033,7 +1068,7 @@ export default class Viewport {
     const classPrefix = options.classPrefix;
 
     const viewportCandidate = wrapper.children[0] as HTMLElement;
-    const hasViewportElement = hasClass(viewportCandidate, `${classPrefix}-viewport`);
+    const hasViewportElement = viewportCandidate && hasClass(viewportCandidate, `${classPrefix}-viewport`);
 
     const viewportElement = hasViewportElement
       ? viewportCandidate
@@ -1042,7 +1077,7 @@ export default class Viewport {
     const cameraCandidate = hasViewportElement
       ? viewportElement.children[0] as HTMLElement
       : wrapper.children[0] as HTMLElement;
-    const hasCameraElement = hasClass(cameraCandidate, `${classPrefix}-camera`);
+    const hasCameraElement = cameraCandidate && hasClass(cameraCandidate, `${classPrefix}-camera`);
 
     const cameraElement = hasCameraElement
       ? cameraCandidate
@@ -1292,7 +1327,7 @@ export default class Viewport {
     const options = this.options;
     const panels = this.panelManager.originalPanels()
       .filter(panel => Boolean(panel));
-    const bbox = this.getBbox();
+    const bbox = this.updateBbox();
 
     const prevSize = state.size;
     // Update size & hanger position
@@ -1782,7 +1817,7 @@ export default class Viewport {
     const isHorizontal = this.options.horizontal;
     const cameraPos = this.getCameraPosition();
     const basePanel = this.nearestPanel!;
-    const viewportBbox = this.getBbox();
+    const viewportBbox = this.updateBbox();
     const bbox = this.options.overflow
       ? this.getWindowBBox()
       : viewportBbox;
@@ -1889,7 +1924,7 @@ export default class Viewport {
     return { removedPanels, addedPanels };
   }
 
-  private resizePanels(panels: Panel[]) {
+  private resizePanels(panels: Panel[]): void {
     const options = this.options;
     const panelBboxes = this.panelBboxes;
 
