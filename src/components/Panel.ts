@@ -446,11 +446,14 @@ class Panel implements FlickingPanel {
   }
 
   public removeClonedPanelsAfter(start: number): void {
+    const options = this.viewport.options;
     const removingPanels = this.clonedPanels.splice(start);
 
-    removingPanels.forEach(panel => {
-      panel.removeElement();
-    });
+    if (!options.renderExternal && !options.renderOnlyVisible) {
+      removingPanels.forEach(panel => {
+        panel.removeElement();
+      });
+    }
   }
 
   public setElement(element: HTMLElement): void {

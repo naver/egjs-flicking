@@ -379,11 +379,9 @@ class PanelManager {
   public removeClonesAfter(cloneIndex: number): void {
     const panels = this.panels;
 
-    if (this.shouldRender()) {
-      panels.forEach(panel => {
-        panel.removeClonedPanelsAfter(cloneIndex);
-      });
-    }
+    panels.forEach(panel => {
+      panel.removeClonedPanelsAfter(cloneIndex);
+    });
     this.clones.splice(cloneIndex);
   }
 
