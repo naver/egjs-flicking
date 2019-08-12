@@ -389,7 +389,7 @@ export default class Viewport {
   }
 
   public addVisiblePanel(panel: Panel): void {
-    if (findIndex(this.visiblePanels, visiblePanel => visiblePanel === panel) < 0) {
+    if (this.getVisibleIndexOf(panel) < 0) {
       this.visiblePanels.push(panel);
     }
   }
@@ -483,7 +483,7 @@ export default class Viewport {
     const replacedPanels = panelManager.replace(index, panels);
 
     replacedPanels.forEach(panel => {
-      const visibleIndex = findIndex(this.visiblePanels, visiblePanel => visiblePanel === panel);
+      const visibleIndex = this.getVisibleIndexOf(panel);
       if (visibleIndex > -1) {
         this.visiblePanels.splice(visibleIndex, 1);
       }
@@ -958,6 +958,10 @@ export default class Viewport {
       };
     }
     return state.cachedBbox!;
+  }
+
+  private getVisibleIndexOf(panel: Panel): number {
+    return findIndex(this.visiblePanels, visiblePanel => visiblePanel === panel);
   }
 
   private getWindowBBox(): BoundingBox {
