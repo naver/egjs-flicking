@@ -374,7 +374,7 @@ describe("Methods call", () => {
 
     it("should check 'getAllPanels' in panel(circular: true)", async () => {
       // Given
-      flickingInfo = createFlicking(horizontal.half, {circular: true});
+      flickingInfo = createFlicking(horizontal.half, { circular: true });
 
       // When, Then
       expect(flickingInfo.instance.getAllPanels().length).to.be.equals(3);
@@ -405,7 +405,7 @@ describe("Methods call", () => {
 
     it("should check 'getVisiblePanels' in panel(circular: true)", async () => {
       // Given
-      flickingInfo = createFlicking(horizontal.full, {circular: true});
+      flickingInfo = createFlicking(horizontal.full, { circular: true });
 
       // When
       const panels1 = flickingInfo.instance.getVisiblePanels();
@@ -565,7 +565,7 @@ describe("Methods call", () => {
         it(`checks that 'progress' should be integer in panel(bound: true, hanger: ${hanger}, anchor: ${anchor})`, async () => {
           // Given
           // 6 panels
-          flickingInfo = createFlicking(horizontal.panel30, {bound: true, hanger, anchor});
+          flickingInfo = createFlicking(horizontal.panel30, { bound: true, hanger, anchor });
 
           const inst = flickingInfo.instance;
           const steps: number[][] = [];
@@ -591,7 +591,7 @@ describe("Methods call", () => {
     });
     it("should check 'visibleRatio' in panel", async () => {
       // Given
-      flickingInfo = createFlicking(horizontal.variant2, {circular: true});
+      flickingInfo = createFlicking(horizontal.variant2, { circular: true });
 
       const panelArr = [0, 1, 2];
       const steps: number[][][] = [];
@@ -766,7 +766,7 @@ describe("Methods call", () => {
 
     it("should clone proper amount of panels(without gap)", () => {
       testResize(
-        { width: 1000, expected: 12},
+        { width: 1000, expected: 12 },
         { width: 500, expected: 12 },
         0,
       );
@@ -774,7 +774,7 @@ describe("Methods call", () => {
 
     it("should clone proper amount of panels(with gap)", () => {
       testResize(
-        { width: 1000, expected: 8},
+        { width: 1000, expected: 8 },
         { width: 500, expected: 7 },
         50,
       );
@@ -1261,6 +1261,63 @@ describe("Methods call", () => {
       // Then
       expect(flicking.getPanelCount()).equals(1);
       expect(flicking.getPanel(0).getElement()).not.equals(originalPanel);
+    });
+  });
+  describe("mapVisiblePanel()", () => {
+    it(`get mapped items with renderOnlyVisible: true, circular: false`, () => {
+      // Given
+      // 30, 30, 30, 30, 30, 30
+      flickingInfo = createFlicking(horizontal.panel30, {
+        renderOnlyVisible: true,
+      });
+      const items = [0, 1, 2, 3, 4, 5];
+      // When
+      const mappedItems = flickingInfo.instance.mapVisiblePanels(items);
+
+      // Then
+      expect(mappedItems).to.be.deep.equals([0, 1, 2]);
+    });
+    it(`get mapped items with renderOnlyVisible: false, circular: false`, () => {
+      // Given
+      // 30, 30, 30, 30, 30, 30
+      flickingInfo = createFlicking(horizontal.panel30, {
+        renderOnlyVisible: false,
+      });
+      const items = [0, 1, 2, 3, 4, 5];
+      // When
+      const mappedItems = flickingInfo.instance.mapVisiblePanels(items);
+
+      // Then
+      expect(mappedItems).to.be.deep.equals(items);
+    });
+    it(`get mapped items with renderOnlyVisible: true, circular: true`, () => {
+      // Given
+      // 30, 30, 30, 30, 30, 30
+      flickingInfo = createFlicking(horizontal.panel30, {
+        renderOnlyVisible: true,
+        circular: true,
+      });
+      const items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+      // When
+      const mappedItems = flickingInfo.instance.mapVisiblePanels(items);
+
+      // Then
+      // Clone(11, 12) + Original (0, 1, 2)
+      expect(mappedItems).to.be.deep.equals([0, 1, 2, 11, 12]);
+    });
+    it(`get mapped items with renderOnlyVisible: false. circular: true`, () => {
+      // Given
+      // 30, 30, 30, 30, 30, 30
+      flickingInfo = createFlicking(horizontal.panel30, {
+        renderOnlyVisible: false,
+        circular: true,
+      });
+      const items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+      // When
+      const mappedItems = flickingInfo.instance.mapVisiblePanels(items);
+
+      // Then
+      expect(mappedItems).to.be.deep.equals(items);
     });
   });
   describe("beforeSync() with renderOnlyVisible", () => {

@@ -11,7 +11,7 @@ import StateMachine from "./StateMachine";
 import MoveType from "../moves/MoveType";
 import { FlickingOptions, FlickingPanel, FlickingStatus, ElementLike, EventType, TriggerCallback, NeedPanelEvent, FlickingEvent, MoveTypeObjectOption, OriginalStyle, Plugin, DestroyOption, BoundingBox } from "../types";
 import { DEFAULT_VIEWPORT_CSS, DEFAULT_CAMERA_CSS, TRANSFORM, DEFAULT_OPTIONS, EVENTS, DIRECTION, STATE_TYPE, MOVE_TYPE } from "../consts";
-import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement, hasClass, restoreStyle, counter, circulate, findIndex } from "../utils";
+import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement, hasClass, restoreStyle, circulate, findIndex } from "../utils";
 import Snap from "../moves/Snap";
 import FreeScroll from "../moves/FreeScroll";
 
