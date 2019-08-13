@@ -56,6 +56,7 @@ class Panel implements FlickingPanel {
     };
     this.initElement(element);
   }
+
   public initElement(element?: HTMLElement | null) {
     if (!element) {
       return;

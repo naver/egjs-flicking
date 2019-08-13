@@ -579,6 +579,7 @@ class Flicking extends Component {
   public remove(index: number, deleteCount: number = 1): FlickingPanel[] {
     return this.viewport.remove(index, deleteCount);
   }
+
   /**
    * Mapping all items of the user for the currently visible panels.
    * @ko 현재 보이는 패널들에 대해 사용자의 전체 아이템들과 매핑을 시킨다.
@@ -598,6 +599,7 @@ class Flicking extends Component {
 
     return visiblePanels;
   }
+
   /**
    * Synchronize info of panels instance with info given by external rendering.
    * @ko 외부 렌더링 방식에 의해 입력받은 패널의 정보와 현재 플리킹이 갖는 패널 정보를 동기화한다.
@@ -678,10 +680,8 @@ class Flicking extends Component {
     panelManager.replacePanels(newPanels, newClones);
 
     !isSync && this.viewport.resize(true);
-
-
-    console.log(this.viewport.getVisibleIndex());
   }
+
   /**
    * Synchronize info of panels instance with info given by external rendering.
    * @ko 외부 렌더링 방식에 의해 입력받은 패널의 정보와 현재 플리킹이 갖는 패널 정보를 동기화한다.
@@ -702,7 +702,6 @@ class Flicking extends Component {
     const viewport = this.viewport;
     const { renderOnlyVisible, circular } = this.options;
     const panelManager = viewport.panelManager;
-
 
     if (!renderOnlyVisible) {
       const indexRange = panelManager.getRange();

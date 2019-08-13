@@ -263,7 +263,6 @@ export default class Viewport {
   public resize(isBeforeSync?: boolean): void {
     const panelManager = this.panelManager;
 
-
     if (isBeforeSync) {
       this.updateOriginalPanelPositions();
     } else {
@@ -981,9 +980,11 @@ export default class Viewport {
       }
     });
   }
+
   public getVisibleIndex() {
     return this.state.visibleIndex;
   }
+
   public resetVisibleIndex(): void {
     const visibleIndex = this.state.visibleIndex;
     visibleIndex.min = NaN;

@@ -498,6 +498,5 @@ export interface DestroyOption {
   preserveUI: boolean;
 }
 
-
 export type BeforeSyncResult = Pick<DiffResult<any>, "added" | "changed" | "maintained" | "removed">;
 export type SyncResult = Pick<DiffResult<HTMLElement>, "added" | "changed" | "maintained" | "removed" | "list">;
