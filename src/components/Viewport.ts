@@ -722,20 +722,12 @@ export default class Viewport {
   public calcVisiblePanels(): Panel[] {
     const allPanels = this.panelManager.allPanels();
     if (this.options.renderOnlyVisible) {
-      const visibleIndex = this.state.visibleIndex;
-      const getPanelFromRelativeIndex = (index: number) => {
-        index = index < 0
-          ? allPanels.length + index
-          : index;
-        return allPanels[index];
-      };
+      const { min, max } = this.state.visibleIndex;
+      const visiblePanels = min >= 0
+        ? allPanels.slice(min, max + 1)
+        : allPanels.slice(0, max + 1).concat(allPanels.slice(min));
 
-      const visiblePanels = counter(visibleIndex.max - visibleIndex.min + 1).map(offset => {
-        const index = visibleIndex.min + offset;
-        return getPanelFromRelativeIndex(index);
-      }).filter(panel => panel);
-
-      return visiblePanels;
+      return visiblePanels.filter(panel => panel);
     } else {
       return allPanels.filter(panel => {
         const outsetProgress = panel.getOutsetProgress();
