@@ -8,6 +8,7 @@ import { EVENTS, DIRECTION } from "../../src/consts";
 import { counter, toArray } from "../../src/utils";
 import Viewport from "../../src/components/Viewport";
 import Panel from "../../src/components/Panel";
+import { diff } from "@egjs/list-differ";
 
 declare var viewport: any;
 
@@ -1262,7 +1263,64 @@ describe("Methods call", () => {
       expect(flicking.getPanel(0).getElement()).not.equals(originalPanel);
     });
   });
+  describe("beforeSync() with renderOnlyVisible", () => {
+    it("can add element with beforeSync, renderOnlyVisible", () => {
+      // Given
+      // 30, 30, 30, 30, 30, 30
+      flickingInfo = createFlicking(horizontal.panel30, {
+        renderExternal: true,
+        renderOnlyVisible: true,
+      });
 
+      const flicking = flickingInfo.instance;
+      // 0, 1, 2, 3, 4, 5,
+      const allElements = flicking.getAllPanels().map(panel => panel.getElement());
+      // 0, DIV, 1, 2, 3, 4, 5
+      const nextElements = [...allElements.slice(0, 1), document.createElement("div"), ...allElements.slice(1, 6)];
+      const result = diff(allElements, nextElements);
+
+      // When
+      flicking.beforeSync(result);
+      // 0, DIV, 1, 2
+      const visibleElements = flicking.getVisiblePanels().map(panel => panel.getElement());
+
+      // Then
+      expect(visibleElements).to.be.deep.equals([
+        nextElements[0],
+        undefined,
+        nextElements[2],
+        nextElements[3],
+      ]);
+    });
+    it("can remove element with beforeSync, renderOnlyVisible", () => {
+      // Given
+      // 30, 30, 30, 30, 30, 30
+      flickingInfo = createFlicking(horizontal.panel30, {
+        renderExternal: true,
+        renderOnlyVisible: true,
+      });
+
+      const flicking = flickingInfo.instance;
+
+      // 0, 1, 2, 3, 4, 5,
+      const allElements = flicking.getAllPanels().map(panel => panel.getElement());
+      // 0, 2, 3, 4, 5
+      const nextElements = [...allElements.slice(0, 1), ...allElements.slice(2, 6)];
+      const result = diff(allElements, nextElements);
+
+      // When
+      flicking.beforeSync(result);
+      // 0, 2, 3
+      const visibleElements = flicking.getVisiblePanels().map(panel => panel.getElement());
+
+      // Then
+      expect(visibleElements).to.be.deep.equals([
+        allElements[0],
+        allElements[2],
+        allElements[3],
+      ]);
+    });
+  });
   describe("sync()", () => {
     const renderOriginalElement = (count: number, className: string): HTMLElement[] => {
       const flicking = flickingInfo.instance;
