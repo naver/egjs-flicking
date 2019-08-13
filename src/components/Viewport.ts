@@ -279,7 +279,10 @@ export default class Viewport {
     }
     panelManager.chainAllPanels();
 
-    if (!isBeforeSync) {
+    if (isBeforeSync) {
+      // update visible index
+      this.updateVisiblePanels();
+    } else {
       this.updateCameraPosition();
       this.updatePlugins();
     }
@@ -978,7 +981,9 @@ export default class Viewport {
       }
     });
   }
-
+  public getVisibleIndex() {
+    return this.state.visibleIndex;
+  }
   public resetVisibleIndex(): void {
     const visibleIndex = this.state.visibleIndex;
     visibleIndex.min = NaN;
@@ -1748,8 +1753,8 @@ export default class Viewport {
     const options = this.options;
     const cameraElement = this.cameraElement;
     const visibleIndex = state.visibleIndex;
-
-    if (!options.renderOnlyVisible) {
+    const { renderExternal, renderOnlyVisible } = options;
+    if (!renderOnlyVisible) {
       return;
     }
 
@@ -1786,7 +1791,7 @@ export default class Viewport {
         panel.setPositionCSS(state.positionOffset);
       });
 
-      if (!options.renderExternal) {
+      if (!renderExternal) {
         removedPanels.forEach(panel => {
           const panelElement = panel.getElement();
           panelElement.parentNode && cameraElement.removeChild(panelElement);
@@ -1796,9 +1801,9 @@ export default class Viewport {
         addedPanels.forEach(panel => {
           fragment.appendChild(panel.getElement());
         });
+
         cameraElement.appendChild(fragment);
       }
-
       this.visiblePanels = newVisiblePanels;
 
       this.flicking.trigger(EVENTS.VISIBLE_CHANGE, {
