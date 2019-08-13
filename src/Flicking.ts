@@ -580,6 +580,25 @@ class Flicking extends Component {
     return this.viewport.remove(index, deleteCount);
   }
   /**
+   * Mapping all items of the user for the currently visible panels.
+   * @ko 현재 보이는 패널들에 대해 사용자의 전체 아이템들과 매핑을 시킨다.
+   * @param - User's all items <ko>사용자의 전체 아이템들</ko>
+   * @return Array of Item of the user mapped to the currently visible item <ko>현재 보이는 패널과 매핑되는 사용자의 아이템 배열</ko>
+   */
+  public mapVisiblePanels<T = any>(allItems: T[]): T[] {
+    const { renderOnlyVisible } = this.options;
+
+    if (!renderOnlyVisible) {
+      return allItems;
+    }
+    const { min, max } = this.viewport.getVisibleIndex();
+    const visiblePanels = min >= 0
+      ? allItems.slice(min, max + 1)
+      : allItems.slice(0, max + 1).concat(allItems.slice(min));
+
+    return visiblePanels;
+  }
+  /**
    * Synchronize info of panels instance with info given by external rendering.
    * @ko 외부 렌더링 방식에 의해 입력받은 패널의 정보와 현재 플리킹이 갖는 패널 정보를 동기화한다.
    * @param diffInfo - Info object of how panel infos are changed.<ko>패널 정보들의 변경 정보를 담는 오브젝트.</ko>
@@ -659,6 +678,9 @@ class Flicking extends Component {
     panelManager.replacePanels(newPanels, newClones);
 
     !isSync && this.viewport.resize(true);
+
+
+    console.log(this.viewport.getVisibleIndex());
   }
   /**
    * Synchronize info of panels instance with info given by external rendering.
@@ -706,13 +728,16 @@ class Flicking extends Component {
     const visiblePanels = renderOnlyVisible ? this.getVisiblePanels() : this.getAllPanels(true);
 
     added.forEach(addedIndex => {
+      const addedElement = list[addedIndex];
       const beforePanel = visiblePanels[addedIndex] as Panel;
 
-      beforePanel.initElement(list[addedIndex]);
+      beforePanel.getElement()
+        ? beforePanel.setElement(addedElement)
+        : beforePanel.initElement(list[addedIndex]);
       beforePanel.unCacheBbox();
     });
-    this.viewport.resetVisibleIndex();
-    this.viewport.resize();
+    viewport.resetVisibleIndex();
+    viewport.resize();
     return this;
   }
 
