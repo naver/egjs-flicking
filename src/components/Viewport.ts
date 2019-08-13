@@ -29,7 +29,7 @@ export default class Viewport {
   private cameraElement: HTMLElement;
 
   private triggerEvent: Flicking["triggerEvent"];
-  private axesHandlers: {[key: string]: any};
+  private axesHandlers: { [key: string]: any };
 
   private currentPanel: Panel | undefined;
   private nearestPanel: Panel | undefined;
@@ -161,8 +161,8 @@ export default class Viewport {
       currentState.direction = destPos === currentPosition
         ? null
         : destPos > currentPosition
-            ? DIRECTION.NEXT
-            : DIRECTION.PREV;
+          ? DIRECTION.NEXT
+          : DIRECTION.PREV;
 
       if (destPos === currentPosition) {
         // no move
@@ -203,7 +203,7 @@ export default class Viewport {
       const halfGap = options.gap / 2;
 
       // As panel's range is from panel position - half gap ~ panel pos + panel size + half gap
-      state.panelMaintainRatio = (hangerPosition - panelPosition + halfGap) / (panelSize +  2 * halfGap);
+      state.panelMaintainRatio = (hangerPosition - panelPosition + halfGap) / (panelSize + 2 * halfGap);
     } else {
       state.panelMaintainRatio = 0;
     }
@@ -222,8 +222,8 @@ export default class Viewport {
 
     // Offset is needed to fix camera layer size in visible-only rendering mode
     const posOffset = options.renderOnlyVisible
-        ? state.positionOffset
-        : 0;
+      ? state.positionOffset
+      : 0;
     const moveVector = options.horizontal
       ? [-(pos - posOffset), 0] : [0, -(pos - posOffset)];
     const moveCoord = moveVector.map(coord => `${Math.round(coord)}px`).join(", ");
@@ -260,23 +260,29 @@ export default class Viewport {
     this.panelBboxes = {};
   }
 
-  public resize(): void {
+  public resize(isBeforeSync?: boolean): void {
     const panelManager = this.panelManager;
 
-    this.updateSize();
-    this.updateOriginalPanelPositions();
-    this.updateAdaptiveSize();
-    this.updateScrollArea();
 
+    if (isBeforeSync) {
+      this.updateOriginalPanelPositions();
+    } else {
+      this.updateSize();
+      this.updateOriginalPanelPositions();
+      this.updateAdaptiveSize();
+      this.updateScrollArea();
+    }
     // Clone panels in circular mode
     if (this.options.circular && panelManager.getPanelCount() > 0) {
       this.clonePanels();
       this.updateClonedPanelPositions();
     }
-
     panelManager.chainAllPanels();
-    this.updateCameraPosition();
-    this.updatePlugins();
+
+    if (!isBeforeSync) {
+      this.updateCameraPosition();
+      this.updatePlugins();
+    }
   }
 
   // Find nearest anchor from current hanger position
@@ -439,7 +445,7 @@ export default class Viewport {
       const newPanelPosition = this.findEstimatedPosition(newCenterPanel);
       state.position = newPanelPosition;
       this.updateAxesPosition(newPanelPosition);
-      state.panelMaintainRatio = (newCenterPanel.getRelativeAnchorPosition() + options.gap / 2 ) / (newCenterPanel.getSize() + options.gap);
+      state.panelMaintainRatio = (newCenterPanel.getRelativeAnchorPosition() + options.gap / 2) / (newCenterPanel.getSize() + options.gap);
     }
 
     // Update checked indexes in infinite mode
@@ -505,7 +511,7 @@ export default class Viewport {
       const newPanelPosition = this.findEstimatedPosition(newCenterPanel);
       state.position = newPanelPosition;
       this.updateAxesPosition(newPanelPosition);
-      state.panelMaintainRatio = (newCenterPanel.getRelativeAnchorPosition() + options.gap / 2 ) / (newCenterPanel.getSize() + options.gap);
+      state.panelMaintainRatio = (newCenterPanel.getRelativeAnchorPosition() + options.gap / 2) / (newCenterPanel.getSize() + options.gap);
     } else if (isBetween(currentPanel!.getIndex(), index, index + panels.length - 1)) {
       // Current panel is replaced
       this.currentPanel = panelManager.get(currentPanel!.getIndex());
@@ -767,7 +773,7 @@ export default class Viewport {
       // There're no panels
       return NaN;
     }
-    const {prev: prevRange, next: nextRange} = this.getScrollArea();
+    const { prev: prevRange, next: nextRange } = this.getScrollArea();
     const cameraPosition = this.getCameraPosition();
     const isOutOfBound = this.isOutOfBound();
     let prevPanel = nearestPanel.prevSibling;
@@ -1178,10 +1184,10 @@ export default class Viewport {
         bounce: [0, 0], // will be updated in resize()
       },
     }, {
-      easing: options.panelEffect,
-      deceleration: options.deceleration,
-      interruptable: true,
-    });
+        easing: options.panelEffect,
+        deceleration: options.deceleration,
+        interruptable: true,
+      });
 
     this.panInput = new PanInput(this.viewportElement, {
       inputType: options.inputType,
