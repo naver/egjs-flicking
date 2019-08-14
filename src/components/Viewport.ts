@@ -1941,7 +1941,7 @@ export default class Viewport {
       });
       return;
     } else if (options.isEqualSize) {
-      const equalSizeClasses = options.isEqualSize as string[]; // for readability
+      const equalSizeClasses = options.isEqualSize;
 
       panels.forEach(panel => {
         const overlappedClass = panel.getOverlappedClass(equalSizeClasses);
