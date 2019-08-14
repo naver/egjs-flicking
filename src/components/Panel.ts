@@ -146,22 +146,22 @@ class Panel implements FlickingPanel {
     viewport.moveTo(this, viewport.findEstimatedPosition(this), eventType, null, duration);
   }
 
-  public update(updateFunction: (element: HTMLElement) => any): void {
-    const isConstantSize = this.viewport.options.isConstantSize;
+  public update(updateFunction: ((element: HTMLElement) => any) | null = null, shouldResize: boolean = true): void {
     const identicalPanels = this.getIdenticalPanels();
 
-    identicalPanels.forEach(eachPanel => {
-      updateFunction(eachPanel.getElement());
-    });
-
-    if (!isConstantSize) {
+    if (updateFunction) {
       identicalPanels.forEach(eachPanel => {
-        eachPanel.unCacheBbox();
+        updateFunction(eachPanel.getElement());
       });
     }
 
-    this.viewport.addVisiblePanel(this);
-    this.viewport.resize();
+    if (shouldResize) {
+      identicalPanels.forEach(eachPanel => {
+        eachPanel.unCacheBbox();
+      });
+      this.viewport.addVisiblePanel(this);
+      this.viewport.resize();
+    }
   }
 
   public prev(): FlickingPanel | null {
