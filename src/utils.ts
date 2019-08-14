@@ -105,7 +105,7 @@ export function addClass(element: HTMLElement, className: string): void {
   if (element.classList) {
     element.classList.add(className);
   } else {
-    if (element.className.indexOf(className) < 0) {
+    if (!hasClass(element, className)) {
       element.className = (`${element.className} ${className}`).replace(/\s{2,}/g, " ");
     }
   }
@@ -115,7 +115,7 @@ export function hasClass(element: HTMLElement, className: string): boolean {
   if (element.classList) {
     return element.classList.contains(className);
   } else {
-    return (element.className.indexOf(className) < 0);
+    return (element.className.split(" ").indexOf(className) >= 0);
   }
 }
 
