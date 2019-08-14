@@ -1035,7 +1035,7 @@ describe("Initialization", () => {
       // Then
       expect(flicking.getPanelCount()).equals(6);
 
-      // For panels with same class name, it shoould have same size
+      // For panels with same class name, it should have same size
       for (const className in panelsClassed) {
         const panelsWithSameClass = panelsClassed[className];
         const firstPanelSize = panelsWithSameClass[0].getSize();
@@ -1123,7 +1123,7 @@ describe("Initialization", () => {
         expect(beforeSizes[className]).not.equals(afterSizes[className]);
       });
 
-      // For panels with same class name, it shoould have same size
+      // For panels with same class name, it should have same size
       for (const className in panelsClassed) {
         const panelsWithSameClass = panelsClassed[className];
         const firstPanelSize = panelsWithSameClass[0].getSize();
