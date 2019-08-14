@@ -16,7 +16,6 @@
       <div class="panel2"><div class="anchor"></div></div>
       <div class="panel3"><div class="anchor"></div></div>
       <div class="panel4"><div class="anchor"></div></div>
-      <div class="panel0"><div class="anchor"></div></div>
     </flicking>
     <pre><code class="hljs html" data-script="flicking0">{{ code0 }}</code></pre>
 
@@ -29,7 +28,6 @@
       <div class="panel2"><div class="anchor"></div></div>
       <div class="panel3"><div class="anchor"></div></div>
       <div class="panel4"><div class="anchor"></div></div>
-      <div class="panel0"><div class="anchor"></div></div>
     </flicking>
     <div class="pagination pagination1"></div>
     <pre><code class="hljs html" data-script="flicking1">{{ code1 }}</code></pre>
@@ -43,7 +41,6 @@
       <div class="panel2"><div class="anchor"></div></div>
       <div class="panel3"><div class="anchor"></div></div>
       <div class="panel4"><div class="anchor"></div></div>
-      <div class="panel0"><div class="anchor"></div></div>
     </flicking>
     <div class="pagination pagination2"></div>
     <pre><code class="hljs html" data-script="flicking2">{{ code2 }}</code></pre>
@@ -66,7 +63,6 @@ export default class Align extends Vue {
   <div class="panel2"><div class="anchor"></div></div>
   <div class="panel3"><div class="anchor"></div></div>
   <div class="panel4"><div class="anchor"></div></div>
-  <div class="panel0"><div class="anchor"></div></div>
 </flicking>`;
   code1 = `<flicking class="flicking flicking1" :options="{ hanger: 0, anchor: 0 }">
   <div class="panel0"><div class="anchor"></div></div>
@@ -74,7 +70,6 @@ export default class Align extends Vue {
   <div class="panel2"><div class="anchor"></div></div>
   <div class="panel3"><div class="anchor"></div></div>
   <div class="panel4"><div class="anchor"></div></div>
-  <div class="panel0"><div class="anchor"></div></div>
 </flicking>`;
   code2 = `<flicking class="flicking flicking2" :options="{ hanger: '30%', anchor: '50px' }">
   <div class="panel0"><div class="anchor"></div></div>
@@ -82,7 +77,6 @@ export default class Align extends Vue {
   <div class="panel2"><div class="anchor"></div></div>
   <div class="panel3"><div class="anchor"></div></div>
   <div class="panel4"><div class="anchor"></div></div>
-  <div class="panel0"><div class="anchor"></div></div>
 </flicking>`;
 }
 </script>

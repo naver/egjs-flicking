@@ -8,6 +8,7 @@ import ChildrenDiffer from "@egjs/vue-children-differ";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { CreateElement, VNodeData, VNode } from "vue";
+import { counter } from "./utils";
 
 @Component({
   name: "Flicking",
@@ -173,18 +174,15 @@ export default class Flicking extends Vue {
 
     let panels: VNode[];
 
-    const visibleIndex = this.$_visibleIndex;
-
     if (this.options.renderOnlyVisible && this.$_slotDiffer) {
       this.$_slotDiffResult = this.$_slotDiffer.update(slots);
 
       const slotsDiff = this.$_slotDiffResult;
       const panelCnt = flicking.getPanelCount();
+      const visibleIndex = this.$_visibleIndex;
 
-      const visibles = [...Array(visibleIndex.max - visibleIndex.min + 1).keys()].map(offset => {
+      const visibles = counter(visibleIndex.max - visibleIndex.min + 1).map(offset => {
         const index = visibleIndex.min + offset;
-        // TODO: use this to apply 'left' CSS
-        // const panel = this.$_getPanelFromRelativeIndex(index, allPanels);
         let node: VNode;
         if (index < 0) {
           const relativeIndex = panelCnt + ((index + 1) % panelCnt - 1);
@@ -206,7 +204,7 @@ export default class Flicking extends Vue {
 
       const added = slotsDiff.added.map(addedIndex => slots[addedIndex]);
 
-      const addedClones = [...Array(oldCloneCount).keys()].reduce((clones: VNode[], cloneIndex) => {
+      const addedClones = counter(oldCloneCount).reduce((clones: VNode[], cloneIndex) => {
         const newAddedClones = slotsDiff.added.map(addedIdx => {
           const child = slots[addedIdx];
 
@@ -215,7 +213,7 @@ export default class Flicking extends Vue {
         return [...clones, ...newAddedClones];
       }, []);
 
-      const newClones = [...Array(newCloneCount - oldCloneCount).keys()].reduce((clones: VNode[], idxOffset) => {
+      const newClones = counter(newCloneCount - oldCloneCount).reduce((clones: VNode[], idxOffset) => {
         const cloneIndex = oldCloneCount + idxOffset;
         const childs = slots.map((slot, slotIndex) => {
           return this.$_cloneVNode(slot, h, cloneIndex, slotIndex);
