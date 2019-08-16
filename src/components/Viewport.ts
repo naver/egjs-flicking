@@ -981,10 +981,6 @@ export default class Viewport {
     });
   }
 
-  public getVisibleIndex() {
-    return this.state.visibleIndex;
-  }
-
   public resetVisibleIndex(): void {
     const visibleIndex = this.state.visibleIndex;
     visibleIndex.min = NaN;
