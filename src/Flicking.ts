@@ -605,20 +605,14 @@ class Flicking extends Component {
    * Synchronize info of panels instance with info given by external rendering.
    * @ko 외부 렌더링 방식에 의해 입력받은 패널의 정보와 현재 플리킹이 갖는 패널 정보를 동기화한다.
    * @private
-   * @param diffInfo - Info object of how panel infos are changed.<ko>패널 정보들의 변경 정보를 담는 오브젝트.</ko>
-   * @param {number[][]} [diffInfo.changed] - Index tuple array of panel infos changed. Formatted with `[before, after]`.<ko>변경 전후에 패널 정보들의 인덱스 튜플 배열. `[이전, 이후]`의 형식을 갖고 있어야 한다.</ko>
-   * @param {number[][]} [diffInfo.maintained] - Index tuple array of panel infos maintained. Formatted with `[before, after]`.<ko>변경 전후에 유지된 패널 정보들의 인덱스 튜플 배열. `[이전, 이후]`의 형식을 갖고 있어야 한다.</ko>
-   * @param {number[]} [diffInfo.added] - Index array of panel infos added to `list`.<ko>`list`에서 추가된 패널 정보들의 인덱스 배열.</ko>
-   * @param {number[]} [diffInfo.removed] - Index array of panel infos removed from previous element list.<ko>이전 리스트에서 제거된 패널 정보들의 인덱스 배열.</ko>
-   *
+   * @param - Info object of how panel infos are changed.<ko>패널 정보들의 변경 정보를 담는 오브젝트.</ko>
+   * @param - Whether called from sync method <ko> sync 메소드로부터 호출됐는지 여부 </ko>
    */
-  public beforeSync(diffInfo: BeforeSyncResult, isSync?: boolean) {
+  public beforeSync(diffInfo: BeforeSyncResult, isCallSync?: boolean) {
     const { maintained, added, changed, removed } = diffInfo;
     const viewport = this.viewport;
     const panelManager = viewport.panelManager;
     const isCircular = this.options.circular;
-
-    // Make sure that new "list" should include cloned elements
     const cloneCount = panelManager.getCloneCount();
     const prevClonedPanels = panelManager.clonedPanels();
 
@@ -683,19 +677,14 @@ class Flicking extends Component {
     }
     panelManager.replacePanels(newPanels, newClones);
 
-    !isSync && this.viewport.resize(true);
+    !isCallSync && this.viewport.beforeSync();
   }
 
   /**
    * Synchronize info of panels instance with info given by external rendering.
    * @ko 외부 렌더링 방식에 의해 입력받은 패널의 정보와 현재 플리킹이 갖는 패널 정보를 동기화한다.
    * @private
-   * @param diffInfo - Info object of how panel elements are changed.<ko>패널의 DOM 요소들의 변경 정보를 담는 오브젝트.</ko>
-   * @param {HTMLElement[]} [diffInfo.list] - DOM elements list after update.<ko>업데이트 이후 DOM 요소들의 리스트</ko>
-   * @param {number[][]} [diffInfo.changed] - Index tuple array of DOM elements changed. Formatted with `[before, after]`.<ko>변경 전후에 DOM 요소들의 인덱스 튜플 배열. `[이전, 이후]`의 형식을 갖고 있어야 한다.</ko>
-   * @param {number[][]} [diffInfo.maintained] - Index tuple array of DOM elements maintained. Formatted with `[before, after]`.<ko>변경 전후에 유지된 DOM 요소들의 인덱스 튜플 배열. `[이전, 이후]`의 형식을 갖고 있어야 한다.</ko>
-   * @param {number[]} [diffInfo.added] - Index array of DOM elements added to `list`.<ko>`list`에서 추가된 DOM 요소들의 인덱스 배열.</ko>
-   * @param {number[]} [diffInfo.removed] - Index array of DOM elements removed from previous element list.<ko>이전 리스트에서 제거된 DOM 요소들의 인덱스 배열.</ko>
+   * @param - Info object of how panel elements are changed.<ko>패널의 DOM 요소들의 변경 정보를 담는 오브젝트.</ko>
    */
   public sync(diffInfo: SyncResult): this {
     const { list, maintained, added, changed, removed } = diffInfo;

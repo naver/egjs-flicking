@@ -260,21 +260,21 @@ export default class Viewport {
     this.panelBboxes = {};
   }
 
-  public resize(isBeforeSync?: boolean): void {
-    if (isBeforeSync) {
-      this.updateOriginalPanelPositions();
-      this.updateClonePanels();
-      // update visible index
-      this.updateVisiblePanels();
-    } else {
-      this.updateSize();
-      this.updateOriginalPanelPositions();
-      this.updateAdaptiveSize();
-      this.updateScrollArea();
-      this.updateClonePanels();
-      this.updateCameraPosition();
-      this.updatePlugins();
-    }
+  public beforeSync(): void {
+    this.updateOriginalPanelPositions();
+    this.updateClonePanels();
+    // update visible index
+    this.updateVisiblePanels();
+  }
+
+  public resize(): void {
+    this.updateSize();
+    this.updateOriginalPanelPositions();
+    this.updateAdaptiveSize();
+    this.updateScrollArea();
+    this.updateClonePanels();
+    this.updateCameraPosition();
+    this.updatePlugins();
   }
 
   // Find nearest anchor from current hanger position
@@ -1179,10 +1179,10 @@ export default class Viewport {
         bounce: [0, 0], // will be updated in resize()
       },
     }, {
-        easing: options.panelEffect,
-        deceleration: options.deceleration,
-        interruptable: true,
-      });
+      easing: options.panelEffect,
+      deceleration: options.deceleration,
+      interruptable: true,
+    });
 
     this.panInput = new PanInput(this.viewportElement, {
       inputType: options.inputType,
