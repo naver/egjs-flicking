@@ -261,8 +261,6 @@ export default class Viewport {
   }
 
   public resize(isBeforeSync?: boolean): void {
-
-
     if (isBeforeSync) {
       this.updateOriginalPanelPositions();
       this.updateClonePanels();
@@ -1017,8 +1015,10 @@ export default class Viewport {
       this.cameraElement.appendChild(fragment);
     }
   }
+
   private updateClonePanels() {
     const panelManager = this.panelManager;
+
     // Clone panels in circular mode
     if (this.options.circular && panelManager.getPanelCount() > 0) {
       this.clonePanels();
@@ -1026,6 +1026,7 @@ export default class Viewport {
     }
     panelManager.chainAllPanels();
   }
+
   private getVisibleIndexOf(panel: Panel): number {
     return findIndex(this.visiblePanels, visiblePanel => visiblePanel === panel);
   }
