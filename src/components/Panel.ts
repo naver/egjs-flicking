@@ -31,17 +31,17 @@ class Panel implements FlickingPanel {
   private clonedPanels: Panel[];
 
   public constructor(
-    element: HTMLElement,
-    index: number,
-    viewport: Viewport,
+    element?: HTMLElement | null,
+    index?: number,
+    viewport?: Viewport,
   ) {
-    this.viewport = viewport;
+    this.viewport = viewport!;
     this.prevSibling = null;
     this.nextSibling = null;
     this.clonedPanels = [];
 
     this.state = {
-      index,
+      index: index!,
       position: 0,
       relativeAnchorPosition: 0,
       size: 0,
@@ -49,12 +49,11 @@ class Panel implements FlickingPanel {
       isVirtual: false,
       cloneIndex: -1,
       originalStyle: {
-        className: element.getAttribute("class"),
-        style: element.getAttribute("style"),
+        className: "",
+        style: "",
       },
       cachedBbox: null,
     };
-
     this.setElement(element);
   }
 
@@ -301,7 +300,14 @@ class Panel implements FlickingPanel {
     const state = this.state;
     const viewport = this.viewport;
 
-    if (!state.cachedBbox) {
+    if (!this.element) {
+      state.cachedBbox = {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+      };
+    } else if (!state.cachedBbox) {
       if (!this.element.parentNode && !viewport.options.renderExternal) {
         viewport.getCameraElement().appendChild(this.element);
         viewport.addVisiblePanel(this);
@@ -371,6 +377,9 @@ class Panel implements FlickingPanel {
   }
 
   public setPositionCSS(offset: number = 0): void {
+    if (!this.element) {
+      return;
+    }
     const state = this.state;
     const pos = state.position;
     const options = this.viewport.options;
@@ -381,24 +390,20 @@ class Panel implements FlickingPanel {
     const styleToApply = `${pos - offset}px`;
 
     if (!state.isVirtual && currentElementStyle !== styleToApply) {
-      if (options.horizontal) {
-        elementStyle.left = styleToApply;
-      } else {
-        elementStyle.top = styleToApply;
-      }
+      options.horizontal
+        ? elementStyle.left = styleToApply
+        : elementStyle.top = styleToApply;
     }
   }
 
-  public clone(cloneIndex: number, isVirtual: boolean = false, element?: HTMLElement): Panel {
+  public clone(cloneIndex: number, isVirtual: boolean = false, element?: HTMLElement | null): Panel {
     const state = this.state;
     const viewport = this.viewport;
+    let cloneElement = element;
 
-    const cloneElement = element
-      ? element
-      : isVirtual
-        ? this.element
-        : this.element.cloneNode(true) as HTMLElement;
-
+    if (!cloneElement && this.element) {
+      cloneElement = isVirtual ? this.element : this.element.cloneNode(true) as HTMLElement;
+    }
     const clonedPanel = new Panel(cloneElement, state.index, viewport);
     const clonedState = clonedPanel.state;
 
@@ -425,8 +430,9 @@ class Panel implements FlickingPanel {
   }
 
   // Clone with external element
-  public cloneExternal(cloneIndex: number, element: HTMLElement): Panel {
+  public cloneExternal(cloneIndex: number, element: HTMLElement | null): Panel {
     const clonedPanel = this.clone(cloneIndex, false, element);
+    clonedPanel.setElement(element);
 
     return clonedPanel;
   }
@@ -454,7 +460,14 @@ class Panel implements FlickingPanel {
     }
   }
 
-  public setElement(element: HTMLElement): void {
+  public setElement(element?: HTMLElement | null): void {
+    if (!element) {
+      return;
+    }
+    if (!this.element) {
+      this.state.originalStyle.className = element.getAttribute("class");
+      this.state.originalStyle.style = element.getAttribute("style");
+    }
     this.element = element;
 
     const options = this.viewport.options;

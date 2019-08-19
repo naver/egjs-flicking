@@ -45,7 +45,6 @@
 	"devDependencies": {
 		"@daybrush/jsdoc": "^0.3.7",
 		"@egjs/build-helper": "0.0.5",
-		"@egjs/list-differ": "0.0.1",
 		"@egjs/release-helper": "0.0.3",
 		"@types/karma-chai": "^0.1.1",
 		"@types/mocha": "^5.2.5",
@@ -81,7 +80,8 @@
 	},
 	"dependencies": {
 		"@egjs/axes": "^2.5.13",
-		"@egjs/component": "^2.1.2"
+		"@egjs/component": "^2.1.2",
+		"@egjs/list-differ": "^1.0.0"
 	},
 	"husky": {
 		"hooks": {

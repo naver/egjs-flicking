@@ -9,6 +9,7 @@ import StateMachine from "./components/StateMachine";
 import Panel from "./components/Panel";
 import Component from "@egjs/component";
 import State from "./states/State";
+import { DiffResult } from "@egjs/list-differ";
 
 export type ValueOf<T> = T[keyof T];
 /**
@@ -489,10 +490,15 @@ export interface Plugin {
   destroy(flicking: Flicking): void;
 }
 
-export type ExcludeKeys = keyof Component | "replace" | "append" | "remove" | "prepend" | "sync" | "getCloneCount";
+export type ExcludeKeys = keyof Component
+  | "replace" | "append" | "remove" | "prepend"
+  | "beforeSync" | "sync" | "getCloneCount" | "mapRenderingPanels";
 export type FlickingMethodsKeys = Exclude<keyof Flicking, ExcludeKeys>;
 export type FlickingMethods = Pick<Flicking, FlickingMethodsKeys>;
 
 export interface DestroyOption {
   preserveUI: boolean;
 }
+
+export type BeforeSyncResult = Pick<DiffResult<any>, "added" | "changed" | "maintained" | "removed">;
+export type SyncResult = Pick<DiffResult<HTMLElement>, "added" | "changed" | "maintained" | "removed" | "list">;

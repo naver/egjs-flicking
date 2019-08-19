@@ -9,9 +9,8 @@ import Panel from "./components/Panel";
 
 import { merge, getProgress, parseElement, isString, counter } from "./utils";
 import { DEFAULT_OPTIONS, EVENTS, DIRECTION, AXES_EVENTS, STATE_TYPE, DEFAULT_MOVE_TYPE_OPTIONS } from "./consts";
-import { FlickingOptions, FlickingEvent, Direction, EventType, FlickingPanel, TriggerCallback, FlickingContext, FlickingStatus, Plugin, ElementLike, DestroyOption } from "./types";
+import { FlickingOptions, FlickingEvent, Direction, EventType, FlickingPanel, TriggerCallback, FlickingContext, FlickingStatus, Plugin, ElementLike, DestroyOption, BeforeSyncResult, SyncResult } from "./types";
 import { sendEvent } from "./ga/ga";
-import { DiffResult } from "@egjs/list-differ";
 
 /**
  * @memberof eg
@@ -313,6 +312,7 @@ class Flicking extends Component {
 
   /**
    * Return visible index of panels currently shown in viewport area. Cloned panels use relative index, which can be negated or bigger than panel count.
+   * @private
    */
   public getVisibleIndex(): { min: number; max: number } {
     return this.viewport.getVisibleIndex();
@@ -582,193 +582,156 @@ class Flicking extends Component {
   }
 
   /**
+   * Mapping all items of the user for the currently rendering panels.
+   * @private
+   * @ko 현재 렌더링 중인 패널들에 대해 사용자의 전체 아이템들과 매핑을 시킨다.
+   * @param - User's all items. <ko>사용자의 전체 아이템들.</ko>
+   * @return Array of Item of the user mapped to the currently rendering panels. <ko>현재 렌더링 중인 패널과 매핑되는 사용자의 아이템 배열.</ko>
+   */
+  public mapRenderingPanels<T = any>(allItems: T[]): T[] {
+    const { renderOnlyVisible } = this.options;
+
+    if (!renderOnlyVisible) {
+      return allItems;
+    }
+    const { min, max } = this.viewport.getVisibleIndex();
+    const visiblePanels = min >= 0
+      ? allItems.slice(min, max + 1)
+      : allItems.slice(0, max + 1).concat(allItems.slice(min));
+
+    return visiblePanels;
+  }
+
+  /**
    * Synchronize info of panels instance with info given by external rendering.
    * @ko 외부 렌더링 방식에 의해 입력받은 패널의 정보와 현재 플리킹이 갖는 패널 정보를 동기화한다.
-   * @param - Info object of how panel elements are changed.<ko>패널의 DOM 요소들의 변경 정보를 담는 오브젝트.</ko>
-   * @param - Info object of how the user's original rendering list is changed. This argument is only for the `renderOnlyVisible` option.<ko>사용자의 원본 렌더링 리스트의 변경 정보를 담는 오브젝트. 이 인자는 `renderOnlyVisible` 옵션을 위해서만 사용된다.</ko>
-   * @param - Clone count of the previous sync call. This argument is only for the `renderOnlyVisible` option.<ko>이전 sync() 호출 시점의 클론 횟수. 이 인자는 `renderOnlyVisible` 옵션을 위해서만 사용된다.</ko>
+   * @private
+   * @param - Info object of how panel infos are changed.<ko>패널 정보들의 변경 정보를 담는 오브젝트.</ko>
+   * @param - Whether called from sync method <ko> sync 메소드로부터 호출됐는지 여부 </ko>
    */
-  public sync(diffInfo: DiffResult<HTMLElement>, origListInfo?: DiffResult<any>, prevCloneCount: number = 0): this {
+  public beforeSync(diffInfo: BeforeSyncResult, isCallSync?: boolean) {
+    const { maintained, added, changed, removed } = diffInfo;
     const viewport = this.viewport;
-    const options = this.options;
     const panelManager = viewport.panelManager;
-
-    const prevOriginalPanels = panelManager.originalPanels();
+    const isCircular = this.options.circular;
+    const cloneCount = panelManager.getCloneCount();
     const prevClonedPanels = panelManager.clonedPanels();
 
-    const indexRange = panelManager.getRange();
-    const isCircular = options.circular;
+    // Did not changed at all
+    if (
+      added.length <= 0
+      && removed.length <= 0
+      && changed.length <= 0
+      && cloneCount === prevClonedPanels.length
+    ) {
+      return this;
+    }
+    const prevOriginalPanels = panelManager.originalPanels();
+    const newPanels: Panel[] = [];
+    const newClones: Panel[][] = counter(cloneCount).map(() => []);
 
-    if (!options.renderOnlyVisible || !origListInfo) {
-      const { list, maintained, added, changed, removed } = diffInfo;
+    maintained.forEach(([beforeIdx, afterIdx]) => {
+      newPanels[afterIdx] = prevOriginalPanels[beforeIdx];
+      newPanels[afterIdx].setIndex(afterIdx);
+    });
 
-      // Did not changed at all
-      if (added.length <= 0 && removed.length <= 0 && changed.length <= 0) {
-        return this;
-      }
+    added.forEach(addIndex => {
+      newPanels[addIndex] = new Panel(null, addIndex, this.viewport);
+    });
 
-      // Make sure that new "list" should include cloned elements
-      const newOriginalPanelCount = (list.length / (panelManager.getCloneCount() + 1)) >> 0; // Make sure it's integer. Same with Math.floor, but faster
-      const newCloneCount = ((list.length / newOriginalPanelCount) >> 0) - 1;
+    if (isCircular) {
+      counter(cloneCount).forEach(groupIndex => {
+        const prevCloneGroup = prevClonedPanels[groupIndex];
+        const newCloneGroup = newClones[groupIndex];
 
-      const newOriginalElements = list.slice(0, newOriginalPanelCount);
-      const newClonedElements = list.slice(newOriginalPanelCount);
+        maintained.forEach(([beforeIdx, afterIdx]) => {
+          newCloneGroup[afterIdx] = prevCloneGroup
+            ? prevCloneGroup[beforeIdx]
+            : newPanels[afterIdx].cloneExternal(groupIndex, null);
 
-      const newPanels: Panel[] = [];
-      const newClones: Panel[][] = counter(newCloneCount).map(() => []);
-
-      // For maintained panels after external rendering, they should be maintained in newPanels.
-      const originalMaintained = maintained.filter(([beforeIdx, afterIdx]) => beforeIdx <= indexRange.max);
-      // For newly added panels after external rendering, they will be added with their elements.
-      const originalAdded = added.filter(index => index < newOriginalPanelCount);
-
-      originalMaintained.forEach(([beforeIdx, afterIdx]) => {
-        newPanels[afterIdx] = prevOriginalPanels[beforeIdx];
-        newPanels[afterIdx].setIndex(afterIdx);
-      });
-
-      originalAdded.forEach(addIndex => {
-        newPanels[addIndex] = new Panel(newOriginalElements[addIndex], addIndex, viewport);
-      });
-
-      if (isCircular) {
-        counter(newCloneCount).forEach(groupIndex => {
-          const cloneGroupOffset = newOriginalPanelCount * groupIndex;
-          const prevCloneGroup = prevClonedPanels[groupIndex];
-          const newCloneGroup = newClones[groupIndex];
-
-          originalMaintained.forEach(([beforeIdx, afterIdx]) => {
-            newCloneGroup[afterIdx] = prevCloneGroup
-              ? prevCloneGroup[beforeIdx]
-              : newPanels[afterIdx].cloneExternal(groupIndex, newClonedElements[cloneGroupOffset + afterIdx]);
-          });
-
-          originalAdded.forEach(addIndex => {
-            const newPanel = newPanels[addIndex];
-
-            newCloneGroup[addIndex] = newPanel.cloneExternal(groupIndex, newClonedElements[cloneGroupOffset + addIndex]);
-          });
-        });
-      }
-
-      // Replace current info of panels this holds
-      added.forEach(index => { viewport.updateCheckedIndexes({ min: index, max: index }); });
-      removed.forEach(index => { viewport.updateCheckedIndexes({ min: index - 1, max: index + 1 }); });
-
-      const checkedIndexes = viewport.getCheckedIndexes();
-      checkedIndexes.forEach(([min, max], idx) => {
-        // Push checked indexes backward
-        const pushedIndex = added.filter(index => index < min && panelManager.has(index)).length
-          - removed.filter(index => index < min).length;
-        checkedIndexes.splice(idx, 1, [min + pushedIndex, max + pushedIndex]);
-      });
-
-      // Only effective only when there are least one panel which have changed its index
-      if (changed.length > 0) {
-        // Removed checked index by changed ones after pushing
-        maintained.forEach(([prev, next]) => { viewport.updateCheckedIndexes({ min: next, max: next }); });
-      }
-
-      panelManager.replacePanels(newPanels, newClones);
-      viewport.resize();
-    } else {
-      const elements = diffInfo.list;
-      const panelCount = viewport.panelManager.getPanelCount();
-      const cloneCount = viewport.panelManager.getCloneCount();
-      origListInfo = origListInfo!;
-
-      const prevVisiblePanels = viewport.getVisiblePanels();
-      const prevVisibleCount = prevVisiblePanels.length;
-
-      if (origListInfo.added.length > 0 || origListInfo.removed.length > 0 || origListInfo.changed.length > 0) {
-        // Panel count changed
-        const newPanels: Panel[] = [];
-        const newClones: Panel[][] = counter(cloneCount).map(() => []);
-        const addedElements = elements.slice(prevVisibleCount, prevVisibleCount + origListInfo.added.length);
-
-        origListInfo.maintained.forEach(([beforeIdx, afterIdx]) => {
-          const origPanel = prevOriginalPanels[beforeIdx];
-          newPanels[afterIdx] = origPanel;
-          origPanel.setIndex(afterIdx);
-          origPanel.getClonedPanels().forEach((panel, cloneIndex) => {
-            newClones[cloneIndex][afterIdx] = panel;
-          });
+          newCloneGroup[afterIdx].setIndex(afterIdx);
         });
 
-        const addedCount = origListInfo.added.length;
-        const addedCloneOffset = prevVisibleCount + addedCount;
-        const addedCloneElements = elements.slice(addedCloneOffset, addedCount * cloneCount);
-        const addedPanels = origListInfo.added.reduce((panels: Panel[], addIndex, index) => {
-          newPanels[addIndex] = new Panel(addedElements[index], addIndex, viewport);
+        added.forEach(addIndex => {
           const newPanel = newPanels[addIndex];
-          if (isCircular) {
-            const newClonedPanels = counter(cloneCount).map(groupIndex => {
-              newClones[groupIndex][addIndex] = newPanel.cloneExternal(groupIndex, addedCloneElements[index + addedCount * groupIndex]);
-              return newClones[groupIndex][addIndex];
-            });
-            return [...panels, newPanel, ...newClonedPanels];
-          }
-          return [...panels, newPanel];
-        }, []);
 
-        const newVisiblePanels = [...prevVisiblePanels, ...addedPanels];
-        viewport.setVisiblePanels(newVisiblePanels);
-
-        // Replace current info of panels this holds
-        origListInfo.added.forEach(index => { viewport.updateCheckedIndexes({ min: index, max: index }); });
-        origListInfo.removed.forEach(index => { viewport.updateCheckedIndexes({ min: index - 1, max: index + 1 }); });
-
-        const checkedIndexes = viewport.getCheckedIndexes();
-        checkedIndexes.forEach(([min, max], idx) => {
-          // Push checked indexes backward
-          const pushedIndex = origListInfo!.added.filter(index => index < min && panelManager.has(index)).length
-            - origListInfo!.removed.filter(index => index < min).length;
-          checkedIndexes.splice(idx, 1, [min + pushedIndex, max + pushedIndex]);
+          newCloneGroup[addIndex] = newPanel.cloneExternal(groupIndex, null);
         });
-
-        // Only effective only when there are least one panel which have changed its index
-        if (origListInfo.changed.length > 0) {
-          // Removed checked index by changed ones after pushing
-          origListInfo.maintained.forEach(([prev, next]) => { viewport.updateCheckedIndexes({ min: next, max: next }); });
-        }
-
-        panelManager.replacePanels(newPanels, newClones);
-        viewport.resetVisibleIndex();
-        viewport.resize();
-      } else if (cloneCount - prevCloneCount !== 0) {
-        // Clone count changed
-        if (cloneCount > prevCloneCount) {
-          const newCloneElements = elements.slice(prevVisibleCount, prevVisibleCount + panelCount * (cloneCount - prevCloneCount));
-          const newVisiblePanels = [...prevVisiblePanels];
-
-          counter(cloneCount - prevCloneCount).forEach(offset => {
-            const cloneIndex = prevCloneCount + offset;
-            const newClones = prevOriginalPanels.map((panel, idx) => panel.cloneExternal(cloneIndex, newCloneElements[idx + cloneCount * offset]));
-
-            panelManager.insertClones(cloneIndex, 0, newClones);
-            newVisiblePanels.push(...newClones);
-          });
-
-          viewport.setVisiblePanels(newVisiblePanels);
-        } else {
-          panelManager.removeClonesAfter(cloneCount);
-        }
-
-        viewport.resetVisibleIndex();
-        viewport.resize();
-      } else {
-        // Visible info changed
-        const visiblePanels = viewport.calcVisiblePanels();
-        const positionOffset = viewport.getPositionOffset();
-        visiblePanels.forEach((panel, index) => {
-          const panelEl = elements[index];
-          panel.setElement(panelEl);
-          panel.setPositionCSS(positionOffset);
-        });
-        viewport.updatePlugins();
-      }
+      });
     }
 
+    added.forEach(index => { viewport.updateCheckedIndexes({ min: index, max: index }); });
+    removed.forEach(index => { viewport.updateCheckedIndexes({ min: index - 1, max: index + 1 }); });
+
+    const checkedIndexes = viewport.getCheckedIndexes();
+    checkedIndexes.forEach(([min, max], idx) => {
+      // Push checked indexes backward
+      const pushedIndex = added.filter(index => index < min && panelManager.has(index)).length
+        - removed.filter(index => index < min).length;
+      checkedIndexes.splice(idx, 1, [min + pushedIndex, max + pushedIndex]);
+    });
+
+    // Only effective only when there are least one panel which have changed its index
+    if (changed.length > 0) {
+      // Removed checked index by changed ones after pushing
+      maintained.forEach(([, next]) => { viewport.updateCheckedIndexes({ min: next, max: next }); });
+    }
+    panelManager.replacePanels(newPanels, newClones);
+
+    !isCallSync && this.viewport.beforeSync();
+  }
+
+  /**
+   * Synchronize info of panels with DOM info given by external rendering.
+   * @ko 외부 렌더링 방식에 의해 입력받은 DOM의 정보와 현재 플리킹이 갖는 패널 정보를 동기화 한다.
+   * @private
+   * @param - Info object of how panel elements are changed.<ko>패널의 DOM 요소들의 변경 정보를 담는 오브젝트.</ko>
+   */
+  public sync(diffInfo: SyncResult): this {
+    const { list, maintained, added, changed, removed } = diffInfo;
+
+    // Did not changed at all
+    if (added.length <= 0 && removed.length <= 0 && changed.length <= 0) {
+      return this;
+    }
+    const viewport = this.viewport;
+    const { renderOnlyVisible, circular } = this.options;
+    const panelManager = viewport.panelManager;
+
+    if (!renderOnlyVisible) {
+      const indexRange = panelManager.getRange();
+      let beforeDiffInfo: BeforeSyncResult = diffInfo;
+
+      if (circular) {
+        const prevOriginalPanelCount = indexRange.max;
+        const originalPanelCount = (list.length / (panelManager.getCloneCount() + 1)) >> 0;
+        const originalAdded = added.filter(index => index < originalPanelCount);
+        const originalRemoved = removed.filter(index => index <= prevOriginalPanelCount);
+        const originalMaintained = maintained.filter(([beforeIdx]) => beforeIdx <= prevOriginalPanelCount);
+        const originalChanged = changed.filter(([beforeIdx]) => beforeIdx <= prevOriginalPanelCount);
+
+        beforeDiffInfo = {
+          added: originalAdded,
+          maintained: originalMaintained,
+          removed: originalRemoved,
+          changed: originalChanged,
+        };
+      }
+      this.beforeSync(beforeDiffInfo, true);
+    }
+    const visiblePanels = renderOnlyVisible ? this.getVisiblePanels() : this.getAllPanels(true);
+
+    added.forEach(addedIndex => {
+      const addedElement = list[addedIndex];
+      const beforePanel = visiblePanels[addedIndex] as Panel;
+
+      beforePanel.getElement()
+        ? beforePanel.setElement(addedElement)
+        : beforePanel.setElement(list[addedIndex]);
+      beforePanel.unCacheBbox();
+    });
+    viewport.resetVisibleIndex();
+    viewport.resize();
     return this;
   }
 
