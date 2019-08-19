@@ -474,7 +474,7 @@ class Panel implements FlickingPanel {
     if (!element) {
       return;
     }
-    if (!this.element && element) {
+    if (!this.element) {
       this.initElement(element);
       return;
     }
