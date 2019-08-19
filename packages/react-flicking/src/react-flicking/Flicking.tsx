@@ -12,8 +12,10 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   public static defaultProps: FlickingProps = FLICKING_PROPS;
   public state: {
     cloneCount: number,
+    visibleIndex: { min: number, max: number },
   } = {
       cloneCount: 0,
+      visibleIndex: { min: NaN, max: NaN },
     };
   // Flicking
   @withFlickingMethods
@@ -24,6 +26,8 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   };
   // differ
   private pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
+  private jsxDiffer: ListDiffer<string> = new ListDiffer<string>();
+
   // life cycle
   constructor(props: Partial<FlickingProps & FlickingOptions>) {
     super(props);
@@ -34,6 +38,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       }
     }
   }
+
   public render() {
     const props = this.props;
     // tslint:disable-next-line:naming-convention
@@ -58,6 +63,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       </Tag>
     );
   }
+
   public onUpdate = (result: ChildrenDiffResult<HTMLElement>) => {
     if (typeof this.props.lastIndex === "number") {
       this.setLastIndex(this.props.lastIndex!);
@@ -66,10 +72,15 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     this.checkPlugins();
     this.checkCloneCount();
   }
+
   public componentDidMount() {
     this.flicking = new NativeFlicking(
       findDOMNode(this) as HTMLElement,
-      this.options,
+      {
+        ...this.options,
+        framework: "react",
+        frameworkVersion: React.version,
+      } as any,
     ).on({
       moveStart: (e: FlickingEvent) => this.props.onMoveStart!(e),
       move: (e: FlickingEvent) => this.props.onMove!(e),
@@ -80,6 +91,9 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       needPanel: (e: NeedPanelEvent) => this.props.onNeedPanel!(e),
       change: (e: FlickingEvent) => this.props.onChange!(e),
       restore: (e: FlickingEvent) => this.props.onRestore!(e),
+      visibleChange: () => {
+        this.checkCloneCount();
+      },
     });
 
     if (this.props.status) {
@@ -88,9 +102,11 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     this.checkPlugins();
     this.checkCloneCount();
   }
+
   public componentWillUnmount() {
     this.destroy({ preserveUI: true });
   }
+
   // private
   private checkPlugins() {
     const { list, added, removed, prevList } = this.pluginsDiffer.update(this.props.plugins!);
@@ -98,27 +114,52 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     this.addPlugins(added.map(index => list[index]));
     this.removePlugins(removed.map(index => prevList[index]));
   }
+
   private checkCloneCount() {
     const cloneCount = this.flicking!.getCloneCount();
+    const visibleIndex = this.flicking!.getVisibleIndex();
+    const stateVisibleIndex = { ...this.state.visibleIndex };
+    let isUpdateState = false;
 
-    if (this.state.cloneCount !== cloneCount) {
+    if (
+      this.state.cloneCount !== cloneCount
+      || (
+        this.props.renderOnlyVisible
+        && (stateVisibleIndex.min !== visibleIndex.min || stateVisibleIndex.max !== visibleIndex.max)
+      )
+    ) {
+      isUpdateState = true;
+    }
+    if (isUpdateState) {
       this.setState({
         cloneCount,
+        visibleIndex,
       });
     }
   }
+
   private renderPanels() {
+    const { renderOnlyVisible, children } = this.props;
+    const flicking = this.flicking;
+    const reactChildren = React.Children.toArray(children) as Array<React.ReactElement<any>>;
+
+    const result = this.jsxDiffer.update(reactChildren.map(child => `${child.key}`));
+
+    if (flicking && renderOnlyVisible) {
+      flicking.beforeSync(result);
+      this.state.cloneCount = flicking.getCloneCount();
+    }
     const cloneCount = this.state.cloneCount;
-    const children = React.Children.toArray(this.props.children) as Array<React.ReactElement<any>>;
-    let arr: Array<React.ReactElement<any>> = [...children];
+    let arr: Array<React.ReactElement<any>> = [...reactChildren];
 
     for (let i = 0; i < cloneCount; ++i) {
-      arr = arr.concat(children.map(el => {
+      arr = arr.concat(reactChildren.map(el => {
         return <CloneComponent key={`clone${i}${el.key}`}>{el}</CloneComponent>;
       }));
     }
-    return arr;
+
+    return flicking ? flicking.mapRenderingPanels(arr) : arr;
   }
 }
-interface Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>, FlickingType<Flicking> {}
+interface Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>, FlickingType<Flicking> { }
 export default Flicking;

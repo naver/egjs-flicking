@@ -312,6 +312,7 @@ class Flicking extends Component {
 
   /**
    * Return visible index of panels currently shown in viewport area. Cloned panels use relative index, which can be negated or bigger than panel count.
+   * @private
    */
   public getVisibleIndex(): { min: number; max: number } {
     return this.viewport.getVisibleIndex();

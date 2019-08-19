@@ -137,6 +137,5 @@ export const FLICKING_METHODS: {[key in FlickingMethodsKeys]: true} = {
   removePlugins: true,
   isPlaying: true,
   getLastIndex: true,
-  mapRenderingPanels: true,
 };
 export const TRANSFORM = checkTranslateSupport();
