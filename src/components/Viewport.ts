@@ -36,7 +36,7 @@ export default class Viewport {
   private visiblePanels: Panel[];
 
   private plugins: Plugin[] = [];
-  private panelBboxes: {[className: string]: BoundingBox};
+  private panelBboxes: { [className: string]: BoundingBox };
   private state: {
     size: number;
     position: number;
@@ -261,27 +261,19 @@ export default class Viewport {
   }
 
   public resize(isBeforeSync?: boolean): void {
-    const panelManager = this.panelManager;
+
 
     if (isBeforeSync) {
       this.updateOriginalPanelPositions();
+      this.updateClonePanels();
+      // update visible index
+      this.updateVisiblePanels();
     } else {
       this.updateSize();
       this.updateOriginalPanelPositions();
       this.updateAdaptiveSize();
       this.updateScrollArea();
-    }
-    // Clone panels in circular mode
-    if (this.options.circular && panelManager.getPanelCount() > 0) {
-      this.clonePanels();
-      this.updateClonedPanelPositions();
-    }
-    panelManager.chainAllPanels();
-
-    if (isBeforeSync) {
-      // update visible index
-      this.updateVisiblePanels();
-    } else {
+      this.updateClonePanels();
       this.updateCameraPosition();
       this.updatePlugins();
     }
@@ -932,7 +924,7 @@ export default class Viewport {
     this.visiblePanels = panels;
   }
 
-  public connectAxesHandler(handlers: {[key: string]: (event: { [key: string]: any; }) => any}): void {
+  public connectAxesHandler(handlers: { [key: string]: (event: { [key: string]: any; }) => any }): void {
     const axes = this.axes;
 
     this.axesHandlers = handlers;
@@ -994,7 +986,7 @@ export default class Viewport {
     if (options.isEqualSize) {
       const prevVisiblePanels = this.visiblePanels;
       const equalSizeClasses = options.isEqualSize as string[]; // for readability
-      const cached: {[className: string]: boolean} = {};
+      const cached: { [className: string]: boolean } = {};
 
       this.visiblePanels = [];
 
@@ -1025,7 +1017,15 @@ export default class Viewport {
       this.cameraElement.appendChild(fragment);
     }
   }
-
+  private updateClonePanels() {
+    const panelManager = this.panelManager;
+    // Clone panels in circular mode
+    if (this.options.circular && panelManager.getPanelCount() > 0) {
+      this.clonePanels();
+      this.updateClonedPanelPositions();
+    }
+    panelManager.chainAllPanels();
+  }
   private getVisibleIndexOf(panel: Panel): number {
     return findIndex(this.visiblePanels, visiblePanel => visiblePanel === panel);
   }

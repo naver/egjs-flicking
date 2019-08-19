@@ -582,6 +582,7 @@ class Flicking extends Component {
 
   /**
    * Mapping all items of the user for the currently visible panels.
+   * @private
    * @ko 현재 보이는 패널들에 대해 사용자의 전체 아이템들과 매핑을 시킨다.
    * @param - User's all items <ko>사용자의 전체 아이템들</ko>
    * @return Array of Item of the user mapped to the currently visible item <ko>현재 보이는 패널과 매핑되는 사용자의 아이템 배열</ko>
@@ -603,6 +604,7 @@ class Flicking extends Component {
   /**
    * Synchronize info of panels instance with info given by external rendering.
    * @ko 외부 렌더링 방식에 의해 입력받은 패널의 정보와 현재 플리킹이 갖는 패널 정보를 동기화한다.
+   * @private
    * @param diffInfo - Info object of how panel infos are changed.<ko>패널 정보들의 변경 정보를 담는 오브젝트.</ko>
    * @param {number[][]} [diffInfo.changed] - Index tuple array of panel infos changed. Formatted with `[before, after]`.<ko>변경 전후에 패널 정보들의 인덱스 튜플 배열. `[이전, 이후]`의 형식을 갖고 있어야 한다.</ko>
    * @param {number[][]} [diffInfo.maintained] - Index tuple array of panel infos maintained. Formatted with `[before, after]`.<ko>변경 전후에 유지된 패널 정보들의 인덱스 튜플 배열. `[이전, 이후]`의 형식을 갖고 있어야 한다.</ko>
@@ -612,22 +614,24 @@ class Flicking extends Component {
    */
   public beforeSync(diffInfo: BeforeSyncResult, isSync?: boolean) {
     const { maintained, added, changed, removed } = diffInfo;
-
-    // Did not changed at all
-    if (added.length <= 0 && removed.length <= 0 && changed.length <= 0) {
-      return this;
-    }
-
     const viewport = this.viewport;
     const panelManager = viewport.panelManager;
     const isCircular = this.options.circular;
 
     // Make sure that new "list" should include cloned elements
     const cloneCount = panelManager.getCloneCount();
-
-    const prevOriginalPanels = panelManager.originalPanels();
     const prevClonedPanels = panelManager.clonedPanels();
 
+    // Did not changed at all
+    if (
+      added.length <= 0
+      && removed.length <= 0
+      && changed.length <= 0
+      && cloneCount === prevClonedPanels.length
+    ) {
+      return this;
+    }
+    const prevOriginalPanels = panelManager.originalPanels();
     const newPanels: Panel[] = [];
     const newClones: Panel[][] = counter(cloneCount).map(() => []);
 
@@ -685,6 +689,7 @@ class Flicking extends Component {
   /**
    * Synchronize info of panels instance with info given by external rendering.
    * @ko 외부 렌더링 방식에 의해 입력받은 패널의 정보와 현재 플리킹이 갖는 패널 정보를 동기화한다.
+   * @private
    * @param diffInfo - Info object of how panel elements are changed.<ko>패널의 DOM 요소들의 변경 정보를 담는 오브젝트.</ko>
    * @param {HTMLElement[]} [diffInfo.list] - DOM elements list after update.<ko>업데이트 이후 DOM 요소들의 리스트</ko>
    * @param {number[][]} [diffInfo.changed] - Index tuple array of DOM elements changed. Formatted with `[before, after]`.<ko>변경 전후에 DOM 요소들의 인덱스 튜플 배열. `[이전, 이후]`의 형식을 갖고 있어야 한다.</ko>
@@ -711,9 +716,9 @@ class Flicking extends Component {
         const prevOriginalPanelCount = indexRange.max;
         const originalPanelCount = (list.length / (panelManager.getCloneCount() + 1)) >> 0;
         const originalAdded = added.filter(index => index < originalPanelCount);
-        const originalRemoved = removed.filter(index => index < prevOriginalPanelCount);
-        const originalMaintained = maintained.filter(([beforeIdx]) => beforeIdx < prevOriginalPanelCount);
-        const originalChanged = changed.filter(([beforeIdx]) => beforeIdx < prevOriginalPanelCount);
+        const originalRemoved = removed.filter(index => index <= prevOriginalPanelCount);
+        const originalMaintained = maintained.filter(([beforeIdx]) => beforeIdx <= prevOriginalPanelCount);
+        const originalChanged = changed.filter(([beforeIdx]) => beforeIdx <= prevOriginalPanelCount);
 
         beforeDiffInfo = {
           added: originalAdded,
