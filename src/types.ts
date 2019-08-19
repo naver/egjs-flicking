@@ -399,10 +399,18 @@ export interface SelectEvent {
  * @property - Direction of panel is needed from reference panel. `null` if no panel exists.<ko>기준 패널로부터 패널이 필요한 방향. 패널이 하나도 없을 경우 `null`이다.</ko>
  * @property - Original event emitted from {@link https://naver.github.io/egjs-axes/release/latest/doc/ Axes} instance.<ko>내부의 {@link https://naver.github.io/egjs-axes/release/latest/doc Axes} 인스턴스로부터 발생된 원본 이벤트.</ko>
  * @property - Flicking instance that triggered event.<ko>이벤트를 발생시킨 Flicking의 인스턴스</ko>
+ * @property - A helper function that can be used to fill the empty panel area without consideration of direction.<ko>방향을 고려하지 않고 패널을 손쉽게 추가할 수 있게 해주는 헬퍼 함수.</ko>
  * @property range - Range of indexes that is emtpy.<ko>패널이 존재하지 않는 인덱스의 범위.</ko>
  * @property {number} [range.min] - Minimum index of panels needed.<ko>필요한 패널들의 최소 인덱스.</ko>.
  * @property {number} [range.max] - Maximum index of panels needed.<ko>필요한 패널들의 최대 인덱스.</ko>.
  * @property {number} [range.length] - How many panels are needed to fill empty spaces.<ko>몇 개의 패널이 필요한지를 나타내는 정수.</ko>
+ * @example
+ * ```js
+ * flicking.on("needPanel", e => {
+ *     const newPanelElements = createElements();
+ *     e.fill(newPanelElements);
+ * })
+ * ```
  */
 export interface NeedPanelEvent {
   type: string;
@@ -414,6 +422,7 @@ export interface NeedPanelEvent {
   direction: ValueOf<Direction> | null;
   axesEvent?: any;
   currentTarget: Flicking;
+  fill: (elements: ElementLike | ElementLike[]) => FlickingPanel[];
   range: {
     min: number;
     max: number;

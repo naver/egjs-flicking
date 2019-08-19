@@ -28,11 +28,8 @@ setTimeout(function() {
     }).on({
         needPanel: function(e) {
             console.log("NEED_PANEL", e);
-            e.direction === eg.Flicking.DIRECTION.NEXT
-                ? e.index === 50
-                    ? n2.replace(e.range.min, createPanelElement(e.range.min))
-                    : e.panel.insertAfter(createPanelElement(e.index + 1))
-                : e.panel.insertBefore(createPanelElement(e.index - 1));
+            var newPanel = e.fill(createPanelElement(0))[0];
+            newPanel.update(el => el.innerHTML = "<p>Layer " + newPanel.getIndex() + "</p>");
         }
     });
     n2.replace(50, createPanelElement(50));
@@ -48,16 +45,16 @@ setTimeout(function() {
         needPanel: function(e) {
             console.log("NEED_PANEL", e);
             e.direction === eg.Flicking.DIRECTION.NEXT
-            ? e.panel.insertAfter([
-                createPanelElement(e.index + 1),
-                createPanelElement(e.index + 2),
-                createPanelElement(e.index + 3)
-            ])
-            : e.panel.insertBefore([
-                createPanelElement(e.index - 3),
-                createPanelElement(e.index - 2),
-                createPanelElement(e.index - 1)
-            ]);
+                ? e.panel.insertAfter([
+                    createPanelElement(e.index + 1),
+                    createPanelElement(e.index + 2),
+                    createPanelElement(e.index + 3)
+                ])
+                : e.panel.insertBefore([
+                    createPanelElement(e.index - 3),
+                    createPanelElement(e.index - 2),
+                    createPanelElement(e.index - 1)
+                ]);
         }
     });
     n3.replace(10, createPanelElement(10));
@@ -69,14 +66,8 @@ setTimeout(function() {
     }).on({
         needPanel: function(e) {
             console.log("NEED_PANEL", e);
-            if (e.panel) {
-            e.direction === eg.Flicking.DIRECTION.NEXT
-            ? e.panel.insertAfter(createPanelElement(e.index + 1))
-            : e.panel.insertBefore(createPanelElement(e.index - 1));
-            } else {
-            // No panels exist
-            n4.append(createPanelElement(0));
-            }
+            var newPanel = e.fill(createPanelElement(0))[0];
+            newPanel.update(el => el.innerHTML = "<p>Layer " + newPanel.getIndex() + "</p>");
         }
     });
     document.querySelector("#setLastIndex").addEventListener("click", function(e) {
@@ -100,11 +91,8 @@ setTimeout(function() {
     }).on({
         needPanel: function(e) {
             console.log("NEED_PANEL", e);
-            e.direction === eg.Flicking.DIRECTION.NEXT
-            ? e.panel.insertAfter(createPanelElement(e.index + 1))
-            : e.index === 0
-                ? n5.replace(e.range.max, createPanelElement(e.range.max))
-                : e.panel.insertBefore(createPanelElement(e.index - 1));
+            var newPanel = e.fill(createPanelElement(0))[0];
+            newPanel.update(el => el.innerHTML = "<p>Layer " + newPanel.getIndex() + "</p>");
         }
     });
     n5.replace(0, createPanelElement(0));
