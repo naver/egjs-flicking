@@ -581,13 +581,13 @@ class Flicking extends Component {
   }
 
   /**
-   * Mapping all items of the user for the currently visible panels.
+   * Mapping all items of the user for the currently rendering panels.
    * @private
-   * @ko 현재 보이는 패널들에 대해 사용자의 전체 아이템들과 매핑을 시킨다.
-   * @param - User's all items <ko>사용자의 전체 아이템들</ko>
-   * @return Array of Item of the user mapped to the currently visible item <ko>현재 보이는 패널과 매핑되는 사용자의 아이템 배열</ko>
+   * @ko 현재 렌더링 중인 패널들에 대해 사용자의 전체 아이템들과 매핑을 시킨다.
+   * @param - User's all items. <ko>사용자의 전체 아이템들.</ko>
+   * @return Array of Item of the user mapped to the currently rendering panels. <ko>현재 렌더링 중인 패널과 매핑되는 사용자의 아이템 배열.</ko>
    */
-  public mapVisiblePanels<T = any>(allItems: T[]): T[] {
+  public mapRenderingPanels<T = any>(allItems: T[]): T[] {
     const { renderOnlyVisible } = this.options;
 
     if (!renderOnlyVisible) {
@@ -635,7 +635,7 @@ class Flicking extends Component {
     });
 
     added.forEach(addIndex => {
-      newPanels[addIndex] = new Panel(null, addIndex, this.viewport) as any as Panel;
+      newPanels[addIndex] = new Panel(null, addIndex, this.viewport);
     });
 
     if (isCircular) {
@@ -681,8 +681,8 @@ class Flicking extends Component {
   }
 
   /**
-   * Synchronize info of panels instance with info given by external rendering.
-   * @ko 외부 렌더링 방식에 의해 입력받은 패널의 정보와 현재 플리킹이 갖는 패널 정보를 동기화한다.
+   * Synchronize info of panels with DOM info given by external rendering.
+   * @ko 외부 렌더링 방식에 의해 입력받은 DOM의 정보와 현재 플리킹이 갖는 패널 정보를 동기화 한다.
    * @private
    * @param - Info object of how panel elements are changed.<ko>패널의 DOM 요소들의 변경 정보를 담는 오브젝트.</ko>
    */
@@ -726,7 +726,7 @@ class Flicking extends Component {
 
       beforePanel.getElement()
         ? beforePanel.setElement(addedElement)
-        : beforePanel.initElement(list[addedIndex]);
+        : beforePanel.setElement(list[addedIndex]);
       beforePanel.unCacheBbox();
     });
     viewport.resetVisibleIndex();

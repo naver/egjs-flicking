@@ -54,16 +54,6 @@ class Panel implements FlickingPanel {
       },
       cachedBbox: null,
     };
-    this.initElement(element);
-  }
-
-  public initElement(element?: HTMLElement | null) {
-    if (!element) {
-      return;
-    }
-    this.element = element;
-    this.state.originalStyle.className = element.getAttribute("class");
-    this.state.originalStyle.style = element.getAttribute("style");
     this.setElement(element);
   }
 
@@ -470,13 +460,13 @@ class Panel implements FlickingPanel {
     }
   }
 
-  public setElement(element: HTMLElement | null): void {
+  public setElement(element?: HTMLElement | null): void {
     if (!element) {
       return;
     }
     if (!this.element) {
-      this.initElement(element);
-      return;
+      this.state.originalStyle.className = element.getAttribute("class");
+      this.state.originalStyle.style = element.getAttribute("style");
     }
     this.element = element;
 

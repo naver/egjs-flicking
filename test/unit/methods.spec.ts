@@ -1264,7 +1264,7 @@ describe("Methods call", () => {
     });
   });
   describe("mapVisiblePanel()", () => {
-    it(`get mapped items with renderOnlyVisible: true, circular: false`, () => {
+    it("get mapped items with renderOnlyVisible: true, circular: false", () => {
       // Given
       // 30, 30, 30, 30, 30, 30
       flickingInfo = createFlicking(horizontal.panel30, {
@@ -1272,12 +1272,12 @@ describe("Methods call", () => {
       });
       const items = [0, 1, 2, 3, 4, 5];
       // When
-      const mappedItems = flickingInfo.instance.mapVisiblePanels(items);
+      const mappedItems = flickingInfo.instance.mapRenderingPanels(items);
 
       // Then
       expect(mappedItems).to.be.deep.equals([0, 1, 2]);
     });
-    it(`get mapped items with renderOnlyVisible: false, circular: false`, () => {
+    it("get mapped items with renderOnlyVisible: false, circular: false", () => {
       // Given
       // 30, 30, 30, 30, 30, 30
       flickingInfo = createFlicking(horizontal.panel30, {
@@ -1285,12 +1285,12 @@ describe("Methods call", () => {
       });
       const items = [0, 1, 2, 3, 4, 5];
       // When
-      const mappedItems = flickingInfo.instance.mapVisiblePanels(items);
+      const mappedItems = flickingInfo.instance.mapRenderingPanels(items);
 
       // Then
       expect(mappedItems).to.be.deep.equals(items);
     });
-    it(`get mapped items with renderOnlyVisible: true, circular: true`, () => {
+    it("get mapped items with renderOnlyVisible: true, circular: true", () => {
       // Given
       // 30, 30, 30, 30, 30, 30
       flickingInfo = createFlicking(horizontal.panel30, {
@@ -1299,13 +1299,13 @@ describe("Methods call", () => {
       });
       const items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
       // When
-      const mappedItems = flickingInfo.instance.mapVisiblePanels(items);
+      const mappedItems = flickingInfo.instance.mapRenderingPanels(items);
 
       // Then
       // Clone(11, 12) + Original (0, 1, 2)
       expect(mappedItems).to.be.deep.equals([0, 1, 2, 11, 12]);
     });
-    it(`get mapped items with renderOnlyVisible: false. circular: true`, () => {
+    it("get mapped items with renderOnlyVisible: false. circular: true", () => {
       // Given
       // 30, 30, 30, 30, 30, 30
       flickingInfo = createFlicking(horizontal.panel30, {
@@ -1314,7 +1314,7 @@ describe("Methods call", () => {
       });
       const items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
       // When
-      const mappedItems = flickingInfo.instance.mapVisiblePanels(items);
+      const mappedItems = flickingInfo.instance.mapRenderingPanels(items);
 
       // Then
       expect(mappedItems).to.be.deep.equals(items);
