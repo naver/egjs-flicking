@@ -1718,6 +1718,7 @@ export default class Viewport {
     indexRange: NeedPanelEvent["range"];
   }): void {
     const { axesEvent, siblingPanel, direction, indexRange } = params;
+    const options = this.options;
     const checkedIndexes = this.state.checkedIndexes;
     const alreadyTriggered = checkedIndexes.some(([min, max]) => min === indexRange.min || max === indexRange.max);
     const hasHandler = this.flicking.hasOn(EVENTS.NEED_PANEL);
@@ -1745,6 +1746,25 @@ export default class Viewport {
         panel: siblingPanel,
         direction,
         range: indexRange,
+        fill: (element: ElementLike | ElementLike[]) => {
+          const panelManager = this.panelManager;
+          if (!siblingPanel) {
+            return this.insert(panelManager.getRange().max + 1, element);
+          }
+
+          const parsedElements = parseElement(element);
+          const elements = direction === DIRECTION.NEXT
+            ? parsedElements.slice(0, indexRange.length)
+            : parsedElements.slice(parsedElements.length - indexRange.length);
+          const newPanels = direction === DIRECTION.NEXT
+            ? options.circular && index === panelManager.getLastIndex()
+              ? this.insert(0, elements)
+              : siblingPanel.insertAfter(elements)
+            : options.circular && index === 0
+              ? this.insert(indexRange.max - elements.length + 1, elements)
+              : siblingPanel.insertBefore(elements);
+          return newPanels;
+        },
       } as Partial<NeedPanelEvent>,
     );
   }
