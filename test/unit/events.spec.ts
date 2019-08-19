@@ -827,6 +827,224 @@ describe("Events", () => {
       expect(scrollAreaBefore.next).not.equals(scrollAreaAfter.next);
       expect(scrollAreaBefore.prev).not.equals(scrollAreaAfter.prev);
     });
+
+    describe("fill()", () => {
+      it("can fill panels in right position when not circular, next direction", () => {
+        // Given
+        createInfiniteFlickingWithOption(horizontal.none, {
+          anchor: 0,
+          hanger: 0,
+          circular: false,
+        });
+
+        // When
+        const flicking = flickingInfo.instance;
+        flicking.on(EVENTS.NEED_PANEL, e => {
+          e.fill([
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+          ]);
+        });
+        flicking.replace(0, createHorizontalElement(20));
+
+        // Then
+        expect(needPanelEvents.length).equals(1);
+        const needPanelEvent = needPanelEvents[0];
+
+        expect(needPanelEvent.direction).equals(DIRECTION.NEXT);
+        expect(flicking.getPanel(1)).not.to.be.null;
+        expect(flicking.getPanel(2)).not.to.be.null;
+        expect(flicking.getPanel(3)).not.to.be.null;
+        expect(flicking.getPanel(4)).not.to.be.null;
+        expect(flicking.getPanel(5)).not.to.be.null;
+      });
+
+      it("can fill panels in right position when not circular, prev direction", () => {
+        // Given
+        createInfiniteFlickingWithOption(horizontal.none, {
+          anchor: "0%",
+          hanger: "100%",
+          circular: false,
+        });
+
+        // When
+        const flicking = flickingInfo.instance;
+        flicking.on(EVENTS.NEED_PANEL, e => {
+          e.fill([
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+          ]);
+        });
+        flicking.replace(5, createHorizontalElement(20));
+
+        // Then
+        expect(needPanelEvents.length).equals(1);
+        const needPanelEvent = needPanelEvents[0];
+
+        expect(needPanelEvent.direction).equals(DIRECTION.PREV);
+        expect(flicking.getPanel(0)).not.to.be.null;
+        expect(flicking.getPanel(1)).not.to.be.null;
+        expect(flicking.getPanel(2)).not.to.be.null;
+        expect(flicking.getPanel(3)).not.to.be.null;
+        expect(flicking.getPanel(4)).not.to.be.null;
+      });
+
+      it("can fill panels in right position when circular, next direction", () => {
+        // Given
+        createInfiniteFlickingWithOption(horizontal.none, {
+          anchor: 0,
+          hanger: 0,
+          circular: true,
+          lastIndex: 5,
+        });
+
+        // When
+        const flicking = flickingInfo.instance;
+        flicking.on(EVENTS.NEED_PANEL, e => {
+          e.fill([
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+          ]);
+        });
+        flicking.replace(5, createHorizontalElement(20));
+
+        // Then
+        expect(needPanelEvents.length).equals(1);
+        const needPanelEvent = needPanelEvents[0];
+
+        expect(needPanelEvent.direction).equals(DIRECTION.NEXT);
+        expect(flicking.getPanel(0)).not.to.be.null;
+        expect(flicking.getPanel(1)).not.to.be.null;
+        expect(flicking.getPanel(2)).not.to.be.null;
+        expect(flicking.getPanel(3)).not.to.be.null;
+        expect(flicking.getPanel(4)).not.to.be.null;
+      });
+
+      it("can fill panels in right position when circular, prev direction", () => {
+        // Given
+        createInfiniteFlickingWithOption(horizontal.none, {
+          anchor: 0,
+          hanger: "100%",
+          circular: true,
+          lastIndex: 5,
+        });
+
+        // When
+        const flicking = flickingInfo.instance;
+        flicking.on(EVENTS.NEED_PANEL, e => {
+          e.fill([
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+          ]);
+        });
+        flicking.replace(0, createHorizontalElement(20));
+
+        // Then
+        expect(needPanelEvents.length).equals(1);
+        const needPanelEvent = needPanelEvents[0];
+
+        expect(needPanelEvent.direction).equals(DIRECTION.PREV);
+        expect(flicking.getPanel(1)).not.to.be.null;
+        expect(flicking.getPanel(2)).not.to.be.null;
+        expect(flicking.getPanel(3)).not.to.be.null;
+        expect(flicking.getPanel(4)).not.to.be.null;
+        expect(flicking.getPanel(5)).not.to.be.null;
+      });
+
+      it("can fill panels in only empty position, next direction", () => {
+        // Given
+        createInfiniteFlickingWithOption(horizontal.none, {
+          anchor: 0,
+          hanger: 0,
+          lastIndex: 10,
+        });
+        const flicking = flickingInfo.instance;
+        flicking.replace(0, createHorizontalElement(50)); // needPanel is triggered but not handled
+
+        // When
+        flicking.on(EVENTS.NEED_PANEL, e => {
+          e.fill([
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+          ]);
+        });
+        flicking.replace(5, createHorizontalElement(20));
+
+        // Then
+        expect(needPanelEvents.length).equals(2);
+        const needPanelEvent = needPanelEvents[1];
+
+        expect(needPanelEvent.direction).equals(DIRECTION.NEXT);
+        expect(flicking.getPanel(0)).not.to.be.null;
+        expect(flicking.getPanel(1)).not.to.be.null;
+        expect(flicking.getPanel(2)).not.to.be.null;
+        expect(flicking.getPanel(3)).not.to.be.null;
+        expect(flicking.getPanel(4)).not.to.be.null;
+        expect(flicking.getPanel(5)).not.to.be.null;
+        expect(flicking.getPanel(6)).to.be.null;
+      });
+
+      it("can fill panels in only empty position, prev direction", () => {
+        // Given
+        createInfiniteFlickingWithOption(horizontal.none, {
+          anchor: 0,
+          hanger: "100%",
+          lastIndex: 10,
+        });
+        const flicking = flickingInfo.instance;
+        flicking.replace(5, createHorizontalElement(50)); // needPanel is triggered but not handled
+
+        // When
+        flicking.on(EVENTS.NEED_PANEL, e => {
+          e.fill([
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+            createHorizontalElement(20),
+          ]);
+        });
+        flicking.replace(3, createHorizontalElement(100)); // should fill from 3 to 5
+
+        // Then
+        expect(needPanelEvents.length).equals(2);
+        const needPanelEvent = needPanelEvents[1];
+
+        expect(needPanelEvent.direction).equals(DIRECTION.PREV);
+        expect(flicking.getPanel(0)).to.be.null;
+        expect(flicking.getPanel(1)).to.be.null;
+        expect(flicking.getPanel(2)).to.be.null;
+        expect(flicking.getPanel(3)).not.to.be.null;
+        expect(flicking.getPanel(4)).not.to.be.null;
+        expect(flicking.getPanel(5)).not.to.be.null;
+        expect(flicking.getPanel(6)).to.be.null;
+      });
+    });
   });
 
   describe("change event", () => {
