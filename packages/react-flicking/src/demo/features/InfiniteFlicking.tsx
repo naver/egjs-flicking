@@ -12,8 +12,8 @@ export default class InfiniteFlicking extends React.Component<{}, { list0: numbe
     list1: [0, 1, 2, 3, 4],
     list2: [0, 1, 2, 3, 4],
   };
+
   public render() {
-    // [3, 4, 0, 1, 2, 5, 6, 7, 8]
     return (
       <div id="infinite" className="container">
         <h1>Infinite Flicking</h1>
@@ -80,6 +80,7 @@ export default class InfiniteFlicking extends React.Component<{}, { list0: numbe
       </div>
     );
   }
+
   public componentDidMount() {
     insertCode("infinite", 0, `
 <Flicking className="flicking flicking0" gap={10}>

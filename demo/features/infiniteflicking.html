@@ -89,6 +89,9 @@ var prev = 0;
 var next = 4;
 var flicking0 = new eg.Flicking(".flicking0", {
     gap: 10,
+    circular: true,
+    lastIndex: 10,
+    renderOnlyVisible: true,
 });
 
 document.querySelector("#prepend").addEventListener("click", function () {

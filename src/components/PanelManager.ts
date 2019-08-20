@@ -205,6 +205,13 @@ class PanelManager {
 
     if (isCircular) {
       this.addNewClones(index, newPanels, newPanels.length - pushedIndex, nextSibling);
+      const clones = this.clones;
+      const panelCount = this.panels.length;
+      if (clones[0] && clones[0].length > lastIndex + 1) {
+        clones.forEach(cloneSet => {
+          cloneSet.splice(panelCount);
+        });
+      }
     }
 
     return pushedIndex;

@@ -401,7 +401,7 @@ class Panel implements FlickingPanel {
     const viewport = this.viewport;
     let cloneElement = element;
 
-    if (!cloneElement && this.element) {
+    if (!cloneElement && this.element && viewport.options.renderOnlyVisible) {
       cloneElement = isVirtual ? this.element : this.element.cloneNode(true) as HTMLElement;
     }
     const clonedPanel = new Panel(cloneElement, state.index, viewport);
@@ -468,15 +468,18 @@ class Panel implements FlickingPanel {
       this.state.originalStyle.className = element.getAttribute("class");
       this.state.originalStyle.style = element.getAttribute("style");
     }
-    this.element = element;
 
-    const options = this.viewport.options;
-    if (options.classPrefix) {
-      addClass(element, `${options.classPrefix}-panel`);
+    if (element !== this.element) {
+      this.element = element;
+
+      const options = this.viewport.options;
+      if (options.classPrefix) {
+        addClass(element, `${options.classPrefix}-panel`);
+      }
+
+      // Update size info after applying panel css
+      applyCSS(this.element, DEFAULT_PANEL_CSS);
     }
-
-    // Update size info after applying panel css
-    applyCSS(this.element, DEFAULT_PANEL_CSS);
   }
 }
 
