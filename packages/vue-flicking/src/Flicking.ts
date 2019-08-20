@@ -8,7 +8,6 @@ import ChildrenDiffer from "@egjs/vue-children-differ";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { CreateElement, VNodeData, VNode } from "vue";
-import { counter } from "./utils";
 
 @Component({
   name: "Flicking",
@@ -39,7 +38,7 @@ export default class Flicking extends Vue {
     this.options.renderOnlyVisible = true;
     const options = {...this.options, ...{ renderExternal: true }};
     this.$_nativeFlicking = new NativeFlicking(this.$el as HTMLElement, options);
-    this.$_slotDiffer = new ListDiffer<VNode>(this.$slots.default, (vnode, idx) => vnode.key || idx);
+    this.$_slotDiffer = new ListDiffer<VNode>(this.$slots.default, (vnode, idx) => vnode.key!);
 
     this.$_bindEvents();
     this.$_checkUpdate();
@@ -97,10 +96,9 @@ export default class Flicking extends Vue {
 
   public onUpdate(diffResult: DiffResult<HTMLElement>) {
     const flicking = this.$_nativeFlicking;
-    const prevCloneCount = this.$_cloneCount;
     const newCloneCount = flicking.getCloneCount();
 
-    this.$_nativeFlicking.sync(diffResult, this.$_slotDiffResult, prevCloneCount);
+    this.$_nativeFlicking.sync(diffResult);
     this.$_cloneCount = newCloneCount;
     this.$_slotDiffResult = undefined;
     this.$nextTick(() => {
@@ -157,74 +155,39 @@ export default class Flicking extends Vue {
 
   private $_getPanels(h: CreateElement) {
     const flicking = this.$_nativeFlicking;
-    const slots = this.$slots.default;
+    const wholeSlots = this.$slots.default;
 
-    if (!slots) {
+    if (!wholeSlots) {
       return [];
     }
-
-    const oldCloneCount = this.$_cloneCount;
-    const newCloneCount = flicking
-      ? flicking.getCloneCount()
-      : 0;
 
     const lastIndex = flicking
       ? flicking.getLastIndex()
       : this.options.lastIndex || DEFAULT_OPTIONS.lastIndex;
-
+    const slots = wholeSlots.slice(0, lastIndex + 1);
     let panels: VNode[];
 
     if (this.options.renderOnlyVisible && this.$_slotDiffer) {
       this.$_slotDiffResult = this.$_slotDiffer.update(slots);
 
       const slotsDiff = this.$_slotDiffResult;
-      const panelCnt = flicking.getPanelCount();
-      const visibleIndex = this.$_visibleIndex;
+      const panelCnt = slots.length;
 
-      const visibles = counter(visibleIndex.max - visibleIndex.min + 1).map(offset => {
-        const index = visibleIndex.min + offset;
-        let node: VNode;
-        if (index < 0) {
-          const relativeIndex = panelCnt + ((index + 1) % panelCnt - 1);
-          const cloneIndex = newCloneCount - ((index + 1) % panelCnt + 1);
-          const origSlot = slots[relativeIndex];
+      flicking.beforeSync(slotsDiff);
 
-          node = this.$_cloneVNode(origSlot, h, cloneIndex, relativeIndex);
-        } else if (index >= panelCnt) {
+      const indexesToRender = flicking.mapRenderingPanels(slotsDiff);
+      panels = indexesToRender.map(index => {
+        if (index >= panelCnt) {
           const relativeIndex = index % panelCnt;
           const origSlot = slots[relativeIndex];
 
-          node = this.$_cloneVNode(origSlot, h, Math.floor(index / panelCnt) - 1, relativeIndex);
+          return this.$_cloneVNode(origSlot, h, Math.floor(index / panelCnt) - 1, relativeIndex);
         } else {
-          node = slots[index];
+          return slots[index];
         }
-
-        return node;
       });
-
-      const added = slotsDiff.added.map(addedIndex => slots[addedIndex]);
-
-      const addedClones = counter(oldCloneCount).reduce((clones: VNode[], cloneIndex) => {
-        const newAddedClones = slotsDiff.added.map(addedIdx => {
-          const child = slots[addedIdx];
-
-          return this.$_cloneVNode(child, h, cloneIndex, addedIdx);
-        });
-        return [...clones, ...newAddedClones];
-      }, []);
-
-      const newClones = counter(newCloneCount - oldCloneCount).reduce((clones: VNode[], idxOffset) => {
-        const cloneIndex = oldCloneCount + idxOffset;
-        const childs = slots.map((slot, slotIndex) => {
-          return this.$_cloneVNode(slot, h, cloneIndex, slotIndex);
-        });
-
-        return [...clones, ...childs];
-      }, []);
-
-      panels = [...visibles, ...added, ...addedClones, ...newClones];
     } else {
-      panels = [...slots.slice(0, lastIndex + 1), ...this.$_getClonedVNodes()];
+      panels = [...slots, ...this.$_getClonedVNodes()];
     }
 
     return panels;
@@ -249,7 +212,7 @@ export default class Flicking extends Vue {
 
   private $_cloneVNode(vnode: VNode, h: CreateElement, cloneIndex?: number, childIndex?: number): VNode {
     const key = cloneIndex != null
-      ? `clone${cloneIndex}-${vnode.key ? vnode.key : childIndex}`
+      ? `clone${cloneIndex}-${vnode.key != null ? vnode.key : childIndex}`
       : undefined;
     const clonedChilds = vnode.children
       ? vnode.children.map(child => this.$_cloneVNode(child, h))
@@ -264,12 +227,5 @@ export default class Flicking extends Vue {
     clone.key = key;
 
     return clone;
-  }
-
-  private $_getPanelFromRelativeIndex(index: number, allPanels: FlickingPanel[]) {
-    index = index < 0
-      ? allPanels.length + index
-      : index;
-    return allPanels[index];
   }
 }

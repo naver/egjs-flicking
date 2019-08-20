@@ -158,7 +158,11 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       }));
     }
 
-    return flicking ? flicking.mapRenderingPanels(arr) : arr;
+    if (flicking && renderOnlyVisible) {
+      arr = flicking.mapRenderingPanels(result).map(index => arr[index]);
+    }
+
+    return arr;
   }
 }
 interface Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>, FlickingType<Flicking> { }

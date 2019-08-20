@@ -7,8 +7,8 @@
       <li>The panel's indexes are zero-based integer.</li>
       <li>Note: The number displayed above each panel is not panel's index.</li>
     </ul>
-    <flicking class="flicking flicking0" :options="{ gap: 10, renderOnlyVisible: true }">
-      <div v-for="num in list0" class="infinite" :class="`panel${Math.abs(num) % 5}`" :key="num">
+    <flicking class="flicking flicking0" :options="{ gap: 10, renderOnlyVisible: true, circular: true, lastIndex: 10 }">
+      <div v-for="num in list0" class="infinite" :class="`panel${Math.abs(num) % 5}`" :key="`1-${num}`">
         {{ num }}
       </div>
     </flicking>

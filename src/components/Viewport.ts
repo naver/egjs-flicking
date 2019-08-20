@@ -185,8 +185,12 @@ export default class Viewport {
     const state = this.state;
     const options = this.options;
     const transform = state.translate.name;
+    const scrollArea = state.scrollArea;
 
     // Update position & nearestPanel
+    if (!isBetween(pos, scrollArea.prev, scrollArea.next)) {
+      pos = circulate(pos, scrollArea.prev, scrollArea.next, false);
+    }
     state.position = pos;
     this.nearestPanel = this.findNearestPanel();
     const nearestPanel = this.nearestPanel;
@@ -258,13 +262,6 @@ export default class Viewport {
     }
     state.isAdaptiveCached = false;
     this.panelBboxes = {};
-  }
-
-  public beforeSync(): void {
-    this.updateOriginalPanelPositions();
-    this.updateClonePanels();
-    // update visible index
-    this.updateVisiblePanels();
   }
 
   public resize(): void {
@@ -1885,7 +1882,9 @@ export default class Viewport {
 
     const newVisibleIndex = {
       // Relative index including clone, can be negative number
-      min: lastPanelOfPrevDir.getIndex() - minPanelCloneOffset,
+      min: basePanel.getCloneIndex() > -1
+        ? lastPanelOfPrevDir.getIndex() + minPanelCloneOffset
+        : lastPanelOfPrevDir.getIndex() - minPanelCloneOffset,
       // Relative index including clone
       max: lastPanelOfNextDir.getIndex() + maxPanelCloneOffset,
     };

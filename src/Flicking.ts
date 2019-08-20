@@ -11,6 +11,7 @@ import { merge, getProgress, parseElement, isString, counter } from "./utils";
 import { DEFAULT_OPTIONS, EVENTS, DIRECTION, AXES_EVENTS, STATE_TYPE, DEFAULT_MOVE_TYPE_OPTIONS } from "./consts";
 import { FlickingOptions, FlickingEvent, Direction, EventType, FlickingPanel, TriggerCallback, FlickingContext, FlickingStatus, Plugin, ElementLike, DestroyOption, BeforeSyncResult, SyncResult } from "./types";
 import { sendEvent } from "./ga/ga";
+import { DiffResult } from "@egjs/list-differ";
 
 /**
  * @memberof eg
@@ -585,21 +586,40 @@ class Flicking extends Component {
    * Mapping all items of the user for the currently rendering panels.
    * @private
    * @ko 현재 렌더링 중인 패널들에 대해 사용자의 전체 아이템들과 매핑을 시킨다.
-   * @param - User's all items. <ko>사용자의 전체 아이템들.</ko>
-   * @return Array of Item of the user mapped to the currently rendering panels. <ko>현재 렌더링 중인 패널과 매핑되는 사용자의 아이템 배열.</ko>
+   * @param - User's all items.<ko>사용자의 전체 아이템들.</ko>
+   * @return Array of Item of the user mapped to the currently rendering panels.<ko>현재 렌더링 중인 패널과 매핑되는 사용자의 아이템 배열.</ko>
    */
-  public mapRenderingPanels<T = any>(allItems: T[]): T[] {
-    const { renderOnlyVisible } = this.options;
+  public mapRenderingPanels(diffResult: DiffResult<any>): number[] {
+    const viewport = this.viewport;
+    const { min, max } = viewport.getVisibleIndex();
+    const maintained = diffResult.maintained.reduce((values: {[key: number]: number}, [before, after]) => {
+      values[before] = after;
+      return values;
+    }, {});
 
-    if (!renderOnlyVisible) {
-      return allItems;
-    }
-    const { min, max } = this.viewport.getVisibleIndex();
-    const visiblePanels = min >= 0
-      ? allItems.slice(min, max + 1)
-      : allItems.slice(0, max + 1).concat(allItems.slice(min));
+    const prevPanelCount = diffResult.prevList.length;
+    const panelCount = diffResult.list.length;
+    const added = diffResult.added;
+    const list = counter(prevPanelCount * (this.getCloneCount() + 1));
 
-    return visiblePanels;
+    let visibles = min >= 0
+      ? list.slice(min, max + 1)
+      : list.slice(0, max + 1).concat(list.slice(min));
+    visibles = visibles
+      .filter(val => maintained[val % prevPanelCount] != null)
+      .map(val => {
+        const cloneIndex = Math.floor(val / prevPanelCount);
+        const changedIndex = maintained[val % prevPanelCount];
+
+        return changedIndex + panelCount * cloneIndex;
+      });
+
+    const renderingPanels = [...visibles, ...added];
+    const allPanels = viewport.panelManager.allPanels();
+
+    viewport.setVisiblePanels(renderingPanels.map(index => allPanels[index]));
+
+    return renderingPanels;
   }
 
   /**
@@ -609,7 +629,7 @@ class Flicking extends Component {
    * @param - Info object of how panel infos are changed.<ko>패널 정보들의 변경 정보를 담는 오브젝트.</ko>
    * @param - Whether called from sync method <ko> sync 메소드로부터 호출됐는지 여부 </ko>
    */
-  public beforeSync(diffInfo: BeforeSyncResult, isCallSync?: boolean) {
+  public beforeSync(diffInfo: BeforeSyncResult) {
     const { maintained, added, changed, removed } = diffInfo;
     const viewport = this.viewport;
     const panelManager = viewport.panelManager;
@@ -677,8 +697,6 @@ class Flicking extends Component {
       maintained.forEach(([, next]) => { viewport.updateCheckedIndexes({ min: next, max: next }); });
     }
     panelManager.replacePanels(newPanels, newClones);
-
-    !isCallSync && this.viewport.beforeSync();
   }
 
   /**
@@ -717,17 +735,19 @@ class Flicking extends Component {
           changed: originalChanged,
         };
       }
-      this.beforeSync(beforeDiffInfo, true);
+      this.beforeSync(beforeDiffInfo);
     }
-    const visiblePanels = renderOnlyVisible ? this.getVisiblePanels() : this.getAllPanels(true);
+
+    const visiblePanels = renderOnlyVisible
+      ? viewport.getVisiblePanels()
+      : this.getAllPanels(true);
 
     added.forEach(addedIndex => {
       const addedElement = list[addedIndex];
       const beforePanel = visiblePanels[addedIndex] as Panel;
 
-      beforePanel.getElement()
-        ? beforePanel.setElement(addedElement)
-        : beforePanel.setElement(list[addedIndex]);
+      beforePanel.setElement(addedElement);
+      // As it can be 0
       beforePanel.unCacheBbox();
     });
     viewport.resetVisibleIndex();
