@@ -7,7 +7,7 @@ import Component from "@egjs/component";
 import Viewport from "./components/Viewport";
 import Panel from "./components/Panel";
 
-import { merge, getProgress, parseElement, isString, counter } from "./utils";
+import { merge, getProgress, parseElement, isString, counter, findIndex } from "./utils";
 import { DEFAULT_OPTIONS, EVENTS, DIRECTION, AXES_EVENTS, STATE_TYPE, DEFAULT_MOVE_TYPE_OPTIONS } from "./consts";
 import { FlickingOptions, FlickingEvent, Direction, EventType, FlickingPanel, TriggerCallback, FlickingContext, FlickingStatus, Plugin, ElementLike, DestroyOption, BeforeSyncResult, SyncResult } from "./types";
 import { sendEvent } from "./ga/ga";
@@ -65,6 +65,7 @@ class Flicking extends Component {
   private wrapper: HTMLElement;
   private viewport: Viewport;
   private eventContext: FlickingContext;
+  private flag: boolean = false;
 
   /**
    * @param element A base element for the eg.Flicking module. When specifying a value as a `string` type, you must specify a css selector string to select the element.<ko>eg.Flicking 모듈을 사용할 기준 요소. `string`타입으로 값 지정시 요소를 선택하기 위한 css 선택자 문자열을 지정해야 한다.</ko>
@@ -309,14 +310,6 @@ class Flicking extends Component {
    */
   public getVisiblePanels(): FlickingPanel[] {
     return this.viewport.calcVisiblePanels();
-  }
-
-  /**
-   * Return visible index of panels currently shown in viewport area. Cloned panels use relative index, which can be negated or bigger than panel count.
-   * @private
-   */
-  public getVisibleIndex(): { min: number; max: number } {
-    return this.viewport.getVisibleIndex();
   }
 
   /**
@@ -583,13 +576,13 @@ class Flicking extends Component {
   }
 
   /**
-   * Mapping all items of the user for the currently rendering panels.
+   * Get indexes to render. Should be used with `renderOnlyVisible` option.
    * @private
-   * @ko 현재 렌더링 중인 패널들에 대해 사용자의 전체 아이템들과 매핑을 시킨다.
-   * @param - User's all items.<ko>사용자의 전체 아이템들.</ko>
-   * @return Array of Item of the user mapped to the currently rendering panels.<ko>현재 렌더링 중인 패널과 매핑되는 사용자의 아이템 배열.</ko>
+   * @ko 렌더링이 필요한 인덱스들을 반환한다. `renderOnlyVisible` 옵션과 함께 사용해야 한다.
+   * @param - Info object of how panel infos are changed.<ko>패널 정보들의 변경 정보를 담는 오브젝트.</ko>
+   * @return Array of indexes to render.<ko>렌더링할 인덱스의 배열</ko>
    */
-  public mapRenderingPanels(diffResult: DiffResult<any>): number[] {
+  public getRenderingIndexes(diffResult: DiffResult<any>): number[] {
     const viewport = this.viewport;
     const { min, max } = viewport.getVisibleIndex();
     const maintained = diffResult.maintained.reduce((values: {[key: number]: number}, [before, after]) => {
@@ -637,6 +630,13 @@ class Flicking extends Component {
     const cloneCount = panelManager.getCloneCount();
     const prevClonedPanels = panelManager.clonedPanels();
 
+    // Update visible panels
+    const newVisiblePanels = viewport.getVisiblePanels()
+      .filter(panel => findIndex(removed, index => {
+        return index === panel.getIndex();
+      }) < 0);
+    viewport.setVisiblePanels(newVisiblePanels);
+
     // Did not changed at all
     if (
       added.length <= 0
@@ -667,7 +667,7 @@ class Flicking extends Component {
         maintained.forEach(([beforeIdx, afterIdx]) => {
           newCloneGroup[afterIdx] = prevCloneGroup
             ? prevCloneGroup[beforeIdx]
-            : newPanels[afterIdx].cloneExternal(groupIndex, null);
+            : newPanels[afterIdx].clone(groupIndex, false);
 
           newCloneGroup[afterIdx].setIndex(afterIdx);
         });
@@ -675,7 +675,7 @@ class Flicking extends Component {
         added.forEach(addIndex => {
           const newPanel = newPanels[addIndex];
 
-          newCloneGroup[addIndex] = newPanel.cloneExternal(groupIndex, null);
+          newCloneGroup[addIndex] = newPanel.clone(groupIndex, false);
         });
       });
     }
@@ -697,6 +697,7 @@ class Flicking extends Component {
       maintained.forEach(([, next]) => { viewport.updateCheckedIndexes({ min: next, max: next }); });
     }
     panelManager.replacePanels(newPanels, newClones);
+    this.flag = true;
   }
 
   /**
@@ -750,8 +751,12 @@ class Flicking extends Component {
       // As it can be 0
       beforePanel.unCacheBbox();
     });
-    viewport.resetVisibleIndex();
+    if (this.flag) {
+      viewport.resetVisibleIndex();
+      this.flag = false;
+    }
     viewport.resize();
+
     return this;
   }
 

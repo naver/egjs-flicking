@@ -126,7 +126,6 @@ export const FLICKING_METHODS: {[key in FlickingMethodsKeys]: true} = {
   getPanelCount: true,
   getStatus: true,
   getVisiblePanels: true,
-  getVisibleIndex: true,
   setLastIndex: true,
   enableInput: true,
   disableInput: true,

@@ -992,11 +992,15 @@ export default class Viewport {
       panels.forEach(panel => {
         const overlappedClass = panel.getOverlappedClass(equalSizeClasses);
         if (overlappedClass && !cached[overlappedClass]) {
-          fragment.appendChild(panel.getElement());
+          if (!options.renderExternal) {
+            fragment.appendChild(panel.getElement());
+          }
           this.visiblePanels.push(panel);
           cached[overlappedClass] = true;
         } else if (!overlappedClass) {
-          fragment.appendChild(panel.getElement());
+          if (!options.renderExternal) {
+            fragment.appendChild(panel.getElement());
+          }
           this.visiblePanels.push(panel);
         }
       });
@@ -1004,7 +1008,9 @@ export default class Viewport {
         this.addVisiblePanel(panel);
       });
     } else {
-      panels.forEach(panel => fragment.appendChild(panel.getElement()));
+      if (!options.renderExternal) {
+        panels.forEach(panel => fragment.appendChild(panel.getElement()));
+      }
       this.visiblePanels = panels.filter(panel => Boolean(panel));
     }
 
@@ -1808,6 +1814,8 @@ export default class Viewport {
           max: newVisibleIndex.max,
         },
       });
+    } else {
+      this.visiblePanels.forEach(panel => panel.setPositionCSS(state.positionOffset));
     }
   }
 
