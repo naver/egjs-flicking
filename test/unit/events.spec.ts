@@ -426,6 +426,7 @@ describe("Events", () => {
       expect(halfProgress).to.be.equals(0.5);
       expect(fullProgress).to.be.equals(1);
     });
+
     it("Check the progress of the 'move' event.(circular: true)", async () => {
       flickingInfo = createFlicking(horizontal.full, { defaultIndex: 0, circular: true });
       let progress = 0;
