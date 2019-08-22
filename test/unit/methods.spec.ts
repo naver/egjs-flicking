@@ -1382,7 +1382,7 @@ describe("Methods call", () => {
   });
 
   describe("beforeSync() with renderOnlyVisible", () => {
-    it("can add element with beforeSync, renderOnlyVisible", () => {
+    it("can add panel with beforeSync, renderOnlyVisible", () => {
       // Given
       // 30, 30, 30, 30, 30, 30
       flickingInfo = createFlicking(horizontal.panel30, {
@@ -1399,16 +1399,10 @@ describe("Methods call", () => {
 
       // When
       flicking.beforeSync(result);
-      // 0, DIV, 1, 2
-      const visibleElements = flicking.getVisiblePanels().map(panel => panel.getElement());
 
       // Then
-      expect(visibleElements).to.be.deep.equals([
-        nextElements[0],
-        undefined,
-        nextElements[2],
-        nextElements[3],
-      ]);
+      expect(flicking.getPanelCount()).equals(7);
+      expect(flicking.getPanel(1).getElement()).to.be.undefined;
     });
 
     it("can remove element with beforeSync, renderOnlyVisible", () => {
@@ -1428,16 +1422,12 @@ describe("Methods call", () => {
       const result = diff(allElements, nextElements);
 
       // When
+      const removingPanel = flicking.getPanel(1);
       flicking.beforeSync(result);
-      // 0, 2, 3
-      const visibleElements = flicking.getVisiblePanels().map(panel => panel.getElement());
 
       // Then
-      expect(visibleElements).to.be.deep.equals([
-        allElements[0],
-        allElements[2],
-        allElements[3],
-      ]);
+      expect(flicking.getPanelCount()).equals(5);
+      expect(flicking.getAllPanels().every(panel => panel !== removingPanel));
     });
   });
 

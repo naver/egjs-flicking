@@ -407,7 +407,7 @@ class Panel implements FlickingPanel {
     const viewport = this.viewport;
     let cloneElement = element;
 
-    if (!cloneElement && this.element && viewport.options.renderOnlyVisible) {
+    if (!cloneElement && this.element) {
       cloneElement = isVirtual ? this.element : this.element.cloneNode(true) as HTMLElement;
     }
     const clonedPanel = new Panel(cloneElement, state.index, viewport);
