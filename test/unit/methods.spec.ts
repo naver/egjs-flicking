@@ -1263,63 +1263,124 @@ describe("Methods call", () => {
       expect(flicking.getPanel(0).getElement()).not.equals(originalPanel);
     });
   });
-  describe("mapVisiblePanel()", () => {
-    it("get mapped items with renderOnlyVisible: true, circular: false", () => {
+
+  describe("getRenderingIndexes()", () => {
+    it("should return correct rendering indexes when only visible panels are changed and circular option is false", () => {
       // Given
-      // 30, 30, 30, 30, 30, 30
       flickingInfo = createFlicking(horizontal.panel30, {
         renderOnlyVisible: true,
+        circular: false,
       });
-      const items = [0, 1, 2, 3, 4, 5];
+
       // When
-      const mappedItems = flickingInfo.instance.mapRenderingPanels(items);
+      const prevItems = [0, 1, 2, 3, 4];
+      const newItems = [0, 1, 2, 3, 4];
+      const result = diff(prevItems, newItems);
+      const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
 
       // Then
-      expect(mappedItems).to.be.deep.equals([0, 1, 2]);
+      expect(renderingIndexes).to.be.deep.equals([0, 1, 2]);
     });
-    it("get mapped items with renderOnlyVisible: false, circular: false", () => {
-      // Given
-      // 30, 30, 30, 30, 30, 30
-      flickingInfo = createFlicking(horizontal.panel30, {
-        renderOnlyVisible: false,
-      });
-      const items = [0, 1, 2, 3, 4, 5];
-      // When
-      const mappedItems = flickingInfo.instance.mapRenderingPanels(items);
 
-      // Then
-      expect(mappedItems).to.be.deep.equals(items);
-    });
-    it("get mapped items with renderOnlyVisible: true, circular: true", () => {
+    it("should return correct rendering indexes when only visible panels are changed and circular option is true", () => {
       // Given
-      // 30, 30, 30, 30, 30, 30
       flickingInfo = createFlicking(horizontal.panel30, {
         renderOnlyVisible: true,
         circular: true,
       });
-      const items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
       // When
-      const mappedItems = flickingInfo.instance.mapRenderingPanels(items);
+      const prevItems = [0, 1, 2, 3, 4];
+      const newItems = [0, 1, 2, 3, 4];
+      const result = diff(prevItems, newItems);
+      const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
 
       // Then
-      // Clone(11, 12) + Original (0, 1, 2)
-      expect(mappedItems).to.be.deep.equals([0, 1, 2, 11, 12]);
+      // It is rendered [8, 9, 0, 1, 2]
+      // ...so it should return Original (0, 1, 2) + Clone(8, 9)
+      expect(renderingIndexes).to.be.deep.equals([0, 1, 2, 8, 9]);
     });
-    it("get mapped items with renderOnlyVisible: false. circular: true", () => {
+
+    it("should return correct rendering indexes, including appending panels", () => {
       // Given
-      // 30, 30, 30, 30, 30, 30
       flickingInfo = createFlicking(horizontal.panel30, {
-        renderOnlyVisible: false,
+        renderOnlyVisible: true,
+        circular: false,
+      });
+
+      // When
+      const prevItems = [0, 1, 2, 3, 4];
+      const newItems = [0, 1, 2, 3, 4, 5, 6];
+      const result = diff(prevItems, newItems);
+      const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
+
+      // Then
+      expect(renderingIndexes).to.be.deep.equals([0, 1, 2, 5, 6]);
+    });
+
+    it("should return correct rendering indexes when circular option in enabled, including appending panels", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.panel30, {
+        renderOnlyVisible: true,
         circular: true,
       });
-      const items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
       // When
-      const mappedItems = flickingInfo.instance.mapRenderingPanels(items);
+      const prevItems = [0, 1, 2, 3, 4];
+      const newItems = [0, 1, 2, 3, 4, 5, 6];
+      const result = diff(prevItems, newItems);
+      const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
 
       // Then
-      expect(mappedItems).to.be.deep.equals(items);
+      // It should return in order of
+      // Original (0, 1, 2)
+      // Clone(10, 11), which has been pushed by 2
+      // New panels(5, 6)
+      expect(renderingIndexes).to.be.deep.equals([0, 1, 2, 10, 11, 5, 6]);
+    });
+
+    it("should return correct rendering indexes, including prepending panels", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.panel30, {
+        renderOnlyVisible: true,
+        circular: false,
+      });
+
+      // When
+      const prevItems = [0, 1, 2, 3, 4];
+      const newItems = [-2, -1, 0, 1, 2, 3, 4];
+      const result = diff(prevItems, newItems);
+      const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
+
+      // Then
+      // It should return
+      // Original(2, 3, 4), which has been pushed by 2
+      // New panels(0, 1)
+      expect(renderingIndexes).to.be.deep.equals([2, 3, 4, 0, 1]);
+    });
+
+    it("should return correct rendering indexes when circular option is enabled, including prepending panels", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.panel30, {
+        renderOnlyVisible: true,
+        circular: true,
+      });
+
+      // When
+      const prevItems = [0, 1, 2, 3, 4];
+      const newItems = [-2, -1, 0, 1, 2, 3, 4];
+      const result = diff(prevItems, newItems);
+      const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
+
+      // Then
+      // It should return
+      // Original(2, 3, 4), which has been pushed by 2
+      // Clones(12, 13), which has been pushed by 4(original 2 + clone 2)
+      // New panels(0, 1)
+      expect(renderingIndexes).to.be.deep.equals([2, 3, 4, 12, 13, 0, 1]);
     });
   });
+
   describe("beforeSync() with renderOnlyVisible", () => {
     it("can add element with beforeSync, renderOnlyVisible", () => {
       // Given
@@ -1349,6 +1410,7 @@ describe("Methods call", () => {
         nextElements[3],
       ]);
     });
+
     it("can remove element with beforeSync, renderOnlyVisible", () => {
       // Given
       // 30, 30, 30, 30, 30, 30
@@ -1378,6 +1440,7 @@ describe("Methods call", () => {
       ]);
     });
   });
+
   describe("sync()", () => {
     const renderOriginalElement = (count: number, className: string): HTMLElement[] => {
       const flicking = flickingInfo.instance;
