@@ -492,7 +492,7 @@ export interface Plugin {
 
 export type ExcludeKeys = keyof Component
   | "replace" | "append" | "remove" | "prepend"
-  | "beforeSync" | "sync" | "getCloneCount" | "mapRenderingPanels";
+  | "beforeSync" | "sync" | "getCloneCount" | "getRenderingIndexes";
 export type FlickingMethodsKeys = Exclude<keyof Flicking, ExcludeKeys>;
 export type FlickingMethods = Pick<Flicking, FlickingMethodsKeys>;
 

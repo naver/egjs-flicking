@@ -299,8 +299,9 @@ class Panel implements FlickingPanel {
   public getBbox(): BoundingBox {
     const state = this.state;
     const viewport = this.viewport;
+    const element = this.element;
 
-    if (!this.element) {
+    if (!element) {
       state.cachedBbox = {
         x: 0,
         y: 0,
@@ -308,17 +309,22 @@ class Panel implements FlickingPanel {
         height: 0,
       };
     } else if (!state.cachedBbox) {
-      if (!this.element.parentNode && !viewport.options.renderExternal) {
-        viewport.getCameraElement().appendChild(this.element);
+      const wasVisible = Boolean(element.parentNode);
+      const cameraElement = viewport.getCameraElement();
+      if (!wasVisible) {
+        cameraElement.appendChild(element);
         viewport.addVisiblePanel(this);
       }
-      const bbox = this.element.getBoundingClientRect();
+      const bbox = element.getBoundingClientRect();
       state.cachedBbox = {
         x: bbox.left,
         y: bbox.top,
         width: bbox.width,
         height: bbox.height,
       };
+      if (!wasVisible && viewport.options.renderExternal) {
+        cameraElement.removeChild(element);
+      }
     }
     return state.cachedBbox!;
   }
@@ -429,14 +435,6 @@ class Panel implements FlickingPanel {
     return clonedPanel;
   }
 
-  // Clone with external element
-  public cloneExternal(cloneIndex: number, element: HTMLElement | null): Panel {
-    const clonedPanel = this.clone(cloneIndex, false, element);
-    clonedPanel.setElement(element);
-
-    return clonedPanel;
-  }
-
   public removeElement(): void {
     if (!this.viewport.options.renderExternal) {
       const element = this.element;
@@ -464,15 +462,25 @@ class Panel implements FlickingPanel {
     if (!element) {
       return;
     }
-    if (!this.element) {
-      this.state.originalStyle.className = element.getAttribute("class");
-      this.state.originalStyle.style = element.getAttribute("style");
-    }
+    const currentElement = this.element;
+    if (element !== currentElement) {
+      const options = this.viewport.options;
 
-    if (element !== this.element) {
+      if (currentElement) {
+        if (options.horizontal) {
+          element.style.left = currentElement.style.left;
+        } else {
+          element.style.top = currentElement.style.top;
+        }
+      } else {
+        const originalStyle = this.state.originalStyle;
+
+        originalStyle.className = element.getAttribute("class");
+        originalStyle.style = element.getAttribute("style");
+      }
+
       this.element = element;
 
-      const options = this.viewport.options;
       if (options.classPrefix) {
         addClass(element, `${options.classPrefix}-panel`);
       }

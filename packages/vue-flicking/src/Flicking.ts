@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 
-import NativeFlicking, { Plugin, FlickingOptions, DestroyOption, withFlickingMethods, DEFAULT_OPTIONS, FlickingPanel } from "../../../src/index";
+import NativeFlicking, { Plugin, FlickingOptions, DestroyOption, withFlickingMethods, DEFAULT_OPTIONS, FlickingPanel } from "@egjs/flicking";
 import ChildrenDiffer from "@egjs/vue-children-differ";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
@@ -27,15 +27,11 @@ export default class Flicking extends Vue {
   private $_pluginsDiffer!: ListDiffer<Plugin>;
   private $_cloneCount!: number;
   private $_slotDiffer!: ListDiffer<VNode>;
-  private $_slotDiffResult: DiffResult<VNode> | undefined;
-  private $_visibleIndex!: { min: number; max: number };
 
   public mounted() {
     this.$_pluginsDiffer = new ListDiffer<Plugin>();
     this.$_cloneCount = 0;
-    this.$_visibleIndex = { min: NaN, max: NaN };
 
-    this.options.renderOnlyVisible = true;
     const options = {...this.options, ...{ renderExternal: true }};
     this.$_nativeFlicking = new NativeFlicking(this.$el as HTMLElement, options);
     this.$_slotDiffer = new ListDiffer<VNode>(this.$slots.default, (vnode, idx) => vnode.key!);
@@ -45,11 +41,6 @@ export default class Flicking extends Vue {
 
     if (this.options.renderOnlyVisible) {
       // Should update once to update visibles
-      const visibleIndex = this.$_nativeFlicking.getVisibleIndex();
-      this.$_visibleIndex = {
-        min: visibleIndex.min,
-        max: visibleIndex.max,
-      };
       this.$forceUpdate();
     }
   }
@@ -100,7 +91,6 @@ export default class Flicking extends Vue {
 
     this.$_nativeFlicking.sync(diffResult);
     this.$_cloneCount = newCloneCount;
-    this.$_slotDiffResult = undefined;
     this.$nextTick(() => {
       this.$_checkUpdate();
     });
@@ -130,8 +120,6 @@ export default class Flicking extends Vue {
 
     if (this.options.renderOnlyVisible) {
       this.$_nativeFlicking.on(NativeFlicking.EVENTS.VISIBLE_CHANGE, e => {
-        this.$_visibleIndex.min = e.range.min;
-        this.$_visibleIndex.max = e.range.max;
         this.$forceUpdate();
       });
     }
@@ -168,14 +156,12 @@ export default class Flicking extends Vue {
     let panels: VNode[];
 
     if (this.options.renderOnlyVisible && this.$_slotDiffer) {
-      this.$_slotDiffResult = this.$_slotDiffer.update(slots);
-
-      const slotsDiff = this.$_slotDiffResult;
+      const slotsDiff = this.$_slotDiffer.update(slots);
       const panelCnt = slots.length;
 
       flicking.beforeSync(slotsDiff);
 
-      const indexesToRender = flicking.mapRenderingPanels(slotsDiff);
+      const indexesToRender = flicking.getRenderingIndexes(slotsDiff);
       panels = indexesToRender.map(index => {
         if (index >= panelCnt) {
           const relativeIndex = index % panelCnt;
