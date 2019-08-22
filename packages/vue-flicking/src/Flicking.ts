@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 
-import NativeFlicking, { Plugin, FlickingOptions, DestroyOption, withFlickingMethods, DEFAULT_OPTIONS, FlickingPanel } from "@egjs/flicking";
+import NativeFlicking, { Plugin, FlickingOptions, DestroyOption, withFlickingMethods, DEFAULT_OPTIONS } from "@egjs/flicking";
 import ChildrenDiffer from "@egjs/vue-children-differ";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
