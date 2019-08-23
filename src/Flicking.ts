@@ -65,7 +65,7 @@ class Flicking extends Component {
   private wrapper: HTMLElement;
   private viewport: Viewport;
   private eventContext: FlickingContext;
-  private flag: boolean = false;
+  private isPanelChangedAtBeforeSync: boolean = false;
 
   /**
    * @param element A base element for the eg.Flicking module. When specifying a value as a `string` type, you must specify a css selector string to select the element.<ko>eg.Flicking 모듈을 사용할 기준 요소. `string`타입으로 값 지정시 요소를 선택하기 위한 css 선택자 문자열을 지정해야 한다.</ko>
@@ -697,7 +697,7 @@ class Flicking extends Component {
       maintained.forEach(([, next]) => { viewport.updateCheckedIndexes({ min: next, max: next }); });
     }
     panelManager.replacePanels(newPanels, newClones);
-    this.flag = true;
+    this.isPanelChangedAtBeforeSync = true;
   }
 
   /**
@@ -751,9 +751,9 @@ class Flicking extends Component {
       // As it can be 0
       beforePanel.unCacheBbox();
     });
-    if (this.flag) {
+    if (this.isPanelChangedAtBeforeSync) {
       viewport.resetVisibleIndex();
-      this.flag = false;
+      this.isPanelChangedAtBeforeSync = false;
     }
     viewport.resize();
 
