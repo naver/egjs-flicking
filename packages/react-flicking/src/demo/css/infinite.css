@@ -15,7 +15,7 @@
   font-weight: bold;
 }
 #infinite .flicking2 .infinite {
-  transition: all ease 1s;
+  transition: background ease 1s;
 }
 #infinite .flicking .infinite.placeholder {
   background: #ddd;
