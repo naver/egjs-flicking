@@ -540,15 +540,6 @@ describe("Events", () => {
   describe("needPanel event", () => {
     let needPanelEvents: NeedPanelEvent[] = [];
 
-    beforeEach(() => {
-      flickingInfo = createFlicking(horizontal.none, {
-        infinite: true,
-      });
-      flickingInfo.instance.on(EVENTS.NEED_PANEL, (e: NeedPanelEvent) => {
-        needPanelEvents.push(e);
-      });
-    });
-
     afterEach(() => {
       needPanelEvents = [];
     });
@@ -566,7 +557,7 @@ describe("Events", () => {
 
     it("won't trigger event while in initialization process", () => {
       // Given & When
-      /* Initial State */
+      createInfiniteFlickingWithOption(horizontal.none);
 
       // Then
       expect(needPanelEvents).to.be.empty;
@@ -574,7 +565,7 @@ describe("Events", () => {
 
     it("will trigger event after adding one half sized panel at index 0", async () => {
       // Given
-      /* Initial State */
+      createInfiniteFlickingWithOption(horizontal.none);
 
       // When
       flickingInfo.instance.replace(0, createHorizontalElement(50));
@@ -591,7 +582,7 @@ describe("Events", () => {
 
     it("will trigger event in both direction after adding one half sized panel at index above 0", async () => {
       // Given
-      /* Initial State */
+      createInfiniteFlickingWithOption(horizontal.none);
 
       // When
       flickingInfo.instance.replace(1, createHorizontalElement(50));
@@ -612,7 +603,7 @@ describe("Events", () => {
 
     it("won't trigger event after adding 2 half size panel at index 0", () => {
       // Given
-      /* Initial State */
+      createInfiniteFlickingWithOption(horizontal.none);
 
       // When
       flickingInfo.instance.replace(0, [createHorizontalElement(50), createHorizontalElement(50)]);
@@ -719,6 +710,7 @@ describe("Events", () => {
     });
 
     it("should increase range to next direction if insertAfter is called for event's panel", async () => {
+      // Given
       createInfiniteFlickingWithOption(horizontal.none, {
         circular: true,
         anchor: "100%",
@@ -782,11 +774,9 @@ describe("Events", () => {
       expect(panelCountBefore).not.equals(panelCountAfter);
       expect(panelCountBefore + 1).not.equals(panelCountAfter);
 
-      // Expanded to both prev / next
+      // Expanded to next direction
       // Because scroll area expanded to next direction while scrolling
-      // And it expanded to prev direction while animating
       expect(scrollAreaBefore.next).not.equals(scrollAreaAfter.next);
-      expect(scrollAreaBefore.prev).not.equals(scrollAreaAfter.prev);
     });
 
     it("should increase range to prev direction if moving to next direction and looped while scrolling", async () => {
@@ -821,10 +811,8 @@ describe("Events", () => {
       expect(panelCountBefore).not.equals(panelCountAfter);
       expect(panelCountBefore + 1).not.equals(panelCountAfter);
 
-      // Expanded to both prev / next
+      // Expanded to prev direction
       // Because scroll area expanded to prev direction while scrolling
-      // And it expanded to next direction while animating
-      expect(scrollAreaBefore.next).not.equals(scrollAreaAfter.next);
       expect(scrollAreaBefore.prev).not.equals(scrollAreaAfter.prev);
     });
   });

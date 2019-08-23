@@ -589,6 +589,7 @@ describe("Methods call", () => {
         });
       });
     });
+
     it("should check 'visibleRatio' in panel", async () => {
       // Given
       flickingInfo = createFlicking(horizontal.variant2, { circular: true });
@@ -643,7 +644,7 @@ describe("Methods call", () => {
       steps.forEach((standards, i) => {
         standards.forEach(visibleRatioArr => {
           expected[i].forEach((ratio, j) => {
-            expect(visibleRatioArr[j]).to.be.closeTo(ratio, 0.00001);
+            expect(visibleRatioArr[j]).to.be.closeTo(ratio, 0.0001);
           });
         });
       });
