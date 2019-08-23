@@ -592,8 +592,8 @@ describe("Methods call", () => {
 
     it("should check 'visibleRatio' in panel", async () => {
       // Given
+      viewport.set(1000, 100);
       flickingInfo = createFlicking(horizontal.variant2, { circular: true });
-
       const panelArr = [0, 1, 2];
       const steps: number[][][] = [];
       steps[0] = panelArr.map(i => getPanels(i, 8))
@@ -644,7 +644,7 @@ describe("Methods call", () => {
       steps.forEach((standards, i) => {
         standards.forEach(visibleRatioArr => {
           expected[i].forEach((ratio, j) => {
-            expect(visibleRatioArr[j]).to.be.closeTo(ratio, 0.0001);
+            expect(visibleRatioArr[j]).to.be.closeTo(ratio, 0.00001);
           });
         });
       });
