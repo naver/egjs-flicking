@@ -65,11 +65,6 @@
     </div>
     <div class="pagination pagination1"></div>
     <pre><code class="hljs javascript" data-script="flicking1"></code></pre>
-
-
-
-
-
     <h2>infinite: true &amp; placeholder</h2>
     <ul class="extra">
         <li>You can make continuous carousel UI with asynchronous data by adding placeholder panel first, then update panel with fetched data later.</li>
@@ -129,7 +124,7 @@ flicking1.on("needPanel", function (e) {
 var flicking2 = new eg.Flicking(".flicking2", {
     gap: 10,
     infinite: true,
-    moveType: "freeScroll",
+    moveType: "freeScroll"
 });
 
 flicking2.on("needPanel", function (e) {
