@@ -188,7 +188,7 @@ export default class Viewport {
     const scrollArea = state.scrollArea;
 
     // Update position & nearestPanel
-    if (!isBetween(pos, scrollArea.prev, scrollArea.next)) {
+    if (options.circular && !isBetween(pos, scrollArea.prev, scrollArea.next)) {
       pos = circulate(pos, scrollArea.prev, scrollArea.next, false);
     }
     state.position = pos;
@@ -1781,11 +1781,8 @@ export default class Viewport {
       const { addedPanels, removedPanels } = this.checkVisiblePanelChange(prevVisiblePanels, newVisiblePanels);
 
       if (newVisiblePanels.length > 0) {
-        const firstPanelPos = this.panelManager.firstPanel()!.getPosition();
         const firstVisiblePanelPos = newVisiblePanels[0].getPosition();
-        if (firstVisiblePanelPos >= firstPanelPos) {
-          state.positionOffset = firstVisiblePanelPos - firstPanelPos;
-        }
+        state.positionOffset = firstVisiblePanelPos;
       }
 
       newVisiblePanels.forEach(panel => {
