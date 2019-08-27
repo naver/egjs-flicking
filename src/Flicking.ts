@@ -595,6 +595,8 @@ class Flicking extends Component {
     const added = diffResult.added;
     const list = counter(prevPanelCount * (this.getCloneCount() + 1));
 
+    // console.log("this.getCloneCount()", this.getCloneCount(), min, max);
+
     let visibles = min >= 0
       ? list.slice(min, max + 1)
       : list.slice(0, max + 1).concat(list.slice(min));
@@ -697,7 +699,6 @@ class Flicking extends Component {
       maintained.forEach(([, next]) => { viewport.updateCheckedIndexes({ min: next, max: next }); });
     }
     panelManager.replacePanels(newPanels, newClones);
-    this.isPanelChangedAtBeforeSync = true;
   }
 
   /**
@@ -739,6 +740,7 @@ class Flicking extends Component {
       this.beforeSync(beforeDiffInfo);
     }
 
+    this.viewport.setDelayUpdate(false);
     const visiblePanels = renderOnlyVisible
       ? viewport.getVisiblePanels()
       : this.getAllPanels(true);
@@ -751,10 +753,8 @@ class Flicking extends Component {
       // As it can be 0
       beforePanel.unCacheBbox();
     });
-    if (this.isPanelChangedAtBeforeSync) {
-      viewport.resetVisibleIndex();
-      this.isPanelChangedAtBeforeSync = false;
-    }
+
+    viewport.resetVisibleIndex();
     viewport.resize();
 
     return this;

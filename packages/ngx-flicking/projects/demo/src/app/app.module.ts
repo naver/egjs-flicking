@@ -1,3 +1,4 @@
+import { VisiblePanelsComponent } from './visiblepanels/visiblepanels.component';
 import { NgxFlickingModule } from './../../../ngx-flicking/src/lib/ngx-flicking.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -29,7 +30,8 @@ const appRoutes: Routes = [
   { path: 'autoplay', component: AutoplayComponent },
   { path: 'fade', component: FadeComponent },
   { path: 'parallax', component: ParallaxComponent },
-  { path: 'custom', component: CustomComponent }
+  { path: 'custom', component: CustomComponent },
+  { path: 'visiblepanels', component: VisiblePanelsComponent },
   // { path: '**', component: PageNotFoundComponent }
 ];
 
@@ -49,7 +51,8 @@ const appRoutes: Routes = [
     FadeComponent,
     ParallaxComponent,
     TestPanelComponent,
-    PlaceHolderItemComponent
+    PlaceHolderItemComponent,
+    VisiblePanelsComponent
   ],
   imports: [
     BrowserModule,

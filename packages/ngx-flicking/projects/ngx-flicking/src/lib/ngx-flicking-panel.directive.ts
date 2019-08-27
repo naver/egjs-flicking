@@ -6,7 +6,6 @@ import { Directive } from '@angular/core';
 export class NgxFlickingPanelDirective {
 
   constructor() {
-    console.log('### NgxFlickingPanelDirective created.');
   }
 
 }

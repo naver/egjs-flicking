@@ -1,0 +1,20 @@
+<div id="infinite" class="container">
+  <h1>Render Only Visible</h1>
+  <h2>Append  &amp; Prepend panel dynamically</h2>
+  <ul class="extra">
+    <li>You can dynamically add panels to the flicking.</li>
+    <li>The panel's indexes are zero-based integer.</li>
+    <li>Note: The number displayed above each panel is not panel's index.</li>
+  </ul>
+  <ngx-flicking class="flicking flicking0" [options]="{ gap: 10, renderOnlyVisible: true, circular: true, moveType: 'snap'}" [panels]="list0" (renderPanelChange)="onRenderPanelChange($event)">
+    <ng-template>
+      <div *ngFor="let panel of visiblePanels;" class='infinite infinite{{ math.abs(panel.num) % 5 }}' [attr.key]="panel.key">
+        {{ panel.num }}, {{ math.abs(panel.num) % 5 }}
+      </div>
+    </ng-template>
+  </ngx-flicking>
+  <div class="buttons">
+    <button id="prepend" (click)="onPrepend()">Prepend</button>
+    <button id="append" (click)="onAppend()">Append</button>
+  </div>
+</div>

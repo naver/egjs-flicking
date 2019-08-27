@@ -1,13 +1,17 @@
+// import { VisibleChangeEvent } from './../../../../../../declaration/types.d';
+// import { Flicking } from '@egjs/flicking';
 /**
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
 
 // tslint:disable-next-line: max-line-length
-import NativeFlicking, { Plugin, FlickingOptions, withFlickingMethods, DEFAULT_OPTIONS, FlickingEvent, NeedPanelEvent, SelectEvent, ChangeEvent } from '@egjs/flicking';
+import NativeFlicking, { Plugin, FlickingOptions, withFlickingMethods, DEFAULT_OPTIONS, FlickingEvent, NeedPanelEvent, SelectEvent, ChangeEvent, VisibleChangeEvent } from '../../../../../../src/index';
+import { counter } from '../../../../../../src/utils';
 // tslint:disable-next-line: max-line-length
-import { Component, OnInit, Input, AfterViewInit, ElementRef, OnChanges, Output, EventEmitter, OnDestroy, ContentChild, TemplateRef } from '@angular/core';
-import ListDiffer, { DiffResult } from '@egjs/list-differ';
+import { Component, OnInit, Input, AfterViewInit, ElementRef, OnChanges, Output, EventEmitter, OnDestroy, ContentChild, TemplateRef, SimpleChanges, AfterViewChecked, DoCheck, ApplicationRef, ChangeDetectorRef } from '@angular/core';
+// import ListDiffer, { DiffResult } from '@egjs/list-differ';
+import ListDiffer, { DiffResult } from '../../../../../../node_modules/@egjs/list-differ';
 
 @Component({
   selector: 'ngx-flicking',
@@ -27,9 +31,10 @@ import ListDiffer, { DiffResult } from '@egjs/list-differ';
     ':host {display: block}', ':host > div {width: 100%; height: 100%}'
   ]
 })
-export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
+export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
   @Input() options: Partial<FlickingOptions> = {};
   @Input() plugins: Plugin[] = [];
+  @Input() panels: [];
 
   // TODO: Can @Output be added dynamically?
   @Output() holdStart = new EventEmitter<Partial<FlickingEvent>>();
@@ -41,34 +46,56 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
   @Output() restore = new EventEmitter<Partial<FlickingEvent>>();
   @Output() select = new EventEmitter<SelectEvent>();
   @Output() needPanel = new EventEmitter<NeedPanelEvent>();
+  @Output() visibleChange = new EventEmitter<VisibleChangeEvent>();
+  @Output() renderPanelChange = new EventEmitter<number[]>(false);
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
   @withFlickingMethods
   private flicking?: NativeFlicking | null;
   private pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
-  classPrefix: string;
-  cloneCount = 0;
+  private userPanelDataDiffer: ListDiffer<any> = null;
+  private classPrefix: string;
+  private cloneCount = 0;
+  private internalCloneCount = 0;
+  private prevPanels = null;
+  private prevVisibles: number[] = [];
+  /**
+   * To prevent 'ExpressionChangedAfterItHasBeenCheckedError'
+   * It would trigger above error if you changed the value after DOM operation is started. It makes unstable DOM tree.
+   * So when it is in critical section(DOM updates), it should update the value asynchronously.
+   *
+   * Ref: https://indepth.dev/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error/
+   */
+  private criticalSection = true;
 
-  constructor(private elRef: ElementRef) {}
+  constructor(private elRef: ElementRef, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.options = {...DEFAULT_OPTIONS, ...this.options, ...{renderExternal: true}};
     this.classPrefix = this.options.classPrefix;
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.flicking && this.prevPanels !== this.panels) {
+      this.syncPanelDataIfRenderOnlyVisible(this.panels);
+      this.prevPanels = this.panels;
+    }
+
     this.checkPlugins();
   }
 
   ngAfterViewInit() {
     if (!this.flicking) {
       this.flicking = new NativeFlicking(this.elRef.nativeElement.children[0], this.options);
+      this.userPanelDataDiffer = new ListDiffer<any>(this.panels);
+
+      this.syncPanelDataIfRenderOnlyVisible(this.panels);
 
       this.bindEvents();
-
       this.checkPlugins();
 
       setTimeout(() => {
+        // console.log('#### ViewInit - setTimeout');
         // To check clone on first time
         /**
          * TODO: Can setTimeout guarantee that it's called before XXXChecked?
@@ -78,6 +105,18 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
     }
   }
 
+  syncPanelDataIfRenderOnlyVisible(panelData: any[]) {
+    if (!panelData || !this.options.renderOnlyVisible) {
+      return;
+    }
+
+    const panelDiff = this.userPanelDataDiffer.update(this.panels);
+    this.flicking.beforeSync(panelDiff);
+    const renderingIndexes = this.flicking.getRenderingIndexes(panelDiff);
+
+    this.triggerRenderChange(renderingIndexes);
+  }
+
   ngOnDestroy() {
     if (this.flicking) {
       this.flicking.destroy();
@@ -85,15 +124,21 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
   }
 
   onUpdate(diff: DiffResult<any>) {
-    // console.log('Result Callback : added: %o, removed: %o, changed: %o', diff.added, diff.removed, diff.changed);
-    this.flicking.sync(diff);
-
     if (diff.added.length > 0 || diff.removed.length > 0 || diff.changed.length > 0) {
+      this.flicking.sync(diff);
 
       setTimeout(() => {
         this.checkCloneCount();
       });
     }
+  }
+
+  ngDoCheck() {
+    this.criticalSection = true;
+  }
+
+  ngAfterViewChecked() {
+    this.criticalSection = false;
   }
 
   checkCloneCount() {
@@ -103,12 +148,19 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
 
     const newCC = this.flicking.getCloneCount();
 
-    if (this.cloneCount === newCC) {
+    if (this.internalCloneCount === newCC) {
       return;
     }
 
     // console.log(`Flicking Component: clone count is changed (${this.cloneCount} => ${newCC})`);
-    this.cloneCount = newCC;
+    if (!this.options.renderOnlyVisible) {
+      this.cloneCount = newCC;
+    } else {
+      // it should not use clone count, clone is calculated by NativeFlicking.
+      // Updating `this.cloneCount` makes trigger re-render.
+    }
+
+    this.internalCloneCount = newCC;
   }
 
   private checkPlugins() {
@@ -133,8 +185,38 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
 
         if (emitter) {
           emitter.emit(e);
+
+          if (eventName === 'visibleChange') {
+            const list = counter(this.panels.length * (this.flicking.getCloneCount() + 1));
+            const min = e.range.min;
+            const max = e.range.max;
+
+            const visibles = min >= 0
+              ? list.slice(min, max + 1)
+              : list.slice(0, max + 1).concat(list.slice(min));
+
+            this.triggerRenderChange(visibles);
+          }
         }
       });
     });
+  }
+
+  private triggerRenderChange(visibles: number[]) {
+    // visible panel is not changed
+    if (visibles.length === this.prevVisibles.length &&
+        visibles.every((v, i) => this.prevVisibles[i] === v)) {
+      return;
+    }
+
+    this.prevVisibles = visibles;
+
+    if (this.criticalSection) {
+      // Use microtask to run as soon as synchronous job is done.
+      Promise.resolve()
+        .then(() => this.renderPanelChange.emit(visibles));
+    } else {
+      this.renderPanelChange.emit(visibles);
+    }
   }
 }

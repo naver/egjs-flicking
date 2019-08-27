@@ -386,6 +386,12 @@ class Panel implements FlickingPanel {
     if (!this.element) {
       return;
     }
+    // console.trace();
+
+    if (this.viewport.getDelayUpdate()) {
+      return;
+    }
+
     const state = this.state;
     const pos = state.position;
     const options = this.viewport.options;
@@ -462,13 +468,18 @@ class Panel implements FlickingPanel {
     if (!element) {
       return;
     }
+
+    // console.log(`setElement(${this.state.index}), element`, element);
+
     const currentElement = this.element;
     if (element !== currentElement) {
       const options = this.viewport.options;
 
       if (currentElement) {
         if (options.horizontal) {
+          // console.log(`### panel setElement ${this.state.index} isClone: ${this.state.isClone}, left: ${currentElement.style.left || "none"}, state.left: ${this.state.position}`);
           element.style.left = currentElement.style.left;
+          // element.style.left = this.state.position + "";
         } else {
           element.style.top = currentElement.style.top;
         }
