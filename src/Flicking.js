@@ -448,7 +448,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 	 * @private
 	 * @param {Number} index
 	 */
-	_setDefaultPanel(index) {
+	_setDefaultPanel(index, isRebuild) {
 		const panel = this._conf.panel;
 		const lastIndex = panel.count - 1;
 		let coords;
@@ -469,7 +469,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 				currNo: index
 			});
 			// if defaultIndex option is given, then move to that index panel
-		} else if (index > 0 && index <= lastIndex) {
+		} else if (((!isRebuild && index > 0) || (isRebuild && index >= 0)) && index <= lastIndex) {
 			this._setPanelNo({
 				index,
 				no: index,
@@ -1785,7 +1785,7 @@ export default class Flicking extends Mixin(Component).with(eventHandler) {
 			panel.$list = utils.toArray(container.children);
 		}
 
-		this._setDefaultPanel(param.defaultIndex);
+		this._setDefaultPanel(param.defaultIndex, true);
 		this._arrangePanels();
 
 		return this;
