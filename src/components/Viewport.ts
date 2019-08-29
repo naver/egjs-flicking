@@ -1487,7 +1487,7 @@ export default class Viewport {
     const viewportSize = state.size;
     const bounce = options.bounce;
 
-    let parsedBounce: number[] = bounce as [number, number];
+    let parsedBounce: number[];
     if (isArray(bounce)) {
       parsedBounce = (bounce as string[]).map(val => parseArithmeticExpression(val, viewportSize, DEFAULT_OPTIONS.bounce as number));
     } else {
