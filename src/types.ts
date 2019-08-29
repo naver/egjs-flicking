@@ -410,8 +410,8 @@ export interface SelectEvent {
  * @example
  * ```js
  * flicking.on("needPanel", e => {
- *     const newPanelElements = createElements();
- *     e.fill(newPanelElements);
+ *     // You can use "fill" method in event to add panels easily.
+ *     e.fill("<div>New panel</div>");
  * })
  * ```
  */
