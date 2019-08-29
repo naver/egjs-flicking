@@ -78,6 +78,24 @@
     </div>
     <div class="pagination pagination2"></div>
     <pre><code class="hljs javascript" data-script="flicking2"></code></pre>
+    <h2>🚀 Increasing performance</h2>
+    <ul class="extra">
+        <li>You can increase performance by enabling <b>renderOnlyVisible</b>, <b>isEqualSize</b>, and <b>isConstantSize</b> of Flicking</li>
+        <li>See its effect: <a href="https://www.youtube.com/watch?v=R-DKq-fqeSI">https://www.youtube.com/watch?v=R-DKq-fqeSI</a></li>
+        <li>Check the details of the options: <a href="https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#.FlickingOptions">Link</a></li>
+    </ul>
+    <div class="flicking flicking3">
+        <div class="infinite infinite0">0</div>
+        <div class="infinite infinite1">1</div>
+        <div class="infinite infinite2">2</div>
+        <div class="infinite infinite3">3</div>
+        <div class="infinite infinite4">4</div>
+    </div>
+    <div class="buttons">
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+    </div>
+    <pre><code class="hljs javascript" data-script="flicking3"></code></pre>
 </div>
 <script data-script="flicking0">
 var prev = 0;
@@ -113,7 +131,7 @@ var flicking1 = new eg.Flicking(".flicking1", {
 flicking1.on("needPanel", function (e) {
     var length = flicking1.getPanelCount();
 
-    e.panel.insertAfter(
+    e.fill(
         '<div class="infinite infinite' + (length + 1) % 5 + '">'+ (length + 1) + '</div>'
         + '<div class="infinite infinite' + (length + 2) % 5 + '">' + (length + 2) + '</div>'
     );
@@ -131,7 +149,7 @@ flicking2.on("needPanel", function (e) {
     var length = flicking2.getPanelCount();
 
     /* placeholder */
-    var panels = e.panel.insertAfter(
+    var panels = e.fill(
         '<div class="infinite placeholder infinite' + (length + 1) % 5 + '">'+ (length + 1) + '</div>'
         + '<div class="infinite placeholder infinite' + (length + 2) % 5 + '">' + (length + 2) + '</div>'
     );
@@ -146,6 +164,40 @@ flicking2.on("needPanel", function (e) {
     }, 1500);
 });
 </script>
+<script data-script="flicking3">
+    var flicking3 = new eg.Flicking(".flicking3", {
+        renderOnlyVisible: true,
+        isEqualSize: true,
+        isConstantSize: true,
+        infinite: true,
+        gap: 10,
+        duration: 5,
+        moveType: "freeScroll"
+    });
+
+    flicking3.on("needPanel", function (e) {
+        var panels = e.direction === eg.Flicking.DIRECTION.NEXT
+            ? [
+                '<div class="infinite infinite' + e.range.min % 5 + '">'+ e.range.min + '</div>',
+                '<div class="infinite infinite' + (e.range.min + 1) % 5 + '">' + (e.range.min + 1) + '</div>'
+            ]
+            : [
+                '<div class="infinite infinite' + (e.range.max - 1) % 5 + '">'+ (e.range.max - 1) + '</div>',
+                '<div class="infinite infinite' + e.range.max % 5 + '">' + e.range.max + '</div>'
+            ]
+
+        e.fill(panels);
+    });
+    document.querySelector("#start").addEventListener("click", function () {
+        flicking3.on("moveEnd", function(e) {
+            flicking3.next();
+        });
+        flicking3.next();
+    });
+    document.querySelector("#stop").addEventListener("click", function () {
+        flicking3.off("moveEnd");
+    });
+    </script>
 <script data-script=".">
     var flickingPagination0 = CustomPagination(".pagination0");
     flicking0.addPlugins(flickingPagination0);

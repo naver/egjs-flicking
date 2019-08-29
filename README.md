@@ -64,7 +64,9 @@
   <img width="300" src="https://user-images.githubusercontent.com/26213435/59832831-cebaf780-937f-11e9-84cd-e21f8cf1fd07.gif" />
 </p>
 
-- Easy-to-use infinite carousel(slider).
+- Easy-to-use and performant infinite carousel(slider).
+  - You can use 3 [options](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#.FlickingOptions)(`renderOnlyVisible`, `isEqualsSize`, `isConstantSize`) to make your carousel more performant.
+  - Check the effect! ⇒ [<img style="height: 10px" src="./demo/images/youtube.svg"> https://www.youtube.com/watch?v=R-DKq-fqeSI](https://www.youtube.com/watch?v=R-DKq-fqeSI)
 - Every options are compatible with each others.
   - Except for mutual exclusive options (like `circular` and `bound`).
 - Provides various scroll movement types that you can choose.
