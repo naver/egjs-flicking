@@ -176,17 +176,10 @@ flicking2.on("needPanel", function (e) {
     });
 
     flicking3.on("needPanel", function (e) {
-        var panels = e.direction === eg.Flicking.DIRECTION.NEXT
-            ? [
-                '<div class="infinite infinite' + e.range.min % 5 + '">'+ e.range.min + '</div>',
-                '<div class="infinite infinite' + (e.range.min + 1) % 5 + '">' + (e.range.min + 1) + '</div>'
-            ]
-            : [
-                '<div class="infinite infinite' + (e.range.max - 1) % 5 + '">'+ (e.range.max - 1) + '</div>',
-                '<div class="infinite infinite' + e.range.max % 5 + '">' + e.range.max + '</div>'
-            ]
-
-        e.fill(panels);
+        var panels = e.fill([
+            '<div class="infinite infinite' + e.range.min % 5 + '">'+ e.range.min + '</div>',
+            '<div class="infinite infinite' + (e.range.min + 1) % 5 + '">' + (e.range.min + 1) + '</div>'
+        ]);
     });
     document.querySelector("#start").addEventListener("click", function () {
         flicking3.on("moveEnd", function(e) {
