@@ -848,7 +848,7 @@ describe("Events", () => {
             createHorizontalElement(20),
           ]);
         });
-        flicking.replace(0, createHorizontalElement(20));
+        flicking.replace(0, createHorizontalElement(20)); // Panel info should be changed to trgiger needPanel event
 
         // Then
         expect(needPanelEvents.length).equals(1);
@@ -881,7 +881,7 @@ describe("Events", () => {
             createHorizontalElement(20),
           ]);
         });
-        flicking.replace(5, createHorizontalElement(20));
+        flicking.replace(5, createHorizontalElement(20)); // Panel info should be changed to trgiger needPanel event
 
         // Then
         expect(needPanelEvents.length).equals(1);
