@@ -1749,17 +1749,29 @@ export default class Viewport {
           }
 
           const parsedElements = parseElement(element);
+          // Slice elements to fit size equal to empty spaces
           const elements = direction === DIRECTION.NEXT
             ? parsedElements.slice(0, indexRange.length)
-            : parsedElements.slice(parsedElements.length - indexRange.length);
-          const newPanels = direction === DIRECTION.NEXT
-            ? options.circular && index === panelManager.getLastIndex()
-              ? this.insert(0, elements)
-              : siblingPanel.insertAfter(elements)
-            : options.circular && index === 0
-              ? this.insert(indexRange.max - elements.length + 1, elements)
-              : siblingPanel.insertBefore(elements);
-          return newPanels;
+            : parsedElements.slice(-indexRange.length);
+
+          if (direction === DIRECTION.NEXT) {
+            if (options.circular && index === panelManager.getLastIndex()) {
+              // needPanel event is triggered on last index, insert at index 0
+              return this.insert(0, elements);
+            } else {
+              return siblingPanel.insertAfter(elements);
+            }
+          } else if (direction === DIRECTION.PREV) {
+            if (options.circular && index === 0) {
+              // needPanel event is triggered on first index(0), insert at the last index
+              return this.insert(indexRange.max - elements.length + 1, elements);
+            } else {
+              return siblingPanel.insertBefore(elements);
+            }
+          } else {
+            // direction is null when there're no panels exist
+            return this.insert(0, elements);
+          }
         },
       } as Partial<NeedPanelEvent>,
     );
