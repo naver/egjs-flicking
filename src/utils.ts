@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 
-import { ElementLike, OriginalStyle } from "./types";
+import { ElementLike, OriginalStyle, BoundingBox } from "./types";
 import Flicking from "./Flicking";
 import { FLICKING_METHODS, isBrowser } from "./consts";
 
@@ -300,4 +300,25 @@ export function withFlickingMethods(prototype: any, flickingName: string) {
       }
     };
   });
+}
+
+export function getBbox(element: HTMLElement, useOffset: boolean) {
+  let bbox: BoundingBox;
+  if (useOffset) {
+    bbox = {
+      x: element.offsetLeft,
+      y: element.offsetTop,
+      width: element.offsetWidth,
+      height: element.offsetHeight,
+    };
+  } else {
+    const clientRect = element.getBoundingClientRect();
+    bbox = {
+      x: clientRect.left,
+      y: clientRect.top,
+      width: clientRect.width,
+      height: clientRect.height,
+    };
+  }
+  return bbox;
 }
