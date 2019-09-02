@@ -1,5 +1,6 @@
 .wrapper{
     background-color: grey;
+    width: 100%;
     height: 39px;
     overflow: hidden;
 }
