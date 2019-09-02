@@ -65,6 +65,7 @@
 </p>
 
 - 사용하기 쉬우면서도 뛰어난 성능의 무한 캐로셀을 지원합니다.
+  - 3가지 [옵션](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#.FlickingOptions)들(`renderOnlyVisible`, `isEqualSize`, `isConstantSize`)을 이용하여 더욱 뛰어난 성능을 얻을 수 있습니다.
 - 모든 옵션을 결합하여 사용 가능합니다.
   - 옵션들이 상호배타적인 경우를 제외합니다 (`circular`와 `bound` 같은 경우).
 - 다양한 스크롤 동작 방식을 제공합니다.
@@ -96,6 +97,37 @@ const flicking = new Flicking("#el", { circular: true });
 ```
 ```js
 var flicking = new eg.Flicking("#el", { circular: true });
+```
+
+#### DOM 구조에 대해
+⚠️ NOTICE: 저희가 플리킹을 좀 더 쉽고 유연하게 사용하실 수 있도록 노력하고 있지만, 플리킹을 올바르게 초기화하기 위해서 최소한의 구조가 필요합니다.
+
+플리킹이 패널들에 `position: absolute`를 설정하기 때문에, 래퍼 엘리먼트나 패널에 고정된 높이값을 설정해주셔야만 합니다.
+
+✅
+```html
+<div id="wrapper" style="height: 120px">
+  <div class="panel"></div>
+  <div class="panel"></div>
+  <div class="panel"></div>
+</div>
+```
+```html
+<div id="wrapper">
+  <!-- 적어도 하나의 패널이 고정된 크기를 가지고 있어야 합니다 -->
+  <div class="panel" style="height: 120px;"></div>
+  <div class="panel"></div>
+  <div class="panel"></div>
+</div>
+```
+
+❌
+```html
+<div id="wrapper"> <!-- 래퍼 크기가 패널 크기에 종속적인 상황입니다 -->
+  <div class="panel" style="height: 100%;"></div>
+  <div class="panel" style="height: 100%;"></div>
+  <div class="panel" style="height: 100%;"></div>
+</div>
 ```
 
 #### 사용자 지표의 수집
