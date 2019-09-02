@@ -612,7 +612,7 @@ export default class Viewport {
     const viewportElement = this.viewportElement;
 
     if (!state.cachedBbox) {
-      state.cachedBbox = getBbox(viewportElement, options.useOffset);
+      state.cachedBbox = getBbox(viewportElement, options.useOffset, true);
     }
 
     return state.cachedBbox!;
