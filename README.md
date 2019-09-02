@@ -100,6 +100,37 @@ const flicking = new Flicking("#el", { circular: true });
 var flicking = new eg.Flicking("#el", { circular: true });
 ```
 
+#### DOM Structure
+⚠️ NOTICE: Although Flicking is trying to support more flexible and easy usage for users, it requires minimal structure to initialize.
+
+As Flicking applies `position: absolute` for panels, either wrapper or panel should have fixed height value.
+
+✅
+```html
+<div id="wrapper" style="height: 120px">
+  <div class="panel"></div>
+  <div class="panel"></div>
+  <div class="panel"></div>
+</div>
+```
+```html
+<div id="wrapper">
+  <!-- Least one of them should have fixed height -->
+  <div class="panel" style="height: 120px;"></div>
+  <div class="panel"></div>
+  <div class="panel"></div>
+</div>
+```
+
+❌
+```html
+<div id="wrapper"> <!-- Wrapper height is dependent on panel height -->
+  <div class="panel" style="height: 100%;"></div>
+  <div class="panel" style="height: 100%;"></div>
+  <div class="panel" style="height: 100%;"></div>
+</div>
+```
+
 #### Collect statistics
 
 Flicking applies Google Analytics (GA) to collect which features are useful to users. For example, the use of the `freeScroll` option, or the value of the `gap` option, and so on. Statistics also DO NOT contain any information that can identify an individual. Statistics on the usage will serve as basis for making better products. To disable GA, set the `collectStatistics` option to `false` as follows:
