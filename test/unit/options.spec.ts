@@ -23,7 +23,7 @@ describe("Initialization", () => {
   };
 
   describe("Check specifications in initialization process", () => {
-    afterEach(() => cleanup());
+    // afterEach(() => cleanup());
 
     it("should have VERSION string", () => {
       expect(Flicking.VERSION).not.to.be.undefined;
@@ -1201,6 +1201,76 @@ describe("Initialization", () => {
         const afterPanelSize = afterPanelSizes[idx];
 
         expect(beforePanelSize).equals(afterPanelSize);
+      });
+    });
+  });
+
+  describe("useOffset", () => {
+    it("should make viewport size integer when true", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.full, {
+        useOffset: true,
+      });
+      const flicking = flickingInfo.instance;
+      flicking.getElement().style.width = "1000.54321px";
+
+      // When
+      flicking.resize();
+
+      // Then
+      const viewportSize = (flickingInfo.instance as any).viewport.getSize();
+      expect(viewportSize).equals(parseInt(viewportSize, 10));
+    });
+
+    it("should make viewport size not integer when false", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.full, {
+        useOffset: false,
+      });
+      const flicking = flickingInfo.instance;
+      flicking.getElement().style.width = "1000.54321px";
+
+      // When
+      flicking.resize();
+
+      // Then
+      const viewportSize = (flickingInfo.instance as any).viewport.getSize();
+      expect(viewportSize).not.equals(parseInt(viewportSize, 10));
+    });
+
+    it("should make panel size integer when true", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.full, {
+        useOffset: true,
+      });
+      const flicking = flickingInfo.instance;
+      flicking.getElement().style.width = "1000.54321px";
+
+      // When
+      flicking.resize();
+
+      // Then
+      flicking.getAllPanels().forEach(panel => {
+        const panelSize = panel.getSize();
+        expect(panelSize).equals(parseInt(panelSize.toString(), 10));
+      });
+    });
+
+    it("should make panel size not integer when false", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.full, {
+        useOffset: false,
+      });
+      const flicking = flickingInfo.instance;
+      flicking.getElement().style.width = "1000.54321px";
+
+      // When
+      flicking.resize();
+
+      // Then
+      flicking.getAllPanels().forEach(panel => {
+        const panelSize = panel.getSize();
+        expect(panelSize).not.equals(parseInt(panelSize.toString(), 10));
       });
     });
   });
