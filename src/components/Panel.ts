@@ -316,7 +316,7 @@ class Panel implements FlickingPanel {
         cameraElement.appendChild(element);
         viewport.addVisiblePanel(this);
       }
-      state.cachedBbox = getBbox(element, options.useOffset);
+      state.cachedBbox = getBbox(element, options.useOffset, false);
 
       if (!wasVisible && viewport.options.renderExternal) {
         cameraElement.removeChild(element);

@@ -302,12 +302,19 @@ export function withFlickingMethods(prototype: any, flickingName: string) {
   });
 }
 
-export function getBbox(element: HTMLElement, useOffset: boolean) {
+export function getBbox(element: HTMLElement, useOffset: boolean, includeXY: boolean) {
   let bbox: BoundingBox;
   if (useOffset) {
-    bbox = {
+    bbox = includeXY
+    ? {
       x: element.offsetLeft,
       y: element.offsetTop,
+      width: element.offsetWidth,
+      height: element.offsetHeight,
+    }
+    : {
+      x: 0,
+      y: 0,
       width: element.offsetWidth,
       height: element.offsetHeight,
     };
