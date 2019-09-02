@@ -300,6 +300,7 @@ class Panel implements FlickingPanel {
     const state = this.state;
     const viewport = this.viewport;
     const element = this.element;
+    const options = viewport.options;
 
     if (!element) {
       state.cachedBbox = {
@@ -315,13 +316,22 @@ class Panel implements FlickingPanel {
         cameraElement.appendChild(element);
         viewport.addVisiblePanel(this);
       }
-      const bbox = element.getBoundingClientRect();
-      state.cachedBbox = {
-        x: bbox.left,
-        y: bbox.top,
-        width: bbox.width,
-        height: bbox.height,
-      };
+      if (options.useOffset) {
+        state.cachedBbox = {
+          x: element.offsetLeft,
+          y: element.offsetTop,
+          width: element.offsetWidth,
+          height: element.offsetHeight,
+        };
+      } else {
+        const bbox = element.getBoundingClientRect();
+        state.cachedBbox = {
+          x: bbox.left,
+          y: bbox.top,
+          width: bbox.width,
+          height: bbox.height,
+        };
+      }
       if (!wasVisible && viewport.options.renderExternal) {
         cameraElement.removeChild(element);
       }
