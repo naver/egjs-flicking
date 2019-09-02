@@ -608,14 +608,26 @@ export default class Viewport {
 
   public updateBbox(): BoundingBox {
     const state = this.state;
+    const options = this.options;
+    const viewportElement = this.viewportElement;
+
     if (!state.cachedBbox) {
-      const bbox = this.viewportElement.getBoundingClientRect();
-      state.cachedBbox = {
-        x: bbox.left,
-        y: bbox.top,
-        width: bbox.width,
-        height: bbox.height,
-      };
+      if (options.useOffset) {
+        state.cachedBbox = {
+          x: viewportElement.offsetLeft,
+          y: viewportElement.offsetTop,
+          width: viewportElement.offsetWidth,
+          height: viewportElement.offsetHeight,
+        };
+      } else {
+        const bbox = viewportElement.getBoundingClientRect();
+        state.cachedBbox = {
+          x: bbox.left,
+          y: bbox.top,
+          width: bbox.width,
+          height: bbox.height,
+        };
+      }
     }
 
     return state.cachedBbox!;
