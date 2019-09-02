@@ -11,7 +11,7 @@ import StateMachine from "./StateMachine";
 import MoveType from "../moves/MoveType";
 import { FlickingOptions, FlickingPanel, FlickingStatus, ElementLike, EventType, TriggerCallback, NeedPanelEvent, FlickingEvent, MoveTypeObjectOption, OriginalStyle, Plugin, DestroyOption, BoundingBox } from "../types";
 import { DEFAULT_VIEWPORT_CSS, DEFAULT_CAMERA_CSS, TRANSFORM, DEFAULT_OPTIONS, EVENTS, DIRECTION, STATE_TYPE, MOVE_TYPE } from "../consts";
-import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement, hasClass, restoreStyle, circulate, findIndex } from "../utils";
+import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement, hasClass, restoreStyle, circulate, findIndex, getBbox } from "../utils";
 import Snap from "../moves/Snap";
 import FreeScroll from "../moves/FreeScroll";
 
@@ -612,22 +612,7 @@ export default class Viewport {
     const viewportElement = this.viewportElement;
 
     if (!state.cachedBbox) {
-      if (options.useOffset) {
-        state.cachedBbox = {
-          x: viewportElement.offsetLeft,
-          y: viewportElement.offsetTop,
-          width: viewportElement.offsetWidth,
-          height: viewportElement.offsetHeight,
-        };
-      } else {
-        const bbox = viewportElement.getBoundingClientRect();
-        state.cachedBbox = {
-          x: bbox.left,
-          y: bbox.top,
-          width: bbox.width,
-          height: bbox.height,
-        };
-      }
+      state.cachedBbox = getBbox(viewportElement, options.useOffset);
     }
 
     return state.cachedBbox!;
