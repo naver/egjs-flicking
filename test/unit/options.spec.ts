@@ -1273,5 +1273,22 @@ describe("Initialization", () => {
         expect(panelSize).not.equals(parseInt(panelSize.toString(), 10));
       });
     });
+
+    it("should return original panel size when true even if transform is applied", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.full, {
+        useOffset: true,
+      });
+
+      // When
+      const flicking = flickingInfo.instance;
+      const prevSize = flicking.getPanel(0).getSize();
+      flicking.getElement().style.transform = "scale(2)";
+      flicking.resize();
+
+      // Then
+      const afterSize = flicking.getPanel(0).getSize();
+      expect(prevSize).equals(afterSize);
+    });
   });
 });
