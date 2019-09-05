@@ -1,4 +1,3 @@
-import { VisiblePanelsComponent } from './visiblepanels/visiblepanels.component';
 import { NgxFlickingModule } from './../../../ngx-flicking/src/lib/ngx-flicking.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -17,6 +16,7 @@ import { VariablesizeComponent } from './variablesize/variablesize.component';
 import { AutoplayComponent } from './autoplay/autoplay.component';
 import { FadeComponent } from './fade/fade.component';
 import { ParallaxComponent } from './parallax/parallax.component';
+import { VisiblePanelsComponent } from './visiblepanels/visiblepanels.component';
 
 const appRoutes: Routes = [
   { path: 'align', component: AlignComponent },

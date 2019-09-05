@@ -92,10 +92,10 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
       this.syncPanelDataIfRenderOnlyVisible(this.panels);
 
       this.bindEvents();
+
       this.checkPlugins();
 
       setTimeout(() => {
-        // console.log('#### ViewInit - setTimeout');
         // To check clone on first time
         /**
          * TODO: Can setTimeout guarantee that it's called before XXXChecked?
@@ -124,6 +124,7 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
   }
 
   onUpdate(diff: DiffResult<any>) {
+    // console.log('Result Callback : added: %o, removed: %o, changed: %o', diff.added, diff.removed, diff.changed);
     if (diff.added.length > 0 || diff.removed.length > 0 || diff.changed.length > 0) {
       this.flicking.sync(diff);
 

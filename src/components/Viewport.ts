@@ -65,7 +65,6 @@ export default class Viewport {
     cachedBbox: BoundingBox | null;
     windowBbox: BoundingBox | null;
   };
-  private delayUpdate: boolean;
 
   constructor(
     flicking: Flicking,
@@ -110,7 +109,6 @@ export default class Viewport {
     this.stateMachine = new StateMachine();
     this.visiblePanels = [];
     this.panelBboxes = {};
-    this.delayUpdate = false;
 
     this.build();
   }
@@ -224,7 +222,7 @@ export default class Viewport {
     pos += (modifiedNearestPosition - originalNearestPosition);
     state.position = pos;
 
-    const visibleChanged = this.updateVisiblePanels();
+    this.updateVisiblePanels();
 
     // Offset is needed to fix camera layer size in visible-only rendering mode
     const posOffset = options.renderOnlyVisible
@@ -237,16 +235,6 @@ export default class Viewport {
     this.cameraElement.style[transform] = state.translate.has3d
       ? `translate3d(${moveCoord}, 0px)`
       : `translate(${moveCoord})`;
-  }
-
-  public setDelayUpdate(delay: boolean) {
-    // console.log(`#### delay camera update: ${delay} ####`);
-    this.delayUpdate = delay;
-  }
-
-  public getDelayUpdate() {
-    // this.delayUpdate && console.log(`#### getDelayUpdate: ${this.delayUpdate} ####`);
-    return this.delayUpdate;
   }
 
   public stopCamera = (axesEvent: any): void => {
@@ -727,7 +715,7 @@ export default class Viewport {
       const visiblePanels = min >= 0
         ? allPanels.slice(min, max + 1)
         : allPanels.slice(0, max + 1).concat(allPanels.slice(min));
-      // console.log(`visibleIndex ${min} -> ${max}, visiblePanels:`, visiblePanels);
+
       return visiblePanels.filter(panel => panel);
     } else {
       return allPanels.filter(panel => {
@@ -1793,23 +1781,22 @@ export default class Viewport {
     );
   }
 
-  private updateVisiblePanels(): boolean {
+  private updateVisiblePanels() {
     const state = this.state;
     const options = this.options;
     const cameraElement = this.cameraElement;
     const visibleIndex = state.visibleIndex;
     const { renderExternal, renderOnlyVisible } = options;
     if (!renderOnlyVisible) {
-      return false;
+      return;
     }
 
-    // console.log("### updateVisiblePanels");
     if (!this.nearestPanel) {
       this.resetVisibleIndex();
       while (cameraElement.firstChild) {
         cameraElement.removeChild(cameraElement.firstChild);
       }
-      return false;
+      return;
     }
 
     const newVisibleIndex = this.calcNewVisiblePanelIndex();
@@ -1817,7 +1804,7 @@ export default class Viewport {
     if (newVisibleIndex.min !== visibleIndex.min || newVisibleIndex.max !== visibleIndex.max) {
       state.visibleIndex = newVisibleIndex;
       if (isNaN(newVisibleIndex.min) || isNaN(newVisibleIndex.max)) {
-        return false;
+        return;
       }
 
       const prevVisiblePanels = this.visiblePanels;
@@ -1830,8 +1817,6 @@ export default class Viewport {
         state.positionOffset = firstVisiblePanelPos;
       }
 
-
-      // console.log(`viewport.updateVisiblePanels -> newVisiblePanels: length ${newVisiblePanels.length}`);
       newVisiblePanels.forEach(panel => {
           panel.setPositionCSS(state.positionOffset);
       });
@@ -1858,12 +1843,9 @@ export default class Viewport {
           max: newVisibleIndex.max,
         },
       });
-      return true;
     } else {
-      // console.log(`viewport.updateVisiblePanels => no visible Change`);
       this.visiblePanels.forEach(panel => panel.setPositionCSS(state.positionOffset));
     }
-    return false;
   }
 
   private calcNewVisiblePanelIndex() {
@@ -1915,7 +1897,7 @@ export default class Viewport {
 
     const lastPanelOfPrevDir = checkLastPanel(basePanel, panel => {
       const prevPanel = panel.prevSibling;
-      // console.log("hasNextPanel", prevPanel, "prevPanel.getPosition()", prevPanel ? prevPanel.getPosition() : "no pos", "panel.getPosition()", panel.getPosition());
+
       if (prevPanel && prevPanel.getPosition() <= panel.getPosition()) {
         return prevPanel;
       } else {
@@ -1943,13 +1925,12 @@ export default class Viewport {
       // Relative index including clone
       max: lastPanelOfNextDir.getIndex() + maxPanelCloneOffset,
     };
-    // console.log("### calcNewVisiblePanelIndex => cloneIndex", basePanel.getCloneIndex(), "lastPanelOfPrevDir.getIndex()", lastPanelOfPrevDir.getIndex(), "minPanelCloneOffset", minPanelCloneOffset, "maxPanelCloneOffset");
 
     // Stopped on first cloned first panel
     if (lastPanelOfPrevDir.getIndex() === 0 && lastPanelOfPrevDir.getCloneIndex() === 0) {
       newVisibleIndex.min = allPanelCount;
     }
-    // console.log("calcNewVisiblePanelIndex", newVisibleIndex);
+
     return newVisibleIndex;
   }
 
