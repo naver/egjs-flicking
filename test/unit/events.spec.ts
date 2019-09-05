@@ -475,6 +475,7 @@ describe("Events", () => {
 
     it("will trigger events in correct order even if interrupted", async () => {
       // Don't let first simulate finished, as this is testing interruptablility
+      // Setting time same to duration(400) makes only panning behavior finished, but not animation
       simulate(flickingInfo.element, { deltaX: -500, duration: 400 }, 400);
       await simulate(flickingInfo.element, { deltaX: -500, duration: 100 });
 

@@ -77,16 +77,13 @@ export function simulate(el: HTMLElement, option?: object, time: number = 15000)
   }
 
   return new Promise<void>(resolve => {
-    const mergedOption = merge({
+    Simulator.gestures.pan(targetElement, merge({
       pos: [50, 15],
       deltaX: 0,
       deltaY: 0,
       duration: 500,
       easing: "linear",
-    }, option);
-    Simulator.gestures.pan(targetElement, mergedOption, () => {
-      resolve();
-    });
+    }, option), resolve);
 
     tick(time);
   });
