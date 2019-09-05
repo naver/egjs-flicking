@@ -1,5 +1,3 @@
-// import { VisibleChangeEvent } from './../../../../../../declaration/types.d';
-// import { Flicking } from '@egjs/flicking';
 /**
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
@@ -9,7 +7,7 @@
 import NativeFlicking, { Plugin, FlickingOptions, withFlickingMethods, DEFAULT_OPTIONS, FlickingEvent, NeedPanelEvent, SelectEvent, ChangeEvent, VisibleChangeEvent } from '@egjs/flicking';
 import { counter } from '../../../../../../src/utils';
 // tslint:disable-next-line: max-line-length
-import { Component, OnInit, Input, AfterViewInit, ElementRef, OnChanges, Output, EventEmitter, OnDestroy, ContentChild, TemplateRef, SimpleChanges, AfterViewChecked, DoCheck, ApplicationRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ElementRef, OnChanges, Output, EventEmitter, OnDestroy, ContentChild, TemplateRef, SimpleChanges, AfterViewChecked, DoCheck } from '@angular/core';
 import ListDiffer, { DiffResult } from '@egjs/list-differ';
 
 @Component({
@@ -67,7 +65,7 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
    */
   private criticalSection = true;
 
-  constructor(private elRef: ElementRef, private cdr: ChangeDetectorRef) {}
+  constructor(private elRef: ElementRef) {}
 
   ngOnInit() {
     this.options = {...DEFAULT_OPTIONS, ...this.options, ...{renderExternal: true}};
