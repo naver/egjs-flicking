@@ -3,7 +3,7 @@ import { spy } from "sinon";
 import Flicking from "../../src/Flicking";
 import { FlickingEvent, FlickingPanel, NeedPanelEvent } from "../../src/types";
 import { horizontal, panel as createPanelElement } from "./assets/fixture";
-import { createFlicking, cleanup, simulate, waitFor, createHorizontalElement, waitEvent } from "./assets/utils";
+import { createFlicking, cleanup, simulate, createHorizontalElement, tick } from "./assets/utils";
 import { EVENTS, DIRECTION } from "../../src/consts";
 import { counter, toArray } from "../../src/utils";
 import Viewport from "../../src/components/Viewport";
@@ -39,7 +39,6 @@ describe("Methods call", () => {
 
     it("should circulate index in circular mode(moving to next panel)", async () => {
       await simulate(flickingInfo.element, { deltaX: -100 });
-      await waitFor(1000);
 
       expect(flickingInfo.instance.getIndex()).to.equal(0);
     });
@@ -51,7 +50,6 @@ describe("Methods call", () => {
       });
 
       await simulate(flickingInfo.element, { deltaX: 100 });
-      await waitFor(1000);
 
       expect(flickingInfo.instance.getIndex()).to.equal(maximumIndex);
     });
@@ -73,7 +71,7 @@ describe("Methods call", () => {
 
       // When
       flicking.next(200);
-      await waitEvent(flicking, "moveEnd");
+      tick(300);
 
       // Then
       const afterCameraPos = (flicking as any).viewport.getCameraPosition();
@@ -86,7 +84,7 @@ describe("Methods call", () => {
       const flicking = flickingInfo.instance;
       const indexBefore = flicking.getIndex();
       flicking.next(200);
-      await waitEvent(flicking, "moveEnd");
+      tick(300);
 
       expect(flicking.getIndex()).equals(indexBefore + 1);
     });
@@ -102,10 +100,9 @@ describe("Methods call", () => {
       const flicking = flickingInfo.instance;
 
       // Will trigger "restore" event, not "change" event
-      simulate(flickingInfo.element, { deltaX: 10, duration: 200 });
-      await waitFor(25);
+      simulate(flickingInfo.element, { deltaX: 10, duration: 200 }, 200);
       flicking.next();
-      await waitFor(500);
+      tick(100);
 
       expect(flickingInfo.eventFired.some(eventType => eventType === EVENTS.CHANGE)).to.be.false;
     });
@@ -130,7 +127,7 @@ describe("Methods call", () => {
 
       // When
       flicking.prev(200);
-      await waitEvent(flicking, "moveEnd");
+      tick(300);
 
       // Then
       const afterCameraPos = -cameraElement.getBoundingClientRect().left; // position is set multiplied by -1
@@ -143,7 +140,7 @@ describe("Methods call", () => {
       const flicking = flickingInfo.instance;
       const indexBefore = flicking.getIndex();
       flicking.prev(200);
-      await waitFor(1000);
+      tick(300);
 
       expect(flicking.getIndex()).equals(indexBefore - 1);
     });
@@ -159,10 +156,9 @@ describe("Methods call", () => {
       const flicking = flickingInfo.instance;
 
       // Will trigger "restore" event, not "change" event
-      simulate(flickingInfo.element, { deltaX: 10, duration: 200 });
-      await waitFor(25);
+      simulate(flickingInfo.element, { deltaX: 10, duration: 200 }, 200);
       flicking.prev();
-      await waitFor(500);
+      tick(100);
 
       expect(flickingInfo.eventFired.some(eventType => eventType === EVENTS.CHANGE)).to.be.false;
     });
@@ -176,7 +172,7 @@ describe("Methods call", () => {
       const indexToMove = 3;
 
       flicking.moveTo(indexToMove, 200);
-      await waitFor(500);
+      tick(300);
 
       expect(flicking.getIndex()).equals(indexToMove);
     });
@@ -188,14 +184,14 @@ describe("Methods call", () => {
       let indexToMove = 5;
 
       flicking.moveTo(indexToMove, 200);
-      await waitFor(500);
+      tick(300);
 
       expect(flicking.getIndex()).equals(indexToMove);
 
       indexToMove = 2;
 
       flicking.moveTo(indexToMove, 200);
-      await waitFor(500);
+      tick(300);
 
       expect(flicking.getIndex()).equals(indexToMove);
     });
@@ -206,7 +202,7 @@ describe("Methods call", () => {
       const flicking = flickingInfo.instance;
 
       flicking.moveTo(2, 200);
-      await waitFor(500);
+      tick(300);
 
       expect(flickingInfo.eventDirection[0]).equals(DIRECTION.PREV);
     });
@@ -217,7 +213,7 @@ describe("Methods call", () => {
       const flicking = flickingInfo.instance;
 
       flicking.moveTo(0, 200);
-      await waitFor(500);
+      tick(300);
 
       expect(flickingInfo.eventDirection[0]).equals(DIRECTION.NEXT);
     });
@@ -235,7 +231,6 @@ describe("Methods call", () => {
       flicking.enableInput();
 
       await simulate(flickingInfo.element, { deltaX: -100 });
-      await waitFor(500);
       expect(flickingInfo.eventFired.length).to.not.equal(0);
     });
 
@@ -258,7 +253,6 @@ describe("Methods call", () => {
       flicking.disableInput();
 
       await simulate(flickingInfo.element, { deltaX: -100 });
-      await waitFor(500);
       expect(flickingInfo.eventFired.length).equals(0);
     });
 
@@ -278,7 +272,6 @@ describe("Methods call", () => {
 
     it("should not trigger events anymore", async () => {
       await simulate(flickingInfo.element, { deltaX: -100 });
-      await waitFor(500);
       expect(flickingInfo.eventFired.length).equals(0);
     });
 
@@ -391,8 +384,7 @@ describe("Methods call", () => {
       const panels1 = flickingInfo.instance.getVisiblePanels();
 
       flickingInfo.instance.next(0);
-
-      await waitFor(100);
+      tick(100);
       const panels2 = flickingInfo.instance.getVisiblePanels();
 
       // Then
@@ -411,8 +403,7 @@ describe("Methods call", () => {
       const panels1 = flickingInfo.instance.getVisiblePanels();
 
       flickingInfo.instance.prev(0);
-
-      await waitFor(100);
+      tick(100);
       const panels2 = flickingInfo.instance.getVisiblePanels();
 
       // Then
@@ -451,15 +442,13 @@ describe("Methods call", () => {
 
       // When
       flickingInfo.instance.next();
-
-      await waitFor(500);
+      tick(200);
 
       steps[1] = panelArr.map(i => getPanels(i, 3))
         .map(panels => panels.map(panel => panel.getProgress()));
 
       flickingInfo.instance.next();
-
-      await waitFor(500);
+      tick(200);
 
       steps[2] = panelArr.map(i => getPanels(i, 3))
         .map(panels => panels.map(panel => panel.getProgress()));
@@ -486,24 +475,24 @@ describe("Methods call", () => {
       // When
       // 0 => 1
       flickingInfo.instance.next();
+      tick(150);
 
-      await waitFor(500);
       // 1, 2, 0(3), 1(4), 2(5), 0(6)
       steps[1] = panelArr.map(i => getPanels(i, 8, i + 1))
         .map(panels => panels.map(panel => panel.getProgress()));
 
       // 1 => 2
       flickingInfo.instance.next();
+      tick(150);
 
-      await waitFor(500);
       // 2, 0(3), 1(4), 2(5), 0(6), 1(7)
       steps[2] = panelArr.map(i => getPanels(i, 8, i + 1))
         .map(panels => panels.map(panel => panel.getProgress()));
 
       // 2 => 0
       flickingInfo.instance.next();
+      tick(150);
 
-      await waitFor(500);
       // 0(3) 1(4) 2(5) 0 (6) 1(7) 0(8)
       steps[3] = panelArr.map(i => getPanels(i, 8, i + 1))
         .map(panels => panels.map(panel => panel.getProgress()));
@@ -530,24 +519,24 @@ describe("Methods call", () => {
       // When
       // 0 => 1
       flickingInfo.instance.next();
+      tick(150);
 
-      await waitFor(500);
       // 1, 2, 0(3), 1(4), 2(5), 0(6)
       steps[1] = panelArr.map(i => getPanels(i, 8, i + 1))
         .map(panels => panels.map(panel => panel.getOutsetProgress()));
 
       // 1 => 2
       flickingInfo.instance.next();
+      tick(150);
 
-      await waitFor(500);
       // 2, 0(3), 1(4), 2(5), 0(6), 1(7)
       steps[2] = panelArr.map(i => getPanels(i, 8, i + 1))
         .map(panels => panels.map(panel => panel.getOutsetProgress()));
 
       // 2 => 0
       flickingInfo.instance.next();
+      tick(150);
 
-      await waitFor(500);
       // 0(3) 1(4) 2(5) 0 (6) 1(7) 0(8)
       steps[3] = panelArr.map(i => getPanels(i, 8, i + 1))
         .map(panels => panels.map(panel => panel.getOutsetProgress()));
@@ -576,7 +565,7 @@ describe("Methods call", () => {
 
           for (let i = 1; i <= 5; ++i) {
             inst.next(0);
-            await waitFor(50);
+            tick(100);
             steps[i] = inst.getAllPanels().map(panel => panel.getProgress());
           }
 
@@ -589,7 +578,9 @@ describe("Methods call", () => {
         });
       });
     });
+
     it("should check 'visibleRatio' in panel", async () => {
+      viewport.set(1000, 100);
       // Given
       flickingInfo = createFlicking(horizontal.variant2, { circular: true });
 
@@ -600,30 +591,30 @@ describe("Methods call", () => {
 
       // When
       // 0 => 1
-      flickingInfo.instance.next();
+      flickingInfo.instance.next(300);
+      tick(450);
 
-      await waitFor(500);
       steps[1] = panelArr.map(i => getPanels(i, 8))
         .map(panels => panels.map(panel => panel.getVisibleRatio()));
 
       // 1 => 2
-      flickingInfo.instance.next();
+      flickingInfo.instance.next(300);
+      tick(450);
 
-      await waitFor(500);
       steps[2] = panelArr.map(i => getPanels(i, 8))
         .map(panels => panels.map(panel => panel.getVisibleRatio()));
 
       // 2 => 3
-      flickingInfo.instance.next();
+      flickingInfo.instance.next(300);
+      tick(450);
 
-      await waitFor(500);
       steps[3] = panelArr.map(i => getPanels(i, 8))
         .map(panels => panels.map(panel => panel.getVisibleRatio()));
 
       // 3 => 4
-      flickingInfo.instance.next();
+      flickingInfo.instance.next(300);
+      tick(450);
 
-      await waitFor(500);
       steps[4] = panelArr.map(i => getPanels(i, 8))
         .map(panels => panels.map(panel => panel.getVisibleRatio()));
 
@@ -666,13 +657,11 @@ describe("Methods call", () => {
 
       // When
       await simulate(flickingInfo.element, { deltaX: -150, duration: 500 });
-      await waitFor(1000);
       const index = flicking.getIndex();
 
       // not call change event
       flicking.moveTo(index, 0);
-
-      await waitFor(100);
+      tick(100);
 
       // Then
       expect(restore.callCount).to.be.equal(0);
@@ -708,7 +697,6 @@ describe("Methods call", () => {
 
       // When
       await simulate(flickingInfo.element, { deltaX: -400, duration: 50 });
-      await waitEvent(flicking, "moveEnd");
 
       const index = flicking.getIndex();
       const flick = moveEnd.args[0][0].axesEvent.currentTarget.get(["flick"]).flick;
@@ -791,7 +779,6 @@ describe("Methods call", () => {
         deltaX: -200,
         duration: 100,
       });
-      await waitEvent(flicking, "moveEnd");
       const prevCameraPosition = flickingViewport.getCameraPosition();
 
       // When

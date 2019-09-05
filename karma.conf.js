@@ -11,6 +11,7 @@ module.exports = function(config) {
     },
     files: [
       "./node_modules/hammer-simulator/index.js",
+      "./test/setup.js",
       "./test/hammer-simulator.run.js",
       "./src/**/*.ts",
       "./test/**/*.ts",
