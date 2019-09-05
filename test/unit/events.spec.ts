@@ -1,10 +1,9 @@
-import { SinonStatic, SinonFakeTimers } from "sinon";
-
+import { SinonStatic } from "sinon";
 import Flicking from "../../src/Flicking";
 import { EVENTS, DIRECTION } from "../../src/consts";
 import { FlickingEvent, NeedPanelEvent, FlickingOptions } from "../../src/types";
 import { horizontal, vertical } from "./assets/fixture";
-import { createFlicking, createHorizontalElement, cleanup, simulate, waitFor, waitEvent } from "./assets/utils";
+import { createFlicking, createHorizontalElement, cleanup, simulate, waitFor, waitEvent, tick } from "./assets/utils";
 import { merge } from "../../src/utils";
 import Viewport from "../../src/components/Viewport";
 
@@ -46,7 +45,6 @@ describe("Events", () => {
       const beforeIndex = flickingInfo.instance.getIndex();
 
       await simulate(flickingInfo.element, simulateOption);
-      await waitFor(1000);
 
       // Events are fired in correct order
       expect(expectedEventOrder.manual).to.deep.equal(flickingInfo.eventFired);
@@ -112,7 +110,6 @@ describe("Events", () => {
         flicking.on(eventType, e => e.stop());
 
         await simulate(flickingInfo.element, { deltaX: -70 });
-        await waitFor(1000);
 
         if (eventType.endsWith("End")) {
           // If event name ends with ~end, then it won't do anything.
@@ -122,7 +119,7 @@ describe("Events", () => {
             expect(handler.called).to.be.true;
           });
         } else {
-          // Events before current event type will triggered
+          // Events before current event type will be triggered
           orderedEventTypes.slice(0, eventIndex + 1).forEach(type => {
             const handler = mockedHandlers[type];
             expect(handler.called).to.be.true;
@@ -138,13 +135,8 @@ describe("Events", () => {
   });
 
   describe("events can be stopped almost immediately", () => {
-    let timer: SinonFakeTimers;
     beforeEach(() => {
-      timer = sinon.useFakeTimers();
       flickingInfo = createFlicking(horizontal.full);
-    });
-    afterEach(() => {
-      timer.restore();
     });
 
     it("holdStart can be stopped almost immediately", () => {
@@ -161,10 +153,7 @@ describe("Events", () => {
 
       // When
       simulate(flickingInfo.element, { deltaX: -70, duration: 30 });
-      timer.tick(50);
-
       simulate(flickingInfo.element, { deltaX: -70, duration: 30 });
-      timer.tick(500); // Make sure animation ends after second simulate()
 
       // Then
       expect(isPlayingInHoldStart.every(val => val === false)).to.be.true;
@@ -188,10 +177,7 @@ describe("Events", () => {
 
         // When
         simulate(flickingInfo.element, { deltaX: -70, duration: 30 });
-        timer.tick(50);
-
         simulate(flickingInfo.element, { deltaX: -70, duration: 30 });
-        timer.tick(500);
 
         // Then
         expect(eventCount).equals(2);
@@ -209,7 +195,6 @@ describe("Events", () => {
       const beforeIndex = flicking.getIndex();
 
       flicking.next(0);
-      await waitFor(1000);
 
       // Events are fired in correct order
       expect(expectedEventOrder.programmatic).to.deep.equal(flickingInfo.eventFired);
@@ -224,7 +209,6 @@ describe("Events", () => {
       const beforeIndex = flicking.getIndex();
 
       flicking.prev(0);
-      await waitFor(1000);
 
       // Events are fired in correct order
       expect(expectedEventOrder.programmatic).to.deep.equal(flickingInfo.eventFired);
@@ -239,7 +223,6 @@ describe("Events", () => {
       const beforeIndex = flicking.getIndex();
 
       flicking.moveTo(2, 0);
-      await waitFor(1000);
 
       // Events are fired in correct order
       expect(expectedEventOrder.programmatic).to.deep.equal(flickingInfo.eventFired);
@@ -260,7 +243,7 @@ describe("Events", () => {
       const beforeIndex = flicking.getIndex();
 
       flicking.next(10);
-      await waitFor(1000);
+      tick(100);
 
       // Events are fired in correct order
       expect(expectedEventOrder.programmatic).to.deep.equal(flickingInfo.eventFired);
@@ -275,7 +258,7 @@ describe("Events", () => {
       const beforeIndex = flicking.getIndex();
 
       flicking.prev(10);
-      await waitFor(1000);
+      tick(100);
 
       // Events are fired in correct order
       expect(expectedEventOrder.programmatic).to.deep.equal(flickingInfo.eventFired);
@@ -290,7 +273,7 @@ describe("Events", () => {
       const beforeIndex = flicking.getIndex();
 
       flicking.moveTo(2, 10);
-      await waitFor(1000);
+      tick(100);
 
       // Events are fired in correct order
       expect(expectedEventOrder.programmatic).to.deep.equal(flickingInfo.eventFired);
@@ -310,7 +293,7 @@ describe("Events", () => {
       const flicking = flickingInfo.instance;
 
       flicking.next(10);
-      await waitFor(1000);
+      tick(100);
 
       expect(flickingInfo.eventDirection.every(dir => dir === DIRECTION.NEXT)).to.be.true;
     });
@@ -319,14 +302,13 @@ describe("Events", () => {
       const flicking = flickingInfo.instance;
 
       flicking.prev(10);
-      await waitFor(1000);
+      tick(100);
 
       expect(flickingInfo.eventDirection.every(dir => dir === DIRECTION.PREV)).to.be.true;
     });
 
     it("is \"NEXT\" while manually flicking to next panel(except for holdStart)", async () => {
       await simulate(flickingInfo.element, { deltaX: -100 });
-      await waitFor(1000);
 
       expect(flickingInfo.eventDirection[0]).to.deep.equal(null);
       expect(flickingInfo.eventDirection.slice(1).every(direction => {
@@ -336,7 +318,6 @@ describe("Events", () => {
 
     it("is \"PREV\" while manually flicking to prev panel(except for holdStart)", async () => {
       await simulate(flickingInfo.element, { deltaX: 100 });
-      await waitFor(1000);
 
       expect(flickingInfo.eventDirection[0]).to.deep.equal(null);
       expect(flickingInfo.eventDirection.slice(1).every(direction => {
@@ -354,7 +335,7 @@ describe("Events", () => {
       const flicking = flickingInfo.instance;
 
       flicking.next(100);
-      await waitFor(1000);
+      tick(200);
 
       expect(flickingInfo.events.every(e => e.isTrusted === false)).to.be.true;
     });
@@ -363,7 +344,7 @@ describe("Events", () => {
       const flicking = flickingInfo.instance;
 
       flicking.prev(100);
-      await waitFor(1000);
+      tick(200);
 
       expect(flickingInfo.events.every(e => e.isTrusted === false)).to.be.true;
     });
@@ -372,21 +353,19 @@ describe("Events", () => {
       const flicking = flickingInfo.instance;
 
       flicking.moveTo(2, 100);
-      await waitFor(1000);
+      tick(200);
 
       expect(flickingInfo.events.every(e => e.isTrusted === false)).to.be.true;
     });
 
     it("is always true in events triggered by user input(moving to next panel)", async () => {
       await simulate(flickingInfo.element, { deltaX: -70 });
-      await waitFor(1000);
 
       expect(flickingInfo.events.every(e => e.isTrusted === true)).to.be.true;
     });
 
     it("is always true in events triggered by user input(moving to prev panel)", async () => {
       await simulate(flickingInfo.element, { deltaX: 70 });
-      await waitFor(1000);
 
       expect(flickingInfo.events.every(e => e.isTrusted === true)).to.be.true;
     });
@@ -410,15 +389,9 @@ describe("Events", () => {
       // When
       await simulate(flickingInfo.element, { deltaX: -70 });
 
-      // wait moveEnd
-      await waitEvent(flickingInfo.instance, "moveEnd");
-
       const halfProgress = progress;
 
       await simulate(flickingInfo.element, { deltaX: -70 });
-
-      // wait moveEnd
-      await waitEvent(flickingInfo.instance, "moveEnd");
 
       const fullProgress = progress;
 
@@ -445,24 +418,15 @@ describe("Events", () => {
       // When
       await simulate(flickingInfo.element, { deltaX: -70 });
 
-      // wait moveEnd
-      await waitEvent(flickingInfo.instance, "moveEnd");
-
       // 1/3
       const progress1 = progress;
 
       await simulate(flickingInfo.element, { deltaX: -70 });
 
-      // wait moveEnd
-      await waitEvent(flickingInfo.instance, "moveEnd");
-
       // 2/3
       const progress2 = progress;
 
       await simulate(flickingInfo.element, { deltaX: -70 });
-
-      // wait moveEnd
-      await waitEvent(flickingInfo.instance, "moveEnd");
 
       // 3/3 => 0/3
       const progress3 = progress;
@@ -487,13 +451,12 @@ describe("Events", () => {
       const firstSize = firstPanel.getSize();
 
       await simulate(flickingInfo.element, { deltaX: -100, duration: 200 });
-      await waitFor(25);
+
       // Interrupt
       await simulate(flickingInfo.element, { deltaX: 0, duration: 200 });
-      await waitFor(25);
+
       // Interrupt again
       await simulate(flickingInfo.element, { deltaX: 0, duration: 200 });
-      await waitFor(1000);
 
       const afterPosition = (flicking as any).viewport.getCameraPosition();
 
@@ -504,18 +467,16 @@ describe("Events", () => {
       const flicking = flickingInfo.instance;
 
       flicking.moveTo(2, 200);
-      await waitFor(100);
+      tick(300);
       await simulate(flickingInfo.element, { deltaX: 100 });
-      await waitFor(1000);
 
       expect(flicking.getIndex()).equals(1);
     });
 
     it("will trigger events in correct order even if interrupted", async () => {
-      await simulate(flickingInfo.element, { deltaX: -100, duration: 50 });
-      await waitFor(25);
-      await simulate(flickingInfo.element, { deltaX: -100, duration: 100 });
-      await waitFor(1000);
+      // Don't let first simulate finished, as this is testing interruptablility
+      simulate(flickingInfo.element, { deltaX: -500, duration: 400 }, 400);
+      await simulate(flickingInfo.element, { deltaX: -500, duration: 100 });
 
       // Expected event order
       const expectedEventsOnInterrupted = [
@@ -709,7 +670,6 @@ describe("Events", () => {
 
       // When
       await simulate(flickingInfo.element, { deltaX: 500, duration: 100 });
-      await waitFor(1000);
 
       // Then
       const scrollAreaAfter = viewport.getScrollArea();
@@ -741,7 +701,6 @@ describe("Events", () => {
 
       // When
       await simulate(flickingInfo.element, { deltaX: -500, duration: 100 });
-      await waitFor(1000);
 
       // Then
       const scrollAreaAfter = viewport.getScrollArea();
@@ -775,7 +734,6 @@ describe("Events", () => {
 
       // When
       await simulate(flickingInfo.element, { deltaX: 500, duration: 100 });
-      await waitFor(1000);
 
       // Then
       const scrollAreaAfter = viewport.getScrollArea();
@@ -814,7 +772,6 @@ describe("Events", () => {
 
       // When
       await simulate(flickingInfo.element, { deltaX: -500, duration: 100 });
-      await waitFor(1000);
 
       // Then
       const scrollAreaAfter = viewport.getScrollArea();
@@ -1060,7 +1017,6 @@ describe("Events", () => {
 
       // When
       await simulate(flickingInfo.element, { deltaX: -500, duration: 100 });
-      await waitFor(1000);
 
       // Then
       expect(flickingInfo.eventFired.every(evtName => evtName !== EVENTS.CHANGE)).to.be.true;
@@ -1075,7 +1031,6 @@ describe("Events", () => {
 
       // When
       await simulate(flickingInfo.element, { deltaX: 25, duration: 100 });
-      await waitFor(1000);
 
       // Then
       expect(flickingInfo.eventFired.every(evtName => evtName !== EVENTS.CHANGE)).to.be.true;
