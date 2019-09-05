@@ -65,8 +65,12 @@ export function cleanup() {
   });
 }
 
+export function tick(time) {
+  (window as any).timer.tick(time);
+}
+
 declare var Simulator: any;
-export function simulate(el: HTMLElement, option?: object): Promise<void> {
+export function simulate(el: HTMLElement, option?: object, time: number = 15000): Promise<void> {
   let targetElement = el.querySelector(".eg-flick-viewport");
 
   if (!targetElement) {
@@ -74,13 +78,18 @@ export function simulate(el: HTMLElement, option?: object): Promise<void> {
   }
 
   return new Promise<void>(resolve => {
-    Simulator.gestures.pan(targetElement, merge({
+    const mergedOption = merge({
       pos: [50, 15],
       deltaX: 0,
       deltaY: 0,
       duration: 500,
       easing: "linear",
-    }, option), resolve);
+    }, option);
+    Simulator.gestures.pan(targetElement, mergedOption, () => {
+      resolve();
+    });
+
+    tick(time);
   });
 }
 
