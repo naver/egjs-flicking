@@ -6,12 +6,11 @@
  */
 
 // tslint:disable-next-line: max-line-length
-import NativeFlicking, { Plugin, FlickingOptions, withFlickingMethods, DEFAULT_OPTIONS, FlickingEvent, NeedPanelEvent, SelectEvent, ChangeEvent, VisibleChangeEvent } from '../../../../../../src/index';
+import NativeFlicking, { Plugin, FlickingOptions, withFlickingMethods, DEFAULT_OPTIONS, FlickingEvent, NeedPanelEvent, SelectEvent, ChangeEvent, VisibleChangeEvent } from '@egjs/flicking';
 import { counter } from '../../../../../../src/utils';
 // tslint:disable-next-line: max-line-length
 import { Component, OnInit, Input, AfterViewInit, ElementRef, OnChanges, Output, EventEmitter, OnDestroy, ContentChild, TemplateRef, SimpleChanges, AfterViewChecked, DoCheck, ApplicationRef, ChangeDetectorRef } from '@angular/core';
-// import ListDiffer, { DiffResult } from '@egjs/list-differ';
-import ListDiffer, { DiffResult } from '../../../../../../node_modules/@egjs/list-differ';
+import ListDiffer, { DiffResult } from '@egjs/list-differ';
 
 @Component({
   selector: 'ngx-flicking',
