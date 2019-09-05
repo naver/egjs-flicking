@@ -1,4 +1,3 @@
-import Component from "@egjs/component";
 import Flicking from "../../../src/Flicking";
 import { merge, counter } from "../../../src/utils";
 import { EVENTS } from "../../../src/consts";
@@ -90,20 +89,6 @@ export function simulate(el: HTMLElement, option?: object, time: number = 15000)
     });
 
     tick(time);
-  });
-}
-
-export function waitFor(delay: number): Promise<void> {
-  return new Promise(resolve => {
-    setTimeout(resolve, delay);
-  });
-}
-
-export function waitEvent(component: Component, eventName: string) {
-  return new Promise(resolve => {
-    component.once(eventName, e => {
-      resolve(e);
-    });
   });
 }
 

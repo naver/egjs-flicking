@@ -3,7 +3,7 @@ import Flicking from "../../src/Flicking";
 import { EVENTS, DIRECTION } from "../../src/consts";
 import { FlickingEvent, NeedPanelEvent, FlickingOptions } from "../../src/types";
 import { horizontal, vertical } from "./assets/fixture";
-import { createFlicking, createHorizontalElement, cleanup, simulate, waitFor, waitEvent, tick } from "./assets/utils";
+import { createFlicking, createHorizontalElement, cleanup, simulate, tick } from "./assets/utils";
 import { merge } from "../../src/utils";
 import Viewport from "../../src/components/Viewport";
 

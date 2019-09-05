@@ -3,7 +3,7 @@ import Flicking from "../../src/Flicking";
 import { DEFAULT_OPTIONS } from "../../src/consts";
 import { FlickingEvent, FlickingPanel, Plugin } from "../../src/types";
 import { horizontal, vertical } from "./assets/fixture";
-import { createFlicking, cleanup, simulate, waitFor, waitEvent, createFixture } from "./assets/utils";
+import { createFlicking, cleanup, simulate, createFixture, tick } from "./assets/utils";
 import { EVENTS } from "../../src/consts";
 import * as sinon from "sinon";
 import { withFlickingMethods } from "../../src/utils";
@@ -14,6 +14,8 @@ declare var viewport: any;
 const defaultClassPrefix = DEFAULT_OPTIONS.classPrefix;
 
 describe("Initialization", () => {
+  afterEach(() => cleanup());
+
   let flickingInfo: {
     element: HTMLElement,
     instance: Flicking,
@@ -23,8 +25,6 @@ describe("Initialization", () => {
   };
 
   describe("Check specifications in initialization process", () => {
-    // afterEach(() => cleanup());
-
     it("should have VERSION string", () => {
       expect(Flicking.VERSION).not.to.be.undefined;
     });
@@ -140,8 +140,6 @@ describe("Initialization", () => {
   });
 
   describe("circular", () => {
-    afterEach(() => cleanup());
-
     it("should not clone panels in non-circular, horizontal mode", () => {
       // Given & When
       flickingInfo = createFlicking(horizontal.shouldClone4);
@@ -198,7 +196,6 @@ describe("Initialization", () => {
         range = e.axesEvent.input.observer.axm.axis.flick.range;
       });
     };
-    afterEach(() => cleanup());
 
     it("has correct left bounce", async () => {
       const bounceVal = 25;
@@ -317,7 +314,6 @@ describe("Initialization", () => {
         threshold: 50,
       });
     });
-    afterEach(() => cleanup());
 
     it("should change panel when moving above threshold", async () => {
       const flicking = flickingInfo.instance;
@@ -325,7 +321,6 @@ describe("Initialization", () => {
 
       // Simulation won't be at max position(deltaX we've set) unless setting high duration value
       await simulate(flickingInfo.element, { deltaX: -51, duration: 3000 });
-      await waitFor(500);
 
       const afterIndex = flicking.getIndex();
 
@@ -337,7 +332,6 @@ describe("Initialization", () => {
       const beforeIndex = flicking.getIndex();
 
       await simulate(flickingInfo.element, { deltaX: -50, duration: 3000 });
-      await waitFor(500);
 
       const afterIndex = flicking.getIndex();
 
@@ -349,7 +343,6 @@ describe("Initialization", () => {
       const beforeIndex = flicking.getIndex();
 
       await simulate(flickingInfo.element, { deltaX: -49, duration: 3000 });
-      await waitFor(500);
 
       const afterIndex = flicking.getIndex();
 
@@ -364,14 +357,12 @@ describe("Initialization", () => {
         threshold: 50,
       });
     });
-    afterEach(() => cleanup());
 
     it("should change panel when moving above threshold", async () => {
       const flicking = flickingInfo.instance;
       const beforeIndex = flicking.getIndex();
 
       await simulate(flickingInfo.element, { deltaY: -51, duration: 3000 });
-      await waitFor(500);
 
       const afterIndex = flicking.getIndex();
 
@@ -383,7 +374,6 @@ describe("Initialization", () => {
       const beforeIndex = flicking.getIndex();
 
       await simulate(flickingInfo.element, { deltaY: -50, duration: 3000 });
-      await waitFor(500);
 
       const afterIndex = flicking.getIndex();
 
@@ -395,7 +385,6 @@ describe("Initialization", () => {
       const beforeIndex = flicking.getIndex();
 
       await simulate(flickingInfo.element, { deltaY: -49, duration: 3000 });
-      await waitFor(500);
 
       const afterIndex = flicking.getIndex();
 
@@ -409,14 +398,12 @@ describe("Initialization", () => {
         threshold: 50,
       });
     });
-    afterEach(() => cleanup());
 
     it("should change panel when moving above threshold", async () => {
       const flicking = flickingInfo.instance;
       const beforeIndex = flicking.getIndex();
 
       await simulate(flickingInfo.element, { deltaX: -51, duration: 3000 });
-      await waitFor(500);
 
       const afterIndex = flicking.getIndex();
 
@@ -428,7 +415,6 @@ describe("Initialization", () => {
       const beforeIndex = flicking.getIndex();
 
       await simulate(flickingInfo.element, { deltaX: -50, duration: 3000 });
-      await waitFor(500);
 
       const afterIndex = flicking.getIndex();
 
@@ -440,7 +426,6 @@ describe("Initialization", () => {
       const beforeIndex = flicking.getIndex();
 
       await simulate(flickingInfo.element, { deltaX: -49, duration: 3000 });
-      await waitFor(500);
 
       const afterIndex = flicking.getIndex();
 
@@ -456,14 +441,12 @@ describe("Initialization", () => {
         threshold: 50,
       });
     });
-    afterEach(() => cleanup());
 
     it("should change panel when moving above threshold", async () => {
       const flicking = flickingInfo.instance;
       const beforeIndex = flicking.getIndex();
 
       await simulate(flickingInfo.element, { deltaY: -51, duration: 3000 });
-      await waitFor(500);
 
       const afterIndex = flicking.getIndex();
 
@@ -475,7 +458,6 @@ describe("Initialization", () => {
       const beforeIndex = flicking.getIndex();
 
       await simulate(flickingInfo.element, { deltaY: -50, duration: 3000 });
-      await waitFor(500);
 
       const afterIndex = flicking.getIndex();
 
@@ -487,7 +469,6 @@ describe("Initialization", () => {
       const beforeIndex = flicking.getIndex();
 
       await simulate(flickingInfo.element, { deltaY: -49, duration: 3000 });
-      await waitFor(500);
 
       const afterIndex = flicking.getIndex();
 
@@ -503,7 +484,6 @@ describe("Initialization", () => {
         thresholdAngle: 45,
       });
     });
-    afterEach(() => cleanup());
 
     it("should not change panel when input angle is above thresholdAngle", async () => {
       const flicking = flickingInfo.instance;
@@ -514,7 +494,6 @@ describe("Initialization", () => {
         deltaY: 101,
         duration: 300,
       });
-      await waitFor(1000);
 
       const afterIndex = flicking.getIndex();
 
@@ -530,7 +509,6 @@ describe("Initialization", () => {
         deltaY: 100,
         duration: 300,
       });
-      await waitFor(1000);
 
       const afterIndex = flicking.getIndex();
 
@@ -546,7 +524,6 @@ describe("Initialization", () => {
         deltaY: 99,
         duration: 300,
       });
-      await waitFor(1000);
 
       const afterIndex = flicking.getIndex();
 
@@ -563,7 +540,6 @@ describe("Initialization", () => {
         thresholdAngle: 45,
       });
     });
-    afterEach(() => cleanup());
 
     it("should change panel when input angle is above thresholdAngle", async () => {
       const flicking = flickingInfo.instance;
@@ -574,7 +550,6 @@ describe("Initialization", () => {
         deltaY: 101,
         duration: 300,
       });
-      await waitFor(1000);
 
       const afterIndex = flicking.getIndex();
 
@@ -590,7 +565,6 @@ describe("Initialization", () => {
         deltaY: 100,
         duration: 300,
       });
-      await waitFor(1000);
 
       const afterIndex = flicking.getIndex();
 
@@ -606,7 +580,6 @@ describe("Initialization", () => {
         deltaY: 99,
         duration: 300,
       });
-      await waitFor(1000);
 
       const afterIndex = flicking.getIndex();
 
@@ -615,8 +588,6 @@ describe("Initialization", () => {
   });
 
   describe("snap", () => {
-    afterEach(() => cleanup());
-
     describe("Maximum panel changes per snap value", () => {
       // Snap is effective only when above 1
       const snapCounts = [2, 3, 4, 5];
@@ -635,26 +606,23 @@ describe("Initialization", () => {
               defaultIndex: 0,
               hanger: "0%",
             });
+            let destPos;
+            let eventDelta;
+            let nearestPanel;
             const flicking = flickingInfo.instance;
+
+            flicking.on(Flicking.EVENTS.CHANGE, e => {
+              destPos = e.axesEvent.destPos.flick;
+              eventDelta = Math.abs(e.axesEvent.delta.flick);
+              nearestPanel = (flicking as any).viewport.getNearestPanel();
+            });
+
             const startIndex = flicking.getIndex();
 
             simulate(flickingInfo.element, {
               deltaX: delta,
               duration: 50,
             });
-
-            const [destPos, eventDelta, nearestPanel] = await waitEvent(flicking, "change")
-              .then((e: any) => {
-                const viewPort = (flicking as any).viewport;
-
-                return [
-                  e.axesEvent.destPos.flick,
-                  Math.abs(e.axesEvent.delta.flick),
-                  viewPort.getNearestPanel(),
-                ];
-              });
-
-            await waitEvent(flicking, "moveEnd");
 
             const endIndex = flicking.getIndex();
             const indexAtDestPos = Math.floor(destPos / panelWidth);
@@ -676,8 +644,6 @@ describe("Initialization", () => {
   });
 
   describe("gap", () => {
-    afterEach(() => cleanup());
-
     it("should place panels at correct position", async () => {
       const gap = 50;
 
@@ -720,8 +686,6 @@ describe("Initialization", () => {
   });
 
   describe("renderOnlyVisible", () => {
-    afterEach(() => cleanup());
-
     it("should render only visible panels at init #1", () => {
       // Given
       flickingInfo = createFlicking(horizontal.panel30, {
@@ -768,7 +732,7 @@ describe("Initialization", () => {
 
       // When
       flicking.moveTo(2, 100);
-      await waitFor(200);
+      tick(200);
 
       // Then
       const visiblePAnelCntAfter = flicking.getElement().querySelectorAll(".eg-flick-panel").length;
@@ -790,7 +754,7 @@ describe("Initialization", () => {
 
       // When
       flicking.moveTo(4, 100);
-      await waitFor(200);
+      tick(200);
       const nextFirstVisiblePanel = flicking.getVisiblePanels()[0];
       const nextStyleLeft = nextFirstVisiblePanel.getElement().style.left;
 
@@ -813,7 +777,7 @@ describe("Initialization", () => {
 
       // When
       flicking.moveTo(4, 100);
-      await waitFor(200);
+      tick(200);
       const nextCameraTransform = cameraElement.style.transform;
 
       // Then
@@ -830,7 +794,6 @@ describe("Initialization", () => {
         defaultIndex: 0,
       });
     });
-    afterEach(() => cleanup());
 
     it("should check plugin's init lifecycle", () => {
       // Given
@@ -961,11 +924,10 @@ describe("Initialization", () => {
       flickingInfo.instance.on("move", e => moves.push(e.axesEvent.pos.flick));
 
       // When
-      simulate(flickingInfo.element, {
+      await simulate(flickingInfo.element, {
         deltaX: 40,
         duration: 200,
       });
-      await waitFor(1000);
 
       // Then
       const scrollArea = (flickingInfo.instance as any).viewport.getScrollArea();
@@ -984,11 +946,10 @@ describe("Initialization", () => {
       flickingInfo.instance.on("move", e => moves.push(e.axesEvent.pos.flick));
 
       // When
-      simulate(flickingInfo.element, {
+      await simulate(flickingInfo.element, {
         deltaX: -40,
         duration: 500,
       });
-      await waitFor(1000);
 
       // Then
       const scrollArea = (flickingInfo.instance as any).viewport.getScrollArea();
