@@ -209,10 +209,18 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
 
     this.prevVisibles = visibles;
 
-    if (this.criticalSection) {
-      // Use microtask to run as soon as synchronous job is done.
+    if (Promise) {
       Promise.resolve()
         .then(() => this.renderPanelChange.emit(visibles));
+      return;
+    }
+
+    // If Promise is not supported
+    if (this.criticalSection) {
+      setTimeout(() => {
+        // This works OK but it may cause blink when panel is appended or added
+        this.renderPanelChange.emit(visibles);
+      });
     } else {
       this.renderPanelChange.emit(visibles);
     }
