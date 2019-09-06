@@ -17,7 +17,8 @@ export class VisiblePanelsComponent implements OnInit {
   ngOnInit() {
     this.visiblePanels = this.list0.map(i => ({
       key: i,
-      index: i
+      index: i,
+      data: this.list0[i]
     }));
   }
 

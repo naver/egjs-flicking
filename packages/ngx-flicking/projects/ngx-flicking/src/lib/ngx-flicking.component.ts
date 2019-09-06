@@ -14,6 +14,7 @@ export interface RenderPanelChangeEvent {
   visibles: {
     index: number;
     key: number; /* Unique value */
+    data: any; /* User panel data */
   }[];
 }
 
@@ -217,8 +218,12 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
     this.prevVisibles = visibles;
 
     const l = this.panels.length;
-    const renderChangeEvent = {
-      visibles: visibles.map(i => ({key: i, index: i % l}))
+    const renderChangeEvent: RenderPanelChangeEvent = {
+      visibles: visibles.map(i => ({
+        key: i,
+        index: i % l,
+        data: this.panels[i % l]
+      }))
     };
 
     if (Promise) {
