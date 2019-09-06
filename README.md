@@ -101,7 +101,7 @@ var flicking = new eg.Flicking("#el", { circular: true });
 ```
 
 #### DOM Structure
-⚠️ NOTICE: Although Flicking is trying to support more flexible and easy usage for users, it requires minimal structure to initialize.
+⚠️ NOTICE: Flicking requires minimal structure to initialize properly.
 
 As Flicking applies `position: absolute` for panels, either wrapper or panel should have fixed height value.
 
