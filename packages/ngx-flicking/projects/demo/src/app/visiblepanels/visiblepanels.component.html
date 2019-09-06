@@ -8,8 +8,8 @@
   </ul>
   <ngx-flicking class="flicking flicking0" [options]="{ gap: 10, renderOnlyVisible: true, circular: true, moveType: 'snap'}" [panels]="list0" (renderPanelChange)="onRenderPanelChange($event)">
     <ng-template>
-      <div *ngFor="let panel of visiblePanels;" class='infinite infinite{{ math.abs(panel.num) % 5 }}' [attr.key]="panel.key">
-        {{ panel.num }}, {{ math.abs(panel.num) % 5 }}
+      <div *ngFor="let panel of visiblePanels;" class='infinite infinite{{ math.abs(panel.index) % 5 }}' [attr.key]="panel.key">
+        {{ panel.index }}, {{ panel.key }}
       </div>
     </ng-template>
   </ngx-flicking>

@@ -1,5 +1,6 @@
 import { EVENTS } from '../../../../../../../src/consts';
 import { Component, OnInit, Input, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
+import { RenderPanelChangeEvent } from 'projects/ngx-flicking/src/lib/ngx-flicking.component';
 
 @Component({
   selector: 'demo-visiblepanels',
@@ -16,7 +17,7 @@ export class VisiblePanelsComponent implements OnInit {
   ngOnInit() {
     this.visiblePanels = this.list0.map(i => ({
       key: i,
-      num: i
+      index: i
     }));
   }
 
@@ -33,16 +34,8 @@ export class VisiblePanelsComponent implements OnInit {
     this.list0 = this.list0.slice();
   }
 
-  onRenderPanelChange(visibleIndexes: number[]) {
-    const l = this.list0.length;
-    const newVisiblePanels = visibleIndexes.map(i => {
-      return {
-        key: i,
-        num: this.list0[i % l]
-      };
-    });
-
-    this.visiblePanels = newVisiblePanels;
+  onRenderPanelChange(event: RenderPanelChangeEvent) {
+    this.visiblePanels = event.visibles;
   }
 
   // TODO: We can use trackByFn for the performance.

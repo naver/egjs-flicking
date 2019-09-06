@@ -10,6 +10,13 @@ import { counter } from '../../../../../../src/utils';
 import { Component, OnInit, Input, AfterViewInit, ElementRef, OnChanges, Output, EventEmitter, OnDestroy, ContentChild, TemplateRef, SimpleChanges, AfterViewChecked, DoCheck } from '@angular/core';
 import ListDiffer, { DiffResult } from '@egjs/list-differ';
 
+export interface RenderPanelChangeEvent {
+  visibles: {
+    index: number;
+    key: number; /* Unique value */
+  }[];
+}
+
 @Component({
   selector: 'ngx-flicking',
   template: `
@@ -31,7 +38,7 @@ import ListDiffer, { DiffResult } from '@egjs/list-differ';
 export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
   @Input() options: Partial<FlickingOptions> = {};
   @Input() plugins: Plugin[] = [];
-  @Input() panels: [];
+  @Input() panels: any[];
 
   // TODO: Can @Output be added dynamically?
   @Output() holdStart = new EventEmitter<Partial<FlickingEvent>>();
@@ -44,7 +51,7 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
   @Output() select = new EventEmitter<SelectEvent>();
   @Output() needPanel = new EventEmitter<NeedPanelEvent>();
   @Output() visibleChange = new EventEmitter<VisibleChangeEvent>();
-  @Output() renderPanelChange = new EventEmitter<number[]>(false);
+  @Output() renderPanelChange = new EventEmitter<RenderPanelChangeEvent>();
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
   @withFlickingMethods
@@ -209,20 +216,25 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
 
     this.prevVisibles = visibles;
 
+    const l = this.panels.length;
+    const renderChangeEvent = {
+      visibles: visibles.map(i => ({key: i, index: i % l}))
+    };
+
     if (Promise) {
       Promise.resolve()
-        .then(() => this.renderPanelChange.emit(visibles));
+        .then(() => this.renderPanelChange.emit(renderChangeEvent));
       return;
     }
 
-    // If Promise is not supported
+    // If Promise is not supported (IE)
     if (this.criticalSection) {
       setTimeout(() => {
         // This works OK but it may cause blink when panel is appended or added
-        this.renderPanelChange.emit(visibles);
+        this.renderPanelChange.emit(renderChangeEvent);
       });
     } else {
-      this.renderPanelChange.emit(visibles);
+      this.renderPanelChange.emit(renderChangeEvent);
     }
   }
 }
