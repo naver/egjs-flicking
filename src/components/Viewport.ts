@@ -1818,7 +1818,7 @@ export default class Viewport {
       }
 
       newVisiblePanels.forEach(panel => {
-          panel.setPositionCSS(state.positionOffset);
+        panel.setPositionCSS(state.positionOffset);
       });
 
       if (!renderExternal) {
