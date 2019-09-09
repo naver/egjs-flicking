@@ -102,6 +102,9 @@ export class AutoplayComponent implements OnInit {
 }
 ```
 
+## Guide
+  - \[v3.4\] [Applying renderOnlyVisible option on ngx flicking](https://github.com/naver/egjs-flicking/wiki/Applying-renderOnlyVisible-option-on-ngx-flicking) (Performance)
+
 ## Collect statistics
 
 Flicking applies Google Analytics (GA) to collect which features are useful to users. For example, the use of the `freeScroll` option, or the value of the `gap` option, and so on. Statistics also DO NOT contain any information that can identify an individual. Statistics on the usage will serve as basis for making better products. To disable GA, set the `collectStatistics` option to `false` as follows:
