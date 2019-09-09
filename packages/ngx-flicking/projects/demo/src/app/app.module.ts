@@ -16,6 +16,7 @@ import { VariablesizeComponent } from './variablesize/variablesize.component';
 import { AutoplayComponent } from './autoplay/autoplay.component';
 import { FadeComponent } from './fade/fade.component';
 import { ParallaxComponent } from './parallax/parallax.component';
+import { VisiblePanelsComponent } from './visiblepanels/visiblepanels.component';
 
 const appRoutes: Routes = [
   { path: 'align', component: AlignComponent },
@@ -29,7 +30,8 @@ const appRoutes: Routes = [
   { path: 'autoplay', component: AutoplayComponent },
   { path: 'fade', component: FadeComponent },
   { path: 'parallax', component: ParallaxComponent },
-  { path: 'custom', component: CustomComponent }
+  { path: 'custom', component: CustomComponent },
+  { path: 'visiblepanels', component: VisiblePanelsComponent },
   // { path: '**', component: PageNotFoundComponent }
 ];
 
@@ -49,7 +51,8 @@ const appRoutes: Routes = [
     FadeComponent,
     ParallaxComponent,
     TestPanelComponent,
-    PlaceHolderItemComponent
+    PlaceHolderItemComponent,
+    VisiblePanelsComponent
   ],
   imports: [
     BrowserModule,
