@@ -222,16 +222,16 @@ html, body {
   border-radius: 10px;
   background: #f55;
 }
-.iphone .panel:nth-child(4n + 1) {
+.iphone .panel.first {
   background-color:#78CAFF;
 }
-.iphone .panel:nth-child(4n + 2) {
+.iphone .panel.second {
   background-color:#FFD99D;
 }
-.iphone .panel:nth-child(4n + 3) {
+.iphone .panel.third {
   background-color:#FFB0B9;
 }
-.iphone .panel:nth-child(4n) {
+.iphone .panel.fourth {
   background-color:#B5F6B9;
 }
 
@@ -508,6 +508,53 @@ body.scroll .pages {
 .page1 .downloads .target,
 .page1 .downloads .frameworks {
   margin-left: -5px;
+}
+
+.scroll-arrow {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  left: 50%;
+  bottom: 80px;
+  animation-name: tongtong;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+  animation-direction: alternate-reverse;
+}
+.scroll-arrow::before {
+  content: '';
+  width: 10px;
+  height: 30px;
+  position: absolute;
+  border-radius: 30px;
+  background-color: white;
+  transform: rotateZ(-45deg);
+  transform-origin: 50% 25px;
+}
+.scroll-arrow::after {
+  content: '';
+  width: 10px;
+  height: 30px;
+  position: absolute;
+  border-radius: 30px;
+  background-color: white;
+  transform: rotateZ(45deg);
+  transform-origin: 50% 25px;
+}
+@keyframes tongtong {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 15px, 0);
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .scroll-arrow {
+    display: none;
+  }
 }
 
 .page2 {

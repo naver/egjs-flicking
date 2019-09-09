@@ -10,6 +10,8 @@
 
 <style>
 body {
+  width: 100vw;
+  overflow: hidden;
   background: #fff;
 }
 .patron_reward {
@@ -243,6 +245,7 @@ body {
 }
 
 </style>
+<body>
 <div class="container">
     <h1><a href="https://www.grafolio.com/patron/reward.grfl" target="_blank">Grafolio Rewards</a></h1>
     <ul class="extra">
@@ -397,6 +400,7 @@ var flicking = new eg.Flicking(".slide_list", {
   gap: 20,
   bound: true,
   autoResize: true,
+  renderOnlyVisible: true,
   overflow: "visible",
 });
 
@@ -424,3 +428,4 @@ nextButton.addEventListener("click", function () {
 </script>
 <script src="../common/codepen.js"></script>
 <script src="../common/analytics.js"></script>
+</body>
