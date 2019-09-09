@@ -5,7 +5,7 @@
 
 import { ElementLike, OriginalStyle, BoundingBox } from "./types";
 import Flicking from "./Flicking";
-import { FLICKING_METHODS, isBrowser } from "./consts";
+import { FLICKING_METHODS } from "./consts";
 
 export function merge(target: object, ...srcs: object[]): object {
   srcs.forEach(source => {
@@ -40,54 +40,6 @@ export function parseElement(element: ElementLike | ElementLike[]): HTMLElement[
 
   return elements;
 }
-
-// Check whether browser supports transform: translate3d
-// https://stackoverflow.com/questions/5661671/detecting-transform-translate3d-support
-export let checkTranslateSupport = () => {
-  const transforms = {
-    webkitTransform: "-webkit-transform",
-    msTransform: "-ms-transform",
-    MozTransform: "-moz-transform",
-    OTransform: "-o-transform",
-    transform: "transform",
-  };
-
-  if (!isBrowser) {
-    return {
-      name: transforms.transform,
-      has3d: true,
-    };
-  }
-  const supportedStyle = document.documentElement.style;
-  let transformName = "";
-  for (const prefixedTransform in transforms) {
-    if (prefixedTransform in supportedStyle) {
-      transformName = prefixedTransform;
-    }
-  }
-
-  if (!transformName) {
-    throw new Error("Browser doesn't support CSS3 2D Transforms.");
-  }
-
-  const el = document.createElement("div");
-
-  document.documentElement.insertBefore(el, null);
-
-  el.style[transformName] = "translate3d(1px, 1px, 1px)";
-  const styleVal = window.getComputedStyle(el).getPropertyValue(transforms[transformName]);
-
-  el.parentElement!.removeChild(el);
-
-  const transformInfo = {
-    name: transformName,
-    has3d: styleVal.length > 0 && styleVal !== "none",
-  };
-
-  checkTranslateSupport = () => transformInfo;
-
-  return transformInfo;
-};
 
 export function isString(value: any): value is string {
   return typeof value === "string";
