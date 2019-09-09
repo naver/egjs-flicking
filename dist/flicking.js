@@ -4,7 +4,7 @@ name: @egjs/flicking
 license: MIT
 author: NAVER Corp.
 repository: https://github.com/naver/egjs-flicking
-version: 3.4.0
+version: 3.4.1
 */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('@egjs/component'), require('@egjs/axes')) :
@@ -54,42 +54,126 @@ version: 3.4.0
      * Copyright (c) 2015 NAVER Corp.
      * egjs projects are licensed under the MIT license
      */
-    function merge(target) {
-      var srcs = [];
-
-      for (var _i = 1; _i < arguments.length; _i++) {
-        srcs[_i - 1] = arguments[_i];
+    var MOVE_TYPE = {
+      SNAP: "snap",
+      FREE_SCROLL: "freeScroll"
+    };
+    var DEFAULT_MOVE_TYPE_OPTIONS = {
+      snap: {
+        type: "snap",
+        count: 1
+      },
+      freeScroll: {
+        type: "freeScroll"
       }
+    };
+    var isBrowser = typeof document !== "undefined";
+    /**
+     * Default options for creating Flicking.
+     * @ko 플리킹을 만들 때 사용하는 기본 옵션들
+     * @private
+     * @memberof eg.Flicking
+     */
 
-      srcs.forEach(function (source) {
-        Object.keys(source).forEach(function (key) {
-          var value = source[key];
-          target[key] = value;
-        });
-      });
-      return target;
-    }
-    function parseElement(element) {
-      if (!Array.isArray(element)) {
-        element = [element];
-      }
-
-      var elements = [];
-      element.forEach(function (el) {
-        if (isString(el)) {
-          var tempDiv = document.createElement("div");
-          tempDiv.innerHTML = el;
-          elements.push.apply(elements, toArray(tempDiv.children));
-
-          while (tempDiv.firstChild) {
-            tempDiv.removeChild(tempDiv.firstChild);
-          }
-        } else {
-          elements.push(el);
-        }
-      });
-      return elements;
-    } // Check whether browser supports transform: translate3d
+    var DEFAULT_OPTIONS = {
+      classPrefix: "eg-flick",
+      deceleration: 0.0075,
+      horizontal: true,
+      circular: false,
+      infinite: false,
+      infiniteThreshold: 0,
+      lastIndex: Infinity,
+      threshold: 40,
+      duration: 100,
+      panelEffect: function (x) {
+        return 1 - Math.pow(1 - x, 3);
+      },
+      defaultIndex: 0,
+      inputType: ["touch", "mouse"],
+      thresholdAngle: 45,
+      bounce: 10,
+      autoResize: false,
+      adaptive: false,
+      zIndex: 2000,
+      bound: false,
+      overflow: false,
+      hanger: "50%",
+      anchor: "50%",
+      gap: 0,
+      moveType: DEFAULT_MOVE_TYPE_OPTIONS.snap,
+      useOffset: false,
+      isEqualSize: false,
+      isConstantSize: false,
+      renderOnlyVisible: false,
+      renderExternal: false,
+      collectStatistics: true
+    };
+    var DEFAULT_VIEWPORT_CSS = {
+      position: "relative",
+      zIndex: DEFAULT_OPTIONS.zIndex,
+      overflow: "hidden"
+    };
+    var DEFAULT_CAMERA_CSS = {
+      width: "100%",
+      height: "100%",
+      willChange: "transform"
+    };
+    var DEFAULT_PANEL_CSS = {
+      position: "absolute"
+    };
+    var EVENTS = {
+      HOLD_START: "holdStart",
+      HOLD_END: "holdEnd",
+      MOVE_START: "moveStart",
+      MOVE: "move",
+      MOVE_END: "moveEnd",
+      CHANGE: "change",
+      RESTORE: "restore",
+      SELECT: "select",
+      NEED_PANEL: "needPanel",
+      VISIBLE_CHANGE: "visibleChange"
+    };
+    var AXES_EVENTS = {
+      HOLD: "hold",
+      CHANGE: "change",
+      RELEASE: "release",
+      ANIMATION_END: "animationEnd",
+      FINISH: "finish"
+    };
+    var STATE_TYPE = {
+      IDLE: 0,
+      HOLDING: 1,
+      DRAGGING: 2,
+      ANIMATING: 3,
+      DISABLED: 4
+    };
+    var DIRECTION = {
+      PREV: "PREV",
+      NEXT: "NEXT"
+    };
+    var FLICKING_METHODS = {
+      prev: true,
+      next: true,
+      moveTo: true,
+      getIndex: true,
+      getAllPanels: true,
+      getCurrentPanel: true,
+      getElement: true,
+      getPanel: true,
+      getPanelCount: true,
+      getStatus: true,
+      getVisiblePanels: true,
+      setLastIndex: true,
+      enableInput: true,
+      disableInput: true,
+      destroy: true,
+      resize: true,
+      setStatus: true,
+      addPlugins: true,
+      removePlugins: true,
+      isPlaying: true,
+      getLastIndex: true
+    }; // Check whether browser supports transform: translate3d
     // https://stackoverflow.com/questions/5661671/detecting-transform-translate3d-support
 
     var checkTranslateSupport = function () {
@@ -137,6 +221,48 @@ version: 3.4.0
 
       return transformInfo;
     };
+    var TRANSFORM = checkTranslateSupport();
+
+    /**
+     * Copyright (c) 2015 NAVER Corp.
+     * egjs projects are licensed under the MIT license
+     */
+    function merge(target) {
+      var srcs = [];
+
+      for (var _i = 1; _i < arguments.length; _i++) {
+        srcs[_i - 1] = arguments[_i];
+      }
+
+      srcs.forEach(function (source) {
+        Object.keys(source).forEach(function (key) {
+          var value = source[key];
+          target[key] = value;
+        });
+      });
+      return target;
+    }
+    function parseElement(element) {
+      if (!Array.isArray(element)) {
+        element = [element];
+      }
+
+      var elements = [];
+      element.forEach(function (el) {
+        if (isString(el)) {
+          var tempDiv = document.createElement("div");
+          tempDiv.innerHTML = el;
+          elements.push.apply(elements, toArray(tempDiv.children));
+
+          while (tempDiv.firstChild) {
+            tempDiv.removeChild(tempDiv.firstChild);
+          }
+        } else {
+          elements.push(el);
+        }
+      });
+      return elements;
+    }
     function isString(value) {
       return typeof value === "string";
     } // Get class list of element as string array
@@ -350,132 +476,6 @@ version: 3.4.0
 
       return bbox;
     }
-
-    /**
-     * Copyright (c) 2015 NAVER Corp.
-     * egjs projects are licensed under the MIT license
-     */
-    var MOVE_TYPE = {
-      SNAP: "snap",
-      FREE_SCROLL: "freeScroll"
-    };
-    var DEFAULT_MOVE_TYPE_OPTIONS = {
-      snap: {
-        type: "snap",
-        count: 1
-      },
-      freeScroll: {
-        type: "freeScroll"
-      }
-    };
-    var isBrowser = typeof document !== "undefined";
-    /**
-     * Default options for creating Flicking.
-     * @ko 플리킹을 만들 때 사용하는 기본 옵션들
-     * @private
-     * @memberof eg.Flicking
-     */
-
-    var DEFAULT_OPTIONS = {
-      classPrefix: "eg-flick",
-      deceleration: 0.0075,
-      horizontal: true,
-      circular: false,
-      infinite: false,
-      infiniteThreshold: 0,
-      lastIndex: Infinity,
-      threshold: 40,
-      duration: 100,
-      panelEffect: function (x) {
-        return 1 - Math.pow(1 - x, 3);
-      },
-      defaultIndex: 0,
-      inputType: ["touch", "mouse"],
-      thresholdAngle: 45,
-      bounce: 10,
-      autoResize: false,
-      adaptive: false,
-      zIndex: 2000,
-      bound: false,
-      overflow: false,
-      hanger: "50%",
-      anchor: "50%",
-      gap: 0,
-      moveType: DEFAULT_MOVE_TYPE_OPTIONS.snap,
-      useOffset: false,
-      isEqualSize: false,
-      isConstantSize: false,
-      renderOnlyVisible: false,
-      renderExternal: false,
-      collectStatistics: true
-    };
-    var DEFAULT_VIEWPORT_CSS = {
-      position: "relative",
-      zIndex: DEFAULT_OPTIONS.zIndex,
-      overflow: "hidden"
-    };
-    var DEFAULT_CAMERA_CSS = {
-      width: "100%",
-      height: "100%",
-      willChange: "transform"
-    };
-    var DEFAULT_PANEL_CSS = {
-      position: "absolute"
-    };
-    var EVENTS = {
-      HOLD_START: "holdStart",
-      HOLD_END: "holdEnd",
-      MOVE_START: "moveStart",
-      MOVE: "move",
-      MOVE_END: "moveEnd",
-      CHANGE: "change",
-      RESTORE: "restore",
-      SELECT: "select",
-      NEED_PANEL: "needPanel",
-      VISIBLE_CHANGE: "visibleChange"
-    };
-    var AXES_EVENTS = {
-      HOLD: "hold",
-      CHANGE: "change",
-      RELEASE: "release",
-      ANIMATION_END: "animationEnd",
-      FINISH: "finish"
-    };
-    var STATE_TYPE = {
-      IDLE: 0,
-      HOLDING: 1,
-      DRAGGING: 2,
-      ANIMATING: 3,
-      DISABLED: 4
-    };
-    var DIRECTION = {
-      PREV: "PREV",
-      NEXT: "NEXT"
-    };
-    var FLICKING_METHODS = {
-      prev: true,
-      next: true,
-      moveTo: true,
-      getIndex: true,
-      getAllPanels: true,
-      getCurrentPanel: true,
-      getElement: true,
-      getPanel: true,
-      getPanelCount: true,
-      getStatus: true,
-      getVisiblePanels: true,
-      setLastIndex: true,
-      enableInput: true,
-      disableInput: true,
-      destroy: true,
-      resize: true,
-      setStatus: true,
-      addPlugins: true,
-      removePlugins: true,
-      isPlaying: true,
-      getLastIndex: true
-    };
-    var TRANSFORM = checkTranslateSupport();
 
     /**
      * Copyright (c) 2015 NAVER Corp.
@@ -4058,7 +4058,7 @@ version: 3.4.0
           width: innerWidth,
           height: innerHeight
         };
-        var collectInfos = ["v=1", "t=event", "dl=" + location.href, "ul=" + (navigator.language || "en-us").toLowerCase(), "de=" + (document.charset || document.inputEncoding || document.characterSet || "utf-8"), "dr=" + document.referrer, "dt=" + document.title, "sr=" + screen.width + "x" + screen.height, "vp=" + innerWidth + "x" + innerHeight, "ec=" + category, "ea=" + action, "el=" + JSON.stringify(label), "cid=" + cid, "tid=" + tid, "cd1=3.4.0", "z=" + Math.floor(Math.random() * 10000000)];
+        var collectInfos = ["v=1", "t=event", "dl=" + location.href, "ul=" + (navigator.language || "en-us").toLowerCase(), "de=" + (document.charset || document.inputEncoding || document.characterSet || "utf-8"), "dr=" + document.referrer, "dt=" + document.title, "sr=" + screen.width + "x" + screen.height, "vp=" + innerWidth + "x" + innerHeight, "ec=" + category, "ea=" + action, "el=" + JSON.stringify(label), "cid=" + cid, "tid=" + tid, "cd1=3.4.1", "z=" + Math.floor(Math.random() * 10000000)];
         var req = new XMLHttpRequest();
         req.open("GET", "https://www.google-analytics.com/collect?" + collectInfos.join("&"));
         req.send();
@@ -4961,7 +4961,7 @@ version: 3.4.0
        */
 
 
-      Flicking.VERSION = "3.4.0";
+      Flicking.VERSION = "3.4.1";
       /**
        * Direction constant - "PREV" or "NEXT"
        * @ko 방향 상수 - "PREV" 또는 "NEXT"
