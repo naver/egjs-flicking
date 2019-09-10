@@ -5,7 +5,6 @@
 
 // tslint:disable-next-line: max-line-length
 import NativeFlicking, { Plugin, FlickingOptions, withFlickingMethods, DEFAULT_OPTIONS, FlickingEvent, NeedPanelEvent, SelectEvent, ChangeEvent, VisibleChangeEvent } from '@egjs/flicking';
-import { counter } from '../../../../../../src/utils';
 // tslint:disable-next-line: max-line-length
 import { Component, OnInit, Input, AfterViewInit, ElementRef, OnChanges, Output, EventEmitter, OnDestroy, ContentChild, TemplateRef, SimpleChanges, AfterViewChecked, DoCheck } from '@angular/core';
 import ListDiffer, { DiffResult } from '@egjs/list-differ';
@@ -55,12 +54,13 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
   @Output() renderPanelChange = new EventEmitter<RenderPanelChangeEvent>();
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
+  classPrefix: string;
+  cloneCount = 0;
+
   @withFlickingMethods
   private flicking?: NativeFlicking | null;
   private pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
   private userPanelDataDiffer: ListDiffer<any> = null;
-  private classPrefix: string;
-  private cloneCount = 0;
   private internalCloneCount = 0;
   private prevPanels = null;
   private prevVisibles: number[] = [];
@@ -180,6 +180,14 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
     this.flicking.removePlugins(removed.map(index => prevList[index]));
   }
 
+  private counter(n: number): number[] {
+    const counterArray: number[] = [];
+    for (let i = 0; i < n; i += 1) {
+      counterArray[i] = i;
+    }
+    return counterArray;
+  }
+
   private bindEvents() {
     const events = Object.keys(NativeFlicking.EVENTS)
       .map(key => NativeFlicking.EVENTS[key]);
@@ -193,7 +201,7 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
           emitter.emit(e);
 
           if (eventName === 'visibleChange') {
-            const list = counter(this.panels.length * (this.flicking.getCloneCount() + 1));
+            const list = this.counter(this.panels.length * (this.flicking.getCloneCount() + 1));
             const min = e.range.min;
             const max = e.range.max;
 
