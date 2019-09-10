@@ -8,9 +8,10 @@
   "es2015": "dist/flicking.esm.js",
   "types": "declaration/index.d.ts",
   "dependencies": {
+    "@egjs/children-differ": "^1.0.0",
     "@egjs/flicking": "^3.4.0",
     "@egjs/list-differ": "^1.0.0",
-    "@egjs/react-children-differ": "^0.0.2"
+    "@egjs/react-children-differ": "^1.0.0"
   },
   "devDependencies": {
     "@egjs/build-helper": "0.0.5",
