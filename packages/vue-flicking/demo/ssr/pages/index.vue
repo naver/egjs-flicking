@@ -1,33 +1,25 @@
 <template>
-  <section class="container">
+  <div id="wrapper">
     <div>
-      <h1 class="title">
-        ssr
-      </h1>
-      <h2 class="subtitle">
-        Nuxt.js project
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green">Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey">GitHub</a>
+      <div class="link-wrapper">
+        <h2>Features</h2>
+        <nuxt-link to="/features/Align">Align</nuxt-link>
+        <nuxt-link to="/features/Bound">Bound</nuxt-link>
+        <nuxt-link to="/features/FreeScroll">FreeScroll</nuxt-link>
+        <nuxt-link to="/features/Gap">Gap</nuxt-link>
+        <nuxt-link to="/features/Infinite">Infinite</nuxt-link>
+        <nuxt-link to="/features/Progress">Progress</nuxt-link>
+        <nuxt-link to="/features/Snap">Snap</nuxt-link>
+        <nuxt-link to="/features/VariableSize">VariableSize</nuxt-link>
+      </div>
+      <div class="link-wrapper">
+        <h2>Plugins</h2>
+        <nuxt-link to="/plugins/Autoplay">Autoplay</nuxt-link>
+        <nuxt-link to="/plugins/Fade">Fade</nuxt-link>
+        <nuxt-link to="/plugins/Parallax">Parallax</nuxt-link>
       </div>
     </div>
-    <div>
-      <flicking>
-        <div>PANEL</div>
-        <div>PANEL</div>
-        <div>PANEL</div>
-        <div>PANEL</div>
-        <div>PANEL</div>
-      </flicking>
-    </div>
-  </section>
+  </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
@@ -39,11 +31,26 @@ export default Demo;
 </script>
 <style>
   @import url('https://fonts.googleapis.com/css?family=Nanum+Gothic&subset=korean');
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+  }
   body, em, i {
     font-family: 'Helvetica Neue', sans-serif;
     font-weight: 300;
     font-style: normal;
   }
+
+  #wrapper {
+    width: 100vw; height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .link-wrapper {
+    margin: 30px;
+  }
+
   .hljs {
     margin: 30px auto;
     max-width: 800px;
