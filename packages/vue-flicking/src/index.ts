@@ -10,7 +10,7 @@ declare global {
 const version = "#__VERSION__#";
 
 const install = (Vue: VueConstructor): void => {
-  Vue.component(Flicking.name, Flicking);
+  Vue.component("Flicking", Flicking);
 };
 
 const plugin = {

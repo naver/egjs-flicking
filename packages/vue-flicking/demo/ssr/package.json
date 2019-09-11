@@ -9,7 +9,7 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
-    "@egjs/vue-flicking": "^3.0.0",
+    "@egjs/vue-flicking": "^3.1.1",
     "nuxt": "^2.0.0",
     "vue-hljs": "^1.1.2"
   },

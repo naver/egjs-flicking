@@ -10,7 +10,6 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 import { CreateElement, VNodeData, VNode } from "vue";
 
 @Component({
-  name: "Flicking",
   directives: {
     "children-differ": ChildrenDiffer,
   },

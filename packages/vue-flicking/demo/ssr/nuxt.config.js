@@ -30,7 +30,7 @@ module.exports = {
     }
   },
   plugins: [
-    '~/plugins/install'
+    { src: '~/plugins/install' }
   ],
   css: [
     '~assets/common.css'
