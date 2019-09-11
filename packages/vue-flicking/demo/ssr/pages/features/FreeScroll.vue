@@ -24,18 +24,11 @@
     <pre><code class="hljs html" data-script="flicking1">{{ code1 }}</code></pre>
   </div>
 </template>
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-
-@Component({})
-export default class FreeScroll extends Vue {
-  public mounted() {
-    document.querySelectorAll('.hljs').forEach((block) => {
-      (window as any).hljs.highlightBlock(block);
-    });
-  }
-
-  code0 = `<flicking
+<script>
+export default {
+  data() {
+    return {
+      code0: `<flicking
   class="flicking flicking0"
   :options="{ gap: 10, circular: true, moveType: 'freeScroll' }">
   <div class="panel0"></div>
@@ -43,8 +36,8 @@ export default class FreeScroll extends Vue {
   <div class="panel2"></div>
   <div class="panel3"></div>
   <div class="panel4"></div>
-</flicking>`;
-  code1 = `<flicking
+</flicking>`,
+      code1: `<flicking
   class="flicking flicking1"
   :options="{ gap: 10, circular: true, deceleration: 0.015, moveType: 'freeScroll' }">
   <div class="panel0"></div>
@@ -52,7 +45,14 @@ export default class FreeScroll extends Vue {
   <div class="panel2"></div>
   <div class="panel3"></div>
   <div class="panel4"></div>
-</flicking>`;
+</flicking>`
+    }
+  },
+  mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      window.hljs.highlightBlock(block);
+    });
+  }
 }
 </script>
 <style scoped>

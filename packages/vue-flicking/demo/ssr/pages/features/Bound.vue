@@ -29,25 +29,23 @@
   <pre><code class="hljs html" data-script="flicking1">{{ code1 }}</code></pre>
   </div>
 </template>
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-
-@Component({})
-export default class Bound extends Vue {
-  public mounted() {
-    document.querySelectorAll('.hljs').forEach((block) => {
-      (window as any).hljs.highlightBlock(block);
-    });
-  }
-
-  code1 = `<flicking class="flicking flicking1" gap={10} bound={true}>
+<script>
+export default {
+  data() {
+    code1: `<flicking class="flicking flicking1" gap={10} bound={true}>
   <div class="panel0"><div class="anchor"></div></div>
   <div class="panel1"><div class="anchor"></div></div>
   <div class="panel2"><div class="anchor"></div></div>
   <div class="panel3"><div class="anchor"></div></div>
   <div class="panel4"><div class="anchor"></div></div>
   <div class="panel0"><div class="anchor"></div></div>
-</flicking>`;
+</flicking>`
+  },
+  mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      window.hljs.highlightBlock(block);
+    });
+  }
 }
 </script>
 <style scoped>

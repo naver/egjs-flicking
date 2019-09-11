@@ -49,41 +49,41 @@
     <pre><code class="hljs html" data-script="flicking2">{{ code2 }}</code></pre>
   </div>
 </template>
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-
-@Component({})
-export default class Align extends Vue {
-  public mounted() {
+<script>
+export default {
+  data() {
+    return {
+      code0: `<flicking class="flicking flicking0">
+  <div class="panel0"><div class="anchor"></div></div>
+  <div class="panel1"><div class="anchor"></div></div>
+  <div class="panel2"><div class="anchor"></div></div>
+  <div class="panel3"><div class="anchor"></div></div>
+  <div class="panel4"><div class="anchor"></div></div>
+  <div class="panel0"><div class="anchor"></div></div>
+</flicking>`,
+      code1: `<flicking class="flicking flicking1" :options="{ hanger: 0, anchor: 0 }">
+  <div class="panel0"><div class="anchor"></div></div>
+  <div class="panel1"><div class="anchor"></div></div>
+  <div class="panel2"><div class="anchor"></div></div>
+  <div class="panel3"><div class="anchor"></div></div>
+  <div class="panel4"><div class="anchor"></div></div>
+  <div class="panel0"><div class="anchor"></div></div>
+</flicking>`,
+      code2: `<flicking class="flicking flicking2" :options="{ hanger: '30%', anchor: '50px' }">
+  <div class="panel0"><div class="anchor"></div></div>
+  <div class="panel1"><div class="anchor"></div></div>
+  <div class="panel2"><div class="anchor"></div></div>
+  <div class="panel3"><div class="anchor"></div></div>
+  <div class="panel4"><div class="anchor"></div></div>
+  <div class="panel0"><div class="anchor"></div></div>
+</flicking>`
+    }
+  },
+  mounted() {
     document.querySelectorAll('.hljs').forEach((block) => {
-      (window as any).hljs.highlightBlock(block);
+      window.hljs.highlightBlock(block);
     });
   }
-
-  code0 = `<flicking class="flicking flicking0">
-  <div class="panel0"><div class="anchor"></div></div>
-  <div class="panel1"><div class="anchor"></div></div>
-  <div class="panel2"><div class="anchor"></div></div>
-  <div class="panel3"><div class="anchor"></div></div>
-  <div class="panel4"><div class="anchor"></div></div>
-  <div class="panel0"><div class="anchor"></div></div>
-</flicking>`;
-  code1 = `<flicking class="flicking flicking1" :options="{ hanger: 0, anchor: 0 }">
-  <div class="panel0"><div class="anchor"></div></div>
-  <div class="panel1"><div class="anchor"></div></div>
-  <div class="panel2"><div class="anchor"></div></div>
-  <div class="panel3"><div class="anchor"></div></div>
-  <div class="panel4"><div class="anchor"></div></div>
-  <div class="panel0"><div class="anchor"></div></div>
-</flicking>`;
-  code2 = `<flicking class="flicking flicking2" :options="{ hanger: '30%', anchor: '50px' }">
-  <div class="panel0"><div class="anchor"></div></div>
-  <div class="panel1"><div class="anchor"></div></div>
-  <div class="panel2"><div class="anchor"></div></div>
-  <div class="panel3"><div class="anchor"></div></div>
-  <div class="panel4"><div class="anchor"></div></div>
-  <div class="panel0"><div class="anchor"></div></div>
-</flicking>`;
 }
 </script>
 <style scoped>

@@ -24,34 +24,35 @@
     <pre><code class="hljs html" data-script="flicking0">{{ code0 }}</code></pre>
   </div>
 </template>
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+<script>
 import { Fade, AutoPlay } from "@egjs/flicking-plugins";
 
-@Component({})
-export default class AutoPlayDemo extends Vue {
-  public mounted() {
+export default {
+  data() {
+    return {
+      plugins: [new Fade(), new AutoPlay(2000, "NEXT")],
+      code0: `<flicking
+    class="flicking"
+    :options="{ circular: true, gap: 10, duration: 500 }"
+    :plugins="this.plugins"
+  >
+    <div class="panel">
+      <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
+    </div>
+    <div class="panel">
+      <img src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
+    </div>
+    <div class="panel">
+      <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
+    </div>
+  </flicking>`,
+    }
+  },
+  mounted() {
     document.querySelectorAll('.hljs').forEach((block) => {
-      (window as any).hljs.highlightBlock(block);
+      window.hljs.highlightBlock(block);
     });
   }
-
-  plugins = [new Fade(), new AutoPlay(2000, "NEXT")];
-  code0 = `<flicking
-  class="flicking"
-  :options="{ circular: true, gap: 10, duration: 500 }"
-  :plugins="this.plugins"
->
-  <div class="panel">
-    <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
-  </div>
-  <div class="panel">
-    <img src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
-  </div>
-  <div class="panel">
-    <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
-  </div>
-</flicking>`;
 }
 </script>
 <style scoped>

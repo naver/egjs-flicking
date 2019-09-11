@@ -103,13 +103,11 @@
     <pre><code class="hljs html" data-script="flicking3">{{ code3 }}</code></pre>
   </div >
 </template>
-<script lang="ts">
-import { Flicking } from "../../src/index";
-import { Component, Vue } from "vue-property-decorator";
-
-@Component({})
-export default class Progress extends Vue {
-  code0 = `<flicking class="flicking flicking0"
+<script>
+export default {
+  data() {
+    return {
+      code0: `<flicking class="flicking flicking0"
   :options="{
     gap: 10,
     circular: true,
@@ -123,8 +121,8 @@ export default class Progress extends Vue {
   <div class="panel2"></div>
   <div class="panel3"></div>
   <div class="panel4"></div>
-</flicking>`;
-  code1 = `<flicking class="flicking flicking1"
+</flicking>`,
+      code1: `<flicking class="flicking flicking1"
   :option="{
     gap: 10,
     circular: true,
@@ -140,8 +138,8 @@ export default class Progress extends Vue {
   <div class="panel2"></div>
   <div class="panel3"></div>
   <div class="panel4"></div>
-</flicking>`;
-  code2 = `<flicking class="flicking flicking2"
+</flicking>`,
+      code2: `<flicking class="flicking flicking2"
   :options="{
     gap: 10,
     circular: true,
@@ -159,8 +157,8 @@ export default class Progress extends Vue {
   <div class="panel2"></div>
   <div class="panel3"></div>
   <div class="panel4"></div>
-</flicking>`;
-  code3 = `<flicking class="flicking flicking3"
+</flicking>`,
+      code3: `<flicking class="flicking flicking3"
   :options="{
     gap: 10,
     circular: true,
@@ -178,21 +176,21 @@ export default class Progress extends Vue {
   <div class="panel2"></div>
   <div class="panel3"></div>
   <div class="panel4"></div>
-</flicking>`;
-
+</flicking>`
+    }
+  },
   mounted() {
     document.querySelectorAll('.hljs').forEach((block) => {
-      (window as any).hljs.highlightBlock(block);
+      window.hljs.highlightBlock(block);
     });
-
     this.$nextTick(() => {
-      (this.$refs.flick1 as Flicking).getAllPanels(true).forEach(panel => {
+      this.$refs.flick1.getAllPanels(true).forEach(panel => {
         panel.getElement().innerHTML = panel.getProgress().toFixed(2);
       });
-      (this.$refs.flick2 as Flicking).getAllPanels(true).forEach(panel => {
+      this.$refs.flick2.getAllPanels(true).forEach(panel => {
         panel.getElement().innerHTML = panel.getOutsetProgress().toFixed(2);
       });
-      (this.$refs.flick3 as Flicking).getAllPanels(true).forEach(panel => {
+      this.$refs.flick3.getAllPanels(true).forEach(panel => {
         panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
       });
     });

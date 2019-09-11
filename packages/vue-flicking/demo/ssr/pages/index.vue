@@ -21,14 +21,6 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-@Component({})
-class Demo extends Vue {
-}
-
-export default Demo;
-</script>
 <style>
   @import url('https://fonts.googleapis.com/css?family=Nanum+Gothic&subset=korean');
   html, body {

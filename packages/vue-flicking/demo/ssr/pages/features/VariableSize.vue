@@ -15,24 +15,24 @@
     <pre><code class="hljs html" data-script="flicking0">{{ code0 }}</code></pre>
   </div>
 </template>
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-
-@Component({})
-export default class VariableSize extends Vue {
-  public mounted() {
-    document.querySelectorAll('.hljs').forEach((block) => {
-      (window as any).hljs.highlightBlock(block);
-    });
-  }
-
-  code0 = `<flicking class="flicking flicking0" :options="{ circular: true, gap: 10 }">
+<script>
+export default {
+  data() {
+    return {
+      code0: `<flicking class="flicking flicking0" :options="{ circular: true, gap: 10 }">
   <div class="panel0"></div>
   <div class="panel1"></div>
   <div class="panel2"></div>
   <div class="panel3"></div>
   <div class="panel4"></div>
-</flicking>`;
+</flicking>`,
+    }
+  },
+  mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      window.hljs.highlightBlock(block);
+    });
+  }
 }
 </script>
 <style scoped>

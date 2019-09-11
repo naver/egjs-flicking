@@ -23,20 +23,12 @@
   <pre><code class="hljs html" data-script="flicking0">{{ code0 }}</code></pre>
 </div>
 </template>
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import { Fade } from "@egjs/flicking-plugins";
-
-@Component({})
-export default class FadeDemo extends Vue {
-  public mounted() {
-    document.querySelectorAll('.hljs').forEach((block) => {
-      (window as any).hljs.highlightBlock(block);
-    });
-  }
-
-  plugins = [new Fade()];
-  code0 = `<flicking class="flicking"
+<script>
+export default {
+  data() {
+    return {
+      plugins: [new Fade()],
+      code0: `<flicking class="flicking"
   :options="{ circular: true, gap: 10 }"
   :plugins="plugins"
 >
@@ -49,9 +41,13 @@ export default class FadeDemo extends Vue {
   <div class="panel">
     <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
   </div>
-</flicking>`;
+</flicking>`
+    }
+  },
+  mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      window.hljs.highlightBlock(block);
+    });
+  }
 }
 </script>
-<style scoped>
-
-</style>

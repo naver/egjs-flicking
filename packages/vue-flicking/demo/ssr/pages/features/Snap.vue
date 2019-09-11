@@ -36,43 +36,40 @@
     <pre><code class="hljs html" data-script="flicking2">{{ code2 }}</code></pre>
   </div>
 </template>
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-
-@Component({})
-export default class Snap extends Vue {
-  public mounted() {
-    document.querySelectorAll('.hljs').forEach((block) => {
-      (window as any).hljs.highlightBlock(block);
-    });
-  }
-
-  code0 = `<flicking class="flicking flicking0"
+<script>
+export default {
+  data() {
+    return {
+      code0: `<flicking class="flicking flicking0"
   :options="{ gap: 10, circular: true }">
   <div class="panel0"></div>
   <div class="panel1"></div>
   <div class="panel2"></div>
   <div class="panel3"></div>
   <div class="panel4"></div>
-</flicking>`;
-  code1 = `<flicking class="flicking flicking1"
+</flicking>`,
+      code1: `<flicking class="flicking flicking1"
   :options="{ gap: 10, circular: true, moveType: { type: 'snap', count: 3 } }">
   <div class="panel0"></div>
   <div class="panel1"></div>
   <div class="panel2"></div>
   <div class="panel3"></div>
   <div class="panel4"></div>
-</flicking>`;
-  code2 = `<flicking class="flicking flicking2"
+</flicking>`,
+      code2: `<flicking class="flicking flicking2"
   :options="{ gap: 10, circular: true, moveType: { type: 'snap', count: Infinity } }">
   <div class="panel0"></div>
   <div class="panel1"></div>
   <div class="panel2"></div>
   <div class="panel3"></div>
   <div class="panel4"></div>
-</flicking>`;
+</flicking>`
+    }
+  },
+  mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      window.hljs.highlightBlock(block);
+    });
+  }
 }
 </script>
-<style scoped>
-
-</style>

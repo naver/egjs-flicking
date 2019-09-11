@@ -29,7 +29,9 @@ module.exports = {
       }
     }
   },
-  plugins: [{ src: '~/plugins/install', ssr: true }],
+  plugins: [
+    '~/plugins/install'
+  ],
   css: [
     '~assets/common.css'
   ]

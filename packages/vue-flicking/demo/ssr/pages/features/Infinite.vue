@@ -55,28 +55,16 @@
     <pre><code class="hljs html" data-script="flicking2">{{ code2 }}</code></pre>
   </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script>
 import PlaceHolder from "./component/PlaceHolderItem.vue";
 
-@Component({
-  components: {
-    PlaceHolder,
-  },
-})
-export default class Infinite extends Vue {
-  public mounted() {
-    document.querySelectorAll('.hljs').forEach((block) => {
-      (window as any).hljs.highlightBlock(block);
-    });
-  }
-
-  list0 = [0, 1, 2, 3, 4];
-  list1 = [0, 1, 2, 3, 4];
-  list2 = [0, 1, 2, 3, 4];
-
-  code0 = `<flicking class="flicking flicking0" :options="{ gap: 10 }">
+export default {
+  data() {
+    return {
+      list0: [0, 1, 2, 3, 4],
+      list1: [0, 1, 2, 3, 4],
+      list2: [0, 1, 2, 3, 4],
+      code0: `<flicking class="flicking flicking0" :options="{ gap: 10 }">
   <div v-for="num in list0" class="infinite" :class="\`infinite\${Math.abs(num) % 5}\`" :key="num">
     {{ num }}
   </div>
@@ -90,8 +78,8 @@ export default class Infinite extends Vue {
     const end = list0[list0.length - 1] || 0;
     list0.push(end + 1, end + 2);
   }">Append</button>
-</div>`;
-  code1 = `<flicking
+</div>`,
+      code1: `<flicking
   class="flicking flicking1" :options="{ gap: 10, infinite: true, infiniteThreshold: 50 }"
   @need-panel="() => {
     const end = list1[list1.length - 1] || 0;
@@ -100,8 +88,8 @@ export default class Infinite extends Vue {
   <div v-for="num in list1" class="infinite" :class="\`infinite\${Math.abs(num) % 5}\`" :key="num">
     {{ num }}
   </div>
-</flicking>`;
-  code2 = `<flicking
+</flicking>`,
+      code2: `<flicking
   class="flicking flicking2" :options="{ gap: 10, infinite: true, moveType: 'freeScroll' }"
   @need-panel="() => {
     const end = list2[list2.length - 1] || 0;
@@ -110,7 +98,17 @@ export default class Infinite extends Vue {
   <div v-for="num in list2" class="infinite" :class="\`infinite\${Math.abs(num) % 5}\`" :key="num">
     {{ num }}
   </div>
-</flicking>`;
+</flicking>`
+    }
+  },
+  components: {
+    PlaceHolder
+  },
+  mounted() {
+    document.querySelectorAll('.hljs').forEach((block) => {
+      window.hljs.highlightBlock(block);
+    });
+  }
 }
 </script>
 <style scoped>
