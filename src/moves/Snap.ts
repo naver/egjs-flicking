@@ -24,10 +24,10 @@ class Snap extends MoveType {
     const currentPanel = viewport.getCurrentPanel()!;
     const nearestPanel = viewport.getNearestPanel()!;
     const minimumDistanceToChange = this.calcBrinkOfChange(ctx);
+    const nearestIsCurrent = nearestPanel.getIndex() === currentPanel.getIndex();
 
     // This can happen when bounce is 0
-    const shouldMoveWhenBounceIs0 = viewport.canSetBoundMode()
-      && (nearestPanel.getIndex() === currentPanel.getIndex());
+    const shouldMoveWhenBounceIs0 = viewport.canSetBoundMode() && nearestIsCurrent;
     const shouldMoveToAdjacent = !viewport.isOutOfBound()
       && (swipeDistance <= minimumDistanceToChange || shouldMoveWhenBounceIs0);
 
@@ -40,7 +40,11 @@ class Snap extends MoveType {
         panel: nearestPanel,
         duration: viewport.options.duration,
         destPos: viewport.findEstimatedPosition(nearestPanel),
-        eventType: swipeDistance <= minimumDistanceToChange
+        // As swipeDistance holds mouse/touch position change regardless of bounce option value
+        // swipDistance > minimumDistanceToChange can happen in bounce area
+        // Second condition is for handling that.
+        eventType: (swipeDistance <= minimumDistanceToChange)
+          || (viewport.isOutOfBound() && nearestIsCurrent)
           ? EVENTS.RESTORE
           : EVENTS.CHANGE,
       };
