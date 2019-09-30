@@ -71,7 +71,16 @@ class HoldingState extends State {
     const releaseEvent = this.releaseEvent;
 
     // Static click
-    const clickedElement = releaseEvent.inputEvent.srcEvent.target;
+    const srcEvent = releaseEvent.inputEvent.srcEvent;
+
+    let clickedElement: HTMLElement;
+    if (srcEvent.type === "touchend") {
+      const touchEvent = srcEvent as TouchEvent;
+      const touch = touchEvent.changedTouches[0];
+      clickedElement = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement;
+    } else {
+      clickedElement = srcEvent.target;
+    }
     const clickedPanel = viewport.panelManager.findPanelOf(clickedElement);
     const cameraPosition = viewport.getCameraPosition();
 
