@@ -1007,17 +1007,33 @@ describe("Events", () => {
   });
 
   describe("change event", () => {
-    it("shouldn't be triggered when going out of bound area", async () => {
-      // Issue: https://github.com/naver/egjs-flicking/issues/208
+    // Issue: https://github.com/naver/egjs-flicking/issues/208
+    it("shouldn't be triggered when going out of bound area with bounce 0 & freeScroll", async () => {
       // Given
       flickingInfo = createFlicking(horizontal.full, {
         defaultIndex: 2,
         bound: true,
+        bounce: 0,
         moveType: "freeScroll",
       });
 
       // When
       await simulate(flickingInfo.element, { deltaX: -500, duration: 100 });
+
+      // Then
+      expect(flickingInfo.eventFired.every(evtName => evtName !== EVENTS.CHANGE)).to.be.true;
+    });
+
+    // Issue: https://github.com/naver/egjs-flicking/issues/302
+    it("shouldn't be triggered when going out of bound area with bound option & snap", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.full, {
+        defaultIndex: 0,
+        bound: true,
+      });
+
+      // When
+      await simulate(flickingInfo.element, { deltaX: 500, duration: 500 });
 
       // Then
       expect(flickingInfo.eventFired.every(evtName => evtName !== EVENTS.CHANGE)).to.be.true;
