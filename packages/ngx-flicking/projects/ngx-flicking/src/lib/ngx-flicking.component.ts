@@ -91,7 +91,11 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
 
   ngAfterViewInit() {
     if (!this.flicking) {
-      this.flicking = new NativeFlicking(this.elRef.nativeElement.children[0], this.options);
+      this.flicking = new NativeFlicking(
+        this.elRef.nativeElement.children[0],
+        this.options,
+        {framework: 'angular'}
+      );
       this.userPanelDataDiffer = new ListDiffer<any>(this.panels);
 
       this.syncPanelDataIfRenderOnlyVisible(this.panels);

@@ -71,11 +71,11 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   public componentDidMount() {
     this.flicking = new NativeFlicking(
       findDOMNode(this) as HTMLElement,
+      this.options,
       {
-        ...this.options,
         framework: "react",
         frameworkVersion: React.version,
-      } as any,
+      },
     ).on({
       moveStart: (e: FlickingEvent) => this.props.onMoveStart!(e),
       move: (e: FlickingEvent) => this.props.onMove!(e),
