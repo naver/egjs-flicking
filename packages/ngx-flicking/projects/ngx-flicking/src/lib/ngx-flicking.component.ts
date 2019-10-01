@@ -3,10 +3,34 @@
  * egjs projects are licensed under the MIT license
  */
 
-// tslint:disable-next-line: max-line-length
-import NativeFlicking, { Plugin, FlickingOptions, withFlickingMethods, DEFAULT_OPTIONS, FlickingEvent, NeedPanelEvent, SelectEvent, ChangeEvent, VisibleChangeEvent } from '@egjs/flicking';
-// tslint:disable-next-line: max-line-length
-import { Component, OnInit, Input, AfterViewInit, ElementRef, OnChanges, Output, EventEmitter, OnDestroy, ContentChild, TemplateRef, SimpleChanges, AfterViewChecked, DoCheck } from '@angular/core';
+import NativeFlicking, {
+  Plugin,
+  FlickingOptions,
+  withFlickingMethods,
+  DEFAULT_OPTIONS,
+  FlickingEvent,
+  NeedPanelEvent,
+  SelectEvent,
+  ChangeEvent,
+  VisibleChangeEvent,
+} from '@egjs/flicking';
+import {
+  Component,
+  OnInit,
+  Input,
+  AfterViewInit,
+  ElementRef,
+  OnChanges,
+  Output,
+  EventEmitter,
+  OnDestroy,
+  ContentChild,
+  TemplateRef,
+  SimpleChanges,
+  AfterViewChecked,
+  DoCheck,
+  VERSION,
+} from '@angular/core';
 import ListDiffer, { DiffResult } from '@egjs/list-differ';
 
 export interface RenderPanelChangeEvent {
@@ -94,7 +118,10 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
       this.flicking = new NativeFlicking(
         this.elRef.nativeElement.children[0],
         this.options,
-        {framework: 'angular'}
+        {
+          framework: 'angular',
+          frameworkVersion: VERSION.full,
+        },
       );
       this.userPanelDataDiffer = new ListDiffer<any>(this.panels);
 
