@@ -85,6 +85,17 @@ export interface FlickingOptions {
   collectStatistics: boolean;
 }
 
+/**
+ * @typedef
+ * @memberof eg.Flicking
+ * @property - Framework name<ko>프레임워크 이름</ko>
+ * @property - Framework version<ko>프레임워크 버전</ko>
+ */
+export interface CollectInformation {
+  framework: "react" | "angular" | "vue";
+  frameworkVersion: string;
+}
+
 export type MoveTypeObjectOption = MoveTypeSnapOption | MoveTypeFreeScrollOption;
 export type MoveTypeStringOption = MoveTypeObjectOption["type"];
 
