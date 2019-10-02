@@ -34,13 +34,13 @@ export default class Flicking extends Vue {
     const options = {...this.options, ...{ renderExternal: true }};
     this.$_nativeFlicking = new NativeFlicking(
       this.$el as HTMLElement,
-      options,
       {
+        ...options,
         framework: "vue",
         frameworkVersion: Vue.version,
-      },
+      } as object,
     );
-    this.$_slotDiffer = new ListDiffer<VNode>(this.$slots.default, (vnode, idx) => vnode.key!);
+    this.$_slotDiffer = new ListDiffer<VNode>(this.$slots.default, vnode => vnode.key!);
 
     this.$_bindEvents();
     this.$_checkUpdate();
