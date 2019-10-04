@@ -9,7 +9,21 @@ import Panel from "./components/Panel";
 
 import { merge, getProgress, parseElement, isString, counter, findIndex } from "./utils";
 import { DEFAULT_OPTIONS, EVENTS, DIRECTION, AXES_EVENTS, STATE_TYPE, DEFAULT_MOVE_TYPE_OPTIONS } from "./consts";
-import { FlickingOptions, FlickingEvent, Direction, EventType, FlickingPanel, TriggerCallback, FlickingContext, FlickingStatus, Plugin, ElementLike, DestroyOption, BeforeSyncResult, SyncResult } from "./types";
+import {
+  FlickingOptions,
+  FlickingEvent,
+  Direction,
+  EventType,
+  FlickingPanel,
+  TriggerCallback,
+  FlickingContext,
+  FlickingStatus,
+  Plugin,
+  ElementLike,
+  DestroyOption,
+  BeforeSyncResult,
+  SyncResult,
+} from "./types";
 import { sendEvent } from "./ga/ga";
 import { DiffResult } from "@egjs/list-differ";
 
@@ -136,7 +150,11 @@ class Flicking extends Component {
     this.listenResize();
 
     if (this.options.collectStatistics) {
-      sendEvent("usage", "options", options);
+      sendEvent(
+        "usage",
+        "options",
+        options,
+      );
     }
   }
 

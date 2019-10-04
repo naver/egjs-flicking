@@ -75,7 +75,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
         ...this.options,
         framework: "react",
         frameworkVersion: React.version,
-      } as any,
+      } as object,
     ).on({
       moveStart: (e: FlickingEvent) => this.props.onMoveStart!(e),
       move: (e: FlickingEvent) => this.props.onMove!(e),
