@@ -17,6 +17,7 @@ import { AutoplayComponent } from './autoplay/autoplay.component';
 import { FadeComponent } from './fade/fade.component';
 import { ParallaxComponent } from './parallax/parallax.component';
 import { VisiblePanelsComponent } from './visiblepanels/visiblepanels.component';
+import { PanelComponent } from './panel/panel.component';
 
 const appRoutes: Routes = [
   { path: 'align', component: AlignComponent },
@@ -52,7 +53,8 @@ const appRoutes: Routes = [
     ParallaxComponent,
     TestPanelComponent,
     PlaceHolderItemComponent,
-    VisiblePanelsComponent
+    VisiblePanelsComponent,
+    PanelComponent,
   ],
   imports: [
     BrowserModule,

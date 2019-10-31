@@ -30,6 +30,8 @@ import {
   AfterViewChecked,
   DoCheck,
   VERSION,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import ListDiffer, { DiffResult } from '@egjs/list-differ';
 
@@ -57,7 +59,8 @@ export interface RenderPanelChangeEvent {
   `,
   styles: [
     ':host {display: block}', ':host > div {width: 100%; height: 100%}'
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
   @Input() options: Partial<FlickingOptions> = {};
@@ -97,7 +100,7 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
    */
   private criticalSection = true;
 
-  constructor(private elRef: ElementRef) {}
+  constructor(private elRef: ElementRef, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.options = {...DEFAULT_OPTIONS, ...this.options, ...{renderExternal: true}};
@@ -198,6 +201,7 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
     }
 
     this.internalCloneCount = newCC;
+    this.cdr.detectChanges();
   }
 
   private checkPlugins() {
