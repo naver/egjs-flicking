@@ -201,7 +201,7 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
     }
 
     this.internalCloneCount = newCC;
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
   }
 
   private checkPlugins() {
