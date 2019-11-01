@@ -60,7 +60,6 @@ export interface RenderPanelChangeEvent {
   styles: [
     ':host {display: block}', ':host > div {width: 100%; height: 100%}'
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
   @Input() options: Partial<FlickingOptions> = {};
