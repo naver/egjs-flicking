@@ -30,7 +30,6 @@ import {
   AfterViewChecked,
   DoCheck,
   VERSION,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
 } from '@angular/core';
 import ListDiffer, { DiffResult } from '@egjs/list-differ';
