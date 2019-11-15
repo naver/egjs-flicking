@@ -18,8 +18,3 @@ const plugin = {
   version,
 };
 export default plugin;
-export {
-  version,
-  Flicking,
-  install
-};
