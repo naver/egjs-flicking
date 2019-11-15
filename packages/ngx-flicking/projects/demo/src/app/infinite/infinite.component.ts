@@ -1,10 +1,12 @@
 import { EVENTS } from './../../../../../../../src/consts';
 import { Component, OnInit, Input, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'demo-infinite',
   templateUrl: './infinite.component.html',
-  styleUrls: ['../app.component.css', './infinite.component.css']
+  styleUrls: ['../app.component.css', './infinite.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfiniteComponent implements OnInit {
   list0 = [0, 1, 2, 3, 4];
@@ -19,7 +21,7 @@ export class InfiniteComponent implements OnInit {
 
   onPrepend() {
     const start = this.list0[0] || 0;
-    this.list0.splice(0, 0, ...[start - 2, start - 1]);
+    this.list0.splice(0, 0, start - 2, start - 1);
   }
 
   onAppend() {
