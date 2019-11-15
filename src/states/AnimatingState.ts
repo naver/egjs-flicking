@@ -66,14 +66,15 @@ class AnimatingState extends State {
     viewport.options.bound
       ? viewport.setCurrentPanel(this.targetPanel!)
       : viewport.setCurrentPanel(viewport.getNearestPanel()!);
-    transitTo(STATE_TYPE.IDLE);
-    triggerEvent(EVENTS.MOVE_END, e, isTrusted, {
-      direction: this.direction,
-    });
 
     if (flicking.options.adaptive) {
       viewport.updateAdaptiveSize();
     }
+
+    transitTo(STATE_TYPE.IDLE);
+    triggerEvent(EVENTS.MOVE_END, e, isTrusted, {
+      direction: this.direction,
+    });
   }
 }
 
