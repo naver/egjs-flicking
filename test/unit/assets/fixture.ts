@@ -46,12 +46,15 @@ export const horizontal = {
     [panel, "panel-horizontal-full"],
   ),
   fullN: (count: number) =>  wrapper(
-    ...counter(count).map(() => [panel, "panel-horizontal.full"]),
+    ...counter(count).map(() => [panel, "panel-horizontal-full"]),
   ),
   half: wrapper(
     [panel, "panel-horizontal-50"],
     [panel, "panel-horizontal-50"],
     [panel, "panel-horizontal-50"],
+  ),
+  halfN: (count: number) =>  wrapper(
+    ...counter(count).map(() => [panel, "panel-horizontal-50"]),
   ),
   variant: wrapper(
     [panel, "panel-horizontal-50"],
@@ -90,6 +93,9 @@ export const horizontal = {
     [panel, "panel-horizontal-30"],
     [panel, "panel-horizontal-30"],
     [panel, "panel-horizontal-30"],
+  ),
+  panel30N: (count: number) =>  wrapper(
+    ...counter(count).map(() => [panel, "panel-horizontal-30"]),
   ),
   none: wrapper(),
   hasViewport: wrapper(
