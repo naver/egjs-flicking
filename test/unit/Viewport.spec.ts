@@ -6,7 +6,7 @@ import { createFlicking, cleanup, simulate, createHorizontalElement } from "./as
 import { FlickingOptions } from "../../src/types";
 import { horizontal } from "./assets/fixture";
 import { DEFAULT_OPTIONS } from "../../src/consts";
-import { counter } from "../../src/utils";
+import { counter, clamp } from "../../src/utils";
 
 declare var sinon: SinonStatic;
 
@@ -288,6 +288,116 @@ describe("Viewport", () => {
 
         prevPanel && expect(prevPanel.getElement().nextElementSibling).equals(element);
         nextPanel && expect(nextPanel.getElement().previousElementSibling).equals(element);
+      });
+    });
+  });
+
+  describe("updateScrollArea", () => {
+    it("should set prev:0, next:0 when thre're no panels exist", () => {
+      // Given & When
+      createViewport(horizontal.none);
+
+      // Then
+      const scrollArea = viewport.getScrollArea();
+      expect(scrollArea.prev).equals(0);
+      expect(scrollArea.next).equals(0);
+    });
+
+    it("should set values based on first/last panel", () => {
+      // Given & When
+      createViewport(horizontal.variant);
+
+      // Then
+      const scrollArea = viewport.getScrollArea();
+      const firstPanel = viewport.panelManager.firstPanel();
+      const lastPanel = viewport.panelManager.lastPanel();
+      const relHangerPos = viewport.getRelativeHangerPosition();
+
+      expect(scrollArea.prev).equals(firstPanel.getAnchorPosition() - relHangerPos);
+      expect(scrollArea.next).equals(lastPanel.getAnchorPosition() - relHangerPos);
+    });
+
+    it("should set values based on first/first cloned panel when circular option is set", () => {
+      // Given & When
+      createViewport(horizontal.variant, {
+        circular: true,
+      });
+
+      // Then
+      const scrollArea = viewport.getScrollArea();
+      const firstPanel = viewport.panelManager.firstPanel();
+      const firstClonedPanel = firstPanel.getClonedPanels()[0];
+      const relHangerPos = viewport.getRelativeHangerPosition();
+
+      expect(scrollArea.prev).equals(firstPanel.getAnchorPosition() - relHangerPos);
+      expect(scrollArea.next).equals(firstClonedPanel.getAnchorPosition() - relHangerPos);
+    });
+
+    it("should set values clamped to first/last panel when bound option is set", () => {
+      // Given & When
+      createViewport(horizontal.halfN(3), {
+        bound: true,
+      });
+
+      // Then
+      const scrollArea = viewport.getScrollArea();
+      const firstPanel = viewport.panelManager.firstPanel();
+      const lastPanel = viewport.panelManager.lastPanel();
+      const viewportSize = viewport.getSize();
+
+      expect(scrollArea.prev).equals(firstPanel.getPosition());
+      expect(scrollArea.next).equals(lastPanel.getPosition() + lastPanel.getSize() - viewportSize);
+    });
+
+    describe("bound option is enabled, but sum of panel size is less than viewport size", () => {
+      it("should set values based on anchor/hanger", () => {
+        // Given & When
+        createViewport(horizontal.panel30N(2), {
+          bound: true,
+          anchor: "50%",
+          hanger: "50%",
+        });
+
+        // Then
+        const scrollArea = viewport.getScrollArea();
+        const firstPanel = viewport.panelManager.firstPanel();
+        const lastPanel = viewport.panelManager.lastPanel();
+        const relHangerPos = viewport.getRelativeHangerPosition();
+        const sumPanelSize = lastPanel.getPosition() + lastPanel.getSize() - firstPanel.getPosition();
+
+        const expectedAnchorPos = firstPanel.getPosition() + sumPanelSize / 2;
+
+        expect(sumPanelSize).is.lessThan(viewport.getSize());
+        expect(scrollArea.prev).equals(expectedAnchorPos - relHangerPos);
+        expect(scrollArea.next).equals(expectedAnchorPos - relHangerPos);
+      });
+
+      it("should set values clamped when going out of bound", () => {
+        // Given & When
+        createViewport(horizontal.panel30N(2), {
+          bound: true,
+          anchor: "0%",
+          hanger: "50%",
+        });
+
+        // Then
+        const scrollArea = viewport.getScrollArea();
+        const firstPanel = viewport.panelManager.firstPanel();
+        const lastPanel = viewport.panelManager.lastPanel();
+        const relHangerPos = viewport.getRelativeHangerPosition();
+        const sumPanelSize = lastPanel.getPosition() + lastPanel.getSize() - firstPanel.getPosition();
+        const viewportSize = viewport.getSize();
+
+        const expectedAnchorPos = 0; // As anchor is 0%
+        const clampedAnchorPos = firstPanel.getPosition() + clamp(
+          expectedAnchorPos,
+          sumPanelSize - (viewportSize - relHangerPos),
+          relHangerPos,
+        );
+
+        expect(sumPanelSize).is.lessThan(viewportSize);
+        expect(scrollArea.prev).equals(clampedAnchorPos - relHangerPos);
+        expect(scrollArea.next).equals(clampedAnchorPos - relHangerPos);
       });
     });
   });
