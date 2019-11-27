@@ -30,6 +30,7 @@ body {
 }
 
 .is-full { width: 100%; }
+.is-one-third { width: 33%; }
 .is-two-thirds { width: 66%; }
 .is-half { width: 50%; }
 .is-one-quarter { width: 25%; }
