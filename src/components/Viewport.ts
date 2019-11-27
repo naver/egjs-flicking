@@ -837,18 +837,9 @@ export default class Viewport {
   }
 
   public canSetBoundMode(): boolean {
-    const state = this.state;
     const options = this.options;
-    const lastPanel = this.panelManager.lastPanel();
-    if (!lastPanel) {
-      return false;
-    }
 
-    const summedPanelSize = lastPanel.getPosition() + lastPanel.getSize();
-
-    return options.bound
-      && !options.circular
-      && summedPanelSize >= state.size;
+    return options.bound && !options.circular;
   }
 
   public getViewportElement(): HTMLElement {
@@ -1443,10 +1434,27 @@ export default class Viewport {
         next: 0,
       };
     } else if (this.canSetBoundMode()) {
-      state.scrollArea = {
-        prev: firstPanel.getPosition(),
-        next: lastPanel.getPosition() + lastPanel.getSize() - state.size,
-      };
+      const sumOriginalPanelSize = lastPanel.getPosition() + lastPanel.getSize() - firstPanel.getPosition() + options.gap;
+
+      if (sumOriginalPanelSize >= state.size) {
+        state.scrollArea = {
+          prev: firstPanel.getPosition(),
+          next: lastPanel.getPosition() + lastPanel.getSize() - state.size,
+        };
+      } else {
+        // Find anchor position of set of the combined panels
+        const relAnchorPosOfCombined = parseArithmeticExpression(options.anchor, sumOriginalPanelSize);
+        const anchorPos = firstPanel.getPosition() + clamp(
+          relAnchorPosOfCombined,
+          sumOriginalPanelSize - (state.size - relativeHangerPosition),
+          relativeHangerPosition,
+        );
+
+        state.scrollArea = {
+          prev: anchorPos - relativeHangerPosition,
+          next: anchorPos - relativeHangerPosition,
+        };
+      }
     } else if (options.circular) {
       const sumOriginalPanelSize = lastPanel.getPosition() + lastPanel.getSize() - firstPanel.getPosition() + options.gap;
 

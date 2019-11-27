@@ -19,5 +19,11 @@ setTimeout(function() {
 
   f2 = createFlicking("#flick2", {
     bound: true,
+  });
+
+  f3 = createFlicking("#flick3", {
+    bound: true,
+    anchor: "0%",
+    hanger: "100%"
   })
 }, 500);
