@@ -6,7 +6,6 @@
 import NativeFlicking, {
   Plugin,
   FlickingOptions,
-  withFlickingMethods,
   DEFAULT_OPTIONS,
   FlickingEvent,
   NeedPanelEvent,
