@@ -8,13 +8,14 @@ import ChildrenDiffer from "@egjs/vue-children-differ";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { CreateElement, VNodeData, VNode } from "vue";
+import { FlickingType } from "./types";
 
 @Component({
   directives: {
     "children-differ": ChildrenDiffer,
   },
 })
-export default class Flicking extends Vue {
+class Flicking extends Vue {
   // Tag of wrapper element
   @Prop({ type: String, default: "div", required: false }) tag!: string;
   @Prop({ type: Object, default: () => ({}), required: false }) options!: Partial<FlickingOptions>;
@@ -65,7 +66,7 @@ export default class Flicking extends Vue {
   }
 
   public beforeDestroy() {
-    this.destroy({ preserveUI: true });
+    this.$_nativeFlicking.destroy({ preserveUI: true });
   }
 
   public render(h: CreateElement) {
@@ -221,3 +222,6 @@ export default class Flicking extends Vue {
     return clone;
   }
 }
+
+interface Flicking extends FlickingType<Flicking> {}
+export default Flicking;
