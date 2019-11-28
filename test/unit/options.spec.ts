@@ -904,7 +904,10 @@ describe("Initialization", () => {
       expect(flicking.getCloneCount).to.be.undefined;
       expect(flicking.append).to.be.undefined;
       expect(flicking.prepend).to.be.undefined;
-      expect(flicking.addPlugins([])).to.be.equals(flicking);
+      expect(flicking.addPlugins).to.be.undefined;
+      expect(flicking.removePlugins).to.be.undefined;
+      expect(flicking.getLastIndex).to.be.undefined;
+      expect(flicking.setLastIndex).to.be.undefined;
       expect(flicking.getPanelCount()).to.be.equals(2);
     });
   });
