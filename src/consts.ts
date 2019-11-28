@@ -126,16 +126,12 @@ export const FLICKING_METHODS: {[key in FlickingMethodsKeys]: true} = {
   getPanelCount: true,
   getStatus: true,
   getVisiblePanels: true,
-  setLastIndex: true,
   enableInput: true,
   disableInput: true,
   destroy: true,
   resize: true,
   setStatus: true,
-  addPlugins: true,
-  removePlugins: true,
   isPlaying: true,
-  getLastIndex: true,
 };
 
 // Check whether browser supports transform: translate3d
