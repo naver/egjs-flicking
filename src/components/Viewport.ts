@@ -1434,7 +1434,7 @@ export default class Viewport {
         next: 0,
       };
     } else if (this.canSetBoundMode()) {
-      const sumOriginalPanelSize = lastPanel.getPosition() + lastPanel.getSize() - firstPanel.getPosition() + options.gap;
+      const sumOriginalPanelSize = lastPanel.getPosition() + lastPanel.getSize() - firstPanel.getPosition();
 
       if (sumOriginalPanelSize >= state.size) {
         state.scrollArea = {
