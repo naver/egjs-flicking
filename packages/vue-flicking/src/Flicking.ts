@@ -40,7 +40,9 @@ export default class Flicking extends Vue {
         frameworkVersion: Vue.version,
       } as object,
     );
-    this.$_slotDiffer = new ListDiffer<VNode>(this.$slots.default, vnode => vnode.key!);
+
+    const slots = this.$_getSlots();
+    this.$_slotDiffer = new ListDiffer<VNode>(slots, vnode => vnode.key!);
 
     this.$_bindEvents();
     this.$_checkUpdate();
@@ -51,17 +53,12 @@ export default class Flicking extends Vue {
     }
   }
 
-  public beforeUpdate() {
-    if (!this.$slots.default) {
-      return;
-    }
+  public beforeMount() {
+    this.$_fillKeys();
+  }
 
-    this.$slots.default = this.$slots.default.map((node, index) => {
-      if (node.key == null) {
-        node.key = `${node.tag}-${index}`;
-      }
-      return node;
-    });
+  public beforeUpdate() {
+    this.$_fillKeys();
   }
 
   public beforeDestroy() {
@@ -149,7 +146,7 @@ export default class Flicking extends Vue {
 
   private $_getPanels(h: CreateElement) {
     const flicking = this.$_nativeFlicking;
-    const wholeSlots = this.$slots.default;
+    const wholeSlots = this.$_getSlots();
 
     if (!wholeSlots) {
       return [];
@@ -185,6 +182,13 @@ export default class Flicking extends Vue {
     return panels;
   }
 
+  private $_getSlots() {
+    // Only elements are allowed as panel
+    return this.$slots.default
+      ? this.$slots.default.filter(slot => slot.tag)
+      : [];
+  }
+
   private $_getClonedVNodes() {
     const h = this.$createElement;
     const cloneCount = this.$_nativeFlicking
@@ -193,7 +197,8 @@ export default class Flicking extends Vue {
     const lastIndex = this.$_nativeFlicking
       ? this.$_nativeFlicking.getLastIndex()
       : this.options.lastIndex || DEFAULT_OPTIONS.lastIndex;
-    const children = this.$slots.default!.slice(0, lastIndex + 1);
+    const slots = this.$_getSlots();
+    const children = slots.slice(0, lastIndex + 1);
     const clones: VNode[] = [];
 
     for (let cloneIndex = 0; cloneIndex < cloneCount; cloneIndex++) {
@@ -219,5 +224,13 @@ export default class Flicking extends Vue {
     clone.key = key;
 
     return clone;
+  }
+
+  private $_fillKeys() {
+    this.$_getSlots().forEach((node, index) => {
+      if (node.key == null) {
+        node.key = `${node.tag}-${index}`;
+      }
+    });
   }
 }
