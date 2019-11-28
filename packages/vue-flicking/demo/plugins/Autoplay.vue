@@ -37,7 +37,11 @@ export default class AutoPlayDemo extends Vue {
   }
 
   plugins = [new Fade(), new AutoPlay(2000, "NEXT")];
-  code0 = `<flicking
+  code0 = `<!--
+  import { Fade, AutoPlay } from "@egjs/flicking-plugins";
+  plugins = [new Fade(), new AutoPlay(2000, "NEXT")];
+-->
+<flicking
   class="flicking"
   :options="{ circular: true, gap: 10, duration: 500 }"
   :plugins="this.plugins"

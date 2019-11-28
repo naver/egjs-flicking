@@ -36,7 +36,11 @@ export default class FadeDemo extends Vue {
   }
 
   plugins = [new Fade()];
-  code0 = `<flicking class="flicking"
+  code0 = `<!--
+  import { Fade } from "@egjs/flicking-plugins";
+  plugins = [new Fade()];
+-->
+<flicking class="flicking"
   :options="{ circular: true, gap: 10 }"
   :plugins="plugins"
 >
