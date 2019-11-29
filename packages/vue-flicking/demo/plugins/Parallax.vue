@@ -39,7 +39,7 @@ export default class AutoPlayDemo extends Vue {
   plugins = [new Parallax("img", 4)];
   code0 = `<!--
   import { Parallax } from "@egjs/flicking-plugins";
-  plugins = [new Parallax("img", 4)];
+  const plugins = [new Parallax("img", 4)];
 -->
 <flicking class="flicking"
   :options="{ gap: 10, circular: true }"
