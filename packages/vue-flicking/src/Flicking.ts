@@ -149,7 +149,7 @@ class Flicking extends Vue {
     const flicking = this.$_nativeFlicking;
     const wholeSlots = this.$_getSlots();
 
-    if (!wholeSlots) {
+    if (wholeSlots.length === 0) {
       return [];
     }
 
