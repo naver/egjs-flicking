@@ -6,7 +6,6 @@
 import NativeFlicking, {
   Plugin,
   FlickingOptions,
-  withFlickingMethods,
   DEFAULT_OPTIONS,
   FlickingEvent,
   NeedPanelEvent,
@@ -33,6 +32,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import ListDiffer, { DiffResult } from '@egjs/list-differ';
+import FlickingInterface from './FlickingInterface';
 
 export interface RenderPanelChangeEvent {
   visibles: {
@@ -60,7 +60,8 @@ export interface RenderPanelChangeEvent {
     ':host {display: block}', ':host > div {width: 100%; height: 100%}'
   ],
 })
-export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
+export class NgxFlickingComponent extends FlickingInterface
+  implements OnInit, AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
   @Input() options: Partial<FlickingOptions> = {};
   @Input() plugins: Plugin[] = [];
   @Input() panels: any[];
@@ -82,8 +83,6 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
   classPrefix: string;
   cloneCount = 0;
 
-  @withFlickingMethods
-  private flicking?: NativeFlicking | null;
   private pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
   private userPanelDataDiffer: ListDiffer<any> = null;
   private internalCloneCount = 0;
@@ -98,10 +97,12 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
    */
   private criticalSection = true;
 
-  constructor(private elRef: ElementRef, private cdr: ChangeDetectorRef) {}
+  constructor(private elRef: ElementRef, private cdr: ChangeDetectorRef) {
+    super();
+  }
 
   ngOnInit() {
-    this.options = {...DEFAULT_OPTIONS, ...this.options, ...{renderExternal: true}};
+    this.options = { ...DEFAULT_OPTIONS, ...this.options, ...{ renderExternal: true } };
     this.classPrefix = this.options.classPrefix;
   }
 
@@ -252,7 +253,7 @@ export class NgxFlickingComponent implements OnInit, AfterViewInit, OnDestroy, O
   private triggerRenderChange(visibles: number[]) {
     // visible panel is not changed
     if (visibles.length === this.prevVisibles.length &&
-        visibles.every((v, i) => this.prevVisibles[i] === v)) {
+      visibles.every((v, i) => this.prevVisibles[i] === v)) {
       return;
     }
 
