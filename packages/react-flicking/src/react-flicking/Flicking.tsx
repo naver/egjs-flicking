@@ -113,8 +113,8 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   private checkPlugins() {
     const { list, added, removed, prevList } = this.pluginsDiffer.update(this.props.plugins!);
 
-    this.addPlugins(added.map(index => list[index]));
-    this.removePlugins(removed.map(index => prevList[index]));
+    this.flicking!.addPlugins(added.map(index => list[index]));
+    this.flicking!.removePlugins(removed.map(index => prevList[index]));
   }
 
   private checkCloneCount() {
