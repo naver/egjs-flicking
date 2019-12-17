@@ -121,6 +121,13 @@ export const horizontal = {
       ),
     ),
   ),
+  hasBigHeight: wrapper(
+    viewport(
+      camera(
+        [panel, "panel-horizontal-full panel-vertical-2000px"],
+      ),
+    ),
+  ),
 };
 
 export const vertical = {
