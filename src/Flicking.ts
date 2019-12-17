@@ -494,6 +494,7 @@ class Flicking extends Component {
   public resize = (): this => {
     const viewport = this.viewport;
     const options = this.options;
+    const wrapper = this.getElement();
 
     const allPanels = viewport.panelManager.allPanels();
     if (!options.isConstantSize) {
@@ -504,6 +505,11 @@ class Flicking extends Component {
       && !options.isConstantSize
       && options.isEqualSize !== true;
 
+    // Temporarily set parent's height to prevent scroll (#333)
+    const parent = wrapper.parentElement!;
+    const origStyle = parent.style.height;
+    parent.style.height = `${parent.offsetHeight}px`;
+
     viewport.unCacheBbox();
     // This should be done before adding panels, to lower performance issue
     viewport.updateBbox();
@@ -513,6 +519,7 @@ class Flicking extends Component {
     }
 
     viewport.resize();
+    parent.style.height = origStyle;
 
     return this;
   }

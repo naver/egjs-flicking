@@ -597,8 +597,10 @@ export default class Viewport {
       const viewportSize = `${sizeToApply}px`;
       if (horizontal) {
         viewportStyle.height = viewportSize;
+        state.cachedBbox!.height = sizeToApply;
       } else if (!horizontal) {
         viewportStyle.width = viewportSize;
+        state.cachedBbox!.width = sizeToApply;
       }
     }
   }
