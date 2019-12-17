@@ -3,7 +3,7 @@ import { spy } from "sinon";
 import Flicking from "../../src/Flicking";
 import { FlickingEvent, FlickingPanel, NeedPanelEvent } from "../../src/types";
 import { horizontal, panel as createPanelElement } from "./assets/fixture";
-import { createFlicking, cleanup, simulate, createHorizontalElement, tick } from "./assets/utils";
+import { createFlicking, cleanup, simulate, createHorizontalElement, tick, createFixture } from "./assets/utils";
 import { EVENTS, DIRECTION } from "../../src/consts";
 import { counter, toArray } from "../../src/utils";
 import Viewport from "../../src/components/Viewport";
@@ -787,6 +787,27 @@ describe("Methods call", () => {
       // Then
       const afterCameraPosition = flickingViewport.getCameraPosition();
       expect(prevCameraPosition).closeTo(afterCameraPosition, 0.001);
+    });
+
+    it("shouldn't be scrolled when there's no viewport size change after resize(issue #333)", () => {
+      // Given
+      const wrapper = createFixture(horizontal.hasBigHeight);
+      const sandbox = wrapper.parentElement;
+      const someFixture = createFixture(horizontal.full);
+
+      sandbox.appendChild(someFixture);
+      wrapper.style.height = "auto";
+
+      const flicking = new Flicking(wrapper, {
+        autoResize: true,
+      });
+
+      // When
+      window.scrollTo(0, 1000); // scroll to half of wrapper size
+      flicking.resize(); // then call resize
+
+      // Then
+      expect(window.scrollY).equals(1000); // Should not be scrolled to top(0)
     });
   });
 

@@ -16,4 +16,10 @@ setTimeout(function() {
         gap: 50,
         autoResize: true
     });
+
+    f3 = createFlicking("#flick3", {
+        circular: true,
+        gap: 50,
+        autoResize: true
+    });
 }, 500);
