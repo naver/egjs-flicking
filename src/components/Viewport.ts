@@ -598,7 +598,7 @@ export default class Viewport {
       if (horizontal) {
         viewportStyle.height = viewportSize;
         state.cachedBbox!.height = sizeToApply;
-      } else if (!horizontal) {
+      } else {
         viewportStyle.width = viewportSize;
         state.cachedBbox!.width = sizeToApply;
       }
