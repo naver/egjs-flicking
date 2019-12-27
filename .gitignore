@@ -210,7 +210,6 @@ temp/
 demo/release
 packages/*/dist/
 demo/_data/version.yml
-
+dist/
 outjs/
 declaration/
-
