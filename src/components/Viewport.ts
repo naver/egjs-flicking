@@ -590,10 +590,12 @@ export default class Viewport {
         sizeToApply = maximumPanelSize;
       }
 
-      const viewportBbox = this.updateBbox();
-      sizeToApply = Math.max(sizeToApply, horizontal ? viewportBbox.height : viewportBbox.width);
+      if (!state.isAdaptiveCached) {
+        const viewportBbox = this.updateBbox();
+        sizeToApply = Math.max(sizeToApply, horizontal ? viewportBbox.height : viewportBbox.width);
+        state.isAdaptiveCached = true;
+      }
 
-      state.isAdaptiveCached = true;
       const viewportSize = `${sizeToApply}px`;
       if (horizontal) {
         viewportStyle.height = viewportSize;
