@@ -1255,4 +1255,50 @@ describe("Initialization", () => {
       expect(prevSize).equals(afterSize);
     });
   });
+
+  describe("adaptive", () => {
+    it("should current panel height at init", () => {
+      // Given & When
+      flickingInfo = createFlicking(horizontal.hasDifferentHeight, {
+        adaptive: true,
+      });
+
+      // Then
+      const flicking = flickingInfo.instance;
+      const viewportEl = flickingInfo.element.querySelector(".eg-flick-viewport") as HTMLElement;
+      const firstPanelEl = flicking.getPanel(0).getElement();
+      const secondPanelEl = flicking.getPanel(1).getElement();
+      const viewportSize = viewportEl.getBoundingClientRect().height;
+      const firstPanelSize = firstPanelEl.getBoundingClientRect().height;
+      const secondPanelSize = secondPanelEl.getBoundingClientRect().height;
+      expect(viewportSize).equals(firstPanelSize);
+      expect(secondPanelSize).greaterThan(firstPanelSize);
+    });
+
+    it("should change viewport height to current panel's height", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.hasDifferentHeight, {
+        adaptive: true,
+      });
+      const flicking = flickingInfo.instance;
+      const viewportEl = flickingInfo.element.querySelector(".eg-flick-viewport") as HTMLElement;
+      const firstPanelEl = flicking.getPanel(0).getElement();
+      const secondPanelEl = flicking.getPanel(1).getElement();
+      const firstPanelSize = firstPanelEl.getBoundingClientRect().height;
+      const secondPanelSize = secondPanelEl.getBoundingClientRect().height;
+
+      // When
+      const heightInit = viewportEl.getBoundingClientRect().height;
+      flicking.moveTo(1, 300);
+      tick(500);
+      const heightAtPanel1 = viewportEl.getBoundingClientRect().height;
+      flicking.moveTo(0, 0);
+      const heightAtPanel0 = viewportEl.getBoundingClientRect().height;
+
+      // Then
+      expect(heightInit).equals(firstPanelSize);
+      expect(heightAtPanel1).equals(secondPanelSize);
+      expect(heightAtPanel0).equals(firstPanelSize);
+    });
+  });
 });

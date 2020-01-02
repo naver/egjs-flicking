@@ -128,6 +128,14 @@ export const horizontal = {
       ),
     ),
   ),
+  hasDifferentHeight: wrapper(
+    viewport(
+      camera(
+        [panel, "panel-horizontal-full"],
+        [panel, "panel-horizontal-full panel-vertical-2000px"],
+      ),
+    ),
+  ),
 };
 
 export const vertical = {
