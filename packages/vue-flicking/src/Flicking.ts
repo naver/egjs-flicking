@@ -16,8 +16,12 @@ import { FlickingType } from "./types";
   },
 })
 class Flicking extends Vue {
-  // Tag of wrapper element
+  // Tag of the wrapper element
   @Prop({ type: String, default: "div", required: false }) tag!: string;
+  // Tag of the viewport element
+  @Prop({ type: String, default: "div", required: false }) viewportTag!: string;
+  // Tag of the camera element
+  @Prop({ type: String, default: "div", required: false }) cameraTag!: string;
   @Prop({ type: Object, default: () => ({}), required: false }) options!: Partial<FlickingOptions>;
   @Prop({ type: Array, default: () => ([]), required: false }) plugins!: Plugin[];
 
@@ -81,8 +85,8 @@ class Flicking extends Vue {
     const panels = this.$_getPanels(h);
 
     return h(this.tag,
-      [h("div", viewportData,
-        [h("div", cameraData,
+      [h(this.viewportTag, viewportData,
+        [h(this.cameraTag, cameraData,
           panels,
         )],
       )],
