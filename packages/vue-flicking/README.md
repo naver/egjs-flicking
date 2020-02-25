@@ -67,6 +67,8 @@ export default {
   <flicking
     :options="{ gap: 10, moveType: 'freeScroll' }"
     :tag="'div'"
+    :viewportTag="'div'"
+    :cameraTag="'div'"
     :plugins="plugins"
     @need-panel="e => {
       // ADD PANELS
