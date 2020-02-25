@@ -45,6 +45,8 @@ import { Parallax, Fade, AutoPlay } from "@egjs/flicking-plugins";
 
 <Flicking
   tag = "div"
+  viewportTag = "div"
+  cameraTag = "div"
   onNeedPanel = {(e: NeedPanelEvent) => {}}
   onMoveStart = {(e: FlickingEvent) => {}}
   onMove = {(e: FlickingEvent) => {}}

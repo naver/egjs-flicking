@@ -10,6 +10,8 @@ export type FlickingType<T> = {
 
 export interface FlickingProps {
   tag: keyof JSX.IntrinsicElements;
+  viewportTag: keyof JSX.IntrinsicElements;
+  cameraTag: keyof JSX.IntrinsicElements;
   status?: FlickingStatus;
   plugins: Plugin[];
   onHoldStart: (e: FlickingEvent) => any;
