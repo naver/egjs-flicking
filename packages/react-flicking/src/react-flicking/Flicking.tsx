@@ -39,8 +39,11 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
 
   public render() {
     const props = this.props;
-    // tslint:disable-next-line:naming-convention
+    /* tslint:disable:naming-convention */
     const Tag = props.tag as any;
+    const Viewport = props.viewportTag as any;
+    const Camera = props.cameraTag as any;
+    /* tslint:enable:naming-convention */
     const classPrefix = props.classPrefix;
     const attributes: { [key: string]: any } = {};
 
@@ -51,13 +54,13 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     }
     return (
       <Tag {...attributes}>
-        <div className={`${classPrefix}-viewport`}>
-          <div className={`${classPrefix}-camera`}>
+        <Viewport className={`${classPrefix}-viewport`}>
+          <Camera className={`${classPrefix}-camera`}>
             <ChildrenDiffer onUpdate={this.onUpdate}>
               {this.renderPanels()}
             </ChildrenDiffer>
-          </div>
-        </div>
+          </Camera>
+        </Viewport>
       </Tag>
     );
   }

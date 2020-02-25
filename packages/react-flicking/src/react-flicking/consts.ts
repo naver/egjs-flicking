@@ -3,6 +3,8 @@ import { FlickingProps } from "./types";
 
 export const FLICKING_PROPS: FlickingProps = {
   tag: "div",
+  viewportTag: "div",
+  cameraTag: "div",
   classPrefix: "eg-flick",
   plugins: [],
   onNeedPanel: (e: NeedPanelEvent) => {},
