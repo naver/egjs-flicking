@@ -1,6 +1,6 @@
 import { SinonStatic } from "sinon";
 import Flicking from "../../src/Flicking";
-import { EVENTS, DIRECTION } from "../../src/consts";
+import { EVENTS, DIRECTION, MOVE_TYPE } from "../../src/consts";
 import { FlickingEvent, NeedPanelEvent, FlickingOptions } from "../../src/types";
 import { horizontal, vertical } from "./assets/fixture";
 import { createFlicking, createHorizontalElement, cleanup, simulate, tick } from "./assets/utils";
@@ -1051,6 +1051,99 @@ describe("Events", () => {
 
       // Then
       expect(flickingInfo.eventFired.every(evtName => evtName !== EVENTS.CHANGE)).to.be.true;
+    });
+  });
+
+  describe("visibleChange event", () => {
+    // Issue: https://github.com/naver/egjs-flicking/issues/342
+    it("should not remove visible panels until panning ends", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.fixedTo100, {
+        circular: true,
+        renderOnlyVisible: true,
+      });
+      const flicking = flickingInfo.instance;
+      const viewport = (flicking as any).viewport as Viewport;
+      const initialVisiblePanels = viewport.getVisiblePanels();
+      const visiblePanels = [];
+
+      flicking.on(EVENTS.VISIBLE_CHANGE, e => {
+        if (viewport.stateMachine.getState().holding) {
+          visiblePanels.push(viewport.getVisiblePanels());
+        }
+      });
+
+      // When
+      await simulate(flickingInfo.element, { deltaX: -500, duration: 100 });
+      flicking.off(EVENTS.VISIBLE_CHANGE);
+
+      // Then
+      let prevVisiblePanels = initialVisiblePanels;
+      expect(visiblePanels.length).to.be.greaterThan(0);
+      expect(visiblePanels.every(panels => {
+        const visiblePanelsNotRemoved = panels.length >= prevVisiblePanels.length;
+        prevVisiblePanels = panels;
+        return visiblePanelsNotRemoved;
+      })).to.be.true;
+    });
+
+    it("should preserve visible panels when animation ends", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.fixedTo100, {
+        circular: true,
+        renderOnlyVisible: true,
+      });
+      const flicking = flickingInfo.instance;
+      const viewport = (flicking as any).viewport as Viewport;
+      const initialVisiblePanels = viewport.getVisiblePanels();
+
+      // When
+      await simulate(flickingInfo.element, { deltaX: -500, duration: 100 });
+      const visiblePanelsAfterAnimation = viewport.getVisiblePanels();
+
+      // Then
+      expect(initialVisiblePanels.length).equals(visiblePanelsAfterAnimation.length);
+    });
+
+    it("should update visible panels also when animation didn't triggered & freeScroll", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.fixedTo100, {
+        circular: true,
+        renderOnlyVisible: true,
+        moveType: MOVE_TYPE.FREE_SCROLL,
+      });
+      const flicking = flickingInfo.instance;
+      const viewport = (flicking as any).viewport as Viewport;
+      const initialVisiblePanels = viewport.getVisiblePanels();
+      const visiblePanels = [];
+
+      flicking.on(EVENTS.VISIBLE_CHANGE, e => {
+        if (viewport.stateMachine.getState().holding) {
+          visiblePanels.push(viewport.getVisiblePanels());
+        }
+      });
+
+      // When
+      await simulate(flickingInfo.element, { deltaX: -500, duration: 10000 });
+
+      // Then
+      const visiblePanelsAfterMoveEnd = viewport.getVisiblePanels();
+      const holdEndTriggered = flickingInfo.eventFired.indexOf("holdEnd");
+      const moveEndTriggered = flickingInfo.eventFired.indexOf("moveEnd", holdEndTriggered);
+      const animationNotTriggered = flickingInfo.eventFired.slice(holdEndTriggered, moveEndTriggered)
+        .every(eventName => eventName !== "move");
+
+      expect(visiblePanelsAfterMoveEnd.length).equals(initialVisiblePanels.length);
+      expect(animationNotTriggered).to.be.true;
+
+      // Make sure visible panels were grown without being removed
+      let prevVisiblePanels = initialVisiblePanels;
+      expect(visiblePanels.length).to.be.greaterThan(0);
+      expect(visiblePanels.every(panels => {
+        const visiblePanelsNotRemoved = panels.length >= prevVisiblePanels.length;
+        prevVisiblePanels = panels;
+        return visiblePanelsNotRemoved;
+      })).to.be.true;
     });
   });
 });
