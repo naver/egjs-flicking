@@ -770,10 +770,12 @@ export default class Viewport {
         return visiblePanels;
       };
 
+      const panelCount = this.panelManager.getPanelCount();
+      const getAbsIndex = (panel: Panel) => panel.getIndex() + (panel.getCloneIndex() + 1) * panelCount;
       const nextPanels = getVisiblePanels(basePanel, getNextPanel, isOutOfBoundNext);
       const prevPanels = getVisiblePanels(basePanel, getPrevPanel, isOutOfBoundPrev);
 
-      return [basePanel, ...nextPanels, ...prevPanels];
+      return [basePanel, ...nextPanels, ...prevPanels].sort((panel1, panel2) => getAbsIndex(panel1) - getAbsIndex(panel2));
     } else {
       return allPanels.filter(panel => {
         const outsetProgress = panel.getOutsetProgress();

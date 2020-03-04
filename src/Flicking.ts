@@ -614,7 +614,7 @@ class Flicking extends Component {
    */
   public getRenderingIndexes(diffResult: DiffResult<any>): number[] {
     const viewport = this.viewport;
-    const { min, max } = viewport.getVisibleIndex();
+    const visiblePanels = viewport.getVisiblePanels();
     const maintained = diffResult.maintained.reduce((values: {[key: number]: number}, [before, after]) => {
       values[before] = after;
       return values;
@@ -623,12 +623,12 @@ class Flicking extends Component {
     const prevPanelCount = diffResult.prevList.length;
     const panelCount = diffResult.list.length;
     const added = diffResult.added;
-    const list = counter(prevPanelCount * (this.getCloneCount() + 1));
+    const getPanelAbsIndex = (panel: Panel) => {
+      return panel.getIndex() + (panel.getCloneIndex() + 1) * prevPanelCount;
+    };
 
-    let visibles = min >= 0
-      ? list.slice(min, max + 1)
-      : list.slice(0, max + 1).concat(list.slice(min));
-    visibles = visibles
+    let visibleIndexes = visiblePanels.map(panel => getPanelAbsIndex(panel));
+    visibleIndexes = visibleIndexes
       .filter(val => maintained[val % prevPanelCount] != null)
       .map(val => {
         const cloneIndex = Math.floor(val / prevPanelCount);
@@ -637,7 +637,7 @@ class Flicking extends Component {
         return changedIndex + panelCount * cloneIndex;
       });
 
-    const renderingPanels = [...visibles, ...added];
+    const renderingPanels = [...visibleIndexes, ...added];
     const allPanels = viewport.panelManager.allPanels();
 
     viewport.setVisiblePanels(renderingPanels.map(index => allPanels[index]));
