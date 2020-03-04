@@ -1281,8 +1281,8 @@ describe("Methods call", () => {
       });
 
       // When
-      const prevItems = [0, 1, 2, 3, 4];
-      const newItems = [0, 1, 2, 3, 4];
+      const prevItems = [0, 1, 2, 3, 4, 5];
+      const newItems = [0, 1, 2, 3, 4, 5];
       const result = diff(prevItems, newItems);
       const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
 
@@ -1298,15 +1298,15 @@ describe("Methods call", () => {
       });
 
       // When
-      const prevItems = [0, 1, 2, 3, 4];
-      const newItems = [0, 1, 2, 3, 4];
+      const prevItems = [0, 1, 2, 3, 4, 5];
+      const newItems = [0, 1, 2, 3, 4, 5];
       const result = diff(prevItems, newItems);
       const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
 
       // Then
-      // It is rendered [8, 9, 0, 1, 2]
-      // ...so it should return Original (0, 1, 2) + Clone(8, 9)
-      expect(renderingIndexes).to.be.deep.equals([0, 1, 2, 8, 9]);
+      // It is rendered [10, 11, 0, 1, 2]
+      // ...so it should return Original (0, 1, 2) + Clone(10, 11)
+      expect(renderingIndexes).to.be.deep.equals([0, 1, 2, 10, 11]);
     });
 
     it("should return correct rendering indexes, including appending panels", () => {
@@ -1317,13 +1317,14 @@ describe("Methods call", () => {
       });
 
       // When
-      const prevItems = [0, 1, 2, 3, 4];
-      const newItems = [0, 1, 2, 3, 4, 5, 6];
+      const prevItems = [0, 1, 2, 3, 4, 5];
+      const newItems = [0, 1, 2, 3, 4, 5, 6, 7];
       const result = diff(prevItems, newItems);
       const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
 
       // Then
-      expect(renderingIndexes).to.be.deep.equals([0, 1, 2, 5, 6]);
+      // Render previously rendered(0, 1, 2) + new ones(6, 7)
+      expect(renderingIndexes).to.be.deep.equals([0, 1, 2, 6, 7]);
     });
 
     it("should return correct rendering indexes when circular option in enabled, including appending panels", () => {
@@ -1334,17 +1335,17 @@ describe("Methods call", () => {
       });
 
       // When
-      const prevItems = [0, 1, 2, 3, 4];
-      const newItems = [0, 1, 2, 3, 4, 5, 6];
+      const prevItems = [0, 1, 2, 3, 4, 5];
+      const newItems = [0, 1, 2, 3, 4, 5, 6, 7];
       const result = diff(prevItems, newItems);
       const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
 
       // Then
       // It should return in order of
       // Original (0, 1, 2)
-      // Clone(10, 11), which has been pushed by 2
-      // New panels(5, 6)
-      expect(renderingIndexes).to.be.deep.equals([0, 1, 2, 10, 11, 5, 6]);
+      // Clone(12, 13), which has been pushed by 2
+      // New panels(6, 7)
+      expect(renderingIndexes).to.be.deep.equals([0, 1, 2, 12, 13, 6, 7]);
     });
 
     it("should return correct rendering indexes, including prepending panels", () => {
@@ -1355,8 +1356,8 @@ describe("Methods call", () => {
       });
 
       // When
-      const prevItems = [0, 1, 2, 3, 4];
-      const newItems = [-2, -1, 0, 1, 2, 3, 4];
+      const prevItems = [0, 1, 2, 3, 4, 5];
+      const newItems = [-2, -1, 0, 1, 2, 3, 4, 5];
       const result = diff(prevItems, newItems);
       const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
 
@@ -1375,17 +1376,17 @@ describe("Methods call", () => {
       });
 
       // When
-      const prevItems = [0, 1, 2, 3, 4];
-      const newItems = [-2, -1, 0, 1, 2, 3, 4];
+      const prevItems = [0, 1, 2, 3, 4, 5];
+      const newItems = [-2, -1, 0, 1, 2, 3, 4, 5];
       const result = diff(prevItems, newItems);
       const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
 
       // Then
       // It should return
       // Original(2, 3, 4), which has been pushed by 2
-      // Clones(12, 13), which has been pushed by 4(original 2 + clone 2)
+      // Clones(14, 15), which has been pushed by 4(original 2 + clone 2)
       // New panels(0, 1)
-      expect(renderingIndexes).to.be.deep.equals([2, 3, 4, 12, 13, 0, 1]);
+      expect(renderingIndexes).to.be.deep.equals([2, 3, 4, 14, 15, 0, 1]);
     });
   });
 
