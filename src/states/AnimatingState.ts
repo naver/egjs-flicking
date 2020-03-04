@@ -72,6 +72,7 @@ class AnimatingState extends State {
     }
 
     transitTo(STATE_TYPE.IDLE);
+    viewport.updateCameraPosition();
     triggerEvent(EVENTS.MOVE_END, e, isTrusted, {
       direction: this.direction,
     });

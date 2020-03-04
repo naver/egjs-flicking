@@ -5,7 +5,8 @@ setTimeout(function() {
     f2 = createFlicking("#flick2", {
         circular: true,
         duration: 300,
-        autoResize: true
+        autoResize: true,
+        renderOnlyVisible: true
     });
 
     f2a = createFlicking("#flick2-1", {
@@ -23,7 +24,8 @@ setTimeout(function() {
 
     f2c = createFlicking("#flick2-3", {
         circular: true,
-        autoResize: true
+        autoResize: true,
+        renderOnlyVisible: true
     });
 
     f2d = createFlicking("#flick2-4", {
