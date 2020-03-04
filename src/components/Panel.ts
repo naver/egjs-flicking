@@ -434,7 +434,7 @@ class Panel implements FlickingPanel {
   public removeElement(): void {
     if (!this.viewport.options.renderExternal) {
       const element = this.element;
-      element.parentNode!.removeChild(element);
+      element.parentNode && element.parentNode.removeChild(element);
     }
 
     // Do the same thing for clones
@@ -447,7 +447,7 @@ class Panel implements FlickingPanel {
     const options = this.viewport.options;
     const removingPanels = this.clonedPanels.splice(start);
 
-    if (!options.renderExternal && !options.renderOnlyVisible) {
+    if (!options.renderExternal) {
       removingPanels.forEach(panel => {
         panel.removeElement();
       });

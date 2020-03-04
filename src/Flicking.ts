@@ -782,7 +782,8 @@ class Flicking extends Component {
       beforePanel.unCacheBbox();
     });
     if (this.isPanelChangedAtBeforeSync) {
-      viewport.resetVisibleIndex();
+      // Reset visible panels
+      viewport.setVisiblePanels([]);
       this.isPanelChangedAtBeforeSync = false;
     }
     viewport.resize();
