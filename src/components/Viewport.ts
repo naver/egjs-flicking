@@ -1783,6 +1783,7 @@ export default class Viewport {
   private updateVisiblePanels() {
     const state = this.state;
     const options = this.options;
+    const panelManager = this.panelManager;
     const currentState = this.stateMachine.getState();
     const cameraElement = this.cameraElement;
     const { renderExternal, renderOnlyVisible } = options;
@@ -1810,7 +1811,7 @@ export default class Viewport {
 
     if (currentState.holding) {
       newVisiblePanels.push(...removedPanels);
-    } else if (newVisiblePanels.length > 0) {
+    } else {
       const firstVisiblePanelPos = newVisiblePanels[0].getPosition();
       state.positionOffset = firstVisiblePanelPos;
     }
@@ -1835,82 +1836,19 @@ export default class Viewport {
       cameraElement.appendChild(fragment);
     }
 
-    const newVisibleIndex = this.calcNewVisiblePanelIndex();
+    const firstVisiblePanel = newVisiblePanels[0];
+    const lastVisiblePanel = newVisiblePanels[newVisiblePanels.length - 1];
+    const getAbsIndex = (panel: Panel) => panel.getIndex() + (panel.getCloneIndex() + 1) * panelManager.getPanelCount();
+
+    const newVisibleRange = {
+      min: getAbsIndex(firstVisiblePanel),
+      max: getAbsIndex(lastVisiblePanel),
+    };
     this.visiblePanels = newVisiblePanels;
     this.flicking.trigger(EVENTS.VISIBLE_CHANGE, {
       type: EVENTS.VISIBLE_CHANGE,
-      range: {
-        min: newVisibleIndex.min,
-        max: newVisibleIndex.max,
-      },
+      range: newVisibleRange,
     });
-  }
-
-  private calcNewVisiblePanelIndex() {
-    const cameraPos = this.getCameraPosition();
-    const viewportSize = this.getSize();
-    const basePanel = this.nearestPanel!;
-    const panelManager = this.panelManager;
-    const allPanelCount = panelManager.getRange().max + 1;
-    const cloneCount = panelManager.getCloneCount();
-
-    const checkLastPanel = (
-      panel: Panel,
-      getNextPanel: (panel: Panel) => Panel | null,
-      isOutOfViewport: (panel: Panel) => boolean,
-    ): Panel => {
-      let lastPanel = panel;
-      while (true) {
-        const nextPanel = getNextPanel(lastPanel);
-        if (!nextPanel || isOutOfViewport(nextPanel)) {
-          break;
-        }
-        lastPanel = nextPanel;
-      }
-      return lastPanel;
-    };
-
-    const lastPanelOfNextDir = checkLastPanel(basePanel, panel => {
-      const nextPanel = panel.nextSibling;
-
-      if (nextPanel && nextPanel.getPosition() >= panel.getPosition()) {
-        return nextPanel;
-      } else {
-        return null;
-      }
-    }, panel => panel.getPosition() >= cameraPos + viewportSize);
-
-    const lastPanelOfPrevDir = checkLastPanel(basePanel, panel => {
-      const prevPanel = panel.prevSibling;
-
-      if (prevPanel && prevPanel.getPosition() <= panel.getPosition()) {
-        return prevPanel;
-      } else {
-        return null;
-      }
-    }, panel => panel.getPosition() + panel.getSize() <= cameraPos);
-
-    const minPanelCloneIndex = lastPanelOfPrevDir.getCloneIndex();
-    const maxPanelCloneOffset = allPanelCount * (lastPanelOfNextDir.getCloneIndex() + 1);
-    const minPanelCloneOffset = minPanelCloneIndex > -1
-      ? allPanelCount * (cloneCount - minPanelCloneIndex)
-      : 0;
-
-    const newVisibleIndex = {
-      // Relative index including clone, can be negative number
-      min: basePanel.getCloneIndex() > -1
-        ? lastPanelOfPrevDir.getIndex() + minPanelCloneOffset
-        : lastPanelOfPrevDir.getIndex() - minPanelCloneOffset,
-      // Relative index including clone
-      max: lastPanelOfNextDir.getIndex() + maxPanelCloneOffset,
-    };
-
-    // Stopped on first cloned first panel
-    // if (lastPanelOfPrevDir.getIndex() === 0 && lastPanelOfPrevDir.getCloneIndex() === 0) {
-    //   newVisibleIndex.min = allPanelCount;
-    // }
-
-    return newVisibleIndex;
   }
 
   private checkVisiblePanelChange(prevVisiblePanels: Panel[], newVisiblePanels: Panel[]) {
