@@ -25,7 +25,11 @@
 		"demo:setup": "cpx 'node_modules/@egjs/common-demo/**/*' 'demo/' && rm demo/package.json",
 		"release": "release-helper upstream",
 		"changelog": "node ./config/changelog.js",
-		"coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "packages": "npm run packages:update && npm run packages:build && npm run packages:publish",
+		"packages:update": "pvu --update=react-flicking,ngx-flicking/projects/ngx-flicking,vue-flicking",
+		"packages:build": "pvu --build=react-flicking,ngx-flicking,vue-flicking",
+		"packages:publish": "pvu --publish=react-flicking,ngx-flicking/dist/ngx-flicking,vue-flicking"
 	},
 	"repository": {
 		"type": "git",
@@ -69,6 +73,7 @@
 		"mocha": "^5.2.0",
 		"print-coveralls": "^1.2.2",
 		"print-sizes": "0.0.3",
+		"pvu": "^0.4.1",
 		"sinon": "^7.2.3",
 		"sync-exec": "^0.6.2",
 		"ts-mock-imports": "^1.2.2",
