@@ -1,20 +1,18 @@
 import NativeFlicking, { FlickingOptions, Plugin, FlickingEvent, NeedPanelEvent, withFlickingMethods, DEFAULT_OPTIONS, VisibleChangeEvent } from "@egjs/flicking";
 import * as React from "react";
-import { findDOMNode } from "react-dom";
-import ChildrenDiffer from "@egjs/react-children-differ";
 import { CloneComponent } from "./Clone";
 import { FLICKING_PROPS } from "./consts";
 import { FlickingProps, FlickingType } from "./types";
-import ListDiffer from "@egjs/list-differ";
-import { ChildrenDiffResult } from "@egjs/children-differ";
+import ListDiffer, { ListFormat } from "@egjs/list-differ";
+import ChildrenDiffer, { ChildrenDiffResult } from "@egjs/children-differ";
 
 class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = FLICKING_PROPS;
   public state: {
     cloneCount: number,
   } = {
-    cloneCount: 0,
-  };
+      cloneCount: 0,
+    };
   // Flicking
   @withFlickingMethods
   private flicking?: NativeFlicking | null;
@@ -24,7 +22,10 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   };
   // differ
   private pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
+  private childrenDiffer: ChildrenDiffer<HTMLElement>;
   private jsxDiffer: ListDiffer<string>;
+  private containerElement: HTMLElement;
+  private cameraElement: HTMLElement;
 
   // life cycle
   constructor(props: Partial<FlickingProps & FlickingOptions>) {
@@ -53,27 +54,31 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       }
     }
     return (
-      <Tag {...attributes}>
+      <Tag {...attributes} ref={e => {
+        e && (this.containerElement = e);
+      }}>
         <Viewport className={`${classPrefix}-viewport`}>
-          <Camera className={`${classPrefix}-camera`}>
-            <ChildrenDiffer onUpdate={this.onUpdate}>
-              {this.renderPanels()}
-            </ChildrenDiffer>
+          <Camera className={`${classPrefix}-camera`} ref={e => {
+            e && (this.cameraElement = e);
+          }}>
+            {this.renderPanels()}
           </Camera>
         </Viewport>
       </Tag>
     );
   }
 
-  public onUpdate = (result: ChildrenDiffResult<HTMLElement>) => {
-    this.flicking!.sync(result as ChildrenDiffResult<HTMLElement>);
+  public componentDidUpdate() {
+    const result = this.childrenDiffer!.update(this.getElements());
+    this.flicking!.sync(result);
     this.checkPlugins();
     this.checkCloneCount();
   }
 
   public componentDidMount() {
+    this.childrenDiffer = new ChildrenDiffer<HTMLElement>(this.getElements());
     this.flicking = new NativeFlicking(
-      findDOMNode(this) as HTMLElement,
+      this.containerElement,
       {
         ...this.options,
         framework: "react",
@@ -173,6 +178,10 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     return typeof this.props.lastIndex === "number"
       ? children.slice(0, this.props.lastIndex + 1)
       : children;
+  }
+
+  private getElements(): ListFormat<HTMLElement> {
+    return this.cameraElement.children as any;
   }
 }
 interface Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>, FlickingType<Flicking> { }
