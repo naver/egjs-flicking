@@ -4,7 +4,7 @@ import { CloneComponent } from "./Clone";
 import { FLICKING_PROPS } from "./consts";
 import { FlickingProps, FlickingType } from "./types";
 import ListDiffer, { ListFormat } from "@egjs/list-differ";
-import ChildrenDiffer, { ChildrenDiffResult } from "@egjs/children-differ";
+import ChildrenDiffer from "@egjs/children-differ";
 
 class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = FLICKING_PROPS;

@@ -9,7 +9,8 @@
   "types": "declaration/index.d.ts",
   "dependencies": {
     "@egjs/children-differ": "^1.0.1",
-    "@egjs/flicking": "^3.4.7"
+    "@egjs/flicking": "^3.4.7",
+    "@egjs/list-differ": "^1.0.0"
   },
   "devDependencies": {
     "@egjs/build-helper": "0.0.5",
