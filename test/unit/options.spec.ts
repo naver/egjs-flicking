@@ -126,17 +126,18 @@ describe("Initialization", () => {
       expect(firstPanel.getElement().style.left !== "").to.be.true;
     });
 
-    it("should init with collectStatistics(true)", () => {
-      // Given
-      const mockGa = ImportMock.mockFunction(ga, "sendEvent");
+    // pause GA
+    // it("should init with collectStatistics(true)", () => {
+    //   // Given
+    //   const mockGa = ImportMock.mockFunction(ga, "sendEvent");
 
-      // When
-      flickingInfo = createFlicking(horizontal.full, { collectStatistics: true });
-      mockGa.restore();
+    //   // When
+    //   flickingInfo = createFlicking(horizontal.full, { collectStatistics: true });
+    //   mockGa.restore();
 
-      // Then
-      expect(mockGa.callCount).to.be.equals(1);
-    });
+    //   // Then
+    //   expect(mockGa.callCount).to.be.equals(1);
+    // });
   });
 
   describe("circular", () => {

@@ -1210,6 +1210,7 @@ export default class Viewport {
     this.panInput = new PanInput(this.viewportElement, {
       inputType: options.inputType,
       thresholdAngle: options.thresholdAngle,
+      iOSEdgeSwipeThreshold: options.iOSEdgeSwipeThreshold,
       scale: options.horizontal ? [-1, 0] : [0, -1],
     });
 

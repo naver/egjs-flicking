@@ -24,7 +24,7 @@ import {
   BeforeSyncResult,
   SyncResult,
 } from "./types";
-import { sendEvent } from "./ga/ga";
+// import { sendEvent } from "./ga/ga";
 import { DiffResult } from "@egjs/list-differ";
 
 /**
@@ -149,13 +149,13 @@ class Flicking extends Component {
     this.listenInput();
     this.listenResize();
 
-    if (this.options.collectStatistics) {
-      sendEvent(
-        "usage",
-        "options",
-        options,
-      );
-    }
+    // if (this.options.collectStatistics) {
+    //   sendEvent(
+    //     "usage",
+    //     "options",
+    //     options,
+    //   );
+    // }
   }
 
   /**
