@@ -1,6 +1,6 @@
 {
 	"name": "@egjs/flicking",
-	"version": "3.4.7-snapshot",
+	"version": "3.5.0",
 	"description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
 	"main": "dist/flicking.js",
 	"module": "dist/flicking.esm.js",
@@ -47,11 +47,13 @@
 	},
 	"license": "MIT",
 	"devDependencies": {
-		"@daybrush/jsdoc": "^0.3.7",
+		"@daybrush/jsdoc": "^0.3.8",
 		"@egjs/build-helper": "0.0.5",
 		"@egjs/release-helper": "0.0.3",
+		"@types/chai": "^4.0.10",
 		"@types/karma-chai": "^0.1.1",
 		"@types/mocha": "^5.2.5",
+		"@types/node": "^14.0.27",
 		"@types/sinon": "^7.0.3",
 		"chai": "^4.2.0",
 		"chalk": "^2.4.2",
