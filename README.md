@@ -148,7 +148,7 @@ var flicking = new eg.Flicking("#el", { collectStatistics: false });
 |[**@egjs/vue-flicking**](https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md)|<a href="https://www.npmjs.com/package/@egjs/vue-flicking" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/vue-flicking.svg?style=flat-square&color=42b883&label=%F0%9F%94%96" alt="version" /></a>|<img width="15" src="https://naver.github.io/egjs-flicking/images/vue.svg" valign="middle" alt="Vue.js" /> [Vue.js](https://vuejs.org/v2/guide/index.html) port of @egjs/flicking|
 
 ## 🌐 Supported Browsers
-|<img width="20" src="https://simpleicons.org/icons/internetexplorer.svg" alt="IE" />|<img width="20" src="https://simpleicons.org/icons/googlechrome.svg" alt="Chrome" />|<img width="20" src="https://simpleicons.org/icons/mozillafirefox.svg" alt="Firefox" />|<img width="20" src="https://simpleicons.org/icons/safari.svg" alt="Safari" />|<img width="20" src="https://simpleicons.org/icons/apple.svg" alt="iOS" />|<img width="20" src="https://simpleicons.org/icons/android.svg" alt="Android">|
+|<img width="20" src="https://simpleicons.org/icons/internetexplorer.svg" alt="IE" />|<img width="20" src="https://simpleicons.org/icons/googlechrome.svg" alt="Chrome" />|<img width="20" src="https://simpleicons.org/icons/firefoxbrowser.svg" alt="Firefox" />|<img width="20" src="https://simpleicons.org/icons/safari.svg" alt="Safari" />|<img width="20" src="https://simpleicons.org/icons/apple.svg" alt="iOS" />|<img width="20" src="https://simpleicons.org/icons/android.svg" alt="Android">|
 |:---:|:---:|:---:|:---:|:---:|:---:|
 |10+|Latest|Latest|Latest|7+|4+|
 
