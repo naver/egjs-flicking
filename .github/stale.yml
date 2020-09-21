@@ -9,9 +9,8 @@ exemptLabels:
 staleLabel: stale
 # Comment to post when marking an issue as stale. Set to `false` to disable
 markComment: >
-  This issue has been automatically marked as stale because it has not had
-  recent activity. It will be closed if no further activity occurs. Thank you
-  for your contributions.
+  This issue/PR has been automatically marked as stale because it has not had any update (including
+  commits, comments, labels, milestones, etc) for 30 days. It will be closed automatically if no
+  further update occurs in 7 day. Thank you for your contributions!
 # Comment to post when closing a stale issue. Set to `false` to disable
-closeComment: >
-  This issue has been marked as stale and closed. Please reopen if you think there's more things to discuss. Thank you for your contributions.
+closeComment: false
