@@ -12,5 +12,8 @@ markComment: >
   This issue/PR has been automatically marked as stale because it has not had any update (including
   commits, comments, labels, milestones, etc) for 30 days. It will be closed automatically if no
   further update occurs in 7 day. Thank you for your contributions!
+  <details><summary>한글</summary>
+  이 이슈/PR은 commits, comments, labels, milestones 등 30일간 활동이 없어 자동으로 stale 상태로 전환되었습니다. 이후 7일간 활동이 없다면 자동으로 닫힐 예정입니다. 프로젝트 개선에 기여해주셔서 감사합니다.
+  </details>
 # Comment to post when closing a stale issue. Set to `false` to disable
 closeComment: false
