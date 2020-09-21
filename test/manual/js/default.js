@@ -34,4 +34,7 @@ setTimeout(function() {
         gap: 100,
         autoResize: true
     });
+    f1g = createFlicking("#flick1-7", {
+        autoResize: true
+    });
 }, 500);
