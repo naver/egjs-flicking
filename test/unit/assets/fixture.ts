@@ -136,6 +136,24 @@ export const horizontal = {
       ),
     ),
   ),
+  hasZeroWidth: wrapper(
+    viewport(
+      camera(
+        [panel, "panel-horizontal-0px"],
+        [panel, "panel-horizontal-0px"],
+        [panel, "panel-horizontal-0px"],
+      ),
+    ),
+  ),
+  hasDisplayNone: wrapper(
+    viewport(
+      camera(
+        [panel, "panel-horizontal-none"],
+        [panel, "panel-horizontal-none"],
+        [panel, "panel-horizontal-none"],
+      ),
+    ),
+  ),
 };
 
 export const vertical = {

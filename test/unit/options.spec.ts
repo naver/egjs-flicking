@@ -138,6 +138,20 @@ describe("Initialization", () => {
     //   // Then
     //   expect(mockGa.callCount).to.be.equals(1);
     // });
+
+    it("won't throw error even if all panel has width: 0", () => {
+      // Given & When
+      expect(() => {
+        flickingInfo = createFlicking(horizontal.hasZeroWidth);
+      }).not.to.throw();
+    });
+
+    it("won't throw error even if all panel has display: none", () => {
+      // Given & When
+      expect(() => {
+        flickingInfo = createFlicking(horizontal.hasDisplayNone);
+      }).not.to.throw();
+    });
   });
 
   describe("circular", () => {
