@@ -588,6 +588,7 @@ export default class Viewport {
   public updateCameraPosition(): void {
     const state = this.state;
     const currentPanel = this.getCurrentPanel();
+    const cameraPosition = this.getCameraPosition();
     const currentState = this.stateMachine.getState();
     const isFreeScroll = this.moveType.is(MOVE_TYPE.FREE_SCROLL);
     const relativeHangerPosition = this.getRelativeHangerPosition();
@@ -600,15 +601,17 @@ export default class Viewport {
 
     let newPosition: number;
     if (isFreeScroll) {
+      const positionBounded = this.canSetBoundMode() && (cameraPosition === state.scrollArea.prev || cameraPosition === state.scrollArea.next);
       const nearestPanel = this.getNearestPanel();
 
-      newPosition = nearestPanel
-        ? nearestPanel.getPosition() - halfGap + (nearestPanel.getSize() + 2 * halfGap) * state.panelMaintainRatio - relativeHangerPosition
-        : this.getCameraPosition();
+      // Preserve camera position if it is bound to scroll area limit
+      newPosition = positionBounded || !nearestPanel
+        ? cameraPosition
+        : nearestPanel.getPosition() - halfGap + (nearestPanel.getSize() + 2 * halfGap) * state.panelMaintainRatio - relativeHangerPosition;
     } else {
       newPosition = currentPanel
         ? currentPanel.getAnchorPosition() - relativeHangerPosition
-        : this.getCameraPosition();
+        : cameraPosition;
     }
 
     if (this.canSetBoundMode()) {

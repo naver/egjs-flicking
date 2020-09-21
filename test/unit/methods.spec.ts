@@ -809,6 +809,114 @@ describe("Methods call", () => {
       // Then
       expect(window.scrollY).equals(1000); // Should not be scrolled to top(0)
     });
+
+    it("shouldn't be scrolled if second panel is selected and freescroll & bound option is enabled (#376)", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.panel30N(10), {
+        moveType: "freeScroll",
+        bound: true,
+      });
+
+      // When
+      const flicking = flickingInfo.instance;
+      const viewport = (flicking as any).viewport;
+      const origCameraPos = viewport.getCameraPosition();
+      flicking.moveTo(1, 0);
+      const boundCameraPos = viewport.getCameraPosition();
+      flicking.resize();
+
+      // Then
+      const resizeCameraPos = viewport.getCameraPosition();
+      expect(origCameraPos).equals(boundCameraPos);
+      expect(origCameraPos).equals(resizeCameraPos);
+    });
+
+    it("shouldn't be scrolled if second to last panel is selected and freescroll & bound option is enabled (#376)", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.panel30N(10), {
+        moveType: "freeScroll",
+        bound: true,
+      });
+
+      // When
+      const flicking = flickingInfo.instance;
+      const viewport = (flicking as any).viewport;
+      flicking.moveTo(9, 0);
+      const origCameraPos = viewport.getCameraPosition();
+      flicking.moveTo(8, 0);
+      const boundCameraPos = viewport.getCameraPosition();
+      flicking.resize();
+
+      // Then
+      const resizeCameraPos = viewport.getCameraPosition();
+      expect(origCameraPos).equals(boundCameraPos);
+      expect(origCameraPos).equals(resizeCameraPos);
+    });
+
+    it("should be scrolled if panel is prepended and freescroll & bound option is enabled (#376)", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.panel30N(10), {
+        moveType: "freeScroll",
+        bound: true,
+      });
+
+      // When
+      const flicking = flickingInfo.instance;
+      const viewport = (flicking as any).viewport;
+      const origCameraPos = viewport.getCameraPosition();
+      flicking.moveTo(1, 0);
+      const boundCameraPos = viewport.getCameraPosition();
+      flicking.prepend(horizontal.fullN(1));
+
+      // Then
+      const resizeCameraPos = viewport.getCameraPosition();
+      expect(origCameraPos).equals(boundCameraPos);
+      expect(origCameraPos).not.equals(resizeCameraPos);
+      expect(boundCameraPos).not.equals(resizeCameraPos);
+    });
+
+    it("should be scrolled if second panel is selected and freescroll is enabled (#376)", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.panel30N(10), {
+        moveType: "freeScroll",
+      });
+
+      // When
+      const flicking = flickingInfo.instance;
+      const viewport = (flicking as any).viewport;
+      const origCameraPos = viewport.getCameraPosition();
+      flicking.moveTo(1, 0);
+      const movedCameraPos = viewport.getCameraPosition();
+      flicking.resize();
+
+      // Then
+      const resizeCameraPos = viewport.getCameraPosition();
+      expect(origCameraPos).not.equals(movedCameraPos);
+      expect(origCameraPos).not.equals(resizeCameraPos);
+      expect(movedCameraPos).equals(resizeCameraPos);
+    });
+
+    it("should be scrolled if second to last panel is selected and freescroll is enabled (#376)", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.panel30N(10), {
+        moveType: "freeScroll",
+      });
+
+      // When
+      const flicking = flickingInfo.instance;
+      const viewport = (flicking as any).viewport;
+      flicking.moveTo(9, 0);
+      const origCameraPos = viewport.getCameraPosition();
+      flicking.moveTo(8, 0);
+      const movedCameraPos = viewport.getCameraPosition();
+      flicking.resize();
+
+      // Then
+      const resizeCameraPos = viewport.getCameraPosition();
+      expect(origCameraPos).not.equals(movedCameraPos);
+      expect(origCameraPos).not.equals(resizeCameraPos);
+      expect(movedCameraPos).equals(resizeCameraPos);
+    });
   });
 
   describe("getStatus()", () => {
