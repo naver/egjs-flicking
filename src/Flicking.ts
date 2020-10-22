@@ -23,6 +23,12 @@ import {
   DestroyOption,
   BeforeSyncResult,
   SyncResult,
+  ChangeEvent,
+  SelectEvent,
+  NeedPanelEvent,
+  VisibleChangeEvent,
+  MoveTypeStringOption,
+  ValueOf,
 } from "./types";
 // import { sendEvent } from "./ga/ga";
 import { DiffResult } from "@egjs/list-differ";
@@ -35,7 +41,18 @@ import { DiffResult } from "@egjs/list-differ";
  * @requires {@link https://github.com/naver/egjs-axes|eg.Axes}
  * @see Easing Functions Cheat Sheet {@link http://easings.net/} <ko>이징 함수 Cheat Sheet {@link http://easings.net/}</ko>
  */
-class Flicking extends Component {
+class Flicking extends Component<{
+  holdStart: FlickingEvent;
+  holdEnd: FlickingEvent;
+  moveStart: FlickingEvent;
+  move: FlickingEvent;
+  moveEnd: FlickingEvent;
+  change: ChangeEvent;
+  restore: FlickingEvent;
+  select: SelectEvent;
+  needPanel: NeedPanelEvent;
+  visibleChange: VisibleChangeEvent;
+}> {
   /**
    * Version info string
    * @ko 버전정보 문자열
@@ -138,7 +155,7 @@ class Flicking extends Component {
     this.options = merge({}, DEFAULT_OPTIONS, options) as FlickingOptions;
     // Override moveType option
     const currentOptions = this.options;
-    const moveType = currentOptions.moveType;
+    const moveType = currentOptions.moveType as MoveTypeStringOption;
 
     if (moveType in DEFAULT_MOVE_TYPE_OPTIONS) {
       currentOptions.moveType = DEFAULT_MOVE_TYPE_OPTIONS[moveType as keyof typeof DEFAULT_MOVE_TYPE_OPTIONS];
@@ -824,7 +841,7 @@ class Flicking extends Component {
   }
 
   private triggerEvent = <T extends FlickingEvent>(
-    eventName: string,
+    eventName: ValueOf<Omit<EventType, "VISIBLE_CHANGE">>, // visibleChange event has no common event definition from other events
     axesEvent: any,
     isTrusted: boolean,
     params: Partial<T> = {},
@@ -852,7 +869,7 @@ class Flicking extends Component {
         progress,
         axesEvent,
         isTrusted,
-      }, params));
+      }, params) as FlickingEvent);
     }
 
     return {

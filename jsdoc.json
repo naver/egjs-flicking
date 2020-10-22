@@ -4,7 +4,7 @@
     "dictionaries": ["jsdoc","closure"]
   },
   "source": {
-      "include": ["src", "README.md", "node_modules/@egjs/component/src/component.js"],
+      "include": ["src", "README.md", "node_modules/@egjs/component/src/component.ts"],
       "includePattern": ".+\\.(j|t)s(doc|x)?$",
       "excludePattern": "(^|\\/|\\\\)_"
   },
@@ -17,7 +17,7 @@
   },
   "plugins": [
     "plugins/markdown",
-    "node_modules/egjs-jsdoc-template/jsdoc-plugin/ko", 
+    "node_modules/egjs-jsdoc-template/jsdoc-plugin/ko",
     "node_modules/egjs-jsdoc-template/jsdoc-plugin/group",
     "node_modules/egjs-jsdoc-template/jsdoc-plugin/support"
   ],
