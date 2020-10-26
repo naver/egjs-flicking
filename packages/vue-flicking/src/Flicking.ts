@@ -119,7 +119,7 @@ class Flicking extends Vue {
       .map(key => NativeFlicking.EVENTS[key]);
 
     events.forEach(eventName => {
-      this.$_nativeFlicking.on(eventName, e => {
+      this.$_nativeFlicking.on(eventName, (e: any) => {
         e.currentTarget = this;
         // Make events from camelCase to kebab-case
         this.$emit(eventName.replace(/([A-Z])/g, "-$1").toLowerCase(), e);
