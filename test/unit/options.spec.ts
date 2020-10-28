@@ -798,6 +798,97 @@ describe("Initialization", () => {
       // Then
       expect(prevCameraTransform).equals(nextCameraTransform);
     });
+
+    it("should position panels at correct position on init(Issue #382)", () => {
+      viewport.set(400, 100);
+      // Given
+      flickingInfo = createFlicking(horizontal.fixedTo100N(2), {
+        renderOnlyVisible: true,
+      });
+
+      // When
+      // => Init
+
+      // Then
+      const flicking = flickingInfo.instance;
+      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") as NodeListOf<HTMLElement>;
+
+      expect(flicking.getPanelCount()).equals(2);
+      expect(panels.length).equals(2);
+      panels.forEach((panel, i) => {
+        expect(panel.style.left).equals(`${100 * i}px`);
+      });
+    });
+
+    it("should position panels at correct position on init #2 (Issue #382)", () => {
+      viewport.set(400, 100);
+      // Given
+      flickingInfo = createFlicking(horizontal.fixedTo100N(4), {
+        renderOnlyVisible: true,
+        hanger: "0%",
+        anchor: "0%",
+        gap: 10,
+      });
+
+      // When
+      // => Init
+
+      // Then
+      const flicking = flickingInfo.instance;
+      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") as NodeListOf<HTMLElement>;
+
+      expect(flicking.getPanelCount()).equals(4);
+      expect(panels.length).equals(4);
+      panels.forEach((panel, i) => {
+        expect(panel.style.left).equals(`${110 * i}px`);
+      });
+    });
+
+    it("should position panels at correct position on init #3 (Issue #382)", () => {
+      viewport.set(400, 100);
+      // Given
+      flickingInfo = createFlicking(horizontal.fixedTo100N(4), {
+        renderOnlyVisible: true,
+        bound: true,
+      });
+
+      // When
+      // => Init
+
+      // Then
+      const flicking = flickingInfo.instance;
+      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") as NodeListOf<HTMLElement>;
+
+      expect(flicking.getPanelCount()).equals(4);
+      expect(panels.length).equals(4);
+      panels.forEach((panel, i) => {
+        expect(panel.style.left).equals(`${100 * i}px`);
+      });
+    });
+
+    it("should position panels at correct position on init #4 (Issue #382)", () => {
+      viewport.set(400, 100);
+      // Given
+      flickingInfo = createFlicking(horizontal.fixedTo100N(4), {
+        renderOnlyVisible: true,
+        moveType: "freeScroll",
+        bound: true,
+        gap: 20,
+      });
+
+      // When
+      // => Init
+
+      // Then
+      const flicking = flickingInfo.instance;
+      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") as NodeListOf<HTMLElement>;
+
+      expect(flicking.getPanelCount()).equals(4);
+      expect(panels.length).equals(4);
+      panels.forEach((panel, i) => {
+        expect(panel.style.left).equals(`${120 * i}px`);
+      });
+    });
   });
 
   describe("plugin interface", () => {

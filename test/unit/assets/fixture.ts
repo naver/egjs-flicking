@@ -77,6 +77,9 @@ export const horizontal = {
   oneTenth: wrapper(
     [panel, "panel-horizontal-10"],
   ),
+  fixedTo100N: (count: number) =>  wrapper(
+    ...counter(count).map(() => [panel, "panel-horizontal-100px"]),
+  ),
   fixedTo100: wrapper(
     [panel, "panel-horizontal-100px"],
     [panel, "panel-horizontal-100px"],
