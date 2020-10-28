@@ -1086,6 +1086,10 @@ export default class Viewport {
     this.setDefaultPanel();
     this.resize();
     this.moveToDefaultPanel();
+    if (this.options.renderOnlyVisible) {
+      const panels = this.panelManager.allPanels();
+      panels.forEach(panel => panel.setPositionCSS());
+    }
   }
 
   private setElements(): void {
