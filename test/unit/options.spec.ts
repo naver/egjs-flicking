@@ -889,6 +889,32 @@ describe("Initialization", () => {
         expect(panel.style.left).equals(`${120 * i}px`);
       });
     });
+
+    it("should position panels at correct position after resize", () => {
+      viewport.set(1000, 100);
+      // Given
+      flickingInfo = createFlicking(horizontal.fixedTo100N(4), {
+        renderOnlyVisible: true,
+        hanger: "0%",
+        anchor: "0%",
+      });
+
+      // When
+      const flicking = flickingInfo.instance;
+      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") as NodeListOf<HTMLElement>;
+      panels.forEach(panel => {
+        panel.style.width = "200px";
+      });
+      flicking.resize();
+
+      // Then
+      expect(flicking.getPanelCount()).equals(4);
+      expect(panels.length).equals(4);
+
+      panels.forEach((panel, i) => {
+        expect(panel.style.left).equals(`${200 * i}px`);
+      });
+    });
   });
 
   describe("plugin interface", () => {
