@@ -1480,7 +1480,7 @@ export default class Viewport {
   private updateVisiblePanelPositions(): void {
     if (this.options.renderOnlyVisible) {
       this.visiblePanels.forEach(panel => {
-        panel.setPositionCSS();
+        panel.setPositionCSS(this.state.positionOffset);
       });
     }
   }
