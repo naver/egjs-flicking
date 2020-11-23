@@ -119,7 +119,7 @@ export interface DestinationInfo {
 export type MoveTypeOption = MoveTypeStringOption | MoveTypeObjectOption;
 
 /**
- * With "snap" move type, momentum is applied while choosing destination panel at release time.<br>You can set how many panels can go after relase.
+ * With "snap" move type, momentum is applied while choosing destination panel at release time.<br>You can set how many panels can go after release.
  * @ko 입력을 중단한 시점의 가속도에 영향받아 도달할 패널을 계산하는 이동 방식.<br>입력 중단 이후 최대 몇 개까지의 패널을 통과하여 이동할지 설정할 수 있다.
  * @typedef
  * @memberof eg.Flicking
