@@ -631,6 +631,7 @@ class Flicking extends Component<{
    */
   public getRenderingIndexes(diffResult: DiffResult<any>): number[] {
     const viewport = this.viewport;
+    const isCircular = this.options.circular;
     const visiblePanels = viewport.getVisiblePanels();
     const maintained = diffResult.maintained.reduce((values: {[key: number]: number}, [before, after]) => {
       values[before] = after;
@@ -651,7 +652,9 @@ class Flicking extends Component<{
         const cloneIndex = Math.floor(val / prevPanelCount);
         const changedIndex = maintained[val % prevPanelCount];
 
-        return changedIndex + panelCount * cloneIndex;
+        return isCircular
+          ? changedIndex + panelCount * cloneIndex
+          : changedIndex;
       });
 
     const renderingPanels = [...visibleIndexes, ...added];
