@@ -1496,6 +1496,29 @@ describe("Methods call", () => {
       // New panels(0, 1)
       expect(renderingIndexes).to.be.deep.equals([2, 3, 4, 14, 15, 0, 1]);
     });
+
+    it("should return correct rendering indexes when prepending panels (#389)", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.halfN(5), {
+        renderOnlyVisible: true,
+        circular: false,
+      });
+      const flicking = flickingInfo.instance;
+
+      // When
+      const prevItems = [0, 1, 2, 3, 4];
+      const newItems = [-10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4];
+      const result = diff(prevItems, newItems);
+
+      flicking.beforeSync(result);
+      const renderingIndexes = flicking.getRenderingIndexes(result);
+
+      // Then
+      // It should return
+      // Original(10, 11), which has been pushed by 10
+      // New panels(0~9)
+      expect(renderingIndexes).to.be.deep.equals([10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    });
   });
 
   describe("beforeSync() with renderOnlyVisible", () => {
