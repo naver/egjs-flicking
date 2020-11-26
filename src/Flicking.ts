@@ -624,6 +624,7 @@ class Flicking extends Component<{
 
   /**
    * Get indexes to render. Should be used with `renderOnlyVisible` option.
+   * `beforeSync` should be called before this method for a correct result
    * @private
    * @ko 렌더링이 필요한 인덱스들을 반환한다. `renderOnlyVisible` 옵션과 함께 사용해야 한다.
    * @param - Info object of how panel infos are changed.<ko>패널 정보들의 변경 정보를 담는 오브젝트.</ko>
@@ -631,7 +632,6 @@ class Flicking extends Component<{
    */
   public getRenderingIndexes(diffResult: DiffResult<any>): number[] {
     const viewport = this.viewport;
-    const isCircular = this.options.circular;
     const visiblePanels = viewport.getVisiblePanels();
     const maintained = diffResult.maintained.reduce((values: {[key: number]: number}, [before, after]) => {
       values[before] = after;
@@ -642,20 +642,11 @@ class Flicking extends Component<{
     const panelCount = diffResult.list.length;
     const added = diffResult.added;
     const getPanelAbsIndex = (panel: Panel) => {
-      return panel.getIndex() + (panel.getCloneIndex() + 1) * prevPanelCount;
+      return panel.getIndex() + (panel.getCloneIndex() + 1) * panelCount;
     };
 
-    let visibleIndexes = visiblePanels.map(panel => getPanelAbsIndex(panel));
-    visibleIndexes = visibleIndexes
-      .filter(val => maintained[val % prevPanelCount] != null)
-      .map(val => {
-        const cloneIndex = Math.floor(val / prevPanelCount);
-        const changedIndex = maintained[val % prevPanelCount];
-
-        return isCircular
-          ? changedIndex + panelCount * cloneIndex
-          : changedIndex;
-      });
+    const visibleIndexes = visiblePanels.map(panel => getPanelAbsIndex(panel))
+      .filter(val => maintained[val % prevPanelCount] != null);
 
     const renderingPanels = [...visibleIndexes, ...added];
     const allPanels = viewport.panelManager.allPanels();
