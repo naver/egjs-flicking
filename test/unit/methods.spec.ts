@@ -1387,12 +1387,15 @@ describe("Methods call", () => {
         renderOnlyVisible: true,
         circular: false,
       });
+      const flicking = flickingInfo.instance;
 
       // When
       const prevItems = [0, 1, 2, 3, 4, 5];
       const newItems = [0, 1, 2, 3, 4, 5];
       const result = diff(prevItems, newItems);
-      const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
+
+      flicking.beforeSync(result);
+      const renderingIndexes = flicking.getRenderingIndexes(result);
 
       // Then
       expect(renderingIndexes).to.be.deep.equals([0, 1, 2]);
@@ -1404,12 +1407,15 @@ describe("Methods call", () => {
         renderOnlyVisible: true,
         circular: true,
       });
+      const flicking = flickingInfo.instance;
 
       // When
       const prevItems = [0, 1, 2, 3, 4, 5];
       const newItems = [0, 1, 2, 3, 4, 5];
       const result = diff(prevItems, newItems);
-      const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
+
+      flicking.beforeSync(result);
+      const renderingIndexes = flicking.getRenderingIndexes(result);
 
       // Then
       // It is rendered [10, 11, 0, 1, 2]
@@ -1423,12 +1429,15 @@ describe("Methods call", () => {
         renderOnlyVisible: true,
         circular: false,
       });
+      const flicking = flickingInfo.instance;
 
       // When
       const prevItems = [0, 1, 2, 3, 4, 5];
       const newItems = [0, 1, 2, 3, 4, 5, 6, 7];
       const result = diff(prevItems, newItems);
-      const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
+
+      flicking.beforeSync(result);
+      const renderingIndexes = flicking.getRenderingIndexes(result);
 
       // Then
       // Render previously rendered(0, 1, 2) + new ones(6, 7)
@@ -1441,12 +1450,15 @@ describe("Methods call", () => {
         renderOnlyVisible: true,
         circular: true,
       });
+      const flicking = flickingInfo.instance;
 
       // When
       const prevItems = [0, 1, 2, 3, 4, 5];
       const newItems = [0, 1, 2, 3, 4, 5, 6, 7];
       const result = diff(prevItems, newItems);
-      const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
+
+      flicking.beforeSync(result);
+      const renderingIndexes = flicking.getRenderingIndexes(result);
 
       // Then
       // It should return in order of
@@ -1462,12 +1474,15 @@ describe("Methods call", () => {
         renderOnlyVisible: true,
         circular: false,
       });
+      const flicking = flickingInfo.instance;
 
       // When
       const prevItems = [0, 1, 2, 3, 4, 5];
       const newItems = [-2, -1, 0, 1, 2, 3, 4, 5];
       const result = diff(prevItems, newItems);
-      const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
+
+      flicking.beforeSync(result);
+      const renderingIndexes = flicking.getRenderingIndexes(result);
 
       // Then
       // It should return
@@ -1482,12 +1497,15 @@ describe("Methods call", () => {
         renderOnlyVisible: true,
         circular: true,
       });
+      const flicking = flickingInfo.instance;
 
       // When
       const prevItems = [0, 1, 2, 3, 4, 5];
       const newItems = [-2, -1, 0, 1, 2, 3, 4, 5];
       const result = diff(prevItems, newItems);
-      const renderingIndexes = flickingInfo.instance.getRenderingIndexes(result);
+
+      flicking.beforeSync(result);
+      const renderingIndexes = flicking.getRenderingIndexes(result);
 
       // Then
       // It should return
