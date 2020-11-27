@@ -624,9 +624,9 @@ class Flicking extends Component<{
 
   /**
    * Get indexes to render. Should be used with `renderOnlyVisible` option.
-   * `beforeSync` should be called before this method for a correct result
+   * `beforeSync` should be called before this method for a correct result.
    * @private
-   * @ko 렌더링이 필요한 인덱스들을 반환한다. `renderOnlyVisible` 옵션과 함께 사용해야 한다.
+   * @ko 렌더링이 필요한 인덱스들을 반환한다. `renderOnlyVisible` 옵션과 함께 사용해야 한다. 정확한 결과를 위해선 `beforeSync`를 이전에 호출해야만 합니다.
    * @param - Info object of how panel infos are changed.<ko>패널 정보들의 변경 정보를 담는 오브젝트.</ko>
    * @return Array of indexes to render.<ko>렌더링할 인덱스의 배열</ko>
    */
@@ -634,11 +634,10 @@ class Flicking extends Component<{
     const viewport = this.viewport;
     const visiblePanels = viewport.getVisiblePanels();
     const maintained = diffResult.maintained.reduce((values: {[key: number]: number}, [before, after]) => {
-      values[before] = after;
+      values[after] = before;
       return values;
     }, {});
 
-    const prevPanelCount = diffResult.prevList.length;
     const panelCount = diffResult.list.length;
     const added = diffResult.added;
     const getPanelAbsIndex = (panel: Panel) => {
@@ -646,7 +645,7 @@ class Flicking extends Component<{
     };
 
     const visibleIndexes = visiblePanels.map(panel => getPanelAbsIndex(panel))
-      .filter(val => maintained[val % prevPanelCount] != null);
+      .filter(val => maintained[val % panelCount] != null);
 
     const renderingPanels = [...visibleIndexes, ...added];
     const allPanels = viewport.panelManager.allPanels();
