@@ -260,7 +260,7 @@ export interface Direction {
  */
 
 /**
- * Event that indicates index will be changed, and isn't restoring. Index will be changed at `moveEnd` event.<br>It can be triggered when user finished input, or flicking start to mvoe by method.<br>It won't be triggered when moving to same panel, unless it's circulated more than one cycle in circular mode.<br>Calling `stop()` in event will prevent index changing & panel moving.<br><br>`event` doesn't have `axesEvent` property when triggered by [moveTo()]{@link eg.Flicking#moveTo}, [prev()]{@link eg.Flicking#prev}, [next()]{@link eg.Flicking#next} method.
+ * Event that indicates index will be changed, and isn't restoring. Index will be changed at `moveEnd` event.<br>It can be triggered when user finished input, or flicking start to move by method.<br>It won't be triggered when moving to same panel, unless it's circulated more than one cycle in circular mode.<br>Calling `stop()` in event will prevent index changing & panel moving.<br><br>`event` doesn't have `axesEvent` property when triggered by [moveTo()]{@link eg.Flicking#moveTo}, [prev()]{@link eg.Flicking#prev}, [next()]{@link eg.Flicking#next} method.
  * @ko `restore`되지 않고, 인덱스가 변경될 것임을 나타내는 이벤트. 실제 인덱스는 `moveEnd` 이벤트에서 변경된다.<br>사용자가 입력을 마쳤을 때, 혹은 메소드를 통해 이동을 시작했을 때 발생한다.<br>동일 패널로 이동시에는 발생되지 않지만, circular 모드에서 한 바퀴 이상 순환하여 동일 패널로 도착했을 때에도 발생된다.<br>이벤트의 `stop()`을 호출시 패널로의 이동을 막는다.<br><br>[moveTo()]{@link eg.Flicking#moveTo}, [prev()]{@link eg.Flicking#prev}, [next()]{@link eg.Flicking#next}와 같은 메소드에 의해 호출되었을 경우 `event`내의 `axesEvent` 프로퍼티 값은 undefined이다.
  * @event eg.Flicking#change
  * @type eg.Flicking.ChangeEvent
@@ -274,14 +274,14 @@ export interface Direction {
  */
 
 /**
- * Event triggered when user statically selected(clicked) panel.
+ * Event triggered when user statically selected (clicked) panel.
  * @ko 사용자가 패널을 정적으로 선택(클릭)했을 때 발생하는 이벤트.
  * @event eg.Flicking#select
  * @type eg.Flicking.SelectEvent
  */
 
  /**
-  * Event triggered when Flicking confronts panels don't have successive indexes, so it need more content to draw panel in infinite mode.
+  * Event triggered when Flicking confronts panels don't have successive indexes, so it needs more content to draw panel in infinite mode.
   * @ko 무한 모드에서, Flicking이 인덱스가 연속하지 않은 패널들을 만나 새로운 패널이 필요함을 알리고자 할 때 발생시키는 이벤트.
   * @event eg.Flicking#needPanel
   * @type eg.Flicking.NeedPanelEvent
