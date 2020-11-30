@@ -87,7 +87,8 @@
 	},
 	"dependencies": {
 		"@egjs/axes": "^2.7.0",
-		"@egjs/component": "^2.2.1",
+		"@egjs/component": "^2.2.2",
+		"@egjs/imready": "^1.0.0",
 		"@egjs/list-differ": "^1.0.0"
 	},
 	"husky": {

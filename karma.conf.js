@@ -16,6 +16,7 @@ module.exports = function(config) {
       "./src/**/*.ts",
       "./test/**/*.ts",
       "./test/unit/assets/*.css",
+      {pattern: "./test/unit/images/**/*.*", watched: false, included: false, served: true},
     ],
     preprocessors: {
       "src/**/*.ts": ["karma-typescript"],
@@ -47,6 +48,9 @@ module.exports = function(config) {
       },
     },
     reporters: ["mocha"],
+    proxies: {
+      "/images/": "/base/test/unit/images/"
+    },
   };
 
   karmaConfig.browsers.push(config.chrome ? "Chrome" : "CustomChromeHeadless");
