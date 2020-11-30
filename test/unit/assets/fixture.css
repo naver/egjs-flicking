@@ -1,4 +1,4 @@
-.wrapper{
+.wrapper {
     background-color: grey;
     width: 100%;
     height: 39px;
@@ -10,7 +10,16 @@ p {
     text-align:center;
 }
 
+.wrapper.inline {
+    background-color: cadetblue;
+    display: inline-block;
+    height: initial;
+    overflow: hidden;
+}
+
 .eg-flick-panel { height: 130px }
+
+.panel-inline { height: initial; display: inline-block; }
 
 .panel-horizontal-120 { width: 120% }
 .panel-horizontal-full { width: 100% }

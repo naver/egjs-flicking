@@ -13,8 +13,18 @@ const colors = [
 ];
 const defaultClassPrefix = DEFAULT_OPTIONS.classPrefix;
 
+// Wrapper with width: 100% & height: 39px guaranteed
 export const wrapper = (...panels: any[]) => `
   <div class="wrapper">
+    ${typeof panels[0] === "object"
+      ? panels.map(([panelFunc, args], index) => panelFunc(index, args)).join("\n")
+      : panels[0]
+    }
+  </div>`;
+
+// Wrapper with dynamic size
+export const inlineWrapper = (...panels: any[]) => `
+  <div class="wrapper inline">
     ${typeof panels[0] === "object"
       ? panels.map(([panelFunc, args], index) => panelFunc(index, args)).join("\n")
       : panels[0]
@@ -31,12 +41,17 @@ export const viewport = (...panels: any[]) => `
 
 export const camera = (...panels: any[]) => `
   <div class="${defaultClassPrefix}-camera">
-    ${panels.map(([panelFunc, args], index) => panelFunc(index, args)).join("\n")}
+    ${panels.map(([panelFunc, ...args], index) => panelFunc(index, ...args)).join("\n")}
   </div>`;
 
 export const panel = (index: number, className: string) => `
   <div class="${className}" style="background-color:${colors[index % colors.length]}">
     <p>Layer ${index}</p>
+  </div>`;
+
+export const image = (index: number, className: string, src: string, lazy: boolean = false) => `
+  <div class="${className}" style="background-color:${colors[index % colors.length]}">
+    <img src="${src}" loading="${lazy ? "lazy" : "default"}" alt="image">Layer ${index}</img>
   </div>`;
 
 export const horizontal = {
@@ -154,6 +169,24 @@ export const horizontal = {
         [panel, "panel-horizontal-none"],
         [panel, "panel-horizontal-none"],
         [panel, "panel-horizontal-none"],
+      ),
+    ),
+  ),
+  hasEmptyImagesInside: inlineWrapper(
+    viewport(
+      camera(
+        [image, "panel-inline", "./images/non-exist.png"],
+        [image, "panel-inline", "./images/non-exist.png"],
+        [image, "panel-inline", "./images/non-exist.png"],
+      ),
+    ),
+  ),
+  hasEmptyLazyImagesInside: inlineWrapper(
+    viewport(
+      camera(
+        [image, "panel-inline", "./images/non-exist.png", true],
+        [image, "panel-inline", "./images/non-exist.png", true],
+        [image, "panel-inline", "./images/non-exist.png", true],
       ),
     ),
   ),

@@ -1,4 +1,3 @@
-import { ImportMock } from "ts-mock-imports";
 import Flicking from "../../src/Flicking";
 import { DEFAULT_OPTIONS } from "../../src/consts";
 import { FlickingEvent, FlickingPanel, Plugin } from "../../src/types";
@@ -7,7 +6,6 @@ import { createFlicking, cleanup, simulate, createFixture, tick } from "./assets
 import { EVENTS } from "../../src/consts";
 import * as sinon from "sinon";
 import { withFlickingMethods } from "../../src/utils";
-import * as ga from "../../src/ga/ga";
 
 declare var viewport: any;
 
@@ -1456,6 +1454,88 @@ describe("Initialization", () => {
       expect(heightInit).equals(firstPanelSize);
       expect(heightAtPanel1).equals(secondPanelSize);
       expect(heightAtPanel0).equals(firstPanelSize);
+    });
+  });
+
+  describe("resizeOnImagesReady", () => {
+    beforeEach(() => {
+      cleanup();
+    })
+
+    it("should call resize after all images are loaded", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.hasEmptyImagesInside, {
+        resizeOnImagesReady: true,
+      });
+
+      // When
+      const flicking = flickingInfo.instance;
+      const wrapper = flickingInfo.element;
+      const resizeSpy = sinon.spy();
+
+      flicking.resize = resizeSpy;
+
+      const imageLoaded = img => {
+        return new Promise(res => img.addEventListener("load", res));
+      };
+
+      // Then
+      expect(resizeSpy.called).to.be.false;
+      await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
+        img.src = "./images/30x30.png";
+        return imageLoaded(img);
+      }));
+      expect(resizeSpy.calledOnce).to.be.true;
+    });
+
+    it("should update panel sizes", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.hasEmptyImagesInside, {
+        resizeOnImagesReady: true,
+      });
+
+      // When
+      const flicking = flickingInfo.instance;
+      const wrapper = flickingInfo.element;
+
+      const imageLoaded = img => {
+        return new Promise(res => img.addEventListener("load", res));
+      };
+
+      const prevPanelSizes = flicking.getAllPanels().map(panel => panel.getSize());
+      await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
+        img.src = "./images/100x100.png";
+        return imageLoaded(img);
+      }));
+
+      // Then
+      const panelSizes = flicking.getAllPanels().map(panel => panel.getSize());
+      expect(panelSizes.every((size, index) => size !== prevPanelSizes[index])).to.be.true;
+    });
+
+    it.only("should handle lazyload-enabled images", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.hasEmptyLazyImagesInside, {
+        resizeOnImagesReady: true,
+      });
+
+      // When
+      const flicking = flickingInfo.instance;
+      const wrapper = flickingInfo.element;
+
+      const imageLoaded = img => {
+        return new Promise(res => img.addEventListener("load", res));
+      };
+
+      const prevPanelSizes = flicking.getAllPanels().map(panel => panel.getSize());
+      await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
+        img.src = "./images/200x200.png";
+        return imageLoaded(img);
+      }));
+
+      // Then
+      const panelSizes = flicking.getAllPanels().map(panel => panel.getSize());
+      expect(panelSizes.every((size, index) => size !== prevPanelSizes[index])).to.be.true;
     });
   });
 });
