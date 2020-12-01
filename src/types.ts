@@ -84,7 +84,7 @@ export interface FlickingOptions {
   renderOnlyVisible: boolean;
   renderExternal: boolean;
   iOSEdgeSwipeThreshold: number;
-  resizeOnImagesReady: boolean;
+  resizeOnContentsReady: boolean;
   collectStatistics: boolean;
 }
 

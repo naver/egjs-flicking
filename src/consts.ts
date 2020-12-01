@@ -62,7 +62,7 @@ export const DEFAULT_OPTIONS: Readonly<FlickingOptions> = {
   isConstantSize: false,
   renderOnlyVisible: false,
   renderExternal: false,
-  resizeOnImagesReady: false,
+  resizeOnContentsReady: false,
   iOSEdgeSwipeThreshold: 30,
   collectStatistics: true,
 };
