@@ -1465,7 +1465,7 @@ describe("Initialization", () => {
     it("should call resize after all images are loaded", async () => {
       // Given
       flickingInfo = createFlicking(horizontal.hasEmptyImagesInside, {
-        resizeOnImagesReady: true,
+        resizeOnContentsReady: true,
       });
 
       // When
@@ -1491,7 +1491,7 @@ describe("Initialization", () => {
     it("should update panel sizes", async () => {
       // Given
       flickingInfo = createFlicking(horizontal.hasEmptyImagesInside, {
-        resizeOnImagesReady: true,
+        resizeOnContentsReady: true,
       });
 
       // When
@@ -1513,10 +1513,10 @@ describe("Initialization", () => {
       expect(panelSizes.every((size, index) => size !== prevPanelSizes[index])).to.be.true;
     });
 
-    it.only("should handle lazyload-enabled images", async () => {
+    it("should handle lazyload-enabled images", async () => {
       // Given
       flickingInfo = createFlicking(horizontal.hasEmptyLazyImagesInside, {
-        resizeOnImagesReady: true,
+        resizeOnContentsReady: true,
       });
 
       // When
