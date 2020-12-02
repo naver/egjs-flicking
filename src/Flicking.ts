@@ -28,6 +28,7 @@ import {
   SelectEvent,
   NeedPanelEvent,
   VisibleChangeEvent,
+  ContentErrorEvent,
   MoveTypeStringOption,
   ValueOf,
 } from "./types";
@@ -53,6 +54,7 @@ class Flicking extends Component<{
   select: SelectEvent;
   needPanel: NeedPanelEvent;
   visibleChange: VisibleChangeEvent;
+  contentError: ContentErrorEvent;
 }> {
   /**
    * Version info string
@@ -132,7 +134,7 @@ class Flicking extends Component<{
    * @param {boolean|string[]} [options.isEqualSize=false] This option indicates whether all panels have the same size(true) of first panel, or it can hold a list of class names that determines panel size.<br/>Enabling this option can increase performance while recalculating panel size.<ko>모든 패널의 크기가 동일한지(true), 혹은 패널 크기를 결정하는 패널 클래스들의 리스트.<br/>이 옵션을 설정하면 패널 크기 재설정시에 성능을 높일 수 있다.</ko>
    * @param {boolean} [options.isConstantSize=false] Whether all panels have a constant size that won't be changed after resize. Enabling this option can increase performance while recalculating panel size.<ko>모든 패널의 크기가 불변인지의 여부. 이 옵션을 'true'로 설정하면 패널 크기 재설정시에 성능을 높일 수 있다.</ko>
    * @param {boolean} [options.renderExternal=false] Whether to use external rendering. It will delegate DOM manipulation and can synchronize the rendered state by calling `sync()` method. You can use this option to use in frameworks like React, Vue, Angular, which has its states and rendering methods.<ko>외부 렌더링을 사용할 지의 여부. 이 옵션을 사용시 렌더링을 외부에 위임할 수 있고, `sync()`를 호출하여 그 상태를 동기화할 수 있다. 이 옵션을 사용하여, React, Vue, Angular 등 자체적인 상태와 렌더링 방법을 갖는 프레임워크에 대응할 수 있다.</ko>
-   * @param {boolean} [options.resizeOnContentsReady=false] Whether to resize the Flicking after the image/video elements inside viewport are ready.<br/>Use this property to prevent wrong Flicking layout caused by dynamic image sizes.<ko>Flicking 내부의 이미지 / 비디오 엘리먼트들이 전부 로드되었을 때 Flicking의 크기를 재계산하기 위한 옵션.<br/>이미지 크기가 고정 크기가 아닐 경우 사용하여 레이아웃이 잘못되는 것을 방지할 수 있다.</ko>
+   * @param {boolean} [options.resizeOnContentsReady=false] Whether to resize the Flicking after the image/video elements inside viewport are ready.<br/>Use this property to prevent wrong Flicking layout caused by dynamic image / video sizes.<ko>Flicking 내부의 이미지 / 비디오 엘리먼트들이 전부 로드되었을 때 Flicking의 크기를 재계산하기 위한 옵션.<br/>이미지 / 비디오 크기가 고정 크기가 아닐 경우 사용하여 레이아웃이 잘못되는 것을 방지할 수 있다.</ko>
    * @param {boolean} [options.collectStatistics=true] Whether to collect statistics on how you are using `Flicking`. These statistical data do not contain any personal information and are used only as a basis for the development of a user-friendly product.<ko>어떻게 `Flicking`을 사용하고 있는지에 대한 통계 수집 여부를 나타낸다. 이 통계자료는 개인정보를 포함하고 있지 않으며 오직 사용자 친화적인 제품으로 발전시키기 위한 근거자료로서 활용한다.</ko>
    */
   constructor(
@@ -854,14 +856,18 @@ class Flicking extends Component<{
       const contentsReadyChecker = new ImReady();
 
       contentsReadyChecker.on("preReady", () => {
-        console.log("preReady");
         this.resize();
       });
       contentsReadyChecker.on("readyElement", e => {
-        console.log("readyEl", e.hasLoading, e.isPreReadyOver);
         if (e.hasLoading && e.isPreReadyOver) {
           this.resize();
         }
+      });
+      contentsReadyChecker.on("error", e => {
+        this.trigger(EVENTS.CONTENT_ERROR, {
+          type: EVENTS.CONTENT_ERROR,
+          element: e.element,
+        });
       });
       contentsReadyChecker.check([this.wrapper]);
 

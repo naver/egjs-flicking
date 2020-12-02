@@ -295,6 +295,13 @@ export interface Direction {
  * @type eg.Flicking.VisibleChangeEvent
  */
 
+ /**
+  * Event triggered each time the image/video element inside Flicking fails to load. This event is only triggered with `resizeOnContentsReady` option.
+  * @ko Flicking 내부의 이미지/비디오 엘리먼트의 로드가 실패했을때마다 발생했을 때마다 트리거되는 이벤트. `resizeOnContentsReady` 옵션이 활성화된 경우에만 트리거된다.
+  * @event eg.Flicking#contentError
+  * @type eg.Flicking.ContentErrorEvent
+  */
+
 export interface EventType {
   readonly HOLD_START: "holdStart";
   readonly HOLD_END: "holdEnd";
@@ -306,6 +313,7 @@ export interface EventType {
   readonly SELECT: "select";
   readonly NEED_PANEL: "needPanel";
   readonly VISIBLE_CHANGE: "visibleChange";
+  readonly CONTENT_ERROR: "contentError";
 }
 
 /**
@@ -441,7 +449,7 @@ export type NeedPanelEvent = {
 };
 
 /**
- * Event triggered when Flicking's visible panel changes. This event only triggered with `renderOnlyVisible` option.
+ * Event triggered when Flicking's visible panel changes. This event is only triggered with `renderOnlyVisible` option.
  * @ko 보이는 패널 정보에 변화가 있을 경우에 발생되는 이벤트. `renderOnlyVisible` 옵션이 활성화된 경우에만 트리거된다.
  * @typedef
  * @type object
@@ -457,6 +465,20 @@ export type VisibleChangeEvent = {
     min: number;
     max: number;
   };
+};
+
+/**
+ * Event triggered each time the image/video element inside Flicking fails to load. This event is only triggered with `resizeOnContentsReady` option.
+ * @ko Flicking 내부의 이미지/비디오 엘리먼트의 로드가 실패했을때마다 발생했을 때마다 트리거되는 이벤트. `resizeOnContentsReady` 옵션이 활성화된 경우에만 트리거된다.
+ * @typedef
+ * @type object
+ * @memberof eg.Flicking
+ * @property {string} type Name of the event.<ko>이벤트명</ko>
+ * @property {HTMLElement} element The image/video element that error is occured.<ko>에러가 발생한 이미지/비디오 엘리먼트</ko>
+ */
+export type ContentErrorEvent = {
+  type: string;
+  element: HTMLElement;
 };
 
 export interface StateType {
