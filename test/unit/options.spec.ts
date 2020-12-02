@@ -1457,10 +1457,31 @@ describe("Initialization", () => {
     });
   });
 
-  describe("resizeOnImagesReady", () => {
-    beforeEach(() => {
-      cleanup();
-    })
+  describe.only("resizeOnImagesReady", () => {
+    it("should call resize even if all images are failed", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.hasEmptyImagesInside, {
+        resizeOnContentsReady: true,
+      });
+
+      // When
+      const flicking = flickingInfo.instance;
+      const wrapper = flickingInfo.element;
+      const resizeSpy = sinon.spy();
+
+      flicking.resize = resizeSpy;
+
+      const imageLoaded = img => {
+        return new Promise(res => img.addEventListener("error", res));
+      };
+
+      await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
+        return imageLoaded(img);
+      }));
+
+      // Then
+      expect(resizeSpy.called).to.be.true;
+    });
 
     it("should call resize after all images are loaded", async () => {
       // Given
