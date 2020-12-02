@@ -854,9 +854,11 @@ class Flicking extends Component<{
       const contentsReadyChecker = new ImReady();
 
       contentsReadyChecker.on("preReady", () => {
+        console.log("preReady");
         this.resize();
       });
       contentsReadyChecker.on("readyElement", e => {
+        console.log("readyEl", e.hasLoading, e.isPreReadyOver);
         if (e.hasLoading && e.isPreReadyOver) {
           this.resize();
         }
