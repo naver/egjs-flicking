@@ -94,6 +94,7 @@ export const EVENTS: EventType = {
   SELECT: "select",
   NEED_PANEL: "needPanel",
   VISIBLE_CHANGE: "visibleChange",
+  CONTENT_ERROR: "contentError",
 };
 
 export const AXES_EVENTS: AxesEventType = {
