@@ -1587,11 +1587,34 @@ describe("Initialization", () => {
       expect(resizeSpy.calledThrice).to.be.true;
     });
 
+    it("should trigger contentError event if images are failed", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.hasEmptyImagesInside, {
+        resizeOnContentsReady: true,
+      });
+
+      // When
+      const flicking = flickingInfo.instance;
+      const wrapper = flickingInfo.element;
+      const contentErrorEvents = [];
+
+      flicking.on(EVENTS.CONTENT_ERROR, e => contentErrorEvents.push(e));
+
+      await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
+        return imageError(img);
+      }));
+
+      // Then
+      expect(contentErrorEvents.length).to.equal(3);
+    });
+
     describe("Resize after adding panels", () => {
       let flicking;
       let resizeSpy;
+      let contentErrorEvents;
       let newPanelElements;
       let waitImagesToLoad;
+      let waitImagesToFail;
 
       beforeEach(() => {
         // Given
@@ -1604,6 +1627,9 @@ describe("Initialization", () => {
         resizeSpy = sinon.spy();
         flicking.resize = resizeSpy;
 
+        contentErrorEvents = [];
+        flicking.on(EVENTS.CONTENT_ERROR, e => contentErrorEvents.push(e));
+
         newPanelElements = counter(3).map(() => {
           const panelEl = document.createElement("div");
           const imgEl = document.createElement("img");
@@ -1615,6 +1641,13 @@ describe("Initialization", () => {
           await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
             img.src = "./images/200x200.png";
             return imageLoaded(img);
+          }));
+        };
+
+        waitImagesToFail = async () => {
+          await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
+            img.src = "./images/THIS_IMAGE_DOES_NOT_EXIST.png";
+            return imageError(img);
           }));
         };
       });
@@ -1647,6 +1680,16 @@ describe("Initialization", () => {
         // Then
         await waitImagesToLoad();
         expect(resizeSpy.calledOnce).to.be.true;
+      });
+
+      it("should trigger contentError event if appended panel failed to load a image", async () => {
+        // When
+        expect(resizeSpy.calledOnce).to.be.false;
+        flicking.replace(0, newPanelElements);
+
+        // Then
+        await waitImagesToFail();
+        expect(contentErrorEvents.length).to.equal(3);
       });
     });
   });
