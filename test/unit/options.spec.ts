@@ -5,7 +5,7 @@ import { horizontal, vertical } from "./assets/fixture";
 import { createFlicking, cleanup, simulate, createFixture, tick } from "./assets/utils";
 import { EVENTS } from "../../src/consts";
 import * as sinon from "sinon";
-import { withFlickingMethods } from "../../src/utils";
+import { counter, withFlickingMethods } from "../../src/utils";
 
 declare var viewport: any;
 
@@ -1458,6 +1458,14 @@ describe("Initialization", () => {
   });
 
   describe.only("resizeOnImagesReady", () => {
+    const imageError = img => {
+      return new Promise(res => img.addEventListener("error", res));
+    };
+
+    const imageLoaded = img => {
+      return new Promise(res => img.addEventListener("load", res));
+    };
+
     it("should call resize even if all images are failed", async () => {
       // Given
       flickingInfo = createFlicking(horizontal.hasEmptyImagesInside, {
@@ -1471,12 +1479,8 @@ describe("Initialization", () => {
 
       flicking.resize = resizeSpy;
 
-      const imageLoaded = img => {
-        return new Promise(res => img.addEventListener("error", res));
-      };
-
       await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
-        return imageLoaded(img);
+        return imageError(img);
       }));
 
       // Then
@@ -1496,10 +1500,6 @@ describe("Initialization", () => {
 
       flicking.resize = resizeSpy;
 
-      const imageLoaded = img => {
-        return new Promise(res => img.addEventListener("load", res));
-      };
-
       // Then
       expect(resizeSpy.called).to.be.false;
       await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
@@ -1518,10 +1518,6 @@ describe("Initialization", () => {
       // When
       const flicking = flickingInfo.instance;
       const wrapper = flickingInfo.element;
-
-      const imageLoaded = img => {
-        return new Promise(res => img.addEventListener("load", res));
-      };
 
       const prevPanelSizes = flicking.getAllPanels().map(panel => panel.getSize());
       await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
@@ -1544,10 +1540,6 @@ describe("Initialization", () => {
       const flicking = flickingInfo.instance;
       const wrapper = flickingInfo.element;
 
-      const imageLoaded = img => {
-        return new Promise(res => img.addEventListener("load", res));
-      };
-
       const prevPanelSizes = flicking.getAllPanels().map(panel => panel.getSize());
       await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
         img.src = "./images/200x200.png";
@@ -1557,6 +1549,105 @@ describe("Initialization", () => {
       // Then
       const panelSizes = flicking.getAllPanels().map(panel => panel.getSize());
       expect(panelSizes.every((size, index) => size !== prevPanelSizes[index])).to.be.true;
+    });
+
+    it("should call resize after lazyload image is loaded", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.none, {
+        resizeOnContentsReady: true,
+      });
+
+      const resizeSpy = sinon.spy();
+      const flicking = flickingInfo.instance;
+      const wrapper = flickingInfo.element;
+
+      const newPanelElements = counter(3).map(() => {
+        const panelEl = document.createElement("div");
+        const imgEl = document.createElement("img");
+
+        imgEl.setAttribute("loading", "lazy");
+        Object.defineProperty(imgEl, "loading", { value: "lazy" });
+        Object.defineProperty(imgEl, "complete", { value: false });
+
+        panelEl.appendChild(imgEl);
+        return panelEl;
+      });
+
+      flicking.resize = resizeSpy;
+
+      // When
+      flicking.append(newPanelElements);
+
+      await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
+        img.src = "./images/200x200.png";
+        return imageLoaded(img);
+      }));
+
+      // Then
+      expect(resizeSpy.calledThrice).to.be.true;
+    });
+
+    describe("Resize after adding panels", () => {
+      let flicking;
+      let resizeSpy;
+      let newPanelElements;
+      let waitImagesToLoad;
+
+      beforeEach(() => {
+        // Given
+        flickingInfo = createFlicking(horizontal.none, {
+          resizeOnContentsReady: true,
+        });
+        const wrapper = flickingInfo.element;
+
+        flicking = flickingInfo.instance;
+        resizeSpy = sinon.spy();
+        flicking.resize = resizeSpy;
+
+        newPanelElements = counter(3).map(() => {
+          const panelEl = document.createElement("div");
+          const imgEl = document.createElement("img");
+          panelEl.appendChild(imgEl);
+          return panelEl;
+        });
+
+        waitImagesToLoad = async () => {
+          await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
+            img.src = "./images/200x200.png";
+            return imageLoaded(img);
+          }));
+        };
+      });
+
+      it("should call resize after appending panels", async () => {
+        // When
+        expect(resizeSpy.calledOnce).to.be.false;
+        flicking.append(newPanelElements);
+
+        // Then
+        await waitImagesToLoad();
+        expect(resizeSpy.calledOnce).to.be.true;
+      });
+
+      it("should call resize after prepending panels", async () => {
+        // When
+        expect(resizeSpy.calledOnce).to.be.false;
+        flicking.prepend(newPanelElements);
+
+        // Then
+        await waitImagesToLoad();
+        expect(resizeSpy.calledOnce).to.be.true;
+      });
+
+      it("should call resize after replacing panels", async () => {
+        // When
+        expect(resizeSpy.calledOnce).to.be.false;
+        flicking.replace(0, newPanelElements);
+
+        // Then
+        await waitImagesToLoad();
+        expect(resizeSpy.calledOnce).to.be.true;
+      });
     });
   });
 });
