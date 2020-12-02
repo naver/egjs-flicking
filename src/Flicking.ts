@@ -96,6 +96,8 @@ class Flicking extends Component<{
 
   private wrapper: HTMLElement;
   private viewport: Viewport;
+  private contentsReadyChecker: ImReady;
+
   private eventContext: FlickingContext;
   private isPanelChangedAtBeforeSync: boolean = false;
 
@@ -497,6 +499,7 @@ class Flicking extends Component<{
     }
 
     this.viewport.destroy(option);
+    this.contentsReadyChecker.off();
 
     // release resources
     for (const x in this) {
@@ -561,7 +564,11 @@ class Flicking extends Component<{
     const parsedElements = parseElement(element);
 
     const insertingIndex = Math.max(viewport.panelManager.getRange().min - parsedElements.length, 0);
-    return viewport.insert(insertingIndex, parsedElements);
+    const prependedPanels = viewport.insert(insertingIndex, parsedElements);
+
+    this.contentsReadyChecker.check(prependedPanels.map(panel => panel.getElement()));
+
+    return prependedPanels;
   }
 
   /**
@@ -580,8 +587,11 @@ class Flicking extends Component<{
    */
   public append(element: ElementLike | ElementLike[]): FlickingPanel[] {
     const viewport = this.viewport;
+    const appendedPanels = viewport.insert(viewport.panelManager.getRange().max + 1, element);
 
-    return viewport.insert(viewport.panelManager.getRange().max + 1, element);
+    this.contentsReadyChecker.check(appendedPanels.map(panel => panel.getElement()));
+
+    return appendedPanels;
   }
 
   /**
@@ -610,7 +620,11 @@ class Flicking extends Component<{
    * flicking.replace(3, ["\<div\>Panel\</div\>", "\<div\>Panel\</div\>", "\<div\>Panel\</div\>"])
    */
   public replace(index: number, element: ElementLike | ElementLike[]): FlickingPanel[] {
-    return this.viewport.replace(index, element);
+    const replacedPanels = this.viewport.replace(index, element);
+
+    this.contentsReadyChecker.check(replacedPanels.map(panel => panel.getElement()));
+
+    return replacedPanels;
   }
 
   /**
@@ -837,17 +851,19 @@ class Flicking extends Component<{
     }
 
     if (options.resizeOnContentsReady) {
-      const imageReadyChecker = new ImReady();
+      const contentsReadyChecker = new ImReady();
 
-      imageReadyChecker.on("preReady", () => {
+      contentsReadyChecker.on("preReady", () => {
         this.resize();
       });
-      imageReadyChecker.on("readyElement", e => {
+      contentsReadyChecker.on("readyElement", e => {
         if (e.hasLoading && e.isPreReadyOver) {
           this.resize();
         }
       });
-      imageReadyChecker.check([this.wrapper]);
+      contentsReadyChecker.check([this.wrapper]);
+
+      this.contentsReadyChecker = contentsReadyChecker;
     }
   }
 
