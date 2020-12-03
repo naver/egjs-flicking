@@ -501,7 +501,7 @@ class Flicking extends Component<{
     }
 
     this.viewport.destroy(option);
-    this.contentsReadyChecker?.off();
+    this.contentsReadyChecker?.destroy();
 
     // release resources
     for (const x in this) {
