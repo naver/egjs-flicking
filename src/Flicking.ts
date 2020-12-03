@@ -568,7 +568,7 @@ class Flicking extends Component<{
     const insertingIndex = Math.max(viewport.panelManager.getRange().min - parsedElements.length, 0);
     const prependedPanels = viewport.insert(insertingIndex, parsedElements);
 
-    this.contentsReadyChecker?.check(prependedPanels.map(panel => panel.getElement()));
+    this.checkContentsReady(prependedPanels);
 
     return prependedPanels;
   }
@@ -591,7 +591,7 @@ class Flicking extends Component<{
     const viewport = this.viewport;
     const appendedPanels = viewport.insert(viewport.panelManager.getRange().max + 1, element);
 
-    this.contentsReadyChecker?.check(appendedPanels.map(panel => panel.getElement()));
+    this.checkContentsReady(appendedPanels);
 
     return appendedPanels;
   }
@@ -624,7 +624,7 @@ class Flicking extends Component<{
   public replace(index: number, element: ElementLike | ElementLike[]): FlickingPanel[] {
     const replacedPanels = this.viewport.replace(index, element);
 
-    this.contentsReadyChecker?.check(replacedPanels.map(panel => panel.getElement()));
+    this.checkContentsReady(replacedPanels);
 
     return replacedPanels;
   }
@@ -963,6 +963,10 @@ class Flicking extends Component<{
         // Undo camera movement
         viewport.moveCamera(previousPosition, axesEvent);
       });
+  }
+
+  private checkContentsReady(panels: FlickingPanel[]) {
+    this.contentsReadyChecker?.check(panels.map(panel => panel.getElement()));
   }
 }
 
