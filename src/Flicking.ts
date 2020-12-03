@@ -98,7 +98,7 @@ class Flicking extends Component<{
 
   private wrapper: HTMLElement;
   private viewport: Viewport;
-  private contentsReadyChecker: ImReady;
+  private contentsReadyChecker: ImReady | null = null;
 
   private eventContext: FlickingContext;
   private isPanelChangedAtBeforeSync: boolean = false;
@@ -501,7 +501,7 @@ class Flicking extends Component<{
     }
 
     this.viewport.destroy(option);
-    this.contentsReadyChecker.off();
+    this.contentsReadyChecker?.off();
 
     // release resources
     for (const x in this) {
@@ -568,7 +568,7 @@ class Flicking extends Component<{
     const insertingIndex = Math.max(viewport.panelManager.getRange().min - parsedElements.length, 0);
     const prependedPanels = viewport.insert(insertingIndex, parsedElements);
 
-    this.contentsReadyChecker.check(prependedPanels.map(panel => panel.getElement()));
+    this.contentsReadyChecker?.check(prependedPanels.map(panel => panel.getElement()));
 
     return prependedPanels;
   }
@@ -591,7 +591,7 @@ class Flicking extends Component<{
     const viewport = this.viewport;
     const appendedPanels = viewport.insert(viewport.panelManager.getRange().max + 1, element);
 
-    this.contentsReadyChecker.check(appendedPanels.map(panel => panel.getElement()));
+    this.contentsReadyChecker?.check(appendedPanels.map(panel => panel.getElement()));
 
     return appendedPanels;
   }
@@ -624,7 +624,7 @@ class Flicking extends Component<{
   public replace(index: number, element: ElementLike | ElementLike[]): FlickingPanel[] {
     const replacedPanels = this.viewport.replace(index, element);
 
-    this.contentsReadyChecker.check(replacedPanels.map(panel => panel.getElement()));
+    this.contentsReadyChecker?.check(replacedPanels.map(panel => panel.getElement()));
 
     return replacedPanels;
   }
