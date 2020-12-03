@@ -1457,7 +1457,15 @@ describe("Initialization", () => {
     });
   });
 
-  describe.only("resizeOnImagesReady", () => {
+  describe("resizeOnImagesReady", () => {
+    before(() => {
+      (window as any).timer.restore();
+    });
+
+    after(() => {
+      (window as any).timer = sinon.useFakeTimers();
+    });
+
     const imageError = img => {
       return new Promise(res => img.addEventListener("error", res));
     };
@@ -1551,7 +1559,7 @@ describe("Initialization", () => {
       expect(panelSizes.every((size, index) => size !== prevPanelSizes[index])).to.be.true;
     });
 
-    it("should call resize after lazyload image is loaded", async () => {
+    it("should call resize each time after appended lazyload image is loaded", async () => {
       // Given
       flickingInfo = createFlicking(horizontal.none, {
         resizeOnContentsReady: true,
@@ -1579,12 +1587,13 @@ describe("Initialization", () => {
       flicking.append(newPanelElements);
 
       await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
-        img.src = "./images/200x200.png";
+        // Images are loaded
+        img.src = "./images/150x150.png";
         return imageLoaded(img);
       }));
 
       // Then
-      expect(resizeSpy.calledThrice).to.be.true;
+      expect(resizeSpy.callCount).to.equal(4); // preReady + readyElement(3)
     });
 
     it("should trigger contentError event if images are failed", async () => {
