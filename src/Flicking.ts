@@ -307,6 +307,15 @@ class Flicking extends Component<{
   }
 
   /**
+   * Return the viewport element's size.
+   * @ko 뷰포트 엘리먼트의 크기를 반환한다.
+   * @return Width if horizontal: true, height if horizontal: false
+   */
+  public getSize(): number {
+    return this.viewport.getSize();
+  }
+
+  /**
    * Return current panel. `null` if no panel exists.
    * @ko 현재 패널을 반환한다. 패널이 하나도 없을 경우 `null`을 반환한다.
    * @return Current panel.<ko>현재 패널.</ko>
