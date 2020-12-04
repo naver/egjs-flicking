@@ -2,7 +2,7 @@ import { spy } from "sinon";
 
 import Flicking from "../../src/Flicking";
 import { FlickingEvent, FlickingPanel, NeedPanelEvent } from "../../src/types";
-import { horizontal, panel as createPanelElement } from "./assets/fixture";
+import { horizontal, panel as createPanelElement, vertical } from "./assets/fixture";
 import { createFlicking, cleanup, simulate, createHorizontalElement, tick, createFixture } from "./assets/utils";
 import { EVENTS, DIRECTION } from "../../src/consts";
 import { counter, toArray } from "../../src/utils";
@@ -1838,6 +1838,36 @@ describe("Methods call", () => {
           expect(panel.getElement().classList.contains(panelClassName)).to.be.true;
         });
       });
+    });
+  });
+
+  describe("getSize()", () => {
+    it("should return width if horizontal:true", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.full, { horizontal: true });
+      const flicking = flickingInfo.instance;
+      const wrapper = flicking.getElement();
+      const viewportEl = wrapper.querySelector(".eg-flick-viewport");
+
+      // When
+      const size = flicking.getSize();
+
+      // Then
+      expect(size).equals(viewportEl.getBoundingClientRect().width);
+    });
+
+    it("should return height if horizontal:false", () => {
+      // Given
+      flickingInfo = createFlicking(vertical.full, { horizontal: false });
+      const flicking = flickingInfo.instance;
+      const wrapper = flicking.getElement();
+      const viewportEl = wrapper.querySelector(".eg-flick-viewport");
+
+      // When
+      const size = flicking.getSize();
+
+      // Then
+      expect(size).equals(viewportEl.getBoundingClientRect().height);
     });
   });
 });
