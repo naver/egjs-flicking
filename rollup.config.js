@@ -4,7 +4,7 @@
 // flicking.pkgd.min.js
 // flicking.esm.js
 
-const buildHelper = require("@egjs/build-helper");
+const buildHelper = require("./config/build-helper");
 
 const external = {
 	"@egjs/axes": "eg.Axes",

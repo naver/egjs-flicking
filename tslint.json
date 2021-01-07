@@ -21,6 +21,7 @@
     "ordered-imports": false,
     "object-literal-sort-keys": false,
     "no-unused-expression": false,
+    "no-unused-variable": true,
     "lines-between-class-members": true,
     "interface-over-type-literal": false,
     "one-line": [true, "check-catch", "check-finally", "check-else", "check-open-brace"],

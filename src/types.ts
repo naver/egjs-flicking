@@ -3,13 +3,14 @@
  * egjs projects are licensed under the MIT license
  */
 
+import Component from "@egjs/component";
+import { DiffResult } from "@egjs/list-differ";
+
 import Flicking from "./Flicking";
 import Viewport from "./core/Viewport";
 import StateMachine from "./core/StateMachine";
 import Panel from "./core/Panel";
-import Component from "@egjs/component";
 import State from "./states/State";
-import { DiffResult } from "@egjs/list-differ";
 
 export type ValueOf<T> = T[keyof T];
 /**

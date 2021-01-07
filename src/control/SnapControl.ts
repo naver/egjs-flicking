@@ -5,14 +5,16 @@
 
 import Control from "./Control";
 import { MOVE_TYPE, EVENTS } from "../consts";
-import { MoveTypeContext, DestinationInfo } from "../types";
+import { MoveTypeContext, DestinationInfo, MoveTypeSnapOption } from "../types";
 import { clamp } from "../utils";
 
 class SnapControl extends Control {
   protected readonly _type: string = MOVE_TYPE.SNAP;
   protected _count: number;
 
-  constructor(count: number) {
+  constructor({
+    count = 1,
+  }: Partial<Omit<MoveTypeSnapOption, "type">> = {}) {
     super();
     this._count = count;
   }

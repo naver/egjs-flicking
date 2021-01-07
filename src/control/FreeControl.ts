@@ -13,7 +13,7 @@ class FreeControl extends SnapControl {
 
   constructor() {
     // Set snap count to Infinity
-    super(Infinity);
+    super({ count: Infinity });
   }
 
   public findTargetPanel(ctx: MoveTypeContext): DestinationInfo {

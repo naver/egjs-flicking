@@ -5,12 +5,16 @@
 
 import Component from "@egjs/component";
 import ImReady from "@egjs/imready";
+import { DiffResult } from "@egjs/list-differ";
 
 import Viewport from "./core/Viewport";
 import Panel from "./core/Panel";
+import { Control, FreeControl, SnapControl } from "./control";
+import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
+import { ExternalRenderer, RawRenderer, Renderer, VisibleRenderer } from "./renderer";
 
-import { merge, getProgress, parseElement, isString, counter, findIndex } from "./utils";
-import { DEFAULT_OPTIONS, EVENTS, DIRECTION, AXES_EVENTS, STATE_TYPE, DEFAULT_MOVE_TYPE_OPTIONS } from "./consts";
+import { merge, getProgress, parseElement, counter, findIndex, getElement, isString, hasClass, toArray } from "./utils";
+import { DEFAULT_OPTIONS, EVENTS, DIRECTION, AXES_EVENTS, STATE_TYPE, DEFAULT_MOVE_TYPE_OPTIONS, MOVE_TYPE } from "./consts";
 import {
   FlickingOptions,
   FlickingEvent,
@@ -32,8 +36,9 @@ import {
   ContentErrorEvent,
   MoveTypeStringOption,
   ValueOf,
+  MoveTypeObjectOption,
+  MoveTypeSnapOption,
 } from "./types";
-import { DiffResult } from "@egjs/list-differ";
 
 /**
  * @memberof eg
@@ -96,10 +101,15 @@ class Flicking extends Component<{
 
   public options: FlickingOptions;
 
-  private _wrapper: HTMLElement;
+  // Core components
   private _viewport: Viewport;
+  private _camera: Camera;
+  private _control: Control;
+  private _renderer: Renderer;
   private _contentsReadyChecker: ImReady | null = null;
 
+  // Internal States
+  private _wrapper: HTMLElement;
   private _eventContext: FlickingContext;
   private _isPanelChangedAtBeforeSync: boolean = false;
 
@@ -143,32 +153,26 @@ class Flicking extends Component<{
   ) {
     super();
 
-    // Set flicking wrapper user provided
-    let wrapper: HTMLElement | null;
-    if (isString(element)) {
-      wrapper = document.querySelector(element);
-      if (!wrapper) {
-        throw new Error("Base element doesn't exist.");
-      }
-    } else if (element.nodeName && element.nodeType === 1) {
-      wrapper = element;
-    } else {
-      throw new Error("Element should be provided in string or HTMLElement.");
-    }
-
-    this._wrapper = wrapper;
     // Override default options
     this.options = merge({}, DEFAULT_OPTIONS, options) as FlickingOptions;
-    // Override moveType option
-    const currentOptions = this.options;
-    const moveType = currentOptions.moveType as MoveTypeStringOption;
 
-    if (moveType in DEFAULT_MOVE_TYPE_OPTIONS) {
-      currentOptions.moveType = DEFAULT_MOVE_TYPE_OPTIONS[moveType as keyof typeof DEFAULT_MOVE_TYPE_OPTIONS];
-    }
+    // Set flicking wrapper user provided
+    const elements = this._getElements(element);
+    this._wrapper = elements.wrapper;
 
     // Make viewport instance with panel container element
-    this._viewport = new Viewport(this, this.options, this._triggerEvent);
+    this._viewport = new Viewport({
+      el: elements.viewport,
+      cameraEl: elements.camera,
+      flicking: this,
+      options: this.options,
+      triggerEvent: this._triggerEvent,
+    });
+    this._control = this._getControl();
+    this._camera = this._getCamera(elements.camera);
+    this._renderer = this._getRenderer();
+
+    //
     this._listenInput();
     this._listenResize();
   }
@@ -818,6 +822,112 @@ class Flicking extends Component<{
     viewport.resize();
 
     return this;
+  }
+
+  private _getElements(el: string | HTMLElement): {
+    wrapper: HTMLElement;
+    viewport: HTMLElement;
+    camera: HTMLElement;
+  } {
+    const wrapper = getElement(el);
+    const classPrefix = this.options.classPrefix;
+
+    const viewportCandidate = wrapper.children[0] as HTMLElement;
+    const hasViewportElement = viewportCandidate && hasClass(viewportCandidate, `${classPrefix}-viewport`);
+
+    const viewport = hasViewportElement
+      ? viewportCandidate
+      : document.createElement("div");
+
+    const cameraCandidate = hasViewportElement
+      ? viewport.children[0] as HTMLElement
+      : wrapper.children[0] as HTMLElement;
+    const hasCameraElement = cameraCandidate && hasClass(cameraCandidate, `${classPrefix}-camera`);
+
+    const camera = hasCameraElement
+      ? cameraCandidate
+      : document.createElement("div");
+
+    if (!hasCameraElement) {
+      camera.className = `${classPrefix}-camera`;
+
+      const panelElements = hasViewportElement
+        ? viewport.children
+        : wrapper.children;
+
+      // Make all panels to be a child of camera element
+      // wrapper <- viewport <- camera <- panels[1...n]
+      toArray(panelElements).forEach(child => {
+        camera.appendChild(child);
+      });
+    }
+
+    if (!hasViewportElement) {
+      viewport.className = `${classPrefix}-viewport`;
+
+      // Add viewport element to wrapper
+      wrapper.appendChild(viewport);
+    }
+
+    if (!hasCameraElement || !hasViewportElement) {
+      viewport.appendChild(camera);
+    }
+
+    return {
+      wrapper,
+      viewport,
+      camera,
+    };
+  }
+
+  private _getControl(): Control {
+    const moveType = this.options.moveType;
+    let type: MoveTypeStringOption | undefined;
+    let moveTypeOptions: MoveTypeObjectOption | undefined;
+
+    if (isString(moveType) && moveType in DEFAULT_MOVE_TYPE_OPTIONS) {
+      type = moveType;
+      moveTypeOptions = DEFAULT_MOVE_TYPE_OPTIONS[moveType];
+    } else if (!isString(moveType) && moveType.type && moveType.type in DEFAULT_MOVE_TYPE_OPTIONS) {
+      type = moveType.type;
+      moveTypeOptions = moveType;
+    }
+
+    if (!type || !moveTypeOptions) {
+      throw new Error(`Flicking's option 'moveType' is not formatted properly, given: ${moveType}`);
+    }
+
+    switch (type) {
+      case MOVE_TYPE.SNAP:
+        return new SnapControl(moveTypeOptions as MoveTypeSnapOption);
+      case MOVE_TYPE.FREE_SCROLL:
+        return new FreeControl();
+    }
+  }
+
+  private _getCamera(cameraEl: HTMLElement): Camera {
+    const options = this.options;
+    const cameraOption = { element: cameraEl, flicking: this };
+
+    if (options.circular) {
+      return new CircularCamera(cameraOption);
+    } else if (options.bound) {
+      return new BoundCamera(cameraOption);
+    } else {
+      return new LinearCamera(cameraOption);
+    }
+  }
+
+  private _getRenderer(): Renderer {
+    const options = this.options;
+
+    if (options.renderExternal) {
+      return new ExternalRenderer();
+    } else if (options.renderOnlyVisible) {
+      return new VisibleRenderer();
+    } else {
+      return new RawRenderer();
+    }
   }
 
   private _listenInput(): void {

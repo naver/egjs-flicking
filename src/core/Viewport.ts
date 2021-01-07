@@ -61,11 +61,19 @@ export default class Viewport {
     cachedBbox: BoundingBox | null;
   };
 
-  constructor(
-    flicking: Flicking,
-    options: FlickingOptions,
-    triggerEvent: Flicking["_triggerEvent"],
-  ) {
+  constructor({
+    el,
+    cameraEl, // FIXME: Remove this after refactoring
+    flicking,
+    options,
+    triggerEvent,
+  }: {
+    el: HTMLElement;
+    cameraEl: HTMLElement;
+    flicking: Flicking;
+    options: FlickingOptions;
+    triggerEvent: Flicking["_triggerEvent"];
+  }) {
     this._flicking = flicking;
     this._triggerEvent = triggerEvent;
 
@@ -99,6 +107,9 @@ export default class Viewport {
     this.stateMachine = new StateMachine();
     this._visiblePanels = [];
     this._panelBboxes = {};
+
+    this._viewportElement = el;
+    this._cameraElement = cameraEl;
 
     this._build();
   }
@@ -1086,7 +1097,6 @@ export default class Viewport {
   }
 
   private _build(): void {
-    this._setElements();
     this._applyCSSValue();
     this._setMoveType();
     this._setAxesInstance();
@@ -1094,69 +1104,6 @@ export default class Viewport {
     this._setDefaultPanel();
     this.resize();
     this._moveToDefaultPanel();
-  }
-
-  private _setElements(): void {
-    const state = this._state;
-    const options = this.options;
-    const wrapper = this._flicking.getElement();
-    const classPrefix = options.classPrefix;
-
-    const viewportCandidate = wrapper.children[0] as HTMLElement;
-    const hasViewportElement = viewportCandidate && hasClass(viewportCandidate, `${classPrefix}-viewport`);
-
-    const viewportElement = hasViewportElement
-      ? viewportCandidate
-      : document.createElement("div");
-
-    const cameraCandidate = hasViewportElement
-      ? viewportElement.children[0] as HTMLElement
-      : wrapper.children[0] as HTMLElement;
-    const hasCameraElement = cameraCandidate && hasClass(cameraCandidate, `${classPrefix}-camera`);
-
-    const cameraElement = hasCameraElement
-      ? cameraCandidate
-      : document.createElement("div");
-
-    if (!hasCameraElement) {
-      cameraElement.className = `${classPrefix}-camera`;
-
-      const panelElements = hasViewportElement
-        ? viewportElement.children
-        : wrapper.children;
-
-      // Make all panels to be a child of camera element
-      // wrapper <- viewport <- camera <- panels[1...n]
-      toArray(panelElements).forEach(child => {
-        cameraElement.appendChild(child);
-      });
-    } else {
-      state.originalCameraStyle = {
-        className: cameraElement.getAttribute("class"),
-        style: cameraElement.getAttribute("style"),
-      };
-    }
-
-    if (!hasViewportElement) {
-      viewportElement.className = `${classPrefix}-viewport`;
-
-      // Add viewport element to wrapper
-      wrapper.appendChild(viewportElement);
-    } else {
-      state.originalViewportStyle = {
-        className: viewportElement.getAttribute("class"),
-        style: viewportElement.getAttribute("style"),
-      };
-    }
-
-    if (!hasCameraElement || !hasViewportElement) {
-      viewportElement.appendChild(cameraElement);
-    }
-
-    this._viewportElement = viewportElement;
-    this._cameraElement = cameraElement;
-    state.isViewportGiven = hasViewportElement;
-    state.isCameraGiven = hasCameraElement;
   }
 
   private _applyCSSValue(): void {
@@ -1185,11 +1132,17 @@ export default class Viewport {
   }
 
   private _setMoveType(): void {
-    const moveType = this.options.moveType as MoveTypeObjectOption;
+    const moveType = this.options.moveType;
+    const type = (moveType as MoveTypeObjectOption).type
+      ? (moveType as MoveTypeObjectOption).type
+      : moveType;
+    const moveTypeOptions = (moveType as MoveTypeObjectOption).type
+      ? moveType as MoveTypeObjectOption
+      : {};
 
-    switch (moveType.type) {
+    switch (type) {
       case MOVE_TYPE.SNAP:
-        this.moveType = new SnapControl(moveType.count);
+        this.moveType = new SnapControl(moveTypeOptions);
         break;
       case MOVE_TYPE.FREE_SCROLL:
         this.moveType = new FreeControl();

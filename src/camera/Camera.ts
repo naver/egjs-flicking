@@ -29,16 +29,9 @@ abstract class Camera extends Component {
     this._range = { min: 0, max: 0 };
   }
 
+  public abstract updateRange(): this;
+
   public destroy(): this {
-    return this;
-  }
-
-  public updateRange(): this {
-    const flicking = this._flicking;
-
-    // const renderer = flicking.renderer;
-
-    // this._range = { min: renderer.firstPanel?.position ?? 0, max: flicking.renderer.lastPanel?.position ?? 0 };
     return this;
   }
 

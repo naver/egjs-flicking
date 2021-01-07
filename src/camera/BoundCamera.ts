@@ -1,6 +1,6 @@
 import Camera from "./Camera";
 
-class LinearCamera extends Camera {
+class BoundCamera extends Camera {
   public updateRange() {
     const flicking = this._flicking;
 
@@ -11,4 +11,4 @@ class LinearCamera extends Camera {
   }
 }
 
-export default LinearCamera;
+export default BoundCamera;

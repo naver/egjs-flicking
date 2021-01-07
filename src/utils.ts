@@ -3,11 +3,11 @@
  * egjs projects are licensed under the MIT license
  */
 
-import { ElementLike, OriginalStyle, BoundingBox } from "./types";
 import Flicking from "./Flicking";
 import { FLICKING_METHODS } from "./consts";
+import { ElementLike, OriginalStyle, BoundingBox } from "./types";
 
-export function merge(target: object, ...srcs: object[]): object {
+export const merge = (target: object, ...srcs: object[]): object => {
   srcs.forEach(source => {
     Object.keys(source).forEach(key => {
       const value = source[key];
@@ -16,9 +16,30 @@ export function merge(target: object, ...srcs: object[]): object {
   });
 
   return target;
-}
+};
 
-export function parseElement(element: ElementLike | ElementLike[]): HTMLElement[] {
+export const getElement = (el: HTMLElement | string | null, parent?: HTMLElement): HTMLElement => {
+  let targetEl: HTMLElement | null = null;
+
+  if (isString(el)) {
+    const parentEl = parent ? parent : document;
+    const queryResult = parentEl.querySelector(el);
+    if (!queryResult) {
+      throw new Error("Base element doesn't exist.");
+    }
+    targetEl = queryResult as HTMLElement;
+  } else if (el && el.nodeType === Node.ELEMENT_NODE) {
+    targetEl = el;
+  }
+
+  if (!targetEl) {
+    throw new Error("Element should be provided in string or HTMLElement.");
+  }
+
+  return targetEl;
+};
+
+export const parseElement = (element: ElementLike | ElementLike[]): HTMLElement[] => {
   if (!Array.isArray(element)) {
     element = [element];
   }
@@ -39,21 +60,21 @@ export function parseElement(element: ElementLike | ElementLike[]): HTMLElement[
   });
 
   return elements;
-}
+};
 
-export function isString(value: any): value is string {
+export const isString = (value: any): value is string => {
   return typeof value === "string";
-}
+};
 
 // Get class list of element as string array
-export function classList(element: HTMLElement): string[] {
+export const classList = (element: HTMLElement): string[] => {
   return element.classList
     ? toArray(element.classList)
     : element.className.split(" ");
-}
+};
 
 // Add class to specified element
-export function addClass(element: HTMLElement, className: string): void {
+export const addClass = (element: HTMLElement, className: string): void => {
   if (element.classList) {
     element.classList.add(className);
   } else {
@@ -61,45 +82,45 @@ export function addClass(element: HTMLElement, className: string): void {
       element.className = (`${element.className} ${className}`).replace(/\s{2,}/g, " ");
     }
   }
-}
+};
 
-export function hasClass(element: HTMLElement, className: string): boolean {
+export const hasClass = (element: HTMLElement, className: string): boolean => {
   if (element.classList) {
     return element.classList.contains(className);
   } else {
     return (element.className.split(" ").indexOf(className) >= 0);
   }
-}
+};
 
-export function applyCSS(element: HTMLElement, cssObj: object): void {
+export const applyCSS = (element: HTMLElement, cssObj: object): void => {
   Object.keys(cssObj).forEach(property => {
     element.style[property] = cssObj[property];
   });
-}
+};
 
-export function clamp(val: number, min: number, max: number) {
+export const clamp = (val: number, min: number, max: number) => {
   return Math.max(Math.min(val, max), min);
-}
+};
 
 // Min: inclusive, Max: exclusive
-export function isBetween(val: number, min: number, max: number) {
+export const isBetween = (val: number, min: number, max: number) => {
   return val >= min && val <= max;
-}
+};
 
 export interface ArrayLike<T> {
   length: number;
   [index: number]: T;
 }
 
-export function toArray<T>(iterable: ArrayLike<T>): T[] {
+export const toArray = <T>(iterable: ArrayLike<T>): T[] => {
   return [].slice.call(iterable);
-}
+};
 
-export function isArray(arr: any): boolean {
+export const isArray = (arr: any): boolean => {
   return arr && arr.constructor === Array;
-}
+};
 
-export function parseArithmeticExpression(cssValue: number | string, base: number, defaultVal?: number): number {
+export const parseArithmeticExpression = (cssValue: number | string, base: number, defaultVal?: number): number => {
   // Set base / 2 to default value, if it's undefined
   const defaultValue = defaultVal != null ? defaultVal : base / 2;
   const cssRegex = /(?:(\+|\-)\s*)?(\d+(?:\.\d+)?(%|px)?)/g;
@@ -147,9 +168,9 @@ export function parseArithmeticExpression(cssValue: number | string, base: numbe
 
   // Clamp between 0 ~ base
   return clamp(calculatedValue, 0, base);
-}
+};
 
-export function getProgress(pos: number, range: number[]) {
+export const getProgress = (pos: number, range: number[]) => {
   // start, anchor, end
   // -1 , 0 , 1
   const [min, center, max] = range;
@@ -164,9 +185,9 @@ export function getProgress(pos: number, range: number[]) {
     return (pos - min) / (max - min);
   }
   return 0;
-}
+};
 
-export function findIndex<T>(iterable: T[], callback: (el: T) => boolean): number {
+export const findIndex = <T>(iterable: T[], callback: (el: T) => boolean): number => {
   for (let i = 0; i < iterable.length; i += 1) {
     const element = iterable[i];
     if (element && callback(element)) {
@@ -175,16 +196,16 @@ export function findIndex<T>(iterable: T[], callback: (el: T) => boolean): numbe
   }
 
   return -1;
-}
+};
 
 // return [0, 1, ...., max - 1]
-export function counter(max: number): number[] {
+export const counter = (max: number): number[] => {
   const counterArray: number[] = [];
   for (let i = 0; i < max; i += 1) {
     counterArray[i] = i;
   }
   return counterArray;
-}
+};
 
 // Circulate number between range [min, max]
 /*
@@ -193,7 +214,7 @@ export function counter(max: number): number[] {
  * use `indexed: true` when it should be used for circulating integers like index
  * or `indexed: false` when it should be used for something like positions.
  */
-export function circulate(value: number, min: number, max: number, indexed: boolean): number {
+export const circulate = (value: number, min: number, max: number, indexed: boolean): number => {
   const size = indexed
     ? max - min + 1
     : max - min;
@@ -210,16 +231,16 @@ export function circulate(value: number, min: number, max: number, indexed: bool
   }
 
   return value;
-}
+};
 
-export function restoreStyle(element: HTMLElement, originalStyle: OriginalStyle): void {
+export const restoreStyle = (element: HTMLElement, originalStyle: OriginalStyle): void => {
   originalStyle.className
     ? element.setAttribute("class", originalStyle.className)
     : element.removeAttribute("class");
   originalStyle.style
     ? element.setAttribute("style", originalStyle.style)
     : element.removeAttribute("style");
-}
+};
 
 /**
  * Decorator that makes the method of flicking available in the framework.
@@ -236,7 +257,7 @@ export function restoreStyle(element: HTMLElement, originalStyle: OriginalStyle)
  * }
  * ```
  */
-export function withFlickingMethods(prototype: any, flickingName: string) {
+export const withFlickingMethods = (prototype: any, flickingName: string) => {
   Object.keys(FLICKING_METHODS).forEach((name: keyof Flicking) => {
     if (prototype[name]) {
       return;
@@ -252,9 +273,9 @@ export function withFlickingMethods(prototype: any, flickingName: string) {
       }
     };
   });
-}
+};
 
-export function getBbox(element: HTMLElement, useOffset: boolean) {
+export const getBbox = (element: HTMLElement, useOffset: boolean) => {
   let bbox: BoundingBox;
   if (useOffset) {
     bbox = {
@@ -273,4 +294,4 @@ export function getBbox(element: HTMLElement, useOffset: boolean) {
     };
   }
   return bbox;
-}
+};
