@@ -9,7 +9,7 @@ import { MoveTypeContext, DestinationInfo } from "../types";
 import { circulate, clamp } from "../utils";
 
 class FreeScroll extends Snap {
-  protected readonly type: string = MOVE_TYPE.FREE_SCROLL;
+  protected readonly _type: string = MOVE_TYPE.FREE_SCROLL;
 
   constructor() {
     // Set snap count to Infinity
@@ -19,14 +19,14 @@ class FreeScroll extends Snap {
   public findTargetPanel(ctx: MoveTypeContext): DestinationInfo {
     const { axesEvent, state, viewport } = ctx;
     const destPos = axesEvent.destPos.flick;
-    const minimumDistanceToChange = this.calcBrinkOfChange(ctx);
+    const minimumDistanceToChange = this._calcBrinkOfChange(ctx);
     const scrollArea = viewport.getScrollArea();
     const currentPanel = viewport.getCurrentPanel()!;
     const options = viewport.options;
 
     const delta = Math.abs(axesEvent.delta.flick + state.delta);
     if (delta > minimumDistanceToChange) {
-      const destInfo = super.findSnappedPanel(ctx);
+      const destInfo = super._findSnappedPanel(ctx);
 
       destInfo.duration = axesEvent.duration;
       destInfo.destPos = destPos;
@@ -68,7 +68,7 @@ class FreeScroll extends Snap {
     };
   }
 
-  protected calcBrinkOfChange(ctx: MoveTypeContext): number {
+  protected _calcBrinkOfChange(ctx: MoveTypeContext): number {
     const { viewport, isNextDirection } = ctx;
 
     const options = viewport.options;

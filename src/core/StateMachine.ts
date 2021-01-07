@@ -13,10 +13,10 @@ import AnimatingState from "../states/AnimatingState";
 import DisabledState from "../states/DisabledState";
 
 class StateMachine {
-  private state: State = new IdleState();
+  private _state: State = new IdleState();
 
   public fire(eventType: ValueOf<AxesEventType>, e: any, context: FlickingContext) {
-    const currentState = this.state;
+    const currentState = this._state;
     switch (eventType) {
       case AXES_EVENTS.HOLD:
         currentState.onHold(e, context);
@@ -37,11 +37,11 @@ class StateMachine {
   }
 
   public getState(): State {
-    return this.state;
+    return this._state;
   }
 
   public transitTo = (nextStateType: ValueOf<StateType>): State => {
-    const currentState = this.state;
+    const currentState = this._state;
 
     if (currentState.type !== nextStateType) {
       let nextState: State;
@@ -67,9 +67,9 @@ class StateMachine {
       currentState.onExit(nextState!);
       nextState!.onEnter(currentState);
 
-      this.state = nextState!;
+      this._state = nextState!;
     }
-    return this.state;
+    return this._state;
   }
 }
 

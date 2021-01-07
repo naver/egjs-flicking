@@ -5,7 +5,7 @@ import { FlickingEvent, FlickingOptions } from "../../src/types";
 import { cleanup, createFlicking } from "./assets/utils";
 import { horizontal } from "./assets/fixture";
 import { counter } from "../../src/utils";
-import Panel from "../../src/components/Panel";
+import Panel from "../../src/core/Panel";
 
 declare var sinon: SinonStatic;
 

@@ -1,6 +1,6 @@
 import { SinonStatic, SinonFakeTimers, SinonSpy } from "sinon";
 
-import Viewport from "../../src/components/Viewport";
+import Viewport from "../../src/core/Viewport";
 import Flicking from "../../src/Flicking";
 import { createFlicking, cleanup, simulate, createHorizontalElement } from "./assets/utils";
 import { FlickingOptions } from "../../src/types";
@@ -18,7 +18,7 @@ describe("Viewport", () => {
   const createViewport = (type: string, options: Partial<FlickingOptions> = {}) => {
     const flickingInfo = createFlicking(type, options);
     flicking = flickingInfo.instance;
-    viewport = (flicking as any).viewport as Viewport;
+    viewport = (flicking as any)._viewport as Viewport;
   };
 
   beforeEach(() => {

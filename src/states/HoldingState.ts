@@ -12,7 +12,7 @@ class HoldingState extends State {
   public readonly holding = true;
   public readonly playing = true;
 
-  private releaseEvent: any = null;
+  private _releaseEvent: any = null;
 
   public onChange(e: any, context: FlickingContext): void {
     const { flicking, triggerEvent, transitTo } = context;
@@ -54,7 +54,7 @@ class HoldingState extends State {
 
     // Can't handle select event here,
     // As "finish" axes event happens
-    this.releaseEvent = e;
+    this._releaseEvent = e;
   }
 
   public onFinish(e: any, { viewport, triggerEvent, transitTo }: FlickingContext): void {
@@ -62,13 +62,13 @@ class HoldingState extends State {
     // As user expects hold is already finished
     transitTo(STATE_TYPE.IDLE);
 
-    if (!this.releaseEvent) {
+    if (!this._releaseEvent) {
       return;
     }
 
     // Handle release event here
     // To prevent finish event called twice
-    const releaseEvent = this.releaseEvent;
+    const releaseEvent = this._releaseEvent;
 
     // Static click
     const srcEvent = releaseEvent.inputEvent.srcEvent;

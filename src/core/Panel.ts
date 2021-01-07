@@ -13,7 +13,7 @@ class Panel implements FlickingPanel {
   public prevSibling: Panel | null;
   public nextSibling: Panel | null;
 
-  protected state: {
+  protected _state: {
     index: number;
     position: number;
     relativeAnchorPosition: number;
@@ -26,9 +26,9 @@ class Panel implements FlickingPanel {
     originalStyle: OriginalStyle;
     cachedBbox: BoundingBox | null;
   };
-  private element: HTMLElement;
-  private original?: Panel;
-  private clonedPanels: Panel[];
+  private _element: HTMLElement;
+  private _original?: Panel;
+  private _clonedPanels: Panel[];
 
   public constructor(
     element?: HTMLElement | null,
@@ -38,9 +38,9 @@ class Panel implements FlickingPanel {
     this.viewport = viewport!;
     this.prevSibling = null;
     this.nextSibling = null;
-    this.clonedPanels = [];
+    this._clonedPanels = [];
 
-    this.state = {
+    this._state = {
       index: index!,
       position: 0,
       relativeAnchorPosition: 0,
@@ -58,12 +58,12 @@ class Panel implements FlickingPanel {
   }
 
   public resize(givenBbox?: BoundingBox): void {
-    const state = this.state;
+    const state = this._state;
     const options = this.viewport.options;
     const bbox = givenBbox
       ? givenBbox
       : this.getBbox();
-    this.state.cachedBbox = bbox;
+    this._state.cachedBbox = bbox;
     const prevSize = state.size;
 
     state.size = options.horizontal
@@ -75,8 +75,8 @@ class Panel implements FlickingPanel {
     }
 
     if (!state.isClone) {
-      this.clonedPanels.forEach(panel => {
-        const cloneState = panel.state;
+      this._clonedPanels.forEach(panel => {
+        const cloneState = panel._state;
 
         cloneState.size = state.size;
         cloneState.cachedBbox = state.cachedBbox;
@@ -86,7 +86,7 @@ class Panel implements FlickingPanel {
   }
 
   public unCacheBbox(): void {
-    this.state.cachedBbox = null;
+    this._state.cachedBbox = null;
   }
 
   public getProgress() {
@@ -261,9 +261,9 @@ class Panel implements FlickingPanel {
 
   public destroy(option: Partial<DestroyOption>): void {
     if (!option.preserveUI) {
-      const originalStyle = this.state.originalStyle;
+      const originalStyle = this._state.originalStyle;
 
-      restoreStyle(this.element, originalStyle);
+      restoreStyle(this._element, originalStyle);
     }
 
     // release resources
@@ -273,33 +273,33 @@ class Panel implements FlickingPanel {
   }
 
   public getElement(): HTMLElement {
-    return this.element;
+    return this._element;
   }
 
   public getAnchorPosition(): number {
-    return this.state.position + this.state.relativeAnchorPosition;
+    return this._state.position + this._state.relativeAnchorPosition;
   }
 
   public getRelativeAnchorPosition(): number {
-    return this.state.relativeAnchorPosition;
+    return this._state.relativeAnchorPosition;
   }
 
   public getIndex(): number {
-    return this.state.index;
+    return this._state.index;
   }
 
   public getPosition(): number {
-    return this.state.position;
+    return this._state.position;
   }
 
   public getSize(): number {
-    return this.state.size;
+    return this._state.size;
   }
 
   public getBbox(): BoundingBox {
-    const state = this.state;
+    const state = this._state;
     const viewport = this.viewport;
-    const element = this.element;
+    const element = this._element;
     const options = viewport.options;
 
     if (!element) {
@@ -326,11 +326,11 @@ class Panel implements FlickingPanel {
   }
 
   public isClone(): boolean {
-    return this.state.isClone;
+    return this._state.isClone;
   }
 
   public getOverlappedClass(classes: string[]): string | undefined {
-    const element = this.element;
+    const element = this._element;
 
     for (const className of classes) {
       if (hasClass(element, className)) {
@@ -340,52 +340,52 @@ class Panel implements FlickingPanel {
   }
 
   public getCloneIndex(): number {
-    return this.state.cloneIndex;
+    return this._state.cloneIndex;
   }
 
   public getClonedPanels(): Panel[] {
-    const state = this.state;
+    const state = this._state;
 
     return state.isClone
-      ? this.original!.getClonedPanels()
-      : this.clonedPanels;
+      ? this._original!.getClonedPanels()
+      : this._clonedPanels;
   }
 
   public getIdenticalPanels(): Panel[] {
-    const state = this.state;
+    const state = this._state;
 
     return state.isClone
-      ? this.original!.getIdenticalPanels()
-      : [this, ...this.clonedPanels];
+      ? this._original!.getIdenticalPanels()
+      : [this, ...this._clonedPanels];
   }
 
   public getOriginalPanel(): Panel {
-    return this.state.isClone
-      ? this.original!
+    return this._state.isClone
+      ? this._original!
       : this;
   }
 
   public setIndex(index: number): void {
-    const state = this.state;
+    const state = this._state;
 
     state.index = index;
-    this.clonedPanels.forEach(panel => panel.state.index = index);
+    this._clonedPanels.forEach(panel => panel._state.index = index);
   }
 
   public setPosition(pos: number): this {
-    this.state.position = pos;
+    this._state.position = pos;
 
     return this;
   }
 
   public setPositionCSS(offset: number = 0): void {
-    if (!this.element) {
+    if (!this._element) {
       return;
     }
-    const state = this.state;
+    const state = this._state;
     const pos = state.position;
     const options = this.viewport.options;
-    const elementStyle = this.element.style;
+    const elementStyle = this._element.style;
     const currentElementStyle = options.horizontal
       ? elementStyle.left
       : elementStyle.top;
@@ -399,18 +399,18 @@ class Panel implements FlickingPanel {
   }
 
   public clone(cloneIndex: number, isVirtual: boolean = false, element?: HTMLElement | null): Panel {
-    const state = this.state;
+    const state = this._state;
     const viewport = this.viewport;
     let cloneElement = element;
 
-    if (!cloneElement && this.element) {
-      cloneElement = isVirtual ? this.element : this.element.cloneNode(true) as HTMLElement;
+    if (!cloneElement && this._element) {
+      cloneElement = isVirtual ? this._element : this._element.cloneNode(true) as HTMLElement;
     }
     const clonedPanel = new Panel(cloneElement, state.index, viewport);
-    const clonedState = clonedPanel.state;
+    const clonedState = clonedPanel._state;
 
-    clonedPanel.original = state.isClone
-      ? this.original
+    clonedPanel._original = state.isClone
+      ? this._original
       : this;
     clonedState.isClone = true;
     clonedState.isVirtual = isVirtual;
@@ -422,7 +422,7 @@ class Panel implements FlickingPanel {
     clonedState.cachedBbox = state.cachedBbox;
 
     if (!isVirtual) {
-      this.clonedPanels.push(clonedPanel);
+      this._clonedPanels.push(clonedPanel);
     } else {
       clonedPanel.prevSibling = this.prevSibling;
       clonedPanel.nextSibling = this.nextSibling;
@@ -433,19 +433,19 @@ class Panel implements FlickingPanel {
 
   public removeElement(): void {
     if (!this.viewport.options.renderExternal) {
-      const element = this.element;
+      const element = this._element;
       element.parentNode && element.parentNode.removeChild(element);
     }
 
     // Do the same thing for clones
-    if (!this.state.isClone) {
+    if (!this._state.isClone) {
       this.removeClonedPanelsAfter(0);
     }
   }
 
   public removeClonedPanelsAfter(start: number): void {
     const options = this.viewport.options;
-    const removingPanels = this.clonedPanels.splice(start);
+    const removingPanels = this._clonedPanels.splice(start);
 
     if (!options.renderExternal) {
       removingPanels.forEach(panel => {
@@ -458,7 +458,7 @@ class Panel implements FlickingPanel {
     if (!element) {
       return;
     }
-    const currentElement = this.element;
+    const currentElement = this._element;
     if (element !== currentElement) {
       const options = this.viewport.options;
 
@@ -469,20 +469,20 @@ class Panel implements FlickingPanel {
           element.style.top = currentElement.style.top;
         }
       } else {
-        const originalStyle = this.state.originalStyle;
+        const originalStyle = this._state.originalStyle;
 
         originalStyle.className = element.getAttribute("class");
         originalStyle.style = element.getAttribute("style");
       }
 
-      this.element = element;
+      this._element = element;
 
       if (options.classPrefix) {
         addClass(element, `${options.classPrefix}-panel`);
       }
 
       // Update size info after applying panel css
-      applyCSS(this.element, DEFAULT_PANEL_CSS);
+      applyCSS(this._element, DEFAULT_PANEL_CSS);
     }
   }
 }

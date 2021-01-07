@@ -8,96 +8,96 @@ import { FlickingOptions } from "../types";
 import { findIndex, counter } from "../utils";
 
 class PanelManager {
-  private cameraElement: HTMLElement;
-  private options: FlickingOptions;
-  private panels: Panel[];
-  private clones: Panel[][];
+  private _cameraElement: HTMLElement;
+  private _options: FlickingOptions;
+  private _panels: Panel[];
+  private _clones: Panel[][];
   // index range of existing panels
-  private range: {
+  private _range: {
     min: number;
     max: number;
   };
-  private length: number;
-  private lastIndex: number;
-  private cloneCount: number;
+  private _length: number;
+  private _lastIndex: number;
+  private _cloneCount: number;
 
   constructor(
     cameraElement: HTMLElement,
     options: FlickingOptions,
   ) {
-    this.cameraElement = cameraElement;
-    this.panels = [];
-    this.clones = [];
-    this.range = {
+    this._cameraElement = cameraElement;
+    this._panels = [];
+    this._clones = [];
+    this._range = {
       min: -1,
       max: -1,
     };
-    this.length = 0;
-    this.cloneCount = 0;
-    this.options = options;
-    this.lastIndex = options.lastIndex;
+    this._length = 0;
+    this._cloneCount = 0;
+    this._options = options;
+    this._lastIndex = options.lastIndex;
   }
 
   public firstPanel(): Panel | undefined {
-    return this.panels[this.range.min];
+    return this._panels[this._range.min];
   }
 
   public lastPanel(): Panel | undefined {
-    return this.panels[this.range.max];
+    return this._panels[this._range.max];
   }
 
   public allPanels(): ReadonlyArray<Panel> {
     return [
-      ...this.panels,
-      ...this.clones.reduce((allClones, clones) => [...allClones, ...clones], []),
+      ...this._panels,
+      ...this._clones.reduce((allClones, clones) => [...allClones, ...clones], []),
     ];
   }
 
   public originalPanels(): ReadonlyArray<Panel> {
-    return this.panels;
+    return this._panels;
   }
 
   public clonedPanels(): ReadonlyArray<Panel[]> {
-    return this.clones;
+    return this._clones;
   }
 
   public replacePanels(newPanels: Panel[], newClones: Panel[][]): void {
-    this.panels = newPanels;
-    this.clones = newClones;
+    this._panels = newPanels;
+    this._clones = newClones;
 
-    this.range = {
+    this._range = {
       min: findIndex(newPanels, panel => Boolean(panel)),
       max: newPanels.length - 1,
     };
-    this.length = newPanels.filter(panel => Boolean(panel)).length;
+    this._length = newPanels.filter(panel => Boolean(panel)).length;
   }
 
   public has(index: number): boolean {
-    return !!this.panels[index];
+    return !!this._panels[index];
   }
 
   public get(index: number): Panel | undefined {
-    return this.panels[index];
+    return this._panels[index];
   }
 
   public getPanelCount(): number {
-    return this.length;
+    return this._length;
   }
 
   public getLastIndex(): number {
-    return this.lastIndex;
+    return this._lastIndex;
   }
 
   public getRange(): Readonly<{ min: number, max: number }> {
-    return this.range;
+    return this._range;
   }
 
   public getCloneCount(): number {
-    return this.cloneCount;
+    return this._cloneCount;
   }
 
   public setLastIndex(lastIndex: number): void {
-    this.lastIndex = lastIndex;
+    this._lastIndex = lastIndex;
 
     const firstPanel = this.firstPanel();
     const lastPanel = this.lastPanel();
@@ -107,10 +107,10 @@ class PanelManager {
     }
 
     // Remove panels above new last index
-    const range = this.range;
+    const range = this._range;
     if (lastPanel.getIndex() > lastIndex) {
-      const removingPanels = this.panels.splice(lastIndex + 1);
-      this.length -= removingPanels.length;
+      const removingPanels = this._panels.splice(lastIndex + 1);
+      this._length -= removingPanels.length;
 
       const firstRemovedPanel = removingPanels.filter(panel => !!panel)[0];
       const possibleLastPanel = firstRemovedPanel.prevSibling;
@@ -128,16 +128,16 @@ class PanelManager {
   }
 
   public setCloneCount(cloneCount: number): void {
-    this.cloneCount = cloneCount;
+    this._cloneCount = cloneCount;
   }
 
   // Insert at index
   // Returns pushed elements from index, inserting at 'empty' position doesn't push elements behind it
   public insert(index: number, newPanels: Panel[]): number {
-    const panels = this.panels;
-    const range = this.range;
-    const isCircular = this.options.circular;
-    const lastIndex = this.lastIndex;
+    const panels = this._panels;
+    const range = this._range;
+    const isCircular = this._options.circular;
+    const lastIndex = this._lastIndex;
 
     // Find first panel that index is greater than inserting index
     const nextSibling = this.findFirstPanelFrom(index);
@@ -177,14 +177,14 @@ class PanelManager {
       if (panels.length > lastIndex + 1) {
         const removedPanels = panels.splice(lastIndex + 1)
           .filter(panel => Boolean(panel));
-        this.length -= removedPanels.length;
+        this._length -= removedPanels.length;
 
         // Find first
-        const newLastIndex = lastIndex - findIndex(this.panels.concat().reverse(), panel => !!panel);
+        const newLastIndex = lastIndex - findIndex(this._panels.concat().reverse(), panel => !!panel);
 
         // Can be filled with empty after newLastIndex
-        this.panels.splice(newLastIndex + 1);
-        this.range.max = newLastIndex;
+        this._panels.splice(newLastIndex + 1);
+        this._range.max = newLastIndex;
 
         if (this.shouldRender()) {
           removedPanels.forEach(panel => panel.removeElement());
@@ -200,13 +200,13 @@ class PanelManager {
     }
 
     // Update state
-    this.length += newPanels.length;
+    this._length += newPanels.length;
     this.updateIndex(index);
 
     if (isCircular) {
       this.addNewClones(index, newPanels, newPanels.length - pushedIndex, nextSibling);
-      const clones = this.clones;
-      const panelCount = this.panels.length;
+      const clones = this._clones;
+      const panelCount = this._panels.length;
       if (clones[0] && clones[0].length > lastIndex + 1) {
         clones.forEach(cloneSet => {
           cloneSet.splice(panelCount);
@@ -218,9 +218,9 @@ class PanelManager {
   }
 
   public replace(index: number, newPanels: Panel[]): Panel[] {
-    const panels = this.panels;
-    const range = this.range;
-    const options = this.options;
+    const panels = this._panels;
+    const range = this._range;
+    const options = this._options;
     const isCircular = options.circular;
 
     // Find first panel that index is greater than inserting index
@@ -248,7 +248,7 @@ class PanelManager {
 
     // Suppose inserting [1, 2, 3] at 0 position when there were [empty, 1]
     // So length should be increased by 3(inserting panels) - 1(non-empty panels)
-    this.length += newPanels.length - wasNonEmptyCount;
+    this._length += newPanels.length - wasNonEmptyCount;
     this.updateIndex(index);
 
     if (isCircular) {
@@ -263,9 +263,9 @@ class PanelManager {
   }
 
   public remove(index: number, deleteCount: number = 1): Panel[] {
-    const isCircular = this.options.circular;
-    const panels = this.panels;
-    const clones = this.clones;
+    const isCircular = this._options.circular;
+    const panels = this._panels;
+    const clones = this._clones;
     // Delete count should be equal or larger than 0
     deleteCount = Math.max(deleteCount, 0);
 
@@ -309,16 +309,16 @@ class PanelManager {
     }
 
     // Update range & length
-    this.range = {
+    this._range = {
       min: findIndex(panels, panel => !!panel),
       max: lastIndex,
     };
-    this.length -= deletedPanels.length;
+    this._length -= deletedPanels.length;
 
-    if (this.length <= 0) {
+    if (this._length <= 0) {
       // Reset clones
-      this.clones = [];
-      this.cloneCount = 0;
+      this._clones = [];
+      this._cloneCount = 0;
     }
 
     return deletedPanels;
@@ -348,15 +348,15 @@ class PanelManager {
     lastPanel.prevSibling = allPanels[allPanelsCount - 2];
     lastPanel.nextSibling = null;
 
-    if (this.options.circular) {
+    if (this._options.circular) {
       firstPanel.prevSibling = lastPanel;
       lastPanel.nextSibling = firstPanel;
     }
   }
 
   public insertClones(cloneIndex: number, index: number, clonedPanels: Panel[], deleteCount: number = 0): void {
-    const clones = this.clones;
-    const lastIndex = this.lastIndex;
+    const clones = this._clones;
+    const lastIndex = this._lastIndex;
 
     if (!clones[cloneIndex]) {
       const newClones: Panel[] = [];
@@ -384,12 +384,12 @@ class PanelManager {
 
   // clones are operating in set
   public removeClonesAfter(cloneIndex: number): void {
-    const panels = this.panels;
+    const panels = this._panels;
 
     panels.forEach(panel => {
       panel.removeClonedPanelsAfter(cloneIndex);
     });
-    this.clones.splice(cloneIndex);
+    this._clones.splice(cloneIndex);
   }
 
   public findPanelOf(element: HTMLElement): Panel | undefined {
@@ -406,7 +406,7 @@ class PanelManager {
   }
 
   public findFirstPanelFrom(index: number): Panel | undefined {
-    for (const panel of this.panels.slice(index)) {
+    for (const panel of this._panels.slice(index)) {
       if (panel && panel.getIndex() >= index && panel.getElement().parentNode) {
         return panel;
       }
@@ -414,7 +414,7 @@ class PanelManager {
   }
 
   private addNewClones(index: number, originalPanels: Panel[], deleteCount: number, nextSibling: Panel | undefined) {
-    const cameraElement = this.cameraElement;
+    const cameraElement = this._cameraElement;
     const cloneCount = this.getCloneCount();
     const lastPanel = this.lastPanel();
     const lastPanelClones: Panel[] = lastPanel
@@ -449,8 +449,8 @@ class PanelManager {
   }
 
   private updateIndex(insertingIndex: number) {
-    const panels = this.panels;
-    const range = this.range;
+    const panels = this._panels;
+    const range = this._range;
 
     const newLastIndex = panels.length - 1;
     if (newLastIndex > range.max) {
@@ -465,12 +465,12 @@ class PanelManager {
     if (this.shouldRender()) {
       const fragment = document.createDocumentFragment();
       newPanels.forEach(panel => fragment.appendChild(panel.getElement()));
-      this.cameraElement.insertBefore(fragment, siblingElement);
+      this._cameraElement.insertBefore(fragment, siblingElement);
     }
   }
 
   private shouldRender(): boolean {
-    const options = this.options;
+    const options = this._options;
 
     return !options.renderExternal && !options.renderOnlyVisible;
   }

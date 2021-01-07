@@ -5,7 +5,7 @@ import { FlickingEvent, NeedPanelEvent, FlickingOptions } from "../../src/types"
 import { horizontal, vertical } from "./assets/fixture";
 import { createFlicking, createHorizontalElement, cleanup, simulate, tick } from "./assets/utils";
 import { merge } from "../../src/utils";
-import Viewport from "../../src/components/Viewport";
+import Viewport from "../../src/core/Viewport";
 
 declare var sinon: SinonStatic;
 
@@ -445,7 +445,7 @@ describe("Events", () => {
 
     it("can restore its position after user keeps static clicking", async () => {
       const flicking = flickingInfo.instance;
-      const beforePosition = (flicking as any).viewport.getCameraPosition();
+      const beforePosition = (flicking as any)._viewport.getCameraPosition();
 
       const firstPanel = flicking.getPanel(0);
       const firstSize = firstPanel.getSize();
@@ -458,7 +458,7 @@ describe("Events", () => {
       // Interrupt again
       await simulate(flickingInfo.element, { deltaX: 0, duration: 200 });
 
-      const afterPosition = (flicking as any).viewport.getCameraPosition();
+      const afterPosition = (flicking as any)._viewport.getCameraPosition();
 
       expect(afterPosition).equals(beforePosition + firstSize);
     });
@@ -658,7 +658,7 @@ describe("Events", () => {
         lastIndex: 50,
       });
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any).viewport as Viewport;
+      const viewport = (flicking as any)._viewport as Viewport;
       flicking.on(EVENTS.NEED_PANEL, e => {
         if (e.direction === DIRECTION.PREV) {
           e.panel.insertBefore(createHorizontalElement(20));
@@ -689,7 +689,7 @@ describe("Events", () => {
       });
 
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any).viewport as Viewport;
+      const viewport = (flicking as any)._viewport as Viewport;
       flicking.on(EVENTS.NEED_PANEL, e => {
         if (e.direction === DIRECTION.NEXT) {
           e.panel.insertAfter(createHorizontalElement(20));
@@ -720,7 +720,7 @@ describe("Events", () => {
         lastIndex: 50,
       });
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any).viewport as Viewport;
+      const viewport = (flicking as any)._viewport as Viewport;
       flicking.on(EVENTS.NEED_PANEL, e => {
         if (e.direction === DIRECTION.PREV) {
           e.index === 0
@@ -758,7 +758,7 @@ describe("Events", () => {
         lastIndex: 50,
       });
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any).viewport as Viewport;
+      const viewport = (flicking as any)._viewport as Viewport;
       flicking.on(EVENTS.NEED_PANEL, e => {
         if (e.direction === DIRECTION.NEXT) {
           e.index === 50
@@ -1063,7 +1063,7 @@ describe("Events", () => {
         renderOnlyVisible: true,
       });
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any).viewport as Viewport;
+      const viewport = (flicking as any)._viewport as Viewport;
       const initialVisiblePanels = viewport.getVisiblePanels();
       const visiblePanels = [];
 
@@ -1094,7 +1094,7 @@ describe("Events", () => {
         renderOnlyVisible: true,
       });
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any).viewport as Viewport;
+      const viewport = (flicking as any)._viewport as Viewport;
       const initialVisiblePanels = viewport.getVisiblePanels();
 
       // When
@@ -1113,7 +1113,7 @@ describe("Events", () => {
         moveType: MOVE_TYPE.FREE_SCROLL,
       });
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any).viewport as Viewport;
+      const viewport = (flicking as any)._viewport as Viewport;
       const initialVisiblePanels = viewport.getVisiblePanels();
       const visiblePanels = [];
 

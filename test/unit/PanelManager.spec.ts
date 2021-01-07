@@ -1,9 +1,9 @@
 import { SinonStatic } from "sinon";
 
 import Flicking from "../../src/Flicking";
-import Panel from "../../src/components/Panel";
-import Viewport from "../../src/components/Viewport";
-import PanelManager from "../../src/components/PanelManager";
+import Panel from "../../src/core/Panel";
+import Viewport from "../../src/core/Viewport";
+import PanelManager from "../../src/core/PanelManager";
 import { counter } from "../../src/utils";
 import { FlickingEvent } from "../../src/types";
 import { cleanup, createFlicking } from "./assets/utils";
@@ -27,8 +27,8 @@ describe("PanelManager", () => {
     flickingInfo = createFlicking(horizontal.none);
 
     const flicking = flickingInfo.instance;
-    viewport = (flicking as any).viewport as Viewport;
-    cameraElement = (viewport as any).cameraElement as HTMLElement;
+    viewport = (flicking as any)._viewport as Viewport;
+    cameraElement = (viewport as any)._cameraElement as HTMLElement;
     panelManager = viewport.panelManager;
   });
 
@@ -70,8 +70,8 @@ describe("PanelManager", () => {
     });
 
     const flicking = flickingInfo.instance;
-    viewport = (flicking as any).viewport as Viewport;
-    cameraElement = (viewport as any).cameraElement as HTMLElement;
+    viewport = (flicking as any)._viewport as Viewport;
+    cameraElement = (viewport as any)._cameraElement as HTMLElement;
     panelManager = viewport.panelManager;
   };
 

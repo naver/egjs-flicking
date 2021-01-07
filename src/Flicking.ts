@@ -5,8 +5,9 @@
 
 import Component from "@egjs/component";
 import ImReady from "@egjs/imready";
-import Viewport from "./components/Viewport";
-import Panel from "./components/Panel";
+
+import Viewport from "./core/Viewport";
+import Panel from "./core/Panel";
 
 import { merge, getProgress, parseElement, isString, counter, findIndex } from "./utils";
 import { DEFAULT_OPTIONS, EVENTS, DIRECTION, AXES_EVENTS, STATE_TYPE, DEFAULT_MOVE_TYPE_OPTIONS } from "./consts";
@@ -32,7 +33,6 @@ import {
   MoveTypeStringOption,
   ValueOf,
 } from "./types";
-// import { sendEvent } from "./ga/ga";
 import { DiffResult } from "@egjs/list-differ";
 
 /**
@@ -96,12 +96,12 @@ class Flicking extends Component<{
 
   public options: FlickingOptions;
 
-  private wrapper: HTMLElement;
-  private viewport: Viewport;
-  private contentsReadyChecker: ImReady | null = null;
+  private _wrapper: HTMLElement;
+  private _viewport: Viewport;
+  private _contentsReadyChecker: ImReady | null = null;
 
-  private eventContext: FlickingContext;
-  private isPanelChangedAtBeforeSync: boolean = false;
+  private _eventContext: FlickingContext;
+  private _isPanelChangedAtBeforeSync: boolean = false;
 
   /**
    * @param element A base element for the eg.Flicking module. When specifying a value as a `string` type, you must specify a css selector string to select the element.<ko>eg.Flicking 모듈을 사용할 기준 요소. `string`타입으로 값 지정시 요소를 선택하기 위한 css 선택자 문자열을 지정해야 한다.</ko>
@@ -156,7 +156,7 @@ class Flicking extends Component<{
       throw new Error("Element should be provided in string or HTMLElement.");
     }
 
-    this.wrapper = wrapper;
+    this._wrapper = wrapper;
     // Override default options
     this.options = merge({}, DEFAULT_OPTIONS, options) as FlickingOptions;
     // Override moveType option
@@ -168,17 +168,9 @@ class Flicking extends Component<{
     }
 
     // Make viewport instance with panel container element
-    this.viewport = new Viewport(this, this.options, this.triggerEvent);
+    this._viewport = new Viewport(this, this.options, this.triggerEvent);
     this.listenInput();
     this.listenResize();
-
-    // if (this.options.collectStatistics) {
-    //   sendEvent(
-    //     "usage",
-    //     "options",
-    //     options,
-    //   );
-    // }
   }
 
   /**
@@ -189,7 +181,7 @@ class Flicking extends Component<{
    */
   public prev(duration?: number): this {
     const currentPanel = this.getCurrentPanel();
-    const currentState = this.viewport.stateMachine.getState();
+    const currentState = this._viewport.stateMachine.getState();
 
     if (currentPanel && currentState.type === STATE_TYPE.IDLE) {
       const prevPanel = currentPanel.prev();
@@ -209,7 +201,7 @@ class Flicking extends Component<{
    */
   public next(duration?: number): this {
     const currentPanel = this.getCurrentPanel();
-    const currentState = this.viewport.stateMachine.getState();
+    const currentState = this._viewport.stateMachine.getState();
 
     if (currentPanel && currentState.type === STATE_TYPE.IDLE) {
       const nextPanel = currentPanel.next();
@@ -229,7 +221,7 @@ class Flicking extends Component<{
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
   public moveTo(index: number, duration?: number): this {
-    const viewport = this.viewport;
+    const viewport = this._viewport;
     const panel = viewport.panelManager.get(index);
     const state = viewport.stateMachine.getState();
 
@@ -294,7 +286,7 @@ class Flicking extends Component<{
    * @return Current panel's index, zero-based integer.<ko>현재 패널의 인덱스 번호. 0부터 시작하는 정수.</ko>
    */
   public getIndex(): number {
-    return this.viewport.getCurrentIndex();
+    return this._viewport.getCurrentIndex();
   }
 
   /**
@@ -303,7 +295,7 @@ class Flicking extends Component<{
    * @return Wrapper element user provided.<ko>사용자가 제공한 래퍼 엘리먼트.</ko>
    */
   public getElement(): HTMLElement {
-    return this.wrapper;
+    return this._wrapper;
   }
 
   /**
@@ -312,7 +304,7 @@ class Flicking extends Component<{
    * @return Width if horizontal: true, height if horizontal: false
    */
   public getSize(): number {
-    return this.viewport.getSize();
+    return this._viewport.getSize();
   }
 
   /**
@@ -321,7 +313,7 @@ class Flicking extends Component<{
    * @return Current panel.<ko>현재 패널.</ko>
    */
   public getCurrentPanel(): FlickingPanel | null {
-    const viewport = this.viewport;
+    const viewport = this._viewport;
     const panel = viewport.getCurrentPanel();
     return panel
       ? panel
@@ -334,7 +326,7 @@ class Flicking extends Component<{
    * @return Panel of given index.<ko>주어진 인덱스에 해당하는 패널.</ko>
    */
   public getPanel(index: number): FlickingPanel | null {
-    const viewport = this.viewport;
+    const viewport = this._viewport;
     const panel = viewport.panelManager.get(index);
     return panel
       ? panel
@@ -348,7 +340,7 @@ class Flicking extends Component<{
    * @return All panels.<ko>모든 패널들.</ko>
    */
   public getAllPanels(includeClone?: boolean): FlickingPanel[] {
-    const viewport = this.viewport;
+    const viewport = this._viewport;
     const panelManager = viewport.panelManager;
     const panels = includeClone
       ? panelManager.allPanels()
@@ -364,7 +356,7 @@ class Flicking extends Component<{
    * @return Panels currently shown in viewport area.<ko>현재 뷰포트 영역에 보여지는 패널들</ko>
    */
   public getVisiblePanels(): FlickingPanel[] {
-    return this.viewport.calcVisiblePanels();
+    return this._viewport.calcVisiblePanels();
   }
 
   /**
@@ -373,7 +365,7 @@ class Flicking extends Component<{
    * @return Length of original panels.<ko>원본 패널의 개수</ko>
    */
   public getPanelCount(): number {
-    return this.viewport.panelManager.getPanelCount();
+    return this._viewport.panelManager.getPanelCount();
   }
 
   /**
@@ -382,7 +374,7 @@ class Flicking extends Component<{
    * @return Length of cloned panel groups.<ko>클론된 패널 그룹의 개수</ko>
    */
   public getCloneCount(): number {
-    return this.viewport.panelManager.getCloneCount();
+    return this._viewport.panelManager.getCloneCount();
   }
 
   /**
@@ -392,7 +384,7 @@ class Flicking extends Component<{
    * @return Maximum index of panel that can be added.<ko>최대 추가 가능한 패널의 인덱스.</ko>
    */
   public getLastIndex(): number {
-    return this.viewport.panelManager.getLastIndex();
+    return this._viewport.panelManager.getLastIndex();
   }
 
   /**
@@ -403,7 +395,7 @@ class Flicking extends Component<{
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
   public setLastIndex(index: number): this {
-    this.viewport.setLastIndex(index);
+    this._viewport.setLastIndex(index);
 
     return this;
   }
@@ -414,7 +406,7 @@ class Flicking extends Component<{
    * @return Is animating or not.<ko>애니메이션 진행 여부.</ko>
    */
   public isPlaying(): boolean {
-    return this.viewport.stateMachine.getState().playing;
+    return this._viewport.stateMachine.getState().playing;
   }
 
   /**
@@ -423,7 +415,7 @@ class Flicking extends Component<{
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
   public enableInput(): this {
-    this.viewport.enable();
+    this._viewport.enable();
 
     return this;
   }
@@ -434,7 +426,7 @@ class Flicking extends Component<{
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
   public disableInput(): this {
-    this.viewport.disable();
+    this._viewport.disable();
 
     return this;
   }
@@ -445,7 +437,7 @@ class Flicking extends Component<{
    * @return An object with current status value information.<ko>현재 상태값 정보를 가진 객체.</ko>
    */
   public getStatus(): FlickingStatus {
-    const viewport = this.viewport;
+    const viewport = this._viewport;
 
     const panels = viewport.panelManager.originalPanels()
       .filter(panel => !!panel)
@@ -469,7 +461,7 @@ class Flicking extends Component<{
    * @param status Status value to be restored. You can specify the return value of the [getStatus()]{@link eg.Flicking#getStatus} method.<ko>복원할 상태 값. [getStatus()]{@link eg.Flicking#getStatus}메서드의 반환값을 지정하면 된다.</ko>
    */
   public setStatus(status: FlickingStatus): void {
-    this.viewport.restore(status);
+    this._viewport.restore(status);
   }
 
   /**
@@ -479,7 +471,7 @@ class Flicking extends Component<{
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
   public addPlugins(plugins: Plugin | Plugin[]) {
-    this.viewport.addPlugins(plugins);
+    this._viewport.addPlugins(plugins);
     return this;
   }
 
@@ -490,7 +482,7 @@ class Flicking extends Component<{
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
   public removePlugins(plugins: Plugin | Plugin[]) {
-    this.viewport.removePlugins(plugins);
+    this._viewport.removePlugins(plugins);
     return this;
   }
 
@@ -509,8 +501,8 @@ class Flicking extends Component<{
       window.removeEventListener("resize", this.resize);
     }
 
-    this.viewport.destroy(option);
-    this.contentsReadyChecker?.destroy();
+    this._viewport.destroy(option);
+    this._contentsReadyChecker?.destroy();
 
     // release resources
     for (const x in this) {
@@ -525,7 +517,7 @@ class Flicking extends Component<{
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
   public resize = (): this => {
-    const viewport = this.viewport;
+    const viewport = this._viewport;
     const options = this.options;
     const wrapper = this.getElement();
 
@@ -571,7 +563,7 @@ class Flicking extends Component<{
    * flicking.prepend("\<div\>Panel\</div\>"); // Prepended at index 0, pushing every panels behind it.
    */
   public prepend(element: ElementLike | ElementLike[]): FlickingPanel[] {
-    const viewport = this.viewport;
+    const viewport = this._viewport;
     const parsedElements = parseElement(element);
 
     const insertingIndex = Math.max(viewport.panelManager.getRange().min - parsedElements.length, 0);
@@ -597,7 +589,7 @@ class Flicking extends Component<{
    * flicking.append("\<div\>Panel 1\</div\>\<div\>Panel 2\</div\>"); // Appended at index 4, 5
    */
   public append(element: ElementLike | ElementLike[]): FlickingPanel[] {
-    const viewport = this.viewport;
+    const viewport = this._viewport;
     const appendedPanels = viewport.insert(viewport.panelManager.getRange().max + 1, element);
 
     this.checkContentsReady(appendedPanels);
@@ -631,7 +623,7 @@ class Flicking extends Component<{
    * flicking.replace(3, ["\<div\>Panel\</div\>", "\<div\>Panel\</div\>", "\<div\>Panel\</div\>"])
    */
   public replace(index: number, element: ElementLike | ElementLike[]): FlickingPanel[] {
-    const replacedPanels = this.viewport.replace(index, element);
+    const replacedPanels = this._viewport.replace(index, element);
 
     this.checkContentsReady(replacedPanels);
 
@@ -646,7 +638,7 @@ class Flicking extends Component<{
    * @return Array of removed panels<ko>제거된 패널들의 배열</ko>
    */
   public remove(index: number, deleteCount: number = 1): FlickingPanel[] {
-    return this.viewport.remove(index, deleteCount);
+    return this._viewport.remove(index, deleteCount);
   }
 
   /**
@@ -658,7 +650,7 @@ class Flicking extends Component<{
    * @return Array of indexes to render.<ko>렌더링할 인덱스의 배열</ko>
    */
   public getRenderingIndexes(diffResult: DiffResult<any>): number[] {
-    const viewport = this.viewport;
+    const viewport = this._viewport;
     const visiblePanels = viewport.getVisiblePanels();
     const maintained = diffResult.maintained.reduce((values: {[key: number]: number}, [before, after]) => {
       values[after] = before;
@@ -691,7 +683,7 @@ class Flicking extends Component<{
    */
   public beforeSync(diffInfo: BeforeSyncResult) {
     const { maintained, added, changed, removed } = diffInfo;
-    const viewport = this.viewport;
+    const viewport = this._viewport;
     const panelManager = viewport.panelManager;
     const isCircular = this.options.circular;
     const cloneCount = panelManager.getCloneCount();
@@ -723,7 +715,7 @@ class Flicking extends Component<{
     });
 
     added.forEach(addIndex => {
-      newPanels[addIndex] = new Panel(null, addIndex, this.viewport);
+      newPanels[addIndex] = new Panel(null, addIndex, this._viewport);
     });
 
     if (isCircular) {
@@ -764,7 +756,7 @@ class Flicking extends Component<{
       maintained.forEach(([, next]) => { viewport.updateCheckedIndexes({ min: next, max: next }); });
     }
     panelManager.replacePanels(newPanels, newClones);
-    this.isPanelChangedAtBeforeSync = true;
+    this._isPanelChangedAtBeforeSync = true;
   }
 
   /**
@@ -780,7 +772,7 @@ class Flicking extends Component<{
     if (added.length <= 0 && removed.length <= 0 && changed.length <= 0) {
       return this;
     }
-    const viewport = this.viewport;
+    const viewport = this._viewport;
     const { renderOnlyVisible, circular } = this.options;
     const panelManager = viewport.panelManager;
 
@@ -818,10 +810,10 @@ class Flicking extends Component<{
       // As it can be 0
       beforePanel.unCacheBbox();
     });
-    if (this.isPanelChangedAtBeforeSync) {
+    if (this._isPanelChangedAtBeforeSync) {
       // Reset visible panels
       viewport.setVisiblePanels([]);
-      this.isPanelChangedAtBeforeSync = false;
+      this._isPanelChangedAtBeforeSync = false;
     }
     viewport.resize();
 
@@ -830,13 +822,13 @@ class Flicking extends Component<{
 
   private listenInput(): void {
     const flicking = this;
-    const viewport = flicking.viewport;
+    const viewport = flicking._viewport;
     const stateMachine = viewport.stateMachine;
 
     // Set event context
-    flicking.eventContext = {
+    flicking._eventContext = {
       flicking,
-      viewport: flicking.viewport,
+      viewport: flicking._viewport,
       transitTo: stateMachine.transitTo,
       triggerEvent: flicking.triggerEvent,
       moveCamera: flicking.moveCamera,
@@ -847,11 +839,11 @@ class Flicking extends Component<{
     for (const key in AXES_EVENTS) {
       const eventType = AXES_EVENTS[key];
 
-      handlers[eventType] = (e: any) => stateMachine.fire(eventType, e, flicking.eventContext);
+      handlers[eventType] = (e: any) => stateMachine.fire(eventType, e, flicking._eventContext);
     }
 
     // Connect Axes instance with PanInput
-    flicking.viewport.connectAxesHandler(handlers);
+    flicking._viewport.connectAxesHandler(handlers);
   }
 
   private listenResize(): void {
@@ -878,9 +870,9 @@ class Flicking extends Component<{
           element: e.element,
         });
       });
-      contentsReadyChecker.check([this.wrapper]);
+      contentsReadyChecker.check([this._wrapper]);
 
-      this.contentsReadyChecker = contentsReadyChecker;
+      this._contentsReadyChecker = contentsReadyChecker;
     }
   }
 
@@ -890,7 +882,7 @@ class Flicking extends Component<{
     isTrusted: boolean,
     params: Partial<T> = {},
   ): TriggerCallback => {
-    const viewport = this.viewport;
+    const viewport = this._viewport;
 
     let canceled: boolean = true;
 
@@ -934,7 +926,7 @@ class Flicking extends Component<{
 
   // Return result of "move" event triggered
   private moveCamera = (axesEvent: any): TriggerCallback => {
-    const viewport = this.viewport;
+    const viewport = this._viewport;
     const state = viewport.stateMachine.getState();
     const options = this.options;
 
@@ -975,7 +967,7 @@ class Flicking extends Component<{
   }
 
   private checkContentsReady(panels: FlickingPanel[]) {
-    this.contentsReadyChecker?.check(panels.map(panel => panel.getElement()));
+    this._contentsReadyChecker?.check(panels.map(panel => panel.getElement()));
   }
 }
 

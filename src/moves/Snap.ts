@@ -9,21 +9,21 @@ import { MoveTypeContext, DestinationInfo } from "../types";
 import { clamp } from "../utils";
 
 class Snap extends MoveType {
-  protected readonly type: string = MOVE_TYPE.SNAP;
-  protected count: number;
+  protected readonly _type: string = MOVE_TYPE.SNAP;
+  protected _count: number;
 
   constructor(count: number) {
     super();
-    this.count = count;
+    this._count = count;
   }
 
   public findTargetPanel(ctx: MoveTypeContext): DestinationInfo {
     const { viewport, axesEvent, swipeDistance } = ctx;
-    const snapCount = this.count;
+    const snapCount = this._count;
     const eventDelta = Math.abs(axesEvent.delta.flick);
     const currentPanel = viewport.getCurrentPanel()!;
     const nearestPanel = viewport.getNearestPanel()!;
-    const minimumDistanceToChange = this.calcBrinkOfChange(ctx);
+    const minimumDistanceToChange = this._calcBrinkOfChange(ctx);
     const nearestIsCurrent = nearestPanel.getIndex() === currentPanel.getIndex();
 
     // This can happen when bounce is 0
@@ -32,9 +32,9 @@ class Snap extends MoveType {
       && (swipeDistance <= minimumDistanceToChange || shouldMoveWhenBounceIs0);
 
     if (snapCount > 1 && eventDelta > minimumDistanceToChange) {
-      return this.findSnappedPanel(ctx);
+      return this._findSnappedPanel(ctx);
     } else if (shouldMoveToAdjacent) {
-      return this.findAdjacentPanel(ctx);
+      return this._findAdjacentPanel(ctx);
     } else {
       return {
         panel: nearestPanel,
@@ -51,12 +51,12 @@ class Snap extends MoveType {
     }
   }
 
-  protected findSnappedPanel(ctx: MoveTypeContext): DestinationInfo {
+  protected _findSnappedPanel(ctx: MoveTypeContext): DestinationInfo {
     const { axesEvent, viewport, state, isNextDirection } = ctx;
 
     const eventDelta = Math.abs(axesEvent.delta.flick);
-    const minimumDistanceToChange = this.calcBrinkOfChange(ctx);
-    const snapCount = this.count;
+    const minimumDistanceToChange = this._calcBrinkOfChange(ctx);
+    const snapCount = this._count;
     const options = viewport.options;
     const scrollAreaSize = viewport.getScrollAreaSize();
     const halfGap = options.gap / 2;
@@ -123,7 +123,7 @@ class Snap extends MoveType {
     };
   }
 
-  private findAdjacentPanel(ctx: MoveTypeContext): DestinationInfo {
+  private _findAdjacentPanel(ctx: MoveTypeContext): DestinationInfo {
     const { viewport, isNextDirection } = ctx;
 
     const options = viewport.options;

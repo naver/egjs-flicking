@@ -4,9 +4,9 @@
  */
 
 import Flicking from "./Flicking";
-import Viewport from "./components/Viewport";
-import StateMachine from "./components/StateMachine";
-import Panel from "./components/Panel";
+import Viewport from "./core/Viewport";
+import StateMachine from "./core/StateMachine";
+import Panel from "./core/Panel";
 import Component from "@egjs/component";
 import State from "./states/State";
 import { DiffResult } from "@egjs/list-differ";

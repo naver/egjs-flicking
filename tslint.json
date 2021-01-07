@@ -66,6 +66,8 @@
       { "type": "default", "format": "camelCase", "leadingUnderscore": "forbid", "trailingUnderscore": "forbid" },
       { "type": "variable", "modifiers": ["export", "const"], "format": ["camelCase", "UPPER_CASE"] },
       { "type": "member", "format": "camelCase" },
+      { "type": "member", "modifiers": ["private"], "leadingUnderscore": "require" },
+      { "type": "member", "modifiers": ["protected"], "leadingUnderscore": "require" },
       { "type": "member", "modifiers": ["static"], "format": ["camelCase", "UPPER_CASE"] },
       { "type": "type", "format": "PascalCase" }
     ]

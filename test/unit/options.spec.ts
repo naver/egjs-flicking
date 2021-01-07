@@ -627,7 +627,7 @@ describe("Initialization", () => {
             flicking.on(Flicking.EVENTS.CHANGE, e => {
               destPos = e.axesEvent.destPos.flick;
               eventDelta = Math.abs(e.axesEvent.delta.flick);
-              nearestPanel = (flicking as any).viewport.getNearestPanel();
+              nearestPanel = (flicking as any)._viewport.getNearestPanel();
             });
 
             const startIndex = flicking.getIndex();
@@ -931,7 +931,7 @@ describe("Initialization", () => {
 
       // Then
       expect(panels.length).equals(1);
-      expect((flicking as any).viewport.getPositionOffset()).not.equals(0);
+      expect((flicking as any)._viewport.getPositionOffset()).not.equals(0);
       expect(flicking.getPanelCount()).equals(4);
 
       panels.forEach((panel, i) => {
@@ -1040,7 +1040,7 @@ describe("Initialization", () => {
     it("should check if the method of the class created with the decorator is properly entered.", () => {
       class TestFlicking {
         @withFlickingMethods
-        private nativeFlicking: Flicking;
+        private _nativeFlicking: Flicking;
 
         constructor() {
           flickingInfo = createFlicking(horizontal.shouldClone4, {
@@ -1050,7 +1050,7 @@ describe("Initialization", () => {
             circular: false,
             defaultIndex: 0,
           });
-          this.nativeFlicking = flickingInfo.instance;
+          this._nativeFlicking = flickingInfo.instance;
         }
       }
       const flicking: any = new TestFlicking();
@@ -1078,8 +1078,9 @@ describe("Initialization", () => {
         defaultIndex: 5,
         moveType: { type: "snap", count: 1},
       });
+      const flicking = flickingInfo.instance;
       const moves = [];
-      flickingInfo.instance.on("move", e => moves.push(e.axesEvent.pos.flick));
+      flicking.on("move", e => moves.push(e.axesEvent.pos.flick));
 
       // When
       await simulate(flickingInfo.element, {
@@ -1088,7 +1089,7 @@ describe("Initialization", () => {
       });
 
       // Then
-      const scrollArea = (flickingInfo.instance as any).viewport.getScrollArea();
+      const scrollArea = (flicking as any)._viewport.getScrollArea();
       expect(moves.every(move => move <= scrollArea.next)).to.be.true;
     });
 
@@ -1101,7 +1102,8 @@ describe("Initialization", () => {
         moveType: { type: "snap", count: 1},
       });
       const moves = [];
-      flickingInfo.instance.on("move", e => moves.push(e.axesEvent.pos.flick));
+      const flicking = flickingInfo.instance;
+      flicking.on("move", e => moves.push(e.axesEvent.pos.flick));
 
       // When
       await simulate(flickingInfo.element, {
@@ -1110,7 +1112,7 @@ describe("Initialization", () => {
       });
 
       // Then
-      const scrollArea = (flickingInfo.instance as any).viewport.getScrollArea();
+      const scrollArea = (flicking as any)._viewport.getScrollArea();
       expect(moves.every(move => move >= scrollArea.prev)).to.be.true;
     });
   });
@@ -1337,7 +1339,7 @@ describe("Initialization", () => {
       flicking.resize();
 
       // Then
-      const viewportSize = (flickingInfo.instance as any).viewport.getSize();
+      const viewportSize = (flicking as any)._viewport.getSize();
       expect(viewportSize).equals(parseInt(viewportSize, 10));
     });
 
@@ -1353,7 +1355,7 @@ describe("Initialization", () => {
       flicking.resize();
 
       // Then
-      const viewportSize = (flickingInfo.instance as any).viewport.getSize();
+      const viewportSize = (flicking as any)._viewport.getSize();
       expect(viewportSize).not.equals(parseInt(viewportSize, 10));
     });
 

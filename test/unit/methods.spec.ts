@@ -6,8 +6,8 @@ import { horizontal, panel as createPanelElement, vertical } from "./assets/fixt
 import { createFlicking, cleanup, simulate, createHorizontalElement, tick, createFixture } from "./assets/utils";
 import { EVENTS, DIRECTION, STATE_TYPE } from "../../src/consts";
 import { counter, toArray } from "../../src/utils";
-import Viewport from "../../src/components/Viewport";
-import Panel from "../../src/components/Panel";
+import Viewport from "../../src/core/Viewport";
+import Panel from "../../src/core/Panel";
 import { diff } from "@egjs/list-differ";
 
 declare var viewport: any;
@@ -66,7 +66,7 @@ describe("Methods call", () => {
     it("can move to next panel correctly", async () => {
       // Given
       const flicking = flickingInfo.instance;
-      const beforeCameraPos = (flicking as any).viewport.getCameraPosition();
+      const beforeCameraPos = (flicking as any)._viewport.getCameraPosition();
       const beforePanelPos = flicking.getCurrentPanel().getPosition();
 
       // When
@@ -74,7 +74,7 @@ describe("Methods call", () => {
       tick(300);
 
       // Then
-      const afterCameraPos = (flicking as any).viewport.getCameraPosition();
+      const afterCameraPos = (flicking as any)._viewport.getCameraPosition();
       const afterPanelPos = flicking.getCurrentPanel().getPosition();
 
       expect(Math.abs(afterCameraPos - beforeCameraPos)).equals(afterPanelPos - beforePanelPos);
@@ -732,7 +732,7 @@ describe("Methods call", () => {
 
       const index = flicking.getIndex();
       const flick = moveEnd.args[0][0].axesEvent.currentTarget.get(["flick"]).flick;
-      const scrollAreaSize = (flicking as any).viewport.getScrollAreaSize();
+      const scrollAreaSize = (flicking as any)._viewport.getScrollAreaSize();
 
       // call change event
       const targetIndex = index === 2 // Last panel's index is 2
@@ -806,7 +806,7 @@ describe("Methods call", () => {
         moveType: "freeScroll",
       });
       const flicking = flickingInfo.instance;
-      const flickingViewport = (flicking as any).viewport as Viewport;
+      const flickingViewport = (flicking as any)._viewport as Viewport;
       await simulate(flickingInfo.element, {
         deltaX: -200,
         duration: 100,
@@ -851,7 +851,7 @@ describe("Methods call", () => {
 
       // When
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any).viewport;
+      const viewport = (flicking as any)._viewport;
       const origCameraPos = viewport.getCameraPosition();
       flicking.moveTo(1, 0);
       const boundCameraPos = viewport.getCameraPosition();
@@ -872,7 +872,7 @@ describe("Methods call", () => {
 
       // When
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any).viewport;
+      const viewport = (flicking as any)._viewport;
       flicking.moveTo(9, 0);
       const origCameraPos = viewport.getCameraPosition();
       flicking.moveTo(8, 0);
@@ -894,7 +894,7 @@ describe("Methods call", () => {
 
       // When
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any).viewport;
+      const viewport = (flicking as any)._viewport;
       const origCameraPos = viewport.getCameraPosition();
       flicking.moveTo(1, 0);
       const boundCameraPos = viewport.getCameraPosition();
@@ -915,7 +915,7 @@ describe("Methods call", () => {
 
       // When
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any).viewport;
+      const viewport = (flicking as any)._viewport;
       const origCameraPos = viewport.getCameraPosition();
       flicking.moveTo(1, 0);
       const movedCameraPos = viewport.getCameraPosition();
@@ -936,7 +936,7 @@ describe("Methods call", () => {
 
       // When
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any).viewport;
+      const viewport = (flicking as any)._viewport;
       flicking.moveTo(9, 0);
       const origCameraPos = viewport.getCameraPosition();
       flicking.moveTo(8, 0);
@@ -1624,7 +1624,7 @@ describe("Methods call", () => {
   describe("sync()", () => {
     const renderOriginalElement = (count: number, className: string): HTMLElement[] => {
       const flicking = flickingInfo.instance;
-      const cameraElement = (flicking as any).viewport.cameraElement as HTMLElement;
+      const cameraElement = (flicking as any)._viewport._cameraElement as HTMLElement;
       const newElements = counter(count).map(index => {
         const tempElement = document.createElement("div");
         // Fix its size to 100px
@@ -1641,7 +1641,7 @@ describe("Methods call", () => {
 
     const renderClonedElement = (cloneCount: number): HTMLElement[] => {
       const flicking = flickingInfo.instance;
-      const cameraElement = (flicking as any).viewport.cameraElement as HTMLElement;
+      const cameraElement = (flicking as any)._viewport._cameraElement as HTMLElement;
       const clonedElements = counter(cloneCount).reduce((elements: HTMLElement[]) => {
         flicking.getAllPanels().forEach(panel => {
           const clonedElement = panel.getElement().cloneNode(true);

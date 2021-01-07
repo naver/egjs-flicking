@@ -3,17 +3,17 @@
  * egjs projects are licensed under the MIT license
  */
 
-import { MoveTypeStringOption, MoveTypeContext, DestinationInfo } from "../types";
-import Panel from "../components/Panel";
+import Panel from "../core/Panel";
 import { EVENTS } from "../consts";
+import { MoveTypeStringOption, MoveTypeContext, DestinationInfo } from "../types";
 
 abstract class MoveType {
-  protected readonly abstract type: string;
+  protected readonly abstract _type: string;
 
   public abstract findTargetPanel(ctx: MoveTypeContext): DestinationInfo;
 
   public is(type: MoveTypeStringOption): boolean {
-    return type === this.type;
+    return type === this._type;
   }
 
   public findRestorePanel(ctx: MoveTypeContext): DestinationInfo {
@@ -21,7 +21,7 @@ abstract class MoveType {
     const options = viewport.options;
 
     const panel = options.circular
-      ? this.findRestorePanelInCircularMode(ctx)
+      ? this._findRestorePanelInCircularMode(ctx)
       : viewport.getCurrentPanel()!;
 
     return {
@@ -45,7 +45,7 @@ abstract class MoveType {
   }
 
   // Calculate minimum distance to "change" panel
-  protected calcBrinkOfChange(ctx: MoveTypeContext): number {
+  protected _calcBrinkOfChange(ctx: MoveTypeContext): number {
     const { viewport, isNextDirection } = ctx;
 
     const options = viewport.options;
@@ -69,7 +69,7 @@ abstract class MoveType {
     return minimumDistanceToChange;
   }
 
-  private findRestorePanelInCircularMode(ctx: MoveTypeContext): Panel {
+  private _findRestorePanelInCircularMode(ctx: MoveTypeContext): Panel {
     const viewport = ctx.viewport;
     const originalPanel = viewport.getCurrentPanel()!.getOriginalPanel();
     const hangerPosition = viewport.getHangerPosition();
