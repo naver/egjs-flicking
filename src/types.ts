@@ -506,8 +506,8 @@ export interface FlickingContext {
   flicking: Flicking;
   viewport: Viewport;
   transitTo: StateMachine["transitTo"];
-  triggerEvent: Flicking["triggerEvent"];
-  moveCamera: Flicking["moveCamera"];
+  triggerEvent: Flicking["_triggerEvent"];
+  moveCamera: Flicking["_moveCamera"];
   stopCamera: Viewport["stopCamera"];
 }
 

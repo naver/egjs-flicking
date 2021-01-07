@@ -1,4 +1,3 @@
-
 // flicking.js
 // flicking.min.js
 // flicking.pkgd.js
@@ -9,7 +8,8 @@ const buildHelper = require("@egjs/build-helper");
 
 const external = {
 	"@egjs/axes": "eg.Axes",
-	"@egjs/component": "eg.Component",
+  "@egjs/component": "eg.Component",
+  "@egjs/imready": "eg.ImReady"
 }
 const name = "eg.Flicking";
 

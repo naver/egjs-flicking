@@ -1,4 +1,4 @@
-import { SinonStatic, SinonFakeTimers, SinonSpy } from "sinon";
+import * as sinon from "sinon";
 
 import Viewport from "../../src/core/Viewport";
 import Flicking from "../../src/Flicking";
@@ -8,12 +8,10 @@ import { horizontal } from "./assets/fixture";
 import { DEFAULT_OPTIONS } from "../../src/consts";
 import { counter, clamp } from "../../src/utils";
 
-declare var sinon: SinonStatic;
-
 describe("Viewport", () => {
   let flicking: Flicking;
   let viewport: Viewport;
-  let clock: SinonFakeTimers;
+  let clock: sinon.SinonFakeTimers;
 
   const createViewport = (type: string, options: Partial<FlickingOptions> = {}) => {
     const flickingInfo = createFlicking(type, options);
@@ -115,7 +113,7 @@ describe("Viewport", () => {
       expect(checkedAfterAdd[0][0]).equals(4);
       expect(checkedAfterAdd[0][1]).equals(DEFAULT_OPTIONS.lastIndex);
 
-      const spliceSpy = viewport.getCheckedIndexes().splice as SinonSpy;
+      const spliceSpy = viewport.getCheckedIndexes().splice as sinon.SinonSpy;
       expect(spliceSpy.calledOnce).to.be.true;
       // splice called with (0, 1, [3 + 1, Infinity + 1])
       expect(spliceSpy.getCall(0).args).deep.equals([0, 1, [4, Infinity]]);
@@ -234,7 +232,7 @@ describe("Viewport", () => {
       expect(checkedAfterAdd[0][0]).equals(4);
       expect(checkedAfterAdd[0][1]).equals(DEFAULT_OPTIONS.lastIndex);
 
-      const spliceSpy = viewport.getCheckedIndexes().splice as SinonSpy;
+      const spliceSpy = viewport.getCheckedIndexes().splice as sinon.SinonSpy;
       expect(spliceSpy.calledOnce).to.be.true;
       // splice called with (0, 1, [3 + 1, Infinity + 1])
       expect(spliceSpy.getCall(0).args).deep.equals([0, 1, [4, Infinity]]);

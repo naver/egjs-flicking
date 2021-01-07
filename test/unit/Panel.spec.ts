@@ -1,13 +1,12 @@
-import { SinonStatic } from "sinon";
+import * as sinon from "sinon";
 
-import Flicking from "../../src/Flicking";
-import { FlickingEvent, FlickingOptions } from "../../src/types";
-import { cleanup, createFlicking } from "./assets/utils";
+import Flicking from "~/Flicking";
+import Panel from "~/core/Panel";
+import { counter } from "~/utils";
+import { FlickingEvent, FlickingOptions } from "~/types";
+
 import { horizontal } from "./assets/fixture";
-import { counter } from "../../src/utils";
-import Panel from "../../src/core/Panel";
-
-declare var sinon: SinonStatic;
+import { cleanup, createFlicking } from "./assets/utils";
 
 describe("Panel", () => {
   let flickingInfo: {

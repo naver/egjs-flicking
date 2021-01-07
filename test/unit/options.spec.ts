@@ -1,11 +1,12 @@
-import Flicking from "../../src/Flicking";
-import { DEFAULT_OPTIONS } from "../../src/consts";
-import { FlickingEvent, FlickingPanel, Plugin } from "../../src/types";
+import * as sinon from "sinon";
+
+import Flicking from "~/Flicking";
+import { counter, withFlickingMethods } from "~/utils";
+import { DEFAULT_OPTIONS, EVENTS } from "~/consts";
+import { FlickingEvent, FlickingPanel, Plugin } from "~/types";
+
 import { horizontal, vertical } from "./assets/fixture";
 import { createFlicking, cleanup, simulate, createFixture, tick } from "./assets/utils";
-import { EVENTS } from "../../src/consts";
-import * as sinon from "sinon";
-import { counter, withFlickingMethods } from "../../src/utils";
 
 declare var viewport: any;
 

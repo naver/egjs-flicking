@@ -1,21 +1,21 @@
 {
-  "extends": "./tsconfig",
+  "extends": "../tsconfig",
   "compilerOptions": {
     "module": "commonjs",
     "noImplicitAny": false,
     "strictNullChecks": false,
     "noUnusedLocals": false,
-    "experimentalDecorators": true,
     "types": [
       "karma-chai",
       "mocha",
+      "sinon"
     ]
   },
   "include": [
-    "./src/**/*.ts",
-    "./test/**/*.ts"
+    "../src/**/*.ts",
+    "./**/*.ts"
   ],
   "exclude": [
-    "./node_modules/**/*.ts"
+    "../node_modules/**/*.ts"
   ]
 }

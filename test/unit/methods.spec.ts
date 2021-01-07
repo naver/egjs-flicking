@@ -1,14 +1,20 @@
-import { spy } from "sinon";
+import * as sinon from "sinon";
+import { diff } from "@egjs/list-differ";
 
-import Flicking from "../../src/Flicking";
-import { FlickingEvent, FlickingPanel, NeedPanelEvent } from "../../src/types";
-import { horizontal, panel as createPanelElement, vertical } from "./assets/fixture";
+import Flicking from "~/Flicking";
+import Viewport from "~/core/Viewport";
+import Panel from "~/core/Panel";
+import { counter, toArray } from "~/utils";
+import { EVENTS, DIRECTION } from "~/consts";
+import { FlickingEvent, FlickingPanel, NeedPanelEvent } from "~/types";
+
 import { createFlicking, cleanup, simulate, createHorizontalElement, tick, createFixture } from "./assets/utils";
 import { EVENTS, DIRECTION, STATE_TYPE } from "../../src/consts";
 import { counter, toArray } from "../../src/utils";
 import Viewport from "../../src/core/Viewport";
 import Panel from "../../src/core/Panel";
 import { diff } from "@egjs/list-differ";
+import { horizontal, panel as createPanelElement, vertical } from "./assets/fixture";
 
 declare var viewport: any;
 
@@ -679,9 +685,9 @@ describe("Methods call", () => {
         moveType: "freeScroll",
       });
       const flicking = flickingInfo.instance;
-      const restore = spy();
-      const change = spy();
-      const moveEnd = spy();
+      const restore = sinon.spy();
+      const change = sinon.spy();
+      const moveEnd = sinon.spy();
 
       flicking.on("restore", restore);
       flicking.on("change", change);
@@ -717,11 +723,11 @@ describe("Methods call", () => {
 
       let destPos = 0;
 
-      const restore = spy();
-      const change = spy(e => {
+      const restore = sinon.spy();
+      const change = sinon.spy(e => {
         e.axesEvent && (destPos = e.axesEvent.destPos.flick);
       });
-      const moveEnd = spy();
+      const moveEnd = sinon.spy();
 
       flicking.on("restore", restore);
       flicking.on("change", change);

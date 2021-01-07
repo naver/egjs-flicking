@@ -1,13 +1,13 @@
-import { SinonStatic } from "sinon";
-import Flicking from "../../src/Flicking";
-import { EVENTS, DIRECTION, MOVE_TYPE } from "../../src/consts";
-import { FlickingEvent, NeedPanelEvent, FlickingOptions } from "../../src/types";
+import * as sinon from "sinon";
+
+import Flicking from "~/Flicking";
+import Viewport from "~/core/Viewport";
+import { merge } from "~/utils";
+import { EVENTS, DIRECTION, MOVE_TYPE } from "~/consts";
+import { FlickingEvent, NeedPanelEvent, FlickingOptions } from "~/types";
+
 import { horizontal, vertical } from "./assets/fixture";
 import { createFlicking, createHorizontalElement, cleanup, simulate, tick } from "./assets/utils";
-import { merge } from "../../src/utils";
-import Viewport from "../../src/core/Viewport";
-
-declare var sinon: SinonStatic;
 
 describe("Events", () => {
   afterEach(() => {

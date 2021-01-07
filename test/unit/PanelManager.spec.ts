@@ -1,15 +1,12 @@
-import { SinonStatic } from "sinon";
+import Flicking from "~/Flicking";
+import Panel from "~/core/Panel";
+import Viewport from "~/core/Viewport";
+import PanelManager from "~/core/PanelManager";
+import { counter } from "~/utils";
+import { FlickingEvent } from "~/types";
 
-import Flicking from "../../src/Flicking";
-import Panel from "../../src/core/Panel";
-import Viewport from "../../src/core/Viewport";
-import PanelManager from "../../src/core/PanelManager";
-import { counter } from "../../src/utils";
-import { FlickingEvent } from "../../src/types";
 import { cleanup, createFlicking } from "./assets/utils";
 import { horizontal } from "./assets/fixture";
-
-declare var sinon: SinonStatic;
 
 describe("PanelManager", () => {
   let panelManager: PanelManager;

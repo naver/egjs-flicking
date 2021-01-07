@@ -174,6 +174,30 @@ class Flicking extends Component<{
   }
 
   /**
+   * Return the reference element and all its children to the state they were in before the instance was created. Remove all attached event handlers. Specify `null` for all attributes of the instance (including inherited attributes).
+   * @ko 기준 요소와 그 하위 패널들을 인스턴스 생성전의 상태로 되돌린다. 부착된 모든 이벤트 핸들러를 탈거한다. 인스턴스의 모든 속성(상속받은 속성포함)에 `null`을 지정한다.
+   * @example
+   * const flick = new eg.Flicking("#flick");
+   * flick.destroy();
+   * console.log(flick.moveTo); // null
+   */
+  public destroy(option: Partial<DestroyOption> = {}): void {
+    this.off();
+
+    if (this.options.autoResize) {
+      window.removeEventListener("resize", this.resize);
+    }
+
+    this._viewport.destroy(option);
+    this._contentsReadyChecker?.destroy();
+
+    // release resources
+    for (const x in this) {
+      (this as any)[x] = null;
+    }
+  }
+
+  /**
    * Move to the previous panel if it exists.
    * @ko 이전 패널이 존재시 해당 패널로 이동한다.
    * @param [duration=options.duration] Duration of the panel movement animation.(unit: ms)<ko>패널 이동 애니메이션 진행 시간.(단위: ms)</ko>
@@ -484,30 +508,6 @@ class Flicking extends Component<{
   public removePlugins(plugins: Plugin | Plugin[]) {
     this._viewport.removePlugins(plugins);
     return this;
-  }
-
-  /**
-   * Return the reference element and all its children to the state they were in before the instance was created. Remove all attached event handlers. Specify `null` for all attributes of the instance (including inherited attributes).
-   * @ko 기준 요소와 그 하위 패널들을 인스턴스 생성전의 상태로 되돌린다. 부착된 모든 이벤트 핸들러를 탈거한다. 인스턴스의 모든 속성(상속받은 속성포함)에 `null`을 지정한다.
-   * @example
-   * const flick = new eg.Flicking("#flick");
-   * flick.destroy();
-   * console.log(flick.moveTo); // null
-   */
-  public destroy(option: Partial<DestroyOption> = {}): void {
-    this.off();
-
-    if (this.options.autoResize) {
-      window.removeEventListener("resize", this.resize);
-    }
-
-    this._viewport.destroy(option);
-    this._contentsReadyChecker?.destroy();
-
-    // release resources
-    for (const x in this) {
-      (this as any)[x] = null;
-    }
   }
 
   /**
