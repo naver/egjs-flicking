@@ -17,9 +17,12 @@ class HoldingState extends State {
   public onChange(e: any, context: FlickingContext): void {
     const { flicking, triggerEvent, transitTo } = context;
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const inputEvent = e.inputEvent as { offsetX: number; offsetY: number };
+
     const offset = flicking.options.horizontal
-      ? e.inputEvent.offsetX
-      : e.inputEvent.offsetY;
+      ? inputEvent.offsetX
+      : inputEvent.offsetY;
     this.direction = offset < 0
       ? DIRECTION.NEXT
       : DIRECTION.PREV;
@@ -40,6 +43,7 @@ class HoldingState extends State {
 
     triggerEvent(EVENTS.HOLD_END, e, true);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (e.delta.flick !== 0) {
       // Sometimes "release" event on axes triggered before "change" event
       // Especially if user flicked panel fast in really short amount of time
@@ -47,6 +51,7 @@ class HoldingState extends State {
 
       // Event flow should be HOLD_START -> MOVE_START -> MOVE -> HOLD_END
       // At least one move event should be included between holdStart and holdEnd
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       e.setTo({ flick: viewport.getCameraPosition() }, 0);
       transitTo(STATE_TYPE.IDLE);
       return;
@@ -54,6 +59,7 @@ class HoldingState extends State {
 
     // Can't handle select event here,
     // As "finish" axes event happens
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     this._releaseEvent = e;
   }
 
@@ -68,17 +74,21 @@ class HoldingState extends State {
 
     // Handle release event here
     // To prevent finish event called twice
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const releaseEvent = this._releaseEvent;
 
     // Static click
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const srcEvent = releaseEvent.inputEvent.srcEvent;
 
     let clickedElement: HTMLElement;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (srcEvent.type === "touchend") {
       const touchEvent = srcEvent as TouchEvent;
       const touch = touchEvent.changedTouches[0];
       clickedElement = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement;
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       clickedElement = srcEvent.target;
     }
     const clickedPanel = viewport.panelManager.findPanelOf(clickedElement);
@@ -96,7 +106,7 @@ class HoldingState extends State {
       triggerEvent(EVENTS.SELECT, null, true, {
         direction, // Direction to the clicked panel
         index: clickedPanel.getIndex(),
-        panel: clickedPanel,
+        panel: clickedPanel
       });
     }
   }

@@ -9,7 +9,7 @@ const colors = [
   "#032B43",
   "#50808E",
   "#420217",
-  "#565264",
+  "#565264"
 ];
 const defaultClassPrefix = DEFAULT_OPTIONS.classPrefix;
 
@@ -17,26 +17,23 @@ const defaultClassPrefix = DEFAULT_OPTIONS.classPrefix;
 export const wrapper = (...panels: any[]) => `
   <div class="wrapper">
     ${typeof panels[0] === "object"
-      ? panels.map(([panelFunc, args], index) => panelFunc(index, args)).join("\n")
-      : panels[0]
-    }
+    ? panels.map(([panelFunc, args], index) => panelFunc(index, args)).join("\n")
+    : panels[0]}
   </div>`;
 
 // Wrapper with dynamic size
 export const inlineWrapper = (...panels: any[]) => `
   <div class="wrapper inline">
     ${typeof panels[0] === "object"
-      ? panels.map(([panelFunc, args], index) => panelFunc(index, args)).join("\n")
-      : panels[0]
-    }
+    ? panels.map(([panelFunc, args], index) => panelFunc(index, args)).join("\n")
+    : panels[0]}
   </div>`;
 
 export const viewport = (...panels: any[]) => `
   <div class="${defaultClassPrefix}-viewport">
     ${typeof panels[0] === "object"
-      ? panels.map(([panelFunc, args], index) => panelFunc(index, args)).join("\n")
-      : panels[0]
-    }
+    ? panels.map(([panelFunc, args], index) => panelFunc(index, args)).join("\n")
+    : panels[0]}
   </div>`;
 
 export const camera = (...panels: any[]) => `
@@ -189,7 +186,7 @@ export const horizontal = {
         [image, "panel-inline", "./images/non-exist.png", true],
       ),
     ),
-  ),
+  )
 };
 
 export const vertical = {
@@ -214,5 +211,5 @@ export const vertical = {
   shouldClone4: wrapper(
     [panel, "panel-vertical-50"],
     [panel, "panel-vertical-50"],
-  ),
+  )
 };

@@ -4,6 +4,7 @@
  */
 
 import Control from "./Control";
+import Panel from "~/core/Panel";
 import { MOVE_TYPE, EVENTS } from "../consts";
 import { MoveTypeContext, DestinationInfo, MoveTypeSnapOption } from "../types";
 import { clamp } from "../utils";
@@ -12,8 +13,8 @@ class SnapControl extends Control {
   protected readonly _type: string = MOVE_TYPE.SNAP;
   protected _count: number;
 
-  constructor({
-    count = 1,
+  public constructor({
+    count = 1
   }: Partial<Omit<MoveTypeSnapOption, "type">> = {}) {
     super();
     this._count = count;
@@ -23,8 +24,8 @@ class SnapControl extends Control {
     const { viewport, axesEvent, swipeDistance } = ctx;
     const snapCount = this._count;
     const eventDelta = Math.abs(axesEvent.delta.flick);
-    const currentPanel = viewport.getCurrentPanel()!;
-    const nearestPanel = viewport.getNearestPanel()!;
+    const currentPanel = viewport.getCurrentPanel() as Panel;
+    const nearestPanel = viewport.getNearestPanel() as Panel;
     const minimumDistanceToChange = this._calcBrinkOfChange(ctx);
     const nearestIsCurrent = nearestPanel.getIndex() === currentPanel.getIndex();
 
@@ -48,7 +49,7 @@ class SnapControl extends Control {
         eventType: (swipeDistance <= minimumDistanceToChange)
           || (viewport.isOutOfBound() && nearestIsCurrent)
           ? EVENTS.RESTORE
-          : EVENTS.CHANGE,
+          : EVENTS.CHANGE
       };
     }
   }
@@ -64,7 +65,7 @@ class SnapControl extends Control {
     const halfGap = options.gap / 2;
     const estimatedHangerPos = axesEvent.destPos.flick + viewport.getRelativeHangerPosition();
 
-    let panelToMove = viewport.getNearestPanel()!;
+    let panelToMove = viewport.getNearestPanel() as Panel;
     let cycleIndex = panelToMove.getCloneIndex() + 1; // 0(original) or 1(clone)
     let passedPanelCount = 0;
 
@@ -121,7 +122,7 @@ class SnapControl extends Control {
       duration,
       eventType: Math.max(eventDelta, state.delta) > minimumDistanceToChange
         ? EVENTS.CHANGE
-        : EVENTS.RESTORE,
+        : EVENTS.RESTORE
     };
   }
 
@@ -130,7 +131,7 @@ class SnapControl extends Control {
 
     const options = viewport.options;
     const currentIndex = viewport.getCurrentIndex();
-    const currentPanel = viewport.panelManager.get(currentIndex)!;
+    const currentPanel = viewport.panelManager.get(currentIndex) as Panel;
     const hangerPosition = viewport.getHangerPosition();
     const scrollArea = viewport.getScrollArea();
 
@@ -171,7 +172,7 @@ class SnapControl extends Control {
       panel: panelToMove,
       destPos,
       duration: options.duration,
-      eventType,
+      eventType
     };
   }
 }

@@ -3,5 +3,5 @@ import Viewport from "./Viewport";
 
 export {
   Panel,
-  Viewport,
+  Viewport
 };

@@ -13,6 +13,7 @@ class DraggingState extends State {
   public readonly playing = true;
 
   public onChange(e: any, { moveCamera, transitTo }: FlickingContext): void {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (!e.delta.flick) {
       return;
     }
@@ -31,7 +32,8 @@ class DraggingState extends State {
     const options = flicking.options;
     const horizontal = options.horizontal;
     const moveType = viewport.moveType;
-    const inputEvent = e.inputEvent;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const inputEvent = e.inputEvent as { velocityX: number; velocityY: number; deltaX: number; deltaY: number };
 
     const velocity = horizontal
       ? inputEvent.velocityX
@@ -59,10 +61,11 @@ class DraggingState extends State {
 
     const moveTypeContext = {
       viewport,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       axesEvent: e,
       state: this,
       swipeDistance,
-      isNextDirection,
+      isNextDirection
     };
 
     // Update last position to cope with Axes's animating behavior
@@ -90,6 +93,7 @@ class DraggingState extends State {
 
     if (!currentPanel || !nearestPanel) {
       // There're no panels
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       e.stop();
       transitTo(STATE_TYPE.IDLE);
       return;

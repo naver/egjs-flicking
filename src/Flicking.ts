@@ -37,7 +37,7 @@ import {
   MoveTypeStringOption,
   ValueOf,
   MoveTypeObjectOption,
-  MoveTypeSnapOption,
+  MoveTypeSnapOption
 } from "./types";
 
 /**
@@ -63,14 +63,17 @@ class Flicking extends Component<{
 }> {
   /**
    * Version info string
+   *
    * @ko 버전정보 문자열
    * @example
    * eg.Flicking.VERSION;  // ex) 3.0.0
    * @memberof eg.Flicking
    */
-  public static VERSION: string = "#__VERSION__#";
+  public static VERSION = "#__VERSION__#";
+
   /**
    * Direction constant - "PREV" or "NEXT"
+   *
    * @ko 방향 상수 - "PREV" 또는 "NEXT"
    * @type {object}
    * @property {"PREV"} PREV - Prev direction from current hanger position.<br/>It's `left(←️)` direction when `horizontal: true`.<br/>Or, `up(↑️)` direction when `horizontal: false`.<ko>현재 행어를 기준으로 이전 방향.<br/>`horizontal: true`일 경우 `왼쪽(←️)` 방향.<br/>`horizontal: false`일 경우 `위쪽(↑️)`방향이다.</ko>
@@ -83,6 +86,7 @@ class Flicking extends Component<{
 
   /**
    * Event type object with event name strings.
+   *
    * @ko 이벤트 이름 문자열들을 담은 객체
    * @type {object}
    * @property {"holdStart"} HOLD_START - holdStart event<ko>holdStart 이벤트</ko>
@@ -111,7 +115,7 @@ class Flicking extends Component<{
   // Internal States
   private _wrapper: HTMLElement;
   private _eventContext: FlickingContext;
-  private _isPanelChangedAtBeforeSync: boolean = false;
+  private _isPanelChangedAtBeforeSync = false;
 
   /**
    * @param element A base element for the eg.Flicking module. When specifying a value as a `string` type, you must specify a css selector string to select the element.<ko>eg.Flicking 모듈을 사용할 기준 요소. `string`타입으로 값 지정시 요소를 선택하기 위한 css 선택자 문자열을 지정해야 한다.</ko>
@@ -147,7 +151,7 @@ class Flicking extends Component<{
    * @param {boolean} [options.resizeOnContentsReady=false] Whether to resize the Flicking after the image/video elements inside viewport are ready.<br/>Use this property to prevent wrong Flicking layout caused by dynamic image / video sizes.<ko>Flicking 내부의 이미지 / 비디오 엘리먼트들이 전부 로드되었을 때 Flicking의 크기를 재계산하기 위한 옵션.<br/>이미지 / 비디오 크기가 고정 크기가 아닐 경우 사용하여 레이아웃이 잘못되는 것을 방지할 수 있다.</ko>
    * @param {boolean} [options.collectStatistics=true] Whether to collect statistics on how you are using `Flicking`. These statistical data do not contain any personal information and are used only as a basis for the development of a user-friendly product.<ko>어떻게 `Flicking`을 사용하고 있는지에 대한 통계 수집 여부를 나타낸다. 이 통계자료는 개인정보를 포함하고 있지 않으며 오직 사용자 친화적인 제품으로 발전시키기 위한 근거자료로서 활용한다.</ko>
    */
-  constructor(
+  public constructor(
     element: string | HTMLElement,
     options: Partial<FlickingOptions> = {},
   ) {
@@ -166,7 +170,7 @@ class Flicking extends Component<{
       cameraEl: elements.camera,
       flicking: this,
       options: this.options,
-      triggerEvent: this._triggerEvent,
+      triggerEvent: this._triggerEvent
     });
     this._control = this._getControl();
     this._camera = this._getCamera(elements.camera);
@@ -179,6 +183,7 @@ class Flicking extends Component<{
 
   /**
    * Return the reference element and all its children to the state they were in before the instance was created. Remove all attached event handlers. Specify `null` for all attributes of the instance (including inherited attributes).
+   *
    * @ko 기준 요소와 그 하위 패널들을 인스턴스 생성전의 상태로 되돌린다. 부착된 모든 이벤트 핸들러를 탈거한다. 인스턴스의 모든 속성(상속받은 속성포함)에 `null`을 지정한다.
    * @example
    * const flick = new eg.Flicking("#flick");
@@ -196,13 +201,15 @@ class Flicking extends Component<{
     this._contentsReadyChecker?.destroy();
 
     // release resources
+    // eslint-disable-next-line guard-for-in
     for (const x in this) {
-      (this as any)[x] = null;
+      (this as any)[x] = null; // eslint-disable-line @typescript-eslint/no-unsafe-member-access
     }
   }
 
   /**
    * Move to the previous panel if it exists.
+   *
    * @ko 이전 패널이 존재시 해당 패널로 이동한다.
    * @param [duration=options.duration] Duration of the panel movement animation.(unit: ms)<ko>패널 이동 애니메이션 진행 시간.(단위: ms)</ko>
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
@@ -223,6 +230,7 @@ class Flicking extends Component<{
 
   /**
    * Move to the next panel if it exists.
+   *
    * @ko 다음 패널이 존재시 해당 패널로 이동한다.
    * @param [duration=options.duration] Duration of the panel movement animation(unit: ms).<ko>패널 이동 애니메이션 진행 시간.(단위: ms)</ko>
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
@@ -243,6 +251,7 @@ class Flicking extends Component<{
 
   /**
    * Move to the panel of given index.
+   *
    * @ko 주어진 인덱스에 해당하는 패널로 이동한다.
    * @param index The index number of the panel to move.<ko>이동할 패널의 인덱스 번호.</ko>
    * @param duration [duration=options.duration] Duration of the panel movement.(unit: ms)<ko>패널 이동 애니메이션 진행 시간.(단위: ms)</ko>
@@ -267,13 +276,13 @@ class Flicking extends Component<{
       const possiblePositions = [
         anchorPosition - scrollAreaSize,
         anchorPosition,
-        anchorPosition + scrollAreaSize,
+        anchorPosition + scrollAreaSize
       ];
-      const nearestPosition = possiblePositions.reduce((nearest, current) => {
-        return (Math.abs(current - hangerPosition) < Math.abs(nearest - hangerPosition))
+      const nearestPosition = possiblePositions.reduce(
+        (nearest, current) => (Math.abs(current - hangerPosition) < Math.abs(nearest - hangerPosition))
           ? current
-          : nearest;
-      }, Infinity) - panel.getRelativeAnchorPosition();
+          : nearest, Infinity
+      ) - panel.getRelativeAnchorPosition();
 
       const identicals = panel.getIdenticalPanels();
       const offset = nearestPosition - anchorPosition;
@@ -310,6 +319,7 @@ class Flicking extends Component<{
 
   /**
    * Return index of the current panel. `-1` if no panel exists.
+   *
    * @ko 현재 패널의 인덱스 번호를 반환한다. 패널이 하나도 없을 경우 `-1`을 반환한다.
    * @return Current panel's index, zero-based integer.<ko>현재 패널의 인덱스 번호. 0부터 시작하는 정수.</ko>
    */
@@ -319,6 +329,7 @@ class Flicking extends Component<{
 
   /**
    * Return the wrapper element user provided in constructor.
+   *
    * @ko 사용자가 생성자에서 제공한 래퍼 엘리먼트를 반환한다.
    * @return Wrapper element user provided.<ko>사용자가 제공한 래퍼 엘리먼트.</ko>
    */
@@ -328,6 +339,7 @@ class Flicking extends Component<{
 
   /**
    * Return the viewport element's size.
+   *
    * @ko 뷰포트 엘리먼트의 크기를 반환한다.
    * @return Width if horizontal: true, height if horizontal: false
    */
@@ -337,6 +349,7 @@ class Flicking extends Component<{
 
   /**
    * Return current panel. `null` if no panel exists.
+   *
    * @ko 현재 패널을 반환한다. 패널이 하나도 없을 경우 `null`을 반환한다.
    * @return Current panel.<ko>현재 패널.</ko>
    */
@@ -350,6 +363,7 @@ class Flicking extends Component<{
 
   /**
    * Return the panel of given index. `null` if it doesn't exists.
+   *
    * @ko 주어진 인덱스에 해당하는 패널을 반환한다. 해당 패널이 존재하지 않을 시 `null`이다.
    * @return Panel of given index.<ko>주어진 인덱스에 해당하는 패널.</ko>
    */
@@ -363,6 +377,7 @@ class Flicking extends Component<{
 
   /**
    * Return all panels.
+   *
    * @ko 모든 패널들을 반환한다.
    * @param - Should include cloned panels or not.<ko>복사된 패널들을 포함할지의 여부.</ko>
    * @return All panels.<ko>모든 패널들.</ko>
@@ -380,6 +395,7 @@ class Flicking extends Component<{
 
   /**
    * Return the panels currently shown in viewport area.
+   *
    * @ko 현재 뷰포트 영역에서 보여지고 있는 패널들을 반환한다.
    * @return Panels currently shown in viewport area.<ko>현재 뷰포트 영역에 보여지는 패널들</ko>
    */
@@ -389,6 +405,7 @@ class Flicking extends Component<{
 
   /**
    * Return length of original panels.
+   *
    * @ko 원본 패널의 개수를 반환한다.
    * @return Length of original panels.<ko>원본 패널의 개수</ko>
    */
@@ -398,6 +415,7 @@ class Flicking extends Component<{
 
   /**
    * Return how many groups of clones are created.
+   *
    * @ko 몇 개의 클론 그룹이 생성되었는지를 반환한다.
    * @return Length of cloned panel groups.<ko>클론된 패널 그룹의 개수</ko>
    */
@@ -407,6 +425,7 @@ class Flicking extends Component<{
 
   /**
    * Get maximum panel index for `infinite` mode.
+   *
    * @ko `infinite` 모드에서 적용되는 추가 가능한 패널의 최대 인덱스 값을 반환한다.
    * @see {@link eg.Flicking.FlickingOptions}
    * @return Maximum index of panel that can be added.<ko>최대 추가 가능한 패널의 인덱스.</ko>
@@ -417,6 +436,7 @@ class Flicking extends Component<{
 
   /**
    * Set maximum panel index for `infinite' mode.<br>[needPanel]{@link eg.Flicking#events:needPanel} won't be triggered anymore when last panel's index reaches it.<br>Also, you can't add more panels after it.
+   *
    * @ko `infinite` 모드에서 적용되는 패널의 최대 인덱스를 설정한다.<br>마지막 패널의 인덱스가 설정한 값에 도달할 경우 더 이상 [needPanel]{@link eg.Flicking#events:needPanel} 이벤트가 발생되지 않는다.<br>또한, 설정한 인덱스 이후로 새로운 패널을 추가할 수 없다.
    * @param - Maximum panel index.
    * @see {@link eg.Flicking.FlickingOptions}
@@ -430,6 +450,7 @@ class Flicking extends Component<{
 
   /**
    * Return panel movement animation.
+   *
    * @ko 현재 패널 이동 애니메이션이 진행 중인지를 반환한다.
    * @return Is animating or not.<ko>애니메이션 진행 여부.</ko>
    */
@@ -439,6 +460,7 @@ class Flicking extends Component<{
 
   /**
    * Unblock input devices.
+   *
    * @ko 막았던 입력 장치로부터의 입력을 푼다.
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
@@ -450,6 +472,7 @@ class Flicking extends Component<{
 
   /**
    * Block input devices.
+   *
    * @ko 입력 장치로부터의 입력을 막는다.
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
@@ -461,6 +484,7 @@ class Flicking extends Component<{
 
   /**
    * Get current flicking status. You can restore current state by giving returned value to [setStatus()]{@link eg.Flicking#setStatus}.
+   *
    * @ko 현재 상태 값을 반환한다. 반환받은 값을 [setStatus()]{@link eg.Flicking#setStatus} 메소드의 인자로 지정하면 현재 상태를 복원할 수 있다.
    * @return An object with current status value information.<ko>현재 상태값 정보를 가진 객체.</ko>
    */
@@ -469,22 +493,21 @@ class Flicking extends Component<{
 
     const panels = viewport.panelManager.originalPanels()
       .filter(panel => !!panel)
-      .map(panel => {
-        return {
-          html: panel.getElement().outerHTML,
-          index: panel.getIndex(),
-        };
-      });
+      .map(panel => ({
+        html: panel.getElement().outerHTML,
+        index: panel.getIndex()
+      }));
 
     return {
       index: viewport.getCurrentIndex(),
       panels,
-      position: viewport.getCameraPosition(),
+      position: viewport.getCameraPosition()
     };
   }
 
   /**
    * Restore to the state of the `status`.
+   *
    * @ko `status`의 상태로 복원한다.
    * @param status Status value to be restored. You can specify the return value of the [getStatus()]{@link eg.Flicking#getStatus} method.<ko>복원할 상태 값. [getStatus()]{@link eg.Flicking#getStatus}메서드의 반환값을 지정하면 된다.</ko>
    */
@@ -494,6 +517,7 @@ class Flicking extends Component<{
 
   /**
    * Add plugins that can have different effects on Flicking.
+   *
    * @ko 플리킹에 다양한 효과를 부여할 수 있는 플러그인을 추가한다.
    * @param - The plugin(s) to add.<ko>추가할 플러그인(들).</ko>
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
@@ -505,6 +529,7 @@ class Flicking extends Component<{
 
   /**
    * Remove plugins from Flicking.
+   *
    * @ko 플리킹으로부터 플러그인들을 제거한다.
    * @param - The plugin(s) to remove.<ko>제거 플러그인(들).</ko>
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
@@ -516,6 +541,7 @@ class Flicking extends Component<{
 
   /**
    * Update panels to current state.
+   *
    * @ko 패널들을 현재 상태에 맞춰 갱신한다.
    * @method
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
@@ -535,7 +561,7 @@ class Flicking extends Component<{
       && options.isEqualSize !== true;
 
     // Temporarily set parent's height to prevent scroll (#333)
-    const parent = wrapper.parentElement!;
+    const parent = wrapper.parentElement as HTMLElement;
     const origStyle = parent.style.height;
     parent.style.height = `${parent.offsetHeight}px`;
 
@@ -551,10 +577,11 @@ class Flicking extends Component<{
     parent.style.height = origStyle;
 
     return this;
-  }
+  };
 
   /**
    * Add new panels at the beginning of panels.
+   *
    * @ko 제일 앞에 새로운 패널을 추가한다.
    * @param element - Either HTMLElement, HTML string, or array of them.<br>It can be also HTML string of multiple elements with same depth.<ko>HTMLElement 혹은 HTML 문자열, 혹은 그것들의 배열도 가능하다.<br>또한, 같은 depth의 여러 개의 엘리먼트에 해당하는 HTML 문자열도 가능하다.</ko>
    * @return Array of appended panels.<ko>추가된 패널들의 배열</ko>
@@ -580,6 +607,7 @@ class Flicking extends Component<{
 
   /**
    * Add new panels at the end of panels.
+   *
    * @ko 제일 끝에 새로운 패널을 추가한다.
    * @param element - Either HTMLElement, HTML string, or array of them.<br>It can be also HTML string of multiple elements with same depth.<ko>HTMLElement 혹은 HTML 문자열, 혹은 그것들의 배열도 가능하다.<br>또한, 같은 depth의 여러 개의 엘리먼트에 해당하는 HTML 문자열도 가능하다.</ko>
    * @return Array of appended panels.<ko>추가된 패널들의 배열</ko>
@@ -603,6 +631,7 @@ class Flicking extends Component<{
 
   /**
    * Replace existing panels with new panels from given index. If target index is empty, add new panel at target index.
+   *
    * @ko 주어진 인덱스로부터의 패널들을 새로운 패널들로 교체한다. 인덱스에 해당하는 자리가 비어있다면, 새로운 패널을 해당 자리에 집어넣는다.
    * @param index - Start index to replace new panels.<ko>새로운 패널들로 교체할 시작 인덱스</ko>
    * @param element - Either HTMLElement, HTML string, or array of them.<br>It can be also HTML string of multiple elements with same depth.<ko>HTMLElement 혹은 HTML 문자열, 혹은 그것들의 배열도 가능하다.<br>또한, 같은 depth의 여러 개의 엘리먼트에 해당하는 HTML 문자열도 가능하다.</ko>
@@ -636,6 +665,7 @@ class Flicking extends Component<{
 
   /**
    * Remove panel at target index. This will decrease index of panels behind it.
+   *
    * @ko `index`에 해당하는 자리의 패널을 제거한다. 수행시 `index` 이후의 패널들의 인덱스가 감소된다.
    * @param index - Index of panel to remove.<ko>제거할 패널의 인덱스</ko>
    * @param {number} [deleteCount=1] - Number of panels to remove from index.<ko>`index` 이후로 제거할 패널의 개수.</ko>
@@ -648,6 +678,7 @@ class Flicking extends Component<{
   /**
    * Get indexes to render. Should be used with `renderOnlyVisible` option.
    * `beforeSync` should be called before this method for a correct result.
+   *
    * @private
    * @ko 렌더링이 필요한 인덱스들을 반환한다. `renderOnlyVisible` 옵션과 함께 사용해야 한다. 정확한 결과를 위해선 `beforeSync`를 이전에 호출해야만 합니다.
    * @param - Info object of how panel infos are changed.<ko>패널 정보들의 변경 정보를 담는 오브젝트.</ko>
@@ -663,9 +694,7 @@ class Flicking extends Component<{
 
     const panelCount = diffResult.list.length;
     const added = diffResult.added;
-    const getPanelAbsIndex = (panel: Panel) => {
-      return panel.getIndex() + (panel.getCloneIndex() + 1) * panelCount;
-    };
+    const getPanelAbsIndex = (panel: Panel) => panel.getIndex() + (panel.getCloneIndex() + 1) * panelCount;
 
     const visibleIndexes = visiblePanels.map(panel => getPanelAbsIndex(panel))
       .filter(val => maintained[val % panelCount] != null);
@@ -680,6 +709,7 @@ class Flicking extends Component<{
 
   /**
    * Synchronize info of panels instance with info given by external rendering.
+   *
    * @ko 외부 렌더링 방식에 의해 입력받은 패널의 정보와 현재 플리킹이 갖는 패널 정보를 동기화한다.
    * @private
    * @param - Info object of how panel infos are changed.<ko>패널 정보들의 변경 정보를 담는 오브젝트.</ko>
@@ -695,9 +725,7 @@ class Flicking extends Component<{
 
     // Update visible panels
     const newVisiblePanels = viewport.getVisiblePanels()
-      .filter(panel => findIndex(removed, index => {
-        return index === panel.getIndex();
-      }) < 0);
+      .filter(panel => findIndex(removed, index => index === panel.getIndex()) < 0);
     viewport.setVisiblePanels(newVisiblePanels);
 
     // Did not changed at all
@@ -765,6 +793,7 @@ class Flicking extends Component<{
 
   /**
    * Synchronize info of panels with DOM info given by external rendering.
+   *
    * @ko 외부 렌더링 방식에 의해 입력받은 DOM의 정보와 현재 플리킹이 갖는 패널 정보를 동기화 한다.
    * @private
    * @param - Info object of how panel elements are changed.<ko>패널의 DOM 요소들의 변경 정보를 담는 오브젝트.</ko>
@@ -796,7 +825,7 @@ class Flicking extends Component<{
           added: originalAdded,
           maintained: originalMaintained,
           removed: originalRemoved,
-          changed: originalChanged,
+          changed: originalChanged
         };
       }
       this.beforeSync(beforeDiffInfo);
@@ -876,7 +905,7 @@ class Flicking extends Component<{
     return {
       wrapper,
       viewport,
-      camera,
+      camera
     };
   }
 
@@ -894,7 +923,7 @@ class Flicking extends Component<{
     }
 
     if (!type || !moveTypeOptions) {
-      throw new Error(`Flicking's option 'moveType' is not formatted properly, given: ${moveType}`);
+      throw new Error(`Flicking's option 'moveType' is not formatted properly, given: ${moveType.toString()}`);
     }
 
     switch (type) {
@@ -931,29 +960,32 @@ class Flicking extends Component<{
   }
 
   private _listenInput(): void {
-    const flicking = this;
-    const viewport = flicking._viewport;
+    const viewport = this._viewport;
     const stateMachine = viewport.stateMachine;
 
     // Set event context
-    flicking._eventContext = {
-      flicking,
-      viewport: flicking._viewport,
+    this._eventContext = {
+      flicking: this,
+      viewport: this._viewport,
       transitTo: stateMachine.transitTo,
-      triggerEvent: flicking._triggerEvent,
-      moveCamera: flicking._moveCamera,
-      stopCamera: viewport.stopCamera,
+      triggerEvent: this._triggerEvent,
+      moveCamera: this._moveCamera,
+      stopCamera: viewport.stopCamera
     };
 
     const handlers = {};
     for (const key in AXES_EVENTS) {
-      const eventType = AXES_EVENTS[key];
+      if (key) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const eventType = AXES_EVENTS[key];
 
-      handlers[eventType] = (e: any) => stateMachine.fire(eventType, e, flicking._eventContext);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        handlers[eventType] = (e: any) => stateMachine.fire(eventType, e, this._eventContext);
+      }
     }
 
     // Connect Axes instance with PanInput
-    flicking._viewport.connectAxesHandler(handlers);
+    this._viewport.connectAxesHandler(handlers);
   }
 
   private _listenResize(): void {
@@ -977,7 +1009,7 @@ class Flicking extends Component<{
       contentsReadyChecker.on("error", e => {
         this.trigger(EVENTS.CONTENT_ERROR, {
           type: EVENTS.CONTENT_ERROR,
-          element: e.element,
+          element: e.element
         });
       });
       contentsReadyChecker.check([this._wrapper]);
@@ -1013,28 +1045,32 @@ class Flicking extends Component<{
         direction: state.direction,
         holding: state.holding,
         progress,
-        axesEvent,
-        isTrusted,
+        axesEvent, // eslint-disable-line @typescript-eslint/no-unsafe-assignment
+        isTrusted
       }, params) as FlickingEvent);
     }
 
     return {
-      onSuccess(callback: () => void): TriggerCallback {
+      onSuccess(callback: () => void) {
         if (!canceled) {
           callback();
         }
-        return this;
+
+        return this as TriggerCallback;
       },
-      onStopped(callback: () => void): TriggerCallback {
+      onStopped(callback: () => void) {
         if (canceled) {
           callback();
         }
-        return this;
-      },
-    } as TriggerCallback;
-  }
+
+        return this as TriggerCallback;
+      }
+    };
+  };
 
   // Return result of "move" event triggered
+  /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+  /* eslint-disable @typescript-eslint/no-unsafe-member-access */
   private _moveCamera = (axesEvent: any): TriggerCallback => {
     const viewport = this._viewport;
     const state = viewport.stateMachine.getState();
@@ -1069,12 +1105,15 @@ class Flicking extends Component<{
     state.delta += axesEvent.delta.flick;
 
     viewport.moveCamera(pos, axesEvent);
+
     return this._triggerEvent(EVENTS.MOVE, axesEvent, axesEvent.isTrusted)
       .onStopped(() => {
         // Undo camera movement
         viewport.moveCamera(previousPosition, axesEvent);
       });
-  }
+  };
+  /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+  /* eslint-enable @typescript-eslint/no-unsafe-member-access */
 
   private _checkContentsReady(panels: FlickingPanel[]) {
     this._contentsReadyChecker?.check(panels.map(panel => panel.getElement()));

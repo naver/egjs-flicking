@@ -1,13 +1,17 @@
-module.exports = function(config) {
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/naming-convention */
+
+module.exports = config => {
   const karmaConfig = {
     frameworks: ["mocha", "chai", "sinon", "karma-typescript", "viewport"],
     mime: {
-      'text/x-typescript': ['ts','tsx']
+      "text/x-typescript": ["ts","tsx"]
     },
     client: {
       mocha: {
-        opts: "./mocha.opts",
-      },
+        opts: "./mocha.opts"
+      }
     },
     files: [
       "./node_modules/hammer-simulator/index.js",
@@ -16,11 +20,11 @@ module.exports = function(config) {
       "./src/**/*.ts",
       "./test/**/*.ts",
       "./test/unit/assets/*.css",
-      {pattern: "./test/unit/images/**/*.*", watched: false, included: false, served: true},
+      {pattern: "./test/unit/images/**/*.*", watched: false, included: false, served: true}
     ],
     preprocessors: {
       "src/**/*.ts": ["karma-typescript"],
-      "test/**/*.ts": ["karma-typescript"],
+      "test/**/*.ts": ["karma-typescript"]
     },
     karmaTypescriptConfig: {
       tsconfig: "./test/tsconfig.json",
@@ -33,24 +37,24 @@ module.exports = function(config) {
           "directory": "coverage",
           "filename": "lcov.info",
           "subdirectory": "."
-        },
+        }
       },
       coverageOptions: {
         instrumentation: true,
-        exclude: /test/i,
+        exclude: /test/i
       }
     },
     browsers: [],
     customLaunchers: {
       CustomChromeHeadless: {
         base: "ChromeHeadless",
-        flags: ["--window-size=400,300", "--no-sandbox", "--disable-setuid-sandbox"],
-      },
+        flags: ["--window-size=400,300", "--no-sandbox", "--disable-setuid-sandbox"]
+      }
     },
     reporters: ["mocha"],
     proxies: {
       "/images/": "/base/test/unit/images/"
-    },
+    }
   };
 
   karmaConfig.browsers.push(config.chrome ? "Chrome" : "CustomChromeHeadless");

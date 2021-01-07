@@ -4,6 +4,7 @@
  */
 
 import SnapControl from "./SnapControl";
+import Panel from "~/core/Panel";
 import { MOVE_TYPE, EVENTS } from "../consts";
 import { MoveTypeContext, DestinationInfo } from "../types";
 import { circulate, clamp } from "../utils";
@@ -11,7 +12,7 @@ import { circulate, clamp } from "../utils";
 class FreeControl extends SnapControl {
   protected readonly _type: string = MOVE_TYPE.FREE_SCROLL;
 
-  constructor() {
+  public constructor() {
     // Set snap count to Infinity
     super({ count: Infinity });
   }
@@ -21,7 +22,7 @@ class FreeControl extends SnapControl {
     const destPos = axesEvent.destPos.flick;
     const minimumDistanceToChange = this._calcBrinkOfChange(ctx);
     const scrollArea = viewport.getScrollArea();
-    const currentPanel = viewport.getCurrentPanel()!;
+    const currentPanel = viewport.getCurrentPanel() as Panel;
     const options = viewport.options;
 
     const delta = Math.abs(axesEvent.delta.flick + state.delta);
@@ -42,13 +43,13 @@ class FreeControl extends SnapControl {
       estimatedPosition = clamp(estimatedPosition, scrollArea.prev, scrollArea.next);
       estimatedPosition += viewport.getRelativeHangerPosition();
 
-      const estimatedPanel = viewport.findNearestPanelAt(estimatedPosition)!;
+      const estimatedPanel = viewport.findNearestPanelAt(estimatedPosition) as Panel;
 
       return {
         panel: estimatedPanel,
         destPos,
         duration: axesEvent.duration,
-        eventType: "",
+        eventType: ""
       };
     }
   }
@@ -61,10 +62,10 @@ class FreeControl extends SnapControl {
     const { viewport } = ctx;
 
     return {
-      panel: viewport.getNearestPanel()!,
+      panel: viewport.getNearestPanel() as Panel,
       destPos: viewport.getCameraPosition(),
       duration: 0,
-      eventType: "",
+      eventType: ""
     };
   }
 
@@ -72,7 +73,7 @@ class FreeControl extends SnapControl {
     const { viewport, isNextDirection } = ctx;
 
     const options = viewport.options;
-    const currentPanel = viewport.getCurrentPanel()!;
+    const currentPanel = viewport.getCurrentPanel() as Panel;
     const halfGap = options.gap / 2;
 
     const lastPosition = viewport.stateMachine.getState().lastPosition;

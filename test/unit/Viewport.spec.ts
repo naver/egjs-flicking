@@ -131,7 +131,7 @@ describe("Viewport", () => {
         added: [0],
         changed: [],
         removed: [],
-        maintained: [],
+        maintained: []
       });
 
       // Then
@@ -156,7 +156,7 @@ describe("Viewport", () => {
         added: [],
         changed: [],
         removed: [0],
-        maintained: [],
+        maintained: []
       });
       const checkedAfterRemove = viewport.getCheckedIndexes();
 
@@ -186,7 +186,7 @@ describe("Viewport", () => {
         added: [0, 1, 2],
         removed: [],
         changed: [[0, 3]],
-        maintained: [[0, 3]],
+        maintained: [[0, 3]]
       });
       const checkedAfterAdd = viewport.getCheckedIndexes();
 
@@ -220,7 +220,7 @@ describe("Viewport", () => {
         added: [0, 1],
         removed: [1],
         changed: [[0, 2], [2, 3]],
-        maintained: [[0, 2], [2, 3]],
+        maintained: [[0, 2], [2, 3]]
       });
       const checkedAfterAdd = viewport.getCheckedIndexes();
 
@@ -243,7 +243,7 @@ describe("Viewport", () => {
     it("should guarantee panel element order", () => {
       // Given
       createViewport(horizontal.fullN(5), {
-        renderOnlyVisible: false,
+        renderOnlyVisible: false
       });
 
       // When
@@ -269,7 +269,7 @@ describe("Viewport", () => {
     it("should guarantee panel element order", () => {
       // Given
       createViewport(horizontal.fullN(5), {
-        renderOnlyVisible: false,
+        renderOnlyVisible: false
       });
 
       // When
@@ -318,7 +318,7 @@ describe("Viewport", () => {
     it("should set values based on first/first cloned panel when circular option is set", () => {
       // Given & When
       createViewport(horizontal.variant, {
-        circular: true,
+        circular: true
       });
 
       // Then
@@ -334,7 +334,7 @@ describe("Viewport", () => {
     it("should set values clamped to first/last panel when bound option is set", () => {
       // Given & When
       createViewport(horizontal.halfN(3), {
-        bound: true,
+        bound: true
       });
 
       // Then
@@ -353,7 +353,7 @@ describe("Viewport", () => {
         createViewport(horizontal.panel30N(2), {
           bound: true,
           anchor: "50%",
-          hanger: "50%",
+          hanger: "50%"
         });
 
         // Then
@@ -375,7 +375,7 @@ describe("Viewport", () => {
         createViewport(horizontal.panel30N(2), {
           bound: true,
           anchor: "0%",
-          hanger: "50%",
+          hanger: "50%"
         });
 
         // Then

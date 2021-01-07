@@ -16,15 +16,15 @@ import Panel from "../../src/core/Panel";
 import { diff } from "@egjs/list-differ";
 import { horizontal, panel as createPanelElement, vertical } from "./assets/fixture";
 
-declare var viewport: any;
+declare let viewport: any;
 
 describe("Methods call", () => {
   let flickingInfo: {
-    element: HTMLElement,
-    instance: Flicking,
-    events: FlickingEvent[],
-    eventFired: string[],
-    eventDirection: string[],
+    element: HTMLElement;
+    instance: Flicking;
+    events: FlickingEvent[];
+    eventFired: string[];
+    eventDirection: string[];
   };
   afterEach(() => {
     cleanup();
@@ -35,7 +35,7 @@ describe("Methods call", () => {
     beforeEach(() => {
       flickingInfo = createFlicking(horizontal.full, {
         circular: true,
-        defaultIndex: maximumIndex,
+        defaultIndex: maximumIndex
       });
     });
 
@@ -52,7 +52,7 @@ describe("Methods call", () => {
     it("should circulate index in circular mode(moving to prev panel)", async () => {
       flickingInfo = createFlicking(horizontal.full, {
         circular: true,
-        defaultIndex: 0,
+        defaultIndex: 0
       });
 
       await simulate(flickingInfo.element, { deltaX: 100 });
@@ -65,7 +65,7 @@ describe("Methods call", () => {
     beforeEach(() => {
       flickingInfo = createFlicking(horizontal.fixedTo100, {
         anchor: "0%",
-        hanger: "0%",
+        hanger: "0%"
       });
     });
 
@@ -119,7 +119,7 @@ describe("Methods call", () => {
       flickingInfo = createFlicking(horizontal.fixedTo100, {
         anchor: "100%",
         hanger: "100%",
-        defaultIndex: 2,
+        defaultIndex: 2
       });
     });
 
@@ -373,9 +373,9 @@ describe("Methods call", () => {
       it("should maintain styles on panels", () => {
         // Then
         const flickingElement = flickingInfo.element;
-        const panels = toArray(flickingElement.querySelectorAll(".eg-flick-panel")) as HTMLElement[];
+        const panels = toArray(flickingElement.querySelectorAll(".eg-flick-panel"));
 
-        expect(panels.every(panelEl => panelEl.style.left !== "")).to.be.true;
+        expect(panels.every((panelEl: HTMLElement) => panelEl.style.left !== "")).to.be.true;
       });
     });
   });
@@ -454,7 +454,7 @@ describe("Methods call", () => {
   });
 
   describe("getPanel()", () => {
-    function getPanels(index: number, length: number, start: number = index) {
+    const getPanels = (index: number, length: number, start: number = index) => {
       const arr: FlickingPanel[] = [];
 
       arr[start] = flickingInfo.instance.getPanel(index);
@@ -466,7 +466,7 @@ describe("Methods call", () => {
         arr[i] = arr[i - 1].next();
       }
       return arr;
-    }
+    };
 
     it("should check 'progress' in panel(circular: false)", async () => {
       // Given
@@ -666,7 +666,7 @@ describe("Methods call", () => {
         // 120 => 100 / 120 = 0.83333
         [0, 0, 0, 0.8333389847750161, 0, 0, 0, 0], // 120
         // 120 => 25 / 120 = 0.208
-        [0, 0, 0, 0.20833474619375403, 1, 0.25, 0, 0], // half(clone: 0)
+        [0, 0, 0, 0.20833474619375403, 1, 0.25, 0, 0] // half(clone: 0)
       ];
       // Then
       steps.forEach((standards, i) => {
@@ -682,7 +682,7 @@ describe("Methods call", () => {
       // Given
       flickingInfo = createFlicking(horizontal.full, {
         circular: true,
-        moveType: "freeScroll",
+        moveType: "freeScroll"
       });
       const flicking = flickingInfo.instance;
       const restore = sinon.spy();
@@ -717,7 +717,7 @@ describe("Methods call", () => {
       // Given
       flickingInfo = createFlicking(horizontal.full, {
         circular: true,
-        moveType: "freeScroll",
+        moveType: "freeScroll"
       });
       const flicking = flickingInfo.instance;
 
@@ -758,8 +758,8 @@ describe("Methods call", () => {
 
   describe("resize()", () => {
     const testResize = async (
-      initial: { width: number, expected: number },
-      resize: { width: number, expected: number },
+      initial: { width: number; expected: number },
+      resize: { width: number; expected: number },
       gap: number,
     ) => {
       document.body.style.margin = "0";
@@ -767,7 +767,7 @@ describe("Methods call", () => {
 
       flickingInfo = createFlicking(horizontal.oneTenth, {
         circular: true,
-        gap,
+        gap
       });
 
       let panels = flickingInfo.element.querySelectorAll(".eg-flick-panel");
@@ -809,13 +809,13 @@ describe("Methods call", () => {
     it("shouldn't move camera position when it's freeScroll mode", async () => {
       // Given
       flickingInfo = createFlicking(horizontal.full, {
-        moveType: "freeScroll",
+        moveType: "freeScroll"
       });
       const flicking = flickingInfo.instance;
       const flickingViewport = (flicking as any)._viewport as Viewport;
       await simulate(flickingInfo.element, {
         deltaX: -200,
-        duration: 100,
+        duration: 100
       });
       const prevCameraPosition = flickingViewport.getCameraPosition();
 
@@ -837,7 +837,7 @@ describe("Methods call", () => {
       wrapper.style.height = "auto";
 
       const flicking = new Flicking(wrapper, {
-        autoResize: true,
+        autoResize: true
       });
 
       // When
@@ -852,19 +852,19 @@ describe("Methods call", () => {
       // Given
       flickingInfo = createFlicking(horizontal.panel30N(10), {
         moveType: "freeScroll",
-        bound: true,
+        bound: true
       });
 
       // When
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any)._viewport;
-      const origCameraPos = viewport.getCameraPosition();
+      const flickingViewport = (flicking as any)._viewport;
+      const origCameraPos = flickingViewport.getCameraPosition();
       flicking.moveTo(1, 0);
-      const boundCameraPos = viewport.getCameraPosition();
+      const boundCameraPos = flickingViewport.getCameraPosition();
       flicking.resize();
 
       // Then
-      const resizeCameraPos = viewport.getCameraPosition();
+      const resizeCameraPos = flickingViewport.getCameraPosition();
       expect(origCameraPos).equals(boundCameraPos);
       expect(origCameraPos).equals(resizeCameraPos);
     });
@@ -873,20 +873,20 @@ describe("Methods call", () => {
       // Given
       flickingInfo = createFlicking(horizontal.panel30N(10), {
         moveType: "freeScroll",
-        bound: true,
+        bound: true
       });
 
       // When
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any)._viewport;
+      const flickingViewport = (flicking as any)._viewport;
       flicking.moveTo(9, 0);
-      const origCameraPos = viewport.getCameraPosition();
+      const origCameraPos = flickingViewport.getCameraPosition();
       flicking.moveTo(8, 0);
-      const boundCameraPos = viewport.getCameraPosition();
+      const boundCameraPos = flickingViewport.getCameraPosition();
       flicking.resize();
 
       // Then
-      const resizeCameraPos = viewport.getCameraPosition();
+      const resizeCameraPos = flickingViewport.getCameraPosition();
       expect(origCameraPos).equals(boundCameraPos);
       expect(origCameraPos).equals(resizeCameraPos);
     });
@@ -895,19 +895,19 @@ describe("Methods call", () => {
       // Given
       flickingInfo = createFlicking(horizontal.panel30N(10), {
         moveType: "freeScroll",
-        bound: true,
+        bound: true
       });
 
       // When
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any)._viewport;
-      const origCameraPos = viewport.getCameraPosition();
+      const flickingViewport = (flicking as any)._viewport;
+      const origCameraPos = flickingViewport.getCameraPosition();
       flicking.moveTo(1, 0);
-      const boundCameraPos = viewport.getCameraPosition();
+      const boundCameraPos = flickingViewport.getCameraPosition();
       flicking.prepend(horizontal.fullN(1));
 
       // Then
-      const resizeCameraPos = viewport.getCameraPosition();
+      const resizeCameraPos = flickingViewport.getCameraPosition();
       expect(origCameraPos).equals(boundCameraPos);
       expect(origCameraPos).not.equals(resizeCameraPos);
       expect(boundCameraPos).not.equals(resizeCameraPos);
@@ -916,19 +916,19 @@ describe("Methods call", () => {
     it("should be scrolled if second panel is selected and freescroll is enabled (#376)", () => {
       // Given
       flickingInfo = createFlicking(horizontal.panel30N(10), {
-        moveType: "freeScroll",
+        moveType: "freeScroll"
       });
 
       // When
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any)._viewport;
-      const origCameraPos = viewport.getCameraPosition();
+      const flickingViewport = (flicking as any)._viewport;
+      const origCameraPos = flickingViewport.getCameraPosition();
       flicking.moveTo(1, 0);
-      const movedCameraPos = viewport.getCameraPosition();
+      const movedCameraPos = flickingViewport.getCameraPosition();
       flicking.resize();
 
       // Then
-      const resizeCameraPos = viewport.getCameraPosition();
+      const resizeCameraPos = flickingViewport.getCameraPosition();
       expect(origCameraPos).not.equals(movedCameraPos);
       expect(origCameraPos).not.equals(resizeCameraPos);
       expect(movedCameraPos).equals(resizeCameraPos);
@@ -937,20 +937,20 @@ describe("Methods call", () => {
     it("should be scrolled if second to last panel is selected and freescroll is enabled (#376)", () => {
       // Given
       flickingInfo = createFlicking(horizontal.panel30N(10), {
-        moveType: "freeScroll",
+        moveType: "freeScroll"
       });
 
       // When
       const flicking = flickingInfo.instance;
-      const viewport = (flicking as any)._viewport;
+      const flickingViewport = (flicking as any)._viewport;
       flicking.moveTo(9, 0);
-      const origCameraPos = viewport.getCameraPosition();
+      const origCameraPos = flickingViewport.getCameraPosition();
       flicking.moveTo(8, 0);
-      const movedCameraPos = viewport.getCameraPosition();
+      const movedCameraPos = flickingViewport.getCameraPosition();
       flicking.resize();
 
       // Then
-      const resizeCameraPos = viewport.getCameraPosition();
+      const resizeCameraPos = flickingViewport.getCameraPosition();
       expect(origCameraPos).not.equals(movedCameraPos);
       expect(origCameraPos).not.equals(resizeCameraPos);
       expect(movedCameraPos).equals(resizeCameraPos);
@@ -962,7 +962,7 @@ describe("Methods call", () => {
       // Given
       const defaultIndex = 1;
       flickingInfo = createFlicking(horizontal.full, {
-        defaultIndex,
+        defaultIndex
       });
 
       // When
@@ -977,7 +977,7 @@ describe("Methods call", () => {
       // Given
       const indexToMove = 2;
       flickingInfo = createFlicking(horizontal.full, {
-        defaultIndex: 0,
+        defaultIndex: 0
       });
 
       // When
@@ -1007,7 +1007,7 @@ describe("Methods call", () => {
     it("shouldn't return cloned panels", () => {
       // Given
       flickingInfo = createFlicking(horizontal.shouldClone4, {
-        circular: true,
+        circular: true
       });
 
       // When
@@ -1026,7 +1026,7 @@ describe("Methods call", () => {
       const beforeIndex = 0;
       const afterIndex = 2;
       flickingInfo = createFlicking(horizontal.full, {
-        defaultIndex: beforeIndex,
+        defaultIndex: beforeIndex
       });
 
       // When
@@ -1059,7 +1059,7 @@ describe("Methods call", () => {
     it("shouldn't trigger events while restoring", () => {
       // Given
       flickingInfo = createFlicking(horizontal.full, {
-        defaultIndex: 0,
+        defaultIndex: 0
       });
 
       // When
@@ -1312,7 +1312,7 @@ describe("Methods call", () => {
 
     beforeEach(() => {
       flickingInfo = createFlicking(horizontal.none, {
-        infinite: true,
+        infinite: true
       });
       flickingInfo.instance.on(EVENTS.NEED_PANEL, (e: NeedPanelEvent) => {
         needPanelEvents.push(e);
@@ -1384,14 +1384,12 @@ describe("Methods call", () => {
       // Given
       flickingInfo = createFlicking(horizontal.none, {
         infinite: true,
-        lastIndex: 5,
+        lastIndex: 5
       });
       const flicking = flickingInfo.instance;
 
       // When
-      const panels = counter(7).map(() => {
-        return createHorizontalElement(50);
-      });
+      const panels = counter(7).map(() => createHorizontalElement(50));
       flicking.append(panels);
 
       // Then
@@ -1423,7 +1421,7 @@ describe("Methods call", () => {
       // Given
       flickingInfo = createFlicking(horizontal.panel30, {
         renderOnlyVisible: true,
-        circular: false,
+        circular: false
       });
       const flicking = flickingInfo.instance;
 
@@ -1443,7 +1441,7 @@ describe("Methods call", () => {
       // Given
       flickingInfo = createFlicking(horizontal.panel30, {
         renderOnlyVisible: true,
-        circular: true,
+        circular: true
       });
       const flicking = flickingInfo.instance;
 
@@ -1465,7 +1463,7 @@ describe("Methods call", () => {
       // Given
       flickingInfo = createFlicking(horizontal.panel30, {
         renderOnlyVisible: true,
-        circular: false,
+        circular: false
       });
       const flicking = flickingInfo.instance;
 
@@ -1486,7 +1484,7 @@ describe("Methods call", () => {
       // Given
       flickingInfo = createFlicking(horizontal.panel30, {
         renderOnlyVisible: true,
-        circular: true,
+        circular: true
       });
       const flicking = flickingInfo.instance;
 
@@ -1510,7 +1508,7 @@ describe("Methods call", () => {
       // Given
       flickingInfo = createFlicking(horizontal.panel30, {
         renderOnlyVisible: true,
-        circular: false,
+        circular: false
       });
       const flicking = flickingInfo.instance;
 
@@ -1533,7 +1531,7 @@ describe("Methods call", () => {
       // Given
       flickingInfo = createFlicking(horizontal.panel30, {
         renderOnlyVisible: true,
-        circular: true,
+        circular: true
       });
       const flicking = flickingInfo.instance;
 
@@ -1557,7 +1555,7 @@ describe("Methods call", () => {
       // Given
       flickingInfo = createFlicking(horizontal.halfN(5), {
         renderOnlyVisible: true,
-        circular: false,
+        circular: false
       });
       const flicking = flickingInfo.instance;
 
@@ -1583,7 +1581,7 @@ describe("Methods call", () => {
       // 30, 30, 30, 30, 30, 30
       flickingInfo = createFlicking(horizontal.panel30, {
         renderExternal: true,
-        renderOnlyVisible: true,
+        renderOnlyVisible: true
       });
 
       const flicking = flickingInfo.instance;
@@ -1606,7 +1604,7 @@ describe("Methods call", () => {
       // 30, 30, 30, 30, 30, 30
       flickingInfo = createFlicking(horizontal.panel30, {
         renderExternal: true,
-        renderOnlyVisible: true,
+        renderOnlyVisible: true
       });
 
       const flicking = flickingInfo.instance;
@@ -1664,7 +1662,7 @@ describe("Methods call", () => {
       it("can sync with externally rendered elements when there are no panels", () => {
         // Given
         flickingInfo = createFlicking(horizontal.none, {
-          renderExternal: true,
+          renderExternal: true
         });
         const flicking = flickingInfo.instance;
 
@@ -1675,7 +1673,7 @@ describe("Methods call", () => {
           maintained: [],
           added: [0, 1, 2],
           changed: [],
-          removed: [],
+          removed: []
         });
 
         // Then
@@ -1691,7 +1689,7 @@ describe("Methods call", () => {
       it("can sync with externally rendered elements", () => {
         // Given
         flickingInfo = createFlicking(horizontal.full, {
-          renderExternal: true,
+          renderExternal: true
         });
         const flicking = flickingInfo.instance;
         const originalLastPanel = flicking.getAllPanels()[flicking.getPanelCount() - 1];
@@ -1704,7 +1702,7 @@ describe("Methods call", () => {
           maintained: [[0, 0], [1, 1], [2, 2]],
           added: [3, 4, 5],
           changed: [],
-          removed: [],
+          removed: []
         });
 
         // Then
@@ -1724,7 +1722,7 @@ describe("Methods call", () => {
       it("can sync with externally rendered elements when prepended", () => {
         // Given
         flickingInfo = createFlicking(horizontal.full, {
-          renderExternal: true,
+          renderExternal: true
         });
         const flicking = flickingInfo.instance;
 
@@ -1736,7 +1734,7 @@ describe("Methods call", () => {
           maintained: [[0, 1], [1, 2], [2, 3]],
           added: [0],
           changed: [[0, 1], [1, 2], [2, 3]],
-          removed: [],
+          removed: []
         });
 
         // Then
@@ -1747,7 +1745,7 @@ describe("Methods call", () => {
           expect(panel.getIndex()).equals(idx);
           expect(panel.getElement()).not.to.be.null;
         });
-        flicking.getAllPanels().slice(1).forEach((panel, idx) => {
+        flicking.getAllPanels().slice(1).forEach(panel => {
           const prevPanel = flicking.getPanel(panel.getIndex() - 1);
           expect(panel.getPosition()).is.greaterThan(prevPanel.getPosition());
         });
@@ -1759,7 +1757,7 @@ describe("Methods call", () => {
         // Given
         flickingInfo = createFlicking(horizontal.none, {
           renderExternal: true,
-          circular: true,
+          circular: true
         });
         const flicking = flickingInfo.instance;
 
@@ -1772,7 +1770,7 @@ describe("Methods call", () => {
           maintained: [],
           added: [0, 1, 2],
           changed: [],
-          removed: [],
+          removed: []
         });
 
         const calcedCloneCount = flicking.getCloneCount();
@@ -1784,7 +1782,7 @@ describe("Methods call", () => {
           maintained: [[0, 0], [1, 1], [2, 2]],
           added: [...counter(calcedCloneCount * originalElements.length).map(index => 3 + index)],
           changed: [],
-          removed: [],
+          removed: []
         });
         const finalCloneCount = flicking.getCloneCount();
 
@@ -1804,7 +1802,7 @@ describe("Methods call", () => {
         // Given
         flickingInfo = createFlicking(horizontal.full, {
           renderExternal: true,
-          circular: true,
+          circular: true
         });
         const flicking = flickingInfo.instance;
 
@@ -1817,13 +1815,13 @@ describe("Methods call", () => {
         flicking.sync({
           list: [...originalElements, ...clonedElements],
           maintained: [
-            ...originalElements.map((val, idx) => [idx, idx]),
+            ...originalElements.map((val, idx) => [idx, idx])
           ],
           added: [
-            ...clonedElements.map((val, idx) => originalElements.length + idx),
+            ...clonedElements.map((val, idx) => originalElements.length + idx)
           ],
           changed: [],
-          removed: [],
+          removed: []
         });
 
         // Then
@@ -1842,7 +1840,7 @@ describe("Methods call", () => {
         // Given
         flickingInfo = createFlicking(horizontal.none, {
           renderExternal: true,
-          circular: true,
+          circular: true
         });
         const flicking = flickingInfo.instance;
 
@@ -1855,7 +1853,7 @@ describe("Methods call", () => {
           maintained: [],
           added: [0, 1, 2],
           changed: [],
-          removed: [],
+          removed: []
         });
 
         const calcedCloneCount = flicking.getCloneCount();
@@ -1867,7 +1865,7 @@ describe("Methods call", () => {
           maintained: [[0, 0], [1, 1], [2, 2]],
           added: [...counter(calcedCloneCount * originalElements.length).map(index => 3 + index)],
           changed: [],
-          removed: [],
+          removed: []
         });
 
         // Then

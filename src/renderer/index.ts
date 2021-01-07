@@ -7,5 +7,5 @@ export {
   Renderer,
   RawRenderer,
   VisibleRenderer,
-  ExternalRenderer,
+  ExternalRenderer
 };

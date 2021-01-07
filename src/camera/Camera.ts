@@ -16,9 +16,9 @@ abstract class Camera extends Component {
   protected _alignPos: number;
   protected _range: { min: number; max: number };
 
-  constructor({
+  public constructor({
     element,
-    flicking,
+    flicking
   }: CameraOption) {
     super();
 
@@ -28,8 +28,6 @@ abstract class Camera extends Component {
     this._alignPos = 0;
     this._range = { min: 0, max: 0 };
   }
-
-  public abstract updateRange(): this;
 
   public destroy(): this {
     return this;
@@ -47,6 +45,8 @@ abstract class Camera extends Component {
     el.style.transform = `translate(${-(this._position - this._alignPos)}px)`;
     // this.emit(EVENTS.MOVE, { position: this._position });
   }
+
+  public abstract updateRange(): this;
 }
 
 export default Camera;

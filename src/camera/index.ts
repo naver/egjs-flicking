@@ -8,5 +8,5 @@ export {
   CameraOption,
   LinearCamera,
   CircularCamera,
-  BoundCamera,
+  BoundCamera
 };

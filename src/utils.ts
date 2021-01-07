@@ -5,17 +5,17 @@
 
 import Flicking from "./Flicking";
 import { FLICKING_METHODS } from "./consts";
-import { ElementLike, OriginalStyle, BoundingBox } from "./types";
+import { ElementLike, OriginalStyle, BoundingBox, Merged } from "./types";
 
-export const merge = (target: object, ...srcs: object[]): object => {
-  srcs.forEach(source => {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const merge = <From extends object, To extends object>(target: From, ...sources: To[]): Merged<From, To> => {
+  sources.forEach(source => {
     Object.keys(source).forEach(key => {
-      const value = source[key];
-      target[key] = value;
+      target[key] = source[key] as unknown;
     });
   });
 
-  return target;
+  return target as Merged<From, To>;
 };
 
 export const getElement = (el: HTMLElement | string | null, parent?: HTMLElement): HTMLElement => {
@@ -55,23 +55,19 @@ export const parseElement = (element: ElementLike | ElementLike[]): HTMLElement[
         tempDiv.removeChild(tempDiv.firstChild);
       }
     } else {
-      elements.push(el as HTMLElement);
+      elements.push(el);
     }
   });
 
   return elements;
 };
 
-export const isString = (value: any): value is string => {
-  return typeof value === "string";
-};
+export const isString = (value: any): value is string => typeof value === "string";
 
 // Get class list of element as string array
-export const classList = (element: HTMLElement): string[] => {
-  return element.classList
-    ? toArray(element.classList)
-    : element.className.split(" ");
-};
+export const classList = (element: HTMLElement): string[] => element.classList
+  ? toArray(element.classList)
+  : element.className.split(" ");
 
 // Add class to specified element
 export const addClass = (element: HTMLElement, className: string): void => {
@@ -92,33 +88,22 @@ export const hasClass = (element: HTMLElement, className: string): boolean => {
   }
 };
 
-export const applyCSS = (element: HTMLElement, cssObj: object): void => {
+export const applyCSS = (element: HTMLElement, cssObj: Partial<{ [key in keyof CSSStyleDeclaration]: CSSStyleDeclaration[key] }>): void => {
   Object.keys(cssObj).forEach(property => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     element.style[property] = cssObj[property];
   });
 };
 
-export const clamp = (val: number, min: number, max: number) => {
-  return Math.max(Math.min(val, max), min);
-};
+export const clamp = (val: number, min: number, max: number) => Math.max(Math.min(val, max), min);
 
-// Min: inclusive, Max: exclusive
-export const isBetween = (val: number, min: number, max: number) => {
-  return val >= min && val <= max;
-};
+// FIXME: Min: inclusive, Max: exclusive
+export const isBetween = (val: number, min: number, max: number) => val >= min && val <= max;
 
-export interface ArrayLike<T> {
-  length: number;
-  [index: number]: T;
-}
+export const toArray = <T>(iterable: ArrayLike<T>): T[] => [].slice.call(iterable) as T[];
 
-export const toArray = <T>(iterable: ArrayLike<T>): T[] => {
-  return [].slice.call(iterable);
-};
-
-export const isArray = (arr: any): boolean => {
-  return arr && arr.constructor === Array;
-};
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+export const isArray = (arr: any): boolean => arr && arr.constructor === Array;
 
 export const parseArithmeticExpression = (cssValue: number | string, base: number, defaultVal?: number): number => {
   // Set base / 2 to default value, if it's undefined
@@ -234,16 +219,24 @@ export const circulate = (value: number, min: number, max: number, indexed: bool
 };
 
 export const restoreStyle = (element: HTMLElement, originalStyle: OriginalStyle): void => {
-  originalStyle.className
-    ? element.setAttribute("class", originalStyle.className)
-    : element.removeAttribute("class");
-  originalStyle.style
-    ? element.setAttribute("style", originalStyle.style)
-    : element.removeAttribute("style");
+  if (originalStyle.className) {
+    element.setAttribute("class", originalStyle.className);
+  } else {
+    element.removeAttribute("class");
+  }
+
+  if (originalStyle.style) {
+    element.setAttribute("style", originalStyle.style);
+  } else {
+    element.removeAttribute("style");
+  }
 };
 
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /**
  * Decorator that makes the method of flicking available in the framework.
+ *
  * @ko 프레임워크에서 플리킹의 메소드를 사용할 수 있게 하는 데코레이터.
  * @memberof eg.Flicking
  * @private
@@ -263,17 +256,19 @@ export const withFlickingMethods = (prototype: any, flickingName: string) => {
       return;
     }
     prototype[name] = function(...args) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const result = this[flickingName][name](...args);
 
       // fix `this` type to return your own `flicking` instance to the instance using the decorator.
-      if (result === this[flickingName]) {
-        return this;
-      } else {
-        return result;
-      }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return result === this[flickingName]
+        ? this
+        : result;
     };
   });
 };
+/* eslint-enable @typescript-eslint/no-unsafe-member-access */
+/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 
 export const getBbox = (element: HTMLElement, useOffset: boolean) => {
   let bbox: BoundingBox;
@@ -282,7 +277,7 @@ export const getBbox = (element: HTMLElement, useOffset: boolean) => {
       x: 0,
       y: 0,
       width: element.offsetWidth,
-      height: element.offsetHeight,
+      height: element.offsetHeight
     };
   } else {
     const clientRect = element.getBoundingClientRect();
@@ -290,7 +285,7 @@ export const getBbox = (element: HTMLElement, useOffset: boolean) => {
       x: clientRect.left,
       y: clientRect.top,
       width: clientRect.width,
-      height: clientRect.height,
+      height: clientRect.height
     };
   }
   return bbox;

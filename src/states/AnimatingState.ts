@@ -4,9 +4,10 @@
  */
 
 import State from "./State";
+import Panel from "~/core/Panel";
+import { circulate } from "../utils";
 import { STATE_TYPE, EVENTS } from "../consts";
 import { FlickingContext } from "../types";
-import { circulate } from "../utils";
 
 class AnimatingState extends State {
   public readonly type = STATE_TYPE.ANIMATING;
@@ -39,7 +40,7 @@ class AnimatingState extends State {
     this.lastPosition = viewport.getCameraPosition();
 
     // Update current panel as current nearest panel
-    viewport.setCurrentPanel(viewport.getNearestPanel()!);
+    viewport.setCurrentPanel(viewport.getNearestPanel() as Panel);
     triggerEvent(EVENTS.HOLD_START, e, true)
       .onSuccess(() => {
         transitTo(STATE_TYPE.DRAGGING);
@@ -50,6 +51,7 @@ class AnimatingState extends State {
   }
 
   public onChange(e: any, { moveCamera, transitTo }: FlickingContext): void {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (!e.delta.flick) {
       return;
     }
@@ -61,11 +63,14 @@ class AnimatingState extends State {
   }
 
   public onFinish(e: any, { flicking, viewport, triggerEvent, transitTo }: FlickingContext) {
-    const isTrusted = e && e.isTrusted;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const isTrusted = e && e.isTrusted as boolean;
 
-    viewport.options.bound
-      ? viewport.setCurrentPanel(this.targetPanel!)
-      : viewport.setCurrentPanel(viewport.getNearestPanel()!);
+    if (viewport.options.bound) {
+      viewport.setCurrentPanel(this.targetPanel as Panel);
+    } else {
+      viewport.setCurrentPanel(viewport.getNearestPanel() as Panel);
+    }
 
     if (flicking.options.adaptive) {
       viewport.updateAdaptiveSize();
@@ -74,7 +79,7 @@ class AnimatingState extends State {
     transitTo(STATE_TYPE.IDLE);
     viewport.updateCameraPosition();
     triggerEvent(EVENTS.MOVE_END, e, isTrusted, {
-      direction: this.direction,
+      direction: this.direction
     });
   }
 }

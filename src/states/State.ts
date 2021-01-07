@@ -3,6 +3,8 @@
  * egjs projects are licensed under the MIT license
  */
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import Panel from "../core/Panel";
 import { ValueOf, Direction, StateType, FlickingContext } from "../types";
 

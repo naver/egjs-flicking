@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 import Flicking from "./Flicking";
 import * as Core from "./core";
 import * as Camera from "./camera";

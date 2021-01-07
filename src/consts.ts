@@ -10,25 +10,26 @@ export const MOVE_TYPE: {
   FREE_SCROLL: "freeScroll";
 } = {
   SNAP: "snap",
-  FREE_SCROLL: "freeScroll",
+  FREE_SCROLL: "freeScroll"
 };
 
 export const DEFAULT_MOVE_TYPE_OPTIONS: {
-  snap: MoveTypeSnapOption,
-  freeScroll: MoveTypeFreeScrollOption,
+  snap: MoveTypeSnapOption;
+  freeScroll: MoveTypeFreeScrollOption;
 } = {
   snap: {
     type: "snap",
-    count: 1,
+    count: 1
   },
   freeScroll: {
-    type: "freeScroll",
-  },
+    type: "freeScroll"
+  }
 };
 export const isBrowser = typeof document !== "undefined";
 
 /**
  * Default options for creating Flicking.
+ *
  * @ko 플리킹을 만들 때 사용하는 기본 옵션들
  * @private
  * @memberof eg.Flicking
@@ -64,23 +65,23 @@ export const DEFAULT_OPTIONS: Readonly<FlickingOptions> = {
   renderExternal: false,
   resizeOnContentsReady: false,
   iOSEdgeSwipeThreshold: 30,
-  collectStatistics: true,
+  collectStatistics: true
 };
 
 export const DEFAULT_VIEWPORT_CSS = {
   position: "relative",
-  zIndex: DEFAULT_OPTIONS.zIndex,
-  overflow: "hidden",
+  zIndex: DEFAULT_OPTIONS.zIndex as string,
+  overflow: "hidden"
 };
 
 export const DEFAULT_CAMERA_CSS = {
   width: "100%",
   height: "100%",
-  willChange: "transform",
+  willChange: "transform"
 };
 
 export const DEFAULT_PANEL_CSS = {
-  position: "absolute",
+  position: "absolute"
 };
 
 export const EVENTS: EventType = {
@@ -94,7 +95,7 @@ export const EVENTS: EventType = {
   SELECT: "select",
   NEED_PANEL: "needPanel",
   VISIBLE_CHANGE: "visibleChange",
-  CONTENT_ERROR: "contentError",
+  CONTENT_ERROR: "contentError"
 };
 
 export const AXES_EVENTS: AxesEventType = {
@@ -102,7 +103,7 @@ export const AXES_EVENTS: AxesEventType = {
   CHANGE: "change",
   RELEASE: "release",
   ANIMATION_END: "animationEnd",
-  FINISH: "finish",
+  FINISH: "finish"
 };
 
 export const STATE_TYPE: StateType = {
@@ -110,12 +111,12 @@ export const STATE_TYPE: StateType = {
   HOLDING: 1,
   DRAGGING: 2,
   ANIMATING: 3,
-  DISABLED: 4,
+  DISABLED: 4
 };
 
 export const DIRECTION: Direction = {
   PREV: "PREV",
-  NEXT: "NEXT",
+  NEXT: "NEXT"
 };
 export const FLICKING_METHODS: {[key in FlickingMethodsKeys]: true} = {
   prev: true,
@@ -135,7 +136,7 @@ export const FLICKING_METHODS: {[key in FlickingMethodsKeys]: true} = {
   destroy: true,
   resize: true,
   setStatus: true,
-  isPlaying: true,
+  isPlaying: true
 };
 
 // Check whether browser supports transform: translate3d
@@ -144,15 +145,15 @@ export let checkTranslateSupport = () => {
   const transforms = {
     webkitTransform: "-webkit-transform",
     msTransform: "-ms-transform",
-    MozTransform: "-moz-transform",
-    OTransform: "-o-transform",
-    transform: "transform",
+    MozTransform: "-moz-transform", // eslint-disable-line @typescript-eslint/naming-convention
+    OTransform: "-o-transform", // eslint-disable-line @typescript-eslint/naming-convention
+    transform: "transform"
   };
 
   if (!isBrowser) {
     return {
       name: transforms.transform,
-      has3d: true,
+      has3d: true
     };
   }
   const supportedStyle = document.documentElement.style;
@@ -174,11 +175,13 @@ export let checkTranslateSupport = () => {
   el.style[transformName] = "translate3d(1px, 1px, 1px)";
   const styleVal = window.getComputedStyle(el).getPropertyValue(transforms[transformName]);
 
-  el.parentElement!.removeChild(el);
+  if (el.parentElement) {
+    el.parentElement.removeChild(el);
+  }
 
   const transformInfo = {
     name: transformName,
-    has3d: styleVal.length > 0 && styleVal !== "none",
+    has3d: styleVal.length > 0 && styleVal !== "none"
   };
 
   checkTranslateSupport = () => transformInfo;

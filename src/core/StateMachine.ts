@@ -64,13 +64,13 @@ class StateMachine {
           break;
       }
 
-      currentState.onExit(nextState!);
-      nextState!.onEnter(currentState);
+      currentState.onExit(nextState);
+      nextState.onEnter(currentState);
 
-      this._state = nextState!;
+      this._state = nextState;
     }
     return this._state;
-  }
+  };
 }
 
 export default StateMachine;

@@ -13,11 +13,11 @@ describe("PanelManager", () => {
   let viewport: Viewport;
   let cameraElement: HTMLElement;
   let flickingInfo: {
-    element: HTMLElement,
-    instance: Flicking,
-    events: FlickingEvent[],
-    eventFired: string[],
-    eventDirection: string[],
+    element: HTMLElement;
+    instance: Flicking;
+    events: FlickingEvent[];
+    eventFired: string[];
+    eventDirection: string[];
   };
 
   beforeEach(() => {
@@ -44,9 +44,7 @@ describe("PanelManager", () => {
   const createPanels = (count: number, baseIdx: number = 0): Panel[] => {
     const panels = new Array(count)
       .fill(undefined)
-      .map((val, idx) => {
-        return createPanel(baseIdx + idx);
-      });
+      .map((val, idx) => createPanel(baseIdx + idx));
     return panels;
   };
   const firstLastShouldBe = (first: number, last: number) => {
@@ -63,7 +61,7 @@ describe("PanelManager", () => {
   };
   const useCircularMode = () => {
     flickingInfo = createFlicking(horizontal.none, {
-      circular: true,
+      circular: true
     });
 
     const flicking = flickingInfo.instance;
@@ -98,13 +96,13 @@ describe("PanelManager", () => {
       // Given
       panelManager.insert(0, [
         createPanel(0),
-        createPanel(1),
+        createPanel(1)
       ]);
 
       // When
       const panels = [
         panelManager.get(0),
-        panelManager.get(1),
+        panelManager.get(1)
       ];
 
       // Then
@@ -123,7 +121,7 @@ describe("PanelManager", () => {
         panelManager.get(1),
         panelManager.get(2),
         panelManager.get(4),
-        panelManager.get(100),
+        panelManager.get(100)
       ];
       const shouldBePanel = panelManager.get(3);
 

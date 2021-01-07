@@ -17,11 +17,12 @@ class PanelManager {
     min: number;
     max: number;
   };
+
   private _length: number;
   private _lastIndex: number;
   private _cloneCount: number;
 
-  constructor(
+  public constructor(
     cameraElement: HTMLElement,
     options: FlickingOptions,
   ) {
@@ -30,7 +31,7 @@ class PanelManager {
     this._clones = [];
     this._range = {
       min: -1,
-      max: -1,
+      max: -1
     };
     this._length = 0;
     this._cloneCount = 0;
@@ -46,18 +47,18 @@ class PanelManager {
     return this._panels[this._range.max];
   }
 
-  public allPanels(): ReadonlyArray<Panel> {
+  public allPanels(): readonly Panel[] {
     return [
       ...this._panels,
-      ...this._clones.reduce((allClones, clones) => [...allClones, ...clones], []),
+      ...this._clones.reduce((allClones, clones) => [...allClones, ...clones], [])
     ];
   }
 
-  public originalPanels(): ReadonlyArray<Panel> {
+  public originalPanels(): readonly Panel[] {
     return this._panels;
   }
 
-  public clonedPanels(): ReadonlyArray<Panel[]> {
+  public clonedPanels(): readonly Panel[][] {
     return this._clones;
   }
 
@@ -67,7 +68,7 @@ class PanelManager {
 
     this._range = {
       min: findIndex(newPanels, panel => Boolean(panel)),
-      max: newPanels.length - 1,
+      max: newPanels.length - 1
     };
     this._length = newPanels.filter(panel => Boolean(panel)).length;
   }
@@ -88,7 +89,7 @@ class PanelManager {
     return this._lastIndex;
   }
 
-  public getRange(): Readonly<{ min: number, max: number }> {
+  public getRange(): Readonly<{ min: number; max: number }> {
     return this._range;
   }
 
@@ -311,7 +312,7 @@ class PanelManager {
     // Update range & length
     this._range = {
       min: findIndex(panels, panel => !!panel),
-      max: lastIndex,
+      max: lastIndex
     };
     this._length -= deletedPanels.length;
 

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /**
  * Generate changelog file from commit log
  *
@@ -74,7 +76,7 @@ const changelog = {
 	getGitInfo() {
 		return "git rev-parse --abbrev-ref HEAD && git log -1 --pretty=\"format:%h %ci\" --no-merges";
   },
-  
+
   getLatestTagDate() {
     return "git log --tags --simplify-by-decoration --pretty='format:%ad' -1 --date=short";
   },
@@ -213,16 +215,16 @@ const changelog = {
 	init() {
     exec(this.getLatestTagDate(), (function(error, stdout, stderr) {
       const cmd = this.getLogCmd(period[0] || stdout, period[1]);
-      
+
       exec(this.getGitInfo(), (function(error, stdout, stderr) {
       	const info = stdout.replace(/\r?\n/," ").split(" ");
-  
+
       	this.gitinfo = {
       		branchName: info[0],
       		shortSHA: info[1],
       		lastCommitTime: info[2]
       	};
-  
+
       	exec(cmd, this.generate.bind(this));
       }).bind(this));
 		}).bind(this));

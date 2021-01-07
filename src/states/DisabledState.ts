@@ -18,6 +18,7 @@ class DisabledState extends State {
 
   public onChange(e: any, { viewport, transitTo }: FlickingContext): void {
     // Can stop Axes's change event
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     e.stop();
 
     // Should update axes position as it's already changed at this moment
@@ -27,6 +28,7 @@ class DisabledState extends State {
 
   public onRelease(e: any, { transitTo }: FlickingContext): void {
     // This is needed when stopped hold start event
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (e.delta.flick === 0) {
       transitTo(STATE_TYPE.IDLE);
     }

@@ -10,11 +10,11 @@ import { cleanup, createFlicking } from "./assets/utils";
 
 describe("Panel", () => {
   let flickingInfo: {
-    element: HTMLElement,
-    instance: Flicking,
-    events: FlickingEvent[],
-    eventFired: string[],
-    eventDirection: string[],
+    element: HTMLElement;
+    instance: Flicking;
+    events: FlickingEvent[];
+    eventFired: string[];
+    eventDirection: string[];
   };
   let flicking: Flicking;
 

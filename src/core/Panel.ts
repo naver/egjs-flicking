@@ -4,9 +4,9 @@
  */
 
 import Viewport from "./Viewport";
-import { OriginalStyle, FlickingPanel, ElementLike, DestroyOption, BoundingBox } from "../types";
-import { DEFAULT_PANEL_CSS, EVENTS } from "../consts";
 import { addClass, applyCSS, parseArithmeticExpression, parseElement, getProgress, restoreStyle, hasClass, getBbox } from "../utils";
+import { DEFAULT_PANEL_CSS, EVENTS } from "../consts";
+import { OriginalStyle, FlickingPanel, ElementLike, DestroyOption, BoundingBox } from "../types";
 
 class Panel implements FlickingPanel {
   public viewport: Viewport;
@@ -26,22 +26,24 @@ class Panel implements FlickingPanel {
     originalStyle: OriginalStyle;
     cachedBbox: BoundingBox | null;
   };
+
   private _element: HTMLElement;
   private _original?: Panel;
   private _clonedPanels: Panel[];
 
+  // FIXME: remove undefined
   public constructor(
     element?: HTMLElement | null,
     index?: number,
     viewport?: Viewport,
   ) {
-    this.viewport = viewport!;
+    this.viewport = viewport as Viewport;
     this.prevSibling = null;
     this.nextSibling = null;
     this._clonedPanels = [];
 
     this._state = {
-      index: index!,
+      index: index as number,
       position: 0,
       relativeAnchorPosition: 0,
       size: 0,
@@ -50,9 +52,9 @@ class Panel implements FlickingPanel {
       cloneIndex: -1,
       originalStyle: {
         className: "",
-        style: "",
+        style: ""
       },
-      cachedBbox: null,
+      cachedBbox: null
     };
     this.setElement(element);
   }
@@ -106,7 +108,7 @@ class Panel implements FlickingPanel {
     const outsetRange = [
       -this.getSize(),
       viewport.getRelativeHangerPosition() - this.getRelativeAnchorPosition(),
-      viewport.getSize(),
+      viewport.getSize()
     ];
     const relativePanelPosition = this.getPosition() - viewport.getCameraPosition();
     const outsetProgress = getProgress(relativePanelPosition, outsetRange);
@@ -237,7 +239,7 @@ class Panel implements FlickingPanel {
   public insertBefore(element: ElementLike | ElementLike[]): FlickingPanel[] {
     const viewport = this.viewport;
     const parsedElements = parseElement(element);
-    const firstPanel = viewport.panelManager.firstPanel()!;
+    const firstPanel = viewport.panelManager.firstPanel() as Panel;
     const prevSibling = this.prevSibling;
     // Finding correct inserting index
     // While it should insert removing empty spaces,
@@ -267,7 +269,9 @@ class Panel implements FlickingPanel {
     }
 
     // release resources
+    // eslint-disable-next-line guard-for-in
     for (const x in this) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       (this as any)[x] = null;
     }
   }
@@ -307,7 +311,7 @@ class Panel implements FlickingPanel {
         x: 0,
         y: 0,
         width: 0,
-        height: 0,
+        height: 0
       };
     } else if (!state.cachedBbox) {
       const wasVisible = Boolean(element.parentNode);
@@ -322,7 +326,7 @@ class Panel implements FlickingPanel {
         cameraElement.removeChild(element);
       }
     }
-    return state.cachedBbox!;
+    return state.cachedBbox;
   }
 
   public isClone(): boolean {
@@ -347,7 +351,7 @@ class Panel implements FlickingPanel {
     const state = this._state;
 
     return state.isClone
-      ? this._original!.getClonedPanels()
+      ? (this._original as Panel).getClonedPanels()
       : this._clonedPanels;
   }
 
@@ -355,13 +359,13 @@ class Panel implements FlickingPanel {
     const state = this._state;
 
     return state.isClone
-      ? this._original!.getIdenticalPanels()
+      ? (this._original as Panel).getIdenticalPanels()
       : [this, ...this._clonedPanels];
   }
 
   public getOriginalPanel(): Panel {
     return this._state.isClone
-      ? this._original!
+      ? (this._original as Panel)
       : this;
   }
 
@@ -392,9 +396,11 @@ class Panel implements FlickingPanel {
     const styleToApply = `${pos - offset}px`;
 
     if (!state.isVirtual && currentElementStyle !== styleToApply) {
-      options.horizontal
-        ? elementStyle.left = styleToApply
-        : elementStyle.top = styleToApply;
+      if (options.horizontal) {
+        elementStyle.left = styleToApply;
+      } else {
+        elementStyle.top = styleToApply;
+      }
     }
   }
 
@@ -432,9 +438,10 @@ class Panel implements FlickingPanel {
   }
 
   public removeElement(): void {
-    if (!this.viewport.options.renderExternal) {
-      const element = this._element;
-      element.parentNode && element.parentNode.removeChild(element);
+    const element = this._element;
+
+    if (!this.viewport.options.renderExternal && element.parentNode) {
+      element.parentNode.removeChild(element);
     }
 
     // Do the same thing for clones

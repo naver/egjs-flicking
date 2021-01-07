@@ -10,8 +10,6 @@ import { MoveTypeStringOption, MoveTypeContext, DestinationInfo } from "../types
 abstract class Control {
   protected readonly abstract _type: string;
 
-  public abstract findTargetPanel(ctx: MoveTypeContext): DestinationInfo;
-
   public is(type: MoveTypeStringOption): boolean {
     return type === this._type;
   }
@@ -22,25 +20,25 @@ abstract class Control {
 
     const panel = options.circular
       ? this._findRestorePanelInCircularMode(ctx)
-      : viewport.getCurrentPanel()!;
+      : viewport.getCurrentPanel() as Panel;
 
     return {
       panel,
       destPos: viewport.findEstimatedPosition(panel),
       duration: options.duration,
-      eventType: EVENTS.RESTORE,
+      eventType: EVENTS.RESTORE
     };
   }
 
   public findPanelWhenInterrupted(ctx: MoveTypeContext): DestinationInfo {
     const { state, viewport } = ctx;
-    const targetPanel = state.targetPanel!;
+    const targetPanel = state.targetPanel as Panel;
 
     return {
       panel: targetPanel,
       destPos: viewport.findEstimatedPosition(targetPanel),
       duration: viewport.options.duration,
-      eventType: "",
+      eventType: ""
     };
   }
 
@@ -49,7 +47,7 @@ abstract class Control {
     const { viewport, isNextDirection } = ctx;
 
     const options = viewport.options;
-    const currentPanel = viewport.getCurrentPanel()!;
+    const currentPanel = viewport.getCurrentPanel() as Panel;
     const halfGap = options.gap / 2;
 
     const relativeAnchorPosition = currentPanel.getRelativeAnchorPosition();
@@ -71,7 +69,7 @@ abstract class Control {
 
   private _findRestorePanelInCircularMode(ctx: MoveTypeContext): Panel {
     const viewport = ctx.viewport;
-    const originalPanel = viewport.getCurrentPanel()!.getOriginalPanel();
+    const originalPanel = (viewport.getCurrentPanel() as Panel).getOriginalPanel();
     const hangerPosition = viewport.getHangerPosition();
 
     const firstClonedPanel = originalPanel.getIdenticalPanels()[1];
@@ -82,6 +80,8 @@ abstract class Control {
       ? firstClonedPanel
       : originalPanel;
   }
+
+  public abstract findTargetPanel(ctx: MoveTypeContext): DestinationInfo;
 }
 
 export default Control;

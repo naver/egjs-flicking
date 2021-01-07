@@ -5,5 +5,5 @@ import FreeControl from "./FreeControl";
 export {
   Control,
   SnapControl,
-  FreeControl,
+  FreeControl
 };

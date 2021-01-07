@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* eslint-disable */
+
 /**
  * Original Code
  * https://github.com/angular/angular.js/blob/v1.5.9/validate-commit-msg.js
@@ -39,7 +41,7 @@ var error = function() {
 
 var validateMessage = function(message, fullMessage) {
   var isValid = true;
-  
+
   if (IGNORED.test(message)) {
     console.log('Commit message validation ignored.');
     return true;

@@ -8,7 +8,7 @@ import { FlickingEvent, FlickingPanel, Plugin } from "~/types";
 import { horizontal, vertical } from "./assets/fixture";
 import { createFlicking, cleanup, simulate, createFixture, tick } from "./assets/utils";
 
-declare var viewport: any;
+declare let viewport: any;
 
 const defaultClassPrefix = DEFAULT_OPTIONS.classPrefix;
 
@@ -16,11 +16,11 @@ describe("Initialization", () => {
   afterEach(() => cleanup());
 
   let flickingInfo: {
-    element: HTMLElement,
-    instance: Flicking,
-    events: FlickingEvent[],
-    eventFired: string[],
-    eventDirection: string[],
+    element: HTMLElement;
+    instance: Flicking;
+    events: FlickingEvent[];
+    eventFired: string[];
+    eventDirection: string[];
   };
 
   describe("Check specifications in initialization process", () => {
@@ -177,7 +177,7 @@ describe("Initialization", () => {
     it("should not clone panels in non-circular, vertical mode", () => {
       // Given & When
       flickingInfo = createFlicking(vertical.shouldClone4, {
-        horizontal: false,
+        horizontal: false
       });
       const flicking = flickingInfo.instance;
 
@@ -190,7 +190,7 @@ describe("Initialization", () => {
       // Given & When
       flickingInfo = createFlicking(vertical.shouldClone4, {
         horizontal: false,
-        circular: true,
+        circular: true
       });
       const flicking = flickingInfo.instance;
 
@@ -214,14 +214,14 @@ describe("Initialization", () => {
     it("has correct left bounce", async () => {
       const bounceVal = 25;
       flickingInfo = createFlicking(horizontal.full, {
-        bounce: [bounceVal, 0],
+        bounce: [bounceVal, 0]
       });
       setEventHandler();
 
       await simulate(flickingInfo.element, {
         pos: [0, 0],
         deltaX: 250,
-        deltaY: 0,
+        deltaY: 0
       });
 
       expect(depaPos).equals(-bounceVal);
@@ -231,14 +231,14 @@ describe("Initialization", () => {
       const bounceVal = 25;
       flickingInfo = createFlicking(horizontal.full, {
         bounce: [0, bounceVal],
-        defaultIndex: 2,
+        defaultIndex: 2
       });
       setEventHandler();
 
       await simulate(flickingInfo.element, {
         pos: [0, 0],
         deltaX: -250,
-        deltaY: 0,
+        deltaY: 0
       });
 
       expect(depaPos).equals(range[1] + bounceVal);
@@ -248,7 +248,7 @@ describe("Initialization", () => {
       const bounceVal = 25;
       flickingInfo = createFlicking(vertical.full, {
         bounce: [bounceVal, 0],
-        horizontal: false,
+        horizontal: false
       });
 
       setEventHandler();
@@ -256,7 +256,7 @@ describe("Initialization", () => {
       await simulate(flickingInfo.element, {
         pos: [0, 0],
         deltaX: 0,
-        deltaY: 250,
+        deltaY: 250
       });
 
       expect(depaPos).equals(-bounceVal);
@@ -266,7 +266,7 @@ describe("Initialization", () => {
       const bounceVal = 25;
       flickingInfo = createFlicking(vertical.full, {
         bounce: [0, bounceVal],
-        horizontal: false,
+        horizontal: false
       });
 
       setEventHandler();
@@ -274,7 +274,7 @@ describe("Initialization", () => {
       await simulate(flickingInfo.element, {
         pos: [0, 0],
         deltaX: 0,
-        deltaY: -250,
+        deltaY: -250
       });
 
       expect(depaPos).equals(range[1] + bounceVal);
@@ -305,7 +305,7 @@ describe("Initialization", () => {
       const bounceVal = 99999;
       flickingInfo = createFlicking(vertical.full, {
         bounce: [bounceVal, 0],
-        horizontal: false,
+        horizontal: false
       });
 
       setEventHandler();
@@ -315,7 +315,7 @@ describe("Initialization", () => {
       await simulate(flickingInfo.element, {
         pos: [0, 0],
         deltaX: 0,
-        deltaY: 999999,
+        deltaY: 999999
       });
 
       expect(depaPos).equals(-wrapperHeight);
@@ -325,7 +325,7 @@ describe("Initialization", () => {
   describe("threshold-horizontal", () => {
     beforeEach(() => {
       flickingInfo = createFlicking(horizontal.full, {
-        threshold: 50,
+        threshold: 50
       });
     });
 
@@ -368,7 +368,7 @@ describe("Initialization", () => {
     beforeEach(() => {
       flickingInfo = createFlicking(vertical.full, {
         horizontal: false,
-        threshold: 50,
+        threshold: 50
       });
     });
 
@@ -409,7 +409,7 @@ describe("Initialization", () => {
   describe("threshold-horizontal, circular", () => {
     beforeEach(() => {
       flickingInfo = createFlicking(horizontal.full, {
-        threshold: 50,
+        threshold: 50
       });
     });
 
@@ -452,7 +452,7 @@ describe("Initialization", () => {
       flickingInfo = createFlicking(vertical.full, {
         horizontal: false,
         circular: true,
-        threshold: 50,
+        threshold: 50
       });
     });
 
@@ -495,7 +495,7 @@ describe("Initialization", () => {
       flickingInfo = createFlicking(horizontal.full, {
         circular: true,
         threshold: 30,
-        thresholdAngle: 45,
+        thresholdAngle: 45
       });
     });
 
@@ -506,7 +506,7 @@ describe("Initialization", () => {
       await simulate(flickingInfo.element, {
         deltaX: -100,
         deltaY: 101,
-        duration: 300,
+        duration: 300
       });
 
       const afterIndex = flicking.getIndex();
@@ -521,7 +521,7 @@ describe("Initialization", () => {
       await simulate(flickingInfo.element, {
         deltaX: -100,
         deltaY: 100,
-        duration: 300,
+        duration: 300
       });
 
       const afterIndex = flicking.getIndex();
@@ -536,7 +536,7 @@ describe("Initialization", () => {
       await simulate(flickingInfo.element, {
         deltaX: -100,
         deltaY: 99,
-        duration: 300,
+        duration: 300
       });
 
       const afterIndex = flicking.getIndex();
@@ -551,7 +551,7 @@ describe("Initialization", () => {
         circular: true,
         horizontal: false,
         threshold: 30,
-        thresholdAngle: 45,
+        thresholdAngle: 45
       });
     });
 
@@ -562,7 +562,7 @@ describe("Initialization", () => {
       await simulate(flickingInfo.element, {
         deltaX: -100,
         deltaY: 101,
-        duration: 300,
+        duration: 300
       });
 
       const afterIndex = flicking.getIndex();
@@ -577,7 +577,7 @@ describe("Initialization", () => {
       await simulate(flickingInfo.element, {
         deltaX: -100,
         deltaY: 100,
-        duration: 300,
+        duration: 300
       });
 
       const afterIndex = flicking.getIndex();
@@ -592,7 +592,7 @@ describe("Initialization", () => {
       await simulate(flickingInfo.element, {
         deltaX: -100,
         deltaY: 99,
-        duration: 300,
+        duration: 300
       });
 
       const afterIndex = flicking.getIndex();
@@ -614,11 +614,11 @@ describe("Initialization", () => {
             flickingInfo = createFlicking(horizontal.fixedTo100, {
               moveType: {
                 type: "snap",
-                count: snapCount,
+                count: snapCount
               },
               threshold: 40,
               defaultIndex: 0,
-              hanger: "0%",
+              hanger: "0%"
             });
             let destPos;
             let eventDelta;
@@ -635,7 +635,7 @@ describe("Initialization", () => {
 
             simulate(flickingInfo.element, {
               deltaX: delta,
-              duration: 50,
+              duration: 50
             });
 
             const endIndex = flicking.getIndex();
@@ -645,12 +645,12 @@ describe("Initialization", () => {
             // check eventDelta if it's over 50 as it's minimum distance to change index(half of panel size as anchor is 50%)
             // If it's not, expected index will be 0 as it's restoring.
             const expectedIndex = eventDelta >= 50
-              ? Math.min(nearestPanel.getIndex() + snapCount, Math.max(1, indexAtDestPos))
+              ? Math.min((nearestPanel.getIndex() as number) + snapCount, Math.max(1, indexAtDestPos))
               : 0;
 
             expect(startIndex).equals(0);
             expect(expectedIndex).equals(endIndex);
-            expect(endIndex).to.be.not.gt(snapCount + nearestPanel.getIndex());
+            expect(endIndex).to.be.not.gt(snapCount + (nearestPanel.getIndex() as number));
           });
         });
       });
@@ -663,7 +663,7 @@ describe("Initialization", () => {
 
       flickingInfo = createFlicking(horizontal.variant, {
         gap,
-        defaultIndex: 0,
+        defaultIndex: 0
       });
       const flicking = flickingInfo.instance;
       let panel: FlickingPanel = flicking.getCurrentPanel();
@@ -684,7 +684,7 @@ describe("Initialization", () => {
         anchor: "0",
         hanger: "0",
         circular: true,
-        defaultIndex: 0,
+        defaultIndex: 0
       });
 
       const flicking = flickingInfo.instance;
@@ -705,7 +705,7 @@ describe("Initialization", () => {
       flickingInfo = createFlicking(horizontal.panel30, {
         renderOnlyVisible: true,
         hanger: "0%",
-        anchor: "0%",
+        anchor: "0%"
       });
 
       // When
@@ -722,7 +722,7 @@ describe("Initialization", () => {
       flickingInfo = createFlicking(horizontal.panel30, {
         renderOnlyVisible: true,
         hanger: "50%",
-        anchor: "50%",
+        anchor: "50%"
       });
 
       // When
@@ -739,7 +739,7 @@ describe("Initialization", () => {
       flickingInfo = createFlicking(horizontal.panel30, {
         renderOnlyVisible: true,
         hanger: "50%",
-        anchor: "50%",
+        anchor: "50%"
       });
       const flicking = flickingInfo.instance;
       const visiblePanelCntBefore = flicking.getElement().querySelectorAll(".eg-flick-panel").length;
@@ -760,7 +760,7 @@ describe("Initialization", () => {
       flickingInfo = createFlicking(horizontal.panel30, {
         renderOnlyVisible: true,
         hanger: "50%",
-        anchor: "50%",
+        anchor: "50%"
       });
       const flicking = flickingInfo.instance;
       const prevFirstVisiblePanel = flicking.getVisiblePanels()[0];
@@ -783,7 +783,7 @@ describe("Initialization", () => {
       flickingInfo = createFlicking(horizontal.panel30, {
         renderOnlyVisible: true,
         hanger: "0%",
-        anchor: "0%",
+        anchor: "0%"
       });
       const flicking = flickingInfo.instance;
       const cameraElement = flicking.getElement().children[0].children[0] as HTMLElement;
@@ -802,7 +802,7 @@ describe("Initialization", () => {
       viewport.set(400, 100);
       // Given
       flickingInfo = createFlicking(horizontal.fixedTo100N(2), {
-        renderOnlyVisible: true,
+        renderOnlyVisible: true
       });
 
       // When
@@ -810,11 +810,11 @@ describe("Initialization", () => {
 
       // Then
       const flicking = flickingInfo.instance;
-      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") as NodeListOf<HTMLElement>;
+      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") ;
 
       expect(flicking.getPanelCount()).equals(2);
       expect(panels.length).equals(2);
-      panels.forEach((panel, i) => {
+      panels.forEach((panel: HTMLElement, i) => {
         expect(panel.style.left).equals(`${100 * i}px`);
       });
     });
@@ -826,7 +826,7 @@ describe("Initialization", () => {
         renderOnlyVisible: true,
         hanger: "0%",
         anchor: "0%",
-        gap: 10,
+        gap: 10
       });
 
       // When
@@ -834,11 +834,11 @@ describe("Initialization", () => {
 
       // Then
       const flicking = flickingInfo.instance;
-      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") as NodeListOf<HTMLElement>;
+      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") ;
 
       expect(flicking.getPanelCount()).equals(4);
       expect(panels.length).equals(4);
-      panels.forEach((panel, i) => {
+      panels.forEach((panel: HTMLElement, i) => {
         expect(panel.style.left).equals(`${110 * i}px`);
       });
     });
@@ -848,7 +848,7 @@ describe("Initialization", () => {
       // Given
       flickingInfo = createFlicking(horizontal.fixedTo100N(4), {
         renderOnlyVisible: true,
-        bound: true,
+        bound: true
       });
 
       // When
@@ -856,11 +856,11 @@ describe("Initialization", () => {
 
       // Then
       const flicking = flickingInfo.instance;
-      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") as NodeListOf<HTMLElement>;
+      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") ;
 
       expect(flicking.getPanelCount()).equals(4);
       expect(panels.length).equals(4);
-      panels.forEach((panel, i) => {
+      panels.forEach((panel: HTMLElement, i) => {
         expect(panel.style.left).equals(`${100 * i}px`);
       });
     });
@@ -872,7 +872,7 @@ describe("Initialization", () => {
         renderOnlyVisible: true,
         moveType: "freeScroll",
         bound: true,
-        gap: 20,
+        gap: 20
       });
 
       // When
@@ -880,11 +880,11 @@ describe("Initialization", () => {
 
       // Then
       const flicking = flickingInfo.instance;
-      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") as NodeListOf<HTMLElement>;
+      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") ;
 
       expect(flicking.getPanelCount()).equals(4);
       expect(panels.length).equals(4);
-      panels.forEach((panel, i) => {
+      panels.forEach((panel: HTMLElement, i) => {
         expect(panel.style.left).equals(`${120 * i}px`);
       });
     });
@@ -895,13 +895,13 @@ describe("Initialization", () => {
       flickingInfo = createFlicking(horizontal.fixedTo100N(4), {
         renderOnlyVisible: true,
         hanger: "0%",
-        anchor: "0%",
+        anchor: "0%"
       });
 
       // When
       const flicking = flickingInfo.instance;
-      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") as NodeListOf<HTMLElement>;
-      panels.forEach(panel => {
+      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") ;
+      panels.forEach((panel: HTMLElement) => {
         panel.style.width = "200px";
       });
       flicking.resize();
@@ -910,7 +910,7 @@ describe("Initialization", () => {
       expect(flicking.getPanelCount()).equals(4);
       expect(panels.length).equals(4);
 
-      panels.forEach((panel, i) => {
+      panels.forEach((panel: HTMLElement, i) => {
         expect(panel.style.left).equals(`${200 * i}px`);
       });
     });
@@ -921,12 +921,12 @@ describe("Initialization", () => {
       flickingInfo = createFlicking(horizontal.fixedTo100N(4), {
         renderOnlyVisible: true,
         hanger: "0%",
-        anchor: "0%",
+        anchor: "0%"
       });
 
       // When
       const flicking = flickingInfo.instance;
-      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") as NodeListOf<HTMLElement>;
+      const panels = flicking.getElement().querySelectorAll(".eg-flick-panel") ;
       flicking.moveTo(3, 0);
       flicking.resize();
 
@@ -935,7 +935,7 @@ describe("Initialization", () => {
       expect((flicking as any)._viewport.getPositionOffset()).not.equals(0);
       expect(flicking.getPanelCount()).equals(4);
 
-      panels.forEach((panel, i) => {
+      panels.forEach((panel: HTMLElement, i) => {
         expect(panel.style.left).equals(`${100 * i - 300}px`);
       });
     });
@@ -947,7 +947,7 @@ describe("Initialization", () => {
         anchor: "0",
         hanger: "0",
         circular: true,
-        defaultIndex: 0,
+        defaultIndex: 0
       });
     });
 
@@ -956,7 +956,7 @@ describe("Initialization", () => {
       const plugin: Plugin = {
         init: sinon.spy(),
         update: sinon.spy(),
-        destroy: sinon.spy(),
+        destroy: sinon.spy()
       };
 
       // When
@@ -974,7 +974,7 @@ describe("Initialization", () => {
       const plugin: Plugin = {
         init: sinon.spy(),
         update: sinon.spy(),
-        destroy: sinon.spy(),
+        destroy: sinon.spy()
       };
 
       // When
@@ -994,7 +994,7 @@ describe("Initialization", () => {
       const plugin: Plugin = {
         init: sinon.spy(),
         update: sinon.spy(),
-        destroy: sinon.spy(),
+        destroy: sinon.spy()
       };
 
       // When
@@ -1014,7 +1014,7 @@ describe("Initialization", () => {
       const plugin: Plugin = {
         init: sinon.spy(),
         destroy: sinon.spy(),
-        update: sinon.spy(),
+        update: sinon.spy()
       };
 
       // When
@@ -1043,13 +1043,13 @@ describe("Initialization", () => {
         @withFlickingMethods
         private _nativeFlicking: Flicking;
 
-        constructor() {
+        public constructor() {
           flickingInfo = createFlicking(horizontal.shouldClone4, {
             gap: 10,
             anchor: "0",
             hanger: "0",
             circular: false,
-            defaultIndex: 0,
+            defaultIndex: 0
           });
           this._nativeFlicking = flickingInfo.instance;
         }
@@ -1077,7 +1077,7 @@ describe("Initialization", () => {
         hanger: 50,
         threshold: 40,
         defaultIndex: 5,
-        moveType: { type: "snap", count: 1},
+        moveType: { type: "snap", count: 1}
       });
       const flicking = flickingInfo.instance;
       const moves = [];
@@ -1086,7 +1086,7 @@ describe("Initialization", () => {
       // When
       await simulate(flickingInfo.element, {
         deltaX: 40,
-        duration: 200,
+        duration: 200
       });
 
       // Then
@@ -1100,7 +1100,7 @@ describe("Initialization", () => {
         bound: true,
         threshold: 40,
         defaultIndex: 0,
-        moveType: { type: "snap", count: 1},
+        moveType: { type: "snap", count: 1}
       });
       const moves = [];
       const flicking = flickingInfo.instance;
@@ -1109,7 +1109,7 @@ describe("Initialization", () => {
       // When
       await simulate(flickingInfo.element, {
         deltaX: -40,
-        duration: 500,
+        duration: 500
       });
 
       // Then
@@ -1123,7 +1123,7 @@ describe("Initialization", () => {
       // Given & When(Init)
       flickingInfo = createFlicking(horizontal.variant, {
         gap: 0,
-        isEqualSize: true,
+        isEqualSize: true
       });
 
       // Then
@@ -1144,7 +1144,7 @@ describe("Initialization", () => {
         el.classList.add(`test-panel-${idx % 3}`);
       });
       const flicking = new Flicking(wrapper, {
-        isEqualSize: ["test-panel-0", "test-panel-1", "test-panel-2"],
+        isEqualSize: ["test-panel-0", "test-panel-1", "test-panel-2"]
       });
       const panelsClassed = flicking.getAllPanels().reduce((panels, panel) => {
         const className = `test-panel-${panel.getIndex() % 3}`;
@@ -1185,7 +1185,7 @@ describe("Initialization", () => {
       viewport.set(1000, 100);
       flickingInfo = createFlicking(horizontal.variant, {
         gap: 0,
-        isEqualSize: true,
+        isEqualSize: true
       });
       const flicking = flickingInfo.instance;
       const beforeSize = flicking.getPanel(0).getSize();
@@ -1213,7 +1213,7 @@ describe("Initialization", () => {
         el.classList.add(`test-panel-${idx % 3}`);
       });
       const flicking = new Flicking(wrapper, {
-        isEqualSize: ["test-panel-0", "test-panel-1", "test-panel-2"],
+        isEqualSize: ["test-panel-0", "test-panel-1", "test-panel-2"]
       });
       const panelsClassed = flicking.getAllPanels().reduce((panels, panel) => {
         const className = `test-panel-${panel.getIndex() % 3}`;
@@ -1271,7 +1271,7 @@ describe("Initialization", () => {
     it("should put same size for appended panel with existing class", () => {
       // Given
       flickingInfo = createFlicking(horizontal.half, {
-        isEqualSize: ["panel-horizontal-50"],
+        isEqualSize: ["panel-horizontal-50"]
       });
 
       // When
@@ -1287,7 +1287,7 @@ describe("Initialization", () => {
     it("should put same size for replaced panel with existing class", () => {
       // Given
       flickingInfo = createFlicking(horizontal.half, {
-        isEqualSize: ["panel-horizontal-50"],
+        isEqualSize: ["panel-horizontal-50"]
       });
 
       // When
@@ -1307,7 +1307,7 @@ describe("Initialization", () => {
       viewport.set(1000, 100);
       flickingInfo = createFlicking(horizontal.variant, { // horizontal.variant panels has width dependency on window width
         gap: 0,
-        isConstantSize: true,
+        isConstantSize: true
       });
       const flicking = flickingInfo.instance;
       const allPanels = flicking.getAllPanels();
@@ -1331,7 +1331,7 @@ describe("Initialization", () => {
     it("should make viewport size integer when true", () => {
       // Given
       flickingInfo = createFlicking(horizontal.full, {
-        useOffset: true,
+        useOffset: true
       });
       const flicking = flickingInfo.instance;
       flicking.getElement().style.width = "1000.54321px";
@@ -1347,7 +1347,7 @@ describe("Initialization", () => {
     it("should make viewport size not integer when false", () => {
       // Given
       flickingInfo = createFlicking(horizontal.full, {
-        useOffset: false,
+        useOffset: false
       });
       const flicking = flickingInfo.instance;
       flicking.getElement().style.width = "1000.54321px";
@@ -1363,7 +1363,7 @@ describe("Initialization", () => {
     it("should make panel size integer when true", () => {
       // Given
       flickingInfo = createFlicking(horizontal.full, {
-        useOffset: true,
+        useOffset: true
       });
       const flicking = flickingInfo.instance;
       flicking.getElement().style.width = "1000.54321px";
@@ -1381,7 +1381,7 @@ describe("Initialization", () => {
     it("should make panel size not integer when false", () => {
       // Given
       flickingInfo = createFlicking(horizontal.full, {
-        useOffset: false,
+        useOffset: false
       });
       const flicking = flickingInfo.instance;
       flicking.getElement().style.width = "1000.54321px";
@@ -1399,7 +1399,7 @@ describe("Initialization", () => {
     it("should return original panel size when true even if transform is applied", () => {
       // Given
       flickingInfo = createFlicking(horizontal.full, {
-        useOffset: true,
+        useOffset: true
       });
 
       // When
@@ -1418,7 +1418,7 @@ describe("Initialization", () => {
     it("should current panel height at init", () => {
       // Given & When
       flickingInfo = createFlicking(horizontal.hasDifferentHeight, {
-        adaptive: true,
+        adaptive: true
       });
 
       // Then
@@ -1436,7 +1436,7 @@ describe("Initialization", () => {
     it("should change viewport height to current panel's height", async () => {
       // Given
       flickingInfo = createFlicking(horizontal.hasDifferentHeight, {
-        adaptive: true,
+        adaptive: true
       });
       const flicking = flickingInfo.instance;
       const viewportEl = flickingInfo.element.querySelector(".eg-flick-viewport") as HTMLElement;
@@ -1469,18 +1469,14 @@ describe("Initialization", () => {
       (window as any).timer = sinon.useFakeTimers();
     });
 
-    const imageError = img => {
-      return new Promise(res => img.addEventListener("error", res));
-    };
+    const imageError = img => new Promise(res => img.addEventListener("error", res));
 
-    const imageLoaded = img => {
-      return new Promise(res => img.addEventListener("load", res));
-    };
+    const imageLoaded = img => new Promise(res => img.addEventListener("load", res));
 
     it("should call resize even if all images are failed", async () => {
       // Given
       flickingInfo = createFlicking(horizontal.hasEmptyImagesInside, {
-        resizeOnContentsReady: true,
+        resizeOnContentsReady: true
       });
 
       // When
@@ -1490,9 +1486,7 @@ describe("Initialization", () => {
 
       flicking.resize = resizeSpy;
 
-      await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
-        return imageError(img);
-      }));
+      await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => imageError(img)));
 
       // Then
       expect(resizeSpy.called).to.be.true;
@@ -1501,7 +1495,7 @@ describe("Initialization", () => {
     it("should call resize after all images are loaded", async () => {
       // Given
       flickingInfo = createFlicking(horizontal.hasEmptyImagesInside, {
-        resizeOnContentsReady: true,
+        resizeOnContentsReady: true
       });
 
       // When
@@ -1523,7 +1517,7 @@ describe("Initialization", () => {
     it("should update panel sizes", async () => {
       // Given
       flickingInfo = createFlicking(horizontal.hasEmptyImagesInside, {
-        resizeOnContentsReady: true,
+        resizeOnContentsReady: true
       });
 
       // When
@@ -1544,7 +1538,7 @@ describe("Initialization", () => {
     it("should handle lazyload-enabled images", async () => {
       // Given
       flickingInfo = createFlicking(horizontal.hasEmptyLazyImagesInside, {
-        resizeOnContentsReady: true,
+        resizeOnContentsReady: true
       });
 
       // When
@@ -1565,7 +1559,7 @@ describe("Initialization", () => {
     it("should call resize each time after appended lazyload image is loaded", async () => {
       // Given
       flickingInfo = createFlicking(horizontal.none, {
-        resizeOnContentsReady: true,
+        resizeOnContentsReady: true
       });
 
       const resizeSpy = sinon.spy();
@@ -1602,7 +1596,7 @@ describe("Initialization", () => {
     it("should trigger contentError event if images are failed", async () => {
       // Given
       flickingInfo = createFlicking(horizontal.hasEmptyImagesInside, {
-        resizeOnContentsReady: true,
+        resizeOnContentsReady: true
       });
 
       // When
@@ -1612,9 +1606,7 @@ describe("Initialization", () => {
 
       flicking.on(EVENTS.CONTENT_ERROR, e => contentErrorEvents.push(e));
 
-      await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
-        return imageError(img);
-      }));
+      await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => imageError(img)));
 
       // Then
       expect(contentErrorEvents.length).to.equal(3);
@@ -1631,7 +1623,7 @@ describe("Initialization", () => {
       beforeEach(() => {
         // Given
         flickingInfo = createFlicking(horizontal.none, {
-          resizeOnContentsReady: true,
+          resizeOnContentsReady: true
         });
         const wrapper = flickingInfo.element;
 

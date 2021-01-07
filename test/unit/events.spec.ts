@@ -15,11 +15,11 @@ describe("Events", () => {
   });
 
   let flickingInfo: {
-    element: HTMLElement,
-    instance: Flicking,
-    events: FlickingEvent[],
-    eventFired: string[],
-    eventDirection: string[],
+    element: HTMLElement;
+    instance: Flicking;
+    events: FlickingEvent[];
+    eventFired: string[];
+    eventDirection: string[];
   };
 
   const expectedEventOrder = {
@@ -30,14 +30,14 @@ describe("Events", () => {
       EVENTS.HOLD_END,
       EVENTS.CHANGE,
       EVENTS.MOVE,
-      EVENTS.MOVE_END,
+      EVENTS.MOVE_END
     ],
     programmatic: [
       EVENTS.CHANGE,
       EVENTS.MOVE_START,
       EVENTS.MOVE,
-      EVENTS.MOVE_END,
-    ],
+      EVENTS.MOVE_END
+    ]
   };
 
   describe("Changing panel normally", () => {
@@ -56,13 +56,13 @@ describe("Events", () => {
     const horizontalPanelTypes = {
       "horizontal-full": horizontal.full,
       "horizontal-half": horizontal.half,
-      "horizontal-variant": horizontal.variant,
+      "horizontal-variant": horizontal.variant
     };
 
     const verticalPanelTypes = {
       "vertical-full": vertical.full,
       "vertical-half": vertical.half,
-      "vertical-variant": vertical.variant,
+      "vertical-variant": vertical.variant
     };
 
     Object.keys(horizontalPanelTypes).forEach(type => {
@@ -91,7 +91,7 @@ describe("Events", () => {
       EVENTS.MOVE,
       EVENTS.HOLD_END,
       EVENTS.CHANGE,
-      EVENTS.MOVE_END,
+      EVENTS.MOVE_END
     ];
 
     orderedEventTypes.forEach((eventType, eventIndex) => {
@@ -162,7 +162,7 @@ describe("Events", () => {
 
     const testingEvents = [
       EVENTS.MOVE_START,
-      EVENTS.MOVE,
+      EVENTS.MOVE
     ];
 
     testingEvents.forEach(event => {
@@ -311,18 +311,14 @@ describe("Events", () => {
       await simulate(flickingInfo.element, { deltaX: -100 });
 
       expect(flickingInfo.eventDirection[0]).to.deep.equal(null);
-      expect(flickingInfo.eventDirection.slice(1).every(direction => {
-        return direction === DIRECTION.NEXT;
-      })).to.be.true;
+      expect(flickingInfo.eventDirection.slice(1).every(direction => direction === DIRECTION.NEXT)).to.be.true;
     });
 
     it("is \"PREV\" while manually flicking to prev panel(except for holdStart)", async () => {
       await simulate(flickingInfo.element, { deltaX: 100 });
 
       expect(flickingInfo.eventDirection[0]).to.deep.equal(null);
-      expect(flickingInfo.eventDirection.slice(1).every(direction => {
-        return direction === DIRECTION.PREV;
-      })).to.be.true;
+      expect(flickingInfo.eventDirection.slice(1).every(direction => direction === DIRECTION.PREV)).to.be.true;
     });
   });
 
@@ -382,6 +378,7 @@ describe("Events", () => {
         expect(e.progress).to.be.not.lt(progress);
         progress = e.progress;
       };
+
       for (const name in EVENTS) {
         flickingInfo.instance.on(EVENTS[name], callback);
       }
@@ -445,7 +442,7 @@ describe("Events", () => {
 
     it("can restore its position after user keeps static clicking", async () => {
       const flicking = flickingInfo.instance;
-      const beforePosition = (flicking as any)._viewport.getCameraPosition();
+      const beforePosition = (flicking as any)._viewport.getCameraPosition() as number;
 
       const firstPanel = flicking.getPanel(0);
       const firstSize = firstPanel.getSize();
@@ -493,7 +490,7 @@ describe("Events", () => {
         EVENTS.HOLD_END,
         EVENTS.CHANGE,
         EVENTS.MOVE,
-        EVENTS.MOVE_END,
+        EVENTS.MOVE_END
       ];
 
       expect(flickingInfo.eventFired).to.deep.equal(expectedEventsOnInterrupted);
@@ -505,7 +502,7 @@ describe("Events", () => {
 
     beforeEach(() => {
       flickingInfo = createFlicking(horizontal.none, {
-        infinite: true,
+        infinite: true
       });
       flickingInfo.instance.on(EVENTS.NEED_PANEL, (e: NeedPanelEvent) => {
         needPanelEvents.push(e);
@@ -519,7 +516,7 @@ describe("Events", () => {
     const createInfiniteFlickingWithOption = (type: string, options: Partial<FlickingOptions> = {}) => {
       cleanup();
       flickingInfo = createFlicking(type, merge({
-        infinite: true,
+        infinite: true
       }, options));
 
       flickingInfo.instance.on(EVENTS.NEED_PANEL, (e: NeedPanelEvent) => {
@@ -566,10 +563,10 @@ describe("Events", () => {
       expect(needPanelEvents[1].direction).equals(DIRECTION.PREV);
 
       expect(needPanelEvents[0].range).deep.equals({
-        min: 2, max: Infinity, length: Infinity,
+        min: 2, max: Infinity, length: Infinity
       });
       expect(needPanelEvents[1].range).deep.equals({
-        min: 0, max: 0, length: 1,
+        min: 0, max: 0, length: 1
       });
     });
 
@@ -589,7 +586,7 @@ describe("Events", () => {
       createInfiniteFlickingWithOption(horizontal.none, {
         infiniteThreshold: "50%",
         anchor: "0%",
-        hanger: "0%",
+        hanger: "0%"
       });
 
       // When
@@ -607,7 +604,7 @@ describe("Events", () => {
       createInfiniteFlickingWithOption(horizontal.none, {
         circular: true,
         anchor: "0%",
-        hanger: "50%",
+        hanger: "50%"
       });
 
       // When
@@ -631,7 +628,7 @@ describe("Events", () => {
         circular: true,
         anchor: "100%",
         hanger: "50%",
-        lastIndex: 50,
+        lastIndex: 50
       });
 
       // When
@@ -655,7 +652,7 @@ describe("Events", () => {
         circular: true,
         anchor: "0%",
         hanger: "50%",
-        lastIndex: 50,
+        lastIndex: 50
       });
       const flicking = flickingInfo.instance;
       const viewport = (flicking as any)._viewport as Viewport;
@@ -685,7 +682,7 @@ describe("Events", () => {
         circular: true,
         anchor: "100%",
         hanger: "50%",
-        lastIndex: 50,
+        lastIndex: 50
       });
 
       const flicking = flickingInfo.instance;
@@ -717,7 +714,7 @@ describe("Events", () => {
         circular: true,
         anchor: "0%",
         hanger: "50%",
-        lastIndex: 50,
+        lastIndex: 50
       });
       const flicking = flickingInfo.instance;
       const viewport = (flicking as any)._viewport as Viewport;
@@ -755,7 +752,7 @@ describe("Events", () => {
         circular: true,
         anchor: "100%",
         hanger: "50%",
-        lastIndex: 50,
+        lastIndex: 50
       });
       const flicking = flickingInfo.instance;
       const viewport = (flicking as any)._viewport as Viewport;
@@ -793,7 +790,7 @@ describe("Events", () => {
         createInfiniteFlickingWithOption(horizontal.none, {
           anchor: 0,
           hanger: 0,
-          circular: false,
+          circular: false
         });
 
         // When
@@ -804,7 +801,7 @@ describe("Events", () => {
             createHorizontalElement(20),
             createHorizontalElement(20),
             createHorizontalElement(20),
-            createHorizontalElement(20),
+            createHorizontalElement(20)
           ]);
         });
         flicking.replace(0, createHorizontalElement(20)); // Panel info should be changed to trgiger needPanel event
@@ -826,7 +823,7 @@ describe("Events", () => {
         createInfiniteFlickingWithOption(horizontal.none, {
           anchor: "0%",
           hanger: "100%",
-          circular: false,
+          circular: false
         });
 
         // When
@@ -837,7 +834,7 @@ describe("Events", () => {
             createHorizontalElement(20),
             createHorizontalElement(20),
             createHorizontalElement(20),
-            createHorizontalElement(20),
+            createHorizontalElement(20)
           ]);
         });
         flicking.replace(5, createHorizontalElement(20)); // Panel info should be changed to trgiger needPanel event
@@ -860,7 +857,7 @@ describe("Events", () => {
           anchor: 0,
           hanger: 0,
           circular: true,
-          lastIndex: 5,
+          lastIndex: 5
         });
 
         // When
@@ -871,7 +868,7 @@ describe("Events", () => {
             createHorizontalElement(20),
             createHorizontalElement(20),
             createHorizontalElement(20),
-            createHorizontalElement(20),
+            createHorizontalElement(20)
           ]);
         });
         flicking.replace(5, createHorizontalElement(20));
@@ -894,7 +891,7 @@ describe("Events", () => {
           anchor: 0,
           hanger: "100%",
           circular: true,
-          lastIndex: 5,
+          lastIndex: 5
         });
 
         // When
@@ -905,7 +902,7 @@ describe("Events", () => {
             createHorizontalElement(20),
             createHorizontalElement(20),
             createHorizontalElement(20),
-            createHorizontalElement(20),
+            createHorizontalElement(20)
           ]);
         });
         flicking.replace(0, createHorizontalElement(20));
@@ -927,7 +924,7 @@ describe("Events", () => {
         createInfiniteFlickingWithOption(horizontal.none, {
           anchor: 0,
           hanger: 0,
-          lastIndex: 10,
+          lastIndex: 10
         });
         const flicking = flickingInfo.instance;
         flicking.replace(0, createHorizontalElement(50)); // needPanel is triggered but not handled
@@ -944,7 +941,7 @@ describe("Events", () => {
             createHorizontalElement(20),
             createHorizontalElement(20),
             createHorizontalElement(20),
-            createHorizontalElement(20),
+            createHorizontalElement(20)
           ]);
         });
         flicking.replace(5, createHorizontalElement(20));
@@ -968,7 +965,7 @@ describe("Events", () => {
         createInfiniteFlickingWithOption(horizontal.none, {
           anchor: 0,
           hanger: "100%",
-          lastIndex: 10,
+          lastIndex: 10
         });
         const flicking = flickingInfo.instance;
         flicking.replace(5, createHorizontalElement(50)); // needPanel is triggered but not handled
@@ -985,7 +982,7 @@ describe("Events", () => {
             createHorizontalElement(20),
             createHorizontalElement(20),
             createHorizontalElement(20),
-            createHorizontalElement(20),
+            createHorizontalElement(20)
           ]);
         });
         flicking.replace(3, createHorizontalElement(100)); // should fill from 3 to 5
@@ -1014,7 +1011,7 @@ describe("Events", () => {
         defaultIndex: 2,
         bound: true,
         bounce: 0,
-        moveType: "freeScroll",
+        moveType: "freeScroll"
       });
 
       // When
@@ -1029,7 +1026,7 @@ describe("Events", () => {
       // Given
       flickingInfo = createFlicking(horizontal.full, {
         defaultIndex: 0,
-        bound: true,
+        bound: true
       });
 
       // When
@@ -1043,7 +1040,7 @@ describe("Events", () => {
       // Given
       flickingInfo = createFlicking(horizontal.fixedTo100, {
         circular: true,
-        moveType: "freeScroll",
+        moveType: "freeScroll"
       });
 
       // When
@@ -1060,14 +1057,14 @@ describe("Events", () => {
       // Given
       flickingInfo = createFlicking(horizontal.fixedTo100, {
         circular: true,
-        renderOnlyVisible: true,
+        renderOnlyVisible: true
       });
       const flicking = flickingInfo.instance;
       const viewport = (flicking as any)._viewport as Viewport;
       const initialVisiblePanels = viewport.getVisiblePanels();
       const visiblePanels = [];
 
-      flicking.on(EVENTS.VISIBLE_CHANGE, e => {
+      flicking.on(EVENTS.VISIBLE_CHANGE, () => {
         if (viewport.stateMachine.getState().holding) {
           visiblePanels.push(viewport.getVisiblePanels());
         }
@@ -1091,7 +1088,7 @@ describe("Events", () => {
       // Given
       flickingInfo = createFlicking(horizontal.fixedTo100, {
         circular: true,
-        renderOnlyVisible: true,
+        renderOnlyVisible: true
       });
       const flicking = flickingInfo.instance;
       const viewport = (flicking as any)._viewport as Viewport;
@@ -1110,14 +1107,14 @@ describe("Events", () => {
       flickingInfo = createFlicking(horizontal.fixedTo100, {
         circular: true,
         renderOnlyVisible: true,
-        moveType: MOVE_TYPE.FREE_SCROLL,
+        moveType: MOVE_TYPE.FREE_SCROLL
       });
       const flicking = flickingInfo.instance;
       const viewport = (flicking as any)._viewport as Viewport;
       const initialVisiblePanels = viewport.getVisiblePanels();
       const visiblePanels = [];
 
-      flicking.on(EVENTS.VISIBLE_CHANGE, e => {
+      flicking.on(EVENTS.VISIBLE_CHANGE, () => {
         if (viewport.stateMachine.getState().holding) {
           visiblePanels.push(viewport.getVisiblePanels());
         }
