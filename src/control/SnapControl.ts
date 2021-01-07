@@ -3,12 +3,12 @@
  * egjs projects are licensed under the MIT license
  */
 
-import MoveType from "./MoveType";
+import Control from "./Control";
 import { MOVE_TYPE, EVENTS } from "../consts";
 import { MoveTypeContext, DestinationInfo } from "../types";
 import { clamp } from "../utils";
 
-class Snap extends MoveType {
+class SnapControl extends Control {
   protected readonly _type: string = MOVE_TYPE.SNAP;
   protected _count: number;
 
@@ -174,4 +174,4 @@ class Snap extends MoveType {
   }
 }
 
-export default Snap;
+export default SnapControl;

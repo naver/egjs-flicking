@@ -3,12 +3,12 @@
  * egjs projects are licensed under the MIT license
  */
 
-import Snap from "./Snap";
+import SnapControl from "./SnapControl";
 import { MOVE_TYPE, EVENTS } from "../consts";
 import { MoveTypeContext, DestinationInfo } from "../types";
 import { circulate, clamp } from "../utils";
 
-class FreeScroll extends Snap {
+class FreeControl extends SnapControl {
   protected readonly _type: string = MOVE_TYPE.FREE_SCROLL;
 
   constructor() {
@@ -93,4 +93,4 @@ class FreeScroll extends Snap {
   }
 }
 
-export default FreeScroll;
+export default FreeControl;

@@ -7,7 +7,7 @@ import Panel from "../core/Panel";
 import { EVENTS } from "../consts";
 import { MoveTypeStringOption, MoveTypeContext, DestinationInfo } from "../types";
 
-abstract class MoveType {
+abstract class Control {
   protected readonly abstract _type: string;
 
   public abstract findTargetPanel(ctx: MoveTypeContext): DestinationInfo;
@@ -84,4 +84,4 @@ abstract class MoveType {
   }
 }
 
-export default MoveType;
+export default Control;

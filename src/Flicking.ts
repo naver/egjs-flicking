@@ -168,9 +168,9 @@ class Flicking extends Component<{
     }
 
     // Make viewport instance with panel container element
-    this._viewport = new Viewport(this, this.options, this.triggerEvent);
-    this.listenInput();
-    this.listenResize();
+    this._viewport = new Viewport(this, this.options, this._triggerEvent);
+    this._listenInput();
+    this._listenResize();
   }
 
   /**
@@ -569,7 +569,7 @@ class Flicking extends Component<{
     const insertingIndex = Math.max(viewport.panelManager.getRange().min - parsedElements.length, 0);
     const prependedPanels = viewport.insert(insertingIndex, parsedElements);
 
-    this.checkContentsReady(prependedPanels);
+    this._checkContentsReady(prependedPanels);
 
     return prependedPanels;
   }
@@ -592,7 +592,7 @@ class Flicking extends Component<{
     const viewport = this._viewport;
     const appendedPanels = viewport.insert(viewport.panelManager.getRange().max + 1, element);
 
-    this.checkContentsReady(appendedPanels);
+    this._checkContentsReady(appendedPanels);
 
     return appendedPanels;
   }
@@ -625,7 +625,7 @@ class Flicking extends Component<{
   public replace(index: number, element: ElementLike | ElementLike[]): FlickingPanel[] {
     const replacedPanels = this._viewport.replace(index, element);
 
-    this.checkContentsReady(replacedPanels);
+    this._checkContentsReady(replacedPanels);
 
     return replacedPanels;
   }
@@ -820,7 +820,7 @@ class Flicking extends Component<{
     return this;
   }
 
-  private listenInput(): void {
+  private _listenInput(): void {
     const flicking = this;
     const viewport = flicking._viewport;
     const stateMachine = viewport.stateMachine;
@@ -830,8 +830,8 @@ class Flicking extends Component<{
       flicking,
       viewport: flicking._viewport,
       transitTo: stateMachine.transitTo,
-      triggerEvent: flicking.triggerEvent,
-      moveCamera: flicking.moveCamera,
+      triggerEvent: flicking._triggerEvent,
+      moveCamera: flicking._moveCamera,
       stopCamera: viewport.stopCamera,
     };
 
@@ -846,7 +846,7 @@ class Flicking extends Component<{
     flicking._viewport.connectAxesHandler(handlers);
   }
 
-  private listenResize(): void {
+  private _listenResize(): void {
     const options = this.options;
 
     if (options.autoResize) {
@@ -876,7 +876,7 @@ class Flicking extends Component<{
     }
   }
 
-  private triggerEvent = <T extends FlickingEvent>(
+  private _triggerEvent = <T extends FlickingEvent>(
     eventName: ValueOf<Omit<EventType, "VISIBLE_CHANGE">>, // visibleChange event has no common event definition from other events
     axesEvent: any,
     isTrusted: boolean,
@@ -925,7 +925,7 @@ class Flicking extends Component<{
   }
 
   // Return result of "move" event triggered
-  private moveCamera = (axesEvent: any): TriggerCallback => {
+  private _moveCamera = (axesEvent: any): TriggerCallback => {
     const viewport = this._viewport;
     const state = viewport.stateMachine.getState();
     const options = this.options;
@@ -959,14 +959,14 @@ class Flicking extends Component<{
     state.delta += axesEvent.delta.flick;
 
     viewport.moveCamera(pos, axesEvent);
-    return this.triggerEvent(EVENTS.MOVE, axesEvent, axesEvent.isTrusted)
+    return this._triggerEvent(EVENTS.MOVE, axesEvent, axesEvent.isTrusted)
       .onStopped(() => {
         // Undo camera movement
         viewport.moveCamera(previousPosition, axesEvent);
       });
   }
 
-  private checkContentsReady(panels: FlickingPanel[]) {
+  private _checkContentsReady(panels: FlickingPanel[]) {
     this._contentsReadyChecker?.check(panels.map(panel => panel.getElement()));
   }
 }

@@ -8,18 +8,18 @@ import Flicking from "../Flicking";
 import Panel from "./Panel";
 import PanelManager from "./PanelManager";
 import StateMachine from "./StateMachine";
-import MoveType from "../moves/MoveType";
+import SnapControl from "../control/SnapControl";
+import Control from "../control/Control";
+import FreeControl from "../control/FreeControl";
 import { FlickingOptions, FlickingPanel, FlickingStatus, ElementLike, EventType, TriggerCallback, NeedPanelEvent, FlickingEvent, MoveTypeObjectOption, OriginalStyle, Plugin, DestroyOption, BoundingBox } from "../types";
 import { DEFAULT_VIEWPORT_CSS, DEFAULT_CAMERA_CSS, TRANSFORM, DEFAULT_OPTIONS, EVENTS, DIRECTION, STATE_TYPE, MOVE_TYPE } from "../consts";
 import { clamp, applyCSS, toArray, parseArithmeticExpression, isBetween, isArray, parseElement, hasClass, restoreStyle, circulate, findIndex, getBbox } from "../utils";
-import Snap from "../moves/Snap";
-import FreeScroll from "../moves/FreeScroll";
 
 export default class Viewport {
   public options: FlickingOptions;
   public stateMachine: StateMachine;
   public panelManager: PanelManager;
-  public moveType: MoveType;
+  public moveType: Control;
 
   private _flicking: Flicking;
   private _axes: Axes;
@@ -28,7 +28,7 @@ export default class Viewport {
   private _viewportElement: HTMLElement;
   private _cameraElement: HTMLElement;
 
-  private _triggerEvent: Flicking["triggerEvent"];
+  private _triggerEvent: Flicking["_triggerEvent"];
   private _axesHandlers: { [key: string]: any };
 
   private _currentPanel: Panel | undefined;
@@ -64,7 +64,7 @@ export default class Viewport {
   constructor(
     flicking: Flicking,
     options: FlickingOptions,
-    triggerEvent: Flicking["triggerEvent"],
+    triggerEvent: Flicking["_triggerEvent"],
   ) {
     this._flicking = flicking;
     this._triggerEvent = triggerEvent;
@@ -1189,10 +1189,10 @@ export default class Viewport {
 
     switch (moveType.type) {
       case MOVE_TYPE.SNAP:
-        this.moveType = new Snap(moveType.count);
+        this.moveType = new SnapControl(moveType.count);
         break;
       case MOVE_TYPE.FREE_SCROLL:
-        this.moveType = new FreeScroll();
+        this.moveType = new FreeControl();
         break;
       default:
         throw new Error("moveType is not correct!");
