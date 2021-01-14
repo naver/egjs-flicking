@@ -23,7 +23,7 @@ export default class Viewport {
 
   private flicking: Flicking;
   private axes: Axes;
-  private panInput: PanInput;
+  private panInput: PanInput | null;
 
   private viewportElement: HTMLElement;
   private cameraElement: HTMLElement;
@@ -384,11 +384,26 @@ export default class Viewport {
   }
 
   public enable(): void {
-    this.panInput.enable();
+    if (!this.panInput) {
+      const options = this.options;
+      this.panInput = new PanInput(this.viewportElement, {
+        inputType: options.inputType,
+        thresholdAngle: options.thresholdAngle,
+        iOSEdgeSwipeThreshold: options.iOSEdgeSwipeThreshold,
+        scale: options.horizontal ? [-1, 0] : [0, -1],
+      });
+
+      this.axes.connect(options.horizontal ? ["flick", ""] : ["", "flick"], this.panInput);
+    }
   }
 
   public disable(): void {
-    this.panInput.disable();
+    if (this.panInput) {
+      this.panInput.destroy();
+      this.panInput = null;
+
+      this.stateMachine.transitTo(STATE_TYPE.IDLE);
+    }
   }
 
   public insert(index: number, element: ElementLike | ElementLike[]): FlickingPanel[] {
@@ -674,7 +689,7 @@ export default class Viewport {
     }
 
     this.axes.destroy();
-    this.panInput.destroy();
+    this.panInput && this.panInput.destroy();
 
     originalPanels.forEach(panel => { panel.destroy(option); });
 
