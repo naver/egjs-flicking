@@ -4,7 +4,7 @@ import Flicking from "../../src/Flicking";
 import { FlickingEvent, FlickingPanel, NeedPanelEvent } from "../../src/types";
 import { horizontal, panel as createPanelElement, vertical } from "./assets/fixture";
 import { createFlicking, cleanup, simulate, createHorizontalElement, tick, createFixture } from "./assets/utils";
-import { EVENTS, DIRECTION } from "../../src/consts";
+import { EVENTS, DIRECTION, STATE_TYPE } from "../../src/consts";
 import { counter, toArray } from "../../src/utils";
 import Viewport from "../../src/components/Viewport";
 import Panel from "../../src/components/Panel";
@@ -261,6 +261,38 @@ describe("Methods call", () => {
       const returnVal = flicking.disableInput();
 
       expect(returnVal).deep.equals(flickingInfo.instance);
+    });
+
+    it("should make moveTo to be callable when it's called while holding panels", async () => {
+      // Given
+      const flicking = flickingInfo.instance;
+      simulate(flickingInfo.element, { deltaX: -100, duration: 500 }, 10);
+
+      // When
+      flicking.disableInput();
+
+      // Then
+      flicking.moveTo(2, 500);
+      tick(1000);
+      expect(flicking.getIndex()).to.equal(2);
+    });
+
+    it("should remove animation of previous gesture when it's called", async () => {
+      // Given
+      const flicking = flickingInfo.instance;
+      simulate(flickingInfo.element, { deltaX: -100, duration: 50 }, 10);
+
+      // When
+      flicking.disableInput();
+      flicking.enableInput();
+
+      // Then
+      tick(30);
+      expect((flicking as any).viewport.stateMachine.state.type).to.equal(STATE_TYPE.IDLE);
+      expect(flicking.getIndex()).to.equal(0);
+
+      await simulate(flickingInfo.element, { deltaX: -100, duration: 50 });
+      expect(flicking.getIndex()).not.to.equal(0);
     });
   });
 
