@@ -14,6 +14,8 @@ import Panel from "./core/Panel";
 import State from "./states/State";
 
 export type ValueOf<T> = T[keyof T];
+export type LiteralUnion<T extends U, U = string> = T | (Pick<U, never> & {_?: never});
+
 export interface ArrayLike<T> {
   [index: number]: T;
   length: number;
@@ -546,11 +548,7 @@ export interface TriggerCallback {
 
 export interface FlickingContext {
   flicking: Flicking;
-  viewport: Viewport;
   transitTo: StateMachine["transitTo"];
-  triggerEvent: Flicking["_triggerEvent"];
-  moveCamera: Flicking["_moveCamera"];
-  stopCamera: Viewport["stopCamera"];
 }
 
 export interface BoundingBox {

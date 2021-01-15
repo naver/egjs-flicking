@@ -13,29 +13,32 @@ class IdleState extends State {
   public readonly playing = false;
 
   public onEnter() {
-    this.direction = null;
-    this.targetPanel = null;
-    this.delta = 0;
-    this.lastPosition = 0;
+    this._direction = null;
+    this._targetPanel = null;
+    this._delta = 0;
+    this._lastPosition = 0;
   }
 
-  public onHold(e: any, { flicking, viewport, triggerEvent, transitTo }: FlickingContext): void {
+  public onHold(e: any): void {
     // Shouldn't do any action until any panels on flicking area
+    const flicking = this._flicking;
+    const stateMachine = this._stateMachine;
+
     if (flicking.getPanelCount() <= 0) {
-      if (viewport.options.infinite) {
+      if (flicking.options.infinite) {
         viewport.moveCamera(viewport.getCameraPosition(), e);
       }
-      transitTo(STATE_TYPE.DISABLED);
+      stateMachine.transitTo(STATE_TYPE.DISABLED);
       return;
     }
 
     this.lastPosition = viewport.getCameraPosition();
     triggerEvent(EVENTS.HOLD_START, e, true)
       .onSuccess(() => {
-        transitTo(STATE_TYPE.HOLDING);
+        stateMachine.transitTo(STATE_TYPE.HOLDING);
       })
       .onStopped(() => {
-        transitTo(STATE_TYPE.DISABLED);
+        stateMachine.transitTo(STATE_TYPE.DISABLED);
       });
   }
 

@@ -102,7 +102,7 @@
     "typescript-transform-paths": "^2.2.0"
   },
   "dependencies": {
-    "@egjs/axes": "^2.7.0",
+    "@egjs/axes": "^2.7.2",
     "@egjs/component": "^2.2.2",
     "@egjs/imready": "^1.1.2",
     "@egjs/list-differ": "^1.0.0"

@@ -3,10 +3,9 @@ import Camera from "./Camera";
 class LinearCamera extends Camera {
   public updateRange() {
     const flicking = this._flicking;
+    const renderer = flicking.getRenderer();
 
-    // const renderer = flicking.renderer;
-
-    // this._range = { min: renderer.firstPanel?.position ?? 0, max: flicking.renderer.lastPanel?.position ?? 0 };
+    this._range = { min: renderer.firstPanel?.getAnchorPosition() ?? 0, max: renderer.lastPanel?.getAnchorPosition() ?? 0 };
     return this;
   }
 }

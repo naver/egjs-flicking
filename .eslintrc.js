@@ -233,7 +233,14 @@ module.exports = {
       },
       {
         "selector": "memberLike",
-        "modifiers": ["protected", "private"],
+        "modifiers": ["protected"],
+        "format": ["camelCase"],
+        "leadingUnderscore": "require",
+        "trailingUnderscore": "forbid"
+      },
+      {
+        "selector": "memberLike",
+        "modifiers": ["private"],
         "format": ["camelCase"],
         "leadingUnderscore": "require",
         "trailingUnderscore": "forbid"

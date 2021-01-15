@@ -5,46 +5,61 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import StateMachine from "~/core/StateMachine";
+import Flicking from "~/Flicking";
 import Panel from "../core/Panel";
-import { ValueOf, Direction, StateType, FlickingContext } from "../types";
+import { ValueOf, Direction, StateType } from "../types";
 
 abstract class State {
-  public delta: number = 0;
-  public direction: ValueOf<Direction> | null = null;
-  public targetPanel: Panel | null = null;
-  public lastPosition: number = 0;
+  protected _flicking: Flicking;
+  protected _stateMachine: StateMachine;
+  protected _delta: number;
+  protected _direction: ValueOf<Direction> | null;
+  protected _targetPanel: Panel | null;
+  protected _lastPosition: number;
+
   public abstract readonly type: ValueOf<StateType>;
   public abstract readonly holding: boolean;
   public abstract readonly playing: boolean;
 
+  public constructor({ flicking, stateMachine }: { flicking: Flicking; stateMachine: StateMachine }) {
+    this._flicking = flicking;
+    this._stateMachine = stateMachine;
+
+    this._delta = 0;
+    this._direction = null;
+    this._targetPanel = null;
+    this._lastPosition = 0;
+  }
+
   public onEnter(prevState: State): void {
-    this.delta = prevState.delta;
-    this.direction = prevState.direction;
-    this.targetPanel = prevState.targetPanel;
-    this.lastPosition = prevState.lastPosition;
+    this._delta = prevState._delta;
+    this._direction = prevState._direction;
+    this._targetPanel = prevState._targetPanel;
+    this._lastPosition = prevState._lastPosition;
   }
 
   public onExit(nextState: State): void {
     // DO NOTHING
   }
 
-  public onHold(e: any, context: FlickingContext): void {
+  public onHold(e: any): void {
     // DO NOTHING
   }
 
-  public onChange(e: any, context: FlickingContext): void {
+  public onChange(e: any): void {
     // DO NOTHING
   }
 
-  public onRelease(e: any, context: FlickingContext): void {
+  public onRelease(e: any): void {
     // DO NOTHING
   }
 
-  public onAnimationEnd(e: any, context: FlickingContext): void {
+  public onAnimationEnd(e: any): void {
     // DO NOTHING
   }
 
-  public onFinish(e: any, context: FlickingContext): void {
+  public onFinish(e: any): void {
     // DO NOTHING
   }
 }

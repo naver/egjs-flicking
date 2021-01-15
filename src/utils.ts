@@ -5,7 +5,8 @@
 
 import Flicking from "./Flicking";
 import { FLICKING_METHODS } from "./consts";
-import { ElementLike, OriginalStyle, BoundingBox, Merged } from "./types";
+import * as OPTIONS from "~/const/option";
+import { ElementLike, OriginalStyle, BoundingBox, Merged, LiteralUnion, ValueOf } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const merge = <From extends object, To extends object>(target: From, ...sources: To[]): Merged<From, To> => {
@@ -88,13 +89,6 @@ export const hasClass = (element: HTMLElement, className: string): boolean => {
   }
 };
 
-export const applyCSS = (element: HTMLElement, cssObj: Partial<{ [key in keyof CSSStyleDeclaration]: CSSStyleDeclaration[key] }>): void => {
-  Object.keys(cssObj).forEach(property => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    element.style[property] = cssObj[property];
-  });
-};
-
 export const clamp = (val: number, min: number, max: number) => Math.max(Math.min(val, max), min);
 
 // FIXME: Min: inclusive, Max: exclusive
@@ -104,6 +98,30 @@ export const toArray = <T>(iterable: ArrayLike<T>): T[] => [].slice.call(iterabl
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 export const isArray = (arr: any): boolean => arr && arr.constructor === Array;
+
+export const parseAlign = (align: LiteralUnion<ValueOf<typeof OPTIONS.ALIGN>> | number, size: number): number => {
+  let alignPoint: number;
+  if (typeof align === "string") {
+    switch (align) {
+      case OPTIONS.ALIGN.PREV:
+        alignPoint = 0;
+        break;
+      case OPTIONS.ALIGN.CENTER:
+        alignPoint = 0.5 * size;
+        break;
+      case OPTIONS.ALIGN.NEXT:
+        alignPoint = size;
+        break;
+      default:
+        // TODO: string일 경우에 파싱
+        alignPoint = 0;
+    }
+  } else {
+    alignPoint = align as number;
+  }
+
+  return alignPoint;
+};
 
 export const parseArithmeticExpression = (cssValue: number | string, base: number, defaultVal?: number): number => {
   // Set base / 2 to default value, if it's undefined
