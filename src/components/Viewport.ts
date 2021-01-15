@@ -689,7 +689,7 @@ export default class Viewport {
     }
 
     this.axes.destroy();
-    this.panInput && this.panInput.destroy();
+    this.panInput?.destroy();
 
     originalPanels.forEach(panel => { panel.destroy(option); });
 
