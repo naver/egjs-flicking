@@ -385,15 +385,7 @@ export default class Viewport {
 
   public enable(): void {
     if (!this.panInput) {
-      const options = this.options;
-      this.panInput = new PanInput(this.viewportElement, {
-        inputType: options.inputType,
-        thresholdAngle: options.thresholdAngle,
-        iOSEdgeSwipeThreshold: options.iOSEdgeSwipeThreshold,
-        scale: options.horizontal ? [-1, 0] : [0, -1],
-      });
-
-      this.axes.connect(options.horizontal ? ["flick", ""] : ["", "flick"], this.panInput);
+      this.createPanInput();
     }
   }
 
@@ -1212,7 +1204,6 @@ export default class Viewport {
     const options = this.options;
 
     const scrollArea = state.scrollArea;
-    const horizontal = options.horizontal;
 
     this.axes = new Axes({
       flick: {
@@ -1226,14 +1217,7 @@ export default class Viewport {
       interruptable: true,
     });
 
-    this.panInput = new PanInput(this.viewportElement, {
-      inputType: options.inputType,
-      thresholdAngle: options.thresholdAngle,
-      iOSEdgeSwipeThreshold: options.iOSEdgeSwipeThreshold,
-      scale: options.horizontal ? [-1, 0] : [0, -1],
-    });
-
-    this.axes.connect(horizontal ? ["flick", ""] : ["", "flick"], this.panInput);
+    this.createPanInput();
   }
 
   private refreshPanels(): void {
@@ -1939,5 +1923,18 @@ export default class Viewport {
     panels.forEach(panel => {
       panel.resize();
     });
+  }
+
+  private createPanInput() {
+    const options = this.options;
+
+    this.panInput = new PanInput(this.viewportElement, {
+      inputType: options.inputType,
+      thresholdAngle: options.thresholdAngle,
+      iOSEdgeSwipeThreshold: options.iOSEdgeSwipeThreshold,
+      scale: options.horizontal ? [-1, 0] : [0, -1],
+    });
+
+    this.axes.connect(options.horizontal ? ["flick", ""] : ["", "flick"], this.panInput);
   }
 }
