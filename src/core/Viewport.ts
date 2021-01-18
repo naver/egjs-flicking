@@ -2,18 +2,20 @@ class Viewport {
   private _el: HTMLElement;
   private _size: { width: number; height: number };
 
-  public get element() { return this._el; }
-  /**
-   * Return copy of current width/height value
-   */
-  public get size() { return { ...this._size }; }
-
   public constructor(el: HTMLElement) {
     this._el = el;
     this._size = {
       width: 0,
       height: 0
     };
+  }
+
+  public destroy(): this {
+    return this;
+  }
+
+  public getElement() {
+    return this._el;
   }
 
   /**

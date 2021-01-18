@@ -11,6 +11,7 @@
     "start": "rollup -c -w",
     "build": "rm -rf ./dist ./declaration && rollup -c && npm run declaration && npm run printsizes",
     "declaration": "rm -rf declaration && ttsc -p tsconfig.declaration.json",
+    "css": "postcss css/*.css --use autoprefixer postcss-clean -d dist/ -m",
     "printsizes": "print-sizes ./dist --exclude=\\.map",
     "test": "karma start",
     "test:chrome": "karma start --chrome",
@@ -46,6 +47,9 @@
     "url": "https://github.com/naver/egjs-flicking/issues"
   },
   "license": "MIT",
+  "browserslist": [
+		"last 4 version"
+	],
   "devDependencies": {
     "@daybrush/jsdoc": "^0.3.8",
     "@egjs/release-helper": "0.0.3",
@@ -60,6 +64,7 @@
     "@typescript-eslint/eslint-plugin": "^4.10.0",
     "@typescript-eslint/eslint-plugin-tslint": "^4.10.0",
     "@typescript-eslint/parser": "^4.10.0",
+    "autoprefixer": "^9.8.5",
     "chai": "^4.2.0",
     "chalk": "^2.4.2",
     "coveralls": "^3.0.2",
@@ -82,6 +87,8 @@
     "karma-typescript-egjs": "^4.0.0",
     "karma-viewport": "^1.0.4",
     "mocha": "^5.2.0",
+    "postcss-clean": "^1.1.0",
+    "postcss-cli": "^7.1.1",
     "print-coveralls": "^1.2.2",
     "print-sizes": "0.0.3",
     "pvu": "^0.4.1",

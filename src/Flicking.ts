@@ -8,22 +8,22 @@ import ImReady from "@egjs/imready";
 import { DiffResult } from "@egjs/list-differ";
 
 import Viewport from "./core/Viewport";
-import { Control, FreeControl, SnapControl } from "./control";
+import { Control, FreeControl, SnapControl, SnapControlOption } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
-import { ExternalRenderer, RawRenderer, Renderer, VisibleRenderer } from "./renderer";
+import { RawRenderer, Renderer, VisibleRenderer } from "./renderer";
 
+import * as EVENTS from "~/const/event";
 import * as OPTIONS from "~/const/option";
-import { LiteralUnion, ValueOf } from "~/types";
+import { LiteralUnion, MoveTypeOption, ReadyEvent, ResizeEvent, ValueOf } from "~/types";
 
-import { getElement, isString, hasClass, toArray } from "./utils";
-import { EVENTS, DEFAULT_MOVE_TYPE_OPTIONS, MOVE_TYPE, DIRECTION } from "./consts";
+import { getElement, isString } from "./utils";
+import { DEFAULT_MOVE_TYPE_OPTIONS, MOVE_TYPE } from "./consts";
 import {
   FlickingEvent,
   FlickingPanel,
   FlickingStatus,
   Plugin,
   ElementLike,
-  DestroyOption,
   ChangeEvent,
   SelectEvent,
   NeedPanelEvent,
@@ -32,13 +32,32 @@ import {
   MoveTypeStringOption,
   MoveTypeObjectOption
 } from "./types";
+import {  } from "./control/SnapControl";
 
-interface FlickingOptions {
-  align: LiteralUnion<ValueOf<typeof OPTIONS.ALIGN>> | null;
-  direction: ValueOf<typeof OPTIONS.DIRECTION>;
+export interface FlickingOptions {
+  // UI / LAYOUT
+  align: LiteralUnion<ValueOf<typeof OPTIONS.ALIGN>> | { anchor: number | string; hanger: number | string } | null;
+  defaultIndex: number;
+  horizontal: boolean;
+  circular: boolean;
+  bound: boolean;
+  adaptive: boolean;
+  // ANIMATION
+  deceleration: number;
+  duration: number;
+  easing: (x: number) => number;
+  // INPUT
+  moveType: MoveTypeOption;
+  threshold: number;
+  bounce: number | string | [number | string, number | string];
+  iOSEdgeSwipeThreshold: number;
+  // PERFORMANCE
+  isEqualSize: boolean | string[];
+  isConstantSize: boolean;
+  renderOnlyVisible: boolean;
+  // OTHERS
   autoInit: boolean;
   autoResize: boolean;
-  defaultIndex: number;
 }
 
 /**
@@ -51,17 +70,19 @@ interface FlickingOptions {
  * @see Easing Functions Cheat Sheet {@link http://easings.net/} <ko>이징 함수 Cheat Sheet {@link http://easings.net/}</ko>
  */
 class Flicking extends Component<{
-  holdStart: FlickingEvent;
-  holdEnd: FlickingEvent;
-  moveStart: FlickingEvent;
-  move: FlickingEvent;
-  moveEnd: FlickingEvent;
-  change: ChangeEvent;
-  restore: FlickingEvent;
-  select: SelectEvent;
-  needPanel: NeedPanelEvent;
-  visibleChange: VisibleChangeEvent;
-  contentError: ContentErrorEvent;
+  [EVENTS.READY]: ReadyEvent;
+  [EVENTS.RESIZE]: ResizeEvent;
+  [EVENTS.HOLD_START]: FlickingEvent;
+  [EVENTS.HOLD_END]: FlickingEvent;
+  [EVENTS.MOVE_START]: FlickingEvent;
+  [EVENTS.MOVE]: FlickingEvent;
+  [EVENTS.MOVE_END]: FlickingEvent;
+  [EVENTS.CHANGE]: ChangeEvent;
+  [EVENTS.RESTORE]: FlickingEvent;
+  [EVENTS.SELECT]: SelectEvent;
+  [EVENTS.NEED_PANEL]: NeedPanelEvent;
+  [EVENTS.VISIBLE_CHANGE]: VisibleChangeEvent;
+  [EVENTS.CONTENT_ERROR]: ContentErrorEvent;
 }> {
   /**
    * Version info string
@@ -82,8 +103,21 @@ class Flicking extends Component<{
 
   // Options
   private _align: FlickingOptions["align"];
-  private _direction: FlickingOptions["direction"];
   private _defaultIndex: FlickingOptions["defaultIndex"];
+  private _horizontal: FlickingOptions["horizontal"];
+  private _circular: FlickingOptions["circular"];
+  private _bound: FlickingOptions["bound"];
+  private _adaptive: FlickingOptions["adaptive"];
+  private _deceleration: FlickingOptions["deceleration"];
+  private _duration: FlickingOptions["duration"];
+  private _easing: FlickingOptions["easing"];
+  private _moveType: FlickingOptions["moveType"];
+  private _threshold: FlickingOptions["threshold"];
+  private _bounce: FlickingOptions["bounce"];
+  private _iOSEdgeSwipeThreshold: FlickingOptions["iOSEdgeSwipeThreshold"];
+  private _isEqualSize: FlickingOptions["isEqualSize"];
+  private _isConstantSize: FlickingOptions["isConstantSize"];
+  private _renderOnlyVisible: FlickingOptions["renderOnlyVisible"];
   private _autoResize: FlickingOptions["autoResize"];
   private _autoInit: FlickingOptions["autoInit"];
 
@@ -126,7 +160,7 @@ class Flicking extends Component<{
    */
   public constructor(root: HTMLElement | string, {
     align = null,
-    direction = OPTIONS.DIRECTION.HORIZONTAL,
+    horizontal = true,
     autoInit = true,
     autoResize = true,
     defaultIndex = 0
@@ -144,7 +178,7 @@ class Flicking extends Component<{
 
     // Bind options
     this._align = align;
-    this._direction = direction;
+    this._horizontal = horizontal;
     this._defaultIndex = defaultIndex;
     this._autoResize = autoResize;
     this._autoInit = autoInit;
@@ -171,19 +205,19 @@ class Flicking extends Component<{
     this.resize();
 
     if (this._autoResize) {
-      window.addEventListener(BROWSER.EVENT.RESIZE, this.resize);
+      window.addEventListener("resize", this.resize);
     }
 
     // Look at initial panel
-    const initialPanel = renderer.panels[this._initialIndex] || renderer.firstPanel;
+    const initialPanel = renderer.getPanel(this._defaultIndex) || renderer.getPanel(0);
 
     if (initialPanel) {
-      void control.moveTo(initialPanel.index);
+      void control.moveTo(initialPanel.getIndex(), 0);
     }
 
     // Done initializing & emit ready event
     this._initialized = true;
-    this.emit(EVENT.READY);
+    this.trigger(EVENTS.READY);
 
     return this;
   }
@@ -197,25 +231,18 @@ class Flicking extends Component<{
    * flick.destroy();
    * console.log(flick.moveTo); // null
    */
-  public destroy(option: Partial<DestroyOption> = {}): void {
+  public destroy(): void {
     this.off();
+    window.removeEventListener("resize", this.resize);
 
     this._control.destroy();
     this._camera.destroy();
     this._renderer.destroy();
 
-    if (this._options.autoResize) {
-      window.removeEventListener("resize", this.resize);
-    }
-
-    this._viewport.destroy(option);
+    this._viewport.destroy();
     this._contentsReadyChecker?.destroy();
 
-    // release resources
-    // eslint-disable-next-line guard-for-in
-    for (const x in this) {
-      (this as any)[x] = null; // eslint-disable-line @typescript-eslint/no-unsafe-member-access
-    }
+    this._initialized = false;
   }
 
   public getControl() {
@@ -285,17 +312,7 @@ class Flicking extends Component<{
    * @return Wrapper element user provided.<ko>사용자가 제공한 래퍼 엘리먼트.</ko>
    */
   public getElement(): HTMLElement {
-    return this._element;
-  }
-
-  /**
-   * Return the viewport element's size.
-   *
-   * @ko 뷰포트 엘리먼트의 크기를 반환한다.
-   * @return Width if horizontal: true, height if horizontal: false
-   */
-  public getSize(): number {
-    return 0;
+    return this._viewport.getElement();
   }
 
   /**
@@ -433,7 +450,27 @@ class Flicking extends Component<{
    * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
   public resize = (): this => {
-    const a = 1;
+    const viewport = this._viewport;
+    const renderer = this._renderer;
+    const camera = this._camera;
+
+    const prevSize = viewport.getSize();
+
+    viewport.updateSize();
+    renderer.updatePanelSize();
+    camera.updateRange();
+    camera.updateAlignPos();
+
+    const newSize = viewport.getSize();
+    const sizeChanged = newSize.width !== prevSize.width
+      || newSize.height !== prevSize.height;
+
+    this.trigger(EVENTS.RESIZE, {
+      ...newSize,
+      prev: prevSize,
+      sizeChanged,
+      element: viewport.getElement()
+    });
     return this;
   };
 
@@ -499,64 +536,8 @@ class Flicking extends Component<{
     return [];
   }
 
-  private _getElements(el: string | HTMLElement): {
-    wrapper: HTMLElement;
-    viewport: HTMLElement;
-    camera: HTMLElement;
-  } {
-    const wrapper = getElement(el);
-    const classPrefix = this._options.classPrefix;
-
-    const viewportCandidate = wrapper.children[0] as HTMLElement;
-    const hasViewportElement = viewportCandidate && hasClass(viewportCandidate, `${classPrefix}-viewport`);
-
-    const viewport = hasViewportElement
-      ? viewportCandidate
-      : document.createElement("div");
-
-    const cameraCandidate = hasViewportElement
-      ? viewport.children[0] as HTMLElement
-      : wrapper.children[0] as HTMLElement;
-    const hasCameraElement = cameraCandidate && hasClass(cameraCandidate, `${classPrefix}-camera`);
-
-    const camera = hasCameraElement
-      ? cameraCandidate
-      : document.createElement("div");
-
-    if (!hasCameraElement) {
-      camera.className = `${classPrefix}-camera`;
-
-      const panelElements = hasViewportElement
-        ? viewport.children
-        : wrapper.children;
-
-      // Make all panels to be a child of camera element
-      // wrapper <- viewport <- camera <- panels[1...n]
-      toArray(panelElements).forEach(child => {
-        camera.appendChild(child);
-      });
-    }
-
-    if (!hasViewportElement) {
-      viewport.className = `${classPrefix}-viewport`;
-
-      // Add viewport element to wrapper
-      wrapper.appendChild(viewport);
-    }
-
-    if (!hasCameraElement || !hasViewportElement) {
-      viewport.appendChild(camera);
-    }
-
-    return {
-      wrapper,
-      viewport,
-      camera
-    };
-  }
-
   private _createControl(): Control {
-    const moveType = this._options.moveType;
+    const moveType = this._moveType;
     let type: MoveTypeStringOption | undefined;
     let moveTypeOptions: MoveTypeObjectOption | undefined;
 
@@ -572,22 +553,21 @@ class Flicking extends Component<{
       throw new Error(`Flicking's option 'moveType' is not formatted properly, given: ${moveType.toString()}`);
     }
 
-    const controlOption = { flicking: this, ...moveTypeOptions };
+    const controlOption = { ...moveTypeOptions };
     switch (type) {
       case MOVE_TYPE.SNAP:
-        return new SnapControl(controlOption);
+        return new SnapControl(controlOption as SnapControlOption);
       case MOVE_TYPE.FREE_SCROLL:
-        return new FreeControl(controlOption);
+        return new FreeControl();
     }
   }
 
   private _createCamera(): Camera {
-    const options = this._options;
-    const cameraOption = { flicking: this };
+    const cameraOption = { align: this._align };
 
-    if (options.circular) {
+    if (this._circular) {
       return new CircularCamera(cameraOption);
-    } else if (options.bound) {
+    } else if (this._bound) {
       return new BoundCamera(cameraOption);
     } else {
       return new LinearCamera(cameraOption);
@@ -595,74 +575,13 @@ class Flicking extends Component<{
   }
 
   private _createRenderer(): Renderer {
-    const options = this._options;
-    const rendererOption = { flicking: this };
+    const rendererOption = { align: this._align };
 
-    if (options.renderExternal) {
-      return new ExternalRenderer(rendererOption);
-    } else if (options.renderOnlyVisible) {
+    if (this._renderOnlyVisible) {
       return new VisibleRenderer(rendererOption);
     } else {
       return new RawRenderer(rendererOption);
     }
-  }
-
-  private _init() {
-    const options = this._options;
-    const viewport = this._viewport;
-    const camera = this._camera;
-    const renderer = this._renderer;
-    const control = this._control;
-
-    renderer.collectPanels();
-    renderer.updatePanelSize();
-    renderer.render();
-
-    viewport.resize();
-    viewport.updateAdaptiveSize();
-    camera.updateRange();
-
-    const initialPanel = renderer.getPanel(options.defaultIndex) || renderer.getFirstPanel();
-
-    if (initialPanel) {
-      control.moveTo(initialPanel.getIndex(), 0);
-    }
-
-    this._listenResize();
-  }
-
-  private _listenResize(): void {
-    const options = this._options;
-
-    if (options.autoResize) {
-      window.addEventListener("resize", this.resize);
-    }
-
-    if (options.resizeOnContentsReady) {
-      const contentsReadyChecker = new ImReady();
-
-      contentsReadyChecker.on("preReady", () => {
-        this.resize();
-      });
-      contentsReadyChecker.on("readyElement", e => {
-        if (e.hasLoading && e.isPreReadyOver) {
-          this.resize();
-        }
-      });
-      contentsReadyChecker.on("error", e => {
-        this.trigger(EVENTS.CONTENT_ERROR, {
-          type: EVENTS.CONTENT_ERROR,
-          element: e.element
-        });
-      });
-      contentsReadyChecker.check([this._element]);
-
-      this._contentsReadyChecker = contentsReadyChecker;
-    }
-  }
-
-  private _checkContentsReady(panels: FlickingPanel[]) {
-    this._contentsReadyChecker?.check(panels.map(panel => panel.getElement()));
   }
 }
 

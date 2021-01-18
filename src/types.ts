@@ -525,6 +525,18 @@ export type ContentErrorEvent = {
   element: HTMLElement;
 };
 
+export type ReadyEvent = void;
+export type ResizeEvent = {
+  width: number;
+  height: number;
+  prev: {
+    width: number;
+    height: number;
+  };
+  sizeChanged: boolean;
+  element: HTMLElement;
+};
+
 export interface StateType {
   readonly IDLE: 0;
   readonly HOLDING: 1;

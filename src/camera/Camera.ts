@@ -1,20 +1,17 @@
-import Component from "@egjs/component";
-
-import Flicking from "~/Flicking";
+import Flicking, { FlickingOptions } from "~/Flicking";
 import * as OPTIONS from "~/const/option";
-import { LiteralUnion, ValueOf } from "~/types";
 import { parseAlign } from "~/utils";
 
 export interface CameraOption {
-  align: LiteralUnion<ValueOf<typeof OPTIONS.ALIGN>> | number;
+  align: FlickingOptions["align"];
 }
 
-abstract class Camera extends Component {
+abstract class Camera {
   // Options
-  protected _align: CameraOption["align"];
+  protected _align: FlickingOptions["align"];
 
   // Internal states
-  protected _flicking: Flicking;
+  protected _flicking: Flicking | null;
   protected _el: HTMLElement;
   protected _position: number;
   protected _alignPos: number;
@@ -23,21 +20,30 @@ abstract class Camera extends Component {
   public constructor({
     align = OPTIONS.ALIGN.PREV
   }: Partial<CameraOption> = {}) {
-    super();
-
+    this._flicking = null;
     this._position = 0;
     this._alignPos = 0;
     this._range = { min: 0, max: 0 };
+
+    // Options
     this._align = align;
   }
 
   public init(flicking: Flicking) {
     this._flicking = flicking;
 
+    const viewportEl = flicking.getViewport().getElement();
+
+    if (viewportEl.firstElementChild == null) {
+      throw new Error("First element child of the viewport element should be not null");
+    }
+    this._el = viewportEl.firstElementChild as HTMLElement;
+
     this.updateAlignPos();
   }
 
   public destroy(): this {
+    this._flicking = null;
     return this;
   }
 
