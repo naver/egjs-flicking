@@ -1,0 +1,55 @@
+{
+  "name": "@egjs/preact-flicking",
+  "version": "0.2.0",
+  "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
+  "main": "./dist/flicking.cjs.js",
+  "module": "./dist/flicking.esm.js",
+  "sideEffects": false,
+  "types": "declaration/index.d.ts",
+  "es2015": "dist/flicking.esm.js",
+  "scripts": {
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "start": "open ./demo/index.html && rollup -c rollup.config.demo.js -w",
+    "build": "rollup -c && npm run declaration && print-sizes ./dist ",
+    "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json && cp ./src/preact-flicking/Flicking.d.ts ./declaration/Flicking.d.ts"
+  },
+  "keywords": [
+    "preact",
+    "flicking",
+    "carousel",
+    "swipe",
+    "flick",
+    "panel",
+    "scroll",
+    "snap",
+    "egjs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/naver/egjs-flicking/blob/master/packages/preact-flicking"
+  },
+  "author": {
+    "name": "NAVER Corp."
+  },
+  "namespace": {
+    "eg": "eg"
+  },
+  "homepage": "https://naver.github.io/egjs-flicking",
+  "bugs": {
+    "url": "https://github.com/naver/egjs-flicking/issues"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@egjs/flicking-plugins": "^3.3.0",
+    "highlight.js": "^10.5.0",
+    "preact": "^10.0.0",
+    "print-sizes": "^0.1.0",
+    "rollup-plugin-css-bundle": "^1.0.4",
+    "rollup-plugin-preact": "^0.5.2",
+    "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "@egjs/build-helper": "^0.1.2",
+    "@egjs/react-flicking": "^3.5.1"
+  }
+}
