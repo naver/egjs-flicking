@@ -1,0 +1,41 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  width: 100%;
+  overflow-x: hidden;
+  display: flex;
+  align-items: center;
+}
+
+header {
+  width: 100%;
+  text-align: center;
+  font-size: 80px;
+  font-weight: bold;
+  padding: 20px 0;
+}
+
+.demo-area {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#flicking {
+  width: 100%;
+  background-color: #435253;
+}
+
+.flicking-panel {
+  width: 300px;
+  background-color: #369;
+  padding: 10px;
+  margin-left: 5px;
+  margin-right: 10px;
+  border: 10px solid #963;
+  box-sizing: border-box;
+}

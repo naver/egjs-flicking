@@ -1,6 +1,8 @@
 import Flicking, { FlickingOptions } from "~/Flicking";
+import FlickingError from "~/core/FlickingError";
 import * as OPTIONS from "~/const/option";
-import { parseAlign } from "~/utils";
+import * as ERROR from "~/const/error";
+import { checkExistence, parseAlign } from "~/utils";
 
 export interface CameraOption {
   align: FlickingOptions["align"];
@@ -34,9 +36,7 @@ abstract class Camera {
 
     const viewportEl = flicking.getViewport().getElement();
 
-    if (viewportEl.firstElementChild == null) {
-      throw new Error("First element child of the viewport element should be not null");
-    }
+    checkExistence(viewportEl.firstElementChild, "First element child of the viewport element");
     this._el = viewportEl.firstElementChild as HTMLElement;
 
     this.updateAlignPos();
@@ -72,7 +72,9 @@ abstract class Camera {
   public updateAlignPos(): this {
     const flicking = this._flicking;
 
-    if (!flicking) return this;
+    if (!flicking) {
+      throw new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Camera"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
+    }
 
     this._alignPos = parseAlign(this._align, flicking.getViewport().getSize().width);
 

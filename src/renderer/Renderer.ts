@@ -38,6 +38,10 @@ abstract class Renderer {
     return this._panels[index] || null;
   }
 
+  public getPanelCount(): number {
+    return this._panels.length;
+  }
+
   public collectPanels(): this {
     const flicking = this._flicking;
 

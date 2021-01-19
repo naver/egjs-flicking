@@ -7,13 +7,16 @@ import Component from "@egjs/component";
 import ImReady from "@egjs/imready";
 import { DiffResult } from "@egjs/list-differ";
 
+import FlickingError from "./core/FlickingError";
 import Viewport from "./core/Viewport";
+import Panel from "./core/Panel";
 import { Control, FreeControl, SnapControl, SnapControlOption } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
 import { RawRenderer, Renderer, VisibleRenderer } from "./renderer";
 
 import * as EVENTS from "~/const/event";
 import * as OPTIONS from "~/const/option";
+import * as ERROR from "~/const/error";
 import { LiteralUnion, MoveTypeOption, ReadyEvent, ResizeEvent, ValueOf } from "~/types";
 
 import { getElement, isString } from "./utils";
@@ -32,7 +35,6 @@ import {
   MoveTypeStringOption,
   MoveTypeObjectOption
 } from "./types";
-import {  } from "./control/SnapControl";
 
 export interface FlickingOptions {
   // UI / LAYOUT
@@ -164,7 +166,7 @@ class Flicking extends Component<{
     autoInit = true,
     autoResize = true,
     defaultIndex = 0
-  }: FlickingOptions) {
+  }: Partial<FlickingOptions> = {}) {
     super();
 
     this._viewport = new Viewport(getElement(root));
@@ -245,21 +247,16 @@ class Flicking extends Component<{
     this._initialized = false;
   }
 
-  public getControl() {
-    return this._control;
-  }
-
-  public getCamera() {
-    return this._camera;
-  }
-
-  public getRenderer() {
-    return this._renderer;
-  }
-
-  public getViewport() {
-    return this._viewport;
-  }
+  public getControl() { return this._control; }
+  public getCamera() { return this._camera; }
+  public getRenderer() { return this._renderer; }
+  public getViewport() { return this._viewport; }
+  // Options
+  public getAlign() { return this._align; }
+  public isHorizontal() { return this._horizontal; }
+  public getAutoInit() { return this._autoInit; }
+  public getAutoResize() { return this._autoResize; }
+  public getDefaultIndex() { return this._defaultIndex; }
 
   /**
    * Move to the previous panel if it exists.
@@ -321,7 +318,7 @@ class Flicking extends Component<{
    * @ko 현재 패널을 반환한다. 패널이 하나도 없을 경우 `null`을 반환한다.
    * @return Current panel.<ko>현재 패널.</ko>
    */
-  public getCurrentPanel(): FlickingPanel | null {
+  public getCurrentPanel(): Panel | null {
     return null;
   }
 
@@ -331,8 +328,8 @@ class Flicking extends Component<{
    * @ko 주어진 인덱스에 해당하는 패널을 반환한다. 해당 패널이 존재하지 않을 시 `null`이다.
    * @return Panel of given index.<ko>주어진 인덱스에 해당하는 패널.</ko>
    */
-  public getPanel(index: number): FlickingPanel | null {
-    return null;
+  public getPanel(index: number): Panel | null {
+    return this._renderer.getPanel(index);
   }
 
   /**
@@ -363,7 +360,7 @@ class Flicking extends Component<{
    * @return Length of original panels.<ko>원본 패널의 개수</ko>
    */
   public getPanelCount(): number {
-    return 0;
+    return this._renderer.getPanelCount();
   }
 
   /**
@@ -550,7 +547,7 @@ class Flicking extends Component<{
     }
 
     if (!type || !moveTypeOptions) {
-      throw new Error(`Flicking's option 'moveType' is not formatted properly, given: ${moveType.toString()}`);
+      throw new FlickingError(ERROR.MESSAGE.WRONG_OPTION("moveType", JSON.stringify(moveType)), ERROR.CODE.WRONG_OPTION);
     }
 
     const controlOption = { ...moveTypeOptions };
