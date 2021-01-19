@@ -16,6 +16,7 @@
   <a href="https://github.com/naver/egjs-flicking/blob/master/packages/ngx-flicking/README.md" target="_blank"><img alt="Angular" src="https://img.shields.io/static/v1.svg?label=&message=Angular&style=flat-square&logo=Angular&color=dd0031"></a>
   <a href="https://github.com/naver/egjs-flicking/blob/master/packages/react-flicking/README.md" target="_blank"><img alt="React" src="https://img.shields.io/static/v1.svg?label=&message=React&style=flat-square&logo=React&logoColor=white&color=61dafb"></a>
   <a href="https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md" target="_blank"><img alt="Vue" src="https://img.shields.io/static/v1.svg?label=&message=Vue&style=flat-square&logo=Vue.js&logoColor=white&color=42b883"></a>
+  <a href="https://github.com/naver/egjs-flicking/blob/master/packages/preact-flicking/README.md" target="_blank"><img alt="Vue" src="https://img.shields.io/static/v1.svg?label=&message=Preact&style=flat-square&logo=Preact&logoColor=white&color=673ab8"></a>
 <img src="https://img.shields.io/static/v1.svg?label=&message=TypeScript&color=294E80&style=flat-square&logo=typescript">
 <a href="https://deepscan.io/dashboard#view=project&tid=3998&pid=5802&bid=46086"><img src="https://deepscan.io/api/teams/3998/projects/5802/branches/46086/badge/grade.svg" alt="DeepScan grade"></a>
 </p>
@@ -37,7 +38,8 @@
   <b>Supported Frameworks</b><br/>
   <a href="https://github.com/naver/egjs-flicking/blob/master/packages/ngx-flicking/README.md"><img width="45" src="https://naver.github.io/egjs-flicking/images/angular.svg" alt="AngularJS" /></a>&nbsp;&nbsp;
   <a href="https://github.com/naver/egjs-flicking/blob/master/packages/react-flicking/README.md"><img width="45" src="https://naver.github.io/egjs-flicking/images/react.svg" alt="React" /></a>&nbsp;&nbsp;
-  <a href="https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md"><img width="45" src="https://naver.github.io/egjs-flicking/images/vue.svg" alt="Vue.js" /></a>
+  <a href="https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md"><img width="45" src="https://naver.github.io/egjs-flicking/images/vue.svg" alt="Vue.js" /></a>&nbsp;&nbsp;
+  <a href="https://github.com/naver/egjs-flicking/blob/master/packages/preact-flicking/README.md"><img width="45" src="https://naver.github.io/egjs-flicking/images/preact.svg" alt="Preact" /></a>
 </p>
 
 -----
@@ -146,6 +148,7 @@ var flicking = new eg.Flicking("#el", { collectStatistics: false });
 |[**@egjs/ngx-flicking**](https://github.com/naver/egjs-flicking/blob/master/packages/ngx-flicking/README.md)|<a href="https://www.npmjs.com/package/@egjs/ngx-flicking" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/ngx-flicking.svg?style=flat-square&color=dd0031&label=%F0%9F%94%96" alt="version" /></a>|<img width="15" src="https://naver.github.io/egjs-flicking/images/angular.svg" valign="middle" alt="Angular" /> [Angular](https://angular.io/) port of @egjs/flicking|
 |[**@egjs/react-flicking**](https://github.com/naver/egjs-flicking/blob/master/packages/react-flicking/README.md)|<a href="https://www.npmjs.com/package/@egjs/react-flicking" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/react-flicking.svg?style=flat-square&color=00d8ff&label=%F0%9F%94%96" alt="version" /></a>|<img width="15" src="https://naver.github.io/egjs-flicking/images/react.svg" valign="middle" alt="React" /> [React](https://reactjs.org/) port of @egjs/flicking|
 |[**@egjs/vue-flicking**](https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md)|<a href="https://www.npmjs.com/package/@egjs/vue-flicking" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/vue-flicking.svg?style=flat-square&color=42b883&label=%F0%9F%94%96" alt="version" /></a>|<img width="15" src="https://naver.github.io/egjs-flicking/images/vue.svg" valign="middle" alt="Vue.js" /> [Vue.js](https://vuejs.org/v2/guide/index.html) port of @egjs/flicking|
+|[**@egjs/preact-flicking**](https://github.com/naver/egjs-flicking/blob/master/packages/preact-flicking/README.md)|<a href="https://www.npmjs.com/package/@egjs/preact-flicking" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/preact-flicking.svg?style=flat-square&color=673ab8&label=%F0%9F%94%96" alt="version" /></a>|<img width="15" src="https://naver.github.io/egjs-flicking/images/preact.svg" valign="middle" alt="Preact" /> [Preact](https://preactjs.com/guide/v10/getting-started) port of @egjs/flicking|
 
 ## 🌐 Supported Browsers
 |<img width="20" src="https://simpleicons.org/icons/internetexplorer.svg" alt="IE" />|<img width="20" src="https://simpleicons.org/icons/googlechrome.svg" alt="Chrome" />|<img width="20" src="https://simpleicons.org/icons/firefoxbrowser.svg" alt="Firefox" />|<img width="20" src="https://simpleicons.org/icons/safari.svg" alt="Safari" />|<img width="20" src="https://simpleicons.org/icons/apple.svg" alt="iOS" />|<img width="20" src="https://simpleicons.org/icons/android.svg" alt="Android">|
