@@ -1,0 +1,23 @@
+#infinite  .buttons {
+  padding: 10px 0px;
+  text-align: center;
+}
+#infinite .buttons button {
+  padding: 10px 15px;
+  background: #eee;
+  border: 0;
+  margin: 0px 2px;
+}
+#infinite .buttons button:hover {
+  background: #ccc;
+}
+#infinite .panel, #infinite .infinite {
+  font-weight: bold;
+}
+#infinite .flicking2 .infinite {
+  transition: background ease 1s;
+}
+#infinite .flicking .infinite.placeholder {
+  background: #ddd;
+  color: transparent;
+}

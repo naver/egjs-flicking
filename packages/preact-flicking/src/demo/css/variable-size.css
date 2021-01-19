@@ -1,0 +1,16 @@
+
+#variable-size .flicking .panel:nth-child(5n + 1) {
+  width: 100px;
+}
+#variable-size .flicking .panel:nth-child(5n + 2) {
+  width: 200px;
+}
+#variable-size .flicking .panel:nth-child(5n + 3) {
+  width: 80px;
+}
+#variable-size .flicking .panel:nth-child(5n + 4) {
+  width: 250px;
+}
+#variable-size .flicking .panel:nth-child(5n + 5) {
+  width: 150px;
+}
