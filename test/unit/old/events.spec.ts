@@ -6,8 +6,8 @@ import { merge } from "~/utils";
 import { EVENTS, DIRECTION, MOVE_TYPE } from "~/consts";
 import { FlickingEvent, NeedPanelEvent, FlickingOptions } from "~/types";
 
-import { horizontal, vertical } from "./assets/fixture";
-import { createFlicking, createHorizontalElement, cleanup, simulate, tick } from "./assets/utils";
+import { horizontal, vertical } from "../assets/fixture";
+import { createFlicking, createHorizontalElement, cleanup, simulate, tick } from "../assets/utils";
 
 describe("Events", () => {
   afterEach(() => {

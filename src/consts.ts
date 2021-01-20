@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 
-import { FlickingOptions, EventType, Direction, AxesEventType, StateType, MoveTypeSnapOption, MoveTypeFreeScrollOption, FlickingMethodsKeys } from "./types";
+import { Direction, AxesEventType, StateType, MoveTypeSnapOption, MoveTypeFreeScrollOption, FlickingMethodsKeys } from "./types";
 
 export const MOVE_TYPE: {
   SNAP: "snap";
@@ -34,7 +34,7 @@ export const isBrowser = typeof document !== "undefined";
  * @private
  * @memberof eg.Flicking
  */
-export const DEFAULT_OPTIONS: Readonly<FlickingOptions> = {
+export const DEFAULT_OPTIONS = {
   classPrefix: "eg-flick",
   deceleration: 0.0075,
   horizontal: true,
@@ -67,24 +67,6 @@ export const DEFAULT_OPTIONS: Readonly<FlickingOptions> = {
   iOSEdgeSwipeThreshold: 30,
   collectStatistics: true
 };
-
-export const DEFAULT_VIEWPORT_CSS = {
-  position: "relative",
-  zIndex: DEFAULT_OPTIONS.zIndex as string,
-  overflow: "hidden"
-};
-
-export const DEFAULT_CAMERA_CSS = {
-  width: "100%",
-  height: "100%",
-  willChange: "transform"
-};
-
-export const DEFAULT_PANEL_CSS = {
-  position: "absolute"
-};
-
-
 
 export const AXES_EVENTS: AxesEventType = {
   HOLD: "hold",
@@ -119,79 +101,78 @@ export const DIRECTION: Direction = {
   NEXT: "NEXT"
 };
 
-export const FLICKING_METHODS: {[key in FlickingMethodsKeys]: true} = {
-  prev: true,
-  next: true,
-  moveTo: true,
-  getCamera: true,
-  getRenderer: true,
-  getViewport: true,
-  getControl: true,
-  getIndex: true,
-  getAllPanels: true,
-  getCurrentPanel: true,
-  getElement: true,
-  getSize: true,
-  getPanel: true,
-  getPanelCount: true,
-  getStatus: true,
-  getVisiblePanels: true,
-  enableInput: true,
-  disableInput: true,
-  destroy: true,
-  resize: true,
-  setStatus: true,
-  isPlaying: true
-};
+// export const FLICKING_METHODS: {[key in FlickingMethodsKeys]: true} = {
+//   prev: true,
+//   next: true,
+//   moveTo: true,
+//   getCamera: true,
+//   getRenderer: true,
+//   getViewport: true,
+//   getControl: true,
+//   getIndex: true,
+//   getAllPanels: true,
+//   getCurrentPanel: true,
+//   getElement: true,
+//   getPanel: true,
+//   getPanelCount: true,
+//   getStatus: true,
+//   getVisiblePanels: true,
+//   enableInput: true,
+//   disableInput: true,
+//   destroy: true,
+//   resize: true,
+//   setStatus: true,
+//   isPlaying: true
+// };
 
-// Check whether browser supports transform: translate3d
-// https://stackoverflow.com/questions/5661671/detecting-transform-translate3d-support
-export let checkTranslateSupport = () => {
-  const transforms = {
-    webkitTransform: "-webkit-transform",
-    msTransform: "-ms-transform",
-    MozTransform: "-moz-transform", // eslint-disable-line @typescript-eslint/naming-convention
-    OTransform: "-o-transform", // eslint-disable-line @typescript-eslint/naming-convention
-    transform: "transform"
-  };
+// // Check whether browser supports transform: translate3d
+// // https://stackoverflow.com/questions/5661671/detecting-transform-translate3d-support
+// export let checkTranslateSupport = () => {
+//   const transforms = {
+//     webkitTransform: "-webkit-transform",
+//     msTransform: "-ms-transform",
+//     MozTransform: "-moz-transform", // eslint-disable-line @typescript-eslint/naming-convention
+//     OTransform: "-o-transform", // eslint-disable-line @typescript-eslint/naming-convention
+//     transform: "transform"
+//   };
 
-  if (!isBrowser) {
-    return {
-      name: transforms.transform,
-      has3d: true
-    };
-  }
-  const supportedStyle = document.documentElement.style;
-  let transformName = "";
-  for (const prefixedTransform in transforms) {
-    if (prefixedTransform in supportedStyle) {
-      transformName = prefixedTransform;
-    }
-  }
+//   if (!isBrowser) {
+//     return {
+//       name: transforms.transform,
+//       has3d: true
+//     };
+//   }
+//   const supportedStyle = document.documentElement.style;
+//   let transformName = "";
+//   for (const prefixedTransform in transforms) {
+//     if (prefixedTransform in supportedStyle) {
+//       transformName = prefixedTransform;
+//     }
+//   }
 
-  if (!transformName) {
-    throw new Error("Browser doesn't support CSS3 2D Transforms.");
-  }
+//   if (!transformName) {
+//     throw new Error("Browser doesn't support CSS3 2D Transforms.");
+//   }
 
-  const el = document.createElement("div");
+//   const el = document.createElement("div");
 
-  document.documentElement.insertBefore(el, null);
+//   document.documentElement.insertBefore(el, null);
 
-  el.style[transformName] = "translate3d(1px, 1px, 1px)";
-  const styleVal = window.getComputedStyle(el).getPropertyValue(transforms[transformName]);
+//   el.style[transformName] = "translate3d(1px, 1px, 1px)";
+//   const styleVal = window.getComputedStyle(el).getPropertyValue(transforms[transformName]);
 
-  if (el.parentElement) {
-    el.parentElement.removeChild(el);
-  }
+//   if (el.parentElement) {
+//     el.parentElement.removeChild(el);
+//   }
 
-  const transformInfo = {
-    name: transformName,
-    has3d: styleVal.length > 0 && styleVal !== "none"
-  };
+//   const transformInfo = {
+//     name: transformName,
+//     has3d: styleVal.length > 0 && styleVal !== "none"
+//   };
 
-  checkTranslateSupport = () => transformInfo;
+//   checkTranslateSupport = () => transformInfo;
 
-  return transformInfo;
-};
+//   return transformInfo;
+// };
 
-export const TRANSFORM = checkTranslateSupport();
+// export const TRANSFORM = checkTranslateSupport();

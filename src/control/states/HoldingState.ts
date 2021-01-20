@@ -2,48 +2,59 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { OnChange, OnRelease } from "@egjs/axes";
 
-import State from "./State";
-import { STATE_TYPE, EVENTS, DIRECTION } from "../consts";
-import { FlickingContext } from "../types";
+import { STATE_TYPE } from "~/control/StateMachine";
+import State from "~/control/states/State";
+import { DIRECTION, EVENTS } from "~/const/external";
 
 class HoldingState extends State {
-  public readonly type = STATE_TYPE.HOLDING;
   public readonly holding = true;
   public readonly playing = true;
 
-  private _releaseEvent: any = null;
+  private _releaseEvent: OnRelease | null = null;
 
-  public onChange(e: any, context: FlickingContext): void {
-    const { flicking, triggerEvent, transitTo } = context;
+  public onChange(e: OnChange): void {
+    const flicking = this._flicking;
+    const stateMachine = this._stateMachine;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const inputEvent = e.inputEvent as { offsetX: number; offsetY: number };
 
     const offset = flicking.options.horizontal
       ? inputEvent.offsetX
       : inputEvent.offsetY;
-    this.direction = offset < 0
+    this._direction = offset < 0
       ? DIRECTION.NEXT
       : DIRECTION.PREV;
 
-    triggerEvent(EVENTS.MOVE_START, e, true)
-      .onSuccess(() => {
-        // Trigger DraggingState's onChange, to trigger "move" event immediately
-        transitTo(STATE_TYPE.DRAGGING)
-          .onChange(e, context);
-      })
-      .onStopped(() => {
-        transitTo(STATE_TYPE.DISABLED);
-      });
+    const eventSuccess = flicking.trigger(EVENTS.MOVE_START, {
+      index: flicking.getIndex(),
+      panel: flicking.getCurrentPanel(),
+      isTrusted: e.isTrusted,
+      holding: this.holding,
+      direction: e.delta.flick > 0 ? DIRECTION.NEXT : DIRECTION.PREV,
+      axesEvent: e
+    });
+
+    if (eventSuccess) {
+      // Trigger DraggingState's onChange, to trigger "move" event immediately
+      stateMachine.transitTo(STATE_TYPE.DRAGGING)
+        .onChange(e);
+    } else {
+      stateMachine.transitTo(STATE_TYPE.DISABLED);
+    }
   }
 
-  public onRelease(e: any, context: FlickingContext): void {
-    const { viewport, triggerEvent, transitTo } = context;
+  public onRelease(e: OnRelease): void {
+    const flicking = this._flicking;
+    const stateMachine = this._stateMachine;
 
-    triggerEvent(EVENTS.HOLD_END, e, true);
+    flicking.trigger(EVENTS.HOLD_END, {
+      index: flicking.getIndex(),
+      panel: flicking.getCurrentPanel(),
+      axesEvent: e
+    });
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (e.delta.flick !== 0) {
       // Sometimes "release" event on axes triggered before "change" event
       // Especially if user flicked panel fast in really short amount of time
@@ -51,22 +62,23 @@ class HoldingState extends State {
 
       // Event flow should be HOLD_START -> MOVE_START -> MOVE -> HOLD_END
       // At least one move event should be included between holdStart and holdEnd
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      e.setTo({ flick: viewport.getCameraPosition() }, 0);
-      transitTo(STATE_TYPE.IDLE);
+      e.setTo({ flick: flicking.getCamera().getPosition() }, 0);
+      stateMachine.transitTo(STATE_TYPE.IDLE);
       return;
     }
 
     // Can't handle select event here,
     // As "finish" axes event happens
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     this._releaseEvent = e;
   }
 
-  public onFinish(e: any, { viewport, triggerEvent, transitTo }: FlickingContext): void {
+  public onFinish(): void {
+    const flicking = this._flicking;
+    const stateMachine = this._stateMachine;
+
     // Should transite to IDLE state before select event
     // As user expects hold is already finished
-    transitTo(STATE_TYPE.IDLE);
+    stateMachine.transitTo(STATE_TYPE.IDLE);
 
     if (!this._releaseEvent) {
       return;
@@ -74,7 +86,6 @@ class HoldingState extends State {
 
     // Handle release event here
     // To prevent finish event called twice
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const releaseEvent = this._releaseEvent;
 
     // Static click
@@ -91,8 +102,9 @@ class HoldingState extends State {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       clickedElement = srcEvent.target;
     }
-    const clickedPanel = viewport.panelManager.findPanelOf(clickedElement);
-    const cameraPosition = viewport.getCameraPosition();
+
+    const clickedPanel = flicking.getRenderer().getPanels().find(panel => panel.getElement() === clickedElement);
+    const cameraPosition = flicking.getCamera().getPosition();
 
     if (clickedPanel) {
       const clickedPanelPosition = clickedPanel.getPosition();
@@ -102,11 +114,10 @@ class HoldingState extends State {
           ? DIRECTION.PREV
           : null;
 
-      // Don't provide axes event, to use axes instance instead
-      triggerEvent(EVENTS.SELECT, null, true, {
-        direction, // Direction to the clicked panel
+      flicking.trigger(EVENTS.SELECT, {
         index: clickedPanel.getIndex(),
-        panel: clickedPanel
+        panel: clickedPanel,
+        direction // Direction to the clicked panel
       });
     }
   }

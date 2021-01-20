@@ -2,23 +2,26 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { OnChange, OnRelease } from "@egjs/axes";
 
-import State from "./State";
-import { STATE_TYPE, EVENTS } from "../consts";
-import { FlickingContext } from "../types";
+import { STATE_TYPE } from "~/control/StateMachine";
+import State from "~/control/states/State";
+import { DIRECTION, EVENTS } from "~/const/external";
 
 class DraggingState extends State {
   public readonly type = STATE_TYPE.DRAGGING;
   public readonly holding = true;
   public readonly playing = true;
 
-  public onChange(e: any, { moveCamera, transitTo }: FlickingContext): void {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  public onChange(e: OnChange): void {
+    const flicking = this._flicking;
+    const stateMachine = this._stateMachine;
+
     if (!e.delta.flick) {
       return;
     }
 
-    moveCamera(e)
+    flicking.getCamera().lookAt(e)
       .onStopped(() => {
         transitTo(STATE_TYPE.DISABLED);
       });

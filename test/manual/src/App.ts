@@ -1,4 +1,4 @@
-import "../../css/flicking-inline.css";
+import "../../../css/flicking-inline.css";
 import Flicking from "~/index";
 
 class App {

@@ -16,16 +16,50 @@
  * import { EVENTS } from "@egjs/flicking";
  * EVENTS.MOVE_START; // "MOVE_START"
  */
-export const READY = "ready";
-export const RESIZE = "resize";
-export const HOLD_START = "holdStart";
-export const HOLD_END = "holdEnd";
-export const MOVE_START = "moveStart";
-export const MOVE = "move";
-export const MOVE_END = "moveEnd";
-export const CHANGE = "change";
-export const RESTORE = "restore";
-export const SELECT = "select";
-export const NEED_PANEL = "needPanel";
-export const VISIBLE_CHANGE = "visibleChange";
-export const CONTENT_ERROR = "contentError";
+export const EVENTS: {
+  READY: "ready";
+  RESIZE: "resize";
+  HOLD_START: "holdStart";
+  HOLD_END: "holdEnd";
+  MOVE_START: "moveStart";
+  MOVE: "move";
+  MOVE_END: "moveEnd";
+  CHANGE: "change";
+  RESTORE: "restore";
+  SELECT: "select";
+  NEED_PANEL: "needPanel";
+  VISIBLE_CHANGE: "visibleChange";
+  CONTENT_ERROR: "contentError";
+} = {
+  READY: "ready",
+  RESIZE: "resize",
+  HOLD_START: "holdStart",
+  HOLD_END: "holdEnd",
+  MOVE_START: "moveStart",
+  MOVE: "move",
+  MOVE_END: "moveEnd",
+  CHANGE: "change",
+  RESTORE: "restore",
+  SELECT: "select",
+  NEED_PANEL: "needPanel",
+  VISIBLE_CHANGE: "visibleChange",
+  CONTENT_ERROR: "contentError"
+};
+
+export const ALIGN: {
+  PREV: "prev";
+  CENTER: "center";
+  NEXT: "next";
+} = {
+  PREV: "prev",
+  CENTER: "center",
+  NEXT: "next"
+};
+
+export const DIRECTION: {
+  PREV: "PREV";
+  NEXT: "NEXT";
+} = {
+  PREV: "PREV",
+  NEXT: "NEXT"
+};

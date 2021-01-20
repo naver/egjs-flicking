@@ -15,7 +15,7 @@ class LinearCamera extends Camera {
     const firstPanel = renderer.getPanel(0);
     const lastPanel = renderer.getPanel(renderer.getPanelCount() - 1);
 
-    this._range = { min: firstPanel?.getAnchorPosition() ?? 0, max: lastPanel?.getAnchorPosition() ?? 0 };
+    this._range = { min: firstPanel?.getPosition() ?? 0, max: lastPanel?.getPosition() ?? 0 };
     return this;
   }
 }

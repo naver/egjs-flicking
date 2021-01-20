@@ -3,11 +3,11 @@
  * egjs projects are licensed under the MIT license
  */
 
+import { FlickingOption } from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
 import * as ERROR from "~/const/error";
-import * as OPTIONS from "~/const/option";
-import { ElementLike, Merged } from "./types";
-import { FlickingOptions } from "./Flicking";
+import { ALIGN } from "~/const/external";
+import { Merged, ElementLike } from "~/type/internal";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const merge = <From extends object, To extends object>(target: From, ...sources: To[]): Merged<From, To> => {
@@ -95,17 +95,17 @@ export const toArray = <T>(iterable: ArrayLike<T>): T[] => [].slice.call(iterabl
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 export const isArray = (arr: any): boolean => arr && arr.constructor === Array;
 
-export const parseAlign = (align: FlickingOptions["align"], size: number): number => {
+export const parseAlign = (align: FlickingOption["align"], size: number): number => {
   let alignPoint: number;
   if (typeof align === "string") {
     switch (align) {
-      case OPTIONS.ALIGN.PREV:
+      case ALIGN.PREV:
         alignPoint = 0;
         break;
-      case OPTIONS.ALIGN.CENTER:
+      case ALIGN.CENTER:
         alignPoint = 0.5 * size;
         break;
-      case OPTIONS.ALIGN.NEXT:
+      case ALIGN.NEXT:
         alignPoint = size;
         break;
       default:

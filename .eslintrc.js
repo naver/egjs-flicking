@@ -6,7 +6,8 @@ module.exports = {
   },
   "extends": [
     "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:import/typescript"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -144,7 +145,7 @@ module.exports = {
       "error",
       "smart"
     ],
-    "guard-for-in": "error",
+    "guard-for-in": "off",
     "id-blacklist": "off",
     "id-match": "off",
     "import/order": "off",
@@ -168,12 +169,8 @@ module.exports = {
     "no-invalid-this": "off",
     "no-multiple-empty-lines": "error",
     "no-new-wrappers": "error",
-    "no-shadow": [
-      "error",
-      {
-        "hoist": "all"
-      }
-    ],
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"],
     "no-throw-literal": "error",
     "no-trailing-spaces": "error",
     "no-undef-init": "error",
@@ -211,6 +208,7 @@ module.exports = {
     "use-isnan": "error",
     "valid-typeof": "off",
     "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
+    "import/order": ["error", {"newlines-between": "always"}],
     "@typescript-eslint/naming-convention": [
       "error",
       {
@@ -246,9 +244,14 @@ module.exports = {
         "trailingUnderscore": "forbid"
       },
       {
-        "selector": "memberLike",
+        "selector": "classProperty",
         "modifiers": ["static"],
-        "format": ["camelCase"]
+        "format": ["camelCase", "UPPER_CASE"]
+      },
+      {
+        "selector": "classMethod",
+        "modifiers": ["static"],
+        "format": ["camelCase", "UPPER_CASE"]
       },
       {
         "selector": "property",

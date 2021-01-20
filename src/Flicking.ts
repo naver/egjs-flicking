@@ -14,31 +14,40 @@ import { Control, FreeControl, SnapControl, SnapControlOption } from "./control"
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
 import { RawRenderer, Renderer, VisibleRenderer } from "./renderer";
 
-import * as EVENTS from "~/const/event";
-import * as OPTIONS from "~/const/option";
+import { EVENTS, ALIGN } from "~/const/external";
 import * as ERROR from "~/const/error";
-import { LiteralUnion, MoveTypeOption, ReadyEvent, ResizeEvent, ValueOf } from "~/types";
-
-import { getElement, isString } from "./utils";
-import { DEFAULT_MOVE_TYPE_OPTIONS, MOVE_TYPE } from "./consts";
+import { getElement, isString } from "~/utils";
+import { DEFAULT_MOVE_TYPE_OPTIONS, MOVE_TYPE } from "~/consts";
 import {
-  FlickingEvent,
-  FlickingPanel,
   FlickingStatus,
   Plugin,
-  ElementLike,
-  ChangeEvent,
-  SelectEvent,
-  NeedPanelEvent,
-  VisibleChangeEvent,
-  ContentErrorEvent,
   MoveTypeStringOption,
-  MoveTypeObjectOption
-} from "./types";
+  MoveTypeObjectOption,
+  MoveTypeOption, ReadyEvent, ResizeEvent
+} from "~/types";
+import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent } from "~/type/event";
+import { LiteralUnion, ValueOf, ElementLike } from "~/type/internal";
 
-export interface FlickingOptions {
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export type FlickingEvent = {
+  [EVENTS.READY]: ReadyEvent;
+  [EVENTS.RESIZE]: ResizeEvent;
+  [EVENTS.HOLD_START]: HoldStartEvent;
+  [EVENTS.HOLD_END]: HoldEndEvent;
+  [EVENTS.MOVE_START]: MoveStartEvent;
+  // [EVENTS.MOVE]: FlickingEvent;
+  // [EVENTS.MOVE_END]: FlickingEvent;
+  // [EVENTS.CHANGE]: ChangeEvent;
+  // [EVENTS.RESTORE]: FlickingEvent;
+  [EVENTS.SELECT]: SelectEvent;
+  // [EVENTS.NEED_PANEL]: NeedPanelEvent;
+  // [EVENTS.VISIBLE_CHANGE]: VisibleChangeEvent;
+  // [EVENTS.CONTENT_ERROR]: ContentErrorEvent;
+};
+
+export interface FlickingOption {
   // UI / LAYOUT
-  align: LiteralUnion<ValueOf<typeof OPTIONS.ALIGN>> | { anchor: number | string; hanger: number | string } | null;
+  align: LiteralUnion<ValueOf<typeof ALIGN>> | { anchor: number | string; hanger: number | string };
   defaultIndex: number;
   horizontal: boolean;
   circular: boolean;
@@ -49,6 +58,7 @@ export interface FlickingOptions {
   duration: number;
   easing: (x: number) => number;
   // INPUT
+  inputType: string[];
   moveType: MoveTypeOption;
   threshold: number;
   bounce: number | string | [number | string, number | string];
@@ -71,21 +81,7 @@ export interface FlickingOptions {
  * @requires {@link https://github.com/naver/egjs-imready|eg.ImReady}
  * @see Easing Functions Cheat Sheet {@link http://easings.net/} <ko>이징 함수 Cheat Sheet {@link http://easings.net/}</ko>
  */
-class Flicking extends Component<{
-  [EVENTS.READY]: ReadyEvent;
-  [EVENTS.RESIZE]: ResizeEvent;
-  [EVENTS.HOLD_START]: FlickingEvent;
-  [EVENTS.HOLD_END]: FlickingEvent;
-  [EVENTS.MOVE_START]: FlickingEvent;
-  [EVENTS.MOVE]: FlickingEvent;
-  [EVENTS.MOVE_END]: FlickingEvent;
-  [EVENTS.CHANGE]: ChangeEvent;
-  [EVENTS.RESTORE]: FlickingEvent;
-  [EVENTS.SELECT]: SelectEvent;
-  [EVENTS.NEED_PANEL]: NeedPanelEvent;
-  [EVENTS.VISIBLE_CHANGE]: VisibleChangeEvent;
-  [EVENTS.CONTENT_ERROR]: ContentErrorEvent;
-}> {
+class Flicking extends Component<FlickingEvent> {
   /**
    * Version info string
    *
@@ -104,24 +100,25 @@ class Flicking extends Component<{
   private _contentsReadyChecker: ImReady | null;
 
   // Options
-  private _align: FlickingOptions["align"];
-  private _defaultIndex: FlickingOptions["defaultIndex"];
-  private _horizontal: FlickingOptions["horizontal"];
-  private _circular: FlickingOptions["circular"];
-  private _bound: FlickingOptions["bound"];
-  private _adaptive: FlickingOptions["adaptive"];
-  private _deceleration: FlickingOptions["deceleration"];
-  private _duration: FlickingOptions["duration"];
-  private _easing: FlickingOptions["easing"];
-  private _moveType: FlickingOptions["moveType"];
-  private _threshold: FlickingOptions["threshold"];
-  private _bounce: FlickingOptions["bounce"];
-  private _iOSEdgeSwipeThreshold: FlickingOptions["iOSEdgeSwipeThreshold"];
-  private _isEqualSize: FlickingOptions["isEqualSize"];
-  private _isConstantSize: FlickingOptions["isConstantSize"];
-  private _renderOnlyVisible: FlickingOptions["renderOnlyVisible"];
-  private _autoResize: FlickingOptions["autoResize"];
-  private _autoInit: FlickingOptions["autoInit"];
+  private _align: FlickingOption["align"];
+  private _defaultIndex: FlickingOption["defaultIndex"];
+  private _horizontal: FlickingOption["horizontal"];
+  private _circular: FlickingOption["circular"];
+  private _bound: FlickingOption["bound"];
+  private _adaptive: FlickingOption["adaptive"];
+  private _deceleration: FlickingOption["deceleration"];
+  private _duration: FlickingOption["duration"];
+  private _easing: FlickingOption["easing"];
+  private _inputType: FlickingOption["inputType"];
+  private _moveType: FlickingOption["moveType"];
+  private _threshold: FlickingOption["threshold"];
+  private _bounce: FlickingOption["bounce"];
+  private _iOSEdgeSwipeThreshold: FlickingOption["iOSEdgeSwipeThreshold"];
+  private _isEqualSize: FlickingOption["isEqualSize"];
+  private _isConstantSize: FlickingOption["isConstantSize"];
+  private _renderOnlyVisible: FlickingOption["renderOnlyVisible"];
+  private _autoResize: FlickingOption["autoResize"];
+  private _autoInit: FlickingOption["autoInit"];
 
   // Internal State
   private _initialized: boolean;
@@ -161,12 +158,13 @@ class Flicking extends Component<{
    * @param {boolean} [options.collectStatistics=true] Whether to collect statistics on how you are using `Flicking`. These statistical data do not contain any personal information and are used only as a basis for the development of a user-friendly product.<ko>어떻게 `Flicking`을 사용하고 있는지에 대한 통계 수집 여부를 나타낸다. 이 통계자료는 개인정보를 포함하고 있지 않으며 오직 사용자 친화적인 제품으로 발전시키기 위한 근거자료로서 활용한다.</ko>
    */
   public constructor(root: HTMLElement | string, {
-    align = null,
+    align = ALIGN.PREV,
     horizontal = true,
     autoInit = true,
     autoResize = true,
-    defaultIndex = 0
-  }: Partial<FlickingOptions> = {}) {
+    defaultIndex = 0,
+    inputType = ["mouse", "touch"]
+  }: Partial<FlickingOption> = {}) {
     super();
 
     this._viewport = new Viewport(getElement(root));
@@ -182,6 +180,7 @@ class Flicking extends Component<{
     this._align = align;
     this._horizontal = horizontal;
     this._defaultIndex = defaultIndex;
+    this._inputType = inputType;
     this._autoResize = autoResize;
     this._autoInit = autoInit;
 
@@ -252,11 +251,30 @@ class Flicking extends Component<{
   public getRenderer() { return this._renderer; }
   public getViewport() { return this._viewport; }
   // Options
+  // UI / LAYOUT
   public getAlign() { return this._align; }
-  public isHorizontal() { return this._horizontal; }
-  public getAutoInit() { return this._autoInit; }
-  public getAutoResize() { return this._autoResize; }
   public getDefaultIndex() { return this._defaultIndex; }
+  public isHorizontal() { return this._horizontal; }
+  public isCircular() { return this._circular; }
+  public isBound() { return this._bound; }
+  public isAdaptive() { return this._adaptive; }
+  // ANIMATION
+  public getDeceleration() { return this._deceleration; }
+  public getEasing() { return this._easing; }
+  public getDuration() { return this._duration; }
+  // INPUT
+  public getInputType() { return this._inputType; }
+  public getMoveType() { return this._moveType; }
+  public getThreshold() { return this._threshold; }
+  public getBounce() { return this._bounce; }
+  public getIOSEdgeSwipeThreshold() { return this._iOSEdgeSwipeThreshold; }
+  // PERFORMANCE
+  public isEqualSize() { return this._isEqualSize; }
+  public isConstantSize() { return this._isConstantSize; }
+  public isRenderOnlyVisible() { return this._renderOnlyVisible; }
+  // OTHERS
+  public isAutoInit() { return this._autoInit; }
+  public isAutoResize() { return this._autoResize; }
 
   /**
    * Move to the previous panel if it exists.
@@ -339,7 +357,7 @@ class Flicking extends Component<{
    * @param - Should include cloned panels or not.<ko>복사된 패널들을 포함할지의 여부.</ko>
    * @return All panels.<ko>모든 패널들.</ko>
    */
-  public getAllPanels(includeClone?: boolean): FlickingPanel[] {
+  public getAllPanels(includeClone?: boolean): Panel[] {
     return [];
   }
 
@@ -349,7 +367,7 @@ class Flicking extends Component<{
    * @ko 현재 뷰포트 영역에서 보여지고 있는 패널들을 반환한다.
    * @return Panels currently shown in viewport area.<ko>현재 뷰포트 영역에 보여지는 패널들</ko>
    */
-  public getVisiblePanels(): FlickingPanel[] {
+  public getVisiblePanels(): Panel[] {
     return [];
   }
 

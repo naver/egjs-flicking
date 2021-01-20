@@ -9,41 +9,10 @@ import { DiffResult } from "@egjs/list-differ";
 
 import Flicking from "./Flicking";
 import Viewport from "./core/Viewport";
-import StateMachine from "./core/StateMachine";
+import StateMachine from "./control/StateMachine";
 import Panel from "./core/Panel";
-import State from "./states/State";
-
-export type ValueOf<T> = T[keyof T];
-export type LiteralUnion<T extends U, U = string> = T | (Pick<U, never> & {_?: never});
-
-export interface ArrayLike<T> {
-  [index: number]: T;
-  length: number;
-}
-
-export type Unique<T, U> = Pick<T, Exclude<keyof T, keyof U>>;
-
-export type MergeObject<T, U> = {
-  [K in keyof T & keyof U]: T[K] extends Record<string, unknown>
-    ? U[K] extends Record<string, unknown>
-      ? Merged<T[K], U[K]>
-      : T[K]
-    : T[K];
-};
-
-export type Merged<From, To> =
-  Unique<From, To>
-  & Unique<To, From>
-  & MergeObject<From, To>;
-
-/**
- * HTML `string` of single/mutiple HTMLElement, or an instance of `HTMLElement`.
- *
- * @ko 단일/복수의 HTMLElement의 outerHTML에 해당하는 `string`, 혹은 `HTMLElement`의 인스턴스.
- * @typedef
- * @memberof eg.Flicking
- */
-export type ElementLike = string | HTMLElement;
+import State from "./control/states/State";
+import { ElementLike, ValueOf } from "./type/internal";
 
 /**
  * @typedef
@@ -79,7 +48,7 @@ export type ElementLike = string | HTMLElement;
  * @property - Area (px) that can go to the next page when swiping the right edge in iOS safari <ko>iOS Safari에서 오른쪽 엣지를 스와이프 하는 경우 다음 페이지로 넘어갈 수 있는 영역(px)</ko>
  * @property - Whether to collect statistics on how you are using `Flicking`. These statistical data do not contain any personal information and are used only as a basis for the development of a user-friendly product.<ko>어떻게 `Flicking`을 사용하고 있는지에 대한 통계 수집 여부를 나타낸다. 이 통계자료는 개인정보를 포함하고 있지 않으며 오직 사용자 친화적인 제품으로 발전시키기 위한 근거자료로서 활용한다.</ko>
  */
-export interface FlickingOptions {
+interface FlickingOptions {
   classPrefix: string;
   deceleration: number;
   horizontal: boolean;

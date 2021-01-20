@@ -5,20 +5,20 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import StateMachine from "~/core/StateMachine";
+import StateMachine from "~/control/StateMachine";
 import Flicking from "~/Flicking";
-import Panel from "../core/Panel";
-import { ValueOf, Direction, StateType } from "../types";
+import Panel from "~/core/Panel";
+import { DIRECTION } from "~/const/external";
+import { ValueOf } from "~/type/internal";
 
 abstract class State {
   protected _flicking: Flicking;
   protected _stateMachine: StateMachine;
   protected _delta: number;
-  protected _direction: ValueOf<Direction> | null;
+  protected _direction: ValueOf<typeof DIRECTION> | null;
   protected _targetPanel: Panel | null;
   protected _lastPosition: number;
 
-  public abstract readonly type: ValueOf<StateType>;
   public abstract readonly holding: boolean;
   public abstract readonly playing: boolean;
 

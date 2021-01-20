@@ -5,9 +5,9 @@
 
 import State from "./State";
 import Panel from "~/core/Panel";
-import { circulate } from "../utils";
-import { STATE_TYPE, EVENTS } from "../consts";
-import { FlickingContext } from "../types";
+import { circulate } from "../../utils";
+import { STATE_TYPE, EVENTS } from "../../consts";
+import { FlickingContext } from "../../types";
 
 class AnimatingState extends State {
   public readonly type = STATE_TYPE.ANIMATING;

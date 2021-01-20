@@ -1,16 +1,16 @@
-import Flicking, { FlickingOptions } from "~/Flicking";
+import Flicking, { FlickingOption } from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
-import * as OPTIONS from "~/const/option";
+import { ALIGN } from "~/const/external";
 import * as ERROR from "~/const/error";
 import { checkExistence, parseAlign } from "~/utils";
 
 export interface CameraOption {
-  align: FlickingOptions["align"];
+  align: FlickingOption["align"];
 }
 
 abstract class Camera {
   // Options
-  protected _align: FlickingOptions["align"];
+  protected _align: FlickingOption["align"];
 
   // Internal states
   protected _flicking: Flicking | null;
@@ -20,7 +20,7 @@ abstract class Camera {
   protected _range: { min: number; max: number };
 
   public constructor({
-    align = OPTIONS.ALIGN.PREV
+    align = ALIGN.PREV
   }: Partial<CameraOption> = {}) {
     this._flicking = null;
     this._position = 0;
@@ -31,7 +31,7 @@ abstract class Camera {
     this._align = align;
   }
 
-  public init(flicking: Flicking) {
+  public init(flicking: Flicking): this {
     this._flicking = flicking;
 
     const viewportEl = flicking.getViewport().getElement();
@@ -40,6 +40,8 @@ abstract class Camera {
     this._el = viewportEl.firstElementChild as HTMLElement;
 
     this.updateAlignPos();
+
+    return this;
   }
 
   public destroy(): this {

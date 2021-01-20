@@ -1,22 +1,22 @@
-import Flicking, { FlickingOptions } from "~/Flicking";
+import Flicking, { FlickingOption } from "~/Flicking";
 import Panel from "~/core/Panel";
 import { toArray } from "~/utils";
-import * as OPTIONS from "~/const/option";
+import { ALIGN } from "~/const/external";
 
 export interface RendererOption {
-  align: FlickingOptions["align"];
+  align: FlickingOption["align"];
 }
 
 abstract class Renderer {
   // Options
-  protected _align: FlickingOptions["align"];
+  protected _align: FlickingOption["align"];
 
   // Internal States
   protected _flicking: Flicking;
   protected _panels: Panel[];
 
   public constructor({
-    align = OPTIONS.ALIGN.PREV
+    align = ALIGN.PREV
   }: Partial<RendererOption> = {}) {
     this._align = align;
     this.collectPanels();
@@ -48,11 +48,14 @@ abstract class Renderer {
     const cameraElement = flicking.getCamera().getElement();
     const cameraChilds = toArray(cameraElement.children);
 
+    const align = this._getPanelAlign();
+
     this._panels = cameraChilds.map(
       (el: HTMLElement, idx: number) => new Panel({
         flicking: this._flicking,
-        element: el,
-        index: idx
+        el: el,
+        index: idx,
+        align
       })
     );
     return this;
@@ -61,6 +64,14 @@ abstract class Renderer {
   public updatePanelSize(): this {
     this._panels.forEach(panel => panel.resize());
     return this;
+  }
+
+  private _getPanelAlign() {
+    const align = this._align;
+
+    return typeof align === "object"
+      ? (align as { anchor: string | number }).anchor
+      : align;
   }
 }
 

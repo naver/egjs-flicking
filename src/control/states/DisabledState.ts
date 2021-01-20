@@ -4,8 +4,8 @@
  */
 
 import State from "./State";
-import { STATE_TYPE } from "../consts";
-import { FlickingContext } from "../types";
+import { STATE_TYPE } from "../../consts";
+import { FlickingContext } from "../../types";
 
 class DisabledState extends State {
   public readonly type = STATE_TYPE.DISABLED;
