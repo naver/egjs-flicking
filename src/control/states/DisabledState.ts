@@ -2,35 +2,31 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { OnChange, OnRelease } from "@egjs/axes";
 
-import State from "./State";
-import { STATE_TYPE } from "../../consts";
-import { FlickingContext } from "../../types";
+import { STATE_TYPE } from "~/control/StateMachine";
+import State from "~/control/states/State";
 
 class DisabledState extends State {
   public readonly type = STATE_TYPE.DISABLED;
   public readonly holding = false;
   public readonly playing = true;
 
-  public onAnimationEnd(e: any, { transitTo }: FlickingContext): void {
-    transitTo(STATE_TYPE.IDLE);
+  public onAnimationEnd(): void {
+    this._stateMachine.transitTo(STATE_TYPE.IDLE);
   }
 
-  public onChange(e: any, { viewport, transitTo }: FlickingContext): void {
+  public onChange(e: OnChange): void {
     // Can stop Axes's change event
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     e.stop();
 
-    // Should update axes position as it's already changed at this moment
-    viewport.updateAxesPosition(viewport.getCameraPosition());
-    transitTo(STATE_TYPE.IDLE);
+    this._stateMachine.transitTo(STATE_TYPE.IDLE);
   }
 
-  public onRelease(e: any, { transitTo }: FlickingContext): void {
+  public onRelease(e: OnRelease): void {
     // This is needed when stopped hold start event
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (e.delta.flick === 0) {
-      transitTo(STATE_TYPE.IDLE);
+      this._stateMachine.transitTo(STATE_TYPE.IDLE);
     }
   }
 }

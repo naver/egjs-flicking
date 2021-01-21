@@ -25,7 +25,7 @@ import {
   MoveTypeObjectOption,
   MoveTypeOption, ReadyEvent, ResizeEvent
 } from "~/types";
-import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent } from "~/type/event";
+import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, ChangeEvent } from "~/type/event";
 import { LiteralUnion, ValueOf, ElementLike } from "~/type/internal";
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -35,10 +35,10 @@ export type FlickingEvent = {
   [EVENTS.HOLD_START]: HoldStartEvent;
   [EVENTS.HOLD_END]: HoldEndEvent;
   [EVENTS.MOVE_START]: MoveStartEvent;
-  // [EVENTS.MOVE]: FlickingEvent;
-  // [EVENTS.MOVE_END]: FlickingEvent;
-  // [EVENTS.CHANGE]: ChangeEvent;
-  // [EVENTS.RESTORE]: FlickingEvent;
+  [EVENTS.MOVE]: MoveEvent;
+  [EVENTS.MOVE_END]: MoveEndEvent;
+  [EVENTS.CHANGE]: ChangeEvent;
+  [EVENTS.RESTORE]: FlickingEvent;
   [EVENTS.SELECT]: SelectEvent;
   // [EVENTS.NEED_PANEL]: NeedPanelEvent;
   // [EVENTS.VISIBLE_CHANGE]: VisibleChangeEvent;
@@ -159,30 +159,57 @@ class Flicking extends Component<FlickingEvent> {
    */
   public constructor(root: HTMLElement | string, {
     align = ALIGN.PREV,
-    horizontal = true,
-    autoInit = true,
-    autoResize = true,
     defaultIndex = 0,
-    inputType = ["mouse", "touch"]
+    horizontal = true,
+    circular = false,
+    bound = false,
+    adaptive = false,
+    deceleration = 0.0075,
+    duration = 500,
+    easing = x => 1 - Math.pow(1 - x, 3),
+    inputType = ["mouse", "touch"],
+    moveType = "snap",
+    threshold = 40,
+    bounce = 10,
+    iOSEdgeSwipeThreshold = 30,
+    isEqualSize = false,
+    isConstantSize = false,
+    renderOnlyVisible = false,
+    autoInit = true,
+    autoResize = true
   }: Partial<FlickingOption> = {}) {
     super();
-
-    this._viewport = new Viewport(getElement(root));
-    this._renderer = this._createRenderer();
-    this._camera = this._createCamera();
-    this._control = this._createControl();
-    this._contentsReadyChecker = null;
 
     // Internal states
     this._initialized = false;
 
     // Bind options
     this._align = align;
-    this._horizontal = horizontal;
     this._defaultIndex = defaultIndex;
+    this._horizontal = horizontal;
+    this._circular = circular;
+    this._bound = bound;
+    this._adaptive = adaptive;
+    this._deceleration = deceleration;
+    this._duration = duration;
+    this._easing = easing;
     this._inputType = inputType;
+    this._moveType = moveType;
+    this._threshold = threshold;
+    this._bounce = bounce;
+    this._iOSEdgeSwipeThreshold = iOSEdgeSwipeThreshold;
+    this._isEqualSize = isEqualSize;
+    this._isConstantSize = isConstantSize;
+    this._renderOnlyVisible = renderOnlyVisible;
     this._autoResize = autoResize;
     this._autoInit = autoInit;
+
+    // Create core components
+    this._viewport = new Viewport(getElement(root));
+    this._renderer = this._createRenderer();
+    this._camera = this._createCamera();
+    this._control = this._createControl();
+    this._contentsReadyChecker = null;
 
     if (this._autoInit) {
       this.init();
@@ -213,7 +240,7 @@ class Flicking extends Component<FlickingEvent> {
     const initialPanel = renderer.getPanel(this._defaultIndex) || renderer.getPanel(0);
 
     if (initialPanel) {
-      void control.moveTo(initialPanel.getIndex(), 0);
+      void control.moveToPanel(initialPanel, 0);
     }
 
     // Done initializing & emit ready event
@@ -281,10 +308,15 @@ class Flicking extends Component<FlickingEvent> {
    *
    * @ko 이전 패널이 존재시 해당 패널로 이동한다.
    * @param [duration=options.duration] Duration of the panel movement animation.(unit: ms)<ko>패널 이동 애니메이션 진행 시간.(단위: ms)</ko>
-   * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
-  public prev(duration?: number): this {
-    return this;
+  public prev(duration: number = this._duration) {
+    const panel = this._renderer.getPanel(this._control.getActiveIndex() - 1);
+
+    if (!panel) {
+      return Promise.resolve();
+    }
+
+    return this._control.moveToPanel(panel, duration);
   }
 
   /**
@@ -292,10 +324,15 @@ class Flicking extends Component<FlickingEvent> {
    *
    * @ko 다음 패널이 존재시 해당 패널로 이동한다.
    * @param [duration=options.duration] Duration of the panel movement animation(unit: ms).<ko>패널 이동 애니메이션 진행 시간.(단위: ms)</ko>
-   * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
-  public next(duration?: number): this {
-    return this;
+  public next(duration: number = this._duration) {
+    const panel = this._renderer.getPanel(this._control.getActiveIndex() + 1);
+
+    if (!panel) {
+      return Promise.resolve();
+    }
+
+    return this._control.moveToPanel(panel, duration);
   }
 
   /**
@@ -304,10 +341,22 @@ class Flicking extends Component<FlickingEvent> {
    * @ko 주어진 인덱스에 해당하는 패널로 이동한다.
    * @param index The index number of the panel to move.<ko>이동할 패널의 인덱스 번호.</ko>
    * @param duration [duration=options.duration] Duration of the panel movement.(unit: ms)<ko>패널 이동 애니메이션 진행 시간.(단위: ms)</ko>
-   * @return {eg.Flicking} The instance itself.<ko>인스턴스 자기 자신.</ko>
    */
-  public moveTo(index: number, duration?: number): this {
-    return this;
+  public moveTo(index: number, duration: number = this._duration) {
+    const renderer = this._renderer;
+    const panelCount = renderer.getPanelCount();
+
+    if (index < 0 || index > panelCount - 1) {
+      return Promise.reject(new FlickingError(ERROR.MESSAGE.INDEX_OUT_OF_RANGE(index, 0, panelCount - 1), ERROR.CODE.NOT_ATTACHED_TO_FLICKING));
+    }
+
+    const panel = renderer.getPanel(index);
+
+    if (!panel) {
+      return Promise.resolve();
+    }
+
+    return this._control.moveToPanel(panel, duration);
   }
 
   /**
@@ -317,7 +366,7 @@ class Flicking extends Component<FlickingEvent> {
    * @return Current panel's index, zero-based integer.<ko>현재 패널의 인덱스 번호. 0부터 시작하는 정수.</ko>
    */
   public getIndex(): number {
-    return -1;
+    return this._control.getActiveIndex();
   }
 
   /**
@@ -388,7 +437,7 @@ class Flicking extends Component<FlickingEvent> {
    * @return Is animating or not.<ko>애니메이션 진행 여부.</ko>
    */
   public isPlaying(): boolean {
-    return true;
+    return this._control.isPlaying();
   }
 
   /**
@@ -468,6 +517,7 @@ class Flicking extends Component<FlickingEvent> {
     const viewport = this._viewport;
     const renderer = this._renderer;
     const camera = this._camera;
+    const control = this._control;
 
     const prevSize = viewport.getSize();
 
@@ -475,6 +525,7 @@ class Flicking extends Component<FlickingEvent> {
     renderer.updatePanelSize();
     camera.updateRange();
     camera.updateAlignPos();
+    control.updateInputRange(camera.getRange());
 
     const newSize = viewport.getSize();
     const sizeChanged = newSize.width !== prevSize.width
@@ -503,7 +554,7 @@ class Flicking extends Component<FlickingEvent> {
    * flicking.prepend(["\<div\>Panel\</div\>", document.createElement("div")]); // Prepended at index 0, 1
    * flicking.prepend("\<div\>Panel\</div\>"); // Prepended at index 0, pushing every panels behind it.
    */
-  public prepend(element: ElementLike | ElementLike[]): FlickingPanel[] {
+  public prepend(element: ElementLike | ElementLike[]): Panel[] {
     return [];
   }
 
@@ -522,7 +573,7 @@ class Flicking extends Component<FlickingEvent> {
    * // Even this is possible
    * flicking.append("\<div\>Panel 1\</div\>\<div\>Panel 2\</div\>"); // Appended at index 4, 5
    */
-  public append(element: ElementLike | ElementLike[]): FlickingPanel[] {
+  public append(element: ElementLike | ElementLike[]): Panel[] {
     return [];
   }
 
@@ -534,7 +585,7 @@ class Flicking extends Component<FlickingEvent> {
    * @param {number} [deleteCount=1] - Number of panels to remove from index.<ko>`index` 이후로 제거할 패널의 개수.</ko>
    * @return Array of removed panels<ko>제거된 패널들의 배열</ko>
    */
-  public remove(index: number, deleteCount: number = 1): FlickingPanel[] {
+  public remove(index: number, deleteCount: number = 1): Panel[] {
     return [];
   }
 

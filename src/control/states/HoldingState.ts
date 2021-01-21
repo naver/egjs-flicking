@@ -23,16 +23,11 @@ class HoldingState extends State {
     const offset = flicking.options.horizontal
       ? inputEvent.offsetX
       : inputEvent.offsetY;
-    this._direction = offset < 0
-      ? DIRECTION.NEXT
-      : DIRECTION.PREV;
 
     const eventSuccess = flicking.trigger(EVENTS.MOVE_START, {
-      index: flicking.getIndex(),
-      panel: flicking.getCurrentPanel(),
       isTrusted: e.isTrusted,
       holding: this.holding,
-      direction: e.delta.flick > 0 ? DIRECTION.NEXT : DIRECTION.PREV,
+      direction: offset < 0 ? DIRECTION.NEXT : DIRECTION.PREV,
       axesEvent: e
     });
 
@@ -50,8 +45,6 @@ class HoldingState extends State {
     const stateMachine = this._stateMachine;
 
     flicking.trigger(EVENTS.HOLD_END, {
-      index: flicking.getIndex(),
-      panel: flicking.getCurrentPanel(),
       axesEvent: e
     });
 

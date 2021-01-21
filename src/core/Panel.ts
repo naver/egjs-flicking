@@ -101,6 +101,17 @@ class Panel extends Component {
   public getPosition() { return (this._flicking.isHorizontal() ? this._pos.left : this._pos.top) + this._alignPos; }
   public getMargin() { return this._margin; }
 
+  public include(position: number): boolean {
+    const pos = this._pos;
+    const size = this._size;
+    const margin = this._margin;
+    const isHorizontal = this._flicking.isHorizontal();
+
+    return isHorizontal
+      ? position >= (pos.left - margin.left) && position <= (pos.left + size.width + margin.right)
+      : position >= (pos.top - margin.top) && position <= (pos.top + size.height + margin.bottom);
+  }
+
   public focus(duration?: number) {
     return this._flicking.moveTo(this._index, duration);
   }

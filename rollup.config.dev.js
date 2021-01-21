@@ -13,6 +13,7 @@ export default buildHelper([
     input: "./test/manual/src/App.ts",
     output: "./test/manual/dist/app.js",
     format: "umd",
+    tsconfig: "./test/manual/tsconfig.json",
     resolve: true,
     plugins: [
       postcss({

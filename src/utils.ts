@@ -96,7 +96,7 @@ export const toArray = <T>(iterable: ArrayLike<T>): T[] => [].slice.call(iterabl
 export const isArray = (arr: any): boolean => arr && arr.constructor === Array;
 
 export const parseAlign = (align: FlickingOption["align"], size: number): number => {
-  let alignPoint: number;
+  let alignPoint: number | null;
   if (typeof align === "string") {
     switch (align) {
       case ALIGN.PREV:
@@ -110,6 +110,9 @@ export const parseAlign = (align: FlickingOption["align"], size: number): number
         break;
       default:
         alignPoint = parseArithmeticExpression(align, size);
+        if (alignPoint == null) {
+          throw new FlickingError(ERROR.MESSAGE.WRONG_OPTION("align", align), ERROR.CODE.WRONG_OPTION);
+        }
     }
   } else {
     alignPoint = align as number;
@@ -118,9 +121,27 @@ export const parseAlign = (align: FlickingOption["align"], size: number): number
   return alignPoint;
 };
 
-export const parseArithmeticExpression = (cssValue: number | string, base: number, defaultVal?: number): number => {
-  // Set base / 2 to default value, if it's undefined
-  const defaultValue = defaultVal != null ? defaultVal : base / 2;
+export const parseBounce = (bounce: FlickingOption["bounce"], size: number): number[] => {
+  let parsedBounce: Array<number | null>;
+
+  if (isArray(bounce)) {
+    parsedBounce = (bounce as string[]).map(val => parseArithmeticExpression(val, size));
+  } else {
+    const parsedVal = parseArithmeticExpression(bounce as number | string, size);
+
+    parsedBounce = [parsedVal, parsedVal];
+  }
+
+  for (const val of parsedBounce) {
+    if (val == null) {
+      throw new FlickingError(ERROR.MESSAGE.WRONG_OPTION("bounce", bounce), ERROR.CODE.WRONG_OPTION);
+    }
+  }
+
+  return parsedBounce as number[];
+};
+
+export const parseArithmeticExpression = (cssValue: number | string, base: number): number | null => {
   const cssRegex = /(?:(\+|\-)\s*)?(\d+(?:\.\d+)?(%|px)?)/g;
 
   if (typeof cssValue === "number") {
@@ -143,7 +164,7 @@ export const parseArithmeticExpression = (cssValue: number | string, base: numbe
 
     // Return default value for values not in good form
     if (!sign) {
-      return defaultValue;
+      return null;
     }
 
     if (unit === "%") {
@@ -161,7 +182,7 @@ export const parseArithmeticExpression = (cssValue: number | string, base: numbe
 
   // None-matched
   if (idx === 0) {
-    return defaultValue;
+    return null;
   }
 
   // Clamp between 0 ~ base

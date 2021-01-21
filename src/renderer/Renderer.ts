@@ -19,11 +19,12 @@ abstract class Renderer {
     align = ALIGN.PREV
   }: Partial<RendererOption> = {}) {
     this._align = align;
-    this.collectPanels();
+    this._panels = [];
   }
 
   public init(flicking: Flicking) {
     this._flicking = flicking;
+    this.collectPanels();
   }
 
   public destroy(): this {
@@ -36,6 +37,16 @@ abstract class Renderer {
 
   public getPanel(index: number): Panel | null {
     return this._panels[index] || null;
+  }
+
+  public getPanelFromPosition(position: number): Panel | null {
+    for (const panel of this._panels) {
+      if (panel.include(position)) {
+        return panel;
+      }
+    }
+
+    return null;
   }
 
   public getPanelCount(): number {

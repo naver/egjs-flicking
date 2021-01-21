@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 
-import { OnChange, OnHold, OnRelease } from "@egjs/axes";
+import { OnChange, OnFinish, OnHold, OnRelease } from "@egjs/axes";
 
 import Panel from "~/core/Panel";
 import { DIRECTION } from "~/const/external";
@@ -39,28 +39,44 @@ export type ResizeEvent = {
  * @property {eg.Flicking} currentTarget Flicking instance that triggered event.<ko>이벤트를 발생시킨 Flicking의 인스턴스</ko>
  */
 export type HoldStartEvent = {
-  index: number;
-  panel: Panel | null;
   axesEvent: OnHold;
 };
 
 export type HoldEndEvent = {
-  index: number;
-  panel: Panel | null;
   axesEvent: OnRelease;
 };
 
 export type MoveStartEvent = {
-  index: number;
-  panel: Panel | null;
   isTrusted: boolean;
   holding: boolean;
   direction: ValueOf<typeof DIRECTION>;
   axesEvent: OnChange;
 };
 
+export type MoveEvent = {
+  isTrusted: boolean;
+  holding: boolean;
+  direction: ValueOf<typeof DIRECTION>;
+  axesEvent: OnChange;
+};
+
+export type MoveEndEvent = {
+  isTrusted: boolean;
+  holding: boolean;
+  direction: ValueOf<typeof DIRECTION>;
+  axesEvent: OnFinish;
+};
+
+export type ChangeEvent = {
+  index: number;
+  panel: Panel;
+  isTrusted: boolean;
+  direction: ValueOf<typeof DIRECTION>;
+  axesEvent?: OnRelease;
+};
+
 export type SelectEvent = {
   index: number;
-  panel: Panel | null;
+  panel: Panel;
   direction: ValueOf<typeof DIRECTION> | null;
 };

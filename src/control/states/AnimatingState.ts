@@ -2,84 +2,81 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { OnChange, OnFinish, OnHold } from "@egjs/axes";
 
-import State from "./State";
-import Panel from "~/core/Panel";
-import { circulate } from "../../utils";
-import { STATE_TYPE, EVENTS } from "../../consts";
-import { FlickingContext } from "../../types";
+import { STATE_TYPE } from "~/control/StateMachine";
+import State from "~/control/states/State";
+import { DIRECTION, EVENTS } from "~/const/external";
 
 class AnimatingState extends State {
-  public readonly type = STATE_TYPE.ANIMATING;
   public readonly holding = false;
   public readonly playing = true;
 
-  public onHold(e: any, { viewport, triggerEvent, transitTo }: FlickingContext): void {
-    const options = viewport.options;
-    const scrollArea = viewport.getScrollArea();
-    const scrollAreaSize = viewport.getScrollAreaSize();
-    const loopCount = Math.floor((this.lastPosition + this.delta - scrollArea.prev) / scrollAreaSize);
+  public onHold(e: OnHold): void {
+    const flicking = this._flicking;
+    const stateMachine = this._stateMachine;
 
-    const targetPanel = this.targetPanel;
-    if (options.circular && loopCount !== 0 && targetPanel) {
-      const cloneCount = viewport.panelManager.getCloneCount();
-      const originalTargetPosition = targetPanel.getPosition();
+    const isSuccess = flicking.trigger(EVENTS.HOLD_START, {
+      axesEvent: e
+    });
 
-      // cloneIndex is from -1 to cloneCount - 1
-      const newCloneIndex = circulate(targetPanel.getCloneIndex() - loopCount, -1, cloneCount - 1, true);
-      const newTargetPosition = originalTargetPosition - loopCount * scrollAreaSize;
-      const newTargetPanel = targetPanel.getIdenticalPanels()[newCloneIndex + 1].clone(newCloneIndex, true);
-
-      // Set new target panel considering looped count
-      newTargetPanel.setPosition(newTargetPosition);
-      this.targetPanel = newTargetPanel;
+    if (isSuccess) {
+      stateMachine.transitTo(STATE_TYPE.DRAGGING);
+    } else {
+      stateMachine.transitTo(STATE_TYPE.DISABLED);
     }
-
-    // Reset last position and delta
-    this.delta = 0;
-    this.lastPosition = viewport.getCameraPosition();
-
-    // Update current panel as current nearest panel
-    viewport.setCurrentPanel(viewport.getNearestPanel() as Panel);
-    triggerEvent(EVENTS.HOLD_START, e, true)
-      .onSuccess(() => {
-        transitTo(STATE_TYPE.DRAGGING);
-      })
-      .onStopped(() => {
-        transitTo(STATE_TYPE.DISABLED);
-      });
   }
 
-  public onChange(e: any, { moveCamera, transitTo }: FlickingContext): void {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  public onChange(e: OnChange): void {
+    const flicking = this._flicking;
+    const stateMachine = this._stateMachine;
+
     if (!e.delta.flick) {
       return;
     }
 
-    moveCamera(e)
-      .onStopped(() => {
-        transitTo(STATE_TYPE.DISABLED);
-      });
+    const camera = flicking.getCamera();
+    const prevPosition = camera.getPosition();
+
+    camera.lookAt(e.pos.flick);
+
+    const isSuccess = flicking.trigger(EVENTS.MOVE, {
+      isTrusted: e.isTrusted,
+      holding: this.holding,
+      direction: e.delta.flick > 0 ? DIRECTION.NEXT : DIRECTION.PREV,
+      axesEvent: e
+    });
+
+    if (!isSuccess) {
+      // Return to previous position
+      flicking.getCamera().lookAt(prevPosition);
+      stateMachine.transitTo(STATE_TYPE.DISABLED);
+    }
   }
 
-  public onFinish(e: any, { flicking, viewport, triggerEvent, transitTo }: FlickingContext) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const isTrusted = e && e.isTrusted as boolean;
+  public onFinish(e: OnFinish) {
+    const flicking = this._flicking;
+    const stateMachine = this._stateMachine;
 
-    if (viewport.options.bound) {
-      viewport.setCurrentPanel(this.targetPanel as Panel);
-    } else {
-      viewport.setCurrentPanel(viewport.getNearestPanel() as Panel);
-    }
+    // if (viewport.options.bound) {
+    //   viewport.setCurrentPanel(this.targetPanel as Panel);
+    // } else {
+    //   viewport.setCurrentPanel(viewport.getNearestPanel() as Panel);
+    // }
 
-    if (flicking.options.adaptive) {
-      viewport.updateAdaptiveSize();
-    }
+    // if (flicking.options.adaptive) {
+    //   viewport.updateAdaptiveSize();
+    // }
 
-    transitTo(STATE_TYPE.IDLE);
-    viewport.updateCameraPosition();
-    triggerEvent(EVENTS.MOVE_END, e, isTrusted, {
-      direction: this.direction
+    stateMachine.transitTo(STATE_TYPE.IDLE);
+
+    // Assure camera's at correct position
+
+    flicking.trigger(EVENTS.MOVE_END, {
+      isTrusted: e.isTrusted,
+      holding: this.holding,
+      direction: "NEXT", // FIXME:
+      axesEvent: e
     });
   }
 }

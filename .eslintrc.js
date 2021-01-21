@@ -89,6 +89,7 @@ module.exports = {
         }
       }
     ],
+    "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/member-ordering": "error",
     "@typescript-eslint/naming-convention": "off",
     "@typescript-eslint/no-empty-function": "error",

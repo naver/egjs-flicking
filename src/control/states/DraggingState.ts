@@ -9,9 +9,10 @@ import State from "~/control/states/State";
 import { DIRECTION, EVENTS } from "~/const/external";
 
 class DraggingState extends State {
-  public readonly type = STATE_TYPE.DRAGGING;
   public readonly holding = true;
   public readonly playing = true;
+
+  private _dragDelta = 0;
 
   public onChange(e: OnChange): void {
     const flicking = this._flicking;
@@ -21,20 +22,36 @@ class DraggingState extends State {
       return;
     }
 
-    flicking.getCamera().lookAt(e)
-      .onStopped(() => {
-        transitTo(STATE_TYPE.DISABLED);
-      });
+    const camera = flicking.getCamera();
+    const prevPosition = camera.getPosition();
+
+    camera.lookAt(e.pos.flick);
+
+    this._dragDelta += e.delta.flick;
+
+    const isSuccess = flicking.trigger(EVENTS.MOVE, {
+      isTrusted: e.isTrusted,
+      holding: this.holding,
+      direction: e.delta.flick > 0 ? DIRECTION.NEXT : DIRECTION.PREV,
+      axesEvent: e
+    });
+
+    if (!isSuccess) {
+      // Return to previous position
+      flicking.getCamera().lookAt(prevPosition);
+      stateMachine.transitTo(STATE_TYPE.DISABLED);
+    }
   }
 
-  public onRelease(e: any, context: FlickingContext): void {
-    const { flicking, viewport, triggerEvent, transitTo, stopCamera } = context;
+  public onRelease(e: OnRelease): void {
+    const flicking = this._flicking;
+    const stateMachine = this._stateMachine;
 
-    const delta = this.delta;
+    const delta = this._dragDelta;
     const absDelta = Math.abs(delta);
-    const options = flicking.options;
-    const horizontal = options.horizontal;
-    const moveType = viewport.moveType;
+
+    const horizontal = flicking.isHorizontal();
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const inputEvent = e.inputEvent as { velocityX: number; velocityY: number; deltaX: number; deltaY: number };
 
@@ -50,74 +67,28 @@ class DraggingState extends State {
         ? delta > 0
         : inputDelta < 0;
 
-    const swipeDistance = viewport.options.bound
-      ? Math.max(absDelta, Math.abs(inputDelta))
-      : absDelta;
-    const swipeAngle = inputEvent.deltaX
-      ? Math.abs(180 * Math.atan(inputEvent.deltaY / inputEvent.deltaX) / Math.PI)
-      : 90;
-    const belowAngleThreshold = horizontal
-      ? swipeAngle <= options.thresholdAngle
-      : swipeAngle > options.thresholdAngle;
-    const overThreshold = swipeDistance >= options.threshold
-      && belowAngleThreshold;
-
-    const moveTypeContext = {
-      viewport,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      axesEvent: e,
-      state: this,
-      swipeDistance,
-      isNextDirection
-    };
+    const overThreshold = absDelta >= flicking.getThreshold();
 
     // Update last position to cope with Axes's animating behavior
     // Axes uses start position when animation start
-    triggerEvent(EVENTS.HOLD_END, e, true);
-
-    const targetPanel = this.targetPanel;
-    if (!overThreshold && targetPanel) {
-      // Interrupted while animating
-      const interruptDestInfo = moveType.findPanelWhenInterrupted(moveTypeContext);
-
-      viewport.moveTo(
-        interruptDestInfo.panel,
-        interruptDestInfo.destPos,
-        interruptDestInfo.eventType,
-        e,
-        interruptDestInfo.duration,
-      );
-      transitTo(STATE_TYPE.ANIMATING);
-      return;
-    }
-
-    const currentPanel = viewport.getCurrentPanel();
-    const nearestPanel = viewport.getNearestPanel();
-
-    if (!currentPanel || !nearestPanel) {
-      // There're no panels
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      e.stop();
-      transitTo(STATE_TYPE.IDLE);
-      return;
-    }
-
-    const destInfo = overThreshold
-      ? moveType.findTargetPanel(moveTypeContext)
-      : moveType.findRestorePanel(moveTypeContext);
-
-    viewport.moveTo(
-      destInfo.panel,
-      destInfo.destPos,
-      destInfo.eventType,
-      e,
-      destInfo.duration,
-    ).onSuccess(() => {
-      transitTo(STATE_TYPE.ANIMATING);
-    }).onStopped(() => {
-      transitTo(STATE_TYPE.DISABLED);
-      stopCamera(e);
+    flicking.trigger(EVENTS.HOLD_END, {
+      axesEvent: e
     });
+
+    if (flicking.getRenderer().getPanelCount() <= 0) {
+      // There're no panels
+      stateMachine.transitTo(STATE_TYPE.IDLE);
+      return;
+    }
+
+    if (!overThreshold) {
+      // FIXME:
+    }
+
+    const control = flicking.getControl();
+
+    stateMachine.transitTo(STATE_TYPE.ANIMATING);
+    void control.moveToPosition(e.destPos.flick, flicking.getDuration(), true);
   }
 }
 

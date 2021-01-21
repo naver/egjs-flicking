@@ -1,9 +1,9 @@
 import "../../../css/flicking-inline.css";
-import Flicking from "~/index";
+import Flicking from "~/Flicking";
 
 class App {
   public constructor() {
-    const flicking = new Flicking("#flicking");
+    const flicking = new Flicking("#eg-flicking");
 
     document.getElementById("prev")?.addEventListener("click", () => {
       flicking.prev();

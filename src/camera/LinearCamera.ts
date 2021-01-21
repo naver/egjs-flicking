@@ -1,4 +1,4 @@
-import Camera from "./Camera";
+import Camera from "~/camera/Camera";
 import FlickingError from "~/core/FlickingError";
 import * as ERROR from "~/const/error";
 

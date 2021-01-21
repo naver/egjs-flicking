@@ -59,7 +59,6 @@ class StateMachine {
 
   public transitTo = (nextStateType: STATE_TYPE): State => {
     const flicking = this._flicking;
-    const currentState = this._state;
 
     const stateOption = { flicking, stateMachine: this };
 
@@ -82,9 +81,6 @@ class StateMachine {
         nextState = new DisabledState(stateOption);
         break;
     }
-
-    currentState.onExit(nextState);
-    nextState.onEnter(currentState);
 
     this._state = nextState;
 

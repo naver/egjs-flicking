@@ -12,13 +12,6 @@ class IdleState extends State {
   public readonly holding = false;
   public readonly playing = false;
 
-  public onEnter() {
-    this._direction = null;
-    this._targetPanel = null;
-    this._delta = 0;
-    this._lastPosition = 0;
-  }
-
   public onHold(e: OnHold): void {
     // Shouldn't do any action until any panels on flicking area
     const flicking = this._flicking;
@@ -29,11 +22,7 @@ class IdleState extends State {
       return;
     }
 
-    this._lastPosition = flicking.getCamera().getPosition();
-
     const eventSuccess = flicking.trigger(EVENTS.HOLD_START, {
-      index: flicking.getIndex(),
-      panel: flicking.getCurrentPanel(),
       axesEvent: e
     });
 
@@ -50,8 +39,6 @@ class IdleState extends State {
     const stateMachine = this._stateMachine;
 
     const eventSuccess = flicking.trigger(EVENTS.MOVE_START, {
-      index: flicking.getIndex(),
-      panel: flicking.getCurrentPanel(),
       isTrusted: e.isTrusted,
       holding: this.holding,
       direction: e.delta.flick > 0 ? DIRECTION.NEXT : DIRECTION.PREV,

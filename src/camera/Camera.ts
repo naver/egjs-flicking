@@ -1,5 +1,6 @@
 import Flicking, { FlickingOption } from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
+import Panel from "~/core/Panel";
 import { ALIGN } from "~/const/external";
 import * as ERROR from "~/const/error";
 import { checkExistence, parseAlign } from "~/utils";
@@ -39,8 +40,6 @@ abstract class Camera {
     checkExistence(viewportEl.firstElementChild, "First element child of the viewport element");
     this._el = viewportEl.firstElementChild as HTMLElement;
 
-    this.updateAlignPos();
-
     return this;
   }
 
@@ -49,20 +48,19 @@ abstract class Camera {
     return this;
   }
 
-  public getElement() {
-    return this._el;
-  }
+  public getElement() { return this._el; }
+  public getPosition() { return this._position; }
+  public getAlignPosition() { return this._alignPos; }
+  public getRange() { return this._range; }
 
-  public getPosition() {
-    return this._position;
-  }
+  public getPanelBelow(): Panel | null {
+    const flicking = this._flicking;
 
-  public getAlignPosition() {
-    return this._alignPos;
-  }
+    if (!flicking) {
+      throw new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Camera"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
+    }
 
-  public getRange() {
-    return this._range;
+    return flicking.getRenderer().getPanelFromPosition(this._position);
   }
 
   public lookAt(pos: number): this {
