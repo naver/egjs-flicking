@@ -31,6 +31,15 @@ abstract class Renderer {
     return this;
   }
 
+  // Options Getter
+  public getAlign() { return this._align; }
+
+  // Options Setter
+  public setAlign(val: FlickingOption["align"]) {
+    this._align = val;
+    this._panels.forEach(panel => panel.setAlign(val));
+  }
+
   public getPanels(): Panel[] {
     return this._panels;
   }

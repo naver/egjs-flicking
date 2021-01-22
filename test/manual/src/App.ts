@@ -1,16 +1,23 @@
 import "../../../css/flicking-inline.css";
-import Flicking from "~/Flicking";
+import Flicking, { ALIGN, EVENTS } from "~/index";
+import { ValueOf } from "~/type/internal";
 
 class App {
   public constructor() {
-    const flicking = new Flicking("#eg-flicking");
+    const flicking = new Flicking("#eg-flicking", {
+      align: ALIGN.PREV
+    });
+
+    Object.values(EVENTS).forEach((eventName: ValueOf<typeof EVENTS>) => {
+      flicking.on(eventName, event => console.log(eventName, event));
+    });
 
     document.getElementById("prev")?.addEventListener("click", () => {
-      flicking.prev();
+      flicking.prev().then(() => console.log("PREV FINISHED"));
     });
 
     document.getElementById("next")?.addEventListener("click", () => {
-      flicking.next();
+      flicking.next().then(() => console.log("NEXT FINISHED"));
     });
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access

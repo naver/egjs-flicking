@@ -2,31 +2,34 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { OnChange, OnRelease } from "@egjs/axes";
-
-import { STATE_TYPE } from "~/control/StateMachine";
 import State from "~/control/states/State";
+import { STATE_TYPE } from "~/const/internal";
 
 class DisabledState extends State {
-  public readonly type = STATE_TYPE.DISABLED;
   public readonly holding = false;
   public readonly playing = true;
 
-  public onAnimationEnd(): void {
-    this._stateMachine.transitTo(STATE_TYPE.IDLE);
+  public onAnimationEnd(ctx: Parameters<State["onAnimationEnd"]>[0]): void {
+    const { transitTo } = ctx;
+
+    transitTo(STATE_TYPE.IDLE);
   }
 
-  public onChange(e: OnChange): void {
+  public onChange(ctx: Parameters<State["onChange"]>[0]): void {
+    const { axesEvent, transitTo } = ctx;
+
     // Can stop Axes's change event
-    e.stop();
+    axesEvent.stop();
 
-    this._stateMachine.transitTo(STATE_TYPE.IDLE);
+    transitTo(STATE_TYPE.IDLE);
   }
 
-  public onRelease(e: OnRelease): void {
+  public onRelease(ctx: Parameters<State["onRelease"]>[0]): void {
+    const { axesEvent, transitTo } = ctx;
+
     // This is needed when stopped hold start event
-    if (e.delta.flick === 0) {
-      this._stateMachine.transitTo(STATE_TYPE.IDLE);
+    if (axesEvent.delta.flick === 0) {
+      transitTo(STATE_TYPE.IDLE);
     }
   }
 }

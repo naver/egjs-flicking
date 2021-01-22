@@ -6,7 +6,6 @@ import Control from "~/control/Control";
 import FlickingError from "~/core/FlickingError";
 import { clamp } from "~/utils";
 import * as ERROR from "~/const/error";
-import { DIRECTION, EVENTS } from "~/const/external";
 
 export interface SnapControlOption {
   count: number;
@@ -16,33 +15,47 @@ class SnapControl extends Control {
   // Options
   protected _count: number;
 
-  public constructor(options: SnapControlOption) {
+  public constructor({
+    count = 1
+  }: SnapControlOption) {
     super();
-
-    const { count = 1 } = options;
 
     this._count = count;
   }
 
-  public moveToPosition(position: number, duration: number, force: boolean = false) {
+  public moveToPosition(position: number, duration: number) {
     const flicking = this._flicking;
 
     if (!flicking) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Control"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING));
     }
 
+    const renderer = flicking.getRenderer();
     const camera = flicking.getCamera();
+
+    const currentPanel = renderer.getPanel(this._activeIndex);
+
     const cameraRange = camera.getRange();
-
     const clampedPos = clamp(position, cameraRange.min, cameraRange.max);
-    const panel = flicking.getRenderer().getPanelFromPosition(clampedPos);
-    console.log("moving to", panel);
+    const panelAtPosition = flicking.getRenderer().getPanelFromPosition(clampedPos);
 
-    if (!panel) {
+    if (!panelAtPosition || !currentPanel) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE));
     }
 
-    return this.moveToPanel(panel, duration, force);
+    const prevPos = currentPanel.getPosition();
+    const isOverThreshold = Math.abs(position - prevPos) >= flicking.getThreshold();
+
+    if (isOverThreshold) {
+      if (panelAtPosition.getIndex() !== currentPanel.getIndex()) {
+        return this.moveToPanel(panelAtPosition, duration);
+      } else {
+        const adjacentPanel = (position > prevPos) ? currentPanel.next() : currentPanel.prev();
+        return this.moveToPanel(adjacentPanel || currentPanel, duration);
+      }
+    } else {
+      return this.moveToPanel(currentPanel, duration);
+    }
   }
 }
 

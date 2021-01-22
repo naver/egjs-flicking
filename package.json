@@ -48,7 +48,9 @@
   },
   "license": "MIT",
   "browserslist": [
-    "last 4 version"
+    "last 2 version",
+    "ie 8-11",
+    "not op_mini all"
   ],
   "devDependencies": {
     "@daybrush/jsdoc": "^0.3.8",

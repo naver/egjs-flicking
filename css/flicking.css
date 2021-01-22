@@ -21,6 +21,12 @@
   flex-direction: column;
 }
 
+.eg-flicking-camera img {
+  user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+}
+
 .eg-flicking-panel {
   flex-shrink: 0;
   width: 100%;

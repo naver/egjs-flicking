@@ -2,11 +2,12 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { OnChange, OnRelease } from "@egjs/axes";
+import { OnRelease } from "@egjs/axes";
 
-import { STATE_TYPE } from "~/control/StateMachine";
+import Panel from "~/core/Panel";
 import State from "~/control/states/State";
 import { DIRECTION, EVENTS } from "~/const/external";
+import { STATE_TYPE } from "~/const/internal";
 
 class HoldingState extends State {
   public readonly holding = true;
@@ -14,64 +15,61 @@ class HoldingState extends State {
 
   private _releaseEvent: OnRelease | null = null;
 
-  public onChange(e: OnChange): void {
-    const flicking = this._flicking;
-    const stateMachine = this._stateMachine;
+  public onChange(ctx: Parameters<State["onChange"]>[0]): void {
+    const { flicking, axesEvent, transitTo } = ctx;
 
-    const inputEvent = e.inputEvent as { offsetX: number; offsetY: number };
+    const inputEvent = axesEvent.inputEvent as { offsetX: number; offsetY: number };
 
     const offset = flicking.options.horizontal
       ? inputEvent.offsetX
       : inputEvent.offsetY;
 
     const eventSuccess = flicking.trigger(EVENTS.MOVE_START, {
-      isTrusted: e.isTrusted,
+      isTrusted: axesEvent.isTrusted,
       holding: this.holding,
       direction: offset < 0 ? DIRECTION.NEXT : DIRECTION.PREV,
-      axesEvent: e
+      axesEvent
     });
 
     if (eventSuccess) {
       // Trigger DraggingState's onChange, to trigger "move" event immediately
-      stateMachine.transitTo(STATE_TYPE.DRAGGING)
-        .onChange(e);
+      transitTo(STATE_TYPE.DRAGGING)
+        .onChange(ctx);
     } else {
-      stateMachine.transitTo(STATE_TYPE.DISABLED);
+      transitTo(STATE_TYPE.DISABLED);
     }
   }
 
-  public onRelease(e: OnRelease): void {
-    const flicking = this._flicking;
-    const stateMachine = this._stateMachine;
+  public onRelease(ctx: Parameters<State["onRelease"]>[0]): void {
+    const { flicking, axesEvent, transitTo } = ctx;
 
     flicking.trigger(EVENTS.HOLD_END, {
-      axesEvent: e
+      axesEvent
     });
 
-    if (e.delta.flick !== 0) {
+    if (axesEvent.delta.flick !== 0) {
       // Sometimes "release" event on axes triggered before "change" event
       // Especially if user flicked panel fast in really short amount of time
       // if delta is not zero, that means above case happened.
 
       // Event flow should be HOLD_START -> MOVE_START -> MOVE -> HOLD_END
       // At least one move event should be included between holdStart and holdEnd
-      e.setTo({ flick: flicking.getCamera().getPosition() }, 0);
-      stateMachine.transitTo(STATE_TYPE.IDLE);
+      axesEvent.setTo({ flick: flicking.getCamera().getPosition() }, 0);
+      transitTo(STATE_TYPE.IDLE);
       return;
     }
 
     // Can't handle select event here,
     // As "finish" axes event happens
-    this._releaseEvent = e;
+    this._releaseEvent = axesEvent;
   }
 
-  public onFinish(): void {
-    const flicking = this._flicking;
-    const stateMachine = this._stateMachine;
+  public onFinish(ctx: Parameters<State["onFinish"]>[0]): void {
+    const { flicking, transitTo } = ctx;
 
     // Should transite to IDLE state before select event
     // As user expects hold is already finished
-    stateMachine.transitTo(STATE_TYPE.IDLE);
+    transitTo(STATE_TYPE.IDLE);
 
     if (!this._releaseEvent) {
       return;
@@ -96,10 +94,18 @@ class HoldingState extends State {
       clickedElement = srcEvent.target;
     }
 
-    const clickedPanel = flicking.getRenderer().getPanels().find(panel => panel.getElement() === clickedElement);
-    const cameraPosition = flicking.getCamera().getPosition();
+    const panels = flicking.getRenderer().getPanels();
+    let clickedPanel: Panel | null = null;
+
+    for (const panel of panels) {
+      if (panel.getElement().contains(clickedElement)) {
+        clickedPanel = panel;
+        break;
+      }
+    }
 
     if (clickedPanel) {
+      const cameraPosition = flicking.getCamera().getPosition();
       const clickedPanelPosition = clickedPanel.getPosition();
       const direction = clickedPanelPosition > cameraPosition
         ? DIRECTION.NEXT

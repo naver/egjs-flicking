@@ -15,7 +15,7 @@ class FreeControl extends Control {
     }
 
 
-    this._input.animateTo(position, duration);
+    return this._controller!.animateTo(position, duration);
   }
 }
 

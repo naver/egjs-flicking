@@ -48,6 +48,14 @@ abstract class Camera {
     return this;
   }
 
+  // Options Getter
+  public getAlign() { return this._align; }
+
+  // Options Setter
+  public setAlign(val: FlickingOption["align"]) {
+    this._align = val;
+  }
+
   public getElement() { return this._el; }
   public getPosition() { return this._position; }
   public getAlignPosition() { return this._alignPos; }

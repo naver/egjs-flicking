@@ -18,5 +18,6 @@ module.exports = {
     "@typescript-eslint/no-unsafe-call": "off",
     "@typescript-eslint/no-floating-promises": "off",
     "@jsdoc/check-indentation": "off",
+    "no-console": "off"
   }
 };

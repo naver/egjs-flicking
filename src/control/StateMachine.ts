@@ -13,72 +13,63 @@ import DisabledState from "./states/DisabledState";
 
 import Flicking from "~/Flicking";
 import State from "~/control/states/State";
-import * as AXES from "~/const/axes";
-
-export enum STATE_TYPE {
-  IDLE,
-  HOLDING,
-  DRAGGING,
-  ANIMATING,
-  DISABLED
-}
+import { AXES_EVENT, STATE_TYPE } from "~/const/internal";
 
 class StateMachine {
-  private _flicking: Flicking;
   private _state: State;
 
-  public constructor({ flicking }: { flicking: Flicking }) {
-    this._flicking = flicking;
-    this._state = new IdleState({ flicking, stateMachine: this });
+  public constructor() {
+    this._state = new IdleState();
   }
 
   public getState(): State {
     return this._state;
   }
 
-  public fire(eventType: keyof AxesEvents, e: any) {
+  public fire(eventType: keyof AxesEvents, externalCtx: {
+    flicking: Flicking;
+    axesEvent: any;
+  }) {
     const currentState = this._state;
+    const ctx = { ...externalCtx, transitTo: this.transitTo };
+
     switch (eventType) {
-      case AXES.EVENTS.HOLD:
-        currentState.onHold(e);
+      case AXES_EVENT.HOLD:
+        currentState.onHold(ctx);
         break;
-      case AXES.EVENTS.CHANGE:
-        currentState.onChange(e);
+      case AXES_EVENT.CHANGE:
+        currentState.onChange(ctx);
         break;
-      case AXES.EVENTS.RELEASE:
-        currentState.onRelease(e);
+      case AXES_EVENT.RELEASE:
+        currentState.onRelease(ctx);
         break;
-      case AXES.EVENTS.ANIMATION_END:
-        currentState.onAnimationEnd(e);
+      case AXES_EVENT.ANIMATION_END:
+        currentState.onAnimationEnd(ctx);
         break;
-      case AXES.EVENTS.FINISH:
-        currentState.onFinish(e);
+      case AXES_EVENT.FINISH:
+        currentState.onFinish(ctx);
         break;
     }
   }
 
   public transitTo = (nextStateType: STATE_TYPE): State => {
-    const flicking = this._flicking;
-
-    const stateOption = { flicking, stateMachine: this };
-
     let nextState: State;
 
     switch (nextStateType) {
       case STATE_TYPE.IDLE:
-        nextState = new IdleState(stateOption);
+        nextState = new IdleState();
         break;
       case STATE_TYPE.HOLDING:
-        nextState = new HoldingState(stateOption);
+        nextState = new HoldingState();
         break;
       case STATE_TYPE.DRAGGING:
-        nextState = new DraggingState(stateOption);
+        nextState = new DraggingState();
         break;
       case STATE_TYPE.ANIMATING:
-        nextState = new AnimatingState(stateOption);
+        nextState = new AnimatingState();
         break;
       case STATE_TYPE.DISABLED:
-        nextState = new DisabledState(stateOption);
+        nextState = new DisabledState();
         break;
     }
 

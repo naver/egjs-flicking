@@ -2,61 +2,56 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { OnChange, OnFinish, OnHold } from "@egjs/axes";
-
-import { STATE_TYPE } from "~/control/StateMachine";
 import State from "~/control/states/State";
 import { DIRECTION, EVENTS } from "~/const/external";
+import { STATE_TYPE } from "~/const/internal";
 
 class AnimatingState extends State {
   public readonly holding = false;
   public readonly playing = true;
 
-  public onHold(e: OnHold): void {
-    const flicking = this._flicking;
-    const stateMachine = this._stateMachine;
+  public onHold(ctx: Parameters<State["onHold"]>[0]): void {
+    const { flicking, axesEvent, transitTo } = ctx;
 
     const isSuccess = flicking.trigger(EVENTS.HOLD_START, {
-      axesEvent: e
+      axesEvent
     });
 
     if (isSuccess) {
-      stateMachine.transitTo(STATE_TYPE.DRAGGING);
+      transitTo(STATE_TYPE.DRAGGING);
     } else {
-      stateMachine.transitTo(STATE_TYPE.DISABLED);
+      transitTo(STATE_TYPE.DISABLED);
     }
   }
 
-  public onChange(e: OnChange): void {
-    const flicking = this._flicking;
-    const stateMachine = this._stateMachine;
+  public onChange(ctx: Parameters<State["onChange"]>[0]): void {
+    const { flicking, axesEvent, transitTo } = ctx;
 
-    if (!e.delta.flick) {
+    if (!axesEvent.delta.flick) {
       return;
     }
 
     const camera = flicking.getCamera();
     const prevPosition = camera.getPosition();
 
-    camera.lookAt(e.pos.flick);
+    camera.lookAt(axesEvent.pos.flick);
 
     const isSuccess = flicking.trigger(EVENTS.MOVE, {
-      isTrusted: e.isTrusted,
+      isTrusted: axesEvent.isTrusted,
       holding: this.holding,
-      direction: e.delta.flick > 0 ? DIRECTION.NEXT : DIRECTION.PREV,
-      axesEvent: e
+      direction: axesEvent.delta.flick > 0 ? DIRECTION.NEXT : DIRECTION.PREV,
+      axesEvent
     });
 
     if (!isSuccess) {
       // Return to previous position
       flicking.getCamera().lookAt(prevPosition);
-      stateMachine.transitTo(STATE_TYPE.DISABLED);
+      transitTo(STATE_TYPE.DISABLED);
     }
   }
 
-  public onFinish(e: OnFinish) {
-    const flicking = this._flicking;
-    const stateMachine = this._stateMachine;
+  public onFinish(ctx: Parameters<State["onFinish"]>[0]) {
+    const { flicking, axesEvent, transitTo } = ctx;
 
     // if (viewport.options.bound) {
     //   viewport.setCurrentPanel(this.targetPanel as Panel);
@@ -68,15 +63,14 @@ class AnimatingState extends State {
     //   viewport.updateAdaptiveSize();
     // }
 
-    stateMachine.transitTo(STATE_TYPE.IDLE);
+    transitTo(STATE_TYPE.IDLE);
 
     // Assure camera's at correct position
 
     flicking.trigger(EVENTS.MOVE_END, {
-      isTrusted: e.isTrusted,
-      holding: this.holding,
+      isTrusted: axesEvent.isTrusted,
       direction: "NEXT", // FIXME:
-      axesEvent: e
+      axesEvent
     });
   }
 }

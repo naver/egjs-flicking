@@ -18,12 +18,20 @@
   z-index: 1;
   white-space: nowrap;
   will-change: transform;
+  font-size: 0;
+}
+
+.eg-flicking-camera img {
+  user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
 }
 
 .eg-flicking-panel {
   display: inline-block;
   white-space: initial;
   vertical-align: top;
+  font-size: initial;
 }
 .eg-flicking-viewport.vertical-middle>.eg-flicking-camera .eg-flicking-panel {
   vertical-align: middle;

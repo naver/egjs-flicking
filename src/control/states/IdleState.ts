@@ -2,55 +2,51 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { OnChange, OnHold } from "@egjs/axes";
-
-import { STATE_TYPE } from "~/control/StateMachine";
 import State from "~/control/states/State";
 import { DIRECTION, EVENTS } from "~/const/external";
+import { STATE_TYPE } from "~/const/internal";
 
 class IdleState extends State {
   public readonly holding = false;
   public readonly playing = false;
 
-  public onHold(e: OnHold): void {
+  public onHold(ctx: Parameters<State["onHold"]>[0]): void {
     // Shouldn't do any action until any panels on flicking area
-    const flicking = this._flicking;
-    const stateMachine = this._stateMachine;
+    const { flicking, axesEvent, transitTo } = ctx;
 
     if (flicking.getPanelCount() <= 0) {
-      stateMachine.transitTo(STATE_TYPE.DISABLED);
+      transitTo(STATE_TYPE.DISABLED);
       return;
     }
 
     const eventSuccess = flicking.trigger(EVENTS.HOLD_START, {
-      axesEvent: e
+      axesEvent
     });
 
     if (eventSuccess) {
-      stateMachine.transitTo(STATE_TYPE.HOLDING);
+      transitTo(STATE_TYPE.HOLDING);
     } else {
-      stateMachine.transitTo(STATE_TYPE.DISABLED);
+      transitTo(STATE_TYPE.DISABLED);
     }
   }
 
   // By methods call
-  public onChange(e: OnChange): void {
-    const flicking = this._flicking;
-    const stateMachine = this._stateMachine;
+  public onChange(ctx: Parameters<State["onChange"]>[0]): void {
+    const { flicking, axesEvent, transitTo } = ctx;
 
     const eventSuccess = flicking.trigger(EVENTS.MOVE_START, {
-      isTrusted: e.isTrusted,
+      isTrusted: axesEvent.isTrusted,
       holding: this.holding,
-      direction: e.delta.flick > 0 ? DIRECTION.NEXT : DIRECTION.PREV,
-      axesEvent: e
+      direction: axesEvent.delta.flick > 0 ? DIRECTION.NEXT : DIRECTION.PREV,
+      axesEvent
     });
 
     if (eventSuccess) {
       // Trigger AnimatingState's onChange, to trigger "move" event immediately
-      stateMachine.transitTo(STATE_TYPE.ANIMATING)
-        .onChange(e);
+      transitTo(STATE_TYPE.ANIMATING)
+        .onChange(ctx);
     } else {
-      stateMachine.transitTo(STATE_TYPE.DISABLED);
+      transitTo(STATE_TYPE.DISABLED);
     }
   }
 }

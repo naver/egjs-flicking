@@ -2,12 +2,9 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-
-import Component from "@egjs/component";
-
 import Flicking from "~/Flicking";
 import { parseAlign } from "~/utils";
-import { EVENTS, ALIGN } from "~/const/external";
+import { ALIGN } from "~/const/external";
 import { LiteralUnion, ValueOf } from "~/type/internal";
 
 export interface PanelOption {
@@ -17,20 +14,10 @@ export interface PanelOption {
   flicking: Flicking;
 }
 
-export interface PanelEvent {
-  [EVENTS.RESIZE]: ({
-    width: number;
-    height: number;
-  });
-}
-
-class Panel extends Component {
+class Panel {
   private _flicking: Flicking;
   private _el: HTMLElement;
   private _align: PanelOption["align"];
-
-  private _prevSibling: Panel | null;
-  private _nextSibling: Panel | null;
 
   private _index: number;
   private _size: { width: number; height: number };
@@ -44,16 +31,11 @@ class Panel extends Component {
     align,
     flicking
   }: PanelOption) {
-    super();
-
     this._el = el;
     this._index = index;
     this._flicking = flicking;
 
     this._align = align;
-
-    this._prevSibling = null;
-    this._nextSibling = null;
 
     this._size = { width: 0, height: 0 };
     this._pos = { left: 0, top: 0 };
@@ -87,19 +69,21 @@ class Panel extends Component {
 
     this._updateAlignPos();
 
-    this.trigger(EVENTS.RESIZE, {
-      width: this._size.width,
-      height: this._size.height
-    });
-
     return this;
   }
 
+  // Internal States Getter
   public getElement() { return this._el; }
   public getIndex() { return this._index; }
   public getSize() { return this._size; }
   public getPosition() { return (this._flicking.isHorizontal() ? this._pos.left : this._pos.top) + this._alignPos; }
   public getMargin() { return this._margin; }
+
+  // Options Getter
+  public getAlign() { return this._align; }
+
+  // Options Getter
+  public setAlign(val: PanelOption["align"]) { this._align = val; }
 
   public include(position: number): boolean {
     const pos = this._pos;
@@ -108,12 +92,24 @@ class Panel extends Component {
     const isHorizontal = this._flicking.isHorizontal();
 
     return isHorizontal
-      ? position >= (pos.left - margin.left) && position <= (pos.left + size.width + margin.right)
-      : position >= (pos.top - margin.top) && position <= (pos.top + size.height + margin.bottom);
+      ? (position >= pos.left - margin.left) && (position <= pos.left + size.width + margin.right)
+      : (position >= pos.top - margin.top) && (position <= pos.top + size.height + margin.bottom);
   }
 
   public focus(duration?: number) {
     return this._flicking.moveTo(this._index, duration);
+  }
+
+  public prev(): Panel | null {
+    const renderer = this._flicking.getRenderer();
+
+    return renderer.getPanel(this._index - 1);
+  }
+
+  public next(): Panel | null {
+    const renderer = this._flicking.getRenderer();
+
+    return renderer.getPanel(this._index + 1);
   }
 
   private _updateAlignPos() {

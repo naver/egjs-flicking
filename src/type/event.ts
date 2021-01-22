@@ -62,7 +62,6 @@ export type MoveEvent = {
 
 export type MoveEndEvent = {
   isTrusted: boolean;
-  holding: boolean;
   direction: ValueOf<typeof DIRECTION>;
   axesEvent: OnFinish;
 };

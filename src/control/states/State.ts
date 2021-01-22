@@ -5,38 +5,50 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { OnAnimationEnd, OnChange, OnFinish, OnHold, OnRelease } from "@egjs/axes";
 
-import StateMachine from "~/control/StateMachine";
 import Flicking from "~/Flicking";
+import { STATE_TYPE } from "~/const/internal";
 
 abstract class State {
-  protected _flicking: Flicking;
-  protected _stateMachine: StateMachine;
-
   public abstract readonly holding: boolean;
   public abstract readonly playing: boolean;
 
-  public constructor({ flicking, stateMachine }: { flicking: Flicking; stateMachine: StateMachine }) {
-    this._flicking = flicking;
-    this._stateMachine = stateMachine;
-  }
-
-  public onHold(e: OnHold): void {
+  public onHold(ctx: {
+    flicking: Flicking;
+    axesEvent: OnHold;
+    transitTo: (nextState: STATE_TYPE) => State;
+  }): void {
     // DO NOTHING
   }
 
-  public onChange(e: OnChange): void {
+  public onChange(ctx: {
+    flicking: Flicking;
+    axesEvent: OnChange;
+    transitTo: (nextState: STATE_TYPE) => State;
+  }): void {
     // DO NOTHING
   }
 
-  public onRelease(e: OnRelease): void {
+  public onRelease(ctx: {
+    flicking: Flicking;
+    axesEvent: OnRelease;
+    transitTo: (nextState: STATE_TYPE) => State;
+  }): void {
     // DO NOTHING
   }
 
-  public onAnimationEnd(e: OnAnimationEnd): void {
+  public onAnimationEnd(ctx: {
+    flicking: Flicking;
+    axesEvent: OnAnimationEnd;
+    transitTo: (nextState: STATE_TYPE) => State;
+  }): void {
     // DO NOTHING
   }
 
-  public onFinish(e: OnFinish): void {
+  public onFinish(ctx: {
+    flicking: Flicking;
+    axesEvent: OnFinish;
+    transitTo: (nextState: STATE_TYPE) => State;
+  }): void {
     // DO NOTHING
   }
 }

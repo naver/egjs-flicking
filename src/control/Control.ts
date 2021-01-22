@@ -5,7 +5,7 @@
 
 import Flicking from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
-import Input from "~/control/Input";
+import AxesController from "~/control/AxesController";
 import * as ERROR from "~/const/error";
 import { DIRECTION, EVENTS } from "~/const/external";
 import { Panel } from "~/core";
@@ -13,47 +13,70 @@ import { Panel } from "~/core";
 abstract class Control {
   // Internal States
   protected _flicking: Flicking | null;
-  protected _input: Input;
+  protected _controller: AxesController | null;
   protected _activeIndex: number;
 
   public constructor() {
     this._flicking = null;
-    this._input = new Input();
+    this._controller = null;
     this._activeIndex = 0;
   }
 
   public init(flicking: Flicking): this {
     this._flicking = flicking;
-    this._input.init(flicking);
-    this._activeIndex = 0;
+    this._controller = new AxesController(flicking);
+
     return this;
   }
 
   public destroy(): this {
-    this._input.destroy();
+    this._controller?.destroy();
+
+    this._flicking = null;
+    this._controller = null;
+    this._activeIndex = 0;
+
     return this;
   }
 
+  public getController() { return this._controller; }
   public getActiveIndex() { return this._activeIndex; }
-  public isPlaying() { return this._input.getStateMachine().getState().playing; }
+  public isAnimating() { return this._controller?.getState().playing || false; }
 
-  public updateInputRange(range: { min: number; max: number }) {
-    this._input.updateRange(range);
+  public enable(): this {
+    this._controller?.enable();
+
+    return this;
   }
 
-  public async moveToPanel(panel: Panel, duration: number, force: boolean = false) {
+  public disable(): this {
+    this._controller?.disable();
+
+    return this;
+  }
+
+  public updateInput() {
+    const flicking = this._flicking;
+
+    if (!flicking) {
+      throw new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Control"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
+    }
+
+    this._controller!.update();
+  }
+
+  public async moveToPanel(panel: Panel, duration: number) {
     const flicking = this._flicking;
 
     if (!flicking) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Control"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING));
     }
 
-    if (!force && flicking.isPlaying()) {
-      return Promise.resolve();
-    }
-
     const camera = flicking.getCamera();
-    const eventSuccess = flicking.trigger(EVENTS.CHANGE, {
+
+    const triggeringEvent = panel.getIndex() !== this._activeIndex ? EVENTS.CHANGE : EVENTS.RESTORE;
+
+    const eventSuccess = flicking.trigger(triggeringEvent, {
       index: panel.getIndex(),
       panel,
       isTrusted: false,
@@ -64,17 +87,13 @@ abstract class Control {
       return Promise.resolve();
     }
 
-    if (flicking.isPlaying()) {
-      this._input.stop();
-    }
-
-    return this._input.animateTo(panel.getPosition(), duration)
+    return this._controller!.animateTo(panel.getPosition(), duration)
       .then(() => {
         this._activeIndex = panel.getIndex();
       });
   }
 
-  public abstract moveToPosition(position: number, duration: number, force: boolean);
+  public abstract moveToPosition(position: number, duration: number);
 }
 
 export default Control;
