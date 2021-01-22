@@ -5,7 +5,8 @@ import { ValueOf } from "~/type/internal";
 class App {
   public constructor() {
     const flicking = new Flicking("#eg-flicking", {
-      align: ALIGN.PREV
+      align: ALIGN.PREV,
+      bounce: "20%"
     });
 
     Object.values(EVENTS).forEach((eventName: ValueOf<typeof EVENTS>) => {

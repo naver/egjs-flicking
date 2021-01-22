@@ -19,7 +19,7 @@ export const cleanup = () => {
   });
 };
 
-export const createFlicking = (el: El | any, option: Partial<ConstructorParameters<typeof Flicking>[1]> = {}): Flicking => {
+export const createFlicking = (el: El | any, option: ConstructorParameters<typeof Flicking>[1] = {}): Flicking => {
   const sandbox = createSandbox(`flicking-${Date.now()}`);
   const element = el instanceof El ? el.el : el;
 

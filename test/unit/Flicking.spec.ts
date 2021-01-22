@@ -1,12 +1,8 @@
 import FlickingError from "~/core/FlickingError";
 import Viewport from "~/core/Viewport";
-import RawRenderer from "~/renderer/RawRenderer";
-import LinearCamera from "~/camera/LinearCamera";
-import Control from "~/control/Control";
-import { FlickingEvent } from "~/Flicking";
+import { FlickingEvent, FlickingOption } from "~/Flicking";
 import * as ERROR from "~/const/error";
-import * as OPTIONS from "~/const/option";
-import * as EVENTS from "~/const/event";
+import { ALIGN, EVENTS } from "~/const/external";
 
 import El from "./helper/El";
 import { cleanup, createFlicking } from "./helper/test-util";
@@ -61,55 +57,206 @@ describe("Flicking", () => {
 
   describe("Options", () => {
     describe("align", () => {
-      it("is null by default", () => {
+      it("is center by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
-        expect(flicking.getAlign()).to.be.null;
+        expect(flicking.getAlign()).to.equal(ALIGN.CENTER);
       });
 
       it("should override renderer & camera's align", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, {
-          align: OPTIONS.ALIGN.CENTER
+          align: ALIGN.NEXT
         });
 
-        expect(flicking.getAlign()).equals(OPTIONS.ALIGN.CENTER);
+        expect(flicking.getAlign()).equals(ALIGN.NEXT);
+        expect(flicking.getRenderer().getAlign()).equals(ALIGN.NEXT);
+        expect(flicking.getCamera().getAlign()).equals(ALIGN.NEXT);
       });
 
       it("can be changed at anytime", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, {
-          align: OPTIONS.ALIGN.CENTER
+          align: ALIGN.CENTER
         });
 
-        flicking.align = OPTIONS.ALIGN.PREV;
+        flicking.setAlign(ALIGN.PREV);
 
-        expect(flicking.align).equals(OPTIONS.ALIGN.PREV);
-        expect(flicking.renderer.align).equals(OPTIONS.ALIGN.PREV);
-        expect(flicking.camera.align).equals(OPTIONS.ALIGN.PREV);
+        expect(flicking.getAlign()).equals(ALIGN.PREV);
+        expect(flicking.getRenderer().getAlign()).equals(ALIGN.PREV);
+        expect(flicking.getCamera().getAlign()).equals(ALIGN.PREV);
       });
     });
 
-    describe("direction", () => {
-      it(`is ${OPTIONS.DIRECTION.HORIZONTAL} by default`, () => {
+    describe("defaultIndex", () => {
+      it("should be 0 by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        expect(flicking.getDefaultIndex()).to.equal(0);
+      });
+
+      it("should accept any number, even if it's bigger than actual panel length", () => {
+        // Empty flicking
+        const flicking = createFlicking(El.viewport().add(El.camera()), { defaultIndex: 2 });
+        expect(flicking.getRenderer().getPanels().length).to.equal(0);
+        expect(flicking.getDefaultIndex()).to.equal(2);
+      });
+
+      it("should locate camera at position of panel which has index equal to defaultIndex", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { defaultIndex: 1 });
+        expect(flicking.getCamera().getPosition()).not.to.equal(0);
+        expect(flicking.getCamera().getPosition()).to.equal(flicking.getRenderer().getPanel(1).getPosition());
+      });
+
+      it("should locate camera at first panel's position instead if index is out of range", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { defaultIndex: 99999 });
+        expect(flicking.getCamera().getPosition()).to.equal(flicking.getRenderer().getPanel(0).getPosition());
+      });
+    });
+
+    describe("horizontal", () => {
+      it("is true by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.direction).to.equal(OPTIONS.DIRECTION.HORIZONTAL);
+        expect(flicking.isHorizontal()).to.be.true;
       });
 
       it("can be changed on creating new instance", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, {
-          direction: OPTIONS.DIRECTION.VERTICAL
+          horizontal: false
         });
 
-        expect(flicking.direction).to.equal(OPTIONS.DIRECTION.VERTICAL);
+        expect(flicking.isHorizontal()).to.be.false;
       });
 
       it("can be changed anytime", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, {
-          direction: OPTIONS.DIRECTION.HORIZONTAL
+          horizontal: true
         });
 
-        flicking.direction = OPTIONS.DIRECTION.VERTICAL;
+        flicking.setHorizontal(false);
 
-        expect(flicking.direction).to.equal(OPTIONS.DIRECTION.VERTICAL);
+        expect(flicking.isHorizontal()).to.be.false;
+      });
+    });
+
+    describe("circular", () => {
+      it("is false by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        expect(flicking.isCircular()).to.be.false;
+      });
+    });
+
+    describe("bound", () => {
+      it("is false by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        expect(flicking.isBound()).to.be.false;
+      });
+    });
+
+    describe("adaptive", () => {
+      it("is false by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        expect(flicking.isAdaptive()).to.be.false;
+      });
+    });
+
+    describe("deceleration", () => {
+      it("is 0.0075 by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        expect(flicking.getDeceleration()).to.equal(0.0075);
+      });
+    });
+
+    describe("duration", () => {
+      it("is 500 by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        expect(flicking.getDuration()).to.equal(500);
+      });
+    });
+
+    describe("easing", () => {
+
+    });
+
+    describe("inputType", () => {
+      it("is ['mouse', 'touch'] by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        expect(flicking.getInputType()).to.deep.equal(["mouse", "touch"]);
+      });
+    });
+
+    describe("moveType", () => {
+      it("is 'snap' by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        expect(flicking.getMoveType()).to.equal("snap");
+      });
+    });
+
+    describe("threshold", () => {
+      it("is 40 by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        expect(flicking.getThreshold()).to.equal(40);
+      });
+    });
+
+    describe("interruptable", () => {
+      it("is true by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        expect(flicking.isInterruptable()).to.be.true;
+      });
+    });
+
+    describe("interruptable", () => {
+      it("is true by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        expect(flicking.isInterruptable()).to.be.true;
+      });
+    });
+
+    describe("bounce", () => {
+      it("is '50%' by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        expect(flicking.getBounce()).to.equal("50%");
+      });
+    });
+
+    describe("iOSEdgeSwipeThreshold", () => {
+      it("is 30 by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        expect(flicking.getIOSEdgeSwipeThreshold()).to.equal(30);
+      });
+    });
+
+    describe("isEqualSize", () => {
+      it("is false by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        expect(flicking.isEqualSize()).to.equal(false);
+      });
+    });
+
+    describe("isConstantSize", () => {
+      it("is false by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        expect(flicking.isConstantSize()).to.equal(false);
+      });
+    });
+
+    describe("renderOnlyVisible", () => {
+      it("is false by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        expect(flicking.isRenderOnlyVisible()).to.equal(false);
       });
     });
 
@@ -117,19 +264,19 @@ describe("Flicking", () => {
       it("is true by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.autoInit).to.be.true;
+        expect(flicking.isAutoInit()).to.be.true;
       });
 
       it("should set initialized to true", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.initialized).to.be.true;
+        expect(flicking.isInitialized()).to.be.true;
       });
 
       it("should not set initialized to true when it's set to false", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, { autoInit: false });
 
-        expect(flicking.initialized).to.be.false;
+        expect(flicking.isInitialized()).to.be.false;
       });
     });
 
@@ -137,7 +284,7 @@ describe("Flicking", () => {
       it("is true by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.autoResize).to.be.true;
+        expect(flicking.isAutoResize()).to.be.true;
       });
 
       it("should receive window resize event and emit resize event", () => {
@@ -163,31 +310,6 @@ describe("Flicking", () => {
         window.dispatchEvent(new Event("resize"));
         expect(resizeSpy.calledOnce).to.be.true;
 
-      });
-    });
-
-    describe("initialIndex", () => {
-      it("should be 0 by default", () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
-        expect(flicking.initialIndex).to.equal(0);
-      });
-
-      it("should accept any number, even if it's bigger than actual panel length", () => {
-        // Empty flicking
-        const flicking = createFlicking(El.viewport().add(El.camera()), { initialIndex: 2 });
-        expect(flicking.renderer.panels.length).to.equal(0);
-        expect(flicking.initialIndex).to.equal(2);
-      });
-
-      it("should locate camera at position of panel which has index equal to initialIndex", () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { initialIndex: 1 });
-        expect(flicking.camera.position).not.to.equal(0);
-        expect(flicking.camera.position).to.equal(flicking.renderer.panels[1].position);
-      });
-
-      it("should locate camera at first panel's position instead if index is out of range", () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { initialIndex: 99999 });
-        expect(flicking.camera.position).to.equal(flicking.renderer.firstPanel.position);
       });
     });
   });
@@ -354,16 +476,16 @@ describe("Flicking", () => {
       it("should set initialized to false", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, { autoInit: true });
 
-        expect(flicking.initialized).to.be.true;
+        expect(flicking.isInitialized()).to.be.true;
         flicking.destroy();
-        expect(flicking.initialized).to.be.false;
+        expect(flicking.isInitialized()).to.be.false;
       });
 
       it("should remove window resize event handler", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, { autoInit: false, autoResize: false });
         const resizeSpy = sinon.spy();
         flicking.resize = resizeSpy;
-        flicking.autoResize = true;
+        flicking.setAutoResize(true);
         flicking.init();
 
         resizeSpy.resetHistory();

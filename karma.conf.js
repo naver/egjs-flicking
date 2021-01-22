@@ -15,19 +15,18 @@ module.exports = config => {
     },
     files: [
       "./node_modules/hammer-simulator/index.js",
-      "./test/setup.js",
-      "./test/hammer-simulator.run.js",
+      "./test/unit/setup.js",
+      "./test/unit/hammer-simulator.run.js",
       "./src/**/*.ts",
-      "./test/**/*.ts",
-      "./test/unit/assets/*.css",
-      {pattern: "./test/unit/images/**/*.*", watched: false, included: false, served: true}
+      "./test/unit/**/*.ts"
+      // {pattern: "./test/unit/images/**/*.*", watched: false, included: false, served: true}
     ],
     preprocessors: {
       "src/**/*.ts": ["karma-typescript"],
-      "test/**/*.ts": ["karma-typescript"]
+      "test/unit/**/*.ts": ["karma-typescript"]
     },
     karmaTypescriptConfig: {
-      tsconfig: "./test/tsconfig.json",
+      tsconfig: "./test/unit/tsconfig.json",
       reports: {
         html: {
           "directory": "coverage",
@@ -51,10 +50,10 @@ module.exports = config => {
         flags: ["--window-size=400,300", "--no-sandbox", "--disable-setuid-sandbox"]
       }
     },
-    reporters: ["mocha"],
-    proxies: {
-      "/images/": "/base/test/unit/images/"
-    }
+    reporters: ["mocha"]
+    // proxies: {
+    //   "/images/": "/base/test/unit/images/"
+    // }
   };
 
   karmaConfig.browsers.push(config.chrome ? "Chrome" : "CustomChromeHeadless");

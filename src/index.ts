@@ -1,5 +1,6 @@
 import Flicking from "./Flicking";
 
+export { FlickingOption, FlickingEvent } from "./Flicking";
 export * from "./core";
 export * from "./camera";
 export * from "./control";
