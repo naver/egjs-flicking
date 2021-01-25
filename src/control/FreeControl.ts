@@ -3,12 +3,20 @@
  * egjs projects are licensed under the MIT license
  */
 import Control from "~/control/Control";
-import { requireFlicking } from "~/utils";
+import { getFlickingAttached } from "~/utils";
 
 class FreeControl extends Control {
-  @requireFlicking("Control")
   public moveToPosition(position: number, duration: number) {
-    return this._controller!.animateTo(position, duration);
+    const flicking = getFlickingAttached(this._flicking, "Control");
+
+    return this._controller.animateTo(position, duration)
+      .then(() => {
+        const panel = flicking.getCamera().getPanelBelow();
+
+        if (panel) {
+          this._activeIndex = panel.getIndex();
+        }
+      });
   }
 }
 

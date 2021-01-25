@@ -15,6 +15,7 @@
     "printsizes": "print-sizes ./dist --exclude=\\.map",
     "test": "karma start",
     "test:chrome": "karma start --chrome",
+    "test:lint": "eslint 'test/unit/**/*.ts'",
     "coverage": "karma start --coverage && print-coveralls --sort=desc",
     "lint": "eslint 'src/**/*.ts'",
     "jsdoc": "rm -rf ./doc && jsdoc -c jsdoc.json",

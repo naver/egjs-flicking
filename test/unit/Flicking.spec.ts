@@ -1,6 +1,6 @@
 import FlickingError from "~/core/FlickingError";
 import Viewport from "~/core/Viewport";
-import { FlickingEvent, FlickingOption } from "~/Flicking";
+import { FlickingEvent } from "~/Flicking";
 import * as ERROR from "~/const/error";
 import { ALIGN, EVENTS } from "~/const/external";
 

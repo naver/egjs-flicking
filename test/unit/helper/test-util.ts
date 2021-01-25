@@ -38,4 +38,12 @@ export const tick = (time) => {
   (window as any).timer.tick(time);
 };
 
+export const range = (end: number): number[] => {
+  if (!end || end <= 0) {
+    return [];
+  }
+
+  return (Array.apply(0, Array(end)) as number[]).map((_, idx) => idx);
+};
+
 export class NullClass {}

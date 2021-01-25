@@ -16,7 +16,7 @@ import { RawRenderer, Renderer, VisibleRenderer } from "./renderer";
 
 import { EVENTS, ALIGN } from "~/const/external";
 import * as ERROR from "~/const/error";
-import { getElement, isString } from "~/utils";
+import { getElement } from "~/utils";
 import { DEFAULT_MOVE_TYPE_OPTIONS, MOVE_TYPE } from "~/consts";
 import {
   FlickingStatus,
@@ -81,7 +81,7 @@ export type FlickingEvent = {
  */
 export interface FlickingOption {
   // UI / LAYOUT
-  align: LiteralUnion<ValueOf<typeof ALIGN>> | { anchor: number | string; hanger: number | string };
+  align: LiteralUnion<ValueOf<typeof ALIGN>> | number | { anchor: number | string; hanger: number | string };
   defaultIndex: number;
   horizontal: boolean;
   circular: boolean;
@@ -264,6 +264,8 @@ class Flicking extends Component<FlickingEvent> {
    * console.log(flick.moveTo); // null
    */
   public destroy(): void {
+    if (!this._initialized) return;
+
     this.off();
     window.removeEventListener("resize", this.resize);
 
@@ -649,10 +651,10 @@ class Flicking extends Component<FlickingEvent> {
     let type: MoveTypeStringOption | undefined;
     let moveTypeOptions: MoveTypeObjectOption | undefined;
 
-    if (isString(moveType) && moveType in DEFAULT_MOVE_TYPE_OPTIONS) {
+    if (typeof moveType === "string" && moveType in DEFAULT_MOVE_TYPE_OPTIONS) {
       type = moveType;
       moveTypeOptions = DEFAULT_MOVE_TYPE_OPTIONS[moveType];
-    } else if (!isString(moveType) && moveType.type && moveType.type in DEFAULT_MOVE_TYPE_OPTIONS) {
+    } else if (typeof moveType !== "string" && moveType.type && moveType.type in DEFAULT_MOVE_TYPE_OPTIONS) {
       type = moveType.type;
       moveTypeOptions = moveType;
     }

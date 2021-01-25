@@ -5,7 +5,7 @@
 import Flicking, { FlickingOption } from "~/Flicking";
 import Panel from "~/core/Panel";
 import { ALIGN } from "~/const/external";
-import { checkExistence, parseAlign, requireFlicking } from "~/utils";
+import { checkExistence, getFlickingAttached, parseAlign } from "~/utils";
 
 export interface CameraOption {
   align: FlickingOption["align"];
@@ -65,9 +65,10 @@ abstract class Camera {
   public getAlignPosition() { return this._alignPos; }
   public getRange() { return this._range; }
 
-  @requireFlicking("Camera")
   public getPanelBelow(): Panel | null {
-    return this._flicking!.getRenderer().getPanelFromPosition(this._position);
+    const flicking = getFlickingAttached(this._flicking, "Camera");
+
+    return flicking.getRenderer().getPanelFromPosition(this._position);
   }
 
   public lookAt(pos: number): this {
@@ -76,11 +77,16 @@ abstract class Camera {
     return this;
   }
 
-  @requireFlicking("Camera")
   public updateAlignPos(): this {
-    const flicking = this._flicking!;
+    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const align = this._align;
     const size = flicking.getViewport().getSize();
-    this._alignPos = parseAlign(this._align, flicking.isHorizontal() ? size.width : size.height);
+
+    const alignVal = typeof align === "object"
+      ? (align as { hanger: string | number }).hanger
+      : align;
+
+    this._alignPos = parseAlign(alignVal, flicking.isHorizontal() ? size.width : size.height);
 
     return this;
   }

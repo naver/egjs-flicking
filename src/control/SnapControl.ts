@@ -4,7 +4,7 @@
  */
 import Control from "~/control/Control";
 import FlickingError from "~/core/FlickingError";
-import { clamp, requireFlicking } from "~/utils";
+import { clamp, getFlickingAttached } from "~/utils";
 import * as ERROR from "~/const/error";
 
 export interface SnapControlOption {
@@ -23,9 +23,8 @@ class SnapControl extends Control {
     this._count = count;
   }
 
-  @requireFlicking("Control")
   public moveToPosition(position: number, duration: number) {
-    const flicking = this._flicking!;
+    const flicking = getFlickingAttached(this._flicking, "Control");
 
     const renderer = flicking.getRenderer();
     const camera = flicking.getCamera();

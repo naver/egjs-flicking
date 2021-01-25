@@ -5,20 +5,28 @@
 import Axes, { PanInput, AxesEvents, OnRelease } from "@egjs/axes";
 
 import Flicking from "~/Flicking";
+import FlickingError from "~/core/FlickingError";
 import StateMachine from "~/control/StateMachine";
 import { AXES_EVENT } from "~/const/internal";
-import { parseBounce } from "~/utils";
+import * as ERROR from "~/const/error";
+import { getFlickingAttached, parseBounce } from "~/utils";
 
 class AxesController {
-  private _flicking: Flicking;
-  private _axes: Axes;
-  private _panInput: PanInput;
+  private _flicking: Flicking | null;
+  private _axes: Axes | null;
+  private _panInput: PanInput | null;
   private _stateMachine: StateMachine;
 
   private _releaseContext: OnRelease | null;
 
-  public constructor(flicking: Flicking) {
+  public constructor() {
+    this._flicking = null;
+    this._stateMachine = new StateMachine();
+  }
+
+  public init(flicking: Flicking) {
     this._flicking = flicking;
+
     this._axes = new Axes({
       flick: {
         range: [0, 0],
@@ -35,8 +43,6 @@ class AxesController {
       iOSEdgeSwipeThreshold: flicking.getIOSEdgeSwipeThreshold(),
       scale: flicking.isHorizontal() ? [-1, 0] : [0, -1]
     });
-
-    this._stateMachine = new StateMachine();
 
     const axes = this._axes;
 
@@ -57,35 +63,35 @@ class AxesController {
   }
 
   public destroy() {
-    this._axes.destroy();
-    this._panInput.destroy();
+    this._axes?.destroy();
+    this._panInput?.destroy();
 
     return this;
   }
 
   public getAxes() { return this._axes; }
   public getState() { return this._stateMachine.getState(); }
-  public isEnabled() { return this._panInput.isEnable(); }
+  public isEnabled() { return this._panInput?.isEnable() || false; }
 
   public setReleaseContext(val: OnRelease | null) {
     this._releaseContext = val;
   }
 
   public enable(): this {
-    this._panInput.enable();
+    this._panInput?.enable();
 
     return this;
   }
 
   public disable(): this {
-    this._panInput.disable();
+    this._panInput?.disable();
 
     return this;
   }
 
   public update(): this {
-    const axes = this._axes;
-    const flicking = this._flicking;
+    const flicking = getFlickingAttached(this._flicking, "Control");
+    const axes = this._axes!;
 
     const viewportSize = flicking.getViewport().getSize();
     const cameraRange = flicking.getCamera().getRange();
@@ -101,14 +107,20 @@ class AxesController {
   }
 
   public animateTo(position: number, duration: number): Promise<void> {
+    const axes = this._axes;
+
+    if (!axes) {
+      return Promise.reject(new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Control"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING));
+    }
+
     if (this._releaseContext) {
       this._releaseContext.setTo({ flick: position }, duration);
     } else {
-      this._axes.setTo({ flick: position }, duration);
+      axes.setTo({ flick: position }, duration);
     }
 
     return new Promise(resolve => {
-      this._axes.once(AXES_EVENT.FINISH, () => resolve());
+      axes.once(AXES_EVENT.FINISH, () => resolve());
     });
   }
 }

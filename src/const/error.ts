@@ -14,9 +14,7 @@
  * @property {number} INDEX_OUT_OF_RANGE 5
  * @property {number} POSITION_NOT_REACHABLE 5
  */
-export const CODE: {
-  [key in keyof typeof MESSAGE]: number;
-} = {
+export const CODE = {
   WRONG_TYPE: 0,
   ELEMENT_NOT_FOUND: 1,
   VAL_MUST_NOT_NULL: 2,
@@ -24,13 +22,13 @@ export const CODE: {
   WRONG_OPTION: 4,
   INDEX_OUT_OF_RANGE: 5,
   POSITION_NOT_REACHABLE: 6
-};
+} as const;
 
 export const MESSAGE = {
   WRONG_TYPE: (wrongVal: any, correctTypes: string[]) => `${wrongVal}(${typeof wrongVal}) is not a ${correctTypes.map(type => `"${type}"`).join(" or ")}.`,
   ELEMENT_NOT_FOUND: (selector: string) => `Element with selector "${selector}" not found.`,
   VAL_MUST_NOT_NULL: (val: any, name: string) => `${name} should be provided. Given: ${val}`,
-  NOT_ATTACHED_TO_FLICKING: (name: any) => `${name} is not attached to the Flicking instance.`,
+  NOT_ATTACHED_TO_FLICKING: (name: string) => `${name} is not attached to the Flicking instance. "init()" should be called first.`,
   WRONG_OPTION: (optionName: string, val: any) => `Option "${optionName}" is not in correct format, given: ${val}`,
   INDEX_OUT_OF_RANGE: (val: number, min: number, max: number) => `Index "${val}" is out of range: should be between ${min} and ${max}.`,
   POSITION_NOT_REACHABLE: (position: number) => `Position "${position}" is not reachable.`

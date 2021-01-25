@@ -1,10 +1,10 @@
 import Camera from "~/camera/Camera";
-import { requireFlicking } from "~/utils";
+import { getFlickingAttached } from "~/utils";
 
 class LinearCamera extends Camera {
-  @requireFlicking("Camera")
   public updateRange() {
-    const renderer = this._flicking!.getRenderer();
+    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const renderer = flicking.getRenderer();
 
     const firstPanel = renderer.getPanel(0);
     const lastPanel = renderer.getPanel(renderer.getPanelCount() - 1);

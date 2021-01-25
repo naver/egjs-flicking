@@ -22,15 +22,6 @@ class El {
     );
   }
 
-  public get el() { return this._el; }
-
-  private _el: HTMLElement;
-
-  public constructor(type: ValueOf<typeof EL_TYPE>) {
-    this._el = document.createElement("div");
-    this._el.classList.add(type);
-  }
-
   public static viewport() {
     return new El(EL_TYPE.VIEWPORT);
   }
@@ -48,6 +39,15 @@ class El {
       el.setHeight(height);
     }
     return el;
+  }
+
+  public get el() { return this._el; }
+
+  private _el: HTMLElement;
+
+  public constructor(type: ValueOf<typeof EL_TYPE>) {
+    this._el = document.createElement("div");
+    this._el.classList.add(type);
   }
 
   public add(...els: El[]) {

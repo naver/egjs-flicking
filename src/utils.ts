@@ -2,11 +2,11 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { FlickingOption } from "~/Flicking";
+import Flicking, { FlickingOption } from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
 import * as ERROR from "~/const/error";
 import { ALIGN } from "~/const/external";
-import { Merged, ElementLike } from "~/type/internal";
+import { LiteralUnion, Merged, ValueOf } from "~/type/internal";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const merge = <From extends object, To extends object>(target: From, ...sources: To[]): Merged<From, To> => {
@@ -40,76 +40,28 @@ export const getElement = (el: HTMLElement | string | null, parent?: HTMLElement
   return targetEl;
 };
 
-
-/* eslint-disable prefer-arrow/prefer-arrow-functions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unused-vars */
-export function requireFlicking(componentName: string) {
-  return function(
-    target: any,
-    propertyKey: string,
-    descriptor: PropertyDescriptor
-  ) {
-    if (!target._flicking) {
-      throw new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING(componentName), ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
-    }
-  };
-}
-/* eslint-enable */
-
 export const checkExistence = (value: any, nameOnErrMsg: string) => {
   if (value == null) {
     throw new FlickingError(ERROR.MESSAGE.VAL_MUST_NOT_NULL(value, nameOnErrMsg), ERROR.CODE.VAL_MUST_NOT_NULL);
   }
 };
 
-export const parseElement = (element: ElementLike | ElementLike[]): HTMLElement[] => {
-  if (!Array.isArray(element)) {
-    element = [element];
-  }
-
-  const elements: HTMLElement[] = [];
-  element.forEach(el => {
-    if (isString(el)) {
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = el;
-
-      elements.push(...toArray(tempDiv.children) as HTMLElement[]);
-      while (tempDiv.firstChild) {
-        tempDiv.removeChild(tempDiv.firstChild);
-      }
-    } else {
-      elements.push(el);
-    }
-  });
-
-  return elements;
-};
-
-export const isString = (value: any): value is string => typeof value === "string";
-
-export const hasClass = (element: HTMLElement, className: string): boolean => {
-  if (element.classList) {
-    return element.classList.contains(className);
-  } else {
-    return (element.className.split(" ").indexOf(className) >= 0);
-  }
-};
-
-export const range = (end: number): number[] => {
-  if (!end || end <= 0) {
-    return [];
-  }
-
-  return (Array.apply(0, Array(end)) as number[]).map((_, idx) => idx);
-};
-
 export const clamp = (x: number, min: number, max: number) => Math.max(Math.min(x, max), min);
+
+export const getFlickingAttached = (val: Flicking | null, nameToThrowOnError: string): Flicking => {
+  if (!val) {
+    throw new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING(nameToThrowOnError), ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
+  }
+
+  return val;
+};
 
 export const toArray = <T>(iterable: ArrayLike<T>): T[] => [].slice.call(iterable) as T[];
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 export const isArray = (arr: any): boolean => arr && arr.constructor === Array;
 
-export const parseAlign = (align: FlickingOption["align"], size: number): number => {
+export const parseAlign = (align: LiteralUnion<ValueOf<typeof ALIGN>> | number, size: number): number => {
   let alignPoint: number | null;
   if (typeof align === "string") {
     switch (align) {
@@ -159,7 +111,7 @@ export const parseArithmeticExpression = (cssValue: number | string, base: numbe
   const cssRegex = /(?:(\+|\-)\s*)?(\d+(?:\.\d+)?(%|px)?)/g;
 
   if (typeof cssValue === "number") {
-    return clamp(cssValue, 0, base);
+    return cssValue;
   }
 
   let idx = 0;
@@ -199,11 +151,41 @@ export const parseArithmeticExpression = (cssValue: number | string, base: numbe
     return null;
   }
 
-  // Clamp between 0 ~ base
-  return clamp(calculatedValue, 0, base);
+  return calculatedValue;
 };
 
 export const parseCSSSizeValue = (val: string | number): string => typeof val === "string" ? val : `${val}px`;
+
+// export const hasClass = (element: HTMLElement, className: string): boolean => {
+//   if (element.classList) {
+//     return element.classList.contains(className);
+//   } else {
+//     return (element.className.split(" ").indexOf(className) >= 0);
+//   }
+// };
+
+// export const parseElement = (element: ElementLike | ElementLike[]): HTMLElement[] => {
+//   if (!Array.isArray(element)) {
+//     element = [element];
+//   }
+
+//   const elements: HTMLElement[] = [];
+//   element.forEach(el => {
+//     if (typeof el === "string") {
+//       const tempDiv = document.createElement("div");
+//       tempDiv.innerHTML = el;
+
+//       elements.push(...toArray(tempDiv.children) as HTMLElement[]);
+//       while (tempDiv.firstChild) {
+//         tempDiv.removeChild(tempDiv.firstChild);
+//       }
+//     } else {
+//       elements.push(el);
+//     }
+//   });
+
+//   return elements;
+// };
 
 // export const getProgress = (pos: number, range: number[]) => {
 //   // start, anchor, end
