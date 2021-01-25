@@ -2,13 +2,11 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-
 import Flicking from "~/Flicking";
-import FlickingError from "~/core/FlickingError";
 import AxesController from "~/control/AxesController";
-import * as ERROR from "~/const/error";
 import { DIRECTION, EVENTS } from "~/const/external";
 import { Panel } from "~/core";
+import { requireFlicking } from "~/utils";
 
 abstract class Control {
   // Internal States
@@ -21,6 +19,8 @@ abstract class Control {
     this._controller = null;
     this._activeIndex = 0;
   }
+
+  public abstract moveToPosition(position: number, duration: number): Promise<void>;
 
   public init(flicking: Flicking): this {
     this._flicking = flicking;
@@ -55,22 +55,14 @@ abstract class Control {
     return this;
   }
 
+  @requireFlicking("Control")
   public updateInput() {
-    const flicking = this._flicking;
-
-    if (!flicking) {
-      throw new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Control"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
-    }
-
     this._controller!.update();
   }
 
+  @requireFlicking("Control")
   public async moveToPanel(panel: Panel, duration: number) {
-    const flicking = this._flicking;
-
-    if (!flicking) {
-      return Promise.reject(new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Control"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING));
-    }
+    const flicking = this._flicking!;
 
     const camera = flicking.getCamera();
 
@@ -92,8 +84,6 @@ abstract class Control {
         this._activeIndex = panel.getIndex();
       });
   }
-
-  public abstract moveToPosition(position: number, duration: number);
 }
 
 export default Control;

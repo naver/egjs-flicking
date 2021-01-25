@@ -1,16 +1,10 @@
 import Camera from "~/camera/Camera";
-import FlickingError from "~/core/FlickingError";
-import * as ERROR from "~/const/error";
+import { requireFlicking } from "~/utils";
 
 class LinearCamera extends Camera {
+  @requireFlicking("Camera")
   public updateRange() {
-    const flicking = this._flicking;
-
-    if (!flicking) {
-      throw new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Camera"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
-    }
-
-    const renderer = flicking.getRenderer();
+    const renderer = this._flicking!.getRenderer();
 
     const firstPanel = renderer.getPanel(0);
     const lastPanel = renderer.getPanel(renderer.getPanelCount() - 1);

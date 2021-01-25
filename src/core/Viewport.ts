@@ -2,6 +2,8 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { parseCSSSizeValue } from "~/utils";
+
 class Viewport {
   private _el: HTMLElement;
   private _size: { width: number; height: number };
@@ -47,18 +49,10 @@ class Viewport {
   }) {
     const el = this._el;
     if (width != null) {
-      if (typeof width === "string") {
-        el.style.width = width;
-      } else {
-        el.style.width = `${width}px`;
-      }
+      el.style.width = parseCSSSizeValue(width);
     }
     if (height != null) {
-      if (typeof height === "string") {
-        el.style.height = height;
-      } else {
-        el.style.height = `${height}px`;
-      }
+      el.style.height = parseCSSSizeValue(height);
     }
     this.updateSize();
   }

@@ -1,9 +1,11 @@
+/**
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 import Flicking, { FlickingOption } from "~/Flicking";
-import FlickingError from "~/core/FlickingError";
 import Panel from "~/core/Panel";
 import { ALIGN } from "~/const/external";
-import * as ERROR from "~/const/error";
-import { checkExistence, parseAlign } from "~/utils";
+import { checkExistence, parseAlign, requireFlicking } from "~/utils";
 
 export interface CameraOption {
   align: FlickingOption["align"];
@@ -31,6 +33,8 @@ abstract class Camera {
     // Options
     this._align = align;
   }
+
+  public abstract updateRange(): this;
 
   public init(flicking: Flicking): this {
     this._flicking = flicking;
@@ -61,14 +65,9 @@ abstract class Camera {
   public getAlignPosition() { return this._alignPos; }
   public getRange() { return this._range; }
 
+  @requireFlicking("Camera")
   public getPanelBelow(): Panel | null {
-    const flicking = this._flicking;
-
-    if (!flicking) {
-      throw new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Camera"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
-    }
-
-    return flicking.getRenderer().getPanelFromPosition(this._position);
+    return this._flicking!.getRenderer().getPanelFromPosition(this._position);
   }
 
   public lookAt(pos: number): this {
@@ -77,14 +76,11 @@ abstract class Camera {
     return this;
   }
 
+  @requireFlicking("Camera")
   public updateAlignPos(): this {
-    const flicking = this._flicking;
-
-    if (!flicking) {
-      throw new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Camera"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
-    }
-
-    this._alignPos = parseAlign(this._align, flicking.getViewport().getSize().width);
+    const flicking = this._flicking!;
+    const size = flicking.getViewport().getSize();
+    this._alignPos = parseAlign(this._align, flicking.isHorizontal() ? size.width : size.height);
 
     return this;
   }
@@ -94,8 +90,6 @@ abstract class Camera {
 
     el.style.transform = `translate(${-(this._position - this._alignPos)}px)`;
   }
-
-  public abstract updateRange(): this;
 }
 
 export default Camera;

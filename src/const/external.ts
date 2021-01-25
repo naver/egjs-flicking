@@ -16,21 +16,7 @@
  * import { EVENTS } from "@egjs/flicking";
  * EVENTS.MOVE_START; // "MOVE_START"
  */
-export const EVENTS: {
-  READY: "ready";
-  RESIZE: "resize";
-  HOLD_START: "holdStart";
-  HOLD_END: "holdEnd";
-  MOVE_START: "moveStart";
-  MOVE: "move";
-  MOVE_END: "moveEnd";
-  CHANGE: "change";
-  RESTORE: "restore";
-  SELECT: "select";
-  NEED_PANEL: "needPanel";
-  VISIBLE_CHANGE: "visibleChange";
-  CONTENT_ERROR: "contentError";
-} = {
+export const EVENTS = {
   READY: "ready",
   RESIZE: "resize",
   HOLD_START: "holdStart",
@@ -44,22 +30,15 @@ export const EVENTS: {
   NEED_PANEL: "needPanel",
   VISIBLE_CHANGE: "visibleChange",
   CONTENT_ERROR: "contentError"
-};
+} as const;
 
-export const ALIGN: {
-  PREV: "prev";
-  CENTER: "center";
-  NEXT: "next";
-} = {
+export const ALIGN = {
   PREV: "prev",
   CENTER: "center",
   NEXT: "next"
-};
+} as const;
 
-export const DIRECTION: {
-  PREV: "PREV";
-  NEXT: "NEXT";
-} = {
+export const DIRECTION = {
   PREV: "PREV",
   NEXT: "NEXT"
-};
+} as const;

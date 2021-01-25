@@ -90,7 +90,40 @@ module.exports = {
       }
     ],
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/member-ordering": "error",
+    "@typescript-eslint/member-ordering": ["error", {
+      "default": [
+        // Index signature
+        "signature",
+
+        // Static
+        "public-static-method",
+        "protected-static-method",
+        "private-static-method",
+
+        "public-static-field",
+        "protected-static-field",
+        "private-static-field",
+
+        "public-abstract-field",
+        "protected-abstract-field",
+        "private-abstract-field",
+
+        "public-instance-field",
+        "protected-instance-field",
+        "private-instance-field",
+
+        "constructor",
+
+        // Methods
+        "public-abstract-method",
+        "protected-abstract-method",
+        "private-abstract-method",
+
+        "public-instance-method",
+        "protected-instance-method",
+        "private-instance-method"
+      ]
+    }],
     "@typescript-eslint/naming-convention": "off",
     "@typescript-eslint/no-empty-function": "error",
     "@typescript-eslint/no-empty-interface": "warn",

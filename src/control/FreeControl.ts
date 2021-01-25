@@ -3,18 +3,11 @@
  * egjs projects are licensed under the MIT license
  */
 import Control from "~/control/Control";
-import FlickingError from "~/core/FlickingError";
-import * as ERROR from "~/const/error";
+import { requireFlicking } from "~/utils";
 
 class FreeControl extends Control {
+  @requireFlicking("Control")
   public moveToPosition(position: number, duration: number) {
-    const flicking = this._flicking;
-
-    if (!flicking) {
-      return Promise.reject(new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Control"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING));
-    }
-
-
     return this._controller!.animateTo(position, duration);
   }
 }

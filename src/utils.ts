@@ -2,7 +2,6 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-
 import { FlickingOption } from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
 import * as ERROR from "~/const/error";
@@ -40,6 +39,21 @@ export const getElement = (el: HTMLElement | string | null, parent?: HTMLElement
 
   return targetEl;
 };
+
+
+/* eslint-disable prefer-arrow/prefer-arrow-functions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unused-vars */
+export function requireFlicking(componentName: string) {
+  return function(
+    target: any,
+    propertyKey: string,
+    descriptor: PropertyDescriptor
+  ) {
+    if (!target._flicking) {
+      throw new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING(componentName), ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
+    }
+  };
+}
+/* eslint-enable */
 
 export const checkExistence = (value: any, nameOnErrMsg: string) => {
   if (value == null) {
@@ -188,6 +202,8 @@ export const parseArithmeticExpression = (cssValue: number | string, base: numbe
   // Clamp between 0 ~ base
   return clamp(calculatedValue, 0, base);
 };
+
+export const parseCSSSizeValue = (val: string | number): string => typeof val === "string" ? val : `${val}px`;
 
 // export const getProgress = (pos: number, range: number[]) => {
 //   // start, anchor, end
