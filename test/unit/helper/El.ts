@@ -1,9 +1,9 @@
 import { ValueOf } from "~/type/internal";
 
-// Conveyer Element
+// Flicking Element
 class El {
   /**
-   * Very Basic Structure of the Conveyer
+   * Very Basic Structure of the Flicking
    *
    * @example
    * - Viewport
@@ -85,7 +85,7 @@ class El {
 export default El;
 
 export const EL_TYPE = {
-  VIEWPORT: "conveyer-viewport",
-  CAMERA: "conveyer-camera",
-  PANEL: "conveyer-panel"
+  VIEWPORT: "flicking-viewport",
+  CAMERA: "flicking-camera",
+  PANEL: "flicking-panel"
 };

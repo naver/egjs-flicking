@@ -17,7 +17,7 @@
   flex-direction: row;
   z-index: 1;
 }
-.eg-flicking-viewport-vertical>.conveyer-camera {
+.eg-flicking-viewport-vertical>.flicking-camera {
   flex-direction: column;
 }
 

@@ -31,8 +31,8 @@ class Viewport {
   }
 
   /**
-   * Change viewport's size. This will change the actual size of `.conveyer-viewport` element by changing its CSS width/height property.
-   * You must call {@link Conveyer#resize} after this to take effect.
+   * Change viewport's size. This will change the actual size of `.flicking-viewport` element by changing its CSS width/height property.
+   * You must call {@link Flicking#resize} after this to take effect.
    *
    * @param {object} [size] New viewport size
    * @param {number|string} [size.width] CSS string or number(in px)
