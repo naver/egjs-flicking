@@ -6,8 +6,9 @@ import { OnRelease } from "@egjs/axes";
 
 import Panel from "~/core/Panel";
 import State from "~/control/states/State";
-import { DIRECTION, EVENTS } from "~/const/external";
+import { EVENTS } from "~/const/external";
 import { STATE_TYPE } from "~/const/internal";
+import { getDirection } from "~/utils";
 
 class HoldingState extends State {
   public readonly holding = true;
@@ -27,7 +28,7 @@ class HoldingState extends State {
     const eventSuccess = flicking.trigger(EVENTS.MOVE_START, {
       isTrusted: axesEvent.isTrusted,
       holding: this.holding,
-      direction: offset < 0 ? DIRECTION.NEXT : DIRECTION.PREV,
+      direction: getDirection(0, offset),
       axesEvent
     });
 
@@ -80,19 +81,18 @@ class HoldingState extends State {
     const releaseEvent = this._releaseEvent;
 
     // Static click
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
     const srcEvent = releaseEvent.inputEvent.srcEvent;
 
     let clickedElement: HTMLElement;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (srcEvent.type === "touchend") {
       const touchEvent = srcEvent as TouchEvent;
       const touch = touchEvent.changedTouches[0];
       clickedElement = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement;
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       clickedElement = srcEvent.target;
     }
+    /* eslint-enable */
 
     const panels = flicking.getRenderer().getPanels();
     let clickedPanel: Panel | null = null;
@@ -107,16 +107,12 @@ class HoldingState extends State {
     if (clickedPanel) {
       const cameraPosition = flicking.getCamera().getPosition();
       const clickedPanelPosition = clickedPanel.getPosition();
-      const direction = clickedPanelPosition > cameraPosition
-        ? DIRECTION.NEXT
-        : clickedPanelPosition < cameraPosition
-          ? DIRECTION.PREV
-          : null;
 
       flicking.trigger(EVENTS.SELECT, {
         index: clickedPanel.getIndex(),
         panel: clickedPanel,
-        direction // Direction to the clicked panel
+        // Direction to the clicked panel
+        direction: getDirection(cameraPosition, clickedPanelPosition)
       });
     }
   }

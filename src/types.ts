@@ -495,7 +495,14 @@ export type ContentErrorEvent = {
 };
 
 export type ReadyEvent = void;
-export type ResizeEvent = {
+
+export type BeforeResizeEvent = {
+  width: number;
+  height: number;
+  element: HTMLElement;
+};
+
+export type AfterResizeEvent = {
   width: number;
   height: number;
   prev: {

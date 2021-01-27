@@ -2,10 +2,13 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { OnRelease } from "@egjs/axes";
+
 import Control from "~/control/Control";
 import FlickingError from "~/core/FlickingError";
 import { clamp, getFlickingAttached } from "~/utils";
 import * as ERROR from "~/const/error";
+import { Panel } from "~/core";
 
 export interface SnapControlOption {
   count: number;
@@ -23,7 +26,7 @@ class SnapControl extends Control {
     this._count = count;
   }
 
-  public moveToPosition(position: number, duration: number) {
+  public moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
     const flicking = getFlickingAttached(this._flicking, "Control");
 
     const renderer = flicking.getRenderer();
@@ -42,16 +45,20 @@ class SnapControl extends Control {
     const prevPos = currentPanel.getPosition();
     const isOverThreshold = Math.abs(position - prevPos) >= flicking.getThreshold();
 
+    let targetPanel: Panel;
+
     if (isOverThreshold) {
       if (panelAtPosition.getIndex() !== currentPanel.getIndex()) {
-        return this.moveToPanel(panelAtPosition, duration);
+        targetPanel = panelAtPosition;
       } else {
         const adjacentPanel = (position > prevPos) ? currentPanel.next() : currentPanel.prev();
-        return this.moveToPanel(adjacentPanel || currentPanel, duration);
+        targetPanel = adjacentPanel || currentPanel;
       }
     } else {
-      return this.moveToPanel(currentPanel, duration);
+      targetPanel = currentPanel;
     }
+
+    return this.moveToPanel(targetPanel, duration, axesEvent);
   }
 }
 

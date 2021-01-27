@@ -25,12 +25,12 @@ header {
   margin-right: auto;
 }
 
-#eg-flicking {
+#flicking {
   width: 100%;
   background-color: #435253;
 }
 
-.eg-flicking-panel {
+.flicking-panel {
   width: 300px;
   background-color: #369;
   padding: 10px;

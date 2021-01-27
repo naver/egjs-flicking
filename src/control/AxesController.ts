@@ -17,10 +17,11 @@ class AxesController {
   private _panInput: PanInput | null;
   private _stateMachine: StateMachine;
 
-  private _releaseContext: OnRelease | null;
+  private _animatingContext: { start: number; end: number };
 
   public constructor() {
     this._flicking = null;
+    this._animatingContext = { start: 0, end: 0 };
     this._stateMachine = new StateMachine();
   }
 
@@ -58,8 +59,6 @@ class AxesController {
         });
       });
     }
-
-    this._releaseContext = null;
   }
 
   public destroy() {
@@ -71,11 +70,8 @@ class AxesController {
 
   public getAxes() { return this._axes; }
   public getState() { return this._stateMachine.getState(); }
+  public getAnimatingContext() { return this._animatingContext; }
   public isEnabled() { return this._panInput?.isEnable() || false; }
-
-  public setReleaseContext(val: OnRelease | null) {
-    this._releaseContext = val;
-  }
 
   public enable(): this {
     this._panInput?.enable();
@@ -106,22 +102,43 @@ class AxesController {
     return this;
   }
 
-  public animateTo(position: number, duration: number): Promise<void> {
+  public animateTo(position: number, duration: number, axesEvent?: OnRelease): Promise<void> {
     const axes = this._axes;
 
     if (!axes) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Control"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING));
     }
 
-    if (this._releaseContext) {
-      this._releaseContext.setTo({ flick: position }, duration);
-    } else {
-      axes.setTo({ flick: position }, duration);
-    }
+    this._animatingContext = {
+      start: axes.get(["flick"]).flick,
+      end: position
+    };
 
-    return new Promise(resolve => {
-      axes.once(AXES_EVENT.FINISH, () => resolve());
-    });
+    const animate = () => {
+      axes.once(AXES_EVENT.FINISH, () => {
+        this._animatingContext = { start: 0, end: 0 };
+      });
+
+      if (axesEvent) {
+        axesEvent.setTo({ flick: position }, duration);
+      } else {
+        axes.setTo({ flick: position }, duration);
+      }
+    };
+
+    if (duration === 0) {
+      animate();
+
+      return Promise.resolve();
+    } else {
+      return new Promise(resolve => {
+        axes.once(AXES_EVENT.FINISH, () => {
+          resolve();
+        });
+
+        animate();
+      });
+    }
   }
 }
 

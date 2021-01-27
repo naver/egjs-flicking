@@ -5,6 +5,7 @@
 import State from "~/control/states/State";
 import { DIRECTION, EVENTS } from "~/const/external";
 import { STATE_TYPE } from "~/const/internal";
+import { getDirection } from "~/utils";
 
 class AnimatingState extends State {
   public readonly holding = false;
@@ -67,9 +68,12 @@ class AnimatingState extends State {
 
     // Assure camera's at correct position
 
+    const controller = flicking.getControl().getController();
+    const animatingContext = controller.getAnimatingContext();
+
     flicking.trigger(EVENTS.MOVE_END, {
       isTrusted: axesEvent.isTrusted,
-      direction: "NEXT", // FIXME:
+      direction: getDirection(animatingContext.start, animatingContext.end),
       axesEvent
     });
   }

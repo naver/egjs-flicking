@@ -1,5 +1,12 @@
-import Flicking from "~/Flicking";
+import Panel, { PanelOption } from "~/core/Panel";
+import Flicking, { FlickingOptions } from "~/Flicking";
+import { ALIGN } from "~/const/external";
+
 import El from "./El";
+import { merge } from "~/utils";
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+declare let Simulator: any;
 
 export const createSandbox = (id: string): HTMLElement => {
   const tmp = document.createElement("div");
@@ -34,6 +41,14 @@ export const createFlicking = (el: El | any, option: ConstructorParameters<typeo
   return flicking;
 };
 
+export const createPanel = (el: El, panelOption: Partial<PanelOption> = {}, flickingOption: Partial<FlickingOptions> = {}): Panel => {
+  const flicking = createFlicking(El.viewport().add(El.camera()), flickingOption);
+
+  flicking.getCamera().getElement().appendChild(el.el);
+
+  return new Panel({ el: el.el, align: ALIGN.CENTER, index: 0, flicking, ...panelOption });
+};
+
 export const tick = (time) => {
   (window as any).timer.tick(time);
 };
@@ -45,5 +60,25 @@ export const range = (end: number): number[] => {
 
   return (Array.apply(0, Array(end)) as number[]).map((_, idx) => idx);
 };
+
+export const simulate = (el: HTMLElement, option: Partial<{
+  pos: [number, number];
+  deltaX: number;
+  deltaY: number;
+  duration: number;
+  easing: string;
+}> = {}, time: number = 10000): Promise<void> => (
+  new Promise<void>(resolve => {
+    Simulator.gestures.pan(el, merge({
+      pos: [el.offsetLeft / 2, el.offsetTop / 2],
+      deltaX: 0,
+      deltaY: 0,
+      duration: 500,
+      easing: "linear"
+    }, option), resolve);
+
+    tick(time);
+  })
+);
 
 export class NullClass {}

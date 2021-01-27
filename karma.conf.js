@@ -17,6 +17,7 @@ module.exports = config => {
       "./node_modules/hammer-simulator/index.js",
       "./test/unit/setup.js",
       "./test/unit/hammer-simulator.run.js",
+      "./css/flicking.css",
       "./src/**/*.ts",
       "./test/unit/**/*.ts"
       // {pattern: "./test/unit/images/**/*.*", watched: false, included: false, served: true}

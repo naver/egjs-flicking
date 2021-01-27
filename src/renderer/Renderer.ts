@@ -1,15 +1,15 @@
-import Flicking, { FlickingOption } from "~/Flicking";
+import Flicking, { FlickingOptions } from "~/Flicking";
 import Panel from "~/core/Panel";
 import { toArray } from "~/utils";
 import { ALIGN } from "~/const/external";
 
 export interface RendererOption {
-  align: FlickingOption["align"];
+  align: FlickingOptions["align"];
 }
 
 abstract class Renderer {
   // Options
-  protected _align: FlickingOption["align"];
+  protected _align: FlickingOptions["align"];
 
   // Internal States
   protected _flicking: Flicking;
@@ -35,7 +35,7 @@ abstract class Renderer {
   public getAlign() { return this._align; }
 
   // Options Setter
-  public setAlign(val: FlickingOption["align"]) {
+  public setAlign(val: FlickingOptions["align"]) {
     this._align = val;
     this._panels.forEach(panel => panel.setAlign(val));
   }

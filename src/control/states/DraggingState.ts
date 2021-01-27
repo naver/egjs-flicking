@@ -51,14 +51,13 @@ class DraggingState extends State {
       return;
     }
 
-    const control = flicking.getControl();
-    const controller = control.getController()!;
-
     transitTo(STATE_TYPE.ANIMATING);
 
-    controller.setReleaseContext(axesEvent);
-    control.moveToPosition(axesEvent.destPos.flick, Math.max(axesEvent.duration, flicking.getDuration()));
-    controller.setReleaseContext(null);
+    const control = flicking.getControl();
+    const position = axesEvent.destPos.flick;
+    const duration = Math.max(axesEvent.duration, flicking.getDuration());
+
+    void control.moveToPosition(position, duration, axesEvent);
   }
 }
 

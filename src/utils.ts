@@ -2,10 +2,10 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Flicking, { FlickingOption } from "~/Flicking";
+import Flicking, { FlickingOptions } from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
 import * as ERROR from "~/const/error";
-import { ALIGN } from "~/const/external";
+import { ALIGN, DIRECTION } from "~/const/external";
 import { LiteralUnion, Merged, ValueOf } from "~/type/internal";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -87,7 +87,7 @@ export const parseAlign = (align: LiteralUnion<ValueOf<typeof ALIGN>> | number, 
   return alignPoint;
 };
 
-export const parseBounce = (bounce: FlickingOption["bounce"], size: number): number[] => {
+export const parseBounce = (bounce: FlickingOptions["bounce"], size: number): number[] => {
   let parsedBounce: Array<number | null>;
 
   if (isArray(bounce)) {
@@ -155,6 +155,11 @@ export const parseArithmeticExpression = (cssValue: number | string, base: numbe
 };
 
 export const parseCSSSizeValue = (val: string | number): string => typeof val === "string" ? val : `${val}px`;
+
+export const getDirection = (start: number, end: number): ValueOf<typeof DIRECTION> => {
+  if (start === end) return DIRECTION.NONE;
+  return start < end ? DIRECTION.NEXT : DIRECTION.PREV;
+};
 
 // export const hasClass = (element: HTMLElement, className: string): boolean => {
 //   if (element.classList) {

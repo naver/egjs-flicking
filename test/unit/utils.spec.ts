@@ -9,12 +9,13 @@ import {
   parseAlign,
   parseArithmeticExpression,
   parseBounce,
-  parseCSSSizeValue
+  parseCSSSizeValue,
+  getDirection
 } from "~/utils";
 import Flicking from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
 import * as ERROR from "~/const/error";
-import { ALIGN } from "~/const/external";
+import { ALIGN, DIRECTION } from "~/const/external";
 
 import El from "./helper/El";
 import { cleanup, createFlicking, createSandbox, NullClass, range } from "./helper/test-util";
@@ -338,6 +339,29 @@ describe("Util Functions", () => {
       expect(parseCSSSizeValue(0)).to.equal("0px");
       expect(parseCSSSizeValue(24)).to.equal("24px");
       expect(parseCSSSizeValue(-100)).to.equal("-100px");
+    });
+  });
+
+  describe("getDirection", () => {
+    it(`should retrun ${DIRECTION.NONE} when start equals end`, () => {
+      expect(getDirection(0, 0)).to.equal(DIRECTION.NONE);
+      expect(getDirection(100, 100)).to.equal(DIRECTION.NONE);
+      expect(getDirection(-1, -1)).to.equal(DIRECTION.NONE);
+      expect(getDirection(-0, 0)).to.equal(DIRECTION.NONE);
+    });
+
+    it(`should retrun ${DIRECTION.NEXT} when end is bigger than start`, () => {
+      expect(getDirection(0, 0.1)).to.equal(DIRECTION.NEXT);
+      expect(getDirection(100, 500)).to.equal(DIRECTION.NEXT);
+      expect(getDirection(-1, 0)).to.equal(DIRECTION.NEXT);
+      expect(getDirection(-100, 100)).to.equal(DIRECTION.NEXT);
+    });
+
+    it(`should retrun ${DIRECTION.PREV} when end is smaller than start`, () => {
+      expect(getDirection(0.1, 0)).to.equal(DIRECTION.PREV);
+      expect(getDirection(500, 100)).to.equal(DIRECTION.PREV);
+      expect(getDirection(0, -1)).to.equal(DIRECTION.PREV);
+      expect(getDirection(100, -100)).to.equal(DIRECTION.PREV);
     });
   });
 });

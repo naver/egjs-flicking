@@ -2,14 +2,13 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { OnChange, OnFinish, OnHold, OnRelease } from "@egjs/axes";
 
 import Panel from "~/core/Panel";
 import { DIRECTION } from "~/const/external";
 import { ValueOf } from "~/type/internal";
 
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
 export type ReadyEvent = void;
 
 export type ResizeEvent = {
@@ -67,6 +66,14 @@ export type MoveEndEvent = {
 };
 
 export type ChangeEvent = {
+  index: number;
+  panel: Panel;
+  isTrusted: boolean;
+  direction: ValueOf<typeof DIRECTION>;
+  axesEvent?: OnRelease;
+};
+
+export type RestoreEvent = {
   index: number;
   panel: Panel;
   isTrusted: boolean;

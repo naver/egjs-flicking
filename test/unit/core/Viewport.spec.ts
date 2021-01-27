@@ -3,7 +3,7 @@ import El from "../helper/El";
 import { cleanup, createSandbox } from "../helper/test-util";
 
 describe("Viewport", () => {
-  describe("properties", () => {
+  describe("Properties", () => {
     let container: HTMLElement;
 
     beforeEach(() => {

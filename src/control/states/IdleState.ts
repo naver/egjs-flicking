@@ -3,8 +3,9 @@
  * egjs projects are licensed under the MIT license
  */
 import State from "~/control/states/State";
-import { DIRECTION, EVENTS } from "~/const/external";
+import { EVENTS } from "~/const/external";
 import { STATE_TYPE } from "~/const/internal";
+import { getDirection } from "~/utils";
 
 class IdleState extends State {
   public readonly holding = false;
@@ -33,11 +34,13 @@ class IdleState extends State {
   // By methods call
   public onChange(ctx: Parameters<State["onChange"]>[0]): void {
     const { flicking, axesEvent, transitTo } = ctx;
+    const controller = flicking.getControl().getController();
+    const animatingContext = controller.getAnimatingContext();
 
     const eventSuccess = flicking.trigger(EVENTS.MOVE_START, {
       isTrusted: axesEvent.isTrusted,
       holding: this.holding,
-      direction: axesEvent.delta.flick > 0 ? DIRECTION.NEXT : DIRECTION.PREV,
+      direction: getDirection(animatingContext.start, animatingContext.end),
       axesEvent
     });
 

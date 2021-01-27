@@ -2,18 +2,18 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Flicking, { FlickingOption } from "~/Flicking";
+import Flicking, { FlickingOptions } from "~/Flicking";
 import Panel from "~/core/Panel";
 import { ALIGN } from "~/const/external";
 import { checkExistence, getFlickingAttached, parseAlign } from "~/utils";
 
 export interface CameraOption {
-  align: FlickingOption["align"];
+  align: FlickingOptions["align"];
 }
 
 abstract class Camera {
   // Options
-  protected _align: FlickingOption["align"];
+  protected _align: FlickingOptions["align"];
 
   // Internal states
   protected _flicking: Flicking | null;
@@ -56,7 +56,7 @@ abstract class Camera {
   public getAlign() { return this._align; }
 
   // Options Setter
-  public setAlign(val: FlickingOption["align"]) {
+  public setAlign(val: FlickingOptions["align"]) {
     this._align = val;
   }
 

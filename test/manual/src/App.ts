@@ -4,7 +4,7 @@ import { ValueOf } from "~/type/internal";
 
 class App {
   public constructor() {
-    const flicking = new Flicking("#eg-flicking", {
+    const flicking = new Flicking("#flicking", {
       align: ALIGN.PREV,
       bounce: "20%"
     });
