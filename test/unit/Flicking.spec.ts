@@ -585,7 +585,7 @@ describe("Flicking", () => {
         expect(eventsFired).to.deep.equal(expectedEventOrder);
       });
 
-      describe("moveTo", () => {
+      describe("moveTo's event order", () => {
         it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
           const expectedEventOrder = [
             EVENTS.CHANGE,
@@ -620,7 +620,7 @@ describe("Flicking", () => {
         });
       });
 
-      describe("prev", () => {
+      describe("prev's event order", () => {
         it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
           const expectedEventOrder = [
             EVENTS.CHANGE,
@@ -655,7 +655,7 @@ describe("Flicking", () => {
         });
       });
 
-      describe("next", () => {
+      describe("next's event order", () => {
         it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
           const expectedEventOrder = [
             EVENTS.CHANGE,

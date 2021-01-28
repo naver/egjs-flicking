@@ -123,6 +123,37 @@ describe("Panel", () => {
       });
     });
 
+    describe("isRemoved", () => {
+      it("should return true if the panel element is removed", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const panel = flicking.getPanel(0);
+
+        panel.getElement().remove();
+
+        expect(panel.isRemoved()).to.be.true;
+        expect(panel.getElement().parentElement).not.equals(flicking.getCamera().getElement());
+      });
+
+      it("should return true if the panel element is not attached to camera element", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const panel = flicking.getPanel(0);
+
+        // Append to viewport element
+        flicking.getElement().appendChild(panel.getElement());
+
+        expect(panel.isRemoved()).to.be.true;
+        expect(panel.getElement().parentElement).not.equals(flicking.getCamera().getElement());
+      });
+
+      it("should return false if the panel element is attached to camera element", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const panel = flicking.getPanel(0);
+
+        expect(panel.isRemoved()).to.be.false;
+        expect(panel.getElement().parentElement).to.equal(flicking.getCamera().getElement());
+      });
+    });
+
     describe("include", () => {
       it("should return true when given position is inside panel", () => {
         const panel = createPanel(El.panel().setWidth(1000).setHeight(1000));
@@ -232,6 +263,38 @@ describe("Panel", () => {
       it("should return null when called from last panel", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
         expect(flicking.getPanel(2).next()).to.be.null;
+      });
+    });
+
+    describe("increaseIndex", () => {
+      it("should increase panel's index by given value", () => {
+        expect(createPanel(El.panel(), { index: 0 }).increaeIndex(5).getIndex()).to.equal(5);
+        expect(createPanel(El.panel(), { index: 3 }).increaeIndex(8).getIndex()).to.equal(11);
+        expect(createPanel(El.panel(), { index: 1 }).increaeIndex(0).getIndex()).to.equal(1);
+        expect(createPanel(El.panel(), { index: 10 }).increaeIndex(1).getIndex()).to.equal(11);
+      });
+
+      it("should not increase the panel's index if the given value is a negative number", () => {
+        expect(createPanel(El.panel(), { index: 0 }).increaeIndex(-1).getIndex()).to.equal(0);
+        expect(createPanel(El.panel(), { index: 3 }).increaeIndex(-100).getIndex()).to.equal(3);
+        expect(createPanel(El.panel(), { index: 1 }).increaeIndex(-5).getIndex()).to.equal(1);
+        expect(createPanel(El.panel(), { index: 10 }).increaeIndex(-99).getIndex()).to.equal(10);
+      });
+    });
+
+    describe("decreaseIndex", () => {
+      it("should decrease panel's index by given value", () => {
+        expect(createPanel(El.panel(), { index: 5 }).decreaseIndex(5).getIndex()).to.equal(0);
+        expect(createPanel(El.panel(), { index: 10 }).decreaseIndex(8).getIndex()).to.equal(2);
+        expect(createPanel(El.panel(), { index: 1 }).decreaseIndex(0).getIndex()).to.equal(1);
+        expect(createPanel(El.panel(), { index: 10 }).decreaseIndex(1).getIndex()).to.equal(9);
+      });
+
+      it("should not decrease the panel's index if the given value is a negative number", () => {
+        expect(createPanel(El.panel(), { index: 0 }).decreaseIndex(-1).getIndex()).to.equal(0);
+        expect(createPanel(El.panel(), { index: 3 }).decreaseIndex(-100).getIndex()).to.equal(3);
+        expect(createPanel(El.panel(), { index: 1 }).decreaseIndex(-5).getIndex()).to.equal(1);
+        expect(createPanel(El.panel(), { index: 10 }).decreaseIndex(-99).getIndex()).to.equal(10);
       });
     });
   });

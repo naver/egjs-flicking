@@ -74,7 +74,7 @@ class Panel {
   public getSize() { return this._size; }
   public getPosition() { return (this._flicking.isHorizontal() ? this._pos.left : this._pos.top) + this._alignPos; }
   public getMargin() { return this._margin; }
-  public isRemoved() { return this._el.parentElement === this._flicking.getCamera().getElement(); }
+  public isRemoved() { return this._el.parentElement !== this._flicking.getCamera().getElement(); }
 
   // Options Getter
   public getAlign() { return this._align; }
@@ -110,12 +110,12 @@ class Panel {
   }
 
   public increaeIndex(val: number): this {
-    this._index += val;
+    this._index += Math.max(val, 0);
     return this;
   }
 
   public decreaseIndex(val: number): this {
-    this._index -= val;
+    this._index -= Math.max(val, 0);
     return this;
   }
 
