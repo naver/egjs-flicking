@@ -175,8 +175,10 @@ export const parseElement = (element: ElementLike | ElementLike[]): HTMLElement[
       while (tempDiv.firstChild) {
         tempDiv.removeChild(tempDiv.firstChild);
       }
-    } else {
+    } else if (el && el.nodeType === Node.ELEMENT_NODE) {
       elements.push(el);
+    } else {
+      throw new FlickingError(ERROR.MESSAGE.WRONG_TYPE(el, ["HTMLElement", "string"]), ERROR.CODE.WRONG_TYPE);
     }
   });
 

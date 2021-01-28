@@ -41,7 +41,7 @@ abstract class Control {
   }
 
   public getController() { return this._controller; }
-  public getActiveIndex() { return this._activePanel?.getIndex() || -1; }
+  public getActiveIndex() { return this._activePanel?.getIndex() ?? -1; }
   public getActivePanel() { return this._activePanel; }
   public isAnimating() { return this._controller.getState().playing; }
 

@@ -10,7 +10,10 @@ import {
   parseArithmeticExpression,
   parseBounce,
   parseCSSSizeValue,
-  getDirection
+  getDirection,
+  parseElement,
+  getCirculatedIndex,
+  includes
 } from "~/utils";
 import Flicking from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
@@ -362,6 +365,181 @@ describe("Util Functions", () => {
       expect(getDirection(500, 100)).to.equal(DIRECTION.PREV);
       expect(getDirection(0, -1)).to.equal(DIRECTION.PREV);
       expect(getDirection(100, -100)).to.equal(DIRECTION.PREV);
+    });
+  });
+
+  describe("parseElement", () => {
+    it("should return an array with given element if a single HTMLElement is given", () => {
+      const element = document.createElement("div");
+
+      expect(parseElement(element)).to.be.an.instanceOf(Array);
+      expect(parseElement(element).length).to.equal(1);
+      expect(parseElement(element)[0]).to.equal(element);
+    });
+
+    it("should return the same elements if an array of HTMLElement is given", () => {
+      const elements = range(10).map(() => document.createElement("div"));
+
+      expect(parseElement(elements)).to.deep.equal(elements);
+    });
+
+    it("can accept a HTML string includes a single element and return an array of that single HTMLElment", () => {
+      const parsed = parseElement("<div class=\"flicking-panel\">Panel</div>");
+
+      expect(parsed).to.be.an.instanceOf(Array);
+      expect(parsed.length).to.equal(1);
+      expect(parsed[0]).to.be.an.instanceOf(HTMLElement);
+      expect(parsed[0].classList.contains("flicking-panel")).to.be.true;
+      expect(parsed[0].innerHTML).to.equal("Panel");
+    });
+
+    it("can accept a HTML string includes a multiple elements and return an array of that HTMLElments", () => {
+      const parsed = parseElement("<div>Panel 0</div><div>Panel 1</div><div>Panel 2</div>");
+
+      expect(parsed).to.be.an.instanceOf(Array);
+      expect(parsed.length).to.equal(3);
+      expect(parsed.every(el => el instanceof HTMLElement)).to.be.true;
+      expect(parsed[0].innerHTML).to.equal("Panel 0");
+      expect(parsed[1].innerHTML).to.equal("Panel 1");
+      expect(parsed[2].innerHTML).to.equal("Panel 2");
+    });
+
+    it("can ignore Text Nodes", () => {
+      const parsed = parseElement(`
+        <div>Panel 0</div>
+        <div>Panel 1</div>
+        <div>Panel 2</div>
+      `);
+
+      expect(parsed).to.be.an.instanceOf(Array);
+      expect(parsed.length).to.equal(3);
+    });
+
+    it("can accept an mixed array of string-HTMLElement", () => {
+      const elements = ["<div>Panel</div>", document.createElement("div")];
+
+      expect(parseElement(elements)).to.be.an.instanceOf(Array);
+      expect(parseElement(elements).length).to.equal(2);
+      expect(parseElement(elements)[0]).to.be.an.instanceOf(HTMLElement);
+      expect(parseElement(elements)[1]).to.be.an.instanceOf(HTMLElement);
+    });
+
+    it("should return an empty array if non-HTML string is given", () => {
+      expect(parseElement("")).to.deep.equal([]);
+      expect(parseElement("123412341")).to.deep.equal([]);
+      expect(parseElement("<div<<div<")).to.deep.equal([]);
+      expect(parseElement("")).to.deep.equal([]);
+    });
+
+    it("should throw FlickingError with code 'WRONG_TYPE' if given parameter is neither string nor HTMLElement", () => {
+      const wrongValues = [
+        document.createTextNode("some_text"),
+        null,
+        undefined,
+        1203498,
+        { a: 1, b: 2},
+        () => "string"
+      ];
+
+      wrongValues.forEach(val => {
+        expect(() => parseElement(val as any))
+          .to.throw(FlickingError)
+          .with.property("code", ERROR.CODE.WRONG_TYPE);
+      });
+    });
+  });
+
+  describe("getCirculatedIndex", () => {
+    it("should return same number if that number is between 0 and max", () => {
+      expect(getCirculatedIndex(0, 1)).to.equal(0);
+      expect(getCirculatedIndex(1, 1)).to.equal(1);
+      expect(getCirculatedIndex(5, 10)).to.equal(5);
+    });
+
+    it("should return clamped number if that number is bigger than max", () => {
+      expect(getCirculatedIndex(3, 1)).to.equal(1);
+      expect(getCirculatedIndex(1, 0)).to.equal(0);
+      expect(getCirculatedIndex(10, 5)).to.equal(5);
+    });
+
+    it("should return 'max - abs(val)' if given number is negative and abs(val) <= max", () => {
+      expect(getCirculatedIndex(-1, 1)).to.equal(0);
+      expect(getCirculatedIndex(-1, 5)).to.equal(4);
+      expect(getCirculatedIndex(-2, 5)).to.equal(3);
+      expect(getCirculatedIndex(-3, 5)).to.equal(2);
+      expect(getCirculatedIndex(-4, 5)).to.equal(1);
+      expect(getCirculatedIndex(-5, 5)).to.equal(0);
+    });
+
+    it("should return clamp(max - abs(val), 0, max) if given number is negative and abs(val) > max", () => {
+      expect(getCirculatedIndex(-5, 1)).to.equal(0);
+      expect(getCirculatedIndex(-6, 5)).to.equal(0);
+      expect(getCirculatedIndex(-999, 5)).to.equal(0);
+    });
+  });
+
+  describe("includes", () => {
+    it("should return true if the checking literal value is included in the given array", () => {
+      expect(includes([0, 1, 2], 0)).to.be.true;
+      expect(includes([0, 1, 2], 1)).to.be.true;
+      expect(includes([0, 1, 2], 2)).to.be.true;
+      expect(includes(["a", "b", "c"], "b")).to.be.true;
+      expect(includes(["a", "b", "c"], "c")).to.be.true;
+      expect(includes([undefined, null], null)).to.be.true;
+      expect(includes([undefined, null], undefined)).to.be.true;
+    });
+
+    it("should return false if the checking literal value is not included in the given array", () => {
+      expect(includes([0, 1, 2], 4)).to.be.false;
+      expect(includes([0, 1, 2], 10)).to.be.false;
+      expect(includes([0, 1, 2], -1)).to.be.false;
+      expect(includes([1, 2], 0)).to.be.false;
+      expect(includes([0, 1, 2], null)).to.be.false;
+      expect(includes([0, 1, 2], undefined)).to.be.false;
+      expect(includes([0, 1, 2], {} as any)).to.be.false;
+      expect(includes([0, 1, 2], [] as any)).to.be.false;
+      expect(includes(["a", "b", "c"], "")).to.be.false;
+      expect(includes(["a", "b", "c"], "d")).to.be.false;
+      expect(includes(["a", "b", "c"], undefined)).to.be.false;
+      expect(includes(["a", "b", "c"], null)).to.be.false;
+      expect(includes(["a", "b", "c"], {} as any)).to.be.false;
+      expect(includes(["a", "b", "c"], [] as any)).to.be.false;
+      expect(includes([undefined, null], 0)).to.be.false;
+      expect(includes([undefined, null], "")).to.be.false;
+      expect(includes([undefined, null], {})).to.be.false;
+      expect(includes([undefined, null], [])).to.be.false;
+    });
+
+    it("should return true if the exact same class instance / array / object / function is included in the array", () => {
+      class IncludesTestClass {
+        public constructor(public foo: number, public bar: string) {}
+      }
+
+      const instance = new IncludesTestClass(0, "");
+      const array = [0, 1, 2, "1", "2", "3"];
+      const object = { a: 1, b: "2" };
+      const func = (a: number) => true;
+
+      expect(includes([instance, array, object, func], instance)).to.be.true;
+      expect(includes([instance, array, object, func], array)).to.be.true;
+      expect(includes([instance, array, object, func], object)).to.be.true;
+      expect(includes([instance, array, object, func], func)).to.be.true;
+    });
+
+    it("should return false if the class instance / array / object / function with the same value but not the same reference is included in the array", () => {
+      class IncludesTestClass {
+        public constructor(public foo: number, public bar: string) {}
+      }
+
+      const instance = new IncludesTestClass(0, "");
+      const array = [0, 1, 2, "1", "2", "3"];
+      const object = { a: 1, b: "2" };
+      const func = (a: number) => true;
+
+      expect(includes([instance, array, object, func], new IncludesTestClass(0, ""))).to.be.false;
+      expect(includes([instance, array, object, func], [0, 1, 2, "1", "2", "3"])).to.be.false;
+      expect(includes([instance, array, object, func], { a: 1, b: "2" })).to.be.false;
+      expect(includes([instance, array, object, func], (a: number) => true)).to.be.false;
     });
   });
 });
