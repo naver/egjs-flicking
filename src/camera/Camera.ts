@@ -7,7 +7,7 @@ import Panel from "~/core/Panel";
 import { ALIGN } from "~/const/external";
 import { checkExistence, getFlickingAttached, parseAlign } from "~/utils";
 
-export interface CameraOption {
+export interface CameraOptions {
   align: FlickingOptions["align"];
 }
 
@@ -24,7 +24,7 @@ abstract class Camera {
 
   public constructor({
     align = ALIGN.PREV
-  }: Partial<CameraOption> = {}) {
+  }: Partial<CameraOptions> = {}) {
     this._flicking = null;
     this._position = 0;
     this._alignPos = 0;
@@ -49,6 +49,7 @@ abstract class Camera {
 
   public destroy(): this {
     this._flicking = null;
+
     return this;
   }
 

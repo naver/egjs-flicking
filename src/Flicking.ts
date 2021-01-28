@@ -10,13 +10,13 @@ import { DiffResult } from "@egjs/list-differ";
 import FlickingError from "./core/FlickingError";
 import Viewport from "./core/Viewport";
 import Panel from "./core/Panel";
-import { Control, FreeControl, SnapControl, SnapControlOption } from "./control";
+import { Control, FreeControl, SnapControl, SnapControlOptions } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
 import { RawRenderer, Renderer, VisibleRenderer } from "./renderer";
 
 import { EVENTS, ALIGN } from "~/const/external";
 import * as ERROR from "~/const/error";
-import { getDirection, getElement } from "~/utils";
+import { getElement } from "~/utils";
 import { DEFAULT_MOVE_TYPE_OPTIONS, MOVE_TYPE } from "~/consts";
 import {
   FlickingStatus,
@@ -419,7 +419,7 @@ class Flicking extends Component<FlickingEvents> {
    * @return Current panel.<ko>현재 패널.</ko>
    */
   public getCurrentPanel(): Panel | null {
-    return this._renderer.getPanel(this._control.getActiveIndex());
+    return this._control.getActivePanel();
   }
 
   /**
@@ -581,24 +581,6 @@ class Flicking extends Component<FlickingEvents> {
   };
 
   /**
-   * Add new panels at the beginning of panels.
-   *
-   * @ko 제일 앞에 새로운 패널을 추가한다.
-   * @param element - Either HTMLElement, HTML string, or array of them.<br>It can be also HTML string of multiple elements with same depth.<ko>HTMLElement 혹은 HTML 문자열, 혹은 그것들의 배열도 가능하다.<br>또한, 같은 depth의 여러 개의 엘리먼트에 해당하는 HTML 문자열도 가능하다.</ko>
-   * @return Array of appended panels.<ko>추가된 패널들의 배열</ko>
-   * @example
-   * // Suppose there were no panels at initialization
-   * const flicking = new eg.Flicking("#flick");
-   * flicking.replace(3, document.createElement("div")); // Add new panel at index 3
-   * flicking.prepend("\<div\>Panel\</div\>"); // Prepended at index 2
-   * flicking.prepend(["\<div\>Panel\</div\>", document.createElement("div")]); // Prepended at index 0, 1
-   * flicking.prepend("\<div\>Panel\</div\>"); // Prepended at index 0, pushing every panels behind it.
-   */
-  public prepend(element: ElementLike | ElementLike[]): Panel[] {
-    return [];
-  }
-
-  /**
    * Add new panels at the end of panels.
    *
    * @ko 제일 끝에 새로운 패널을 추가한다.
@@ -614,7 +596,29 @@ class Flicking extends Component<FlickingEvents> {
    * flicking.append("\<div\>Panel 1\</div\>\<div\>Panel 2\</div\>"); // Appended at index 4, 5
    */
   public append(element: ElementLike | ElementLike[]): Panel[] {
-    return [];
+    return this._renderer.insert(0, element);
+  }
+
+  /**
+   * Add new panels at the beginning of panels.
+   *
+   * @ko 제일 앞에 새로운 패널을 추가한다.
+   * @param element - Either HTMLElement, HTML string, or array of them.<br>It can be also HTML string of multiple elements with same depth.<ko>HTMLElement 혹은 HTML 문자열, 혹은 그것들의 배열도 가능하다.<br>또한, 같은 depth의 여러 개의 엘리먼트에 해당하는 HTML 문자열도 가능하다.</ko>
+   * @return Array of appended panels.<ko>추가된 패널들의 배열</ko>
+   * @example
+   * // Suppose there were no panels at initialization
+   * const flicking = new eg.Flicking("#flick");
+   * flicking.replace(3, document.createElement("div")); // Add new panel at index 3
+   * flicking.prepend("\<div\>Panel\</div\>"); // Prepended at index 2
+   * flicking.prepend(["\<div\>Panel\</div\>", document.createElement("div")]); // Prepended at index 0, 1
+   * flicking.prepend("\<div\>Panel\</div\>"); // Prepended at index 0, pushing every panels behind it.
+   */
+  public prepend(element: ElementLike | ElementLike[]): Panel[] {
+    return this._renderer.insert(this._renderer.getPanelCount(), element);
+  }
+
+  public insert(index: number, element: ElementLike | ElementLike[]): Panel[] {
+    return this._renderer.insert(index, element);
   }
 
   /**
@@ -626,7 +630,7 @@ class Flicking extends Component<FlickingEvents> {
    * @return Array of removed panels<ko>제거된 패널들의 배열</ko>
    */
   public remove(index: number, deleteCount: number = 1): Panel[] {
-    return [];
+    return this._renderer.remove(index, deleteCount);
   }
 
   /**
@@ -662,7 +666,7 @@ class Flicking extends Component<FlickingEvents> {
     const controlOption = { ...moveTypeOptions };
     switch (type) {
       case MOVE_TYPE.SNAP:
-        return new SnapControl(controlOption as SnapControlOption);
+        return new SnapControl(controlOption as SnapControlOptions);
       case MOVE_TYPE.FREE_SCROLL:
         return new FreeControl();
     }

@@ -14,12 +14,12 @@ abstract class Control {
   // Internal States
   protected _flicking: Flicking | null;
   protected _controller: AxesController;
-  protected _activeIndex: number;
+  protected _activePanel: Panel | null;
 
   public constructor() {
     this._flicking = null;
     this._controller = new AxesController();
-    this._activeIndex = 0;
+    this._activePanel = null;
   }
 
   public abstract moveToPosition(position: number, duration: number, axesEvent?: OnRelease): Promise<void>;
@@ -35,13 +35,14 @@ abstract class Control {
     this._controller.destroy();
 
     this._flicking = null;
-    this._activeIndex = 0;
+    this._activePanel = null;
 
     return this;
   }
 
   public getController() { return this._controller; }
-  public getActiveIndex() { return this._activeIndex; }
+  public getActiveIndex() { return this._activePanel?.getIndex() || -1; }
+  public getActivePanel() { return this._activePanel; }
   public isAnimating() { return this._controller.getState().playing; }
 
   public enable(): this {
@@ -56,15 +57,25 @@ abstract class Control {
     return this;
   }
 
-  public updateInput() {
+  public updateInput(): this {
     this._controller.update();
+
+    return this;
+  }
+
+  public checkActivePanelIsRemoved(): this {
+    if (this._activePanel?.isRemoved()) {
+      this._activePanel = null;
+    }
+
+    return this;
   }
 
   public async moveToPanel(panel: Panel, duration: number, axesEvent?: OnRelease) {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.getCamera();
 
-    const triggeringEvent = panel.getIndex() !== this._activeIndex ? EVENTS.CHANGE : EVENTS.RESTORE;
+    const triggeringEvent = panel !== this._activePanel ? EVENTS.CHANGE : EVENTS.RESTORE;
 
     const eventSuccess = flicking.trigger(triggeringEvent, {
       index: panel.getIndex(),
@@ -78,16 +89,16 @@ abstract class Control {
       return Promise.reject();
     }
 
-    const updateIndex = () => {
-      this._activeIndex = panel.getIndex();
+    const updateActivePanel = () => {
+      this._activePanel = panel;
     };
     const animate = () => this._controller.animateTo(panel.getPosition(), duration, axesEvent);
 
     if (duration === 0) {
-      updateIndex();
+      updateActivePanel();
       return animate();
     } else {
-      return animate().then(updateIndex);
+      return animate().then(updateActivePanel);
     }
   }
 }

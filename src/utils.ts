@@ -6,7 +6,7 @@ import Flicking, { FlickingOptions } from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
 import * as ERROR from "~/const/error";
 import { ALIGN, DIRECTION } from "~/const/external";
-import { LiteralUnion, Merged, ValueOf } from "~/type/internal";
+import { ElementLike, LiteralUnion, Merged, ValueOf } from "~/type/internal";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const merge = <From extends object, To extends object>(target: From, ...sources: To[]): Merged<From, To> => {
@@ -59,7 +59,7 @@ export const getFlickingAttached = (val: Flicking | null, nameToThrowOnError: st
 export const toArray = <T>(iterable: ArrayLike<T>): T[] => [].slice.call(iterable) as T[];
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-export const isArray = (arr: any): boolean => arr && arr.constructor === Array;
+export const isArray = (arr: any): arr is any[] => arr && arr.constructor === Array;
 
 export const parseAlign = (align: LiteralUnion<ValueOf<typeof ALIGN>> | number, size: number): number => {
   let alignPoint: number | null;
@@ -93,18 +93,17 @@ export const parseBounce = (bounce: FlickingOptions["bounce"], size: number): nu
   if (isArray(bounce)) {
     parsedBounce = (bounce as string[]).map(val => parseArithmeticExpression(val, size));
   } else {
-    const parsedVal = parseArithmeticExpression(bounce as number | string, size);
+    const parsedVal = parseArithmeticExpression(bounce, size);
 
     parsedBounce = [parsedVal, parsedVal];
   }
 
-  for (const val of parsedBounce) {
+  return parsedBounce.map(val => {
     if (val == null) {
       throw new FlickingError(ERROR.MESSAGE.WRONG_OPTION("bounce", bounce), ERROR.CODE.WRONG_OPTION);
     }
-  }
-
-  return parsedBounce as number[];
+    return val;
+  });
 };
 
 export const parseArithmeticExpression = (cssValue: number | string, base: number): number | null => {
@@ -161,35 +160,44 @@ export const getDirection = (start: number, end: number): ValueOf<typeof DIRECTI
   return start < end ? DIRECTION.NEXT : DIRECTION.PREV;
 };
 
+export const parseElement = (element: ElementLike | ElementLike[]): HTMLElement[] => {
+  if (!isArray(element)) {
+    element = [element];
+  }
+
+  const elements: HTMLElement[] = [];
+  element.forEach(el => {
+    if (typeof el === "string") {
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = el;
+
+      elements.push(...toArray(tempDiv.children) as HTMLElement[]);
+      while (tempDiv.firstChild) {
+        tempDiv.removeChild(tempDiv.firstChild);
+      }
+    } else {
+      elements.push(el);
+    }
+  });
+
+  return elements;
+};
+
+export const getCirculatedIndex = (idx: number, max: number) => idx < 0 ? clamp(idx + max, 0, max) : clamp(idx, 0, max);
+
+export const includes = <T>(array: T[], target: T) => {
+  for (const val of array) {
+    if (val === target) return true;
+  }
+  return false;
+};
+
 // export const hasClass = (element: HTMLElement, className: string): boolean => {
 //   if (element.classList) {
 //     return element.classList.contains(className);
 //   } else {
 //     return (element.className.split(" ").indexOf(className) >= 0);
 //   }
-// };
-
-// export const parseElement = (element: ElementLike | ElementLike[]): HTMLElement[] => {
-//   if (!Array.isArray(element)) {
-//     element = [element];
-//   }
-
-//   const elements: HTMLElement[] = [];
-//   element.forEach(el => {
-//     if (typeof el === "string") {
-//       const tempDiv = document.createElement("div");
-//       tempDiv.innerHTML = el;
-
-//       elements.push(...toArray(tempDiv.children) as HTMLElement[]);
-//       while (tempDiv.firstChild) {
-//         tempDiv.removeChild(tempDiv.firstChild);
-//       }
-//     } else {
-//       elements.push(el);
-//     }
-//   });
-
-//   return elements;
 // };
 
 // export const getProgress = (pos: number, range: number[]) => {

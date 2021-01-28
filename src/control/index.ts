@@ -1,10 +1,10 @@
 import Control from "./Control";
-import SnapControl, { SnapControlOption } from "./SnapControl";
+import SnapControl, { SnapControlOptions } from "./SnapControl";
 import FreeControl from "./FreeControl";
 
 export {
   Control,
   SnapControl,
-  SnapControlOption,
+  SnapControlOptions,
   FreeControl
 };

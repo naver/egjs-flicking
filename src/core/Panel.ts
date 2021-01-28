@@ -43,10 +43,6 @@ class Panel {
     this._alignPos = 0;
   }
 
-  public destroy(): this {
-    return this;
-  }
-
   public resize(): this {
     const el = this._el;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -78,6 +74,7 @@ class Panel {
   public getSize() { return this._size; }
   public getPosition() { return (this._flicking.isHorizontal() ? this._pos.left : this._pos.top) + this._alignPos; }
   public getMargin() { return this._margin; }
+  public isRemoved() { return this._el.parentElement === this._flicking.getCamera().getElement(); }
 
   // Options Getter
   public getAlign() { return this._align; }
@@ -110,6 +107,16 @@ class Panel {
     const renderer = this._flicking.getRenderer();
 
     return renderer.getPanel(this._index + 1);
+  }
+
+  public increaeIndex(val: number): this {
+    this._index += val;
+    return this;
+  }
+
+  public decreaseIndex(val: number): this {
+    this._index -= val;
+    return this;
   }
 
   private _updateAlignPos() {

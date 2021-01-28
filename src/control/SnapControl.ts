@@ -10,7 +10,7 @@ import { clamp, getFlickingAttached } from "~/utils";
 import * as ERROR from "~/const/error";
 import { Panel } from "~/core";
 
-export interface SnapControlOption {
+export interface SnapControlOptions {
   count: number;
 }
 
@@ -20,7 +20,7 @@ class SnapControl extends Control {
 
   public constructor({
     count = 1
-  }: SnapControlOption) {
+  }: SnapControlOptions) {
     super();
 
     this._count = count;
@@ -28,34 +28,31 @@ class SnapControl extends Control {
 
   public moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
     const flicking = getFlickingAttached(this._flicking, "Control");
-
-    const renderer = flicking.getRenderer();
     const camera = flicking.getCamera();
-
-    const currentPanel = renderer.getPanel(this._activeIndex);
+    const activePanel = this._activePanel;
 
     const cameraRange = camera.getRange();
     const clampedPos = clamp(position, cameraRange.min, cameraRange.max);
     const panelAtPosition = flicking.getRenderer().getPanelFromPosition(clampedPos);
 
-    if (!panelAtPosition || !currentPanel) {
+    if (!panelAtPosition || !activePanel) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE));
     }
 
-    const prevPos = currentPanel.getPosition();
+    const prevPos = activePanel.getPosition();
     const isOverThreshold = Math.abs(position - prevPos) >= flicking.getThreshold();
 
     let targetPanel: Panel;
 
     if (isOverThreshold) {
-      if (panelAtPosition.getIndex() !== currentPanel.getIndex()) {
+      if (panelAtPosition.getIndex() !== activePanel.getIndex()) {
         targetPanel = panelAtPosition;
       } else {
-        const adjacentPanel = (position > prevPos) ? currentPanel.next() : currentPanel.prev();
-        targetPanel = adjacentPanel || currentPanel;
+        const adjacentPanel = (position > prevPos) ? activePanel.next() : activePanel.prev();
+        targetPanel = adjacentPanel || activePanel;
       }
     } else {
-      targetPanel = currentPanel;
+      targetPanel = activePanel;
     }
 
     return this.moveToPanel(targetPanel, duration, axesEvent);

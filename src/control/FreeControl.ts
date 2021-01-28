@@ -16,13 +16,13 @@ class FreeControl extends Control {
     const panel = flicking.getRenderer().getPanelFromPosition(position);
 
     const animate = () => this._controller.animateTo(position, duration);
-    const updateIndex = () => {
+    const updateActivePanel = () => {
       if (panel) {
-        this._activeIndex = panel.getIndex();
+        this._activePanel = panel;
       }
     };
 
-    if (panel && panel.getIndex() !== this._activeIndex) {
+    if (panel && panel !== this._activePanel) {
       const eventSuccess = flicking.trigger(EVENTS.CHANGE, {
         index: panel.getIndex(),
         panel,
@@ -36,11 +36,11 @@ class FreeControl extends Control {
     }
 
     if (duration === 0) {
-      updateIndex();
+      updateActivePanel();
 
       return animate();
     } else {
-      return animate().then(updateIndex);
+      return animate().then(updateActivePanel);
     }
   }
 }
