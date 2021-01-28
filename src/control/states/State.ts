@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
@@ -6,7 +6,7 @@
 import { OnAnimationEnd, OnChange, OnFinish, OnHold, OnRelease } from "@egjs/axes";
 
 import Flicking from "~/Flicking";
-import { STATE_TYPE } from "~/const/internal";
+import { STATE_TYPE } from "~/control/StateMachine";
 
 abstract class State {
   public abstract readonly holding: boolean;

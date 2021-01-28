@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 import Flicking, { FlickingOptions } from "~/Flicking";
 import Panel from "~/core/Panel";
 import { getCirculatedIndex, getFlickingAttached, includes, parseElement, toArray } from "~/utils";

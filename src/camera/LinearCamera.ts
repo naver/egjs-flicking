@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 import Camera from "~/camera/Camera";
 import { getFlickingAttached } from "~/utils";
 

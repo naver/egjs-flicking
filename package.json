@@ -9,7 +9,7 @@
   "types": "declaration/index.d.ts",
   "scripts": {
     "dev": "rollup -w --config ./rollup.config.dev.js",
-    "build": "rm -rf ./dist ./declaration && rollup -c && npm run declaration && npm run printsizes",
+    "build": "rm -rf ./dist ./declaration && rollup -c && npm run declaration && npm run css && npm run printsizes",
     "declaration": "rm -rf declaration && ttsc -p tsconfig.declaration.json",
     "css": "postcss css/*.css --use autoprefixer postcss-clean -d dist/ -m",
     "printsizes": "print-sizes ./dist --exclude=\\.map",

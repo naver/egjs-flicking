@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
@@ -7,9 +7,16 @@ import Axes, { PanInput, AxesEvents, OnRelease } from "@egjs/axes";
 import Flicking from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
 import StateMachine from "~/control/StateMachine";
-import { AXES_EVENT } from "~/const/internal";
 import * as ERROR from "~/const/error";
 import { getFlickingAttached, parseBounce } from "~/utils";
+
+export const AXES_EVENT = {
+  HOLD: "hold",
+  CHANGE: "change",
+  RELEASE: "release",
+  ANIMATION_END: "animationEnd",
+  FINISH: "finish"
+} as const;
 
 class AxesController {
   private _flicking: Flicking | null;

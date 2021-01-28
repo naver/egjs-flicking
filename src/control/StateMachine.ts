@@ -1,8 +1,7 @@
-/**
+/*
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-
 import { AxesEvents } from "@egjs/axes";
 
 import IdleState from "./states/IdleState";
@@ -13,7 +12,15 @@ import DisabledState from "./states/DisabledState";
 
 import Flicking from "~/Flicking";
 import State from "~/control/states/State";
-import { AXES_EVENT, STATE_TYPE } from "~/const/internal";
+import { AXES_EVENT } from "~/control/AxesController";
+
+export enum STATE_TYPE {
+  IDLE,
+  HOLDING,
+  DRAGGING,
+  ANIMATING,
+  DISABLED
+}
 
 class StateMachine {
   private _state: State;

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
@@ -6,8 +6,8 @@ import { OnRelease } from "@egjs/axes";
 
 import Panel from "~/core/Panel";
 import State from "~/control/states/State";
+import { STATE_TYPE } from "~/control/StateMachine";
 import { EVENTS } from "~/const/external";
-import { STATE_TYPE } from "~/const/internal";
 import { getDirection } from "~/utils";
 
 class HoldingState extends State {

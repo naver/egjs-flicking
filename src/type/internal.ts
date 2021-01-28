@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 export type ValueOf<T> = T[keyof T];
 export type LiteralUnion<T extends U, U = string> = T | (Pick<U, never> & {_?: never});
 
