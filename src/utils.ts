@@ -2,23 +2,66 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { FlickingOption } from "~/Flicking";
+import FlickingError from "~/core/FlickingError";
+import * as ERROR from "~/const/error";
+import { ALIGN } from "~/const/external";
+import { Merged, ElementLike } from "~/type/internal";
 
-import { ElementLike, OriginalStyle, BoundingBox } from "./types";
-import Flicking from "./Flicking";
-import { FLICKING_METHODS } from "./consts";
-
-export function merge(target: object, ...srcs: object[]): object {
-  srcs.forEach(source => {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const merge = <From extends object, To extends object>(target: From, ...sources: To[]): Merged<From, To> => {
+  sources.forEach(source => {
     Object.keys(source).forEach(key => {
-      const value = source[key];
-      target[key] = value;
+      target[key] = source[key] as unknown;
     });
   });
 
-  return target;
-}
+  return target as Merged<From, To>;
+};
 
-export function parseElement(element: ElementLike | ElementLike[]): HTMLElement[] {
+export const getElement = (el: HTMLElement | string | null, parent?: HTMLElement): HTMLElement => {
+  let targetEl: HTMLElement | null = null;
+
+  if (typeof el === "string") {
+    const parentEl = parent ? parent : document;
+    const queryResult = parentEl.querySelector(el);
+    if (!queryResult) {
+      throw new FlickingError(ERROR.MESSAGE.ELEMENT_NOT_FOUND(el), ERROR.CODE.ELEMENT_NOT_FOUND);
+    }
+    targetEl = queryResult as HTMLElement;
+  } else if (el && el.nodeType === Node.ELEMENT_NODE) {
+    targetEl = el;
+  }
+
+  if (!targetEl) {
+    throw new FlickingError(ERROR.MESSAGE.WRONG_TYPE(el, ["HTMLElement", "string"]), ERROR.CODE.WRONG_TYPE);
+  }
+
+  return targetEl;
+};
+
+
+/* eslint-disable prefer-arrow/prefer-arrow-functions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unused-vars */
+export function requireFlicking(componentName: string) {
+  return function(
+    target: any,
+    propertyKey: string,
+    descriptor: PropertyDescriptor
+  ) {
+    if (!target._flicking) {
+      throw new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING(componentName), ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
+    }
+  };
+}
+/* eslint-enable */
+
+export const checkExistence = (value: any, nameOnErrMsg: string) => {
+  if (value == null) {
+    throw new FlickingError(ERROR.MESSAGE.VAL_MUST_NOT_NULL(value, nameOnErrMsg), ERROR.CODE.VAL_MUST_NOT_NULL);
+  }
+};
+
+export const parseElement = (element: ElementLike | ElementLike[]): HTMLElement[] => {
   if (!Array.isArray(element)) {
     element = [element];
   }
@@ -34,74 +77,85 @@ export function parseElement(element: ElementLike | ElementLike[]): HTMLElement[
         tempDiv.removeChild(tempDiv.firstChild);
       }
     } else {
-      elements.push(el as HTMLElement);
+      elements.push(el);
     }
   });
 
   return elements;
-}
+};
 
-export function isString(value: any): value is string {
-  return typeof value === "string";
-}
+export const isString = (value: any): value is string => typeof value === "string";
 
-// Get class list of element as string array
-export function classList(element: HTMLElement): string[] {
-  return element.classList
-    ? toArray(element.classList)
-    : element.className.split(" ");
-}
-
-// Add class to specified element
-export function addClass(element: HTMLElement, className: string): void {
-  if (element.classList) {
-    element.classList.add(className);
-  } else {
-    if (!hasClass(element, className)) {
-      element.className = (`${element.className} ${className}`).replace(/\s{2,}/g, " ");
-    }
-  }
-}
-
-export function hasClass(element: HTMLElement, className: string): boolean {
+export const hasClass = (element: HTMLElement, className: string): boolean => {
   if (element.classList) {
     return element.classList.contains(className);
   } else {
     return (element.className.split(" ").indexOf(className) >= 0);
   }
-}
+};
 
-export function applyCSS(element: HTMLElement, cssObj: object): void {
-  Object.keys(cssObj).forEach(property => {
-    element.style[property] = cssObj[property];
-  });
-}
+export const range = (end: number): number[] => {
+  if (!end || end <= 0) {
+    return [];
+  }
 
-export function clamp(val: number, min: number, max: number) {
-  return Math.max(Math.min(val, max), min);
-}
+  return (Array.apply(0, Array(end)) as number[]).map((_, idx) => idx);
+};
 
-// Min: inclusive, Max: exclusive
-export function isBetween(val: number, min: number, max: number) {
-  return val >= min && val <= max;
-}
+export const clamp = (x: number, min: number, max: number) => Math.max(Math.min(x, max), min);
 
-export interface ArrayLike<T> {
-  length: number;
-  [index: number]: T;
-}
+export const toArray = <T>(iterable: ArrayLike<T>): T[] => [].slice.call(iterable) as T[];
 
-export function toArray<T>(iterable: ArrayLike<T>): T[] {
-  return [].slice.call(iterable);
-}
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+export const isArray = (arr: any): boolean => arr && arr.constructor === Array;
 
-export function isArray(arr: any): boolean {
-  return arr && arr.constructor === Array;
-}
+export const parseAlign = (align: FlickingOption["align"], size: number): number => {
+  let alignPoint: number | null;
+  if (typeof align === "string") {
+    switch (align) {
+      case ALIGN.PREV:
+        alignPoint = 0;
+        break;
+      case ALIGN.CENTER:
+        alignPoint = 0.5 * size;
+        break;
+      case ALIGN.NEXT:
+        alignPoint = size;
+        break;
+      default:
+        alignPoint = parseArithmeticExpression(align, size);
+        if (alignPoint == null) {
+          throw new FlickingError(ERROR.MESSAGE.WRONG_OPTION("align", align), ERROR.CODE.WRONG_OPTION);
+        }
+    }
+  } else {
+    alignPoint = align as number;
+  }
 
-export function parseArithmeticExpression(cssValue: number | string, base: number, defaultVal?: number): number {
-  // Set base / 2 to default value, if it's undefined
-  const defaultValue = defaultVal != null ? defaultVal : base / 2;
+  return alignPoint;
+};
+
+export const parseBounce = (bounce: FlickingOption["bounce"], size: number): number[] => {
+  let parsedBounce: Array<number | null>;
+
+  if (isArray(bounce)) {
+    parsedBounce = (bounce as string[]).map(val => parseArithmeticExpression(val, size));
+  } else {
+    const parsedVal = parseArithmeticExpression(bounce as number | string, size);
+
+    parsedBounce = [parsedVal, parsedVal];
+  }
+
+  for (const val of parsedBounce) {
+    if (val == null) {
+      throw new FlickingError(ERROR.MESSAGE.WRONG_OPTION("bounce", bounce), ERROR.CODE.WRONG_OPTION);
+    }
+  }
+
+  return parsedBounce as number[];
+};
+
+export const parseArithmeticExpression = (cssValue: number | string, base: number): number | null => {
   const cssRegex = /(?:(\+|\-)\s*)?(\d+(?:\.\d+)?(%|px)?)/g;
 
   if (typeof cssValue === "number") {
@@ -124,7 +178,7 @@ export function parseArithmeticExpression(cssValue: number | string, base: numbe
 
     // Return default value for values not in good form
     if (!sign) {
-      return defaultValue;
+      return null;
     }
 
     if (unit === "%") {
@@ -142,135 +196,66 @@ export function parseArithmeticExpression(cssValue: number | string, base: numbe
 
   // None-matched
   if (idx === 0) {
-    return defaultValue;
+    return null;
   }
 
   // Clamp between 0 ~ base
   return clamp(calculatedValue, 0, base);
-}
+};
 
-export function getProgress(pos: number, range: number[]) {
-  // start, anchor, end
-  // -1 , 0 , 1
-  const [min, center, max] = range;
+export const parseCSSSizeValue = (val: string | number): string => typeof val === "string" ? val : `${val}px`;
 
-  if (pos > center && (max - center)) {
-    // 0 ~ 1
-    return (pos - center) / (max - center);
-  } else if (pos < center && (center - min)) {
-    // -1 ~ 0
-    return (pos - center) / (center - min);
-  } else if (pos !== center && max - min) {
-    return (pos - min) / (max - min);
-  }
-  return 0;
-}
+// export const getProgress = (pos: number, range: number[]) => {
+//   // start, anchor, end
+//   // -1 , 0 , 1
+//   const [min, center, max] = range;
 
-export function findIndex<T>(iterable: T[], callback: (el: T) => boolean): number {
-  for (let i = 0; i < iterable.length; i += 1) {
-    const element = iterable[i];
-    if (element && callback(element)) {
-      return i;
-    }
-  }
+//   if (pos > center && (max - center)) {
+//     // 0 ~ 1
+//     return (pos - center) / (max - center);
+//   } else if (pos < center && (center - min)) {
+//     // -1 ~ 0
+//     return (pos - center) / (center - min);
+//   } else if (pos !== center && max - min) {
+//     return (pos - min) / (max - min);
+//   }
+//   return 0;
+// };
 
-  return -1;
-}
+// /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+// /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+// /**
+//  * Decorator that makes the method of flicking available in the framework.
+//  *
+//  * @ko 프레임워크에서 플리킹의 메소드를 사용할 수 있게 하는 데코레이터.
+//  * @memberof eg.Flicking
+//  * @private
+//  * @example
+//  * ```js
+//  * import Flicking, { withFlickingMethods } from "@egjs/flicking";
+//  *
+//  * class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
+//  *   &#64;withFlickingMethods
+//  *   private flicking: Flicking;
+//  * }
+//  * ```
+//  */
+// export const withFlickingMethods = (prototype: any, flickingName: string) => {
+//   Object.keys(FLICKING_METHODS).forEach((name: keyof Flicking) => {
+//     if (prototype[name]) {
+//       return;
+//     }
+//     prototype[name] = function(...args) {
+//       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+//       const result = this[flickingName][name](...args);
 
-// return [0, 1, ...., max - 1]
-export function counter(max: number): number[] {
-  const counterArray: number[] = [];
-  for (let i = 0; i < max; i += 1) {
-    counterArray[i] = i;
-  }
-  return counterArray;
-}
-
-// Circulate number between range [min, max]
-/*
- * "indexed" means min and max is not same, so if it's true "min - 1" should be max
- * While if it's false, "min - 1" should be "max - 1"
- * use `indexed: true` when it should be used for circulating integers like index
- * or `indexed: false` when it should be used for something like positions.
- */
-export function circulate(value: number, min: number, max: number, indexed: boolean): number {
-  const size = indexed
-    ? max - min + 1
-    : max - min;
-  if (value < min) {
-    const offset = indexed
-      ? (min - value - 1) % size
-      : (min - value) % size;
-    value = max - offset;
-  } else if (value > max) {
-    const offset = indexed
-      ? (value - max - 1) % size
-      : (value - max) % size;
-    value = min + offset;
-  }
-
-  return value;
-}
-
-export function restoreStyle(element: HTMLElement, originalStyle: OriginalStyle): void {
-  originalStyle.className
-    ? element.setAttribute("class", originalStyle.className)
-    : element.removeAttribute("class");
-  originalStyle.style
-    ? element.setAttribute("style", originalStyle.style)
-    : element.removeAttribute("style");
-}
-
-/**
- * Decorator that makes the method of flicking available in the framework.
- * @ko 프레임워크에서 플리킹의 메소드를 사용할 수 있게 하는 데코레이터.
- * @memberof eg.Flicking
- * @private
- * @example
- * ```js
- * import Flicking, { withFlickingMethods } from "@egjs/flicking";
- *
- * class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
- *   &#64;withFlickingMethods
- *   private flicking: Flicking;
- * }
- * ```
- */
-export function withFlickingMethods(prototype: any, flickingName: string) {
-  Object.keys(FLICKING_METHODS).forEach((name: keyof Flicking) => {
-    if (prototype[name]) {
-      return;
-    }
-    prototype[name] = function(...args) {
-      const result = this[flickingName][name](...args);
-
-      // fix `this` type to return your own `flicking` instance to the instance using the decorator.
-      if (result === this[flickingName]) {
-        return this;
-      } else {
-        return result;
-      }
-    };
-  });
-}
-
-export function getBbox(element: HTMLElement, useOffset: boolean) {
-  let bbox: BoundingBox;
-  if (useOffset) {
-    bbox = {
-      x: 0,
-      y: 0,
-      width: element.offsetWidth,
-      height: element.offsetHeight,
-    };
-  } else {
-    const clientRect = element.getBoundingClientRect();
-    bbox = {
-      x: clientRect.left,
-      y: clientRect.top,
-      width: clientRect.width,
-      height: clientRect.height,
-    };
-  }
-  return bbox;
-}
+//       // fix `this` type to return your own `flicking` instance to the instance using the decorator.
+//       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+//       return result === this[flickingName]
+//         ? this
+//         : result;
+//     };
+//   });
+// };
+// /* eslint-enable @typescript-eslint/no-unsafe-member-access */
+// /* eslint-enable @typescript-eslint/no-unsafe-assignment */

@@ -1,0 +1,44 @@
+.eg-flicking-viewport {
+  width: 100%;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+.eg-flicking-viewport.overflow {
+  overflow: visible;
+}
+
+.eg-flicking-camera {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+  white-space: nowrap;
+  will-change: transform;
+  font-size: 0;
+}
+
+.eg-flicking-camera img {
+  user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+}
+
+.eg-flicking-panel {
+  display: inline-block;
+  white-space: initial;
+  vertical-align: top;
+  font-size: initial;
+}
+.eg-flicking-viewport.vertical-middle>.eg-flicking-camera .eg-flicking-panel {
+  vertical-align: middle;
+}
+.eg-flicking-viewport.vertical-bottom>.eg-flicking-camera .eg-flicking-panel {
+  vertical-align: bottom;
+}
+.eg-flicking-viewport.vertical>.eg-flicking-camera .eg-flicking-panel {
+  display: block;
+}

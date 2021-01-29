@@ -1,24 +1,18 @@
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
 /**
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
 
-import Flicking from "./Flicking";
-import Viewport from "./components/Viewport";
-import StateMachine from "./components/StateMachine";
-import Panel from "./components/Panel";
 import Component from "@egjs/component";
-import State from "./states/State";
 import { DiffResult } from "@egjs/list-differ";
 
-export type ValueOf<T> = T[keyof T];
-/**
- * HTML `string` of single/mutiple HTMLElement, or an instance of `HTMLElement`.
- * @ko 단일/복수의 HTMLElement의 outerHTML에 해당하는 `string`, 혹은 `HTMLElement`의 인스턴스.
- * @typedef
- * @memberof eg.Flicking
- */
-export type ElementLike = string | HTMLElement;
+import Flicking from "./Flicking";
+import Viewport from "./core/Viewport";
+import StateMachine from "./control/StateMachine";
+import Panel from "./core/Panel";
+import State from "./control/states/State";
+import { ElementLike, ValueOf } from "./type/internal";
 
 /**
  * @typedef
@@ -54,7 +48,7 @@ export type ElementLike = string | HTMLElement;
  * @property - Area (px) that can go to the next page when swiping the right edge in iOS safari <ko>iOS Safari에서 오른쪽 엣지를 스와이프 하는 경우 다음 페이지로 넘어갈 수 있는 영역(px)</ko>
  * @property - Whether to collect statistics on how you are using `Flicking`. These statistical data do not contain any personal information and are used only as a basis for the development of a user-friendly product.<ko>어떻게 `Flicking`을 사용하고 있는지에 대한 통계 수집 여부를 나타낸다. 이 통계자료는 개인정보를 포함하고 있지 않으며 오직 사용자 친화적인 제품으로 발전시키기 위한 근거자료로서 활용한다.</ko>
  */
-export interface FlickingOptions {
+interface FlickingOptions {
   classPrefix: string;
   deceleration: number;
   horizontal: boolean;
@@ -113,6 +107,7 @@ export interface DestinationInfo {
 
 /**
  * Movement style by user input.
+ *
  * @ko 사용자 입력에 의한 이동 방식.
  * @typedef {"snap" | "freeScroll" | eg.Flicking.MoveTypeSnapOption | eg.Flicking.MoveTypeFreeScrollOption}
  * @memberof eg.Flicking
@@ -121,6 +116,7 @@ export type MoveTypeOption = MoveTypeStringOption | MoveTypeObjectOption;
 
 /**
  * With "snap" move type, momentum is applied while choosing destination panel at release time.<br>You can set how many panels can go after release.
+ *
  * @ko 입력을 중단한 시점의 가속도에 영향받아 도달할 패널을 계산하는 이동 방식.<br>입력 중단 이후 최대 몇 개까지의 패널을 통과하여 이동할지 설정할 수 있다.
  * @typedef
  * @memberof eg.Flicking
@@ -134,6 +130,7 @@ export interface MoveTypeSnapOption {
 
 /**
  * With "freeScroll" move type, it can be scrolled freely without alignment.
+ *
  * @ko 패널이 정해진 지점에 정렬되지 않고, 자유롭게 스크롤할 수 있는 이동 방식.
  * @typedef
  * @memberof eg.Flicking
@@ -227,6 +224,7 @@ export interface Direction {
 
 /**
  * Event triggered when user started dragging.
+ *
  * @ko 사용자가 드래그를 시작했을 떄 발생하는 이벤트
  * @event eg.Flicking#holdStart
  * @type eg.Flicking.FlickingEvent
@@ -234,6 +232,7 @@ export interface Direction {
 
 /**
  * Event triggered when user stopped dragging.
+ *
  * @ko 사용자가 드래그를 중단했을 때 발생하는 이벤트.
  * @event eg.Flicking#holdEnd
  * @type eg.Flicking.FlickingEvent
@@ -241,6 +240,7 @@ export interface Direction {
 
 /**
  * Event triggered once before first [move]{@link eg.Flicking#event:move} event.
+ *
  * @ko 첫 번째 [move]{@link eg.Flicking#event:move}이벤트 직전에 단 한번 발생하는 이벤트.
  * @event eg.Flicking#moveStart
  * @type eg.Flicking.FlickingEvent
@@ -248,6 +248,7 @@ export interface Direction {
 
 /**
  * Event triggered while moving to the destination panel.
+ *
  * @ko 목적 패널로의 이동 도중에 발생하는 이벤트.
  * @event eg.Flicking#move
  * @type eg.Flicking.FlickingEvent
@@ -255,6 +256,7 @@ export interface Direction {
 
 /**
  * Event triggered after finish moving to the destination panel.
+ *
  * @ko 목적 패널로의 이동을 완료한 다음 발생하는 이벤트.
  * @event eg.Flicking#moveEnd
  * @type eg.Flicking.FlickingEvent
@@ -262,6 +264,7 @@ export interface Direction {
 
 /**
  * Event that indicates index will be changed, and isn't restoring. Index will be changed at `moveEnd` event.<br>It can be triggered when user finished input, or flicking start to move by method.<br>It won't be triggered when moving to same panel, unless it's circulated more than one cycle in circular mode.<br>Calling `stop()` in event will prevent index changing & panel moving.<br><br>`event` doesn't have `axesEvent` property when triggered by [moveTo()]{@link eg.Flicking#moveTo}, [prev()]{@link eg.Flicking#prev}, [next()]{@link eg.Flicking#next} method.
+ *
  * @ko `restore`되지 않고, 인덱스가 변경될 것임을 나타내는 이벤트. 실제 인덱스는 `moveEnd` 이벤트에서 변경된다.<br>사용자가 입력을 마쳤을 때, 혹은 메소드를 통해 이동을 시작했을 때 발생한다.<br>동일 패널로 이동시에는 발생되지 않지만, circular 모드에서 한 바퀴 이상 순환하여 동일 패널로 도착했을 때에도 발생된다.<br>이벤트의 `stop()`을 호출시 패널로의 이동을 막는다.<br><br>[moveTo()]{@link eg.Flicking#moveTo}, [prev()]{@link eg.Flicking#prev}, [next()]{@link eg.Flicking#next}와 같은 메소드에 의해 호출되었을 경우 `event`내의 `axesEvent` 프로퍼티 값은 undefined이다.
  * @event eg.Flicking#change
  * @type eg.Flicking.ChangeEvent
@@ -269,6 +272,7 @@ export interface Direction {
 
 /**
  * Event triggered when user drag amount not reached `threshold` in [FlickingOptions]{@link eg.Flicking.FlickingOptions}.
+ *
  * @ko 사용자가 드래그한 정도가 [FlickingOptions]{@link eg.Flicking.FlickingOptions}의 `threshold`값보다 작을 때 발생하는 이벤트.
  * @event eg.Flicking#restore
  * @type eg.Flicking.FlickingEvent
@@ -276,31 +280,35 @@ export interface Direction {
 
 /**
  * Event triggered when user statically selected (clicked) panel.
+ *
  * @ko 사용자가 패널을 정적으로 선택(클릭)했을 때 발생하는 이벤트.
  * @event eg.Flicking#select
  * @type eg.Flicking.SelectEvent
  */
 
- /**
-  * Event triggered when Flicking confronts panels don't have successive indexes, so it needs more content to draw panel in infinite mode.
-  * @ko 무한 모드에서, Flicking이 인덱스가 연속하지 않은 패널들을 만나 새로운 패널이 필요함을 알리고자 할 때 발생시키는 이벤트.
-  * @event eg.Flicking#needPanel
-  * @type eg.Flicking.NeedPanelEvent
-  */
+/**
+ * Event triggered when Flicking confronts panels don't have successive indexes, so it needs more content to draw panel in infinite mode.
+ *
+ * @ko 무한 모드에서, Flicking이 인덱스가 연속하지 않은 패널들을 만나 새로운 패널이 필요함을 알리고자 할 때 발생시키는 이벤트.
+ * @event eg.Flicking#needPanel
+ * @type eg.Flicking.NeedPanelEvent
+ */
 
 /**
  * Event triggered when Flicking's visible panel changes. This event only triggered with `renderOnlyVisible` option.
+ *
  * @ko 보이는 패널 정보에 변화가 있을 경우에 발생되는 이벤트. `renderOnlyVisible` 옵션이 활성화된 경우에만 트리거된다.
  * @event eg.Flicking#visibleChange
  * @type eg.Flicking.VisibleChangeEvent
  */
 
- /**
-  * Event triggered each time the image/video element inside Flicking fails to load. This event is only triggered with `resizeOnContentsReady` option.
-  * @ko Flicking 내부의 이미지/비디오 엘리먼트의 로드가 실패했을때마다 발생했을 때마다 트리거되는 이벤트. `resizeOnContentsReady` 옵션이 활성화된 경우에만 트리거된다.
-  * @event eg.Flicking#contentError
-  * @type eg.Flicking.ContentErrorEvent
-  */
+/**
+ * Event triggered each time the image/video element inside Flicking fails to load. This event is only triggered with `resizeOnContentsReady` option.
+ *
+ * @ko Flicking 내부의 이미지/비디오 엘리먼트의 로드가 실패했을때마다 발생했을 때마다 트리거되는 이벤트. `resizeOnContentsReady` 옵션이 활성화된 경우에만 트리거된다.
+ * @event eg.Flicking#contentError
+ * @type eg.Flicking.ContentErrorEvent
+ */
 
 export interface EventType {
   readonly HOLD_START: "holdStart";
@@ -346,6 +354,7 @@ export type FlickingEvent = {
 
 /**
  * Event that indicates index will be changed, and isn't restoring. Index will be changed at `moveEnd` event.
+ *
  * @ko `restore`되지 않고, 인덱스가 변경될 것임을 나타내는 이벤트. 실제 인덱스는 `moveEnd`이벤트에서 변경된다.
  * @typedef
  * @type object
@@ -376,6 +385,7 @@ export type ChangeEvent = {
 
 /**
  * Event will be triggered when panel is statically click / touched.
+ *
  * @ko 패널이 정적으로 클릭(혹은 터치)되었을 때 발생되는 이벤트.
  * @typedef
  * @type object
@@ -404,6 +414,7 @@ export type SelectEvent = {
 
 /**
  * Event can be triggered in infinite mode. When camera element reaches at infinite threshold, this event can be triggered to indicate there should be more content to be displayed.
+ *
  * @ko 무한 모드에서 발생될 수 있는 이벤트. 화면의 양 끝, 혹은 불연속적인 인덱스를 가진 패널을 기준으로 `infiniteThreshold`만큼 떨어진 지점에 도달하였을 때 발생될 수 있다.
  * @typedef
  * @type object
@@ -450,6 +461,7 @@ export type NeedPanelEvent = {
 
 /**
  * Event triggered when Flicking's visible panel changes. This event is only triggered with `renderOnlyVisible` option.
+ *
  * @ko 보이는 패널 정보에 변화가 있을 경우에 발생되는 이벤트. `renderOnlyVisible` 옵션이 활성화된 경우에만 트리거된다.
  * @typedef
  * @type object
@@ -469,6 +481,7 @@ export type VisibleChangeEvent = {
 
 /**
  * Event triggered each time the image/video element inside Flicking fails to load. This event is only triggered with `resizeOnContentsReady` option.
+ *
  * @ko Flicking 내부의 이미지/비디오 엘리먼트의 로드가 실패했을때마다 발생했을 때마다 트리거되는 이벤트. `resizeOnContentsReady` 옵션이 활성화된 경우에만 트리거된다.
  * @typedef
  * @type object
@@ -478,6 +491,18 @@ export type VisibleChangeEvent = {
  */
 export type ContentErrorEvent = {
   type: string;
+  element: HTMLElement;
+};
+
+export type ReadyEvent = void;
+export type ResizeEvent = {
+  width: number;
+  height: number;
+  prev: {
+    width: number;
+    height: number;
+  };
+  sizeChanged: boolean;
   element: HTMLElement;
 };
 
@@ -498,17 +523,13 @@ export interface AxesEventType {
 }
 
 export interface TriggerCallback {
-  onSuccess(callback: () => any): TriggerCallback;
-  onStopped(callback: () => any): TriggerCallback;
+  onSuccess(callback: () => void): TriggerCallback;
+  onStopped(callback: () => void): TriggerCallback;
 }
 
 export interface FlickingContext {
   flicking: Flicking;
-  viewport: Viewport;
   transitTo: StateMachine["transitTo"];
-  triggerEvent: Flicking["triggerEvent"];
-  moveCamera: Flicking["moveCamera"];
-  stopCamera: Viewport["stopCamera"];
 }
 
 export interface BoundingBox {
@@ -531,10 +552,12 @@ export interface Plugin {
   destroy(flicking: Flicking): void;
 }
 
+/* eslint-disable @typescript-eslint/indent */
 export type ExcludeKeys = keyof Component
   | "replace" | "append" | "remove" | "prepend"
   | "beforeSync" | "sync" | "getCloneCount" | "getRenderingIndexes"
   | "getLastIndex" | "setLastIndex" | "addPlugins" | "removePlugins";
+/* eslint-enable @typescript-eslint/indent */
 export type FlickingMethodsKeys = Exclude<keyof Flicking, ExcludeKeys>;
 export type FlickingMethods = Pick<Flicking, FlickingMethodsKeys>;
 
