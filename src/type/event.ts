@@ -94,5 +94,5 @@ export type NeedPanelEvent = {
 export type VisibleChangeEvent = {
   added: Panel[];
   removed: Panel[];
-  panels: Panel[];
+  visiblePanels: Panel[];
 };

@@ -176,7 +176,7 @@ class Flicking extends Component<FlickingEvents> {
     easing = x => 1 - Math.pow(1 - x, 3),
     inputType = ["mouse", "touch"],
     moveType = "snap",
-    threshold = 40,
+    threshold = 0,
     interruptable = true,
     bounce = "50%",
     iOSEdgeSwipeThreshold = 30,

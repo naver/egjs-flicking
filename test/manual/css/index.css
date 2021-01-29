@@ -30,6 +30,10 @@ header {
   background-color: #435253;
 }
 
+.flicking-viewport {
+  transition: height 500ms;
+}
+
 .flicking-panel {
   width: 300px;
   background-color: #369;

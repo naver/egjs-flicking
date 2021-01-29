@@ -116,7 +116,7 @@ abstract class Camera {
       flicking.trigger(EVENTS.VISIBLE_CHANGE, {
         added,
         removed,
-        panels: newVisiblePanels
+        visiblePanels: newVisiblePanels
       });
     }
 

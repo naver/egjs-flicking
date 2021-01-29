@@ -7,7 +7,8 @@ class App {
     const flicking = new Flicking("#flicking", {
       align: ALIGN.PREV,
       bounce: "20%",
-      needPanelThreshold: 100
+      needPanelThreshold: 100,
+      adaptive: true
     });
 
     Object.values([EVENTS.NEED_PANEL, EVENTS.VISIBLE_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {

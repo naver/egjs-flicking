@@ -60,13 +60,13 @@ class AnimatingState extends State {
     //   viewport.setCurrentPanel(viewport.getNearestPanel() as Panel);
     // }
 
-    // if (flicking.options.adaptive) {
-    //   viewport.updateAdaptiveSize();
-    // }
+    const panelBelow = flicking.getCamera().getPanelBelow();
+    if (flicking.isAdaptive() && panelBelow) {
+      const panelSize = panelBelow.getSize();
+      flicking.getViewport().setSize({ height: panelSize.height });
+    }
 
     transitTo(STATE_TYPE.IDLE);
-
-    // Assure camera's at correct position
 
     const controller = flicking.getControl().getController();
     const animatingContext = controller.getAnimatingContext();
