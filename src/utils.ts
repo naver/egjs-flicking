@@ -6,7 +6,8 @@ import Flicking, { FlickingOptions } from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
 import * as ERROR from "~/const/error";
 import { ALIGN, DIRECTION } from "~/const/external";
-import { ElementLike, LiteralUnion, Merged, ValueOf } from "~/type/internal";
+import { LiteralUnion, Merged, ValueOf } from "~/type/internal";
+import { ElementLike } from "~/type/external";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const merge = <From extends object, To extends object>(target: From, ...sources: To[]): Merged<From, To> => {

@@ -11,7 +11,8 @@ import Viewport from "./core/Viewport";
 import StateMachine from "./control/StateMachine";
 import Panel from "./core/Panel";
 import State from "./control/states/State";
-import { ElementLike, ValueOf } from "./type/internal";
+import { ValueOf } from "./type/internal";
+import { ElementLike } from "./type/external";
 
 /**
  * @typedef

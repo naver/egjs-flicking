@@ -86,3 +86,13 @@ export type SelectEvent = {
   panel: Panel;
   direction: ValueOf<typeof DIRECTION> | null;
 };
+
+export type NeedPanelEvent = {
+  direction: ValueOf<typeof DIRECTION>;
+};
+
+export type VisibleChangeEvent = {
+  added: Panel[];
+  removed: Panel[];
+  panels: Panel[];
+};

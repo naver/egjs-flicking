@@ -72,6 +72,7 @@ class Panel {
   public getElement() { return this._el; }
   public getIndex() { return this._index; }
   public getSize() { return this._size; }
+  public getBoundingBox() { return { ...this._pos, right: this._pos.left + this._size.width, bottom: this._pos.top + this._size.height }; }
   public getPosition() { return (this._flicking.isHorizontal() ? this._pos.left : this._pos.top) + this._alignPos; }
   public getMargin() { return this._margin; }
   public isRemoved() { return this._el.parentElement !== this._flicking.getCamera().getElement(); }
@@ -82,7 +83,7 @@ class Panel {
   // Options Getter
   public setAlign(val: PanelOption["align"]) { this._align = val; }
 
-  public include(position: number): boolean {
+  public includePosition(position: number): boolean {
     const pos = this._pos;
     const size = this._size;
     const margin = this._margin;
@@ -91,6 +92,31 @@ class Panel {
     return isHorizontal
       ? (position >= pos.left - margin.left) && (position <= pos.left + size.width + margin.right)
       : (position >= pos.top - margin.top) && (position <= pos.top + size.height + margin.bottom);
+  }
+
+  public isVisible(): boolean {
+    const flicking = this._flicking;
+
+    const camera = flicking.getCamera();
+    const viewportSize = flicking.getViewport().getSize();
+
+    const panelPosition = this.getPosition();
+    const panelBbox = this.getBoundingBox();
+
+    const cameraPosition = camera.getPosition();
+    const cameraSize = flicking.isHorizontal() ? viewportSize.width : viewportSize.height;
+
+    if (panelPosition < cameraPosition) {
+      const cameraPrev = cameraPosition - camera.getAlignPosition();
+      const panelNext = flicking.isHorizontal() ? panelBbox.right : panelBbox.bottom;
+
+      return panelNext >= cameraPrev;
+    } else {
+      const cameraNext = cameraPosition - camera.getAlignPosition() + cameraSize;
+      const panelPrev = flicking.isHorizontal() ? panelBbox.left : panelBbox.top;
+
+      return panelPrev <= cameraNext;
+    }
   }
 
   public focus(duration?: number) {
@@ -109,7 +135,7 @@ class Panel {
     return renderer.getPanel(this._index + 1);
   }
 
-  public increaeIndex(val: number): this {
+  public increaseIndex(val: number): this {
     this._index += Math.max(val, 0);
     return this;
   }

@@ -4,7 +4,7 @@
  */
 import State from "~/control/states/State";
 import { STATE_TYPE } from "~/control/StateMachine";
-import { DIRECTION, EVENTS } from "~/const/external";
+import { EVENTS } from "~/const/external";
 import { getDirection } from "~/utils";
 
 class AnimatingState extends State {
@@ -40,7 +40,7 @@ class AnimatingState extends State {
     const isSuccess = flicking.trigger(EVENTS.MOVE, {
       isTrusted: axesEvent.isTrusted,
       holding: this.holding,
-      direction: axesEvent.delta.flick > 0 ? DIRECTION.NEXT : DIRECTION.PREV,
+      direction: getDirection(0, axesEvent.delta.flick),
       axesEvent
     });
 

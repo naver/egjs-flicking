@@ -44,6 +44,7 @@ abstract class Control {
   public getActiveIndex() { return this._activePanel?.getIndex() ?? -1; }
   public getActivePanel() { return this._activePanel; }
   public isAnimating() { return this._controller.getState().playing; }
+  public isHolding() { return this._controller.getState().holding; }
 
   public enable(): this {
     this._controller.enable();

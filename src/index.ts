@@ -11,6 +11,7 @@ export * from "./control";
 export * from "./renderer";
 export * from "./const/external";
 export * from "./type/event";
+export * from "./type/external";
 
 // export * from "./types";
 // export { withFlickingMethods } from "./utils";

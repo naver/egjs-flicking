@@ -24,9 +24,9 @@ import {
   MoveTypeObjectOption,
   MoveTypeOption, ReadyEvent, BeforeResizeEvent, AfterResizeEvent
 } from "~/types";
-import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, ChangeEvent, RestoreEvent } from "~/type/event";
-import { LiteralUnion, ValueOf, ElementLike } from "~/type/internal";
-
+import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, ChangeEvent, RestoreEvent, NeedPanelEvent, VisibleChangeEvent } from "~/type/event";
+import { LiteralUnion, ValueOf } from "~/type/internal";
+import { ElementLike } from "~/type/external";
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type FlickingEvents = {
@@ -41,8 +41,8 @@ export type FlickingEvents = {
   [EVENTS.CHANGE]: ChangeEvent;
   [EVENTS.RESTORE]: RestoreEvent;
   [EVENTS.SELECT]: SelectEvent;
-  [EVENTS.NEED_PANEL]: void;
-  [EVENTS.VISIBLE_CHANGE]: void;
+  [EVENTS.NEED_PANEL]: NeedPanelEvent;
+  [EVENTS.VISIBLE_CHANGE]: VisibleChangeEvent;
   [EVENTS.CONTENT_ERROR]: void;
 };
 
@@ -88,6 +88,8 @@ export interface FlickingOptions {
   circular: boolean;
   bound: boolean;
   adaptive: boolean;
+  // EVENT
+  needPanelThreshold: number;
   // ANIMATION
   deceleration: number;
   duration: number;
@@ -142,6 +144,7 @@ class Flicking extends Component<FlickingEvents> {
   private _circular: FlickingOptions["circular"];
   private _bound: FlickingOptions["bound"];
   private _adaptive: FlickingOptions["adaptive"];
+  private _needPanelThreshold: FlickingOptions["needPanelThreshold"];
   private _deceleration: FlickingOptions["deceleration"];
   private _duration: FlickingOptions["duration"];
   private _easing: FlickingOptions["easing"];
@@ -167,6 +170,7 @@ class Flicking extends Component<FlickingEvents> {
     circular = false,
     bound = false,
     adaptive = false,
+    needPanelThreshold = 0,
     deceleration = 0.0075,
     duration = 500,
     easing = x => 1 - Math.pow(1 - x, 3),
@@ -194,6 +198,7 @@ class Flicking extends Component<FlickingEvents> {
     this._circular = circular;
     this._bound = bound;
     this._adaptive = adaptive;
+    this._needPanelThreshold = needPanelThreshold;
     this._deceleration = deceleration;
     this._duration = duration;
     this._easing = easing;
@@ -295,6 +300,8 @@ class Flicking extends Component<FlickingEvents> {
   public isCircular() { return this._circular; }
   public isBound() { return this._bound; }
   public isAdaptive() { return this._adaptive; }
+  // EVENTS
+  public getNeedPanelThreshold() { return this._needPanelThreshold; }
   // ANIMATION
   public getDeceleration() { return this._deceleration; }
   public getEasing() { return this._easing; }
@@ -472,6 +479,10 @@ class Flicking extends Component<FlickingEvents> {
     return this._control.isAnimating();
   }
 
+  public isHolding(): boolean {
+    return this._control.isHolding();
+  }
+
   /**
    * Unblock input devices.
    *
@@ -595,7 +606,7 @@ class Flicking extends Component<FlickingEvents> {
    * flicking.append("\<div\>Panel 1\</div\>\<div\>Panel 2\</div\>"); // Appended at index 4, 5
    */
   public append(element: ElementLike | ElementLike[]): Panel[] {
-    return this._renderer.insert(0, element);
+    return this._renderer.insert(this._renderer.getPanelCount(), element);
   }
 
   /**
@@ -613,7 +624,7 @@ class Flicking extends Component<FlickingEvents> {
    * flicking.prepend("\<div\>Panel\</div\>"); // Prepended at index 0, pushing every panels behind it.
    */
   public prepend(element: ElementLike | ElementLike[]): Panel[] {
-    return this._renderer.insert(this._renderer.getPanelCount(), element);
+    return this._renderer.insert(0, element);
   }
 
   public insert(index: number, element: ElementLike | ElementLike[]): Panel[] {

@@ -38,4 +38,5 @@ header {
   margin-right: 10px;
   border: 10px solid #963;
   box-sizing: border-box;
+  max-width: 100%;
 }

@@ -6,10 +6,11 @@ class App {
   public constructor() {
     const flicking = new Flicking("#flicking", {
       align: ALIGN.PREV,
-      bounce: "20%"
+      bounce: "20%",
+      needPanelThreshold: 100
     });
 
-    Object.values(EVENTS).forEach((eventName: ValueOf<typeof EVENTS>) => {
+    Object.values([EVENTS.NEED_PANEL, EVENTS.VISIBLE_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {
       flicking.on(eventName, event => console.log(eventName, event));
     });
 

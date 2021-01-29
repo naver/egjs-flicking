@@ -6,7 +6,7 @@ import Flicking, { FlickingOptions } from "~/Flicking";
 import Panel from "~/core/Panel";
 import { getCirculatedIndex, getFlickingAttached, includes, parseElement, toArray } from "~/utils";
 import { ALIGN } from "~/const/external";
-import { ElementLike } from "~/type/internal";
+import { ElementLike } from "~/type/external";
 
 export interface RendererOptions {
   align: FlickingOptions["align"];
@@ -58,7 +58,7 @@ abstract class Renderer {
 
   public getPanelFromPosition(position: number): Panel | null {
     for (const panel of this._panels) {
-      if (panel.include(position)) {
+      if (panel.includePosition(position)) {
         return panel;
       }
     }
@@ -90,8 +90,11 @@ abstract class Renderer {
 
     panels.splice(insertingIdx, 0, ...newPanels);
 
-    // Update panel indexes
-    panelsPushed.forEach(panel => panel.increaeIndex(newPanels.length));
+    // Update panel indexes & positions
+    panelsPushed.forEach(panel => {
+      panel.increaseIndex(newPanels.length);
+      panel.resize();
+    });
 
     // Insert the actual elements as camera element's children
     const cameraElement = camera.getElement();
@@ -104,12 +107,14 @@ abstract class Renderer {
     // Resize the newly added panels
     newPanels.forEach(panel => panel.resize());
 
-    // Update camera range
+    // Update camera & control
     camera.updateRange();
+    camera.resetNeedPanelHistory();
     control.updateInput();
 
     // Move to the first panel added if no panels existed
-    if (newPanels.length > 0) {
+    // FIXME: fix for animating case
+    if (newPanels.length > 0 && !control.isAnimating()) {
       const activePanel = control.getActivePanel();
 
       void control.moveToPanel(activePanel || newPanels[0], 0).catch(() => void 0);
@@ -137,17 +142,22 @@ abstract class Renderer {
       cameraElement.removeChild(panel.getElement());
     });
 
-    // Update camera range
+    // Update camera & control
     camera.updateRange();
+    camera.resetNeedPanelHistory();
     control.updateInput();
     control.checkActivePanelIsRemoved();
 
-    if (panelsRemoved.length > 0) {
+    // FIXME: fix for animating case
+    if (panelsRemoved.length > 0 && !control.isAnimating()) {
       const activePanel = control.getActivePanel();
       const targetPanel = includes(panelsRemoved, activePanel) ? panelsPulled[0] || panels[panels.length - 1] : activePanel;
 
       if (targetPanel) {
         void control.moveToPanel(targetPanel, 0).catch(() => void 0);
+      } else {
+        // All panels removed
+        camera.lookAt(0);
       }
     }
 
