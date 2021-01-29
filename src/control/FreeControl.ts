@@ -12,8 +12,8 @@ class FreeControl extends Control {
   public async moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
     const flicking = getFlickingAttached(this._flicking, "Control");
 
-    const camera = flicking.getCamera();
-    const panel = flicking.getRenderer().getPanelFromPosition(position);
+    const camera = flicking.camera;
+    const panel = flicking.renderer.getPanelFromPosition(position);
 
     const animate = () => this._controller.animateTo(position, duration);
     const updateActivePanel = () => {
@@ -24,10 +24,10 @@ class FreeControl extends Control {
 
     if (panel && panel !== this._activePanel) {
       const eventSuccess = flicking.trigger(EVENTS.CHANGE, {
-        index: panel.getIndex(),
+        index: panel.index,
         panel,
         isTrusted: axesEvent?.isTrusted || false,
-        direction: getDirection(camera.getPosition(), panel.getPosition())
+        direction: getDirection(camera.position, panel.position)
       });
 
       if (!eventSuccess) {

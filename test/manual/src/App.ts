@@ -11,9 +11,9 @@ class App {
       adaptive: true
     });
 
-    Object.values([EVENTS.NEED_PANEL, EVENTS.VISIBLE_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {
-      flicking.on(eventName, event => console.log(eventName, event));
-    });
+    // Object.values([EVENTS.NEED_PANEL, EVENTS.VISIBLE_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {
+    //   flicking.on(eventName, event => console.log(eventName, event));
+    // });
 
     document.getElementById("prev")?.addEventListener("click", () => {
       flicking.prev().then(() => console.log("PREV FINISHED"));

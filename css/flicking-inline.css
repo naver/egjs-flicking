@@ -29,9 +29,9 @@
 
 .flicking-panel {
   display: inline-block;
-  white-space: initial;
+  white-space: normal;
   vertical-align: top;
-  font-size: initial;
+  font-size: 1rem;
 }
 .flicking-viewport.vertical-middle>.flicking-camera .flicking-panel {
   vertical-align: middle;

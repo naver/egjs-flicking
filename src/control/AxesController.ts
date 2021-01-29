@@ -42,19 +42,19 @@ class AxesController {
         bounce: [0, 0]
       }
     }, {
-      deceleration: flicking.getDeceleration(),
-      interruptable: flicking.isInterruptable(),
-      easing: flicking.getEasing()
+      deceleration: flicking.deceleration,
+      interruptable: flicking.interruptable,
+      easing: flicking.easing
     });
-    this._panInput = new PanInput(flicking.getViewport().getElement(), {
-      inputType: flicking.getInputType(),
-      iOSEdgeSwipeThreshold: flicking.getIOSEdgeSwipeThreshold(),
-      scale: flicking.isHorizontal() ? [-1, 0] : [0, -1]
+    this._panInput = new PanInput(flicking.viewport.element, {
+      inputType: flicking.inputType,
+      iOSEdgeSwipeThreshold: flicking.iOSEdgeSwipeThreshold,
+      scale: flicking.horizontal ? [-1, 0] : [0, -1]
     });
 
     const axes = this._axes;
 
-    axes.connect(flicking.isHorizontal() ? ["flick", ""] : ["", "flick"], this._panInput);
+    axes.connect(flicking.horizontal ? ["flick", ""] : ["", "flick"], this._panInput);
 
     for (const key in AXES_EVENT) {
       const eventType = AXES_EVENT[key] as keyof AxesEvents;
@@ -75,10 +75,10 @@ class AxesController {
     return this;
   }
 
-  public getAxes() { return this._axes; }
-  public getState() { return this._stateMachine.getState(); }
-  public getAnimatingContext() { return this._animatingContext; }
-  public isEnabled() { return this._panInput?.isEnable() || false; }
+  public get axes() { return this._axes; }
+  public get state() { return this._stateMachine.state; }
+  public get animatingContext() { return this._animatingContext; }
+  public get enabled() { return this._panInput?.isEnable() || false; }
 
   public enable(): this {
     this._panInput?.enable();
@@ -96,15 +96,15 @@ class AxesController {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const axes = this._axes!;
 
-    const viewportSize = flicking.getViewport().getSize();
-    const cameraRange = flicking.getCamera().getRange();
+    const viewportSize = flicking.viewport.size;
+    const cameraRange = flicking.camera.range;
     const axis = axes.axis.flick;
 
-    axis.circular = flicking.isCircular();
+    axis.circular = flicking.circular;
     axis.range = [cameraRange.min, cameraRange.max];
-    axis.bounce = parseBounce(flicking.getBounce(), flicking.isHorizontal() ? viewportSize.width : viewportSize.height);
+    axis.bounce = parseBounce(flicking.bounce, flicking.horizontal ? viewportSize.width : viewportSize.height);
 
-    axes.setTo({ flick: flicking.getCamera().getPosition() }, 0);
+    axes.setTo({ flick: flicking.camera.position }, 0);
 
     return this;
   }

@@ -29,9 +29,7 @@ class StateMachine {
     this._state = new IdleState();
   }
 
-  public getState(): State {
-    return this._state;
-  }
+  public get state(): State { return this._state; }
 
   public fire(eventType: keyof AxesEvents, externalCtx: {
     flicking: Flicking;

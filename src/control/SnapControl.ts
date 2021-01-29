@@ -28,24 +28,24 @@ class SnapControl extends Control {
 
   public moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
     const flicking = getFlickingAttached(this._flicking, "Control");
-    const camera = flicking.getCamera();
+    const camera = flicking.camera;
     const activePanel = this._activePanel;
 
-    const cameraRange = camera.getRange();
+    const cameraRange = camera.range;
     const clampedPos = clamp(position, cameraRange.min, cameraRange.max);
-    const panelAtPosition = flicking.getRenderer().getPanelFromPosition(clampedPos);
+    const panelAtPosition = flicking.renderer.getPanelFromPosition(clampedPos);
 
     if (!panelAtPosition || !activePanel) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE));
     }
 
-    const prevPos = activePanel.getPosition();
-    const isOverThreshold = Math.abs(position - prevPos) >= flicking.getThreshold();
+    const prevPos = activePanel.position;
+    const isOverThreshold = Math.abs(position - prevPos) >= flicking.threshold;
 
     let targetPanel: Panel;
 
     if (isOverThreshold) {
-      if (panelAtPosition.getIndex() !== activePanel.getIndex()) {
+      if (panelAtPosition.index !== activePanel.index) {
         targetPanel = panelAtPosition;
       } else {
         const adjacentPanel = (position > prevPos) ? activePanel.next() : activePanel.prev();

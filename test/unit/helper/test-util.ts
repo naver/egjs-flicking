@@ -44,7 +44,7 @@ export const createFlicking = (el: El | any, option: ConstructorParameters<typeo
 export const createPanel = (el: El, panelOption: Partial<PanelOption> = {}, flickingOption: Partial<FlickingOptions> = {}): Panel => {
   const flicking = createFlicking(El.viewport().add(El.camera()), flickingOption);
 
-  flicking.getCamera().getElement().appendChild(el.el);
+  flicking.camera.element.appendChild(el.el);
 
   return new Panel({ el: el.el, align: ALIGN.CENTER, index: 0, flicking, ...panelOption });
 };

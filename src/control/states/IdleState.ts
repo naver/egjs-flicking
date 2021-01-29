@@ -34,8 +34,8 @@ class IdleState extends State {
   // By methods call
   public onChange(ctx: Parameters<State["onChange"]>[0]): void {
     const { flicking, axesEvent, transitTo } = ctx;
-    const controller = flicking.getControl().getController();
-    const animatingContext = controller.getAnimatingContext();
+    const controller = flicking.control.controller;
+    const animatingContext = controller.animatingContext;
 
     const eventSuccess = flicking.trigger(EVENTS.MOVE_START, {
       isTrusted: axesEvent.isTrusted,

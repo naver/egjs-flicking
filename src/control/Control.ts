@@ -40,11 +40,11 @@ abstract class Control {
     return this;
   }
 
-  public getController() { return this._controller; }
-  public getActiveIndex() { return this._activePanel?.getIndex() ?? -1; }
-  public getActivePanel() { return this._activePanel; }
-  public isAnimating() { return this._controller.getState().playing; }
-  public isHolding() { return this._controller.getState().holding; }
+  public get controller() { return this._controller; }
+  public get activeIndex() { return this._activePanel?.index ?? -1; }
+  public get activePanel() { return this._activePanel; }
+  public get animating() { return this._controller.state.playing; }
+  public get holding() { return this._controller.state.holding; }
 
   public enable(): this {
     this._controller.enable();
@@ -74,15 +74,15 @@ abstract class Control {
 
   public async moveToPanel(panel: Panel, duration: number, axesEvent?: OnRelease) {
     const flicking = getFlickingAttached(this._flicking, "Control");
-    const camera = flicking.getCamera();
+    const camera = flicking.camera;
 
     const triggeringEvent = panel !== this._activePanel ? EVENTS.CHANGE : EVENTS.RESTORE;
 
     const eventSuccess = flicking.trigger(triggeringEvent, {
-      index: panel.getIndex(),
+      index: panel.index,
       panel,
       isTrusted: axesEvent?.isTrusted || false,
-      direction: getDirection(camera.getPosition(), panel.getPosition())
+      direction: getDirection(camera.position, panel.position)
     });
 
     if (!eventSuccess) {
@@ -93,7 +93,7 @@ abstract class Control {
     const updateActivePanel = () => {
       this._activePanel = panel;
     };
-    const animate = () => this._controller.animateTo(panel.getPosition(), duration, axesEvent);
+    const animate = () => this._controller.animateTo(panel.position, duration, axesEvent);
 
     if (duration === 0) {
       updateActivePanel();

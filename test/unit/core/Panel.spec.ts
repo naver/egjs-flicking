@@ -10,36 +10,36 @@ describe("Panel", () => {
       const el = El.panel();
       const panel = createPanel(el);
 
-      expect(panel.getElement()).to.equal(el.el);
-      expect(panel.getElement()).to.be.an.instanceOf(HTMLElement);
+      expect(panel.element).to.equal(el.el);
+      expect(panel.element).to.be.an.instanceOf(HTMLElement);
     });
 
     it("should have the same index in constructor", () => {
       const panel = createPanel(El.panel(), { index: 999 });
 
-      expect(panel.getIndex()).to.equal(999);
+      expect(panel.index).to.equal(999);
     });
 
     it("has size 0 on creation", () => {
       const panel = createPanel(El.panel());
 
-      expect(panel.getSize().width).to.equal(0);
-      expect(panel.getSize().height).to.equal(0);
+      expect(panel.size.width).to.equal(0);
+      expect(panel.size.height).to.equal(0);
     });
 
     it("has position 0 on creation", () => {
       const panel = createPanel(El.panel());
 
-      expect(panel.getPosition()).to.equal(0);
+      expect(panel.position).to.equal(0);
     });
 
     it("has margin 0 on creation", () => {
       const panel = createPanel(El.panel());
 
-      expect(panel.getMargin().top).to.equal(0);
-      expect(panel.getMargin().left).to.equal(0);
-      expect(panel.getMargin().bottom).to.equal(0);
-      expect(panel.getMargin().right).to.equal(0);
+      expect(panel.margin.top).to.equal(0);
+      expect(panel.margin.left).to.equal(0);
+      expect(panel.margin.bottom).to.equal(0);
+      expect(panel.margin.right).to.equal(0);
     });
   });
 
@@ -49,15 +49,15 @@ describe("Panel", () => {
         const align = "24px";
         const panel = createPanel(El.panel(), { align });
 
-        expect(panel.getAlign()).to.equal(align);
+        expect(panel.align).to.equal(align);
       });
 
       it("can be changed anytime", () => {
         const panel = createPanel(El.panel(), { align: ALIGN.PREV });
 
-        panel.setAlign(ALIGN.CENTER);
+        panel.align = ALIGN.CENTER;
 
-        expect(panel.getAlign()).to.equal(ALIGN.CENTER);
+        expect(panel.align).to.equal(ALIGN.CENTER);
       });
     });
   });
@@ -69,8 +69,8 @@ describe("Panel", () => {
 
         panel.resize();
 
-        expect(panel.getSize().width).to.equal(300);
-        expect(panel.getSize().height).to.equal(300);
+        expect(panel.size.width).to.equal(300);
+        expect(panel.size.height).to.equal(300);
       });
 
       it("should update its margin", () => {
@@ -78,10 +78,10 @@ describe("Panel", () => {
 
         panel.resize();
 
-        expect(panel.getMargin().top).to.equal(10);
-        expect(panel.getMargin().left).to.equal(20);
-        expect(panel.getMargin().bottom).to.equal(30);
-        expect(panel.getMargin().right).to.equal(40);
+        expect(panel.margin.top).to.equal(10);
+        expect(panel.margin.left).to.equal(20);
+        expect(panel.margin.bottom).to.equal(30);
+        expect(panel.margin.right).to.equal(40);
       });
 
       it("should update its position", () => {
@@ -93,7 +93,7 @@ describe("Panel", () => {
 
         panel.resize();
 
-        expect(panel.getPosition()).to.equal(panel.getElement().offsetLeft + 150); // pos + align
+        expect(panel.position).to.equal(panel.element.offsetLeft + 150); // pos + align
       });
     });
 
@@ -107,7 +107,7 @@ describe("Panel", () => {
 
         panel.resize();
 
-        expect(panel.getPosition()).to.equal(panel.getElement().offsetLeft + 120); // pos + align
+        expect(panel.position).to.equal(panel.element.offsetLeft + 120); // pos + align
       });
 
       it("should return its position.top + alignPos when horizontal: false", () => {
@@ -119,7 +119,7 @@ describe("Panel", () => {
 
         panel.resize();
 
-        expect(panel.getPosition()).to.equal(panel.getElement().offsetTop + 934); // pos + align
+        expect(panel.position).to.equal(panel.element.offsetTop + 934); // pos + align
       });
     });
 
@@ -128,10 +128,10 @@ describe("Panel", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
         const panel = flicking.getPanel(0);
 
-        panel.getElement().remove();
+        panel.element.remove();
 
         expect(panel.isRemoved()).to.be.true;
-        expect(panel.getElement().parentElement).not.equals(flicking.getCamera().getElement());
+        expect(panel.element.parentElement).not.equals(flicking.camera.element);
       });
 
       it("should return true if the panel element is not attached to camera element", () => {
@@ -139,10 +139,10 @@ describe("Panel", () => {
         const panel = flicking.getPanel(0);
 
         // Append to viewport element
-        flicking.getElement().appendChild(panel.getElement());
+        flicking.viewport.element.appendChild(panel.element);
 
         expect(panel.isRemoved()).to.be.true;
-        expect(panel.getElement().parentElement).not.equals(flicking.getCamera().getElement());
+        expect(panel.element.parentElement).not.equals(flicking.camera.element);
       });
 
       it("should return false if the panel element is attached to camera element", () => {
@@ -150,26 +150,26 @@ describe("Panel", () => {
         const panel = flicking.getPanel(0);
 
         expect(panel.isRemoved()).to.be.false;
-        expect(panel.getElement().parentElement).to.equal(flicking.getCamera().getElement());
+        expect(panel.element.parentElement).to.equal(flicking.camera.element);
       });
     });
 
-    describe("include", () => {
+    describe("includePosition", () => {
       it("should return true when given position is inside panel", () => {
         const panel = createPanel(El.panel().setWidth(1000).setHeight(1000));
         panel.resize();
 
-        expect(panel.include(panel.getElement().offsetLeft)).to.be.true;
-        expect(panel.include(panel.getElement().offsetLeft + 500)).to.be.true;
-        expect(panel.include(panel.getElement().offsetLeft + 1000)).to.be.true;
+        expect(panel.includePosition(panel.element.offsetLeft)).to.be.true;
+        expect(panel.includePosition(panel.element.offsetLeft + 500)).to.be.true;
+        expect(panel.includePosition(panel.element.offsetLeft + 1000)).to.be.true;
       });
 
       it("should return false when given position is outside of panel", () => {
         const panel = createPanel(El.panel().setWidth(1000).setHeight(1000));
         panel.resize();
 
-        expect(panel.include(panel.getElement().offsetLeft - 0.1)).to.be.false;
-        expect(panel.include(panel.getElement().offsetLeft + 1000 + 0.1)).to.be.false;
+        expect(panel.includePosition(panel.element.offsetLeft - 0.1)).to.be.false;
+        expect(panel.includePosition(panel.element.offsetLeft + 1000 + 0.1)).to.be.false;
       });
 
       it("should return true when given position is inside panel margin left/right area", () => {
@@ -178,8 +178,8 @@ describe("Panel", () => {
         );
         panel.resize();
 
-        expect(panel.include(panel.getElement().offsetLeft - 50)).to.be.true;
-        expect(panel.include(panel.getElement().offsetLeft + 1000 + 50)).to.be.true;
+        expect(panel.includePosition(panel.element.offsetLeft - 50)).to.be.true;
+        expect(panel.includePosition(panel.element.offsetLeft + 1000 + 50)).to.be.true;
       });
 
       it("should return true when given position is inside panel margin top/bottom area", () => {
@@ -188,8 +188,8 @@ describe("Panel", () => {
         );
         panel.resize();
 
-        expect(panel.include(panel.getElement().offsetTop - 50)).to.be.true;
-        expect(panel.include(panel.getElement().offsetTop + 1000 + 50)).to.be.true;
+        expect(panel.includePosition(panel.element.offsetTop - 50)).to.be.true;
+        expect(panel.includePosition(panel.element.offsetTop + 1000 + 50)).to.be.true;
       });
 
       it("should return false when given position is outside of panel margin left/right area", () => {
@@ -198,8 +198,8 @@ describe("Panel", () => {
         );
         panel.resize();
 
-        expect(panel.include(panel.getElement().offsetLeft - 50.1)).to.be.false;
-        expect(panel.include(panel.getElement().offsetLeft + 1000 + 50.1)).to.be.false;
+        expect(panel.includePosition(panel.element.offsetLeft - 50.1)).to.be.false;
+        expect(panel.includePosition(panel.element.offsetLeft + 1000 + 50.1)).to.be.false;
       });
 
       it("should return false when given position is outside of panel margin top/bottom area", () => {
@@ -208,8 +208,8 @@ describe("Panel", () => {
         );
         panel.resize();
 
-        expect(panel.include(panel.getElement().offsetTop - 50.1)).to.be.false;
-        expect(panel.include(panel.getElement().offsetTop + 1000 + 50.1)).to.be.false;
+        expect(panel.includePosition(panel.element.offsetTop - 50.1)).to.be.false;
+        expect(panel.includePosition(panel.element.offsetTop + 1000 + 50.1)).to.be.false;
       });
     });
 
@@ -223,7 +223,7 @@ describe("Panel", () => {
 
         await panel.focus(0);
 
-        expect(moveToSpy.calledWith(panel.getIndex())).to.be.true;
+        expect(moveToSpy.calledWith(panel.index)).to.be.true;
       });
 
       it("should call Flicking's 'moveTo' with the same duration as a parameter", () => {
@@ -236,7 +236,7 @@ describe("Panel", () => {
         void panel.focus(9999);
         tick(10000);
 
-        expect(moveToSpy.calledWith(panel.getIndex())).to.be.true;
+        expect(moveToSpy.calledWith(panel.index)).to.be.true;
       });
     });
 
@@ -268,33 +268,33 @@ describe("Panel", () => {
 
     describe("increaseIndex", () => {
       it("should increase panel's index by given value", () => {
-        expect(createPanel(El.panel(), { index: 0 }).increaeIndex(5).getIndex()).to.equal(5);
-        expect(createPanel(El.panel(), { index: 3 }).increaeIndex(8).getIndex()).to.equal(11);
-        expect(createPanel(El.panel(), { index: 1 }).increaeIndex(0).getIndex()).to.equal(1);
-        expect(createPanel(El.panel(), { index: 10 }).increaeIndex(1).getIndex()).to.equal(11);
+        expect(createPanel(El.panel(), { index: 0 }).increaseIndex(5).index).to.equal(5);
+        expect(createPanel(El.panel(), { index: 3 }).increaseIndex(8).index).to.equal(11);
+        expect(createPanel(El.panel(), { index: 1 }).increaseIndex(0).index).to.equal(1);
+        expect(createPanel(El.panel(), { index: 10 }).increaseIndex(1).index).to.equal(11);
       });
 
       it("should not increase the panel's index if the given value is a negative number", () => {
-        expect(createPanel(El.panel(), { index: 0 }).increaeIndex(-1).getIndex()).to.equal(0);
-        expect(createPanel(El.panel(), { index: 3 }).increaeIndex(-100).getIndex()).to.equal(3);
-        expect(createPanel(El.panel(), { index: 1 }).increaeIndex(-5).getIndex()).to.equal(1);
-        expect(createPanel(El.panel(), { index: 10 }).increaeIndex(-99).getIndex()).to.equal(10);
+        expect(createPanel(El.panel(), { index: 0 }).increaseIndex(-1).index).to.equal(0);
+        expect(createPanel(El.panel(), { index: 3 }).increaseIndex(-100).index).to.equal(3);
+        expect(createPanel(El.panel(), { index: 1 }).increaseIndex(-5).index).to.equal(1);
+        expect(createPanel(El.panel(), { index: 10 }).increaseIndex(-99).index).to.equal(10);
       });
     });
 
     describe("decreaseIndex", () => {
       it("should decrease panel's index by given value", () => {
-        expect(createPanel(El.panel(), { index: 5 }).decreaseIndex(5).getIndex()).to.equal(0);
-        expect(createPanel(El.panel(), { index: 10 }).decreaseIndex(8).getIndex()).to.equal(2);
-        expect(createPanel(El.panel(), { index: 1 }).decreaseIndex(0).getIndex()).to.equal(1);
-        expect(createPanel(El.panel(), { index: 10 }).decreaseIndex(1).getIndex()).to.equal(9);
+        expect(createPanel(El.panel(), { index: 5 }).decreaseIndex(5).index).to.equal(0);
+        expect(createPanel(El.panel(), { index: 10 }).decreaseIndex(8).index).to.equal(2);
+        expect(createPanel(El.panel(), { index: 1 }).decreaseIndex(0).index).to.equal(1);
+        expect(createPanel(El.panel(), { index: 10 }).decreaseIndex(1).index).to.equal(9);
       });
 
       it("should not decrease the panel's index if the given value is a negative number", () => {
-        expect(createPanel(El.panel(), { index: 0 }).decreaseIndex(-1).getIndex()).to.equal(0);
-        expect(createPanel(El.panel(), { index: 3 }).decreaseIndex(-100).getIndex()).to.equal(3);
-        expect(createPanel(El.panel(), { index: 1 }).decreaseIndex(-5).getIndex()).to.equal(1);
-        expect(createPanel(El.panel(), { index: 10 }).decreaseIndex(-99).getIndex()).to.equal(10);
+        expect(createPanel(El.panel(), { index: 0 }).decreaseIndex(-1).index).to.equal(0);
+        expect(createPanel(El.panel(), { index: 3 }).decreaseIndex(-100).index).to.equal(3);
+        expect(createPanel(El.panel(), { index: 1 }).decreaseIndex(-5).index).to.equal(1);
+        expect(createPanel(El.panel(), { index: 10 }).decreaseIndex(-99).index).to.equal(10);
       });
     });
   });

@@ -55,7 +55,7 @@ class HoldingState extends State {
 
       // Event flow should be HOLD_START -> MOVE_START -> MOVE -> HOLD_END
       // At least one move event should be included between holdStart and holdEnd
-      axesEvent.setTo({ flick: flicking.getCamera().getPosition() }, 0);
+      axesEvent.setTo({ flick: flicking.camera.position }, 0);
       transitTo(STATE_TYPE.IDLE);
       return;
     }
@@ -94,22 +94,22 @@ class HoldingState extends State {
     }
     /* eslint-enable */
 
-    const panels = flicking.getRenderer().getPanels();
+    const panels = flicking.renderer.getPanels();
     let clickedPanel: Panel | null = null;
 
     for (const panel of panels) {
-      if (panel.getElement().contains(clickedElement)) {
+      if (panel.element.contains(clickedElement)) {
         clickedPanel = panel;
         break;
       }
     }
 
     if (clickedPanel) {
-      const cameraPosition = flicking.getCamera().getPosition();
-      const clickedPanelPosition = clickedPanel.getPosition();
+      const cameraPosition = flicking.camera.position;
+      const clickedPanelPosition = clickedPanel.position;
 
       flicking.trigger(EVENTS.SELECT, {
-        index: clickedPanel.getIndex(),
+        index: clickedPanel.index,
         panel: clickedPanel,
         // Direction to the clicked panel
         direction: getDirection(cameraPosition, clickedPanelPosition)

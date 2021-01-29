@@ -32,8 +32,8 @@ class AnimatingState extends State {
       return;
     }
 
-    const camera = flicking.getCamera();
-    const prevPosition = camera.getPosition();
+    const camera = flicking.camera;
+    const prevPosition = camera.position;
 
     camera.lookAt(axesEvent.pos.flick);
 
@@ -46,7 +46,7 @@ class AnimatingState extends State {
 
     if (!isSuccess) {
       // Return to previous position
-      flicking.getCamera().lookAt(prevPosition);
+      flicking.camera.lookAt(prevPosition);
       transitTo(STATE_TYPE.DISABLED);
     }
   }
@@ -60,16 +60,17 @@ class AnimatingState extends State {
     //   viewport.setCurrentPanel(viewport.getNearestPanel() as Panel);
     // }
 
-    const panelBelow = flicking.getCamera().getPanelBelow();
-    if (flicking.isAdaptive() && panelBelow) {
-      const panelSize = panelBelow.getSize();
-      flicking.getViewport().setSize({ height: panelSize.height });
+    const panelBelow = flicking.camera.getPanelBelow();
+    if (flicking.horizontal && flicking.adaptive && panelBelow) {
+      const panelSize = panelBelow.size;
+
+      flicking.viewport.setSize({ height: panelSize.height });
     }
 
     transitTo(STATE_TYPE.IDLE);
 
-    const controller = flicking.getControl().getController();
-    const animatingContext = controller.getAnimatingContext();
+    const controller = flicking.control.controller;
+    const animatingContext = controller.animatingContext;
 
     flicking.trigger(EVENTS.MOVE_END, {
       isTrusted: axesEvent.isTrusted,

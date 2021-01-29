@@ -60,7 +60,7 @@ export const getFlickingAttached = (val: Flicking | null, nameToThrowOnError: st
 export const toArray = <T>(iterable: ArrayLike<T>): T[] => [].slice.call(iterable) as T[];
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-export const isArray = (arr: any): arr is any[] => arr && arr.constructor === Array;
+export const isArray = (arr: any): arr is any[] => Boolean(arr) && arr.constructor === Array;
 
 export const parseAlign = (align: LiteralUnion<ValueOf<typeof ALIGN>> | number, size: number): number => {
   let alignPoint: number | null;

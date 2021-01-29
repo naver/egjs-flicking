@@ -18,8 +18,8 @@ class DraggingState extends State {
       return;
     }
 
-    const camera = flicking.getCamera();
-    const prevPosition = camera.getPosition();
+    const camera = flicking.camera;
+    const prevPosition = camera.position;
 
     camera.lookAt(axesEvent.pos.flick);
 
@@ -32,7 +32,7 @@ class DraggingState extends State {
 
     if (!isSuccess) {
       // Return to previous position
-      flicking.getCamera().lookAt(prevPosition);
+      camera.lookAt(prevPosition);
       transitTo(STATE_TYPE.DISABLED);
     }
   }
@@ -46,7 +46,7 @@ class DraggingState extends State {
       axesEvent
     });
 
-    if (flicking.getRenderer().getPanelCount() <= 0) {
+    if (flicking.renderer.getPanelCount() <= 0) {
       // There're no panels
       transitTo(STATE_TYPE.IDLE);
       return;
@@ -54,9 +54,9 @@ class DraggingState extends State {
 
     transitTo(STATE_TYPE.ANIMATING);
 
-    const control = flicking.getControl();
+    const control = flicking.control;
     const position = axesEvent.destPos.flick;
-    const duration = Math.max(axesEvent.duration, flicking.getDuration());
+    const duration = Math.max(axesEvent.duration, flicking.duration);
 
     void control.moveToPosition(position, duration, axesEvent);
   }

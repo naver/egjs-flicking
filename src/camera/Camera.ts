@@ -43,7 +43,7 @@ abstract class Camera {
   public init(flicking: Flicking): this {
     this._flicking = flicking;
 
-    const viewportEl = flicking.getViewport().getElement();
+    const viewportEl = flicking.viewport.element;
 
     checkExistence(viewportEl.firstElementChild, "First element child of the viewport element");
     this._el = viewportEl.firstElementChild as HTMLElement;
@@ -57,23 +57,24 @@ abstract class Camera {
     return this;
   }
 
+  // Internal states getter
+  public get element() { return this._el; }
+  public get position() { return this._position; }
+  public get alignPosition() { return this._alignPos; }
+  public get range() { return this._range; }
+
   // Options Getter
-  public getAlign() { return this._align; }
+  public get align() { return this._align; }
 
   // Options Setter
-  public setAlign(val: FlickingOptions["align"]) {
+  public set align(val: FlickingOptions["align"]) {
     this._align = val;
   }
-
-  public getElement() { return this._el; }
-  public getPosition() { return this._position; }
-  public getAlignPosition() { return this._alignPos; }
-  public getRange() { return this._range; }
 
   public getPanelBelow(): Panel | null {
     const flicking = getFlickingAttached(this._flicking, "Camera");
 
-    return flicking.getRenderer().getPanelFromPosition(this._position);
+    return flicking.renderer.getPanelFromPosition(this._position);
   }
 
   public lookAt(pos: number): this {
@@ -87,13 +88,13 @@ abstract class Camera {
   public updateAlignPos(): this {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const align = this._align;
-    const size = flicking.getViewport().getSize();
+    const size = flicking.viewport.size;
 
     const alignVal = typeof align === "object"
       ? (align as { hanger: string | number }).hanger
       : align;
 
-    this._alignPos = parseAlign(alignVal, flicking.isHorizontal() ? size.width : size.height);
+    this._alignPos = parseAlign(alignVal, flicking.horizontal ? size.width : size.height);
 
     return this;
   }
@@ -104,7 +105,7 @@ abstract class Camera {
 
   private _refreshVisiblePanels(): void {
     const flicking = getFlickingAttached(this._flicking, "Camera");
-    const panels = flicking.getRenderer().getPanels();
+    const panels = flicking.renderer.getPanels();
 
     const newVisiblePanels = panels.filter(panel => panel.isVisible());
     const prevVisiblePanels = this._visiblePanels;
@@ -129,7 +130,7 @@ abstract class Camera {
     if (needPanelTriggered.prev && needPanelTriggered.next) return;
 
     const flicking = getFlickingAttached(this._flicking, "Camera");
-    const panels = flicking.getRenderer().getPanels();
+    const panels = flicking.renderer.getPanels();
 
     if (panels.length <= 0) {
       if (!needPanelTriggered.prev) {
@@ -144,11 +145,11 @@ abstract class Camera {
       return;
     }
 
-    const viewportSize = flicking.getViewport().getSize();
+    const viewportSize = flicking.viewport.size;
     const cameraPosition = this._position;
-    const cameraSize = flicking.isHorizontal() ? viewportSize.width : viewportSize.height;
+    const cameraSize = flicking.horizontal ? viewportSize.width : viewportSize.height;
     const cameraRange = this._range;
-    const needPanelThreshold = flicking.getNeedPanelThreshold();
+    const needPanelThreshold = flicking.needPanelThreshold;
 
     const cameraPrev = cameraPosition - this._alignPos;
     const cameraNext = cameraPrev + cameraSize;
@@ -157,8 +158,8 @@ abstract class Camera {
     const lastPanel = panels[panels.length - 1];
 
     if (!needPanelTriggered.prev) {
-      const firstPanelBbox = firstPanel.getBoundingBox();
-      const firstPanelPrev = flicking.isHorizontal() ? firstPanelBbox.left : firstPanelBbox.top;
+      const firstPanelBbox = firstPanel.bbox;
+      const firstPanelPrev = flicking.horizontal ? firstPanelBbox.left : firstPanelBbox.top;
 
       if (cameraPrev <= (firstPanelPrev + needPanelThreshold) || cameraPosition <= (cameraRange.min + needPanelThreshold)) {
         flicking.trigger(EVENTS.NEED_PANEL, { direction: DIRECTION.PREV });
@@ -167,8 +168,8 @@ abstract class Camera {
     }
 
     if (!needPanelTriggered.next) {
-      const lastPanelBbox = lastPanel.getBoundingBox();
-      const lastPanelNext = flicking.isHorizontal() ? lastPanelBbox.right : lastPanelBbox.bottom;
+      const lastPanelBbox = lastPanel.bbox;
+      const lastPanelNext = flicking.horizontal ? lastPanelBbox.right : lastPanelBbox.bottom;
 
       if (cameraNext >= (lastPanelNext - needPanelThreshold) || cameraPosition >= (cameraRange.max - needPanelThreshold)) {
         flicking.trigger(EVENTS.NEED_PANEL, { direction: DIRECTION.NEXT });
