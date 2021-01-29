@@ -16,7 +16,8 @@
  * @property {number} NOT_ATTACHED_TO_FLICKING 3
  * @property {number} WRONG_OPTION 4
  * @property {number} INDEX_OUT_OF_RANGE 5
- * @property {number} POSITION_NOT_REACHABLE 5
+ * @property {number} POSITION_NOT_REACHABLE 6
+ * @property {number} TRANSFORM_NOT_SUPPORTED 7
  */
 export const CODE = {
   WRONG_TYPE: 0,
@@ -25,7 +26,8 @@ export const CODE = {
   NOT_ATTACHED_TO_FLICKING: 3,
   WRONG_OPTION: 4,
   INDEX_OUT_OF_RANGE: 5,
-  POSITION_NOT_REACHABLE: 6
+  POSITION_NOT_REACHABLE: 6,
+  TRANSFORM_NOT_SUPPORTED: 7
 } as const;
 
 export const MESSAGE = {
@@ -35,5 +37,6 @@ export const MESSAGE = {
   NOT_ATTACHED_TO_FLICKING: (name: string) => `${name} is not attached to the Flicking instance. "init()" should be called first.`,
   WRONG_OPTION: (optionName: string, val: any) => `Option "${optionName}" is not in correct format, given: ${val}`,
   INDEX_OUT_OF_RANGE: (val: number, min: number, max: number) => `Index "${val}" is out of range: should be between ${min} and ${max}.`,
-  POSITION_NOT_REACHABLE: (position: number) => `Position "${position}" is not reachable.`
+  POSITION_NOT_REACHABLE: (position: number) => `Position "${position}" is not reachable.`,
+  TRANSFORM_NOT_SUPPORTED: "Browser does not support CSS transform"
 };

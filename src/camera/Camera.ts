@@ -3,7 +3,9 @@
  * egjs projects are licensed under the MIT license
  */
 import Flicking, { FlickingOptions } from "~/Flicking";
+import FlickingError from "~/core/FlickingError";
 import Panel from "~/core/Panel";
+import * as ERROR from "~/const/error";
 import { ALIGN, DIRECTION, EVENTS } from "~/const/external";
 import { checkExistence, getFlickingAttached, includes, parseAlign } from "~/utils";
 
@@ -18,6 +20,7 @@ abstract class Camera {
   // Internal states
   protected _flicking: Flicking | null;
   protected _el: HTMLElement;
+  protected _transform: string;
   protected _position: number;
   protected _alignPos: number;
   protected _range: { min: number; max: number };
@@ -47,6 +50,7 @@ abstract class Camera {
 
     checkExistence(viewportEl.firstElementChild, "First element child of the viewport element");
     this._el = viewportEl.firstElementChild as HTMLElement;
+    this._checkTranslateSupport();
 
     return this;
   }
@@ -181,8 +185,26 @@ abstract class Camera {
   private _applyTransform(): void {
     const el = this._el;
 
-    el.style.transform = `translate(${-(this._position - this._alignPos)}px)`;
+    el.style[this._transform] = `translate(${-(this._position - this._alignPos)}px)`;
   }
+
+  private _checkTranslateSupport = () => {
+    const transforms = ["webkitTransform", "msTransform", "MozTransform", "OTransform", "transform"];
+
+    const supportedStyle = document.documentElement.style;
+    let transformName = "";
+    for (const prefixedTransform of transforms) {
+      if (prefixedTransform in supportedStyle) {
+        transformName = prefixedTransform;
+      }
+    }
+
+    if (!transformName) {
+      throw new FlickingError(ERROR.MESSAGE.TRANSFORM_NOT_SUPPORTED, ERROR.CODE.TRANSFORM_NOT_SUPPORTED);
+    }
+
+    this._transform = transformName;
+  };
 }
 
 export default Camera;
