@@ -188,7 +188,7 @@ export const parseElement = (element: ElementLike | ElementLike[]): HTMLElement[
 
 export const getCirculatedIndex = (idx: number, max: number) => idx < 0 ? clamp(idx + max, 0, max) : clamp(idx, 0, max);
 
-export const includes = <T>(array: T[], target: T) => {
+export const includes = <T>(array: T[], target: any): target is T => {
   for (const val of array) {
     if (val === target) return true;
   }

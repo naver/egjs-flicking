@@ -16,15 +16,18 @@ export interface SnapControlOptions {
 
 class SnapControl extends Control {
   // Options
-  protected _count: number;
+  private _count: SnapControlOptions["count"];
 
   public constructor({
     count = 1
-  }: SnapControlOptions) {
+  }: Partial<SnapControlOptions>) {
     super();
 
     this._count = count;
   }
+
+  public get count() { return this._count; }
+  public set count(val: SnapControlOptions["count"]) { this._count = val; }
 
   public moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
     const flicking = getFlickingAttached(this._flicking, "Control");

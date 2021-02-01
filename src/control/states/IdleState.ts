@@ -2,14 +2,13 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import State from "~/control/states/State";
-import { STATE_TYPE } from "~/control/StateMachine";
+import State, { STATE_TYPE } from "~/control/states/State";
 import { EVENTS } from "~/const/external";
 import { getDirection } from "~/utils";
 
 class IdleState extends State {
   public readonly holding = false;
-  public readonly playing = false;
+  public readonly animating = false;
 
   public onHold(ctx: Parameters<State["onHold"]>[0]): void {
     // Shouldn't do any action until any panels on flicking area

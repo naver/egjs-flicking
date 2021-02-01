@@ -7,16 +7,9 @@ import Axes, { PanInput, AxesEvents, OnRelease } from "@egjs/axes";
 import Flicking from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
 import StateMachine from "~/control/StateMachine";
+import * as AXES from "~/const/axes";
 import * as ERROR from "~/const/error";
 import { getFlickingAttached, parseBounce } from "~/utils";
-
-export const AXES_EVENT = {
-  HOLD: "hold",
-  CHANGE: "change",
-  RELEASE: "release",
-  ANIMATION_END: "animationEnd",
-  FINISH: "finish"
-} as const;
 
 class AxesController {
   private _flicking: Flicking | null;
@@ -54,10 +47,10 @@ class AxesController {
 
     const axes = this._axes;
 
-    axes.connect(flicking.horizontal ? ["flick", ""] : ["", "flick"], this._panInput);
+    axes.connect(flicking.horizontal ? [AXES.POSITION_KEY, ""] : ["", AXES.POSITION_KEY], this._panInput);
 
-    for (const key in AXES_EVENT) {
-      const eventType = AXES_EVENT[key] as keyof AxesEvents;
+    for (const key in AXES.EVENT) {
+      const eventType = AXES.EVENT[key] as keyof AxesEvents;
 
       axes.on(eventType, (e: AxesEvents[typeof eventType]) => {
         this._stateMachine.fire(eventType, {
@@ -117,12 +110,12 @@ class AxesController {
     }
 
     this._animatingContext = {
-      start: axes.get(["flick"]).flick,
+      start: axes.get([AXES.POSITION_KEY]).flick,
       end: position
     };
 
     const animate = () => {
-      axes.once(AXES_EVENT.FINISH, () => {
+      axes.once(AXES.EVENT.FINISH, () => {
         this._animatingContext = { start: 0, end: 0 };
       });
 
@@ -139,7 +132,7 @@ class AxesController {
       return Promise.resolve();
     } else {
       return new Promise(resolve => {
-        axes.once(AXES_EVENT.FINISH, () => {
+        axes.once(AXES.EVENT.FINISH, () => {
           resolve();
         });
 

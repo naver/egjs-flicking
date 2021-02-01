@@ -6,11 +6,18 @@
 import { OnAnimationEnd, OnChange, OnFinish, OnHold, OnRelease } from "@egjs/axes";
 
 import Flicking from "~/Flicking";
-import { STATE_TYPE } from "~/control/StateMachine";
+
+export enum STATE_TYPE {
+  IDLE,
+  HOLDING,
+  DRAGGING,
+  ANIMATING,
+  DISABLED
+}
 
 abstract class State {
   public abstract readonly holding: boolean;
-  public abstract readonly playing: boolean;
+  public abstract readonly animating: boolean;
 
   public onHold(ctx: {
     flicking: Flicking;

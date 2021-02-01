@@ -3,28 +3,8 @@
  * egjs projects are licensed under the MIT license
  */
 
-import { Direction, AxesEventType, StateType, MoveTypeSnapOption, MoveTypeFreeScrollOption } from "./types";
+import { Direction, AxesEventType, StateType } from "./types";
 
-export const MOVE_TYPE: {
-  SNAP: "snap";
-  FREE_SCROLL: "freeScroll";
-} = {
-  SNAP: "snap",
-  FREE_SCROLL: "freeScroll"
-};
-
-export const DEFAULT_MOVE_TYPE_OPTIONS: {
-  snap: MoveTypeSnapOption;
-  freeScroll: MoveTypeFreeScrollOption;
-} = {
-  snap: {
-    type: "snap",
-    count: 1
-  },
-  freeScroll: {
-    type: "freeScroll"
-  }
-};
 export const isBrowser = typeof document !== "undefined";
 
 /**
@@ -57,7 +37,7 @@ export const DEFAULT_OPTIONS = {
   hanger: "50%",
   anchor: "50%",
   gap: 0,
-  moveType: DEFAULT_MOVE_TYPE_OPTIONS.snap,
+  moveType: "snap",
   useOffset: false,
   isEqualSize: false,
   isConstantSize: false,

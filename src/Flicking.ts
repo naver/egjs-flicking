@@ -4,7 +4,6 @@
  */
 import Component from "@egjs/component";
 import ImReady from "@egjs/imready";
-import { DiffResult } from "@egjs/list-differ";
 
 import FlickingError from "./core/FlickingError";
 import Viewport from "./core/Viewport";
@@ -13,20 +12,17 @@ import { Control, FreeControl, SnapControl, SnapControlOptions } from "./control
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
 import { RawRenderer, Renderer, VisibleRenderer } from "./renderer";
 
-import { EVENTS, ALIGN } from "~/const/external";
+import { EVENTS, ALIGN, MOVE_TYPE } from "~/const/external";
 import * as ERROR from "~/const/error";
-import { getElement } from "~/utils";
-import { DEFAULT_MOVE_TYPE_OPTIONS, MOVE_TYPE } from "~/consts";
+import { getElement, includes } from "~/utils";
 import {
   FlickingStatus,
   Plugin,
-  MoveTypeStringOption,
-  MoveTypeObjectOption,
-  MoveTypeOption, ReadyEvent, BeforeResizeEvent, AfterResizeEvent
+  ReadyEvent, BeforeResizeEvent, AfterResizeEvent
 } from "~/types";
 import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, ChangeEvent, RestoreEvent, NeedPanelEvent, VisibleChangeEvent } from "~/type/event";
 import { LiteralUnion, ValueOf } from "~/type/internal";
-import { ElementLike } from "~/type/external";
+import { ElementLike, MoveTypeOption } from "~/type/external";
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type FlickingEvents = {
@@ -96,7 +92,7 @@ export interface FlickingOptions {
   easing: (x: number) => number;
   // INPUT
   inputType: string[];
-  moveType: MoveTypeOption;
+  moveType: ValueOf<typeof MOVE_TYPE> | MoveTypeOption;
   threshold: number;
   interruptable: boolean;
   bounce: number | string | [number | string, number | string];
@@ -643,40 +639,28 @@ class Flicking extends Component<FlickingEvents> {
     return this._renderer.remove(index, deleteCount);
   }
 
-  /**
-   * Get indexes to render. Should be used with `renderOnlyVisible` option.
-   * `beforeSync` should be called before this method for a correct result.
-   *
-   * @private
-   * @ko 렌더링이 필요한 인덱스들을 반환한다. `renderOnlyVisible` 옵션과 함께 사용해야 한다. 정확한 결과를 위해선 `beforeSync`를 이전에 호출해야만 합니다.
-   * @param - Info object of how panel infos are changed.<ko>패널 정보들의 변경 정보를 담는 오브젝트.</ko>
-   * @return Array of indexes to render.<ko>렌더링할 인덱스의 배열</ko>
-   */
-  public getRenderingIndexes(diffResult: DiffResult<any>): number[] {
-    return [];
-  }
-
   private _createControl(): Control {
     const moveType = this._moveType;
-    let type: MoveTypeStringOption | undefined;
-    let moveTypeOptions: MoveTypeObjectOption | undefined;
 
-    if (typeof moveType === "string" && moveType in DEFAULT_MOVE_TYPE_OPTIONS) {
+    let type: ValueOf<typeof MOVE_TYPE> | undefined;
+    let moveTypeOptions: Partial<SnapControlOptions> = {};
+
+    if (typeof moveType === "string") {
       type = moveType;
-      moveTypeOptions = DEFAULT_MOVE_TYPE_OPTIONS[moveType];
-    } else if (typeof moveType !== "string" && moveType.type && moveType.type in DEFAULT_MOVE_TYPE_OPTIONS) {
+    } else if (typeof moveType !== "string") {
       type = moveType.type;
       moveTypeOptions = moveType;
     }
 
-    if (!type || !moveTypeOptions) {
+    const moveTypes = Object.keys(MOVE_TYPE).map(key => MOVE_TYPE[key] as ValueOf<typeof MOVE_TYPE>);
+
+    if (!includes(moveTypes, type)) {
       throw new FlickingError(ERROR.MESSAGE.WRONG_OPTION("moveType", JSON.stringify(moveType)), ERROR.CODE.WRONG_OPTION);
     }
 
-    const controlOption = { ...moveTypeOptions };
     switch (type) {
       case MOVE_TYPE.SNAP:
-        return new SnapControl(controlOption as SnapControlOptions);
+        return new SnapControl(moveTypeOptions as SnapControlOptions);
       case MOVE_TYPE.FREE_SCROLL:
         return new FreeControl();
     }

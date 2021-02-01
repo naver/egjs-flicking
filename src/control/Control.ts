@@ -43,7 +43,7 @@ abstract class Control {
   public get controller() { return this._controller; }
   public get activeIndex() { return this._activePanel?.index ?? -1; }
   public get activePanel() { return this._activePanel; }
-  public get animating() { return this._controller.state.playing; }
+  public get animating() { return this._controller.state.animating; }
   public get holding() { return this._controller.state.holding; }
 
   public enable(): this {

@@ -48,3 +48,8 @@ export const DIRECTION = {
   NEXT: "NEXT",
   NONE: null
 } as const;
+
+export const MOVE_TYPE = {
+  SNAP: "snap",
+  FREE_SCROLL: "freeScroll"
+} as const;

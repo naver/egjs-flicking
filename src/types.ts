@@ -71,7 +71,7 @@ interface FlickingOptions {
   hanger: number | string;
   anchor: number | string;
   gap: number;
-  moveType: MoveTypeOption;
+  moveType: null;
   useOffset: boolean;
   isEqualSize: boolean | string[];
   isConstantSize: boolean;
@@ -81,9 +81,6 @@ interface FlickingOptions {
   resizeOnContentsReady: boolean;
   collectStatistics: boolean;
 }
-
-export type MoveTypeObjectOption = MoveTypeSnapOption | MoveTypeFreeScrollOption;
-export type MoveTypeStringOption = MoveTypeObjectOption["type"];
 
 export interface MoveTypeContext {
   viewport: Viewport;
@@ -104,15 +101,6 @@ export interface DestinationInfo {
   duration: number;
   eventType: EventType["CHANGE"] | EventType["RESTORE"] | "";
 }
-
-/**
- * Movement style by user input.
- *
- * @ko 사용자 입력에 의한 이동 방식.
- * @typedef {"snap" | "freeScroll" | eg.Flicking.MoveTypeSnapOption | eg.Flicking.MoveTypeFreeScrollOption}
- * @memberof eg.Flicking
- */
-export type MoveTypeOption = MoveTypeStringOption | MoveTypeObjectOption;
 
 /**
  * With "snap" move type, momentum is applied while choosing destination panel at release time.<br>You can set how many panels can go after release.

@@ -1,3 +1,7 @@
+import { SnapControlOptions } from "~/control";
+import { MOVE_TYPE } from "~/const/external";
+import { ValueOf } from "~/type/internal";
+
 /**
  * HTML `string` of single/mutiple HTMLElement, or an instance of `HTMLElement`.
  *
@@ -6,3 +10,7 @@
  * @memberof eg.Flicking
  */
 export type ElementLike = string | HTMLElement;
+
+export interface MoveTypeOption extends SnapControlOptions {
+  type: ValueOf<typeof MOVE_TYPE>;
+}

@@ -6,28 +6,32 @@ import { OnRelease } from "@egjs/axes";
 
 import Control from "~/control/Control";
 import { EVENTS } from "~/const/external";
-import { getDirection, getFlickingAttached } from "~/utils";
+import { clamp, getDirection, getFlickingAttached } from "~/utils";
 
 class FreeControl extends Control {
   public async moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
     const flicking = getFlickingAttached(this._flicking, "Control");
 
     const camera = flicking.camera;
-    const panel = flicking.renderer.getPanelFromPosition(position);
+    const cameraRange = camera.range;
+    const panel = flicking.renderer.getPanelFromPosition(
+      clamp(position, cameraRange.min, cameraRange.max)
+    );
+    const activePanel = this._activePanel;
 
-    const animate = () => this._controller.animateTo(position, duration);
+    const animate = () => this._controller.animateTo(position, duration, axesEvent);
     const updateActivePanel = () => {
       if (panel) {
         this._activePanel = panel;
       }
     };
 
-    if (panel && panel !== this._activePanel) {
+    if (panel && panel !== activePanel) {
       const eventSuccess = flicking.trigger(EVENTS.CHANGE, {
         index: panel.index,
         panel,
         isTrusted: axesEvent?.isTrusted || false,
-        direction: getDirection(camera.position, panel.position)
+        direction: getDirection(activePanel?.position ?? camera.position, position)
       });
 
       if (!eventSuccess) {
