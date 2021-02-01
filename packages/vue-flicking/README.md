@@ -35,6 +35,7 @@
 ## ⚙️ Installation
 ```sh
 npm install --save @egjs/vue-flicking
+npm install --save @egjs/flicking-plugins
 ```
 
 ## ❗ Changes from [@egjs/flicking](https://github.com/naver/egjs-flicking)
