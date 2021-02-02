@@ -178,7 +178,15 @@ describe("Flicking", () => {
     });
 
     describe("easing", () => {
+      it("is (x => 1 - (1 - x)^3) by default", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
+        const defaultEasing = flicking.easing;
+
+        expect(defaultEasing(0)).to.equal(0);
+        expect(defaultEasing(0.5)).to.equal(1 - Math.pow(0.5, 3));
+        expect(defaultEasing(1)).to.equal(1);
+      });
     });
 
     describe("inputType", () => {
@@ -302,7 +310,6 @@ describe("Flicking", () => {
         resizeSpy.resetHistory();
         window.dispatchEvent(new Event("resize"));
         expect(resizeSpy.calledOnce).to.be.true;
-
       });
     });
   });
@@ -782,6 +789,49 @@ describe("Flicking", () => {
   });
 
   describe("Methods", () => {
+    describe("init", () => {
+      it("should set initialized to true", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { autoInit: false });
+
+        expect(flicking.initialized).to.be.false;
+        flicking.init();
+        expect(flicking.initialized).to.be.true;
+      });
+
+      it("should call init of the camera/renderer/control", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { autoInit: false });
+        const controlSpy = sinon.spy(flicking.control, "init");
+        const cameraSpy = sinon.spy(flicking.camera, "init");
+        const rendererSpy = sinon.spy(flicking.renderer, "init");
+
+        flicking.init();
+
+        expect(controlSpy.calledOnce).to.be.true;
+        expect(cameraSpy.calledOnce).to.be.true;
+        expect(rendererSpy.calledOnce).to.be.true;
+      });
+
+      it("should call resize of it", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { autoInit: false });
+        const resizeSpy = sinon.spy(flicking, "resize");
+
+        flicking.init();
+
+        expect(resizeSpy.calledOnce).to.be.true;
+      });
+
+      it("should move to default index", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { autoInit: false, defaultIndex: 1 });
+
+        const beforeIdx = flicking.getIndex();
+        flicking.init();
+        const afterIdx = flicking.getIndex();
+
+        expect(beforeIdx).to.equal(-1);
+        expect(afterIdx).to.equal(1);
+      });
+    });
+
     describe("destroy", () => {
       it("should set initialized to false", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, { autoInit: true });
@@ -793,8 +843,7 @@ describe("Flicking", () => {
 
       it("should remove window resize event handler", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, { autoInit: false, autoResize: false });
-        const resizeSpy = sinon.spy();
-        flicking.resize = resizeSpy;
+        const resizeSpy = sinon.spy(flicking, "resize");
         flicking.autoResize = true;
         flicking.init();
 
@@ -803,6 +852,235 @@ describe("Flicking", () => {
 
         window.dispatchEvent(new Event("resize"));
         expect(resizeSpy.called).to.be.false;
+      });
+
+      it("should call off of it", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const offSpy = sinon.spy(flicking, "off");
+
+        flicking.destroy();
+
+        expect(offSpy.calledOnce).to.be.true;
+      });
+
+      it("should call destroy of the control/camera/renderer", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const controlSpy = sinon.spy(flicking.control, "destroy");
+        const cameraSpy = sinon.spy(flicking.camera, "destroy");
+        const rendererSpy = sinon.spy(flicking.renderer, "destroy");
+
+        flicking.destroy();
+
+        expect(controlSpy.calledOnce).to.be.true;
+        expect(cameraSpy.calledOnce).to.be.true;
+        expect(rendererSpy.calledOnce).to.be.true;
+      });
+
+      it("should call destroy of the viewport", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const destroySpy = sinon.spy(flicking.viewport, "destroy");
+
+        flicking.destroy();
+
+        expect(destroySpy.calledOnce).to.be.true;
+      });
+    });
+
+    describe("getElement()", () => {
+      it("should return viewport element", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        expect(flicking.getElement()).to.be.an.instanceOf(HTMLElement);
+        expect(flicking.getElement()).to.equal(flicking.viewport.element);
+      });
+    });
+
+    describe("enableInput()", () => {
+      it("should enable input", async () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { threshold: 40 });
+        flicking.disableInput();
+
+        flicking.enableInput();
+        const beforeIdx = flicking.getIndex();
+        await simulate(flicking.getElement(), { deltaX: -100 });
+        const afterIdx = flicking.getIndex();
+
+        expect(beforeIdx).to.equal(0);
+        expect(afterIdx).to.equal(1);
+      });
+
+      it("should return this", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const returnVal = flicking.enableInput();
+
+        expect(returnVal).deep.equals(flicking);
+      });
+    });
+
+    describe("disableInput()", () => {
+      it("should disable input", async () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        flicking.disableInput();
+
+        const beforeIdx = flicking.getIndex();
+        await simulate(flicking.getElement(), { deltaX: -100 });
+        const afterIdx = flicking.getIndex();
+
+        expect(beforeIdx).to.equal(afterIdx);
+        expect(beforeIdx).to.equal(0);
+      });
+
+      it("should return this", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const returnVal = flicking.disableInput();
+
+        expect(returnVal).deep.equals(flicking);
+      });
+    });
+
+    describe("next", () => {
+      const next = async (flicking: Flicking, duration?: number) => {
+        const nextPromise = flicking.next(duration);
+        tick(10000);
+        return nextPromise;
+      };
+
+      it("should move to the next panel that has index + 1", async () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        const prevIndex = flicking.getIndex();
+        await next(flicking);
+        const nextIndex = flicking.getIndex();
+
+        expect(prevIndex).to.equal(0);
+        expect(nextIndex).to.equal(1);
+      });
+
+      it("should use the Flicking's current duration option value if the duration is not given", async () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { duration: 1000 });
+        const moveToSpy = sinon.spy(flicking.control, "moveToPanel");
+
+        await next(flicking);
+        flicking.duration = 2000;
+        await next(flicking);
+
+        expect(moveToSpy.calledTwice).to.be.true;
+        expect(moveToSpy.firstCall.calledWith(flicking.getPanel(1), 1000)).to.be.true;
+        expect(moveToSpy.secondCall.calledWith(flicking.getPanel(2), 2000)).to.be.true;
+      });
+
+      it("should throw FlickingError with code INDEX_OUT_OF_RANGE if called on the last index", async () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { defaultIndex: 2 });
+
+        const err = await next(flicking).catch(e => e);
+
+        expect(err)
+          .to.be.instanceOf(FlickingError)
+          .with.property("code", ERROR.CODE.INDEX_OUT_OF_RANGE);
+      });
+
+      it("should throw FlickingError with code ANIMATION_ALREADY_PLAYING if it is animating", async () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+
+        void simulate(flicking.getElement(), { duration: 1000 }, 500);
+        const err = await next(flicking).catch(e => e);
+
+        expect(err)
+          .to.be.instanceOf(FlickingError)
+          .with.property("code", ERROR.CODE.ANIMATION_ALREADY_PLAYING);
+      });
+    });
+
+    describe("prev", () => {
+      const prev = async (flicking: Flicking, duration?: number) => {
+        const nextPromise = flicking.prev(duration);
+        tick(10000);
+        return nextPromise;
+      };
+
+      it("should move to the previous panel that has index - 1", async () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { defaultIndex: 2 });
+
+        const prevIndex = flicking.getIndex();
+        await prev(flicking);
+        const nextIndex = flicking.getIndex();
+
+        expect(prevIndex).to.equal(2);
+        expect(nextIndex).to.equal(1);
+      });
+
+      it("should use the Flicking's current duration option value if the duration is not given", async () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { duration: 1000, defaultIndex: 2 });
+        const moveToSpy = sinon.spy(flicking.control, "moveToPanel");
+
+        await prev(flicking);
+        flicking.duration = 2000;
+        await prev(flicking);
+
+        expect(moveToSpy.calledTwice).to.be.true;
+        expect(moveToSpy.firstCall.calledWith(flicking.getPanel(1), 1000)).to.be.true;
+        expect(moveToSpy.secondCall.calledWith(flicking.getPanel(0), 2000)).to.be.true;
+      });
+
+      it("should throw FlickingError with code INDEX_OUT_OF_RANGE if called on the first index", async () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { defaultIndex: 0 });
+
+        const err = await prev(flicking).catch(e => e);
+
+        expect(err)
+          .to.be.instanceOf(FlickingError)
+          .with.property("code", ERROR.CODE.INDEX_OUT_OF_RANGE);
+      });
+
+      it("should throw FlickingError with code ANIMATION_ALREADY_PLAYING if it is animating", async () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { defaultIndex: 2 });
+
+        void simulate(flicking.getElement(), { duration: 1000 }, 500);
+        const err = await prev(flicking).catch(e => e);
+
+        expect(err)
+          .to.be.instanceOf(FlickingError)
+          .with.property("code", ERROR.CODE.ANIMATION_ALREADY_PLAYING);
+      });
+    });
+
+    describe("moveTo", () => {
+      const prev = async (flicking: Flicking) => {
+        const nextPromise = flicking.prev();
+        tick(10000);
+        return nextPromise;
+      };
+
+      it("should move to the previous panel that has index - 1", async () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { defaultIndex: 2 });
+
+        const prevIndex = flicking.getIndex();
+        await prev(flicking);
+        const nextIndex = flicking.getIndex();
+
+        expect(prevIndex).to.equal(2);
+        expect(nextIndex).to.equal(1);
+      });
+
+      it("should throw FlickingError with code INDEX_OUT_OF_RANGE if called on the first index", async () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { defaultIndex: 0 });
+
+        const err = await prev(flicking).catch(e => e);
+
+        expect(err)
+          .to.be.instanceOf(FlickingError)
+          .with.property("code", ERROR.CODE.INDEX_OUT_OF_RANGE);
+      });
+
+      it("should throw FlickingError with code ANIMATION_ALREADY_PLAYING if it is animating", async () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { defaultIndex: 2 });
+
+        void simulate(flicking.getElement(), { duration: 1000 }, 500);
+        const err = await prev(flicking).catch(e => e);
+
+        expect(err)
+          .to.be.instanceOf(FlickingError)
+          .with.property("code", ERROR.CODE.ANIMATION_ALREADY_PLAYING);
       });
     });
   });
