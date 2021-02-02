@@ -66,6 +66,7 @@ abstract class Camera {
   public get position() { return this._position; }
   public get alignPosition() { return this._alignPos; }
   public get range() { return this._range; }
+  public get visiblePanels() { return this._visiblePanels; }
 
   // Options Getter
   public get align() { return this._align; }

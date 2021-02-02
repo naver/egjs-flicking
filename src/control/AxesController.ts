@@ -109,8 +109,14 @@ class AxesController {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Control"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING));
     }
 
+    const startPos = axes.get([AXES.POSITION_KEY]).flick;
+
+    if (startPos === position) {
+      return Promise.resolve();
+    }
+
     this._animatingContext = {
-      start: axes.get([AXES.POSITION_KEY]).flick,
+      start: startPos,
       end: position
     };
 
@@ -131,10 +137,19 @@ class AxesController {
 
       return Promise.resolve();
     } else {
-      return new Promise(resolve => {
-        axes.once(AXES.EVENT.FINISH, () => {
+      return new Promise((resolve, reject) => {
+        const animationFinishHandler = () => {
+          axes.off(AXES.EVENT.HOLD, interruptionHandler);
           resolve();
-        });
+        };
+
+        const interruptionHandler = () => {
+          axes.off(AXES.EVENT.FINISH, animationFinishHandler);
+          reject(new FlickingError(ERROR.MESSAGE.ANIMATION_INTERRUPTED, ERROR.CODE.ANIMATION_INTERRUPTED));
+        };
+
+        axes.once(AXES.EVENT.FINISH, animationFinishHandler);
+        axes.once(AXES.EVENT.HOLD, interruptionHandler);
 
         animate();
       });

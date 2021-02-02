@@ -5,9 +5,11 @@
 import { OnRelease } from "@egjs/axes";
 
 import Flicking from "~/Flicking";
+import FlickingError from "~/core/FlickingError";
+import Panel from "~/core/Panel";
 import AxesController from "~/control/AxesController";
 import { EVENTS } from "~/const/external";
-import { Panel } from "~/core";
+import * as ERROR from "~/const/error";
 import { getDirection, getFlickingAttached } from "~/utils";
 
 abstract class Control {
@@ -86,8 +88,7 @@ abstract class Control {
     });
 
     if (!eventSuccess) {
-      // TODO: Add new error type that shows it rejected by user stop()
-      return Promise.reject();
+      return Promise.reject(new FlickingError(ERROR.MESSAGE.STOP_CALLED_BY_USER, ERROR.CODE.STOP_CALLED_BY_USER));
     }
 
     const updateActivePanel = () => {

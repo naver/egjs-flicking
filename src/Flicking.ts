@@ -384,12 +384,11 @@ class Flicking extends Component<FlickingEvents> {
     const panel = renderer.getPanel(index);
 
     if (!panel) {
-      return Promise.reject(new FlickingError(ERROR.MESSAGE.INDEX_OUT_OF_RANGE(index, 0, panelCount - 1), ERROR.CODE.NOT_ATTACHED_TO_FLICKING));
+      return Promise.reject(new FlickingError(ERROR.MESSAGE.INDEX_OUT_OF_RANGE(index, 0, panelCount - 1), ERROR.CODE.INDEX_OUT_OF_RANGE));
     }
 
     if (this.isPlaying()) {
-      // TODO: Add new error type
-      return Promise.reject();
+      return Promise.reject(new FlickingError(ERROR.MESSAGE.ANIMATION_ALREADY_PLAYING, ERROR.CODE.ANIMATION_ALREADY_PLAYING));
     }
 
     return this._control.moveToPanel(panel, duration);
@@ -453,7 +452,7 @@ class Flicking extends Component<FlickingEvents> {
    * @return Panels currently shown in viewport area.<ko>현재 뷰포트 영역에 보여지는 패널들</ko>
    */
   public getVisiblePanels(): Panel[] {
-    return [];
+    return this._camera.visiblePanels;
   }
 
   /**
