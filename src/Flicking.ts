@@ -20,7 +20,7 @@ import {
   Plugin,
   ReadyEvent, BeforeResizeEvent, AfterResizeEvent
 } from "~/types";
-import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, ChangeEvent, RestoreEvent, NeedPanelEvent, VisibleChangeEvent } from "~/type/event";
+import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, ChangeEvent, RestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent } from "~/type/event";
 import { LiteralUnion, ValueOf } from "~/type/internal";
 import { ElementLike, MoveTypeOption } from "~/type/external";
 
@@ -39,6 +39,7 @@ export type FlickingEvents = {
   [EVENTS.SELECT]: SelectEvent;
   [EVENTS.NEED_PANEL]: NeedPanelEvent;
   [EVENTS.VISIBLE_CHANGE]: VisibleChangeEvent;
+  [EVENTS.REACH_EDGE]: ReachEdgeEvent;
   [EVENTS.CONTENT_ERROR]: void;
 };
 

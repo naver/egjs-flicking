@@ -96,3 +96,7 @@ export type VisibleChangeEvent = {
   removed: Panel[];
   visiblePanels: Panel[];
 };
+
+export type ReachEdgeEvent = {
+  direction: ValueOf<typeof DIRECTION>;
+};

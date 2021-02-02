@@ -82,10 +82,14 @@ abstract class Camera {
   }
 
   public lookAt(pos: number): this {
+    const prevPos = this._position;
+
     this._position = pos;
     this._applyTransform();
     this._refreshVisiblePanels();
     this._checkNeedPanel();
+    this._checkReachEnd(prevPos, pos);
+
     return this;
   }
 
@@ -180,6 +184,22 @@ abstract class Camera {
         needPanelTriggered.next = true;
       }
     }
+  }
+
+  private _checkReachEnd(prevPos: number, newPos: number): void {
+    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const range = this._range;
+
+    const wasBetweenRange = prevPos > range.min && prevPos < range.max;
+    const isBetweenRange = newPos > range.min && newPos < range.max;
+
+    if (!wasBetweenRange || isBetweenRange) return;
+
+    const direction = newPos <= range.min ? DIRECTION.PREV : DIRECTION.NEXT;
+
+    flicking.trigger(EVENTS.REACH_EDGE, {
+      direction
+    });
   }
 
   private _applyTransform(): void {
