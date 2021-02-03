@@ -1,9 +1,9 @@
-/**
+/*
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
 import State from "~/control/states/State";
-import { STATE_TYPE } from "~/const/internal";
+import { STATE_TYPE } from "~/control/StateMachine";
 
 class DisabledState extends State {
   public readonly holding = false;

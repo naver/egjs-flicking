@@ -4,14 +4,16 @@ import { ValueOf } from "~/type/internal";
 
 class App {
   public constructor() {
-    const flicking = new Flicking("#eg-flicking", {
+    const flicking = new Flicking("#flicking", {
       align: ALIGN.PREV,
-      bounce: "20%"
+      bounce: "20%",
+      needPanelThreshold: 100,
+      adaptive: true
     });
 
-    Object.values(EVENTS).forEach((eventName: ValueOf<typeof EVENTS>) => {
-      flicking.on(eventName, event => console.log(eventName, event));
-    });
+    // Object.values([EVENTS.NEED_PANEL, EVENTS.VISIBLE_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {
+    //   flicking.on(eventName, event => console.log(eventName, event));
+    // });
 
     document.getElementById("prev")?.addEventListener("click", () => {
       flicking.prev().then(() => console.log("PREV FINISHED"));

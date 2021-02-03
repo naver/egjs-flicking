@@ -3,7 +3,7 @@ import El from "../helper/El";
 import { cleanup, createSandbox } from "../helper/test-util";
 
 describe("Viewport", () => {
-  describe("properties", () => {
+  describe("Properties", () => {
     let container: HTMLElement;
 
     beforeEach(() => {
@@ -17,13 +17,13 @@ describe("Viewport", () => {
     it("should have property element same to the given element", () => {
       const expected = new El("some-random-string").el;
       const viewport = new Viewport(expected);
-      expect(viewport.getElement()).equals(expected);
+      expect(viewport.element).equals(expected);
     });
 
     it("should have size in it", () => {
       const viewport = new Viewport(document.createElement("div"));
 
-      expect(viewport.getSize()).to.be.exist;
+      expect(viewport.size).to.be.exist;
     });
 
     it("has size 0 until updating it", () => {
@@ -36,8 +36,8 @@ describe("Viewport", () => {
 
       expect(viewportEl.clientWidth).not.to.equal(0);
       expect(viewportEl.clientHeight).not.to.equal(0);
-      expect(viewport.getSize().width).to.equal(0);
-      expect(viewport.getSize().height).to.equal(0);
+      expect(viewport.size.width).to.equal(0);
+      expect(viewport.size.height).to.equal(0);
     });
 
     it("should set size equal to the given element after update", () => {
@@ -54,8 +54,8 @@ describe("Viewport", () => {
       const viewport = new Viewport(viewportEl);
       viewport.updateSize();
 
-      expect(viewport.getSize().width).to.equal(expected.width);
-      expect(viewport.getSize().height).to.equal(expected.height);
+      expect(viewport.size.width).to.equal(expected.width);
+      expect(viewport.size.height).to.equal(expected.height);
     });
 
     it("can set its size equal to the given arguments", () => {
@@ -72,7 +72,7 @@ describe("Viewport", () => {
       viewport.updateSize();
       viewport.setSize(expected);
 
-      expect(viewport.getSize()).deep.equals(expected);
+      expect(viewport.size).deep.equals(expected);
     });
   });
 });

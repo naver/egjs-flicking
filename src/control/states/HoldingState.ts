@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
@@ -6,8 +6,9 @@ import { OnRelease } from "@egjs/axes";
 
 import Panel from "~/core/Panel";
 import State from "~/control/states/State";
-import { DIRECTION, EVENTS } from "~/const/external";
-import { STATE_TYPE } from "~/const/internal";
+import { STATE_TYPE } from "~/control/StateMachine";
+import { EVENTS } from "~/const/external";
+import { getDirection } from "~/utils";
 
 class HoldingState extends State {
   public readonly holding = true;
@@ -27,7 +28,7 @@ class HoldingState extends State {
     const eventSuccess = flicking.trigger(EVENTS.MOVE_START, {
       isTrusted: axesEvent.isTrusted,
       holding: this.holding,
-      direction: offset < 0 ? DIRECTION.NEXT : DIRECTION.PREV,
+      direction: getDirection(0, offset),
       axesEvent
     });
 
@@ -54,7 +55,7 @@ class HoldingState extends State {
 
       // Event flow should be HOLD_START -> MOVE_START -> MOVE -> HOLD_END
       // At least one move event should be included between holdStart and holdEnd
-      axesEvent.setTo({ flick: flicking.getCamera().getPosition() }, 0);
+      axesEvent.setTo({ flick: flicking.camera.position }, 0);
       transitTo(STATE_TYPE.IDLE);
       return;
     }
@@ -80,43 +81,38 @@ class HoldingState extends State {
     const releaseEvent = this._releaseEvent;
 
     // Static click
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
     const srcEvent = releaseEvent.inputEvent.srcEvent;
 
     let clickedElement: HTMLElement;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (srcEvent.type === "touchend") {
       const touchEvent = srcEvent as TouchEvent;
       const touch = touchEvent.changedTouches[0];
       clickedElement = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement;
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       clickedElement = srcEvent.target;
     }
+    /* eslint-enable */
 
-    const panels = flicking.getRenderer().getPanels();
+    const panels = flicking.renderer.getPanels();
     let clickedPanel: Panel | null = null;
 
     for (const panel of panels) {
-      if (panel.getElement().contains(clickedElement)) {
+      if (panel.element.contains(clickedElement)) {
         clickedPanel = panel;
         break;
       }
     }
 
     if (clickedPanel) {
-      const cameraPosition = flicking.getCamera().getPosition();
-      const clickedPanelPosition = clickedPanel.getPosition();
-      const direction = clickedPanelPosition > cameraPosition
-        ? DIRECTION.NEXT
-        : clickedPanelPosition < cameraPosition
-          ? DIRECTION.PREV
-          : null;
+      const cameraPosition = flicking.camera.position;
+      const clickedPanelPosition = clickedPanel.position;
 
       flicking.trigger(EVENTS.SELECT, {
-        index: clickedPanel.getIndex(),
+        index: clickedPanel.index,
         panel: clickedPanel,
-        direction // Direction to the clicked panel
+        // Direction to the clicked panel
+        direction: getDirection(cameraPosition, clickedPanelPosition)
       });
     }
   }

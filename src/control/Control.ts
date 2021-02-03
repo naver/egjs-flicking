@@ -1,88 +1,106 @@
-/**
+/*
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { OnRelease } from "@egjs/axes";
+
 import Flicking from "~/Flicking";
 import AxesController from "~/control/AxesController";
-import { DIRECTION, EVENTS } from "~/const/external";
+import { EVENTS } from "~/const/external";
 import { Panel } from "~/core";
-import { requireFlicking } from "~/utils";
+import { getDirection, getFlickingAttached } from "~/utils";
 
 abstract class Control {
   // Internal States
   protected _flicking: Flicking | null;
-  protected _controller: AxesController | null;
-  protected _activeIndex: number;
+  protected _controller: AxesController;
+  protected _activePanel: Panel | null;
 
   public constructor() {
     this._flicking = null;
-    this._controller = null;
-    this._activeIndex = 0;
+    this._controller = new AxesController();
+    this._activePanel = null;
   }
 
-  public abstract moveToPosition(position: number, duration: number): Promise<void>;
+  public abstract moveToPosition(position: number, duration: number, axesEvent?: OnRelease): Promise<void>;
 
   public init(flicking: Flicking): this {
     this._flicking = flicking;
-    this._controller = new AxesController(flicking);
+    this._controller.init(flicking);
 
     return this;
   }
 
   public destroy(): this {
-    this._controller?.destroy();
+    this._controller.destroy();
 
     this._flicking = null;
-    this._controller = null;
-    this._activeIndex = 0;
+    this._activePanel = null;
 
     return this;
   }
 
-  public getController() { return this._controller; }
-  public getActiveIndex() { return this._activeIndex; }
-  public isAnimating() { return this._controller?.getState().playing || false; }
+  public get controller() { return this._controller; }
+  public get activeIndex() { return this._activePanel?.index ?? -1; }
+  public get activePanel() { return this._activePanel; }
+  public get animating() { return this._controller.state.playing; }
+  public get holding() { return this._controller.state.holding; }
 
   public enable(): this {
-    this._controller?.enable();
+    this._controller.enable();
 
     return this;
   }
 
   public disable(): this {
-    this._controller?.disable();
+    this._controller.disable();
 
     return this;
   }
 
-  @requireFlicking("Control")
-  public updateInput() {
-    this._controller!.update();
+  public updateInput(): this {
+    this._controller.update();
+
+    return this;
   }
 
-  @requireFlicking("Control")
-  public async moveToPanel(panel: Panel, duration: number) {
-    const flicking = this._flicking!;
+  public checkActivePanelIsRemoved(): this {
+    if (this._activePanel?.isRemoved()) {
+      this._activePanel = null;
+    }
 
-    const camera = flicking.getCamera();
+    return this;
+  }
 
-    const triggeringEvent = panel.getIndex() !== this._activeIndex ? EVENTS.CHANGE : EVENTS.RESTORE;
+  public async moveToPanel(panel: Panel, duration: number, axesEvent?: OnRelease) {
+    const flicking = getFlickingAttached(this._flicking, "Control");
+    const camera = flicking.camera;
+
+    const triggeringEvent = panel !== this._activePanel ? EVENTS.CHANGE : EVENTS.RESTORE;
 
     const eventSuccess = flicking.trigger(triggeringEvent, {
-      index: panel.getIndex(),
+      index: panel.index,
       panel,
-      isTrusted: false,
-      direction: panel.getPosition() > camera.getPosition() ? DIRECTION.NEXT : DIRECTION.PREV
+      isTrusted: axesEvent?.isTrusted || false,
+      direction: getDirection(camera.position, panel.position)
     });
 
     if (!eventSuccess) {
-      return Promise.resolve();
+      // TODO: Add new error type that shows it rejected by user stop()
+      return Promise.reject();
     }
 
-    return this._controller!.animateTo(panel.getPosition(), duration)
-      .then(() => {
-        this._activeIndex = panel.getIndex();
-      });
+    const updateActivePanel = () => {
+      this._activePanel = panel;
+    };
+    const animate = () => this._controller.animateTo(panel.position, duration, axesEvent);
+
+    if (duration === 0) {
+      updateActivePanel();
+      return animate();
+    } else {
+      return animate().then(updateActivePanel);
+    }
   }
 }
 

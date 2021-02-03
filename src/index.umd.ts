@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 import Flicking from "./Flicking";
 import * as Core from "./core";
 import * as Camera from "./camera";

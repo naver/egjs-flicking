@@ -1,13 +1,16 @@
-/**
+/*
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { OnRelease } from "@egjs/axes";
+
 import Control from "~/control/Control";
 import FlickingError from "~/core/FlickingError";
-import { clamp, requireFlicking } from "~/utils";
+import { clamp, getFlickingAttached } from "~/utils";
 import * as ERROR from "~/const/error";
+import { Panel } from "~/core";
 
-export interface SnapControlOption {
+export interface SnapControlOptions {
   count: number;
 }
 
@@ -17,42 +20,42 @@ class SnapControl extends Control {
 
   public constructor({
     count = 1
-  }: SnapControlOption) {
+  }: SnapControlOptions) {
     super();
 
     this._count = count;
   }
 
-  @requireFlicking("Control")
-  public moveToPosition(position: number, duration: number) {
-    const flicking = this._flicking!;
+  public moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
+    const flicking = getFlickingAttached(this._flicking, "Control");
+    const camera = flicking.camera;
+    const activePanel = this._activePanel;
 
-    const renderer = flicking.getRenderer();
-    const camera = flicking.getCamera();
-
-    const currentPanel = renderer.getPanel(this._activeIndex);
-
-    const cameraRange = camera.getRange();
+    const cameraRange = camera.range;
     const clampedPos = clamp(position, cameraRange.min, cameraRange.max);
-    const panelAtPosition = flicking.getRenderer().getPanelFromPosition(clampedPos);
+    const panelAtPosition = flicking.renderer.getPanelFromPosition(clampedPos);
 
-    if (!panelAtPosition || !currentPanel) {
+    if (!panelAtPosition || !activePanel) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE));
     }
 
-    const prevPos = currentPanel.getPosition();
-    const isOverThreshold = Math.abs(position - prevPos) >= flicking.getThreshold();
+    const prevPos = activePanel.position;
+    const isOverThreshold = Math.abs(position - prevPos) >= flicking.threshold;
+
+    let targetPanel: Panel;
 
     if (isOverThreshold) {
-      if (panelAtPosition.getIndex() !== currentPanel.getIndex()) {
-        return this.moveToPanel(panelAtPosition, duration);
+      if (panelAtPosition.index !== activePanel.index) {
+        targetPanel = panelAtPosition;
       } else {
-        const adjacentPanel = (position > prevPos) ? currentPanel.next() : currentPanel.prev();
-        return this.moveToPanel(adjacentPanel || currentPanel, duration);
+        const adjacentPanel = (position > prevPos) ? activePanel.next() : activePanel.prev();
+        targetPanel = adjacentPanel || activePanel;
       }
     } else {
-      return this.moveToPanel(currentPanel, duration);
+      targetPanel = activePanel;
     }
+
+    return this.moveToPanel(targetPanel, duration, axesEvent);
   }
 }
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
@@ -43,9 +43,19 @@ class Panel {
     this._alignPos = 0;
   }
 
-  public destroy(): this {
-    return this;
-  }
+  // Internal States Getter
+  public get element() { return this._el; }
+  public get index() { return this._index; }
+  public get size() { return this._size; }
+  public get bbox() { return { ...this._pos, right: this._pos.left + this._size.width, bottom: this._pos.top + this._size.height }; }
+  public get position() { return (this._flicking.horizontal ? this._pos.left : this._pos.top) + this._alignPos; }
+  public get margin() { return this._margin; }
+
+  // Options Getter
+  public get align() { return this._align; }
+
+  // Options Getter
+  public set align(val: PanelOption["align"]) { this._align = val; }
 
   public resize(): this {
     const el = this._el;
@@ -72,28 +82,40 @@ class Panel {
     return this;
   }
 
-  // Internal States Getter
-  public getElement() { return this._el; }
-  public getIndex() { return this._index; }
-  public getSize() { return this._size; }
-  public getPosition() { return (this._flicking.isHorizontal() ? this._pos.left : this._pos.top) + this._alignPos; }
-  public getMargin() { return this._margin; }
+  public isRemoved(): boolean {
+    return this._el.parentElement !== this._flicking.camera.element;
+  }
 
-  // Options Getter
-  public getAlign() { return this._align; }
-
-  // Options Getter
-  public setAlign(val: PanelOption["align"]) { this._align = val; }
-
-  public include(position: number): boolean {
+  public includePosition(position: number): boolean {
     const pos = this._pos;
     const size = this._size;
     const margin = this._margin;
-    const isHorizontal = this._flicking.isHorizontal();
+    const isHorizontal = this._flicking.horizontal;
 
     return isHorizontal
       ? (position >= pos.left - margin.left) && (position <= pos.left + size.width + margin.right)
       : (position >= pos.top - margin.top) && (position <= pos.top + size.height + margin.bottom);
+  }
+
+  public isVisible(): boolean {
+    const flicking = this._flicking;
+
+    const camera = flicking.camera;
+    const viewportSize = flicking.viewport.size;
+
+    const panelPosition = this.position;
+    const panelBbox = this.bbox;
+    const panelPrev = flicking.horizontal ? panelBbox.left : panelBbox.top;
+    const panelNext = flicking.horizontal ? panelBbox.right : panelBbox.bottom;
+
+    const cameraPosition = camera.position;
+    const cameraSize = flicking.horizontal ? viewportSize.width : viewportSize.height;
+    const cameraPrev = cameraPosition - camera.alignPosition;
+    const cameraNext = cameraPrev + cameraSize;
+
+    return panelPosition < cameraPosition
+      ? panelNext >= cameraPrev
+      : panelPrev <= cameraNext;
   }
 
   public focus(duration?: number) {
@@ -101,20 +123,30 @@ class Panel {
   }
 
   public prev(): Panel | null {
-    const renderer = this._flicking.getRenderer();
+    const renderer = this._flicking.renderer;
 
     return renderer.getPanel(this._index - 1);
   }
 
   public next(): Panel | null {
-    const renderer = this._flicking.getRenderer();
+    const renderer = this._flicking.renderer;
 
     return renderer.getPanel(this._index + 1);
   }
 
+  public increaseIndex(val: number): this {
+    this._index += Math.max(val, 0);
+    return this;
+  }
+
+  public decreaseIndex(val: number): this {
+    this._index -= Math.max(val, 0);
+    return this;
+  }
+
   private _updateAlignPos() {
     const size = this._size;
-    this._alignPos = parseAlign(this._align, this._flicking.isHorizontal() ? size.width : size.height);
+    this._alignPos = parseAlign(this._align, this._flicking.horizontal ? size.width : size.height);
   }
 }
 

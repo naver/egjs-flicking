@@ -1,43 +1,53 @@
-import Flicking, { FlickingOption } from "~/Flicking";
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+import Flicking, { FlickingOptions } from "~/Flicking";
 import Panel from "~/core/Panel";
-import { toArray } from "~/utils";
+import { getCirculatedIndex, getFlickingAttached, includes, parseElement, toArray } from "~/utils";
 import { ALIGN } from "~/const/external";
+import { ElementLike } from "~/type/external";
 
-export interface RendererOption {
-  align: FlickingOption["align"];
+export interface RendererOptions {
+  align: FlickingOptions["align"];
 }
 
 abstract class Renderer {
   // Options
-  protected _align: FlickingOption["align"];
+  protected _align: FlickingOptions["align"];
 
   // Internal States
-  protected _flicking: Flicking;
+  protected _flicking: Flicking | null;
   protected _panels: Panel[];
 
   public constructor({
     align = ALIGN.PREV
-  }: Partial<RendererOption> = {}) {
+  }: Partial<RendererOptions> = {}) {
     this._align = align;
     this._panels = [];
+    this._flicking = null;
   }
 
   public init(flicking: Flicking) {
     this._flicking = flicking;
-    this.collectPanels();
+    this._collectPanels();
   }
 
   public destroy(): this {
+    this._flicking = null;
+    this._panels = [];
     return this;
   }
 
   // Options Getter
-  public getAlign() { return this._align; }
+  public get align() { return this._align; }
 
   // Options Setter
-  public setAlign(val: FlickingOption["align"]) {
+  public set align(val: FlickingOptions["align"]) {
     this._align = val;
-    this._panels.forEach(panel => panel.setAlign(val));
+
+    const panelAlign = this._getPanelAlign();
+    this._panels.forEach(panel => { panel.align = panelAlign; });
   }
 
   public getPanels(): Panel[] {
@@ -50,7 +60,7 @@ abstract class Renderer {
 
   public getPanelFromPosition(position: number): Panel | null {
     for (const panel of this._panels) {
-      if (panel.include(position)) {
+      if (panel.includePosition(position)) {
         return panel;
       }
     }
@@ -62,27 +72,109 @@ abstract class Renderer {
     return this._panels.length;
   }
 
-  public collectPanels(): this {
-    const flicking = this._flicking;
+  public updatePanelSize(): this {
+    this._panels.forEach(panel => panel.resize());
+    return this;
+  }
 
-    const cameraElement = flicking.getCamera().getElement();
+  public insert(index: number, element: ElementLike | ElementLike[]): Panel[] {
+    const panels = this._panels;
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+
+    const { camera, control } = flicking;
+    const align = this._getPanelAlign();
+
+    const elements = parseElement(element);
+    const insertingIdx = getCirculatedIndex(index, panels.length);
+
+    const panelsPushed = panels.slice(insertingIdx);
+    const newPanels = elements.map((el, elIdx) => new Panel({ el, index: insertingIdx + elIdx, align, flicking }));
+
+    panels.splice(insertingIdx, 0, ...newPanels);
+
+    // Update panel indexes & positions
+    panelsPushed.forEach(panel => {
+      panel.increaseIndex(newPanels.length);
+      panel.resize();
+    });
+
+    // Insert the actual elements as camera element's children
+    const cameraElement = camera.element;
+    const nextSiblingPanel = panelsPushed[0]?.element || null;
+    const fragment = document.createDocumentFragment();
+
+    newPanels.forEach(panel => fragment.appendChild(panel.element));
+    cameraElement.insertBefore(fragment, nextSiblingPanel);
+
+    // Resize the newly added panels
+    newPanels.forEach(panel => panel.resize());
+
+    // Update camera & control
+    camera.updateRange();
+    camera.resetNeedPanelHistory();
+    control.updateInput();
+
+    // Move to the first panel added if no panels existed
+    // FIXME: fix for animating case
+    if (newPanels.length > 0 && !control.animating) {
+      void control.moveToPanel(control.activePanel || newPanels[0], 0).catch(() => void 0);
+    }
+
+    return newPanels;
+  }
+
+  public remove(index: number, deleteCount: number = 1): Panel[] {
+    const panels = this._panels;
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+
+    const { camera, control } = flicking;
+    const removingIdx = getCirculatedIndex(index, panels.length);
+
+    const panelsPulled = panels.slice(removingIdx + deleteCount);
+    const panelsRemoved = panels.splice(removingIdx, deleteCount);
+
+    // Update panel indexes
+    panelsPulled.forEach(panel => panel.decreaseIndex(panelsRemoved.length));
+
+    // Remove panel elements
+    const cameraElement = camera.element;
+    panelsRemoved.forEach(panel => {
+      cameraElement.removeChild(panel.element);
+    });
+
+    // Update camera & control
+    camera.updateRange();
+    camera.resetNeedPanelHistory();
+    control.updateInput();
+    control.checkActivePanelIsRemoved();
+
+    // FIXME: fix for animating case
+    if (panelsRemoved.length > 0 && !control.animating) {
+      const activePanel = control.activePanel;
+      const targetPanel = includes(panelsRemoved, activePanel) ? panelsPulled[0] || panels[panels.length - 1] : activePanel;
+
+      if (targetPanel) {
+        void control.moveToPanel(targetPanel, 0).catch(() => void 0);
+      } else {
+        // All panels removed
+        camera.lookAt(0);
+      }
+    }
+
+    return panelsRemoved;
+  }
+
+  private _collectPanels(): this {
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+
+    const cameraElement = flicking.camera.element;
     const cameraChilds = toArray(cameraElement.children);
 
     const align = this._getPanelAlign();
 
     this._panels = cameraChilds.map(
-      (el: HTMLElement, idx: number) => new Panel({
-        flicking: this._flicking,
-        el: el,
-        index: idx,
-        align
-      })
+      (el: HTMLElement, index: number) => new Panel({ flicking, el, index, align })
     );
-    return this;
-  }
-
-  public updatePanelSize(): this {
-    this._panels.forEach(panel => panel.resize());
     return this;
   }
 

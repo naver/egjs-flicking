@@ -1,10 +1,11 @@
-/**
+/*
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
 import State from "~/control/states/State";
-import { DIRECTION, EVENTS } from "~/const/external";
-import { STATE_TYPE } from "~/const/internal";
+import { STATE_TYPE } from "~/control/StateMachine";
+import { EVENTS } from "~/const/external";
+import { getDirection } from "~/utils";
 
 class AnimatingState extends State {
   public readonly holding = false;
@@ -31,21 +32,21 @@ class AnimatingState extends State {
       return;
     }
 
-    const camera = flicking.getCamera();
-    const prevPosition = camera.getPosition();
+    const camera = flicking.camera;
+    const prevPosition = camera.position;
 
     camera.lookAt(axesEvent.pos.flick);
 
     const isSuccess = flicking.trigger(EVENTS.MOVE, {
       isTrusted: axesEvent.isTrusted,
       holding: this.holding,
-      direction: axesEvent.delta.flick > 0 ? DIRECTION.NEXT : DIRECTION.PREV,
+      direction: getDirection(0, axesEvent.delta.flick),
       axesEvent
     });
 
     if (!isSuccess) {
       // Return to previous position
-      flicking.getCamera().lookAt(prevPosition);
+      flicking.camera.lookAt(prevPosition);
       transitTo(STATE_TYPE.DISABLED);
     }
   }
@@ -59,17 +60,21 @@ class AnimatingState extends State {
     //   viewport.setCurrentPanel(viewport.getNearestPanel() as Panel);
     // }
 
-    // if (flicking.options.adaptive) {
-    //   viewport.updateAdaptiveSize();
-    // }
+    const panelBelow = flicking.camera.getPanelBelow();
+    if (flicking.horizontal && flicking.adaptive && panelBelow) {
+      const panelSize = panelBelow.size;
+
+      flicking.viewport.setSize({ height: panelSize.height });
+    }
 
     transitTo(STATE_TYPE.IDLE);
 
-    // Assure camera's at correct position
+    const controller = flicking.control.controller;
+    const animatingContext = controller.animatingContext;
 
     flicking.trigger(EVENTS.MOVE_END, {
       isTrusted: axesEvent.isTrusted,
-      direction: "NEXT", // FIXME:
+      direction: getDirection(animatingContext.start, animatingContext.end),
       axesEvent
     });
   }

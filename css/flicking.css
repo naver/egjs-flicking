@@ -1,15 +1,15 @@
-.eg-flicking-viewport {
+.flicking-viewport {
   margin-left: auto;
   margin-right: auto;
   position: relative;
   overflow: hidden;
   z-index: 1;
 }
-.eg-flicking-viewport.visible {
+.flicking-viewport.visible {
   overflow: visible;
 }
 
-.eg-flicking-camera {
+.flicking-camera {
   width: 100%;
   height: 100%;
   display: flex;
@@ -17,17 +17,17 @@
   flex-direction: row;
   z-index: 1;
 }
-.eg-flicking-viewport-vertical>.flicking-camera {
+.flicking-viewport-vertical>.flicking-camera {
   flex-direction: column;
 }
 
-.eg-flicking-camera img {
+.flicking-camera img {
   user-select: none;
   user-drag: none;
   -webkit-user-drag: none;
 }
 
-.eg-flicking-panel {
+.flicking-panel {
   flex-shrink: 0;
   width: 100%;
   height: 100%;

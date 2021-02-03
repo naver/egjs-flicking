@@ -1,9 +1,8 @@
+/*
+* Copyright (c) 2015 NAVER Corp.
+* egjs projects are licensed under the MIT license
+*/
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
-/**
- * Copyright (c) 2015 NAVER Corp.
- * egjs projects are licensed under the MIT license
- */
-
 import Component from "@egjs/component";
 import { DiffResult } from "@egjs/list-differ";
 
@@ -12,7 +11,8 @@ import Viewport from "./core/Viewport";
 import StateMachine from "./control/StateMachine";
 import Panel from "./core/Panel";
 import State from "./control/states/State";
-import { ElementLike, ValueOf } from "./type/internal";
+import { ValueOf } from "./type/internal";
+import { ElementLike } from "./type/external";
 
 /**
  * @typedef
@@ -495,7 +495,14 @@ export type ContentErrorEvent = {
 };
 
 export type ReadyEvent = void;
-export type ResizeEvent = {
+
+export type BeforeResizeEvent = {
+  width: number;
+  height: number;
+  element: HTMLElement;
+};
+
+export type AfterResizeEvent = {
   width: number;
   height: number;
   prev: {

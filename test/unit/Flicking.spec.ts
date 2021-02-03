@@ -1,11 +1,12 @@
 import FlickingError from "~/core/FlickingError";
 import Viewport from "~/core/Viewport";
-import { FlickingEvent, FlickingOption } from "~/Flicking";
+import Flicking from "~/Flicking";
 import * as ERROR from "~/const/error";
-import { ALIGN, EVENTS } from "~/const/external";
+import { ALIGN, DIRECTION, EVENTS } from "~/const/external";
+import { AfterResizeEvent, BeforeResizeEvent } from "~/types";
 
 import El from "./helper/El";
-import { cleanup, createFlicking } from "./helper/test-util";
+import { cleanup, createFlicking, simulate, tick } from "./helper/test-util";
 
 describe("Flicking", () => {
   afterEach(() => {
@@ -49,8 +50,8 @@ describe("Flicking", () => {
     describe("viewport", () => {
       it("exists when the flicking is created", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
-        expect(flicking.getViewport()).to.exist;
-        expect(flicking.getViewport()).to.be.an.instanceof(Viewport);
+        expect(flicking.viewport).to.exist;
+        expect(flicking.viewport).to.be.an.instanceof(Viewport);
       });
     });
   });
@@ -59,7 +60,7 @@ describe("Flicking", () => {
     describe("align", () => {
       it("is center by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
-        expect(flicking.getAlign()).to.equal(ALIGN.CENTER);
+        expect(flicking.align).to.equal(ALIGN.CENTER);
       });
 
       it("should override renderer & camera's align", () => {
@@ -67,9 +68,9 @@ describe("Flicking", () => {
           align: ALIGN.NEXT
         });
 
-        expect(flicking.getAlign()).equals(ALIGN.NEXT);
-        expect(flicking.getRenderer().getAlign()).equals(ALIGN.NEXT);
-        expect(flicking.getCamera().getAlign()).equals(ALIGN.NEXT);
+        expect(flicking.align).equals(ALIGN.NEXT);
+        expect(flicking.renderer.align).equals(ALIGN.NEXT);
+        expect(flicking.camera.align).equals(ALIGN.NEXT);
       });
 
       it("can be changed at anytime", () => {
@@ -77,36 +78,36 @@ describe("Flicking", () => {
           align: ALIGN.CENTER
         });
 
-        flicking.setAlign(ALIGN.PREV);
+        flicking.align = ALIGN.PREV;
 
-        expect(flicking.getAlign()).equals(ALIGN.PREV);
-        expect(flicking.getRenderer().getAlign()).equals(ALIGN.PREV);
-        expect(flicking.getCamera().getAlign()).equals(ALIGN.PREV);
+        expect(flicking.align).equals(ALIGN.PREV);
+        expect(flicking.renderer.align).equals(ALIGN.PREV);
+        expect(flicking.camera.align).equals(ALIGN.PREV);
       });
     });
 
     describe("defaultIndex", () => {
       it("should be 0 by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
-        expect(flicking.getDefaultIndex()).to.equal(0);
+        expect(flicking.defaultIndex).to.equal(0);
       });
 
       it("should accept any number, even if it's bigger than actual panel length", () => {
         // Empty flicking
         const flicking = createFlicking(El.viewport().add(El.camera()), { defaultIndex: 2 });
-        expect(flicking.getRenderer().getPanels().length).to.equal(0);
-        expect(flicking.getDefaultIndex()).to.equal(2);
+        expect(flicking.renderer.getPanels().length).to.equal(0);
+        expect(flicking.defaultIndex).to.equal(2);
       });
 
       it("should locate camera at position of panel which has index equal to defaultIndex", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, { defaultIndex: 1 });
-        expect(flicking.getCamera().getPosition()).not.to.equal(0);
-        expect(flicking.getCamera().getPosition()).to.equal(flicking.getRenderer().getPanel(1).getPosition());
+        expect(flicking.camera.position).not.to.equal(0);
+        expect(flicking.camera.position).to.equal(flicking.renderer.getPanel(1).position);
       });
 
       it("should locate camera at first panel's position instead if index is out of range", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, { defaultIndex: 99999 });
-        expect(flicking.getCamera().getPosition()).to.equal(flicking.getRenderer().getPanel(0).getPosition());
+        expect(flicking.camera.position).to.equal(flicking.renderer.getPanel(0).position);
       });
     });
 
@@ -114,7 +115,7 @@ describe("Flicking", () => {
       it("is true by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.isHorizontal()).to.be.true;
+        expect(flicking.horizontal).to.be.true;
       });
 
       it("can be changed on creating new instance", () => {
@@ -122,7 +123,7 @@ describe("Flicking", () => {
           horizontal: false
         });
 
-        expect(flicking.isHorizontal()).to.be.false;
+        expect(flicking.horizontal).to.be.false;
       });
 
       it("can be changed anytime", () => {
@@ -130,9 +131,9 @@ describe("Flicking", () => {
           horizontal: true
         });
 
-        flicking.setHorizontal(false);
+        flicking.horizontal = false;
 
-        expect(flicking.isHorizontal()).to.be.false;
+        expect(flicking.horizontal).to.be.false;
       });
     });
 
@@ -140,7 +141,7 @@ describe("Flicking", () => {
       it("is false by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.isCircular()).to.be.false;
+        expect(flicking.circular).to.be.false;
       });
     });
 
@@ -148,7 +149,7 @@ describe("Flicking", () => {
       it("is false by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.isBound()).to.be.false;
+        expect(flicking.bound).to.be.false;
       });
     });
 
@@ -156,7 +157,7 @@ describe("Flicking", () => {
       it("is false by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.isAdaptive()).to.be.false;
+        expect(flicking.adaptive).to.be.false;
       });
     });
 
@@ -164,7 +165,7 @@ describe("Flicking", () => {
       it("is 0.0075 by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.getDeceleration()).to.equal(0.0075);
+        expect(flicking.deceleration).to.equal(0.0075);
       });
     });
 
@@ -172,7 +173,7 @@ describe("Flicking", () => {
       it("is 500 by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.getDuration()).to.equal(500);
+        expect(flicking.duration).to.equal(500);
       });
     });
 
@@ -184,7 +185,7 @@ describe("Flicking", () => {
       it("is ['mouse', 'touch'] by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.getInputType()).to.deep.equal(["mouse", "touch"]);
+        expect(flicking.inputType).to.deep.equal(["mouse", "touch"]);
       });
     });
 
@@ -192,7 +193,7 @@ describe("Flicking", () => {
       it("is 'snap' by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.getMoveType()).to.equal("snap");
+        expect(flicking.moveType).to.equal("snap");
       });
     });
 
@@ -200,7 +201,7 @@ describe("Flicking", () => {
       it("is 40 by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.getThreshold()).to.equal(40);
+        expect(flicking.threshold).to.equal(40);
       });
     });
 
@@ -208,15 +209,7 @@ describe("Flicking", () => {
       it("is true by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.isInterruptable()).to.be.true;
-      });
-    });
-
-    describe("interruptable", () => {
-      it("is true by default", () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
-
-        expect(flicking.isInterruptable()).to.be.true;
+        expect(flicking.interruptable).to.be.true;
       });
     });
 
@@ -224,7 +217,7 @@ describe("Flicking", () => {
       it("is '50%' by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.getBounce()).to.equal("50%");
+        expect(flicking.bounce).to.equal("50%");
       });
     });
 
@@ -232,7 +225,7 @@ describe("Flicking", () => {
       it("is 30 by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.getIOSEdgeSwipeThreshold()).to.equal(30);
+        expect(flicking.iOSEdgeSwipeThreshold).to.equal(30);
       });
     });
 
@@ -240,7 +233,7 @@ describe("Flicking", () => {
       it("is false by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.isEqualSize()).to.equal(false);
+        expect(flicking.isEqualSize).to.equal(false);
       });
     });
 
@@ -248,7 +241,7 @@ describe("Flicking", () => {
       it("is false by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.isConstantSize()).to.equal(false);
+        expect(flicking.isConstantSize).to.equal(false);
       });
     });
 
@@ -256,7 +249,7 @@ describe("Flicking", () => {
       it("is false by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.isRenderOnlyVisible()).to.equal(false);
+        expect(flicking.renderOnlyVisible).to.equal(false);
       });
     });
 
@@ -264,19 +257,19 @@ describe("Flicking", () => {
       it("is true by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.isAutoInit()).to.be.true;
+        expect(flicking.autoInit).to.be.true;
       });
 
       it("should set initialized to true", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.isInitialized()).to.be.true;
+        expect(flicking.initialized).to.be.true;
       });
 
       it("should not set initialized to true when it's set to false", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, { autoInit: false });
 
-        expect(flicking.isInitialized()).to.be.false;
+        expect(flicking.initialized).to.be.false;
       });
     });
 
@@ -284,13 +277,13 @@ describe("Flicking", () => {
       it("is true by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.isAutoResize()).to.be.true;
+        expect(flicking.autoResize).to.be.true;
       });
 
       it("should receive window resize event and emit resize event", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, { autoResize: true });
         const resizeSpy = sinon.spy();
-        flicking.on(EVENTS.RESIZE, resizeSpy);
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
 
         window.dispatchEvent(new Event("resize"));
 
@@ -300,7 +293,7 @@ describe("Flicking", () => {
       it("should not attach resize event until init() is called", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, { autoInit: false, autoResize: true });
         const resizeSpy = sinon.spy();
-        flicking.on(EVENTS.RESIZE, resizeSpy);
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
 
         window.dispatchEvent(new Event("resize"));
         expect(resizeSpy.called).to.be.false;
@@ -345,13 +338,13 @@ describe("Flicking", () => {
       });
     });
 
-    describe(EVENTS.RESIZE, () => {
-      it("should be emitted on initialization", () => {
+    describe(EVENTS.BEFORE_RESIZE, () => {
+      it("should be emitted on initialization when resize", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, {
           autoInit: false
         });
         const resizeSpy = sinon.spy();
-        flicking.on(EVENTS.RESIZE, resizeSpy);
+        flicking.on(EVENTS.BEFORE_RESIZE, resizeSpy);
 
         expect(resizeSpy.called).to.be.false;
         flicking.init();
@@ -361,7 +354,63 @@ describe("Flicking", () => {
       it("should be emitted when resize() is called", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
         const resizeSpy = sinon.spy();
-        flicking.on(EVENTS.RESIZE, resizeSpy);
+        flicking.on(EVENTS.BEFORE_RESIZE, resizeSpy);
+
+        expect(resizeSpy.called).to.be.false;
+        flicking.resize();
+        expect(resizeSpy.calledOnce).to.be.true;
+      });
+
+      it("should have previous size in it", () => {
+        const viewportEl = El.viewport().setWidth(300).setHeight(300).add(El.camera());
+        const flicking = createFlicking(viewportEl);
+        const resizeSpy = sinon.spy();
+
+        flicking.on(EVENTS.BEFORE_RESIZE, resizeSpy);
+
+        viewportEl.setWidth(500).setHeight(500);
+        flicking.resize();
+
+        const event = resizeSpy.firstCall.args[0] as BeforeResizeEvent;
+        expect(resizeSpy.calledOnce).to.be.true;
+        expect(event.width).to.exist;
+        expect(event.height).to.exist;
+        expect(event.width).to.equal(300);
+        expect(event.height).to.equal(300);
+      });
+
+      it(`should be triggered before ${EVENTS.AFTER_RESIZE}`, () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const beforeResizeSpy = sinon.spy();
+        const afterResizeSpy = sinon.spy();
+
+        flicking.on(EVENTS.BEFORE_RESIZE, beforeResizeSpy);
+        flicking.on(EVENTS.BEFORE_RESIZE, afterResizeSpy);
+        flicking.resize();
+
+        expect(beforeResizeSpy.calledOnce).to.be.true;
+        expect(afterResizeSpy.calledOnce).to.be.true;
+        expect(beforeResizeSpy.calledBefore(afterResizeSpy)).to.be.true;
+      });
+    });
+
+    describe(EVENTS.AFTER_RESIZE, () => {
+      it("should be emitted on initialization when resize", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, {
+          autoInit: false
+        });
+        const resizeSpy = sinon.spy();
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
+
+        expect(resizeSpy.called).to.be.false;
+        flicking.init();
+        expect(resizeSpy.calledOnce).to.be.true;
+      });
+
+      it("should be emitted when resize() is called", () => {
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const resizeSpy = sinon.spy();
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
 
         expect(resizeSpy.called).to.be.false;
         flicking.resize();
@@ -369,16 +418,19 @@ describe("Flicking", () => {
       });
 
       it("should have new size in it", () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const viewportEl = El.viewport().setWidth(300).setHeight(300).add(El.camera());
+        const flicking = createFlicking(viewportEl);
         const resizeSpy = sinon.spy();
 
-        flicking.on(EVENTS.RESIZE, resizeSpy);
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
+
+        viewportEl.setWidth(500).setHeight(500);
         flicking.resize();
 
-        const event = resizeSpy.firstCall.args[0] as FlickingEvent["resize"];
+        const event = resizeSpy.firstCall.args[0] as AfterResizeEvent;
         expect(resizeSpy.calledOnce).to.be.true;
-        expect(event.width).to.exist;
-        expect(event.height).to.exist;
+        expect(event.width).to.equal(500);
+        expect(event.height).to.equal(500);
       });
 
       it("should have correct size value of viewport in it", () => {
@@ -394,10 +446,10 @@ describe("Flicking", () => {
         );
         const resizeSpy = sinon.spy();
 
-        flicking.on(EVENTS.RESIZE, resizeSpy);
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
         flicking.resize();
 
-        const event = resizeSpy.firstCall.args[0] as FlickingEvent["resize"];
+        const event = resizeSpy.firstCall.args[0] as AfterResizeEvent;
         expect(resizeSpy.calledOnce).to.be.true;
         expect(event.width).to.equal(viewportSize.width);
         expect(event.height).to.equal(viewportSize.height);
@@ -407,10 +459,10 @@ describe("Flicking", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, { autoInit: false });
         const resizeSpy = sinon.spy();
 
-        flicking.on(EVENTS.RESIZE, resizeSpy);
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
         flicking.init();
 
-        const event = resizeSpy.firstCall.args[0] as FlickingEvent["resize"];
+        const event = resizeSpy.firstCall.args[0] as AfterResizeEvent;
         expect(resizeSpy.calledOnce).to.be.true;
         expect(event.prev.width).to.equal(0);
         expect(event.prev.height).to.equal(0);
@@ -425,11 +477,11 @@ describe("Flicking", () => {
         const flicking = createFlicking(viewport);
         const resizeSpy = sinon.spy();
 
-        flicking.on(EVENTS.RESIZE, resizeSpy);
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
         viewport.setWidth(newSize.width).setHeight(newSize.height);
         flicking.resize();
 
-        const event = resizeSpy.firstCall.args[0] as FlickingEvent["resize"];
+        const event = resizeSpy.firstCall.args[0] as AfterResizeEvent;
         expect(resizeSpy.calledOnce).to.be.true;
 
         expect(event.width).to.equal(newSize.width);
@@ -443,10 +495,10 @@ describe("Flicking", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
         const resizeSpy = sinon.spy();
 
-        flicking.on(EVENTS.RESIZE, resizeSpy);
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
         flicking.resize();
 
-        const event = resizeSpy.firstCall.args[0] as FlickingEvent["resize"];
+        const event = resizeSpy.firstCall.args[0] as AfterResizeEvent;
         expect(resizeSpy.calledOnce).to.be.true;
 
         expect(event.width).to.equal(event.prev.width);
@@ -461,12 +513,270 @@ describe("Flicking", () => {
         const flicking = createFlicking(viewport);
         const resizeSpy = sinon.spy();
 
-        flicking.on(EVENTS.RESIZE, resizeSpy);
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
         flicking.resize();
 
-        const event = resizeSpy.firstCall.args[0] as FlickingEvent["resize"];
+        const event = resizeSpy.firstCall.args[0] as AfterResizeEvent;
         expect(resizeSpy.calledOnce).to.be.true;
         expect(event.element).to.deep.equal(viewport.el);
+      });
+    });
+
+    describe("Input & Move Event Order", () => {
+      const eventsFired: string[] = [];
+      const attachEventOrderRecognizer = (flicking: Flicking) => {
+        [EVENTS.HOLD_START, EVENTS.HOLD_END, EVENTS.MOVE_START, EVENTS.MOVE, EVENTS.MOVE_END, EVENTS.CHANGE, EVENTS.RESTORE].forEach(event => {
+          flicking.on(event, e => {
+            if (eventsFired.length === 0 || eventsFired[eventsFired.length - 1] !== e.eventType) {
+              eventsFired.push(e.eventType);
+            }
+          });
+        });
+      };
+
+      beforeEach(() => {
+        eventsFired.splice(0, eventsFired.length);
+      });
+
+      it(`should be ${EVENTS.HOLD_START} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.HOLD_END} -> ${EVENTS.CHANGE} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when panel changed with user input`, async () => {
+        const expectedEventOrder = [
+          EVENTS.HOLD_START,
+          EVENTS.MOVE_START,
+          EVENTS.MOVE,
+          EVENTS.HOLD_END,
+          EVENTS.CHANGE,
+          EVENTS.MOVE,
+          EVENTS.MOVE_END
+        ];
+
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { threshold: 10 });
+        attachEventOrderRecognizer(flicking);
+
+        await simulate(flicking.getElement(), { deltaX: -50 });
+
+        expect(eventsFired).to.deep.equal(expectedEventOrder);
+      });
+
+      it(`should be ${EVENTS.HOLD_START} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.HOLD_END} -> ${EVENTS.RESTORE} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when panel restored with user input`, async () => {
+        const expectedEventOrder = [
+          EVENTS.HOLD_START,
+          EVENTS.MOVE_START,
+          EVENTS.MOVE,
+          EVENTS.HOLD_END,
+          EVENTS.RESTORE,
+          EVENTS.MOVE,
+          EVENTS.MOVE_END
+        ];
+
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE, { threshold: 50 });
+        attachEventOrderRecognizer(flicking);
+
+        await simulate(flicking.getElement(), { deltaX: -49 });
+
+        expect(eventsFired).to.deep.equal(expectedEventOrder);
+      });
+
+      describe("moveTo's event order", () => {
+        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
+          const expectedEventOrder = [
+            EVENTS.CHANGE,
+            EVENTS.MOVE_START,
+            EVENTS.MOVE,
+            EVENTS.MOVE_END
+          ];
+
+          const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+          attachEventOrderRecognizer(flicking);
+
+          void flicking.moveTo(2, 10);
+          tick(1000);
+
+          expect(eventsFired).to.deep.equal(expectedEventOrder);
+        });
+
+        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method and duration is 0`, () => {
+          const expectedEventOrder = [
+            EVENTS.CHANGE,
+            EVENTS.MOVE_START,
+            EVENTS.MOVE,
+            EVENTS.MOVE_END
+          ];
+
+          const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+          attachEventOrderRecognizer(flicking);
+
+          void flicking.moveTo(2, 0);
+
+          expect(eventsFired).to.deep.equal(expectedEventOrder);
+        });
+      });
+
+      describe("prev's event order", () => {
+        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
+          const expectedEventOrder = [
+            EVENTS.CHANGE,
+            EVENTS.MOVE_START,
+            EVENTS.MOVE,
+            EVENTS.MOVE_END
+          ];
+
+          const flicking = createFlicking(El.DEFAULT_STRUCTURE, { defaultIndex: 2 });
+          attachEventOrderRecognizer(flicking);
+
+          void flicking.prev(10);
+          tick(1000);
+
+          expect(eventsFired).to.deep.equal(expectedEventOrder);
+        });
+
+        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method and duration is 0`, () => {
+          const expectedEventOrder = [
+            EVENTS.CHANGE,
+            EVENTS.MOVE_START,
+            EVENTS.MOVE,
+            EVENTS.MOVE_END
+          ];
+
+          const flicking = createFlicking(El.DEFAULT_STRUCTURE, { defaultIndex: 2 });
+          attachEventOrderRecognizer(flicking);
+
+          void flicking.prev(0);
+
+          expect(eventsFired).to.deep.equal(expectedEventOrder);
+        });
+      });
+
+      describe("next's event order", () => {
+        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
+          const expectedEventOrder = [
+            EVENTS.CHANGE,
+            EVENTS.MOVE_START,
+            EVENTS.MOVE,
+            EVENTS.MOVE_END
+          ];
+
+          const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+          attachEventOrderRecognizer(flicking);
+
+          void flicking.next(10);
+          tick(1000);
+
+          expect(eventsFired).to.deep.equal(expectedEventOrder);
+        });
+
+        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method and duration is 0`, () => {
+          const expectedEventOrder = [
+            EVENTS.CHANGE,
+            EVENTS.MOVE_START,
+            EVENTS.MOVE,
+            EVENTS.MOVE_END
+          ];
+
+          const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+          attachEventOrderRecognizer(flicking);
+
+          void flicking.next(0);
+
+          expect(eventsFired).to.deep.equal(expectedEventOrder);
+        });
+      });
+    });
+
+    describe("Common parameters", () => {
+      const eventsFired: any[] = [];
+      const collectEvents = (flicking: Flicking) => {
+        Object.values(EVENTS).forEach(event => {
+          flicking.on(event, e => eventsFired.push(e));
+        });
+      };
+
+      beforeEach(() => {
+        eventsFired.splice(0, eventsFired.length);
+      });
+
+      describe("direction", () => {
+        it(`is always ${DIRECTION.NEXT} when calling next()`, () => {
+          const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+          collectEvents(flicking);
+
+          void flicking.next(100);
+          tick(1000);
+
+          expect(eventsFired).not.to.be.empty;
+          expect(eventsFired.filter(e => e.direction).every(e => e.direction === DIRECTION.NEXT)).to.be.true;
+        });
+
+        it(`is always ${DIRECTION.PREV} when calling prev()`, () => {
+          const flicking = createFlicking(El.DEFAULT_STRUCTURE, { defaultIndex: 2 });
+          collectEvents(flicking);
+
+          void flicking.prev(100);
+          tick(1000);
+
+          expect(eventsFired).not.to.be.empty;
+          expect(eventsFired.filter(e => e.direction).every(e => e.direction === DIRECTION.PREV)).to.be.true;
+        });
+
+        it(`is always ${DIRECTION.NEXT} when moving to next panel with user input, not going over current panel area`, async () => {
+          const flicking = createFlicking(El.DEFAULT_STRUCTURE, {
+            align: ALIGN.CENTER,
+            threshold: 10
+          });
+          collectEvents(flicking);
+
+          await simulate(flicking.getElement(), { deltaX: -20 });
+
+          expect(eventsFired).not.to.be.empty;
+          expect(eventsFired.filter(e => e.direction).every(e => e.direction === DIRECTION.NEXT)).to.be.true;
+        });
+
+        it(`is always ${DIRECTION.PREV} when moving to next panel with user input, not going over current panel area`, async () => {
+          const flicking = createFlicking(El.DEFAULT_STRUCTURE, {
+            align: ALIGN.CENTER,
+            threshold: 10,
+            defaultIndex: 2
+          });
+          collectEvents(flicking);
+
+          await simulate(flicking.getElement(), { deltaX: 20 });
+
+          expect(eventsFired).not.to.be.empty;
+          expect(eventsFired.filter(e => e.direction).every(e => e.direction === DIRECTION.PREV)).to.be.true;
+        });
+      });
+
+      describe("isTrusted", () => {
+        it("is always false in events triggered by next()", () => {
+          const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+          collectEvents(flicking);
+
+          void flicking.next(500);
+          tick(1000);
+
+          expect(eventsFired).not.to.be.empty;
+          expect(eventsFired.filter(e => e.isTrusted != null).every(e => e.isTrusted === false)).to.be.true;
+        });
+
+        it("is always false in events triggered by prev()", () => {
+          const flicking = createFlicking(El.DEFAULT_STRUCTURE, { defaultIndex: 2 });
+          collectEvents(flicking);
+
+          void flicking.prev(500);
+          tick(1000);
+
+          expect(eventsFired).not.to.be.empty;
+          expect(eventsFired.filter(e => e.isTrusted != null).every(e => e.isTrusted === false)).to.be.true;
+        });
+
+        it("is always true in events triggered by user input", async () => {
+          const flicking = createFlicking(El.DEFAULT_STRUCTURE, { threshold: 10 });
+          collectEvents(flicking);
+
+          await simulate(flicking.getElement(), { deltaX: -20 });
+
+          expect(eventsFired).not.to.be.empty;
+          expect(eventsFired.filter(e => e.isTrusted != null).every(e => e.isTrusted === true)).to.be.true;
+        });
       });
     });
   });
@@ -476,16 +786,16 @@ describe("Flicking", () => {
       it("should set initialized to false", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, { autoInit: true });
 
-        expect(flicking.isInitialized()).to.be.true;
+        expect(flicking.initialized).to.be.true;
         flicking.destroy();
-        expect(flicking.isInitialized()).to.be.false;
+        expect(flicking.initialized).to.be.false;
       });
 
       it("should remove window resize event handler", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE, { autoInit: false, autoResize: false });
         const resizeSpy = sinon.spy();
         flicking.resize = resizeSpy;
-        flicking.setAutoResize(true);
+        flicking.autoResize = true;
         flicking.init();
 
         resizeSpy.resetHistory();

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 export type ValueOf<T> = T[keyof T];
 export type LiteralUnion<T extends U, U = string> = T | (Pick<U, never> & {_?: never});
 
@@ -20,12 +24,3 @@ export type Merged<From, To> =
   Unique<From, To>
   & Unique<To, From>
   & MergeObject<From, To>;
-
-/**
- * HTML `string` of single/mutiple HTMLElement, or an instance of `HTMLElement`.
- *
- * @ko 단일/복수의 HTMLElement의 outerHTML에 해당하는 `string`, 혹은 `HTMLElement`의 인스턴스.
- * @typedef
- * @memberof eg.Flicking
- */
-export type ElementLike = string | HTMLElement;

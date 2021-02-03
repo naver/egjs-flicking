@@ -1,10 +1,11 @@
-/**
+/*
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
 import State from "~/control/states/State";
-import { DIRECTION, EVENTS } from "~/const/external";
-import { STATE_TYPE } from "~/const/internal";
+import { STATE_TYPE } from "~/control/StateMachine";
+import { EVENTS } from "~/const/external";
+import { getDirection } from "~/utils";
 
 class IdleState extends State {
   public readonly holding = false;
@@ -33,11 +34,13 @@ class IdleState extends State {
   // By methods call
   public onChange(ctx: Parameters<State["onChange"]>[0]): void {
     const { flicking, axesEvent, transitTo } = ctx;
+    const controller = flicking.control.controller;
+    const animatingContext = controller.animatingContext;
 
     const eventSuccess = flicking.trigger(EVENTS.MOVE_START, {
       isTrusted: axesEvent.isTrusted,
       holding: this.holding,
-      direction: axesEvent.delta.flick > 0 ? DIRECTION.NEXT : DIRECTION.PREV,
+      direction: getDirection(animatingContext.start, animatingContext.end),
       axesEvent
     });
 

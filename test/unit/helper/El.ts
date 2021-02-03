@@ -1,4 +1,5 @@
 import { ValueOf } from "~/type/internal";
+import { parseCSSSizeValue } from "~/utils";
 
 // Flicking Element
 class El {
@@ -6,29 +7,20 @@ class El {
    * Very Basic Structure of the Flicking
    *
    * @example
-   * - Viewport
+   * - Viewport (width: 1000px)
    *   - Camera
    *     - Panel (width: 100%, height: 300px)
    *     - Panel (width: 100%, height: 300px)
    *     - Panel (width: 100%, height: 300px)
    */
   public static get DEFAULT_STRUCTURE() {
-    return El.viewport().add(
+    return El.viewport().setWidth(1000).add(
       El.camera().add(
         El.panel().setWidth("100%").setHeight(300),
         El.panel().setWidth("100%").setHeight(300),
         El.panel().setWidth("100%").setHeight(300),
       ),
     );
-  }
-
-  public get el() { return this._el; }
-
-  private _el: HTMLElement;
-
-  public constructor(type: ValueOf<typeof EL_TYPE>) {
-    this._el = document.createElement("div");
-    this._el.classList.add(type);
   }
 
   public static viewport() {
@@ -50,6 +42,15 @@ class El {
     return el;
   }
 
+  public get el() { return this._el; }
+
+  private _el: HTMLElement;
+
+  public constructor(type: ValueOf<typeof EL_TYPE>) {
+    this._el = document.createElement("div");
+    this._el.classList.add(type);
+  }
+
   public add(...els: El[]) {
     els.forEach(el => {
       this._el.appendChild(el._el);
@@ -63,21 +64,27 @@ class El {
   }
 
   public setWidth(width: number | string) {
-    if (typeof width === "number") {
-      this._el.style.width = `${width}px`;
-    } else {
-      this._el.style.width = width;
-    }
+    this._el.style.width = parseCSSSizeValue(width);
 
     return this;
   }
 
   public setHeight(height: number | string) {
-    if (typeof height === "number") {
-      this._el.style.height = `${height}px`;
-    } else {
-      this._el.style.height = height;
-    }
+    this._el.style.height = parseCSSSizeValue(height);
+
+    return this;
+  }
+
+  public setMargin(values: Partial<{
+    top: number | string;
+    left: number | string;
+    bottom: number | string;
+    right: number | string;
+  }>) {
+    Object.keys(values).forEach(key => {
+      this._el.style[`margin${key.charAt(0).toUpperCase() + key.slice(1)}`] = parseCSSSizeValue(values[key]);
+    });
+
     return this;
   }
 }

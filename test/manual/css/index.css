@@ -25,12 +25,16 @@ header {
   margin-right: auto;
 }
 
-#eg-flicking {
+#flicking {
   width: 100%;
   background-color: #435253;
 }
 
-.eg-flicking-panel {
+.flicking-viewport {
+  transition: height 500ms;
+}
+
+.flicking-panel {
   width: 300px;
   background-color: #369;
   padding: 10px;
@@ -38,4 +42,5 @@ header {
   margin-right: 10px;
   border: 10px solid #963;
   box-sizing: border-box;
+  max-width: 100%;
 }

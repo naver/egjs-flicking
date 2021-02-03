@@ -1,9 +1,9 @@
-/**
+/*
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
 
-import { Direction, AxesEventType, StateType, MoveTypeSnapOption, MoveTypeFreeScrollOption, FlickingMethodsKeys } from "./types";
+import { Direction, AxesEventType, StateType, MoveTypeSnapOption, MoveTypeFreeScrollOption } from "./types";
 
 export const MOVE_TYPE: {
   SNAP: "snap";

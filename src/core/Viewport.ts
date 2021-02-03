@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
@@ -20,21 +20,16 @@ class Viewport {
     return this;
   }
 
-  public getElement() {
-    return this._el;
-  }
+  public get element() { return this._el; }
 
   /**
    * Return copy of current width/height value
    * Has size 0 at initialization
    */
-  public getSize() {
-    return { ...this._size };
-  }
+  public get size() { return { ...this._size }; }
 
   /**
    * Change viewport's size. This will change the actual size of `.flicking-viewport` element by changing its CSS width/height property.
-   * You must call {@link Flicking#resize} after this to take effect.
    *
    * @param {object} [size] New viewport size
    * @param {number|string} [size.width] CSS string or number(in px)
@@ -43,10 +38,10 @@ class Viewport {
   public setSize({
     width,
     height
-  }: {
+  }: Partial<{
     width: number | string;
     height: number | string;
-  }) {
+  }>) {
     const el = this._el;
     if (width != null) {
       el.style.width = parseCSSSizeValue(width);

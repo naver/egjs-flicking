@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 /**
  * Event type object with event name strings.
  *
@@ -18,7 +22,8 @@
  */
 export const EVENTS = {
   READY: "ready",
-  RESIZE: "resize",
+  BEFORE_RESIZE: "beforeResize",
+  AFTER_RESIZE: "afterResize",
   HOLD_START: "holdStart",
   HOLD_END: "holdEnd",
   MOVE_START: "moveStart",
@@ -40,5 +45,6 @@ export const ALIGN = {
 
 export const DIRECTION = {
   PREV: "PREV",
-  NEXT: "NEXT"
+  NEXT: "NEXT",
+  NONE: null
 } as const;
