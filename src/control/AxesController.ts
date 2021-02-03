@@ -93,7 +93,7 @@ class AxesController {
     const cameraRange = flicking.camera.range;
     const axis = axes.axis.flick;
 
-    axis.circular = flicking.circular;
+    axis.circular = [flicking.circular, flicking.circular];
     axis.range = [cameraRange.min, cameraRange.max];
     axis.bounce = parseBounce(flicking.bounce, flicking.horizontal ? viewportSize.width : viewportSize.height);
 
@@ -149,7 +149,10 @@ class AxesController {
         };
 
         axes.once(AXES.EVENT.FINISH, animationFinishHandler);
-        axes.once(AXES.EVENT.HOLD, interruptionHandler);
+
+        if (!axesEvent) {
+          axes.once(AXES.EVENT.HOLD, interruptionHandler);
+        }
 
         animate();
       });

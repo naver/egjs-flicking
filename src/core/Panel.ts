@@ -87,14 +87,23 @@ class Panel {
   }
 
   public includePosition(position: number): boolean {
+    return this.includeRange(position, position);
+  }
+
+  public includeRange(min: number, max: number): boolean {
     const pos = this._pos;
     const size = this._size;
     const margin = this._margin;
-    const isHorizontal = this._flicking.horizontal;
 
-    return isHorizontal
-      ? (position >= pos.left - margin.left) && (position <= pos.left + size.width + margin.right)
-      : (position >= pos.top - margin.top) && (position <= pos.top + size.height + margin.bottom);
+    return this._flicking.horizontal
+      ? (max >= pos.left - margin.left) && (min <= pos.left + size.width + margin.right)
+      : (max >= pos.top - margin.top) && (min <= pos.top + size.height + margin.bottom);
+  }
+
+  public isReachable(): boolean {
+    const cameraRange = this._flicking.camera.range;
+
+    return this.includeRange(cameraRange.min, cameraRange.max);
   }
 
   public isVisible(): boolean {
@@ -113,6 +122,7 @@ class Panel {
     const cameraPrev = cameraPosition - camera.alignPosition;
     const cameraNext = cameraPrev + cameraSize;
 
+    // Should not include margin, as we don't declare what the margin is visible as what the panel is visible.
     return panelPosition < cameraPosition
       ? panelNext >= cameraPrev
       : panelPrev <= cameraNext;

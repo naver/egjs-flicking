@@ -10,7 +10,7 @@ import Panel from "~/core/Panel";
 import AxesController from "~/control/AxesController";
 import { EVENTS } from "~/const/external";
 import * as ERROR from "~/const/error";
-import { getDirection, getFlickingAttached } from "~/utils";
+import { clamp, getDirection, getFlickingAttached } from "~/utils";
 
 abstract class Control {
   // Internal States
@@ -78,6 +78,10 @@ abstract class Control {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;
 
+    if (!panel.isReachable()) {
+      return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(panel.position), ERROR.CODE.POSITION_NOT_REACHABLE));
+    }
+
     const triggeringEvent = panel !== this._activePanel ? EVENTS.CHANGE : EVENTS.RESTORE;
 
     const eventSuccess = flicking.trigger(triggeringEvent, {
@@ -91,10 +95,13 @@ abstract class Control {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.STOP_CALLED_BY_USER, ERROR.CODE.STOP_CALLED_BY_USER));
     }
 
+    const cameraRange = camera.range;
+    const position = clamp(panel.position, cameraRange.min, cameraRange.max);
+
     const updateActivePanel = () => {
       this._activePanel = panel;
     };
-    const animate = () => this._controller.animateTo(panel.position, duration, axesEvent);
+    const animate = () => this._controller.animateTo(position, duration, axesEvent);
 
     if (duration === 0) {
       updateActivePanel();

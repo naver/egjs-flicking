@@ -14,7 +14,7 @@ import { RawRenderer, Renderer, VisibleRenderer } from "./renderer";
 
 import { EVENTS, ALIGN, MOVE_TYPE } from "~/const/external";
 import * as ERROR from "~/const/error";
-import { getElement, includes } from "~/utils";
+import { getElement, includes, isString } from "~/utils";
 import {
   FlickingStatus,
   Plugin,
@@ -175,7 +175,7 @@ class Flicking extends Component<FlickingEvents> {
     moveType = "snap",
     threshold = 40,
     interruptable = true,
-    bounce = "50%",
+    bounce = "20%",
     iOSEdgeSwipeThreshold = 30,
     isEqualSize = false,
     isConstantSize = false,
@@ -244,11 +244,7 @@ class Flicking extends Component<FlickingEvents> {
     }
 
     // Look at initial panel
-    const initialPanel = renderer.getPanel(this._defaultIndex) || renderer.getPanel(0);
-
-    if (initialPanel) {
-      void control.moveToPanel(initialPanel, 0);
-    }
+    this._moveToInitialPanel();
 
     // Done initializing & emit ready event
     this._initialized = true;
@@ -569,8 +565,8 @@ class Flicking extends Component<FlickingEvents> {
 
     viewport.updateSize();
     renderer.updatePanelSize();
-    camera.updateRange();
     camera.updateAlignPos();
+    camera.updateRange();
     control.updateInput();
 
     const newSize = viewport.size;
@@ -645,9 +641,9 @@ class Flicking extends Component<FlickingEvents> {
     let type: ValueOf<typeof MOVE_TYPE> | undefined;
     let moveTypeOptions: Partial<SnapControlOptions> = {};
 
-    if (typeof moveType === "string") {
+    if (isString(moveType)) {
       type = moveType;
-    } else if (typeof moveType !== "string") {
+    } else {
       type = moveType.type;
       moveTypeOptions = moveType;
     }
@@ -686,6 +682,26 @@ class Flicking extends Component<FlickingEvents> {
     } else {
       return new RawRenderer(rendererOption);
     }
+  }
+
+  private _moveToInitialPanel(): void {
+    const renderer = this._renderer;
+    const control = this._control;
+    let initialPanel = renderer.getPanel(this._defaultIndex) || renderer.getPanel(0);
+
+    // Find the reachable panel nearest to initial panel
+    const cameraRange = this._camera.range;
+    while (initialPanel && !initialPanel.isReachable()) {
+      if (initialPanel.position < cameraRange.min) {
+        initialPanel = initialPanel.next();
+      } else {
+        initialPanel = initialPanel.prev();
+      }
+    }
+
+    if (!initialPanel) return;
+
+    void control.moveToPanel(initialPanel, 0);
   }
 }
 

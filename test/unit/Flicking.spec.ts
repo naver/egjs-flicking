@@ -222,10 +222,10 @@ describe("Flicking", () => {
     });
 
     describe("bounce", () => {
-      it("is '50%' by default", () => {
+      it("is '20%' by default", () => {
         const flicking = createFlicking(El.DEFAULT_STRUCTURE);
 
-        expect(flicking.bounce).to.equal("50%");
+        expect(flicking.bounce).to.equal("20%");
       });
     });
 

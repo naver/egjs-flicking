@@ -52,7 +52,11 @@ class SnapControl extends Control {
         targetPanel = panelAtPosition;
       } else {
         const adjacentPanel = (position > prevPos) ? activePanel.next() : activePanel.prev();
-        targetPanel = adjacentPanel || activePanel;
+        if (adjacentPanel && adjacentPanel.isReachable()) {
+          targetPanel = adjacentPanel;
+        } else {
+          targetPanel = activePanel;
+        }
       }
     } else {
       targetPanel = activePanel;
