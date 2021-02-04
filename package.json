@@ -50,7 +50,7 @@
   "license": "MIT",
   "browserslist": [
     "last 2 version",
-    "ie 8-11",
+    "ie 9-11",
     "not op_mini all"
   ],
   "devDependencies": {

@@ -3,11 +3,11 @@
  * egjs projects are licensed under the MIT license
  */
 import Flicking from "~/Flicking";
-import { parseAlign } from "~/utils";
+import { circulatePosition, parseAlign } from "~/utils";
 import { ALIGN } from "~/const/external";
 import { LiteralUnion, ValueOf } from "~/type/internal";
 
-export interface PanelOption {
+export interface PanelOptions {
   el: HTMLElement;
   index: number;
   align: LiteralUnion<ValueOf<typeof ALIGN>> | number;
@@ -17,7 +17,7 @@ export interface PanelOption {
 class Panel {
   private _flicking: Flicking;
   private _el: HTMLElement;
-  private _align: PanelOption["align"];
+  private _align: PanelOptions["align"];
 
   private _index: number;
   private _size: { width: number; height: number };
@@ -30,7 +30,7 @@ class Panel {
     index,
     align,
     flicking
-  }: PanelOption) {
+  }: PanelOptions) {
     this._el = el;
     this._index = index;
     this._flicking = flicking;
@@ -55,7 +55,7 @@ class Panel {
   public get align() { return this._align; }
 
   // Options Getter
-  public set align(val: PanelOption["align"]) { this._align = val; }
+  public set align(val: PanelOptions["align"]) { this._align = val; }
 
   public resize(): this {
     const el = this._el;
@@ -86,24 +86,59 @@ class Panel {
     return this._el.parentElement !== this._flicking.camera.element;
   }
 
-  public includePosition(position: number): boolean {
-    return this.includeRange(position, position);
+  public getSnapPosition(around: number): number {
+    const flicking = this._flicking;
+
+    if (!flicking.circular) return this.position;
+
+    const cameraRange = flicking.camera.range;
+    const cameraRangeSize = cameraRange.max - cameraRange.min;
+
+    let loopCount = 0;
+    if (around < cameraRange.min) {
+      loopCount = -Math.floor((cameraRange.min - around) / cameraRangeSize) - 1;
+    } else if (around > cameraRange.max) {
+      loopCount = Math.floor((around - cameraRange.max) / cameraRangeSize) + 1;
+    }
+
+    return this.position + cameraRangeSize * loopCount;
   }
 
-  public includeRange(min: number, max: number): boolean {
+  public includePosition(position: number, includeMargin: boolean = false): boolean {
+    const flicking = this._flicking;
+
+    if (flicking.circular) {
+      const cameraRange = flicking.camera.range;
+      position = circulatePosition(position, cameraRange.min, cameraRange.max);
+    }
+
+    return this.includeRange(position, position, includeMargin);
+  }
+
+  public includeRange(min: number, max: number, includeMargin: boolean = false): boolean {
     const pos = this._pos;
     const size = this._size;
     const margin = this._margin;
+    const isHorizontal = this._flicking.horizontal;
 
-    return this._flicking.horizontal
-      ? (max >= pos.left - margin.left) && (min <= pos.left + size.width + margin.right)
-      : (max >= pos.top - margin.top) && (min <= pos.top + size.height + margin.bottom);
+    let panelPrev = isHorizontal ? pos.left : pos.top;
+    let panelNext = isHorizontal ? pos.left + size.width : pos.top + size.height;
+
+    if (includeMargin) {
+      panelPrev -= isHorizontal ? margin.left : margin.top;
+      panelNext += isHorizontal ? margin.right : margin.bottom;
+    }
+
+    return max >= panelPrev && min <= panelNext;
   }
 
   public isReachable(): boolean {
-    const cameraRange = this._flicking.camera.range;
+    const flicking = this._flicking;
+    const cameraRange = flicking.camera.range;
 
-    return this.includeRange(cameraRange.min, cameraRange.max);
+    return flicking.circular
+      ? true // Always reachable on circular mode
+      : this.includeRange(cameraRange.min, cameraRange.max, true);
   }
 
   public isVisible(): boolean {
@@ -112,20 +147,14 @@ class Panel {
     const camera = flicking.camera;
     const viewportSize = flicking.viewport.size;
 
-    const panelPosition = this.position;
-    const panelBbox = this.bbox;
-    const panelPrev = flicking.horizontal ? panelBbox.left : panelBbox.top;
-    const panelNext = flicking.horizontal ? panelBbox.right : panelBbox.bottom;
-
-    const cameraPosition = camera.position;
-    const cameraSize = flicking.horizontal ? viewportSize.width : viewportSize.height;
-    const cameraPrev = cameraPosition - camera.alignPosition;
-    const cameraNext = cameraPrev + cameraSize;
+    const cameraBboxPrev = camera.position - camera.alignPosition;
+    const cameraVisibleRange = {
+      min: cameraBboxPrev,
+      max: cameraBboxPrev + (flicking.horizontal ? viewportSize.width : viewportSize.height)
+    };
 
     // Should not include margin, as we don't declare what the margin is visible as what the panel is visible.
-    return panelPosition < cameraPosition
-      ? panelNext >= cameraPrev
-      : panelPrev <= cameraNext;
+    return this.includeRange(cameraVisibleRange.min, cameraVisibleRange.max, false);
   }
 
   public focus(duration?: number) {
@@ -133,15 +162,29 @@ class Panel {
   }
 
   public prev(): Panel | null {
-    const renderer = this._flicking.renderer;
+    const index = this._index;
+    const flicking = this._flicking;
+    const renderer = flicking.renderer;
+    const panelCount = renderer.getPanelCount();
 
-    return renderer.getPanel(this._index - 1);
+    if (panelCount === 1) return null;
+
+    return flicking.circular
+      ? renderer.getPanel(index === 0 ? panelCount - 1 : index - 1)
+      : renderer.getPanel(index - 1);
   }
 
   public next(): Panel | null {
-    const renderer = this._flicking.renderer;
+    const index = this._index;
+    const flicking = this._flicking;
+    const renderer = flicking.renderer;
+    const panelCount = renderer.getPanelCount();
 
-    return renderer.getPanel(this._index + 1);
+    if (panelCount === 1) return null;
+
+    return flicking.circular
+      ? renderer.getPanel(index === panelCount - 1 ? 0 : index + 1)
+      : renderer.getPanel(index + 1);
   }
 
   public increaseIndex(val: number): this {

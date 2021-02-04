@@ -666,6 +666,10 @@ class Flicking extends Component<FlickingEvents> {
     const cameraOption = { align: this._align };
 
     if (this._circular) {
+      if (this._bound) {
+        // eslint-disable-next-line no-console
+        console.warn("\"circular\" and \"bound\" option cannot be used together, ignoring bound.");
+      }
       return new CircularCamera(cameraOption);
     } else if (this._bound) {
       return new BoundCamera(cameraOption);

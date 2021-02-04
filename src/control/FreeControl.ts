@@ -4,48 +4,30 @@
  */
 import { OnRelease } from "@egjs/axes";
 
+import FlickingError from "~/core/FlickingError";
 import Control from "~/control/Control";
-import { EVENTS } from "~/const/external";
-import { clamp, getDirection, getFlickingAttached } from "~/utils";
+import * as ERROR from "~/const/error";
+import { getFlickingAttached } from "~/utils";
 
 class FreeControl extends Control {
   public async moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
     const flicking = getFlickingAttached(this._flicking, "Control");
 
     const camera = flicking.camera;
-    const cameraRange = camera.range;
-    const panel = flicking.renderer.getPanelFromPosition(
-      clamp(position, cameraRange.min, cameraRange.max)
-    );
+    const targetPos = camera.clampToReachablePosition(position);
+
+    const panel = flicking.renderer.getPanelFromPosition(targetPos);
     const activePanel = this._activePanel;
 
-    const animate = () => this._controller.animateTo(position, duration, axesEvent);
-    const updateActivePanel = () => {
-      if (panel) {
-        this._activePanel = panel;
-      }
-    };
-
-    if (panel && panel !== activePanel) {
-      const eventSuccess = flicking.trigger(EVENTS.CHANGE, {
-        index: panel.index,
-        panel,
-        isTrusted: axesEvent?.isTrusted || false,
-        direction: getDirection(activePanel?.position ?? camera.position, position)
-      });
-
-      if (!eventSuccess) {
-        return Promise.resolve();
-      }
+    if (!panel) {
+      return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE));
     }
 
-    if (duration === 0) {
-      updateActivePanel();
-
-      return animate();
-    } else {
-      return animate().then(updateActivePanel);
+    if (panel !== activePanel) {
+      this._triggerIndexChangeEvent(panel, position, axesEvent);
     }
+
+    return this._animateToPosition({ position, duration, newActivePanel: panel, axesEvent });
   }
 }
 

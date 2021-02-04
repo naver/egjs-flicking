@@ -18,6 +18,7 @@ class BoundCamera extends Camera {
       this._range = { min: 0, max: 0 };
       return this;
     }
+
     const viewportSize = flicking.horizontal
       ? flicking.viewport.size.width
       : flicking.viewport.size.height;

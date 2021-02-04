@@ -186,7 +186,7 @@ export const parseElement = (element: ElementLike | ElementLike[]): HTMLElement[
   return elements;
 };
 
-export const getCirculatedIndex = (idx: number, max: number) => idx < 0 ? clamp(idx + max, 0, max) : clamp(idx, 0, max);
+export const getMinusCompensatedIndex = (idx: number, max: number) => idx < 0 ? clamp(idx + max, 0, max) : clamp(idx, 0, max);
 
 export const includes = <T>(array: T[], target: any): target is T => {
   for (const val of array) {
@@ -196,6 +196,20 @@ export const includes = <T>(array: T[], target: any): target is T => {
 };
 
 export const isString = (val: any): val is string => typeof val === "string";
+
+export const circulatePosition = (pos: number, min: number, max: number) => {
+  const size = max - min;
+
+  if (pos < min) {
+    const offset = (min - pos) % size;
+    pos = max - offset;
+  } else if (pos > max) {
+    const offset = (pos - max) % size;
+    pos = min + offset;
+  }
+
+  return pos;
+};
 
 // export const hasClass = (element: HTMLElement, className: string): boolean => {
 //   if (element.classList) {

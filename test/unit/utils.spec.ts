@@ -12,7 +12,7 @@ import {
   parseCSSSizeValue,
   getDirection,
   parseElement,
-  getCirculatedIndex,
+  getMinusCompensatedIndex,
   includes
 } from "~/utils";
 import Flicking from "~/Flicking";
@@ -451,30 +451,30 @@ describe("Util Functions", () => {
 
   describe("getCirculatedIndex", () => {
     it("should return same number if that number is between 0 and max", () => {
-      expect(getCirculatedIndex(0, 1)).to.equal(0);
-      expect(getCirculatedIndex(1, 1)).to.equal(1);
-      expect(getCirculatedIndex(5, 10)).to.equal(5);
+      expect(getMinusCompensatedIndex(0, 1)).to.equal(0);
+      expect(getMinusCompensatedIndex(1, 1)).to.equal(1);
+      expect(getMinusCompensatedIndex(5, 10)).to.equal(5);
     });
 
     it("should return clamped number if that number is bigger than max", () => {
-      expect(getCirculatedIndex(3, 1)).to.equal(1);
-      expect(getCirculatedIndex(1, 0)).to.equal(0);
-      expect(getCirculatedIndex(10, 5)).to.equal(5);
+      expect(getMinusCompensatedIndex(3, 1)).to.equal(1);
+      expect(getMinusCompensatedIndex(1, 0)).to.equal(0);
+      expect(getMinusCompensatedIndex(10, 5)).to.equal(5);
     });
 
     it("should return 'max - abs(val)' if given number is negative and abs(val) <= max", () => {
-      expect(getCirculatedIndex(-1, 1)).to.equal(0);
-      expect(getCirculatedIndex(-1, 5)).to.equal(4);
-      expect(getCirculatedIndex(-2, 5)).to.equal(3);
-      expect(getCirculatedIndex(-3, 5)).to.equal(2);
-      expect(getCirculatedIndex(-4, 5)).to.equal(1);
-      expect(getCirculatedIndex(-5, 5)).to.equal(0);
+      expect(getMinusCompensatedIndex(-1, 1)).to.equal(0);
+      expect(getMinusCompensatedIndex(-1, 5)).to.equal(4);
+      expect(getMinusCompensatedIndex(-2, 5)).to.equal(3);
+      expect(getMinusCompensatedIndex(-3, 5)).to.equal(2);
+      expect(getMinusCompensatedIndex(-4, 5)).to.equal(1);
+      expect(getMinusCompensatedIndex(-5, 5)).to.equal(0);
     });
 
     it("should return clamp(max - abs(val), 0, max) if given number is negative and abs(val) > max", () => {
-      expect(getCirculatedIndex(-5, 1)).to.equal(0);
-      expect(getCirculatedIndex(-6, 5)).to.equal(0);
-      expect(getCirculatedIndex(-999, 5)).to.equal(0);
+      expect(getMinusCompensatedIndex(-5, 1)).to.equal(0);
+      expect(getMinusCompensatedIndex(-6, 5)).to.equal(0);
+      expect(getMinusCompensatedIndex(-999, 5)).to.equal(0);
     });
   });
 

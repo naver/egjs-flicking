@@ -82,34 +82,56 @@ abstract class Control {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(panel.position), ERROR.CODE.POSITION_NOT_REACHABLE));
     }
 
+    this._triggerIndexChangeEvent(panel, panel.position, axesEvent);
+
+    const position = camera.clampToReachablePosition(panel.position);
+    return this._animateToPosition({ position, duration, newActivePanel: panel, axesEvent });
+  }
+
+  protected _triggerIndexChangeEvent(panel: Panel, position: number, axesEvent?: OnRelease): boolean {
+    const flicking = getFlickingAttached(this._flicking, "Control");
     const triggeringEvent = panel !== this._activePanel ? EVENTS.CHANGE : EVENTS.RESTORE;
+    const camera = flicking.camera;
+    const activePanel = this._activePanel;
 
     const eventSuccess = flicking.trigger(triggeringEvent, {
       index: panel.index,
       panel,
       isTrusted: axesEvent?.isTrusted || false,
-      direction: getDirection(camera.position, panel.position)
+      direction: getDirection(activePanel?.position ?? camera.position, position)
     });
 
     if (!eventSuccess) {
-      return Promise.reject(new FlickingError(ERROR.MESSAGE.STOP_CALLED_BY_USER, ERROR.CODE.STOP_CALLED_BY_USER));
+      throw new FlickingError(ERROR.MESSAGE.STOP_CALLED_BY_USER, ERROR.CODE.STOP_CALLED_BY_USER);
     }
 
-    const cameraRange = camera.range;
-    const position = clamp(panel.position, cameraRange.min, cameraRange.max);
+    return eventSuccess;
+  }
 
-    const updateActivePanel = () => {
-      this._activePanel = panel;
-    };
+  protected async _animateToPosition({
+    position,
+    duration,
+    newActivePanel,
+    axesEvent
+  }: {
+    position: number;
+    duration: number;
+    newActivePanel: Panel;
+    axesEvent?: OnRelease;
+  }) {
     const animate = () => this._controller.animateTo(position, duration, axesEvent);
 
     if (duration === 0) {
-      updateActivePanel();
+      this._setActivePanel(newActivePanel);
       return animate();
     } else {
-      return animate().then(updateActivePanel);
+      return animate().then(() => this._setActivePanel(newActivePanel));
     }
   }
+
+  protected _setActivePanel = (panel: Panel) => {
+    this._activePanel = panel;
+  };
 }
 
 export default Control;

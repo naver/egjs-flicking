@@ -7,7 +7,7 @@ import FlickingError from "~/core/FlickingError";
 import Panel from "~/core/Panel";
 import * as ERROR from "~/const/error";
 import { ALIGN, DIRECTION, EVENTS } from "~/const/external";
-import { checkExistence, getFlickingAttached, includes, parseAlign } from "~/utils";
+import { checkExistence, clamp, getFlickingAttached, includes, parseAlign } from "~/utils";
 
 export interface CameraOptions {
   align: FlickingOptions["align"];
@@ -86,12 +86,17 @@ abstract class Camera {
     const prevPos = this._position;
 
     this._position = pos;
-    this._applyTransform();
     this._refreshVisiblePanels();
     this._checkNeedPanel();
     this._checkReachEnd(prevPos, pos);
+    this._applyTransform();
 
     return this;
+  }
+
+  public clampToReachablePosition(position: number): number {
+    const range = this._range;
+    return clamp(position, range.min, range.max);
   }
 
   public updateAlignPos(): this {
@@ -112,7 +117,7 @@ abstract class Camera {
     this._needPanelTriggered = { prev: false, next: false };
   }
 
-  private _refreshVisiblePanels(): void {
+  protected _refreshVisiblePanels(): void {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const panels = flicking.renderer.getPanels();
 
@@ -133,7 +138,7 @@ abstract class Camera {
     this._visiblePanels = newVisiblePanels;
   }
 
-  private _checkNeedPanel(): void {
+  protected _checkNeedPanel(): void {
     const needPanelTriggered = this._needPanelTriggered;
 
     if (needPanelTriggered.prev && needPanelTriggered.next) return;
@@ -187,7 +192,7 @@ abstract class Camera {
     }
   }
 
-  private _checkReachEnd(prevPos: number, newPos: number): void {
+  protected _checkReachEnd(prevPos: number, newPos: number): void {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const range = this._range;
 
@@ -203,13 +208,13 @@ abstract class Camera {
     });
   }
 
-  private _applyTransform(): void {
+  protected _applyTransform(): void {
     const el = this._el;
 
     el.style[this._transform] = `translate(${-(this._position - this._alignPos)}px)`;
   }
 
-  private _checkTranslateSupport = () => {
+  protected _checkTranslateSupport = () => {
     const transforms = ["webkitTransform", "msTransform", "MozTransform", "OTransform", "transform"];
 
     const supportedStyle = document.documentElement.style;

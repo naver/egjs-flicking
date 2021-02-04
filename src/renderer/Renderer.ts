@@ -4,7 +4,7 @@
  */
 import Flicking, { FlickingOptions } from "~/Flicking";
 import Panel from "~/core/Panel";
-import { getCirculatedIndex, getFlickingAttached, includes, parseElement, toArray } from "~/utils";
+import { getMinusCompensatedIndex, getFlickingAttached, includes, parseElement, toArray } from "~/utils";
 import { ALIGN } from "~/const/external";
 import { ElementLike } from "~/type/external";
 
@@ -60,7 +60,7 @@ abstract class Renderer {
 
   public getPanelFromPosition(position: number): Panel | null {
     for (const panel of this._panels) {
-      if (panel.includePosition(position)) {
+      if (panel.includePosition(position, true)) {
         return panel;
       }
     }
@@ -85,7 +85,7 @@ abstract class Renderer {
     const align = this._getPanelAlign();
 
     const elements = parseElement(element);
-    const insertingIdx = getCirculatedIndex(index, panels.length);
+    const insertingIdx = getMinusCompensatedIndex(index, panels.length);
 
     const panelsPushed = panels.slice(insertingIdx);
     const newPanels = elements.map((el, elIdx) => new Panel({ el, index: insertingIdx + elIdx, align, flicking }));
@@ -128,7 +128,7 @@ abstract class Renderer {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
 
     const { camera, control } = flicking;
-    const removingIdx = getCirculatedIndex(index, panels.length);
+    const removingIdx = getMinusCompensatedIndex(index, panels.length);
 
     const panelsPulled = panels.slice(removingIdx + deleteCount);
     const panelsRemoved = panels.splice(removingIdx, deleteCount);

@@ -7,7 +7,8 @@ class App {
     const flicking = new Flicking("#flicking", {
       align: ALIGN.CENTER,
       bound: true,
-      moveType: MOVE_TYPE.FREE_SCROLL
+      circular: true,
+      // moveType: MOVE_TYPE.FREE_SCROLL
     });
 
     Object.values([EVENTS.CHANGE, EVENTS.REACH_EDGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {
