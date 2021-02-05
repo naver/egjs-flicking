@@ -23,8 +23,15 @@ describe("Panel", () => {
     it("has size 0 on creation", () => {
       const panel = createPanel(El.panel());
 
-      expect(panel.size.width).to.equal(0);
-      expect(panel.size.height).to.equal(0);
+      expect(panel.size).to.equal(0);
+      expect(panel.size).to.equal(0);
+    });
+
+    it("has width/height 0 on creation", () => {
+      const panel = createPanel(El.panel());
+
+      expect(panel.bbox.width).to.equal(0);
+      expect(panel.bbox.height).to.equal(0);
     });
 
     it("has position 0 on creation", () => {
@@ -69,8 +76,9 @@ describe("Panel", () => {
 
         panel.resize();
 
-        expect(panel.size.width).to.equal(300);
-        expect(panel.size.height).to.equal(300);
+        expect(panel.size).to.equal(300);
+        expect(panel.bbox.width).to.equal(300);
+        expect(panel.bbox.height).to.equal(300);
       });
 
       it("should update its margin", () => {

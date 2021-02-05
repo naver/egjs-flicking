@@ -8,75 +8,159 @@ import { getFlickingAttached } from "~/utils";
 
 class CircularCamera extends Camera {
   private _circularOffset: number = 0;
-  private _toggledPanels: Panel[];
+  private _circularEnabled: boolean = false;
+  private _panelTooglePoints: {
+    [pos: number]: Panel;
+  } = {};
+
+  public destroy() {
+    this._resetInternalValues();
+
+    return super.destroy();
+  }
 
   public clampToReachablePosition(position: number): number {
     // Basically all position is reachable for circular camera
-    return position;
+    return this._circularEnabled
+      ? position
+      : super.clampToReachablePosition(position);
+  }
+
+  public getControlParameters() {
+    return {
+      range: this._range,
+      position: this._position,
+      circular: this._circularEnabled
+    };
   }
 
   public updateRange() {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const renderer = flicking.renderer;
-    const camera = flicking.camera;
 
-    const firstPanel = renderer.getPanel(0);
-    const lastPanel = renderer.getPanel(renderer.getPanelCount() - 1);
-    if (!firstPanel || !lastPanel) {
-      this._range = { min: 0, max: 0 };
+    const panels = renderer.getPanels();
+    if (panels.length <= 0) {
+      this._resetInternalValues();
       return this;
     }
 
+    const firstPanel = panels[0]!;
+    const lastPanel = panels[panels.length - 1]!;
     const firstPanelPrev = flicking.horizontal
       ? firstPanel.bbox.left - firstPanel.margin.left
       : firstPanel.bbox.top - firstPanel.margin.top;
     const lastPanelNext = flicking.horizontal
-      ? lastPanel.bbox.right + lastPanel.margin.right
-      : lastPanel.bbox.bottom + lastPanel.margin.bottom;
+      ? lastPanel.bbox.left + lastPanel.bbox.width + lastPanel.margin.right
+      : lastPanel.bbox.top + lastPanel.bbox.height + lastPanel.margin.bottom;
 
-    const viewportSize = flicking.viewport.size;
-    const cameraAlignPos = camera.alignPosition;
-    const cameraSize = flicking.horizontal ? viewportSize.width : viewportSize.height;
+    const isHorizontal = flicking.horizontal;
+    const viewport = flicking.viewport;
+    const visibleSize = isHorizontal ? viewport.width : viewport.height;
+    const panelSizeSum = lastPanelNext - firstPanelPrev;
 
-    const visibleAreaOnFirstPanel = {
-      min: firstPanelPrev - cameraAlignPos,
-      max: firstPanelPrev - cameraAlignPos + cameraSize
-    };
-    const visibleAreaOnLastPanel = {
-      min: lastPanelNext - cameraAlignPos,
-      max: lastPanelNext - cameraAlignPos + cameraSize
-    };
-
-    const invisiblePanelsOnFirstPanel = renderer.getPanels()
-      .filter(panel => !panel.includeRange(visibleAreaOnFirstPanel.min, visibleAreaOnFirstPanel.max, false));
-    const invisiblePanelsOnLastPanel = renderer.getPanels()
-      .filter(panel => !panel.includeRange(visibleAreaOnLastPanel.min, visibleAreaOnLastPanel.max, false));
-
-    let canSetCircularMode: boolean;
-    if (invisiblePanelsOnFirstPanel.length <= 0 || invisiblePanelsOnLastPanel.length <= 0) {
-      canSetCircularMode = false;
-    } else {
-      canSetCircularMode = this._getSizeSumOfPanels(invisiblePanelsOnFirstPanel) >= cameraAlignPos
-        && this._getSizeSumOfPanels(invisiblePanelsOnLastPanel) >= cameraSize - cameraAlignPos;
-    }
+    const canSetCircularMode = panels
+      .every(panel => panelSizeSum - panel.size >= visibleSize);
 
     if (canSetCircularMode) {
       this._range = { min: firstPanelPrev, max: lastPanelNext };
+      const panelTooglePoints = {};
+      const alignPos = this._alignPos;
+      const shouldBeToggled: Panel[] = [];
+
+      panels.forEach(panel => {
+        const range = this._range;
+        const minimumVisible = range.min - alignPos;
+        const maximumVisible = range.max - alignPos + visibleSize;
+        const shouldBeVisibleAtMin = panel.includeRange(maximumVisible - visibleSize, maximumVisible, false);
+        const shouldBeVisibleAtMax = panel.includeRange(minimumVisible, minimumVisible + visibleSize, false);
+
+        if (shouldBeVisibleAtMin) {
+          panelTooglePoints[panel.range.max - (maximumVisible - visibleSize)] = panel;
+          shouldBeToggled.push(panel);
+        }
+        if (shouldBeVisibleAtMax) {
+          panelTooglePoints[panel.range.min - (minimumVisible - visibleSize)] = panel;
+        }
+      });
+
+      flicking.renderer.movePanelsToStart(shouldBeToggled);
+      const panelSizeIncludeMargin = shouldBeToggled.reduce((sum: number, panel: Panel) => {
+        const panelMargin = panel.margin;
+        return sum + panel.size + (isHorizontal ? panelMargin.right - panelMargin.left : panelMargin.bottom - panelMargin.top);
+      }, 0);
+
+      this._circularOffset += panelSizeIncludeMargin;
+
+      this._panelTooglePoints = panelTooglePoints;
     } else {
       this._range = { min: firstPanel.position, max: lastPanel.position };
+      this._circularOffset = 0;
+      this._panelTooglePoints = {};
     }
+
+    this._circularEnabled = canSetCircularMode;
 
     return this;
   }
 
-  private _getSizeSumOfPanels(panels: Panel[]): number {
+  public lookAt(pos: number) {
     const flicking = getFlickingAttached(this._flicking, "Camera");
-    const firstPanel = panels[0];
-    const lastPanel = panels[panels.length - 1];
+    const prevPos = this._position;
+    const togglePoints = Object.keys(this._panelTooglePoints)
+      .map(pointString => parseFloat(pointString))
+      .sort((a, b) => a - b);
+    const isHorizontal = flicking.horizontal;
 
-    return flicking.horizontal
-      ? lastPanel.bbox.right - firstPanel.bbox.left
-      : lastPanel.bbox.bottom - firstPanel.bbox.top;
+    if (pos === prevPos) return super.lookAt(pos);
+
+    if (pos > prevPos) {
+      const passedPanels = togglePoints.reduce((passed: Panel[], togglePoint: number) => {
+        if (togglePoint > prevPos && togglePoint <= pos) {
+          passed.push(this._panelTooglePoints[togglePoint]);
+        }
+        return passed;
+      }, []);
+
+      flicking.renderer.movePanelsToEnd(passedPanels);
+
+      const panelSizeIncludeMargin = passedPanels.reduce((sum: number, panel: Panel) => {
+        const panelMargin = panel.margin;
+        return sum + panel.size + (isHorizontal ? panelMargin.right - panelMargin.left : panelMargin.bottom - panelMargin.top);
+      }, 0);
+
+      this._circularOffset -= panelSizeIncludeMargin;
+    } else {
+      const passedPanels = togglePoints.reduce((passed: Panel[], togglePoint: number) => {
+        if (togglePoint < prevPos && togglePoint >= pos) {
+          passed.push(this._panelTooglePoints[togglePoint]);
+        }
+        return passed;
+      }, []);
+
+      flicking.renderer.movePanelsToStart(passedPanels);
+
+      const panelSizeIncludeMargin = passedPanels.reduce((sum: number, panel: Panel) => {
+        const panelMargin = panel.margin;
+        return sum + panel.size + (isHorizontal ? panelMargin.right - panelMargin.left : panelMargin.bottom - panelMargin.top);
+      }, 0);
+
+      this._circularOffset += panelSizeIncludeMargin;
+    }
+
+    return super.lookAt(pos);
+  }
+
+  protected _applyTransform(): void {
+    const el = this._el;
+
+    el.style[this._transform] = `translate(${-(this._position - this._alignPos + this._circularOffset)}px)`;
+  }
+
+  private _resetInternalValues() {
+    this._range = { min: 0, max: 0 };
+    this._circularOffset = 0;
+    this._circularEnabled = false;
+    this._panelTooglePoints = {};
   }
 }
 

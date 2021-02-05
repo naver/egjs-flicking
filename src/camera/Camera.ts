@@ -76,10 +76,29 @@ abstract class Camera {
     this._align = val;
   }
 
+  public getVisibleRange(): { min: number; max: number } {
+    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const viewport = flicking.viewport;
+
+    const bboxPrev = this._position - this._alignPos;
+    return {
+      min: bboxPrev,
+      max: bboxPrev + (flicking.horizontal ? viewport.width : viewport.height)
+    };
+  }
+
   public getPanelBelow(): Panel | null {
     const flicking = getFlickingAttached(this._flicking, "Camera");
 
     return flicking.renderer.getPanelFromPosition(this._position);
+  }
+
+  public getControlParameters() {
+    return {
+      range: this._range,
+      position: this._position,
+      circular: false
+    };
   }
 
   public lookAt(pos: number): this {
@@ -102,13 +121,13 @@ abstract class Camera {
   public updateAlignPos(): this {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const align = this._align;
-    const size = flicking.viewport.size;
+    const viewport = flicking.viewport;
 
     const alignVal = typeof align === "object"
       ? (align as { hanger: string | number }).hanger
       : align;
 
-    this._alignPos = parseAlign(alignVal, flicking.horizontal ? size.width : size.height);
+    this._alignPos = parseAlign(alignVal, flicking.horizontal ? viewport.width : viewport.height);
 
     return this;
   }
@@ -117,7 +136,7 @@ abstract class Camera {
     this._needPanelTriggered = { prev: false, next: false };
   }
 
-  protected _refreshVisiblePanels(): void {
+  protected _refreshVisiblePanels() {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const panels = flicking.renderer.getPanels();
 
@@ -159,9 +178,9 @@ abstract class Camera {
       return;
     }
 
-    const viewportSize = flicking.viewport.size;
+    const viewport = flicking.viewport;
     const cameraPosition = this._position;
-    const cameraSize = flicking.horizontal ? viewportSize.width : viewportSize.height;
+    const cameraSize = flicking.horizontal ? viewport.width : viewport.height;
     const cameraRange = this._range;
     const needPanelThreshold = flicking.needPanelThreshold;
 
@@ -172,8 +191,7 @@ abstract class Camera {
     const lastPanel = panels[panels.length - 1];
 
     if (!needPanelTriggered.prev) {
-      const firstPanelBbox = firstPanel.bbox;
-      const firstPanelPrev = flicking.horizontal ? firstPanelBbox.left : firstPanelBbox.top;
+      const firstPanelPrev = firstPanel.range.min;
 
       if (cameraPrev <= (firstPanelPrev + needPanelThreshold) || cameraPosition <= (cameraRange.min + needPanelThreshold)) {
         flicking.trigger(EVENTS.NEED_PANEL, { direction: DIRECTION.PREV });
@@ -182,8 +200,7 @@ abstract class Camera {
     }
 
     if (!needPanelTriggered.next) {
-      const lastPanelBbox = lastPanel.bbox;
-      const lastPanelNext = flicking.horizontal ? lastPanelBbox.right : lastPanelBbox.bottom;
+      const lastPanelNext = lastPanel.range.max;
 
       if (cameraNext >= (lastPanelNext - needPanelThreshold) || cameraPosition >= (cameraRange.max - needPanelThreshold)) {
         flicking.trigger(EVENTS.NEED_PANEL, { direction: DIRECTION.NEXT });

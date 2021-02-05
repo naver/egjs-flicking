@@ -88,16 +88,15 @@ class AxesController {
   public update(): this {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const axes = this._axes!;
-
-    const viewportSize = flicking.viewport.size;
-    const cameraRange = flicking.camera.range;
+    const viewport = flicking.viewport;
+    const controlParams = flicking.camera.getControlParameters();
     const axis = axes.axis.flick;
 
-    axis.circular = [flicking.circular, flicking.circular];
-    axis.range = [cameraRange.min, cameraRange.max];
-    axis.bounce = parseBounce(flicking.bounce, flicking.horizontal ? viewportSize.width : viewportSize.height);
+    axis.circular = [controlParams.circular, controlParams.circular];
+    axis.range = [controlParams.range.min, controlParams.range.max];
+    axis.bounce = parseBounce(flicking.bounce, flicking.horizontal ? viewport.width : viewport.height);
 
-    axes.setTo({ flick: flicking.camera.position }, 0);
+    axes.setTo({ flick: controlParams.position }, 0);
 
     return this;
   }

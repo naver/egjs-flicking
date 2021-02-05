@@ -6,14 +6,13 @@ import { parseCSSSizeValue } from "~/utils";
 
 class Viewport {
   private _el: HTMLElement;
-  private _size: { width: number; height: number };
+  private _width: number;
+  private _height: number;
 
   public constructor(el: HTMLElement) {
     this._el = el;
-    this._size = {
-      width: 0,
-      height: 0
-    };
+    this._width = 0;
+    this._height = 0;
   }
 
   public destroy(): this {
@@ -22,11 +21,8 @@ class Viewport {
 
   public get element() { return this._el; }
 
-  /**
-   * Return copy of current width/height value
-   * Has size 0 at initialization
-   */
-  public get size() { return { ...this._size }; }
+  public get width() { return this._width; }
+  public get height() { return this._width; }
 
   /**
    * Change viewport's size. This will change the actual size of `.flicking-viewport` element by changing its CSS width/height property.
@@ -49,16 +45,14 @@ class Viewport {
     if (height != null) {
       el.style.height = parseCSSSizeValue(height);
     }
-    this.updateSize();
+    this.resize();
   }
 
-  public updateSize() {
+  public resize() {
     const el = this._el;
 
-    this._size = {
-      width: el.offsetWidth,
-      height: el.offsetHeight
-    };
+    this._width = el.offsetWidth;
+    this._height = el.offsetHeight;
   }
 }
 

@@ -8,6 +8,7 @@ import { getFlickingAttached } from "~/utils";
 class BoundCamera extends Camera {
   public updateRange() {
     const flicking = getFlickingAttached(this._flicking, "Camera");
+    const viewport = flicking.viewport;
     const renderer = flicking.renderer;
     const alignPos = this._alignPos;
 
@@ -19,15 +20,9 @@ class BoundCamera extends Camera {
       return this;
     }
 
-    const viewportSize = flicking.horizontal
-      ? flicking.viewport.size.width
-      : flicking.viewport.size.height;
-    const firstPanelPrev = flicking.horizontal
-      ? firstPanel.bbox.left
-      : firstPanel.bbox.top;
-    const lastPanelNext = flicking.horizontal
-      ? lastPanel.bbox.right
-      : lastPanel.bbox.bottom;
+    const viewportSize = flicking.horizontal ? viewport.width : viewport.height;
+    const firstPanelPrev = firstPanel.range.min;
+    const lastPanelNext = lastPanel.range.max;
     const panelAreaSize = lastPanelNext - firstPanelPrev;
     const canSetBoundMode = viewportSize < panelAreaSize;
 

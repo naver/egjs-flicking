@@ -556,26 +556,32 @@ class Flicking extends Component<FlickingEvents> {
     const camera = this._camera;
     const control = this._control;
 
-    const prevSize = viewport.size;
+    const prevWidth = viewport.width;
+    const prevHeight = viewport.height;
 
     this.trigger(EVENTS.BEFORE_RESIZE, {
-      ...prevSize,
+      width: prevWidth,
+      height: prevHeight,
       element: viewport.element
     });
 
-    viewport.updateSize();
+    viewport.resize();
     renderer.updatePanelSize();
     camera.updateAlignPos();
     camera.updateRange();
     control.updateInput();
 
-    const newSize = viewport.size;
-    const sizeChanged = newSize.width !== prevSize.width
-      || newSize.height !== prevSize.height;
+    const newWidth = viewport.width;
+    const newHeight = viewport.height;
+    const sizeChanged = newWidth !== prevWidth || newHeight !== prevHeight;
 
     this.trigger(EVENTS.AFTER_RESIZE, {
-      ...newSize,
-      prev: prevSize,
+      width: viewport.width,
+      height: viewport.height,
+      prev: {
+        width: prevWidth,
+        height: prevHeight
+      },
       sizeChanged,
       element: viewport.element
     });

@@ -61,9 +61,7 @@ class AnimatingState extends State {
 
     const panelBelow = flicking.camera.getPanelBelow();
     if (flicking.horizontal && flicking.adaptive && panelBelow) {
-      const panelSize = panelBelow.size;
-
-      flicking.viewport.setSize({ height: panelSize.height });
+      flicking.viewport.setSize({ height: panelBelow.bbox.height });
     }
 
     transitTo(STATE_TYPE.IDLE);
