@@ -3,7 +3,7 @@ import Viewport from "~/core/Viewport";
 import Flicking from "~/Flicking";
 import * as ERROR from "~/const/error";
 import { ALIGN, DIRECTION, EVENTS } from "~/const/external";
-import { AfterResizeEvent, BeforeResizeEvent } from "~/types";
+import { AfterResizeEvent, BeforeResizeEvent } from "~/type/event";
 
 import El from "./helper/El";
 import { cleanup, createFlicking, simulate, tick } from "./helper/test-util";

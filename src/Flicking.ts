@@ -348,7 +348,7 @@ class Flicking extends Component<FlickingEvents> {
    * @param [duration=options.duration] Duration of the panel movement animation.(unit: ms)<ko>패널 이동 애니메이션 진행 시간.(단위: ms)</ko>
    */
   public prev(duration: number = this._duration) {
-    return this.moveTo(this._control.activeIndex - 1, duration);
+    return this.moveTo(this._control.activePanel?.prev()?.index ?? -1, duration);
   }
 
   /**
@@ -358,7 +358,7 @@ class Flicking extends Component<FlickingEvents> {
    * @param [duration=options.duration] Duration of the panel movement animation(unit: ms).<ko>패널 이동 애니메이션 진행 시간.(단위: ms)</ko>
    */
   public next(duration: number = this._duration) {
-    return this.moveTo(this._control.activeIndex + 1, duration);
+    return this.moveTo(this._control.activePanel?.next()?.index ?? this.getPanelCount(), duration);
   }
 
   /**
