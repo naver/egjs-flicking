@@ -27,6 +27,21 @@ abstract class Camera {
   protected _visiblePanels: Panel[];
   protected _needPanelTriggered: { prev: boolean; next: boolean };
 
+  // Internal states getter
+  public get element() { return this._el; }
+  public get position() { return this._position; }
+  public get alignPosition() { return this._alignPos; }
+  public get range() { return this._range; }
+  public get visiblePanels() { return this._visiblePanels; }
+
+  // Options Getter
+  public get align() { return this._align; }
+
+  // Options Setter
+  public set align(val: FlickingOptions["align"]) {
+    this._align = val;
+  }
+
   public constructor({
     align = ALIGN.PREV
   }: Partial<CameraOptions> = {}) {
@@ -59,21 +74,6 @@ abstract class Camera {
     this._flicking = null;
 
     return this;
-  }
-
-  // Internal states getter
-  public get element() { return this._el; }
-  public get position() { return this._position; }
-  public get alignPosition() { return this._alignPos; }
-  public get range() { return this._range; }
-  public get visiblePanels() { return this._visiblePanels; }
-
-  // Options Getter
-  public get align() { return this._align; }
-
-  // Options Setter
-  public set align(val: FlickingOptions["align"]) {
-    this._align = val;
   }
 
   public getVisibleRange(): { min: number; max: number } {

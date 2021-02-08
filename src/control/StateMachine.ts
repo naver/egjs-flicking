@@ -17,11 +17,11 @@ import * as AXES from "~/const/axes";
 class StateMachine {
   private _state: State;
 
+  public get state(): State { return this._state; }
+
   public constructor() {
     this._state = new IdleState();
   }
-
-  public get state(): State { return this._state; }
 
   public fire(eventType: keyof AxesEvents, externalCtx: {
     flicking: Flicking;

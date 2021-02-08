@@ -10,13 +10,19 @@ import Panel from "~/core/Panel";
 import AxesController from "~/control/AxesController";
 import { EVENTS } from "~/const/external";
 import * as ERROR from "~/const/error";
-import { clamp, getDirection, getFlickingAttached } from "~/utils";
+import { getDirection, getFlickingAttached } from "~/utils";
 
 abstract class Control {
   // Internal States
   protected _flicking: Flicking | null;
   protected _controller: AxesController;
   protected _activePanel: Panel | null;
+
+  public get controller() { return this._controller; }
+  public get activeIndex() { return this._activePanel?.index ?? -1; }
+  public get activePanel() { return this._activePanel; }
+  public get animating() { return this._controller.state.animating; }
+  public get holding() { return this._controller.state.holding; }
 
   public constructor() {
     this._flicking = null;
@@ -41,12 +47,6 @@ abstract class Control {
 
     return this;
   }
-
-  public get controller() { return this._controller; }
-  public get activeIndex() { return this._activePanel?.index ?? -1; }
-  public get activePanel() { return this._activePanel; }
-  public get animating() { return this._controller.state.animating; }
-  public get holding() { return this._controller.state.holding; }
 
   public enable(): this {
     this._controller.enable();

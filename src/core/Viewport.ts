@@ -9,6 +9,11 @@ class Viewport {
   private _width: number;
   private _height: number;
 
+  public get element() { return this._el; }
+
+  public get width() { return this._width; }
+  public get height() { return this._height; }
+
   public constructor(el: HTMLElement) {
     this._el = el;
     this._width = 0;
@@ -18,11 +23,6 @@ class Viewport {
   public destroy(): this {
     return this;
   }
-
-  public get element() { return this._el; }
-
-  public get width() { return this._width; }
-  public get height() { return this._width; }
 
   /**
    * Change viewport's size. This will change the actual size of `.flicking-viewport` element by changing its CSS width/height property.

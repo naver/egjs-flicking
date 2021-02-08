@@ -20,6 +20,17 @@ abstract class Renderer {
   protected _flicking: Flicking | null;
   protected _panels: Panel[];
 
+  // Options Getter
+  public get align() { return this._align; }
+
+  // Options Setter
+  public set align(val: FlickingOptions["align"]) {
+    this._align = val;
+
+    const panelAlign = this._getPanelAlign();
+    this._panels.forEach(panel => { panel.align = panelAlign; });
+  }
+
   public constructor({
     align = ALIGN.PREV
   }: Partial<RendererOptions> = {}) {
@@ -37,17 +48,6 @@ abstract class Renderer {
     this._flicking = null;
     this._panels = [];
     return this;
-  }
-
-  // Options Getter
-  public get align() { return this._align; }
-
-  // Options Setter
-  public set align(val: FlickingOptions["align"]) {
-    this._align = val;
-
-    const panelAlign = this._getPanelAlign();
-    this._panels.forEach(panel => { panel.align = panelAlign; });
   }
 
   public getPanels(): Panel[] {

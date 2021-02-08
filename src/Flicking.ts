@@ -15,12 +15,7 @@ import { RawRenderer, Renderer, VisibleRenderer } from "./renderer";
 import { EVENTS, ALIGN, MOVE_TYPE } from "~/const/external";
 import * as ERROR from "~/const/error";
 import { getElement, includes, isString } from "~/utils";
-import {
-  FlickingStatus,
-  Plugin,
-  ReadyEvent, BeforeResizeEvent, AfterResizeEvent
-} from "~/types";
-import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, ChangeEvent, RestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent } from "~/type/event";
+import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, ChangeEvent, RestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent } from "~/type/event";
 import { LiteralUnion, ValueOf } from "~/type/internal";
 import { ElementLike, MoveTypeOption } from "~/type/external";
 
@@ -160,6 +155,74 @@ class Flicking extends Component<FlickingEvents> {
   // Internal State
   private _initialized: boolean;
 
+  // Components
+  public get control() { return this._control; }
+  public get camera() { return this._camera; }
+  public get renderer() { return this._renderer; }
+  public get viewport() { return this._viewport; }
+  // Internal States
+  public get initialized() { return this._initialized; }
+  // Options Getter
+  // UI / LAYOUT
+  public get align() { return this._align; }
+  public get defaultIndex() { return this._defaultIndex; }
+  public get horizontal() { return this._horizontal; }
+  public get circular() { return this._circular; }
+  public get bound() { return this._bound; }
+  public get adaptive() { return this._adaptive; }
+  // EVENTS
+  public get needPanelThreshold() { return this._needPanelThreshold; }
+  // ANIMATION
+  public get deceleration() { return this._deceleration; }
+  public get easing() { return this._easing; }
+  public get duration() { return this._duration; }
+  // INPUT
+  public get inputType() { return this._inputType; }
+  public get moveType() { return this._moveType; }
+  public get threshold() { return this._threshold; }
+  public get interruptable() { return this._interruptable; }
+  public get bounce() { return this._bounce; }
+  public get iOSEdgeSwipeThreshold() { return this._iOSEdgeSwipeThreshold; }
+  // PERFORMANCE
+  public get isEqualSize() { return this._isEqualSize; }
+  public get isConstantSize() { return this._isConstantSize; }
+  public get renderOnlyVisible() { return this._renderOnlyVisible; }
+  // OTHERS
+  public get autoInit() { return this._autoInit; }
+  public get autoResize() { return this._autoResize; }
+
+  // Options Setter
+  // UI / LAYOUT
+  public set align(val: FlickingOptions["align"]) {
+    this._align = val;
+    this._renderer.align = val;
+    this._camera.align = val;
+  }
+
+  public set defaultIndex(val: FlickingOptions["defaultIndex"]) { this._defaultIndex = val; }
+  public set horizontal(val: FlickingOptions["horizontal"]) { this._horizontal = val; }
+  public set circular(val: FlickingOptions["circular"]) { this._circular = val; }
+  public set bound(val: FlickingOptions["bound"]) { this._bound = val; }
+  public set adaptive(val: FlickingOptions["adaptive"]) { this._adaptive = val; }
+  // ANIMATION
+  public set deceleration(val: FlickingOptions["deceleration"]) { this._deceleration = val; }
+  public set easing(val: FlickingOptions["easing"]) { this._easing = val; }
+  public set duration(val: FlickingOptions["duration"]) { this._duration = val; }
+  // INPUT
+  public set inputType(val: FlickingOptions["inputType"]) { this._inputType = val; }
+  public set moveType(val: FlickingOptions["moveType"]) { this._moveType = val; }
+  public set threshold(val: FlickingOptions["threshold"]) { this._threshold = val; }
+  public set interruptable(val: FlickingOptions["interruptable"]) { this._interruptable = val; }
+  public set bounce(val: FlickingOptions["bounce"]) { this._bounce = val; }
+  public set iOSEdgeSwipeThreshold(val: FlickingOptions["iOSEdgeSwipeThreshold"]) { this._iOSEdgeSwipeThreshold = val; }
+  // PERFORMANCE
+  public set isEqualSize(val: FlickingOptions["isEqualSize"]) { this._isEqualSize = val; }
+  public set isConstantSize(val: FlickingOptions["isConstantSize"]) { this._isConstantSize = val; }
+  public set isRenderOnlyVisible(val: FlickingOptions["renderOnlyVisible"]) { this._renderOnlyVisible = val; }
+  // OTHERS
+  public set autoInit(val: FlickingOptions["autoInit"]) { this._autoInit = val; }
+  public set autoResize(val: FlickingOptions["autoResize"]) { this._autoResize = val; }
+
   public constructor(root: HTMLElement | string, {
     align = ALIGN.CENTER,
     defaultIndex = 0,
@@ -277,74 +340,6 @@ class Flicking extends Component<FlickingEvents> {
 
     this._initialized = false;
   }
-
-  // Components
-  public get control() { return this._control; }
-  public get camera() { return this._camera; }
-  public get renderer() { return this._renderer; }
-  public get viewport() { return this._viewport; }
-  // Internal States
-  public get initialized() { return this._initialized; }
-  // Options Getter
-  // UI / LAYOUT
-  public get align() { return this._align; }
-  public get defaultIndex() { return this._defaultIndex; }
-  public get horizontal() { return this._horizontal; }
-  public get circular() { return this._circular; }
-  public get bound() { return this._bound; }
-  public get adaptive() { return this._adaptive; }
-  // EVENTS
-  public get needPanelThreshold() { return this._needPanelThreshold; }
-  // ANIMATION
-  public get deceleration() { return this._deceleration; }
-  public get easing() { return this._easing; }
-  public get duration() { return this._duration; }
-  // INPUT
-  public get inputType() { return this._inputType; }
-  public get moveType() { return this._moveType; }
-  public get threshold() { return this._threshold; }
-  public get interruptable() { return this._interruptable; }
-  public get bounce() { return this._bounce; }
-  public get iOSEdgeSwipeThreshold() { return this._iOSEdgeSwipeThreshold; }
-  // PERFORMANCE
-  public get isEqualSize() { return this._isEqualSize; }
-  public get isConstantSize() { return this._isConstantSize; }
-  public get renderOnlyVisible() { return this._renderOnlyVisible; }
-  // OTHERS
-  public get autoInit() { return this._autoInit; }
-  public get autoResize() { return this._autoResize; }
-
-  // Options Setter
-  // UI / LAYOUT
-  public set align(val: FlickingOptions["align"]) {
-    this._align = val;
-    this._renderer.align = val;
-    this._camera.align = val;
-  }
-
-  public set defaultIndex(val: FlickingOptions["defaultIndex"]) { this._defaultIndex = val; }
-  public set horizontal(val: FlickingOptions["horizontal"]) { this._horizontal = val; }
-  public set circular(val: FlickingOptions["circular"]) { this._circular = val; }
-  public set bound(val: FlickingOptions["bound"]) { this._bound = val; }
-  public set adaptive(val: FlickingOptions["adaptive"]) { this._adaptive = val; }
-  // ANIMATION
-  public set deceleration(val: FlickingOptions["deceleration"]) { this._deceleration = val; }
-  public set easing(val: FlickingOptions["easing"]) { this._easing = val; }
-  public set duration(val: FlickingOptions["duration"]) { this._duration = val; }
-  // INPUT
-  public set inputType(val: FlickingOptions["inputType"]) { this._inputType = val; }
-  public set moveType(val: FlickingOptions["moveType"]) { this._moveType = val; }
-  public set threshold(val: FlickingOptions["threshold"]) { this._threshold = val; }
-  public set interruptable(val: FlickingOptions["interruptable"]) { this._interruptable = val; }
-  public set bounce(val: FlickingOptions["bounce"]) { this._bounce = val; }
-  public set iOSEdgeSwipeThreshold(val: FlickingOptions["iOSEdgeSwipeThreshold"]) { this._iOSEdgeSwipeThreshold = val; }
-  // PERFORMANCE
-  public set isEqualSize(val: FlickingOptions["isEqualSize"]) { this._isEqualSize = val; }
-  public set isConstantSize(val: FlickingOptions["isConstantSize"]) { this._isConstantSize = val; }
-  public set isRenderOnlyVisible(val: FlickingOptions["renderOnlyVisible"]) { this._renderOnlyVisible = val; }
-  // OTHERS
-  public set autoInit(val: FlickingOptions["autoInit"]) { this._autoInit = val; }
-  public set autoResize(val: FlickingOptions["autoResize"]) { this._autoResize = val; }
 
   /**
    * Move to the previous panel if it exists.
@@ -503,7 +498,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 현재 상태 값을 반환한다. 반환받은 값을 [setStatus()]{@link eg.Flicking#setStatus} 메소드의 인자로 지정하면 현재 상태를 복원할 수 있다.
    * @return An object with current status value information.<ko>현재 상태값 정보를 가진 객체.</ko>
    */
-  public getStatus(): FlickingStatus {
+  public getStatus() {
     return {
       index: -1,
       panels: [],
@@ -517,7 +512,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko `status`의 상태로 복원한다.
    * @param status Status value to be restored. You can specify the return value of the [getStatus()]{@link eg.Flicking#getStatus} method.<ko>복원할 상태 값. [getStatus()]{@link eg.Flicking#getStatus}메서드의 반환값을 지정하면 된다.</ko>
    */
-  public setStatus(status: FlickingStatus): void {
+  public setStatus(status): void {
     return;
   }
 
