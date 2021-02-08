@@ -32,7 +32,7 @@ abstract class Renderer {
   }
 
   public constructor({
-    align = ALIGN.PREV
+    align = ALIGN.CENTER
   }: Partial<RendererOptions> = {}) {
     this._align = align;
     this._panels = [];
@@ -209,7 +209,7 @@ abstract class Renderer {
     const align = this._align;
 
     return typeof align === "object"
-      ? (align as { anchor: string | number }).anchor
+      ? (align as { panel: string | number }).panel
       : align;
   }
 }

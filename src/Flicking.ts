@@ -74,7 +74,7 @@ export type FlickingEvents = {
  */
 export interface FlickingOptions {
   // UI / LAYOUT
-  align: LiteralUnion<ValueOf<typeof ALIGN>> | number | { anchor: number | string; hanger: number | string };
+  align: LiteralUnion<ValueOf<typeof ALIGN>> | number | { panel: number | string; camera: number | string };
   defaultIndex: number;
   horizontal: boolean;
   circular: boolean;

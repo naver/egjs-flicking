@@ -13,11 +13,7 @@ class CircularCamera extends Camera {
     [pos: number]: Panel;
   } = {};
 
-  public destroy() {
-    this._resetInternalValues();
-
-    return super.destroy();
-  }
+  public get circularEnabled() { return this._circularEnabled; }
 
   public clampToReachablePosition(position: number): number {
     // Basically all position is reachable for circular camera
@@ -28,8 +24,7 @@ class CircularCamera extends Camera {
 
   public getControlParameters() {
     return {
-      range: this._range,
-      position: this._position,
+      ...super.getControlParameters(),
       circular: this._circularEnabled
     };
   }
@@ -156,8 +151,8 @@ class CircularCamera extends Camera {
     el.style[this._transform] = `translate(${-(this._position - this._alignPos + this._circularOffset)}px)`;
   }
 
-  private _resetInternalValues() {
-    this._range = { min: 0, max: 0 };
+  protected _resetInternalValues() {
+    super._resetInternalValues();
     this._circularOffset = 0;
     this._circularEnabled = false;
     this._panelTooglePoints = {};

@@ -43,14 +43,9 @@ abstract class Camera {
   }
 
   public constructor({
-    align = ALIGN.PREV
+    align = ALIGN.CENTER
   }: Partial<CameraOptions> = {}) {
-    this._flicking = null;
-    this._position = 0;
-    this._alignPos = 0;
-    this._range = { min: 0, max: 0 };
-    this._visiblePanels = [];
-    this._needPanelTriggered = { prev: false, next: false };
+    this._resetInternalValues();
 
     // Options
     this._align = align;
@@ -71,8 +66,7 @@ abstract class Camera {
   }
 
   public destroy(): this {
-    this._flicking = null;
-
+    this._resetInternalValues();
     return this;
   }
 
@@ -124,7 +118,7 @@ abstract class Camera {
     const viewport = flicking.viewport;
 
     const alignVal = typeof align === "object"
-      ? (align as { hanger: string | number }).hanger
+      ? (align as { camera: string | number }).camera
       : align;
 
     this._alignPos = parseAlign(alignVal, flicking.horizontal ? viewport.width : viewport.height);
@@ -133,6 +127,15 @@ abstract class Camera {
   }
 
   public resetNeedPanelHistory() {
+    this._needPanelTriggered = { prev: false, next: false };
+  }
+
+  protected _resetInternalValues() {
+    this._flicking = null;
+    this._position = 0;
+    this._alignPos = 0;
+    this._range = { min: 0, max: 0 };
+    this._visiblePanels = [];
     this._needPanelTriggered = { prev: false, next: false };
   }
 
