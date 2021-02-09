@@ -11,7 +11,7 @@ import { getFlickingAttached } from "~/utils";
 import * as ERROR from "~/const/error";
 
 class SnapControl extends Control {
-  public moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
+  public async moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;
     const activePanel = this._activePanel;

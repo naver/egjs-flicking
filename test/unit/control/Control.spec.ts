@@ -1,10 +1,10 @@
 import { OnRelease } from "@egjs/axes";
 
+import FlickingError from "~/core/FlickingError";
 import Control from "~/control/Control";
 import AxesController from "~/control/AxesController";
 import { EVENTS } from "~/const/external";
 import * as ERROR from "~/const/error";
-import FlickingError from "~/core/FlickingError";
 
 import { createFlicking, createPanel, simulate, tick } from "../helper/test-util";
 import El from "../helper/El";
