@@ -8,16 +8,16 @@ import ImReady from "@egjs/imready";
 import FlickingError from "./core/FlickingError";
 import Viewport from "./core/Viewport";
 import Panel from "./core/Panel";
-import { Control, FreeControl, SnapControl, SnapControlOptions } from "./control";
+import { Control, FreeControl, SnapControl } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
 import { RawRenderer, Renderer, VisibleRenderer } from "./renderer";
 
 import { EVENTS, ALIGN, MOVE_TYPE } from "~/const/external";
 import * as ERROR from "~/const/error";
-import { getElement, includes, isString } from "~/utils";
+import { getElement, includes } from "~/utils";
 import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, ChangeEvent, RestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent } from "~/type/event";
 import { LiteralUnion, ValueOf } from "~/type/internal";
-import { ElementLike, MoveTypeOption } from "~/type/external";
+import { ElementLike } from "~/type/external";
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type FlickingEvents = {
@@ -88,7 +88,7 @@ export interface FlickingOptions {
   easing: (x: number) => number;
   // INPUT
   inputType: string[];
-  moveType: ValueOf<typeof MOVE_TYPE> | MoveTypeOption;
+  moveType: ValueOf<typeof MOVE_TYPE>;
   threshold: number;
   interruptable: boolean;
   bounce: number | string | [number | string, number | string];
@@ -638,26 +638,15 @@ class Flicking extends Component<FlickingEvents> {
 
   private _createControl(): Control {
     const moveType = this._moveType;
-
-    let type: ValueOf<typeof MOVE_TYPE> | undefined;
-    let moveTypeOptions: Partial<SnapControlOptions> = {};
-
-    if (isString(moveType)) {
-      type = moveType;
-    } else {
-      type = moveType.type;
-      moveTypeOptions = moveType;
-    }
-
     const moveTypes = Object.keys(MOVE_TYPE).map(key => MOVE_TYPE[key] as ValueOf<typeof MOVE_TYPE>);
 
-    if (!includes(moveTypes, type)) {
+    if (!includes(moveTypes, moveType)) {
       throw new FlickingError(ERROR.MESSAGE.WRONG_OPTION("moveType", JSON.stringify(moveType)), ERROR.CODE.WRONG_OPTION);
     }
 
-    switch (type) {
+    switch (moveType) {
       case MOVE_TYPE.SNAP:
-        return new SnapControl(moveTypeOptions as SnapControlOptions);
+        return new SnapControl();
       case MOVE_TYPE.FREE_SCROLL:
         return new FreeControl();
     }

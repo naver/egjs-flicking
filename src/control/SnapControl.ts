@@ -4,31 +4,13 @@
  */
 import { OnRelease } from "@egjs/axes";
 
+import Panel from "~/core/Panel";
 import Control from "~/control/Control";
 import FlickingError from "~/core/FlickingError";
 import { getFlickingAttached } from "~/utils";
 import * as ERROR from "~/const/error";
-import { Panel } from "~/core";
-
-export interface SnapControlOptions {
-  count: number;
-}
 
 class SnapControl extends Control {
-  // Options
-  private _count: SnapControlOptions["count"];
-
-  public get count() { return this._count; }
-  public set count(val: SnapControlOptions["count"]) { this._count = val; }
-
-  public constructor({
-    count = 1
-  }: Partial<SnapControlOptions>) {
-    super();
-
-    this._count = count;
-  }
-
   public moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;

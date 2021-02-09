@@ -57,6 +57,18 @@ describe("Control", () => {
   });
 
   describe("Methods", () => {
+    describe("init", () => {
+      it("should also call init of the controller", () => {
+        const control = new ControlImpl();
+        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const initSpy = sinon.spy(control.controller, "init");
+
+        control.init(flicking);
+
+        expect(initSpy.calledOnceWith(flicking)).to.be.true;
+      });
+    });
+
     describe("enable", () => {
       it("should call enable of the controller", () => {
         const control = new ControlImpl();
