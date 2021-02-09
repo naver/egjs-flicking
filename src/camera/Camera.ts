@@ -230,8 +230,11 @@ abstract class Camera {
 
   protected _applyTransform(): void {
     const el = this._el;
+    const flicking = getFlickingAttached(this._flicking, "Camera");
 
-    el.style[this._transform] = `translate(${-(this._position - this._alignPos)}px)`;
+    el.style[this._transform] = flicking.horizontal
+      ? `translate(${-(this._position - this._alignPos)}px)`
+      : `translate(0, ${-(this._position - this._alignPos)}px)`;
   }
 
   protected _checkTranslateSupport = () => {

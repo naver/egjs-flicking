@@ -33,8 +33,9 @@ class SnapControl extends Control {
       targetPanel = panelAtPosition;
     } else if (isOverThreshold && adjacentPanel && adjacentPanel.isReachable()) {
       targetPanel = adjacentPanel;
+
       // Adjust position to adjacentPanel's position
-      const cameraRange = flicking.camera.range;
+      const cameraRange = camera.range;
       const cameraRangeSize = cameraRange.max - cameraRange.min;
 
       if (position > prevPos && adjacentPanel.index < activePanel.index) {

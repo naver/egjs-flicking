@@ -61,7 +61,7 @@ abstract class Renderer {
   public getPanelFromPosition(position: number): Panel | null {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
 
-    if (flicking.circular) {
+    if (flicking.circularEnabled) {
       const cameraRange = flicking.camera.range;
       position = circulatePosition(position, cameraRange.min, cameraRange.max);
     }

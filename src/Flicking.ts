@@ -162,6 +162,8 @@ class Flicking extends Component<FlickingEvents> {
   public get viewport() { return this._viewport; }
   // Internal States
   public get initialized() { return this._initialized; }
+  public get circularEnabled() { return this._camera.getControlParameters().circular; }
+
   // Options Getter
   // UI / LAYOUT
   public get align() { return this._align; }

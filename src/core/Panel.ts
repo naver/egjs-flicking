@@ -97,7 +97,7 @@ class Panel {
   public getSnapPosition(around: number): number {
     const flicking = this._flicking;
 
-    if (!flicking.circular) return this.position;
+    if (!flicking.circularEnabled) return this.position;
 
     const cameraRange = flicking.camera.range;
     const cameraRangeSize = cameraRange.max - cameraRange.min;
@@ -138,7 +138,7 @@ class Panel {
     const flicking = this._flicking;
     const cameraRange = flicking.camera.range;
 
-    return flicking.circular
+    return flicking.circularEnabled
       ? true // Always reachable on circular mode
       : this.includeRange(cameraRange.min, cameraRange.max, true);
   }
@@ -153,7 +153,7 @@ class Panel {
     // Should not include margin, as we don't declare what the margin is visible as what the panel is visible.
     const visibleInCurrentRange = this.includeRange(visibleRange.min, visibleRange.max, false);
 
-    if (!flicking.circular) {
+    if (!flicking.circularEnabled) {
       return visibleInCurrentRange;
     }
 
@@ -179,7 +179,7 @@ class Panel {
 
     if (panelCount === 1) return null;
 
-    return flicking.circular
+    return flicking.circularEnabled
       ? renderer.getPanel(index === 0 ? panelCount - 1 : index - 1)
       : renderer.getPanel(index - 1);
   }
@@ -192,7 +192,7 @@ class Panel {
 
     if (panelCount === 1) return null;
 
-    return flicking.circular
+    return flicking.circularEnabled
       ? renderer.getPanel(index === panelCount - 1 ? 0 : index + 1)
       : renderer.getPanel(index + 1);
   }
