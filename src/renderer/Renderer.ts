@@ -171,7 +171,7 @@ abstract class Renderer {
     return panelsRemoved;
   }
 
-  public movePanelsToStart(panels: Panel[]) {
+  public movePanelElementsToStart(panels: Panel[]) {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
     const cameraElement = flicking.camera.element;
 
@@ -181,7 +181,7 @@ abstract class Renderer {
     cameraElement.insertBefore(fragment, cameraElement.firstElementChild);
   }
 
-  public movePanelsToEnd(panels: Panel[]) {
+  public movePanelElementsToEnd(panels: Panel[]) {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
     const cameraElement = flicking.camera.element;
 

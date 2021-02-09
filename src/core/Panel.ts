@@ -124,7 +124,7 @@ class Panel {
     const isHorizontal = flicking.horizontal;
 
     let panelPrev = isHorizontal ? pos.left : pos.top;
-    let panelNext = isHorizontal ? pos.left + size.width : pos.top + size.height;
+    let panelNext = isHorizontal ? (pos.left + size.width) : (pos.top + size.height);
 
     if (includeMargin) {
       panelPrev -= isHorizontal ? margin.left : margin.top;

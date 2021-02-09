@@ -42,8 +42,7 @@ class AxesController {
     }, {
       deceleration: flicking.deceleration,
       interruptable: flicking.interruptable,
-      easing: flicking.easing,
-      round: 1
+      easing: flicking.easing
     });
     this._panInput = new PanInput(flicking.viewport.element, {
       inputType: flicking.inputType,
