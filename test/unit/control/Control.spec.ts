@@ -60,7 +60,7 @@ describe("Control", () => {
     describe("init", () => {
       it("should also call init of the controller", () => {
         const control = new ControlImpl();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         const initSpy = sinon.spy(control.controller, "init");
 
         control.init(flicking);
@@ -98,7 +98,7 @@ describe("Control", () => {
         const control = new ControlImpl();
         const updateSpy = sinon.spy(control.controller, "update");
 
-        control.init(createFlicking(El.DEFAULT_STRUCTURE));
+        control.init(createFlicking(El.DEFAULT_HORIZONTAL));
         control.updateInput();
 
         expect(updateSpy.calledOnce).to.be.true;
@@ -126,7 +126,7 @@ describe("Control", () => {
 
       it("should change activePanel to given panel after resolved if active panel was null", async () => {
         const control = new ControlImpl();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         const panel = flicking.getPanel(2);
 
         control.init(flicking);
@@ -142,7 +142,7 @@ describe("Control", () => {
 
       it(`should trigger ${EVENTS.CHANGE} if active panel was null`, async () => {
         const control = new ControlImpl();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         const changeSpy = sinon.spy();
         const restoreSpy = sinon.spy();
         flicking.on(EVENTS.CHANGE, changeSpy);
@@ -159,7 +159,7 @@ describe("Control", () => {
 
       it(`should trigger ${EVENTS.CHANGE} if given panel is not same to active panel`, async () => {
         const control = new ControlImpl();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         control.init(flicking);
         control.updateInput();
@@ -178,7 +178,7 @@ describe("Control", () => {
 
       it(`should trigger ${EVENTS.RESTORE} if give panel is same to active panel`, async () => {
         const control = new ControlImpl();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         control.init(flicking);
         control.updateInput();
@@ -197,7 +197,7 @@ describe("Control", () => {
 
       it(`should be rejected with FlickingError with STOP_CALLED_BY_USER as code when stop() is called from ${EVENTS.CHANGE} event`, async () => {
         const control = new ControlImpl();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         flicking.on(EVENTS.CHANGE, e => e.stop());
 
         control.init(flicking);
@@ -212,7 +212,7 @@ describe("Control", () => {
 
       it(`should be rejected with FlickingError with STOP_CALLED_BY_USER as code when stop() is called from ${EVENTS.RESTORE} event`, async () => {
         const control = new ControlImpl();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         control.init(flicking);
         control.updateInput();
@@ -228,7 +228,7 @@ describe("Control", () => {
 
       it("should be rejected when user interrupted while animating", async () => {
         const control = new ControlImpl();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         control.init(flicking);
         control.updateInput();

@@ -35,7 +35,7 @@ describe("FreeControl", () => {
       });
 
       it(`should not trigger either ${EVENTS.CHANGE} or ${EVENTS.RESTORE} if active panel is not changed`, async () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE, {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, {
           moveType: MOVE_TYPE.FREE_SCROLL,
           threshold: 100
         });
@@ -61,7 +61,7 @@ describe("FreeControl", () => {
       });
 
       it("should set target panel by clamping position to camera range even if it's further outside of camera range", async () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE, {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, {
           moveType: MOVE_TYPE.FREE_SCROLL
         });
         const control = flicking.control;
@@ -74,7 +74,7 @@ describe("FreeControl", () => {
       });
 
       it("anyway moves to the given position even if it's further outside of camera range", () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE, {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, {
           moveType: MOVE_TYPE.FREE_SCROLL
         });
         const control = flicking.control;

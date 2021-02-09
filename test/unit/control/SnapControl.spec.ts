@@ -35,7 +35,7 @@ describe("SnapControl", () => {
       });
 
       it("should return to current panel if position delta is smaller than threshold", async () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE, {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, {
           moveType: MOVE_TYPE.SNAP,
           threshold: 40
         });
@@ -49,7 +49,7 @@ describe("SnapControl", () => {
       });
 
       it("should move to adjacent panel if position delta is bigger than threshold", async () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE, {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, {
           moveType: MOVE_TYPE.SNAP,
           threshold: 40
         });
@@ -63,7 +63,7 @@ describe("SnapControl", () => {
       });
 
       it("should clamp to camera range even if it's further outside of camera range", async () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE, {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, {
           moveType: MOVE_TYPE.SNAP
         });
         const control = flicking.control;

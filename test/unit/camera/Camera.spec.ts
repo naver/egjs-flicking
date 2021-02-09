@@ -44,7 +44,7 @@ describe("Camera", () => {
     describe("init", () => {
       it("should throw a FlickingError with code VAL_MUST_NOT_NULL when there's no camera element inside it", () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         // Remove viewport's children
         while (flicking.getElement().firstChild) {
@@ -58,7 +58,7 @@ describe("Camera", () => {
 
       it("should set first child of the viewport element as its element", () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
 
@@ -77,7 +77,7 @@ describe("Camera", () => {
 
       it("should return visible range from current position", () => {
         const camera = new CameraImpl({ align: ALIGN.CENTER });
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.updateAlignPos();
@@ -108,7 +108,7 @@ describe("Camera", () => {
 
       it("should return correct panel underneath it", () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.lookAt(flicking.getPanel(1).position);
@@ -124,7 +124,7 @@ describe("Camera", () => {
 
       it("should return current position", () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.lookAt(800);
@@ -148,7 +148,7 @@ describe("Camera", () => {
 
       it("should set position to given value", () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         const prevPosition = camera.position;
 
         camera.init(flicking);
@@ -160,7 +160,7 @@ describe("Camera", () => {
 
       it("should apply transform to camera element", () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.lookAt(500);
@@ -170,7 +170,7 @@ describe("Camera", () => {
 
       it("should update visible panels", () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.lookAt(500);
@@ -180,7 +180,7 @@ describe("Camera", () => {
 
       it(`should trigger flicking's ${EVENTS.VISIBLE_CHANGE} on visible panels update`, () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         const visibleChangeSpy = sinon.spy();
 
         flicking.on(EVENTS.VISIBLE_CHANGE, visibleChangeSpy);
@@ -287,7 +287,7 @@ describe("Camera", () => {
 
       it("should update alignPosition using current align value", () => {
         const camera = new CameraImpl({ align: "80%" });
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         const prevAlignPosition = camera.alignPosition;
 
         camera.init(flicking);
@@ -299,7 +299,7 @@ describe("Camera", () => {
 
       it("should use property 'camera' if align is given as an object", () => {
         const camera = new CameraImpl({ align: { panel: "30%", camera: "70%" } });
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         const prevAlignPosition = camera.alignPosition;
 
         camera.init(flicking);

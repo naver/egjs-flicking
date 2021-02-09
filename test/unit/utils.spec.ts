@@ -183,7 +183,7 @@ describe("Util Functions", () => {
   describe("getFlickingAttached", () => {
     it("should not throw when its internal field '_flicking' is not null", () => {
       class ClassThatHasFlickingInIt {
-        private _flicking: Flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        private _flicking: Flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         public test() {
           const flicking = getFlickingAttached(this._flicking, "TEST_CLASS");

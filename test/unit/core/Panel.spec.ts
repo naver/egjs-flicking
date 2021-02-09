@@ -133,7 +133,7 @@ describe("Panel", () => {
 
     describe("isRemoved", () => {
       it("should return true if the panel element is removed", () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         const panel = flicking.getPanel(0);
 
         panel.element.remove();
@@ -143,7 +143,7 @@ describe("Panel", () => {
       });
 
       it("should return true if the panel element is not attached to camera element", () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         const panel = flicking.getPanel(0);
 
         // Append to viewport element
@@ -154,7 +154,7 @@ describe("Panel", () => {
       });
 
       it("should return false if the panel element is attached to camera element", () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         const panel = flicking.getPanel(0);
 
         expect(panel.isRemoved()).to.be.false;
@@ -243,7 +243,7 @@ describe("Panel", () => {
 
     describe("focus", () => {
       it("should call Flicking's 'moveTo' with panel's index as a parameter", async () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         const panel = new Panel({ el: El.panel().el, index: 5, flicking, align: ALIGN.PREV });
 
         const moveToSpy = sinon.spy();
@@ -255,7 +255,7 @@ describe("Panel", () => {
       });
 
       it("should call Flicking's 'moveTo' with the same duration as a parameter", () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         const panel = new Panel({ el: El.panel().el, index: 5, flicking, align: ALIGN.PREV });
 
         const moveToSpy = sinon.spy();
@@ -270,26 +270,26 @@ describe("Panel", () => {
 
     describe("prev", () => {
       it("should return panel with index - 1", () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         expect(flicking.getPanel(1).prev()).to.equal(flicking.getPanel(0));
       });
 
       it("should return null when called from first panel", () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         expect(flicking.getPanel(0).prev()).to.be.null;
       });
     });
 
     describe("next", () => {
       it("should return panel with index + 1", () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         expect(flicking.getPanel(1).next()).to.equal(flicking.getPanel(2));
       });
 
       it("should return null when called from last panel", () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         expect(flicking.getPanel(2).next()).to.be.null;
       });
     });

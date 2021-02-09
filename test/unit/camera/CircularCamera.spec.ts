@@ -16,7 +16,7 @@ describe("CircularCamera", () => {
     describe("clampToReachablePosition", () => {
       it("should return position itself even it's over range when circular can be enabled", () => {
         const camera = new CircularCamera();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.updateRange();
@@ -53,7 +53,7 @@ describe("CircularCamera", () => {
     describe("getControlParameters", () => {
       it("should return circular: true when circular can be enabled", () => {
         const camera = new CircularCamera();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.updateRange();
@@ -124,7 +124,7 @@ describe("CircularCamera", () => {
 
       it("should set range from first panel's left to last panel's right when circular is enabled", () => {
         const camera = new CircularCamera();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.updateAlignPos();

@@ -7,6 +7,7 @@ class App {
     const flicking = new Flicking("#flicking", {
       align: ALIGN.CENTER,
       // bound: true,
+      horizontal: false,
       circular: true,
       // moveType: MOVE_TYPE.FREE_SCROLL
     });

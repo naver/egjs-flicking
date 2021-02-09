@@ -28,7 +28,7 @@ describe("LinearCamera", () => {
 
       it("should set range from first panel's position to last panel's position", () => {
         const camera = new LinearCamera();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.updateAlignPos();

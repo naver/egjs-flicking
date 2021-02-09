@@ -70,7 +70,7 @@ export const simulate = (el: HTMLElement, option: Partial<{
 }> = {}, time: number = 10000): Promise<void> => (
   new Promise<void>(resolve => {
     Simulator.gestures.pan(el, merge({
-      pos: [el.offsetLeft / 2, el.offsetTop / 2],
+      pos: [el.offsetLeft + el.offsetWidth / 2, el.offsetTop + el.offsetHeight / 2],
       deltaX: 0,
       deltaY: 0,
       duration: 500,

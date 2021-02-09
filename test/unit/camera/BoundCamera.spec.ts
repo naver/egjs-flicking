@@ -28,7 +28,7 @@ describe("BoundCamera", () => {
 
       it("should set range from first panel's left + align to last panel's right - align", () => {
         const camera = new BoundCamera();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.updateAlignPos();

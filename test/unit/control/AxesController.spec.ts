@@ -35,7 +35,7 @@ describe("AxesController", () => {
     describe("init", () => {
       it("should create axes instance on initialization", () => {
         const controller = new AxesController();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         controller.init(flicking);
 
@@ -47,7 +47,7 @@ describe("AxesController", () => {
     describe("destroy", () => {
       it("should also destroy axes instance", () => {
         const controller = new AxesController();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         controller.init(flicking);
 
         const destroySpy = sinon.spy(controller.axes, "destroy");
@@ -69,7 +69,7 @@ describe("AxesController", () => {
       });
 
       it("should update position to a camera's position", () => {
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         const controller = flicking.control.controller;
         const prevPos = controller.position;
 
@@ -94,7 +94,7 @@ describe("AxesController", () => {
 
       it("should call `setTo` of the axes instance", async () => {
         const controller = new AxesController();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         controller.init(flicking);
         const setToSpy = sinon.spy(controller.axes, "setTo");
 
@@ -107,7 +107,7 @@ describe("AxesController", () => {
 
       it("should call `setTo` of the axes onRelease event if given", async () => {
         const controller = new AxesController();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         controller.init(flicking);
         const onReleaseMock = { setTo: sinon.spy() };
 
@@ -120,7 +120,7 @@ describe("AxesController", () => {
 
       it("should be resolved immediately if duration is 0", async () => {
         const controller = new AxesController();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         controller.init(flicking);
 
         // No tick() is involved, so passing this test means that promise is resolved immediately
@@ -131,7 +131,7 @@ describe("AxesController", () => {
 
       it("should be resolved immediately if given position is same to current position", async () => {
         const controller = new AxesController();
-        const flicking = createFlicking(El.DEFAULT_STRUCTURE);
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         controller.init(flicking);
 
         const prevPos = controller.position;
