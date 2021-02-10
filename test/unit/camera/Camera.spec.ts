@@ -13,13 +13,17 @@ class CameraImpl extends Camera {
 }
 
 describe("Camera", () => {
-  describe("Default properties", () => {
+  describe("Properties", () => {
     it("should have element undefined as default", () => {
       expect(new CameraImpl().element).to.be.undefined;
     });
 
     it("should have position 0 as default", () => {
       expect(new CameraImpl().position).to.equal(0);
+    });
+
+    it("should have 0 as a default size", () => {
+      expect(new CameraImpl().size).to.equal(0);
     });
 
     it("should have alignPosition 0 as default", () => {
@@ -37,6 +41,28 @@ describe("Camera", () => {
 
     it(`should have align ${ALIGN.CENTER} as default`, () => {
       expect(new CameraImpl().align).to.equal(ALIGN.CENTER);
+    });
+
+    it("should return size same to viewport width when horizontal: true", () => {
+      const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { horizontal: true });
+      const camera = new CameraImpl();
+
+      camera.init(flicking);
+
+      expect(camera.size).not.to.equal(0);
+      expect(camera.size).to.equal(flicking.viewport.width);
+      expect(camera.size).not.to.equal(flicking.viewport.height);
+    });
+
+    it("should return size same to viewport height when horizontal: false", () => {
+      const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { horizontal: false });
+      const camera = new CameraImpl();
+
+      camera.init(flicking);
+
+      expect(camera.size).not.to.equal(0);
+      expect(camera.size).not.to.equal(flicking.viewport.width);
+      expect(camera.size).to.equal(flicking.viewport.height);
     });
   });
 
