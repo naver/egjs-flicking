@@ -11,7 +11,7 @@ class LinearCamera extends Camera {
     const renderer = flicking.renderer;
 
     const firstPanel = renderer.getPanel(0);
-    const lastPanel = renderer.getPanel(renderer.getPanelCount() - 1);
+    const lastPanel = renderer.getPanel(renderer.panelCount - 1);
 
     this._range = { min: firstPanel?.position ?? 0, max: lastPanel?.position ?? 0 };
     return this;

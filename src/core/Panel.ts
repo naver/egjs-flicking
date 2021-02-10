@@ -170,7 +170,7 @@ class Panel {
     const index = this._index;
     const flicking = this._flicking;
     const renderer = flicking.renderer;
-    const panelCount = renderer.getPanelCount();
+    const panelCount = renderer.panelCount;
 
     if (panelCount === 1) return null;
 
@@ -183,7 +183,7 @@ class Panel {
     const index = this._index;
     const flicking = this._flicking;
     const renderer = flicking.renderer;
-    const panelCount = renderer.getPanelCount();
+    const panelCount = renderer.panelCount;
 
     if (panelCount === 1) return null;
 

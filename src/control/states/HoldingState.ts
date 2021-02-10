@@ -93,7 +93,7 @@ class HoldingState extends State {
     }
     /* eslint-enable */
 
-    const panels = flicking.renderer.getPanels();
+    const panels = flicking.renderer.panels;
     let clickedPanel: Panel | null = null;
 
     for (const panel of panels) {

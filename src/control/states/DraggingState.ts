@@ -46,7 +46,7 @@ class DraggingState extends State {
       axesEvent
     });
 
-    if (flicking.renderer.getPanelCount() <= 0) {
+    if (flicking.renderer.panelCount <= 0) {
       // There're no panels
       transitTo(STATE_TYPE.IDLE);
       return;

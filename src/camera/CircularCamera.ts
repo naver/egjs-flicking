@@ -39,7 +39,7 @@ class CircularCamera extends Camera {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const renderer = flicking.renderer;
 
-    const panels = renderer.getPanels();
+    const panels = renderer.panels;
     if (panels.length <= 0) {
       this._resetInternalValues();
       return this;

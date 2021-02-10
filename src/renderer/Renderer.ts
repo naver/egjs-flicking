@@ -13,12 +13,16 @@ export interface RendererOptions {
 }
 
 abstract class Renderer {
-  // Options
-  protected _align: FlickingOptions["align"];
-
   // Internal States
   protected _flicking: Flicking | null;
   protected _panels: Panel[];
+
+  // Options
+  protected _align: FlickingOptions["align"];
+
+  // Internal states Getter
+  public get panels() { return this._panels; }
+  public get panelCount() { return this._panels.length; }
 
   // Options Getter
   public get align() { return this._align; }
@@ -39,19 +43,15 @@ abstract class Renderer {
     this._flicking = null;
   }
 
-  public init(flicking: Flicking) {
+  public init(flicking: Flicking): this {
     this._flicking = flicking;
     this._collectPanels();
-  }
-
-  public destroy(): this {
-    this._flicking = null;
-    this._panels = [];
     return this;
   }
 
-  public getPanels(): Panel[] {
-    return this._panels;
+  public destroy(): void {
+    this._flicking = null;
+    this._panels = [];
   }
 
   public getPanel(index: number): Panel | null {
@@ -73,10 +73,6 @@ abstract class Renderer {
     }
 
     return null;
-  }
-
-  public getPanelCount(): number {
-    return this._panels.length;
   }
 
   public updatePanelSize(): this {

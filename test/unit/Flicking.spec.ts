@@ -113,7 +113,7 @@ describe("Flicking", () => {
       it("should accept any number, even if it's bigger than actual panel length", () => {
         // Empty flicking
         const flicking = createFlicking(El.viewport().add(El.camera()), { defaultIndex: 2 });
-        expect(flicking.renderer.getPanels().length).to.equal(0);
+        expect(flicking.renderer.panels.length).to.equal(0);
         expect(flicking.defaultIndex).to.equal(2);
       });
 

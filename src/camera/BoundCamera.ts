@@ -12,7 +12,7 @@ class BoundCamera extends Camera {
     const alignPos = this._alignPos;
 
     const firstPanel = renderer.getPanel(0);
-    const lastPanel = renderer.getPanel(renderer.getPanelCount() - 1);
+    const lastPanel = renderer.getPanel(renderer.panelCount - 1);
 
     if (!firstPanel || !lastPanel) {
       this._range = { min: 0, max: 0 };

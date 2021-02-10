@@ -144,7 +144,7 @@ abstract class Camera {
 
   protected _refreshVisiblePanels() {
     const flicking = getFlickingAttached(this._flicking, "Camera");
-    const panels = flicking.renderer.getPanels();
+    const panels = flicking.renderer.panels;
 
     const newVisiblePanels = panels.filter(panel => panel.isVisible());
     const prevVisiblePanels = this._visiblePanels;
@@ -169,7 +169,7 @@ abstract class Camera {
     if (needPanelTriggered.prev && needPanelTriggered.next) return;
 
     const flicking = getFlickingAttached(this._flicking, "Camera");
-    const panels = flicking.renderer.getPanels();
+    const panels = flicking.renderer.panels;
 
     if (panels.length <= 0) {
       if (!needPanelTriggered.prev) {

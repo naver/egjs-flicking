@@ -372,7 +372,7 @@ class Flicking extends Component<FlickingEvents> {
    */
   public moveTo(index: number, duration: number = this._duration) {
     const renderer = this._renderer;
-    const panelCount = renderer.getPanelCount();
+    const panelCount = renderer.panelCount;
 
     const panel = renderer.getPanel(index);
 
@@ -435,7 +435,7 @@ class Flicking extends Component<FlickingEvents> {
    * @return All panels.<ko>모든 패널들.</ko>
    */
   public getAllPanels(): Panel[] {
-    return this._renderer.getPanels();
+    return this._renderer.panels;
   }
 
   /**
@@ -455,7 +455,7 @@ class Flicking extends Component<FlickingEvents> {
    * @return Length of original panels.<ko>원본 패널의 개수</ko>
    */
   public getPanelCount(): number {
-    return this._renderer.getPanelCount();
+    return this._renderer.panelCount;
   }
 
   /**
@@ -601,7 +601,7 @@ class Flicking extends Component<FlickingEvents> {
    * flicking.append("\<div\>Panel 1\</div\>\<div\>Panel 2\</div\>"); // Appended at index 4, 5
    */
   public append(element: ElementLike | ElementLike[]): Panel[] {
-    return this._renderer.insert(this._renderer.getPanelCount(), element);
+    return this._renderer.insert(this._renderer.panelCount, element);
   }
 
   /**
