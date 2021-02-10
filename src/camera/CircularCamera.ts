@@ -54,9 +54,7 @@ class CircularCamera extends Camera {
       ? lastPanel.bbox.left + lastPanel.bbox.width + lastPanel.margin.right
       : lastPanel.bbox.top + lastPanel.bbox.height + lastPanel.margin.bottom;
 
-    const isHorizontal = flicking.horizontal;
-    const viewport = flicking.viewport;
-    const visibleSize = isHorizontal ? viewport.width : viewport.height;
+    const visibleSize = this.size;
     const panelSizeSum = lastPanelNext - firstPanelPrev;
 
     const canSetCircularMode = panels

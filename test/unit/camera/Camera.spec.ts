@@ -67,14 +67,6 @@ describe("Camera", () => {
     });
 
     describe("getVisibleRange", () => {
-      it("should throw a FlickingError with code NOT_ATTACHED_TO_FLICKING when it's not initialized yet", () => {
-        const camera = new CameraImpl();
-
-        expect(() => camera.getVisibleRange())
-          .to.throw(FlickingError)
-          .with.property("code", ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
-      });
-
       it("should return visible range from current position", () => {
         const camera = new CameraImpl({ align: ALIGN.CENTER });
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
@@ -277,14 +269,6 @@ describe("Camera", () => {
     });
 
     describe("updateAlignPos", () => {
-      it("should throw a FlickingError with code NOT_ATTACHED_TO_FLICKING when it's not initialized yet", () => {
-        const camera = new CameraImpl();
-
-        expect(() => camera.updateAlignPos())
-          .to.throw(FlickingError)
-          .with.property("code", ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
-      });
-
       it("should update alignPosition using current align value", () => {
         const camera = new CameraImpl({ align: "80%" });
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);

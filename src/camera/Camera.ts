@@ -33,6 +33,14 @@ abstract class Camera {
   public get alignPosition() { return this._alignPos; }
   public get range() { return this._range; }
   public get visiblePanels() { return this._visiblePanels; }
+  public get size() {
+    const flicking = this._flicking;
+    return flicking
+      ? flicking.horizontal
+        ? flicking.viewport.width
+        : flicking.viewport.height
+      : 0;
+  }
 
   // Options Getter
   public get align() { return this._align; }
@@ -71,13 +79,10 @@ abstract class Camera {
   }
 
   public getVisibleRange(): { min: number; max: number } {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
-    const viewport = flicking.viewport;
-
     const bboxPrev = this._position - this._alignPos;
     return {
       min: bboxPrev,
-      max: bboxPrev + (flicking.horizontal ? viewport.width : viewport.height)
+      max: bboxPrev + this.size
     };
   }
 
@@ -113,15 +118,13 @@ abstract class Camera {
   }
 
   public updateAlignPos(): this {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
     const align = this._align;
-    const viewport = flicking.viewport;
 
     const alignVal = typeof align === "object"
       ? (align as { camera: string | number }).camera
       : align;
 
-    this._alignPos = parseAlign(alignVal, flicking.horizontal ? viewport.width : viewport.height);
+    this._alignPos = parseAlign(alignVal, this.size);
 
     return this;
   }
@@ -181,9 +184,8 @@ abstract class Camera {
       return;
     }
 
-    const viewport = flicking.viewport;
     const cameraPosition = this._position;
-    const cameraSize = flicking.horizontal ? viewport.width : viewport.height;
+    const cameraSize = this.size;
     const cameraRange = this._range;
     const needPanelThreshold = flicking.needPanelThreshold;
 
