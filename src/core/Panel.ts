@@ -117,21 +117,16 @@ class Panel {
   }
 
   public includeRange(min: number, max: number, includeMargin: boolean = false): boolean {
-    const pos = this._pos;
-    const size = this._size;
     const margin = this._margin;
-    const flicking = this._flicking;
-    const isHorizontal = flicking.horizontal;
-
-    let panelPrev = isHorizontal ? pos.left : pos.top;
-    let panelNext = isHorizontal ? (pos.left + size.width) : (pos.top + size.height);
+    const isHorizontal = this._flicking.horizontal;
+    const panelRange = this.range;
 
     if (includeMargin) {
-      panelPrev -= isHorizontal ? margin.left : margin.top;
-      panelNext += isHorizontal ? margin.right : margin.bottom;
+      panelRange.min -= isHorizontal ? margin.left : margin.top;
+      panelRange.max += isHorizontal ? margin.right : margin.bottom;
     }
 
-    return max >= panelPrev && min <= panelNext;
+    return max >= panelRange.min && min <= panelRange.max;
   }
 
   public isReachable(): boolean {
