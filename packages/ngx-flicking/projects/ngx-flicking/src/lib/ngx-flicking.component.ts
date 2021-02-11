@@ -181,7 +181,7 @@ export class NgxFlickingComponent extends FlickingInterface
   }
 
   checkCloneCount() {
-    if (!this.flicking) {
+    if (!this.flicking || typeof(this.flicking.getCloneCount) !== 'function') {
       return;
     }
 
