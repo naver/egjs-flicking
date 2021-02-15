@@ -1,19 +1,20 @@
 import "../../../css/flicking-inline.css";
-import Flicking, { ALIGN, EVENTS } from "~/index";
+import Flicking, { ALIGN, EVENTS, MOVE_TYPE } from "~/index";
 import { ValueOf } from "~/type/internal";
 
 class App {
   public constructor() {
     const flicking = new Flicking("#flicking", {
-      align: ALIGN.PREV,
-      bounce: "20%",
-      needPanelThreshold: 100,
-      adaptive: true
+      align: ALIGN.CENTER,
+      // bound: true,
+      horizontal: false,
+      circular: true,
+      // moveType: MOVE_TYPE.FREE_SCROLL
     });
 
-    // Object.values([EVENTS.NEED_PANEL, EVENTS.VISIBLE_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {
-    //   flicking.on(eventName, event => console.log(eventName, event));
-    // });
+    Object.values([EVENTS.VISIBLE_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {
+      flicking.on(eventName, event => console.log(eventName, event));
+    });
 
     document.getElementById("prev")?.addEventListener("click", () => {
       flicking.prev().then(() => console.log("PREV FINISHED"));

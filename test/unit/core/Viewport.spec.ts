@@ -20,10 +20,11 @@ describe("Viewport", () => {
       expect(viewport.element).equals(expected);
     });
 
-    it("should have size in it", () => {
+    it("should have width/height in it", () => {
       const viewport = new Viewport(document.createElement("div"));
 
-      expect(viewport.size).to.be.exist;
+      expect(viewport.width).to.be.exist;
+      expect(viewport.height).to.be.exist;
     });
 
     it("has size 0 until updating it", () => {
@@ -36,8 +37,8 @@ describe("Viewport", () => {
 
       expect(viewportEl.clientWidth).not.to.equal(0);
       expect(viewportEl.clientHeight).not.to.equal(0);
-      expect(viewport.size.width).to.equal(0);
-      expect(viewport.size.height).to.equal(0);
+      expect(viewport.width).to.equal(0);
+      expect(viewport.height).to.equal(0);
     });
 
     it("should set size equal to the given element after update", () => {
@@ -52,10 +53,10 @@ describe("Viewport", () => {
         .el;
 
       const viewport = new Viewport(viewportEl);
-      viewport.updateSize();
+      viewport.resize();
 
-      expect(viewport.size.width).to.equal(expected.width);
-      expect(viewport.size.height).to.equal(expected.height);
+      expect(viewport.width).to.equal(expected.width);
+      expect(viewport.height).to.equal(expected.height);
     });
 
     it("can set its size equal to the given arguments", () => {
@@ -69,10 +70,11 @@ describe("Viewport", () => {
         .el;
 
       const viewport = new Viewport(viewportEl);
-      viewport.updateSize();
+      viewport.resize();
       viewport.setSize(expected);
 
-      expect(viewport.size).deep.equals(expected);
+      expect(viewport.width).deep.equals(expected.width);
+      expect(viewport.height).deep.equals(expected.height);
     });
   });
 });

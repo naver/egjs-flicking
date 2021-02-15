@@ -2,12 +2,11 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import State from "~/control/states/State";
-import { STATE_TYPE } from "~/control/StateMachine";
+import State, { STATE_TYPE } from "~/control/states/State";
 
 class DisabledState extends State {
   public readonly holding = false;
-  public readonly playing = true;
+  public readonly animating = true;
 
   public onAnimationEnd(ctx: Parameters<State["onAnimationEnd"]>[0]): void {
     const { transitTo } = ctx;

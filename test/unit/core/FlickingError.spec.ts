@@ -39,7 +39,7 @@ describe("FlickingError", () => {
 
   it("has a message in it", () => {
     // Given
-    const randomMessage = atob(Math.floor(Math.random() * 10000).toString());
+    const randomMessage = Math.floor(Math.random() * 10000).toString();
 
     // When
     const err = new FlickingError(randomMessage, 0);

@@ -124,7 +124,6 @@ module.exports = {
         "private-instance-method"
       ]
     }],
-    "@typescript-eslint/naming-convention": "off",
     "@typescript-eslint/no-empty-function": "error",
     "@typescript-eslint/no-empty-interface": "warn",
     "@typescript-eslint/no-explicit-any": "off",

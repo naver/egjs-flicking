@@ -4,7 +4,7 @@
  */
 import Flicking, { FlickingOptions } from "~/Flicking";
 import Panel from "~/core/Panel";
-import { getCirculatedIndex, getFlickingAttached, includes, parseElement, toArray } from "~/utils";
+import { getMinusCompensatedIndex, getFlickingAttached, includes, parseElement, toArray, circulatePosition } from "~/utils";
 import { ALIGN } from "~/const/external";
 import { ElementLike } from "~/type/external";
 
@@ -13,31 +13,16 @@ export interface RendererOptions {
 }
 
 abstract class Renderer {
-  // Options
-  protected _align: FlickingOptions["align"];
-
   // Internal States
   protected _flicking: Flicking | null;
   protected _panels: Panel[];
 
-  public constructor({
-    align = ALIGN.PREV
-  }: Partial<RendererOptions> = {}) {
-    this._align = align;
-    this._panels = [];
-    this._flicking = null;
-  }
+  // Options
+  protected _align: FlickingOptions["align"];
 
-  public init(flicking: Flicking) {
-    this._flicking = flicking;
-    this._collectPanels();
-  }
-
-  public destroy(): this {
-    this._flicking = null;
-    this._panels = [];
-    return this;
-  }
+  // Internal states Getter
+  public get panels() { return this._panels; }
+  public get panelCount() { return this._panels.length; }
 
   // Options Getter
   public get align() { return this._align; }
@@ -50,8 +35,23 @@ abstract class Renderer {
     this._panels.forEach(panel => { panel.align = panelAlign; });
   }
 
-  public getPanels(): Panel[] {
-    return this._panels;
+  public constructor({
+    align = ALIGN.CENTER
+  }: Partial<RendererOptions> = {}) {
+    this._align = align;
+    this._panels = [];
+    this._flicking = null;
+  }
+
+  public init(flicking: Flicking): this {
+    this._flicking = flicking;
+    this._collectPanels();
+    return this;
+  }
+
+  public destroy(): void {
+    this._flicking = null;
+    this._panels = [];
   }
 
   public getPanel(index: number): Panel | null {
@@ -59,17 +59,20 @@ abstract class Renderer {
   }
 
   public getPanelFromPosition(position: number): Panel | null {
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+
+    if (flicking.circularEnabled) {
+      const cameraRange = flicking.camera.range;
+      position = circulatePosition(position, cameraRange.min, cameraRange.max);
+    }
+
     for (const panel of this._panels) {
-      if (panel.includePosition(position)) {
+      if (panel.includePosition(position, true)) {
         return panel;
       }
     }
 
     return null;
-  }
-
-  public getPanelCount(): number {
-    return this._panels.length;
   }
 
   public updatePanelSize(): this {
@@ -85,7 +88,7 @@ abstract class Renderer {
     const align = this._getPanelAlign();
 
     const elements = parseElement(element);
-    const insertingIdx = getCirculatedIndex(index, panels.length);
+    const insertingIdx = getMinusCompensatedIndex(index, panels.length);
 
     const panelsPushed = panels.slice(insertingIdx);
     const newPanels = elements.map((el, elIdx) => new Panel({ el, index: insertingIdx + elIdx, align, flicking }));
@@ -128,7 +131,7 @@ abstract class Renderer {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
 
     const { camera, control } = flicking;
-    const removingIdx = getCirculatedIndex(index, panels.length);
+    const removingIdx = getMinusCompensatedIndex(index, panels.length);
 
     const panelsPulled = panels.slice(removingIdx + deleteCount);
     const panelsRemoved = panels.splice(removingIdx, deleteCount);
@@ -164,6 +167,26 @@ abstract class Renderer {
     return panelsRemoved;
   }
 
+  public movePanelElementsToStart(panels: Panel[]) {
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const cameraElement = flicking.camera.element;
+
+    const fragment = document.createDocumentFragment();
+    panels.forEach(panel => fragment.appendChild(panel.element));
+
+    cameraElement.insertBefore(fragment, cameraElement.firstElementChild);
+  }
+
+  public movePanelElementsToEnd(panels: Panel[]) {
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const cameraElement = flicking.camera.element;
+
+    const fragment = document.createDocumentFragment();
+    panels.forEach(panel => fragment.appendChild(panel.element));
+
+    cameraElement.appendChild(fragment);
+  }
+
   private _collectPanels(): this {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
 
@@ -182,7 +205,7 @@ abstract class Renderer {
     const align = this._align;
 
     return typeof align === "object"
-      ? (align as { anchor: string | number }).anchor
+      ? (align as { panel: string | number }).panel
       : align;
   }
 }

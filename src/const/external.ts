@@ -34,6 +34,7 @@ export const EVENTS = {
   SELECT: "select",
   NEED_PANEL: "needPanel",
   VISIBLE_CHANGE: "visibleChange",
+  REACH_EDGE: "reachEdge",
   CONTENT_ERROR: "contentError"
 } as const;
 
@@ -47,4 +48,9 @@ export const DIRECTION = {
   PREV: "PREV",
   NEXT: "NEXT",
   NONE: null
+} as const;
+
+export const MOVE_TYPE = {
+  SNAP: "snap",
+  FREE_SCROLL: "freeScroll"
 } as const;

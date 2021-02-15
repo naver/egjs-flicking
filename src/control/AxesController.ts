@@ -7,16 +7,9 @@ import Axes, { PanInput, AxesEvents, OnRelease } from "@egjs/axes";
 import Flicking from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
 import StateMachine from "~/control/StateMachine";
+import * as AXES from "~/const/axes";
 import * as ERROR from "~/const/error";
 import { getFlickingAttached, parseBounce } from "~/utils";
-
-export const AXES_EVENT = {
-  HOLD: "hold",
-  CHANGE: "change",
-  RELEASE: "release",
-  ANIMATION_END: "animationEnd",
-  FINISH: "finish"
-} as const;
 
 class AxesController {
   private _flicking: Flicking | null;
@@ -26,9 +19,14 @@ class AxesController {
 
   private _animatingContext: { start: number; end: number };
 
+  public get axes() { return this._axes; }
+  public get state() { return this._stateMachine.state; }
+  public get animatingContext() { return this._animatingContext; }
+  public get enabled() { return this._panInput?.isEnable() ?? false; }
+  public get position() { return this._axes?.get([AXES.POSITION_KEY])[AXES.POSITION_KEY] ?? 0; }
+
   public constructor() {
-    this._flicking = null;
-    this._animatingContext = { start: 0, end: 0 };
+    this._resetInternalValues();
     this._stateMachine = new StateMachine();
   }
 
@@ -36,7 +34,7 @@ class AxesController {
     this._flicking = flicking;
 
     this._axes = new Axes({
-      flick: {
+      [AXES.POSITION_KEY]: {
         range: [0, 0],
         circular: false,
         bounce: [0, 0]
@@ -54,10 +52,10 @@ class AxesController {
 
     const axes = this._axes;
 
-    axes.connect(flicking.horizontal ? ["flick", ""] : ["", "flick"], this._panInput);
+    axes.connect(flicking.horizontal ? [AXES.POSITION_KEY, ""] : ["", AXES.POSITION_KEY], this._panInput);
 
-    for (const key in AXES_EVENT) {
-      const eventType = AXES_EVENT[key] as keyof AxesEvents;
+    for (const key in AXES.EVENT) {
+      const eventType = AXES.EVENT[key] as keyof AxesEvents;
 
       axes.on(eventType, (e: AxesEvents[typeof eventType]) => {
         this._stateMachine.fire(eventType, {
@@ -72,13 +70,10 @@ class AxesController {
     this._axes?.destroy();
     this._panInput?.destroy();
 
+    this._resetInternalValues();
+
     return this;
   }
-
-  public get axes() { return this._axes; }
-  public get state() { return this._stateMachine.state; }
-  public get animatingContext() { return this._animatingContext; }
-  public get enabled() { return this._panInput?.isEnable() || false; }
 
   public enable(): this {
     this._panInput?.enable();
@@ -94,17 +89,16 @@ class AxesController {
 
   public update(): this {
     const flicking = getFlickingAttached(this._flicking, "Control");
+    const camera = flicking.camera;
     const axes = this._axes!;
+    const controlParams = camera.getControlParameters();
+    const axis = axes.axis[AXES.POSITION_KEY];
 
-    const viewportSize = flicking.viewport.size;
-    const cameraRange = flicking.camera.range;
-    const axis = axes.axis.flick;
+    axis.circular = [controlParams.circular, controlParams.circular];
+    axis.range = [controlParams.range.min, controlParams.range.max];
+    axis.bounce = parseBounce(flicking.bounce, camera.size);
 
-    axis.circular = flicking.circular;
-    axis.range = [cameraRange.min, cameraRange.max];
-    axis.bounce = parseBounce(flicking.bounce, flicking.horizontal ? viewportSize.width : viewportSize.height);
-
-    axes.setTo({ flick: flicking.camera.position }, 0);
+    axes.axm.set({ [AXES.POSITION_KEY]: controlParams.position });
 
     return this;
   }
@@ -116,36 +110,62 @@ class AxesController {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Control"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING));
     }
 
+    const startPos = axes.get([AXES.POSITION_KEY])[AXES.POSITION_KEY];
+
+    if (startPos === position) {
+      return Promise.resolve();
+    }
+
     this._animatingContext = {
-      start: axes.get(["flick"]).flick,
+      start: startPos,
       end: position
     };
 
     const animate = () => {
-      axes.once(AXES_EVENT.FINISH, () => {
+      axes.once(AXES.EVENT.FINISH, () => {
         this._animatingContext = { start: 0, end: 0 };
       });
 
       if (axesEvent) {
-        axesEvent.setTo({ flick: position }, duration);
+        axesEvent.setTo({ [AXES.POSITION_KEY]: position }, duration);
       } else {
-        axes.setTo({ flick: position }, duration);
+        axes.setTo({ [AXES.POSITION_KEY]: position }, duration);
       }
     };
 
     if (duration === 0) {
       animate();
+      axes.axm.set({ [AXES.POSITION_KEY]: position });
 
       return Promise.resolve();
     } else {
-      return new Promise(resolve => {
-        axes.once(AXES_EVENT.FINISH, () => {
+      return new Promise((resolve, reject) => {
+        const animationFinishHandler = () => {
+          axes.off(AXES.EVENT.HOLD, interruptionHandler);
           resolve();
-        });
+        };
+
+        const interruptionHandler = () => {
+          axes.off(AXES.EVENT.FINISH, animationFinishHandler);
+          reject(new FlickingError(ERROR.MESSAGE.ANIMATION_INTERRUPTED, ERROR.CODE.ANIMATION_INTERRUPTED));
+        };
+
+        axes.once(AXES.EVENT.FINISH, animationFinishHandler);
+
+        if (!axesEvent) {
+          axes.once(AXES.EVENT.HOLD, interruptionHandler);
+        }
 
         animate();
       });
     }
+  }
+
+  protected _resetInternalValues() {
+    this._flicking = null;
+    this._axes = null;
+    this._panInput = null;
+    this._animatingContext = { start: 0, end: 0 };
   }
 }
 

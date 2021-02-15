@@ -7,7 +7,7 @@ import { parseAlign } from "~/utils";
 import { ALIGN } from "~/const/external";
 import { LiteralUnion, ValueOf } from "~/type/internal";
 
-export interface PanelOption {
+export interface PanelOptions {
   el: HTMLElement;
   index: number;
   align: LiteralUnion<ValueOf<typeof ALIGN>> | number;
@@ -17,7 +17,7 @@ export interface PanelOption {
 class Panel {
   private _flicking: Flicking;
   private _el: HTMLElement;
-  private _align: PanelOption["align"];
+  private _align: PanelOptions["align"];
 
   private _index: number;
   private _size: { width: number; height: number };
@@ -30,7 +30,7 @@ class Panel {
     index,
     align,
     flicking
-  }: PanelOption) {
+  }: PanelOptions) {
     this._el = el;
     this._index = index;
     this._flicking = flicking;
@@ -46,16 +46,24 @@ class Panel {
   // Internal States Getter
   public get element() { return this._el; }
   public get index() { return this._index; }
-  public get size() { return this._size; }
-  public get bbox() { return { ...this._pos, right: this._pos.left + this._size.width, bottom: this._pos.top + this._size.height }; }
+  public get bbox() { return { ...this._pos, ...this._size }; }
   public get position() { return (this._flicking.horizontal ? this._pos.left : this._pos.top) + this._alignPos; }
+  public get size() { return this._flicking.horizontal ? this._size.width : this._size.height; }
   public get margin() { return this._margin; }
+  public get alignPosition() { return this._alignPos; }
+  public get range() {
+    const pos = this._pos;
+    const size = this._size;
+    return this._flicking.horizontal
+      ? { min: pos.left, max: pos.left + size.width }
+      : { min: pos.top, max: pos.top + size.height };
+  }
 
   // Options Getter
   public get align() { return this._align; }
 
   // Options Getter
-  public set align(val: PanelOption["align"]) { this._align = val; }
+  public set align(val: PanelOptions["align"]) { this._align = val; }
 
   public resize(): this {
     const el = this._el;
@@ -86,36 +94,72 @@ class Panel {
     return this._el.parentElement !== this._flicking.camera.element;
   }
 
-  public includePosition(position: number): boolean {
-    const pos = this._pos;
-    const size = this._size;
+  public getSnapPosition(around: number): number {
+    const flicking = this._flicking;
+
+    if (!flicking.circularEnabled) return this.position;
+
+    const cameraRange = flicking.camera.range;
+    const cameraRangeSize = cameraRange.max - cameraRange.min;
+
+    let loopCount = 0;
+    if (around < cameraRange.min) {
+      loopCount = -Math.floor((cameraRange.min - around) / cameraRangeSize) - 1;
+    } else if (around > cameraRange.max) {
+      loopCount = Math.floor((around - cameraRange.max) / cameraRangeSize) + 1;
+    }
+
+    return this.position + cameraRangeSize * loopCount;
+  }
+
+  public includePosition(pos: number, includeMargin: boolean = false): boolean {
+    return this.includeRange(pos, pos, includeMargin);
+  }
+
+  public includeRange(min: number, max: number, includeMargin: boolean = false): boolean {
     const margin = this._margin;
     const isHorizontal = this._flicking.horizontal;
+    const panelRange = this.range;
 
-    return isHorizontal
-      ? (position >= pos.left - margin.left) && (position <= pos.left + size.width + margin.right)
-      : (position >= pos.top - margin.top) && (position <= pos.top + size.height + margin.bottom);
+    if (includeMargin) {
+      panelRange.min -= isHorizontal ? margin.left : margin.top;
+      panelRange.max += isHorizontal ? margin.right : margin.bottom;
+    }
+
+    return max >= panelRange.min && min <= panelRange.max;
+  }
+
+  public isReachable(): boolean {
+    const flicking = this._flicking;
+    const cameraRange = flicking.camera.range;
+
+    return flicking.circularEnabled
+      ? true // Always reachable on circular mode
+      : this.includeRange(cameraRange.min, cameraRange.max, true);
   }
 
   public isVisible(): boolean {
     const flicking = this._flicking;
 
     const camera = flicking.camera;
-    const viewportSize = flicking.viewport.size;
+    const cameraRange = camera.range;
+    const cameraRangeSize = cameraRange.max - cameraRange.min;
+    const visibleRange = camera.getVisibleRange();
+    // Should not include margin, as we don't declare what the margin is visible as what the panel is visible.
+    const visibleInCurrentRange = this.includeRange(visibleRange.min, visibleRange.max, false);
 
-    const panelPosition = this.position;
-    const panelBbox = this.bbox;
-    const panelPrev = flicking.horizontal ? panelBbox.left : panelBbox.top;
-    const panelNext = flicking.horizontal ? panelBbox.right : panelBbox.bottom;
+    if (!flicking.circularEnabled) {
+      return visibleInCurrentRange;
+    }
 
-    const cameraPosition = camera.position;
-    const cameraSize = flicking.horizontal ? viewportSize.width : viewportSize.height;
-    const cameraPrev = cameraPosition - camera.alignPosition;
-    const cameraNext = cameraPrev + cameraSize;
-
-    return panelPosition < cameraPosition
-      ? panelNext >= cameraPrev
-      : panelPrev <= cameraNext;
+    // Check looped visible area for circular case
+    if (visibleRange.min < cameraRange.min) {
+      return visibleInCurrentRange || this.includeRange(visibleRange.min + cameraRangeSize, visibleRange.max + cameraRangeSize, false);
+    } else if (visibleRange.max > cameraRange.max) {
+      return visibleInCurrentRange || this.includeRange(visibleRange.min - cameraRangeSize, visibleRange.max - cameraRangeSize, false);
+    } else {
+      return visibleInCurrentRange;
+    }
   }
 
   public focus(duration?: number) {
@@ -123,15 +167,29 @@ class Panel {
   }
 
   public prev(): Panel | null {
-    const renderer = this._flicking.renderer;
+    const index = this._index;
+    const flicking = this._flicking;
+    const renderer = flicking.renderer;
+    const panelCount = renderer.panelCount;
 
-    return renderer.getPanel(this._index - 1);
+    if (panelCount === 1) return null;
+
+    return flicking.circularEnabled
+      ? renderer.getPanel(index === 0 ? panelCount - 1 : index - 1)
+      : renderer.getPanel(index - 1);
   }
 
   public next(): Panel | null {
-    const renderer = this._flicking.renderer;
+    const index = this._index;
+    const flicking = this._flicking;
+    const renderer = flicking.renderer;
+    const panelCount = renderer.panelCount;
 
-    return renderer.getPanel(this._index + 1);
+    if (panelCount === 1) return null;
+
+    return flicking.circularEnabled
+      ? renderer.getPanel(index === panelCount - 1 ? 0 : index + 1)
+      : renderer.getPanel(index + 1);
   }
 
   public increaseIndex(val: number): this {

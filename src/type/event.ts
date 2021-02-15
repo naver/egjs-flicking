@@ -11,7 +11,13 @@ import { ValueOf } from "~/type/internal";
 
 export type ReadyEvent = void;
 
-export type ResizeEvent = {
+export type BeforeResizeEvent = {
+  width: number;
+  height: number;
+  element: HTMLElement;
+};
+
+export type AfterResizeEvent = {
   width: number;
   height: number;
   prev: {
@@ -95,4 +101,8 @@ export type VisibleChangeEvent = {
   added: Panel[];
   removed: Panel[];
   visiblePanels: Panel[];
+};
+
+export type ReachEdgeEvent = {
+  direction: ValueOf<typeof DIRECTION>;
 };

@@ -5,9 +5,11 @@
 import { OnRelease } from "@egjs/axes";
 
 import Flicking from "~/Flicking";
+import FlickingError from "~/core/FlickingError";
+import Panel from "~/core/Panel";
 import AxesController from "~/control/AxesController";
 import { EVENTS } from "~/const/external";
-import { Panel } from "~/core";
+import * as ERROR from "~/const/error";
 import { getDirection, getFlickingAttached } from "~/utils";
 
 abstract class Control {
@@ -15,6 +17,12 @@ abstract class Control {
   protected _flicking: Flicking | null;
   protected _controller: AxesController;
   protected _activePanel: Panel | null;
+
+  public get controller() { return this._controller; }
+  public get activeIndex() { return this._activePanel?.index ?? -1; }
+  public get activePanel() { return this._activePanel; }
+  public get animating() { return this._controller.state.animating; }
+  public get holding() { return this._controller.state.holding; }
 
   public constructor() {
     this._flicking = null;
@@ -39,12 +47,6 @@ abstract class Control {
 
     return this;
   }
-
-  public get controller() { return this._controller; }
-  public get activeIndex() { return this._activePanel?.index ?? -1; }
-  public get activePanel() { return this._activePanel; }
-  public get animating() { return this._controller.state.playing; }
-  public get holding() { return this._controller.state.holding; }
 
   public enable(): this {
     this._controller.enable();
@@ -76,32 +78,60 @@ abstract class Control {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;
 
+    if (!panel.isReachable()) {
+      return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(panel.position), ERROR.CODE.POSITION_NOT_REACHABLE));
+    }
+
+    this._triggerIndexChangeEvent(panel, panel.position, axesEvent);
+
+    const position = camera.clampToReachablePosition(panel.position);
+    return this._animateToPosition({ position, duration, newActivePanel: panel, axesEvent });
+  }
+
+  protected _triggerIndexChangeEvent(panel: Panel, position: number, axesEvent?: OnRelease): boolean {
+    const flicking = getFlickingAttached(this._flicking, "Control");
     const triggeringEvent = panel !== this._activePanel ? EVENTS.CHANGE : EVENTS.RESTORE;
+    const camera = flicking.camera;
+    const activePanel = this._activePanel;
 
     const eventSuccess = flicking.trigger(triggeringEvent, {
       index: panel.index,
       panel,
       isTrusted: axesEvent?.isTrusted || false,
-      direction: getDirection(camera.position, panel.position)
+      direction: getDirection(activePanel?.position ?? camera.position, position)
     });
 
     if (!eventSuccess) {
-      // TODO: Add new error type that shows it rejected by user stop()
-      return Promise.reject();
+      throw new FlickingError(ERROR.MESSAGE.STOP_CALLED_BY_USER, ERROR.CODE.STOP_CALLED_BY_USER);
     }
 
-    const updateActivePanel = () => {
-      this._activePanel = panel;
-    };
-    const animate = () => this._controller.animateTo(panel.position, duration, axesEvent);
+    return eventSuccess;
+  }
+
+  protected async _animateToPosition({
+    position,
+    duration,
+    newActivePanel,
+    axesEvent
+  }: {
+    position: number;
+    duration: number;
+    newActivePanel: Panel;
+    axesEvent?: OnRelease;
+  }) {
+    const animate = () => this._controller.animateTo(position, duration, axesEvent);
 
     if (duration === 0) {
-      updateActivePanel();
+      this._setActivePanel(newActivePanel);
       return animate();
     } else {
-      return animate().then(updateActivePanel);
+      return animate().then(() => this._setActivePanel(newActivePanel));
     }
   }
+
+  protected _setActivePanel = (panel: Panel) => {
+    this._activePanel = panel;
+  };
 }
 
 export default Control;

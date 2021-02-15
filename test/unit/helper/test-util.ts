@@ -1,4 +1,4 @@
-import Panel, { PanelOption } from "~/core/Panel";
+import Panel, { PanelOptions } from "~/core/Panel";
 import Flicking, { FlickingOptions } from "~/Flicking";
 import { ALIGN } from "~/const/external";
 
@@ -41,7 +41,7 @@ export const createFlicking = (el: El | any, option: ConstructorParameters<typeo
   return flicking;
 };
 
-export const createPanel = (el: El, panelOption: Partial<PanelOption> = {}, flickingOption: Partial<FlickingOptions> = {}): Panel => {
+export const createPanel = (el: El, panelOption: Partial<PanelOptions> = {}, flickingOption: Partial<FlickingOptions> = {}): Panel => {
   const flicking = createFlicking(El.viewport().add(El.camera()), flickingOption);
 
   flicking.camera.element.appendChild(el.el);
@@ -70,7 +70,7 @@ export const simulate = (el: HTMLElement, option: Partial<{
 }> = {}, time: number = 10000): Promise<void> => (
   new Promise<void>(resolve => {
     Simulator.gestures.pan(el, merge({
-      pos: [el.offsetLeft / 2, el.offsetTop / 2],
+      pos: [el.offsetLeft + el.offsetWidth / 2, el.offsetTop + el.offsetHeight / 2],
       deltaX: 0,
       deltaY: 0,
       duration: 500,

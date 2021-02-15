@@ -5,14 +5,13 @@
 import { OnRelease } from "@egjs/axes";
 
 import Panel from "~/core/Panel";
-import State from "~/control/states/State";
-import { STATE_TYPE } from "~/control/StateMachine";
+import State, { STATE_TYPE } from "~/control/states/State";
 import { EVENTS } from "~/const/external";
 import { getDirection } from "~/utils";
 
 class HoldingState extends State {
   public readonly holding = true;
-  public readonly playing = true;
+  public readonly animating = true;
 
   private _releaseEvent: OnRelease | null = null;
 
@@ -94,7 +93,7 @@ class HoldingState extends State {
     }
     /* eslint-enable */
 
-    const panels = flicking.renderer.getPanels();
+    const panels = flicking.renderer.panels;
     let clickedPanel: Panel | null = null;
 
     for (const panel of panels) {

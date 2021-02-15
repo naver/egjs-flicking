@@ -2,31 +2,31 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import State from "~/control/states/State";
-import { STATE_TYPE } from "~/control/StateMachine";
+import State, { STATE_TYPE } from "~/control/states/State";
 import { EVENTS } from "~/const/external";
+import * as AXES from "~/const/axes";
 import { getDirection } from "~/utils";
 
 class DraggingState extends State {
   public readonly holding = true;
-  public readonly playing = true;
+  public readonly animating = true;
 
   public onChange(ctx: Parameters<State["onChange"]>[0]): void {
     const { flicking, axesEvent, transitTo } = ctx;
 
-    if (!axesEvent.delta.flick) {
+    if (!axesEvent.delta[AXES.POSITION_KEY]) {
       return;
     }
 
     const camera = flicking.camera;
     const prevPosition = camera.position;
 
-    camera.lookAt(axesEvent.pos.flick);
+    camera.lookAt(axesEvent.pos[AXES.POSITION_KEY]);
 
     const isSuccess = flicking.trigger(EVENTS.MOVE, {
       isTrusted: axesEvent.isTrusted,
       holding: this.holding,
-      direction: getDirection(0, axesEvent.delta.flick),
+      direction: getDirection(0, axesEvent.delta[AXES.POSITION_KEY]),
       axesEvent
     });
 
@@ -46,7 +46,7 @@ class DraggingState extends State {
       axesEvent
     });
 
-    if (flicking.renderer.getPanelCount() <= 0) {
+    if (flicking.renderer.panelCount <= 0) {
       // There're no panels
       transitTo(STATE_TYPE.IDLE);
       return;
@@ -55,7 +55,7 @@ class DraggingState extends State {
     transitTo(STATE_TYPE.ANIMATING);
 
     const control = flicking.control;
-    const position = axesEvent.destPos.flick;
+    const position = axesEvent.destPos[AXES.POSITION_KEY];
     const duration = Math.max(axesEvent.duration, flicking.duration);
 
     void control.moveToPosition(position, duration, axesEvent);

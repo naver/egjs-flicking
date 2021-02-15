@@ -23,7 +23,7 @@ export const merge = <From extends object, To extends object>(target: From, ...s
 export const getElement = (el: HTMLElement | string | null, parent?: HTMLElement): HTMLElement => {
   let targetEl: HTMLElement | null = null;
 
-  if (typeof el === "string") {
+  if (isString(el)) {
     const parentEl = parent ? parent : document;
     const queryResult = parentEl.querySelector(el);
     if (!queryResult) {
@@ -64,7 +64,7 @@ export const isArray = (arr: any): arr is any[] => Boolean(arr) && arr.construct
 
 export const parseAlign = (align: LiteralUnion<ValueOf<typeof ALIGN>> | number, size: number): number => {
   let alignPoint: number | null;
-  if (typeof align === "string") {
+  if (isString(align)) {
     switch (align) {
       case ALIGN.PREV:
         alignPoint = 0;
@@ -154,7 +154,7 @@ export const parseArithmeticExpression = (cssValue: number | string, base: numbe
   return calculatedValue;
 };
 
-export const parseCSSSizeValue = (val: string | number): string => typeof val === "string" ? val : `${val}px`;
+export const parseCSSSizeValue = (val: string | number): string => isString(val) ? val : `${val}px`;
 
 export const getDirection = (start: number, end: number): ValueOf<typeof DIRECTION> => {
   if (start === end) return DIRECTION.NONE;
@@ -168,7 +168,7 @@ export const parseElement = (element: ElementLike | ElementLike[]): HTMLElement[
 
   const elements: HTMLElement[] = [];
   element.forEach(el => {
-    if (typeof el === "string") {
+    if (isString(el)) {
       const tempDiv = document.createElement("div");
       tempDiv.innerHTML = el;
 
@@ -186,13 +186,29 @@ export const parseElement = (element: ElementLike | ElementLike[]): HTMLElement[
   return elements;
 };
 
-export const getCirculatedIndex = (idx: number, max: number) => idx < 0 ? clamp(idx + max, 0, max) : clamp(idx, 0, max);
+export const getMinusCompensatedIndex = (idx: number, max: number) => idx < 0 ? clamp(idx + max, 0, max) : clamp(idx, 0, max);
 
-export const includes = <T>(array: T[], target: T) => {
+export const includes = <T>(array: T[], target: any): target is T => {
   for (const val of array) {
     if (val === target) return true;
   }
   return false;
+};
+
+export const isString = (val: any): val is string => typeof val === "string";
+
+export const circulatePosition = (pos: number, min: number, max: number) => {
+  const size = max - min;
+
+  if (pos < min) {
+    const offset = (min - pos) % size;
+    pos = max - offset;
+  } else if (pos > max) {
+    const offset = (pos - max) % size;
+    pos = min + offset;
+  }
+
+  return pos;
 };
 
 // export const hasClass = (element: HTMLElement, className: string): boolean => {

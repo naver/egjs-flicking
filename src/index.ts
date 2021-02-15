@@ -13,8 +13,4 @@ export * from "./const/external";
 export * from "./type/event";
 export * from "./type/external";
 
-// export * from "./types";
-// export { withFlickingMethods } from "./utils";
-// export { DEFAULT_OPTIONS, MOVE_TYPE } from "./consts";
-
 export default Flicking;

@@ -11,25 +11,17 @@ import AnimatingState from "./states/AnimatingState";
 import DisabledState from "./states/DisabledState";
 
 import Flicking from "~/Flicking";
-import State from "~/control/states/State";
-import { AXES_EVENT } from "~/control/AxesController";
-
-export enum STATE_TYPE {
-  IDLE,
-  HOLDING,
-  DRAGGING,
-  ANIMATING,
-  DISABLED
-}
+import State, { STATE_TYPE } from "~/control/states/State";
+import * as AXES from "~/const/axes";
 
 class StateMachine {
   private _state: State;
 
+  public get state(): State { return this._state; }
+
   public constructor() {
     this._state = new IdleState();
   }
-
-  public get state(): State { return this._state; }
 
   public fire(eventType: keyof AxesEvents, externalCtx: {
     flicking: Flicking;
@@ -39,19 +31,19 @@ class StateMachine {
     const ctx = { ...externalCtx, transitTo: this.transitTo };
 
     switch (eventType) {
-      case AXES_EVENT.HOLD:
+      case AXES.EVENT.HOLD:
         currentState.onHold(ctx);
         break;
-      case AXES_EVENT.CHANGE:
+      case AXES.EVENT.CHANGE:
         currentState.onChange(ctx);
         break;
-      case AXES_EVENT.RELEASE:
+      case AXES.EVENT.RELEASE:
         currentState.onRelease(ctx);
         break;
-      case AXES_EVENT.ANIMATION_END:
+      case AXES.EVENT.ANIMATION_END:
         currentState.onAnimationEnd(ctx);
         break;
-      case AXES_EVENT.FINISH:
+      case AXES.EVENT.FINISH:
         currentState.onFinish(ctx);
         break;
     }
