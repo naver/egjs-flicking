@@ -23,6 +23,7 @@ abstract class Camera {
   protected _transform: string;
   protected _position: number;
   protected _alignPos: number;
+  protected _offset: number;
   protected _range: { min: number; max: number };
   protected _visiblePanels: Panel[];
   protected _needPanelTriggered: { prev: boolean; next: boolean };
@@ -31,7 +32,9 @@ abstract class Camera {
   public get element() { return this._el; }
   public get position() { return this._position; }
   public get alignPosition() { return this._alignPos; }
+  public get offset() { return this._offset; }
   public get range() { return this._range; }
+  public get rangeDiff() { return this._range.max - this._range.min; }
   public get visiblePanels() { return this._visiblePanels; }
   public get size() {
     const flicking = this._flicking;
@@ -41,6 +44,8 @@ abstract class Camera {
         : flicking.viewport.height
       : 0;
   }
+
+  public set offset(val: number) { this._offset = val; }
 
   // Options Getter
   public get align() { return this._align; }
@@ -137,6 +142,7 @@ abstract class Camera {
     this._flicking = null;
     this._position = 0;
     this._alignPos = 0;
+    this._offset = 0;
     this._range = { min: 0, max: 0 };
     this._visiblePanels = [];
     this._needPanelTriggered = { prev: false, next: false };
@@ -148,19 +154,20 @@ abstract class Camera {
 
     const newVisiblePanels = panels.filter(panel => panel.isVisible());
     const prevVisiblePanels = this._visiblePanels;
+    this._visiblePanels = newVisiblePanels;
 
     const added: Panel[] = newVisiblePanels.filter(panel => !includes(prevVisiblePanels, panel));
     const removed: Panel[] = prevVisiblePanels.filter(panel => !includes(newVisiblePanels, panel));
 
     if (added.length > 0 || removed.length > 0) {
+      flicking.renderer.render();
+
       flicking.trigger(EVENTS.VISIBLE_CHANGE, {
         added,
         removed,
         visiblePanels: newVisiblePanels
       });
     }
-
-    this._visiblePanels = newVisiblePanels;
   }
 
   protected _checkNeedPanel(): void {
@@ -234,9 +241,11 @@ abstract class Camera {
     const el = this._el;
     const flicking = getFlickingAttached(this._flicking, "Camera");
 
+    const actualPosition = this._position - this._alignPos - this._offset;
+
     el.style[this._transform] = flicking.horizontal
-      ? `translate(${-(this._position - this._alignPos)}px)`
-      : `translate(0, ${-(this._position - this._alignPos)}px)`;
+      ? `translate(${-actualPosition}px)`
+      : `translate(0, ${-actualPosition}px)`;
   }
 
   protected _checkTranslateSupport = () => {

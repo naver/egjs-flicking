@@ -66,10 +66,8 @@ abstract class Control {
     return this;
   }
 
-  public checkActivePanelIsRemoved(): this {
-    if (this._activePanel?.isRemoved()) {
-      this._activePanel = null;
-    }
+  public resetActivePanel(): this {
+    this._activePanel = null;
 
     return this;
   }

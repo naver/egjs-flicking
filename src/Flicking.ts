@@ -564,6 +564,7 @@ class Flicking extends Component<FlickingEvents> {
 
     viewport.resize();
     renderer.updatePanelSize();
+    renderer.resetPanelElementOrder();
     camera.updateAlignPos();
     camera.updateRange();
     control.updateInput();

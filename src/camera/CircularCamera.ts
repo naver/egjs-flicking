@@ -131,7 +131,6 @@ class CircularCamera extends Camera {
       }, []);
 
       flicking.renderer.movePanelElementsToEnd(passedPanels);
-
       this._circularOffset -= this._calcPanelAreaSum(passedPanels);
     } else {
       const passedPanels = togglePoints.reduce((passed: Panel[], togglePoint: number) => {
@@ -148,9 +147,10 @@ class CircularCamera extends Camera {
       }, []);
 
       flicking.renderer.movePanelElementsToStart(passedPanels);
-
       this._circularOffset += this._calcPanelAreaSum(passedPanels);
     }
+
+    flicking.renderer.render();
 
     return super.lookAt(pos);
   }
@@ -159,9 +159,11 @@ class CircularCamera extends Camera {
     const el = this._el;
     const flicking = getFlickingAttached(this._flicking, "Camera");
 
+    const actualPosition = this._position - this._alignPos - this._offset + this._circularOffset;
+
     el.style[this._transform] = flicking.horizontal
-      ? `translate(${-(this._position - this._alignPos + this._circularOffset)}px)`
-      : `translate(0, ${-(this._position - this._alignPos + this._circularOffset)}px)`;
+      ? `translate(${-actualPosition}px)`
+      : `translate(0, ${-actualPosition}px)`;
   }
 
   protected _resetInternalValues() {

@@ -6,9 +6,10 @@ class App {
   public constructor() {
     const flicking = new Flicking("#flicking", {
       align: ALIGN.CENTER,
-      // bound: true,
-      horizontal: false,
-      circular: true,
+      bound: true,
+      // horizontal: false,
+      // circular: true,
+      renderOnlyVisible: true
       // moveType: MOVE_TYPE.FREE_SCROLL
     });
 
