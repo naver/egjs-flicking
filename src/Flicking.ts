@@ -162,7 +162,7 @@ class Flicking extends Component<FlickingEvents> {
   public get viewport() { return this._viewport; }
   // Internal States
   public get initialized() { return this._initialized; }
-  public get circularEnabled() { return this._camera.getControlParameters().circular; }
+  public get circularEnabled() { return this._camera.controlParams.circular; }
 
   // Options Getter
   // UI / LAYOUT
@@ -304,12 +304,12 @@ class Flicking extends Component<FlickingEvents> {
 
     this.resize();
 
+    // Look at initial panel
+    this._moveToInitialPanel();
+
     if (this._autoResize) {
       window.addEventListener("resize", this.resize);
     }
-
-    // Look at initial panel
-    this._moveToInitialPanel();
 
     // Done initializing & emit ready event
     this._initialized = true;
@@ -567,6 +567,7 @@ class Flicking extends Component<FlickingEvents> {
     renderer.resetPanelElementOrder();
     camera.updateAlignPos();
     camera.updateRange();
+    camera.updateAnchors();
     control.updateInput();
 
     const newWidth = viewport.width;
@@ -684,17 +685,7 @@ class Flicking extends Component<FlickingEvents> {
   private _moveToInitialPanel(): void {
     const renderer = this._renderer;
     const control = this._control;
-    let initialPanel = renderer.getPanel(this._defaultIndex) || renderer.getPanel(0);
-
-    // Find the reachable panel nearest to initial panel
-    const cameraRange = this._camera.range;
-    while (initialPanel && !initialPanel.isReachable()) {
-      if (initialPanel.position < cameraRange.min) {
-        initialPanel = initialPanel.next();
-      } else {
-        initialPanel = initialPanel.prev();
-      }
-    }
+    const initialPanel = renderer.getPanel(this._defaultIndex) || renderer.getPanel(0);
 
     if (!initialPanel) return;
 

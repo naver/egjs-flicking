@@ -60,23 +60,6 @@ abstract class Renderer {
     return this._panels[index] || null;
   }
 
-  public getPanelFromPosition(position: number): Panel | null {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
-
-    if (flicking.circularEnabled) {
-      const cameraRange = flicking.camera.range;
-      position = circulatePosition(position, cameraRange.min, cameraRange.max);
-    }
-
-    for (const panel of this._panels) {
-      if (panel.includePosition(position, true)) {
-        return panel;
-      }
-    }
-
-    return null;
-  }
-
   public updatePanelSize(): this {
     this._panels.forEach(panel => panel.resize());
     return this;
@@ -119,6 +102,7 @@ abstract class Renderer {
 
     // Update camera & control
     camera.updateRange();
+    camera.updateAnchors();
     camera.resetNeedPanelHistory();
     control.updateInput();
 
@@ -155,6 +139,7 @@ abstract class Renderer {
 
     // Update camera & control
     camera.updateRange();
+    camera.updateAnchors();
     camera.resetNeedPanelHistory();
     control.updateInput();
 

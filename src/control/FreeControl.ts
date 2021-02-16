@@ -15,19 +15,19 @@ class FreeControl extends Control {
 
     const camera = flicking.camera;
     const targetPos = camera.clampToReachablePosition(position);
-
-    const panel = flicking.renderer.getPanelFromPosition(targetPos);
+    const anchorAtPosition = camera.findAnchorIncludePosition(targetPos);
     const activePanel = this._activePanel;
 
-    if (!panel) {
+    if (!anchorAtPosition) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE));
     }
 
-    if (panel !== activePanel) {
-      this._triggerIndexChangeEvent(panel, position, axesEvent);
+    const targetPanel = anchorAtPosition.panel;
+    if (targetPanel !== activePanel) {
+      this._triggerIndexChangeEvent(targetPanel, position, axesEvent);
     }
 
-    return this._animateToPosition({ position, duration, newActivePanel: panel, axesEvent });
+    return this._animateToPosition({ position, duration, newActivePanel: targetPanel, axesEvent });
   }
 }
 

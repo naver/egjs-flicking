@@ -5,6 +5,7 @@
 import Flicking, { FlickingOptions } from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
 import Panel from "~/core/Panel";
+import AnchorPoint from "~/core/AnchorPoint";
 import * as ERROR from "~/const/error";
 import { ALIGN, DIRECTION, EVENTS } from "~/const/external";
 import { checkExistence, clamp, getFlickingAttached, includes, parseAlign } from "~/utils";
@@ -26,6 +27,7 @@ abstract class Camera {
   protected _offset: number;
   protected _range: { min: number; max: number };
   protected _visiblePanels: Panel[];
+  protected _anchors: AnchorPoint[];
   protected _needPanelTriggered: { prev: boolean; next: boolean };
 
   // Internal states getter
@@ -36,6 +38,9 @@ abstract class Camera {
   public get range() { return this._range; }
   public get rangeDiff() { return this._range.max - this._range.min; }
   public get visiblePanels() { return this._visiblePanels; }
+  public get visibleRange() { return { min: this._position - this._alignPos, max: this._position - this._alignPos + this.size }; }
+  public get anchorPoints() { return this._anchors; }
+  public get controlParams() { return { range: this._range, position: this._position, circular: false }; }
   public get size() {
     const flicking = this._flicking;
     return flicking
@@ -58,6 +63,7 @@ abstract class Camera {
   public constructor({
     align = ALIGN.CENTER
   }: Partial<CameraOptions> = {}) {
+    this._flicking = null;
     this._resetInternalValues();
 
     // Options
@@ -79,30 +85,9 @@ abstract class Camera {
   }
 
   public destroy(): this {
+    this._flicking = null;
     this._resetInternalValues();
     return this;
-  }
-
-  public getVisibleRange(): { min: number; max: number } {
-    const bboxPrev = this._position - this._alignPos;
-    return {
-      min: bboxPrev,
-      max: bboxPrev + this.size
-    };
-  }
-
-  public getPanelBelow(): Panel | null {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
-
-    return flicking.renderer.getPanelFromPosition(this._position);
-  }
-
-  public getControlParameters() {
-    return {
-      range: this._range,
-      position: this._position,
-      circular: false
-    };
   }
 
   public lookAt(pos: number): this {
@@ -117,9 +102,67 @@ abstract class Camera {
     return this;
   }
 
+  public getPrevAnchor(anchor: AnchorPoint): AnchorPoint | null {
+    return this._anchors[anchor.index - 1] || null;
+  }
+
+  public getNextAnchor(anchor: AnchorPoint): AnchorPoint | null {
+    return this._anchors[anchor.index + 1] || null;
+  }
+
+  public findAnchorIncludePosition(position: number): AnchorPoint | null {
+    const anchors = this._anchors;
+
+    for (const anchor of anchors) {
+      if (anchor.panel.includePosition(position, true)) {
+        return anchor;
+      }
+    }
+
+    return null;
+  }
+
+  public findNearestAnchor(position: number): AnchorPoint | null {
+    const anchors = this._anchors;
+
+    if (anchors.length <= 0) return null;
+
+    let prevDist = Infinity;
+    for (let anchorIdx = 0; anchorIdx < anchors.length; anchorIdx++) {
+      const anchor = anchors[anchorIdx];
+      const dist = Math.abs(anchor.position - position);
+
+      if (dist > prevDist) {
+        // Return previous anchor
+        return anchors[anchorIdx - 1];
+      }
+
+      prevDist = dist;
+    }
+
+    // Return last anchor
+    return anchors[anchors.length - 1];
+  }
+
   public clampToReachablePosition(position: number): number {
     const range = this._range;
     return clamp(position, range.min, range.max);
+  }
+
+  public canReach(panel: Panel): boolean {
+    const range = this._range;
+
+    if (panel.element.parentElement !== this._el) return false;
+
+    const panelPos = panel.position;
+
+    return panelPos >= range.min && panelPos <= range.max;
+  }
+
+  public canSee(panel: Panel): boolean {
+    const visibleRange = this.visibleRange;
+    // Should not include margin, as we don't declare what the margin is visible as what the panel is visible.
+    return panel.includeRange(visibleRange.min, visibleRange.max, false);
   }
 
   public updateAlignPos(): this {
@@ -134,17 +177,30 @@ abstract class Camera {
     return this;
   }
 
+  public updateAnchors(): this {
+    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const panels = flicking.renderer.panels;
+
+    this._anchors = panels.map((panel, index) => new AnchorPoint({
+      index,
+      position: panel.position,
+      panel
+    }));
+
+    return this;
+  }
+
   public resetNeedPanelHistory() {
     this._needPanelTriggered = { prev: false, next: false };
   }
 
   protected _resetInternalValues() {
-    this._flicking = null;
     this._position = 0;
     this._alignPos = 0;
     this._offset = 0;
     this._range = { min: 0, max: 0 };
     this._visiblePanels = [];
+    this._anchors = [];
     this._needPanelTriggered = { prev: false, next: false };
   }
 
@@ -152,7 +208,7 @@ abstract class Camera {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const panels = flicking.renderer.panels;
 
-    const newVisiblePanels = panels.filter(panel => panel.isVisible());
+    const newVisiblePanels = panels.filter(panel => this.canSee(panel));
     const prevVisiblePanels = this._visiblePanels;
     this._visiblePanels = newVisiblePanels;
 

@@ -3,7 +3,8 @@
  * egjs projects are licensed under the MIT license
  */
 import Camera from "~/camera/Camera";
-import { getFlickingAttached } from "~/utils";
+import AnchorPoint from "~/core/AnchorPoint";
+import { find, findRight, getFlickingAttached } from "~/utils";
 
 class BoundCamera extends Camera {
   public updateRange() {
@@ -30,6 +31,49 @@ class BoundCamera extends Camera {
     } else {
       this._range = { min: firstPanel.position, max: lastPanel.position };
     }
+
+    return this;
+  }
+
+  public updateAnchors(): this {
+    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const panels = flicking.renderer.panels;
+
+    if (panels.length <= 0) {
+      this._anchors = [];
+      return this;
+    }
+
+    const range = this._range;
+    const reachablePanels = panels.filter(panel => this.canReach(panel));
+    const shouldPrependBoundAnchor = reachablePanels[0].position !== range.min;
+    const shouldAppendBoundAnchor = reachablePanels[reachablePanels.length - 1].position !== range.max;
+
+    const indexOffset = shouldPrependBoundAnchor ? 1 : 0;
+
+    const newAnchors = reachablePanels.map((panel, idx) => new AnchorPoint({
+      index: idx + indexOffset,
+      position: panel.position,
+      panel
+    }));
+
+    if (shouldPrependBoundAnchor) {
+      newAnchors.splice(0, 0, new AnchorPoint({
+        index: 0,
+        position: range.min,
+        panel: find(panels, panel => panel.includePosition(range.min))!
+      }));
+    }
+
+    if (shouldAppendBoundAnchor) {
+      newAnchors.push(new AnchorPoint({
+        index: newAnchors.length,
+        position: range.max,
+        panel: findRight(panels, panel => panel.includePosition(range.min))!
+      }));
+    }
+
+    this._anchors = newAnchors;
 
     return this;
   }
