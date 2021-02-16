@@ -6,16 +6,16 @@ class App {
   public constructor() {
     const flicking = new Flicking("#flicking", {
       align: ALIGN.CENTER,
-      bound: true,
+      // bound: true,
       // horizontal: false,
-      // circular: true,
+      circular: true,
       renderOnlyVisible: true
       // moveType: MOVE_TYPE.FREE_SCROLL
     });
 
-    Object.values([EVENTS.VISIBLE_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {
-      flicking.on(eventName, event => console.log(eventName, event));
-    });
+    // Object.values([EVENTS.VISIBLE_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {
+    //   flicking.on(eventName, event => console.log(eventName, event));
+    // });
 
     document.getElementById("prev")?.addEventListener("click", () => {
       flicking.prev().then(() => console.log("PREV FINISHED"));

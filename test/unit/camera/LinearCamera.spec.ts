@@ -11,7 +11,7 @@ describe("LinearCamera", () => {
       it("should throw a FlickingError with code NOT_ATTACHED_TO_FLICKING when it's not initialized yet", () => {
         const camera = new LinearCamera();
 
-        expect(() => camera.getPanelBelow())
+        expect(() => camera.updateRange())
           .to.throw(FlickingError)
           .with.property("code", ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
       });

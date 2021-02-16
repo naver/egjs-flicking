@@ -81,8 +81,6 @@ abstract class Control {
     if (!camera.canReach(panel)) {
       const nearestAnchor = camera.findNearestAnchor(position);
 
-      console.log(nearestAnchor);
-
       if (!nearestAnchor) {
         return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(panel.position), ERROR.CODE.POSITION_NOT_REACHABLE));
       }
