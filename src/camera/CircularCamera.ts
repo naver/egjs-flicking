@@ -91,7 +91,7 @@ class CircularCamera extends Camera {
   }
 
   public canReach(panel: Panel): boolean {
-    if (panel.element.parentElement !== this._el) return false;
+    if (panel.removed) return false;
 
     return this._circularEnabled
       // Always reachable on circular mode

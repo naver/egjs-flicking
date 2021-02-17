@@ -2,16 +2,17 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Renderer from "./Renderer";
-
+import RawRenderer from "~/renderer/RawRenderer";
+import Panel from "~/core/Panel";
+import ElementPanel from "~/core/ElementPanel";
 import { getFlickingAttached } from "~/utils";
-import { Panel } from "~/core";
-class VisibleRenderer extends Renderer {
+
+class VisibleRenderer extends RawRenderer {
   public render() {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
     const camera = flicking.camera;
     const cameraElement = camera.element;
-    const visiblePanels = camera.visiblePanels;
+    const visiblePanels = camera.visiblePanels as ElementPanel[];
 
     const fragment = document.createDocumentFragment();
 

@@ -97,7 +97,7 @@ class HoldingState extends State {
     let clickedPanel: Panel | null = null;
 
     for (const panel of panels) {
-      if (panel.element.contains(clickedElement)) {
+      if (panel.contains(clickedElement)) {
         clickedPanel = panel;
         break;
       }

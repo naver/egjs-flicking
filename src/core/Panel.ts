@@ -8,45 +8,25 @@ import { ALIGN } from "~/const/external";
 import { LiteralUnion, ValueOf } from "~/type/internal";
 
 export interface PanelOptions {
-  el: HTMLElement;
   index: number;
   align: LiteralUnion<ValueOf<typeof ALIGN>> | number;
   flicking: Flicking;
 }
 
-class Panel {
-  private _flicking: Flicking;
-  private _el: HTMLElement;
-  private _align: PanelOptions["align"];
+abstract class Panel {
+  protected _flicking: Flicking;
+  protected _align: PanelOptions["align"];
 
-  private _index: number;
-  private _size: { width: number; height: number };
-  private _pos: { left: number; top: number };
-  private _margin: { left: number; right: number; top: number; bottom: number };
-  private _alignPos: number; // Actual align pos
-  private _offset: number;
-
-  public constructor({
-    el,
-    index,
-    align,
-    flicking
-  }: PanelOptions) {
-    this._el = el;
-    this._index = index;
-    this._flicking = flicking;
-
-    this._align = align;
-
-    this._size = { width: 0, height: 0 };
-    this._pos = { left: 0, top: 0 };
-    this._margin = { left: 0, right: 0, top: 0, bottom: 0 };
-    this._alignPos = 0;
-    this._offset = 0;
-  }
+  // Internal States
+  protected _index: number;
+  protected _size: { width: number; height: number };
+  protected _pos: { left: number; top: number };
+  protected _margin: { left: number; right: number; top: number; bottom: number };
+  protected _alignPos: number; // Actual align pos
+  protected _offset: number;
+  protected _removed: boolean;
 
   // Internal States Getter
-  public get element() { return this._el; }
   public get index() { return this._index; }
   public get bbox() { return { ...this._pos, ...this._size }; }
   public get position() { return (this._flicking.horizontal ? this._pos.left : this._pos.top) + this._alignPos; }
@@ -54,6 +34,7 @@ class Panel {
   public get margin() { return this._margin; }
   public get alignPosition() { return this._alignPos; }
   public get offset() { return this._offset; }
+  public get removed() { return this._removed; }
   public get range() {
     const pos = this._pos;
     const size = this._size;
@@ -68,29 +49,26 @@ class Panel {
   // Options Getter
   public set align(val: PanelOptions["align"]) { this._align = val; }
 
-  public resize(): this {
-    const el = this._el;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const elStyle = window.getComputedStyle(el) || (el as any).currentStyle as CSSStyleDeclaration;
+  public constructor({
+    index,
+    align,
+    flicking
+  }: PanelOptions) {
+    this._index = index;
+    this._flicking = flicking;
 
-    this._size = {
-      width: el.offsetWidth,
-      height: el.offsetHeight
-    };
-    this._pos = {
-      left: el.offsetLeft,
-      top: el.offsetTop
-    };
-    this._margin = {
-      left: parseFloat(elStyle.marginLeft),
-      right: parseFloat(elStyle.marginRight),
-      top: parseFloat(elStyle.marginTop),
-      bottom: parseFloat(elStyle.marginBottom)
-    };
+    this._align = align;
 
-    this._updateAlignPos();
+    this._removed = false;
+    this._resetInternalStates();
+  }
 
-    return this;
+  public abstract resize(): this;
+  public abstract contains(element: HTMLElement): boolean;
+
+  public destroy(): void {
+    this._resetInternalStates();
+    this._removed = true;
   }
 
   public includePosition(pos: number, includeMargin: boolean = false): boolean {
@@ -165,9 +143,17 @@ class Panel {
     return this;
   }
 
-  private _updateAlignPos() {
+  protected _updateAlignPos() {
     const size = this._size;
     this._alignPos = parseAlign(this._align, this._flicking.horizontal ? size.width : size.height);
+  }
+
+  protected _resetInternalStates() {
+    this._size = { width: 0, height: 0 };
+    this._pos = { left: 0, top: 0 };
+    this._margin = { left: 0, right: 0, top: 0, bottom: 0 };
+    this._alignPos = 0;
+    this._offset = 0;
   }
 }
 
