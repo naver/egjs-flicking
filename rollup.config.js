@@ -7,7 +7,7 @@ const external = {
   "@egjs/component": "eg.Component",
   "@egjs/imready": "eg.ImReady"
 };
-const name = "eg.Flicking";
+const name = "Flicking";
 
 export default buildHelper([
   {

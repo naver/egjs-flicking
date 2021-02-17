@@ -4,7 +4,7 @@
  */
 import Flicking, { FlickingOptions } from "~/Flicking";
 import Panel from "~/core/Panel";
-import { getMinusCompensatedIndex, getFlickingAttached, includes, parseElement, toArray, circulatePosition } from "~/utils";
+import { getMinusCompensatedIndex, getFlickingAttached, includes, parseElement, toArray } from "~/utils";
 import { ALIGN } from "~/const/external";
 import { ElementLike } from "~/type/external";
 
@@ -226,9 +226,16 @@ abstract class Renderer {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
 
     const cameraElement = flicking.camera.element;
-    const cameraChilds = toArray(cameraElement.children);
+    const cameraChilds = toArray(cameraElement.childNodes);
 
     const align = this._getPanelAlign();
+
+    // Remove all text nodes
+    cameraChilds.forEach(child => {
+      if (child.nodeType === Node.TEXT_NODE) {
+        cameraElement.removeChild(child);
+      }
+    });
 
     this._panels = cameraChilds.map(
       (el: HTMLElement, index: number) => new Panel({ flicking, el, index, align })

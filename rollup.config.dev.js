@@ -9,7 +9,7 @@ const buildHelper = require("./config/build-helper");
 
 export default buildHelper([
   {
-    name: "eg.Flicking",
+    name: "Flicking",
     input: "./test/manual/src/App.ts",
     output: "./test/manual/dist/app.js",
     format: "umd",
