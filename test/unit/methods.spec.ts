@@ -1083,6 +1083,25 @@ describe("Methods call", () => {
       expect(flicking.getCurrentPanel()).not.to.be.null;
       expect(flicking.getCurrentPanel().getIndex()).equals(2);
     });
+
+    it("can restore panel's position correctly when getStatus is called from non-zero index panel", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.fullN(5));
+
+      const flicking = flickingInfo.instance;
+      flicking.moveTo(3, 0);
+      const status = flicking.getStatus();
+      const prevPositions = flicking.getAllPanels().map(panel => parseFloat(panel.getElement().style.left));
+
+      // When
+      flicking.setStatus(status);
+      const positions = flicking.getAllPanels().map(panel => parseFloat(panel.getElement().style.left));
+
+      // Then
+      expect(positions.every((pos, idx) => pos === prevPositions[idx])).to.be.true;
+      // Camera position should be on the third panel
+      expect((flicking as any).viewport.state.position).to.equal(flicking.getPanel(3).getPosition());
+    });
   });
 
   describe("append()", () => {
