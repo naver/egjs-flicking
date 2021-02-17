@@ -719,10 +719,8 @@ export default class Viewport {
       this.currentPanel = panelManager.get(status.index)
         || panelManager.get(defaultIndex)
         || panelManager.firstPanel();
-      this.nearestPanel = this.currentPanel;
     } else {
       this.currentPanel = undefined;
-      this.nearestPanel = undefined;
     }
     this.visiblePanels = orderedPanels.filter(panel => Boolean(panel));
 
