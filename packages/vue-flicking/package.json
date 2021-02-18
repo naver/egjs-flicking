@@ -29,10 +29,16 @@
   "url": "https://github.com/naver/egjs-flicking/issues"
  },
  "license": "MIT",
+ "browserslist": [
+  "last 2 version",
+  "ie 9-11",
+  "not op_mini all"
+ ],
  "dependencies": {
   "@egjs/flicking": "^3.7.0",
   "@egjs/list-differ": "^1.0.0",
   "@egjs/vue-children-differ": "^1.0.0",
+  "uuid": "^8.3.2",
   "vue-property-decorator": "^8.1.0"
  },
  "devDependencies": {
@@ -40,13 +46,14 @@
   "@egjs/flicking-plugins": "^3.1.0",
   "@types/chai": "^4.1.0",
   "@types/mocha": "^5.2.4",
+  "@types/uuid": "^8.3.0",
   "@vue/cli-plugin-typescript": "^3.7.0",
   "@vue/cli-plugin-unit-mocha": "^3.7.0",
   "@vue/cli-service": "^3.7.0",
   "@vue/test-utils": "1.0.0-beta.29",
   "chai": "^4.1.2",
   "rollup-plugin-vue": "^5.0.0",
-  "typescript": "^3.4.3",
+  "typescript": "^4.1.5",
   "vue": "^2.6.10",
   "vue-class-component": "^7.0.2",
   "vue-cli-plugin-p11n": "^0.3.0",

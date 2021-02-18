@@ -22,7 +22,7 @@
     <h2>Left Align</h2>
     <h2>hanger: 0, anchor: 0</h2>
     <div class="hanger hanger1"></div>
-    <flicking class="flicking flicking1" :options="{ hanger: 0, anchor: 0 }">
+    <flicking class="flicking flicking1" :options="{ align: { camera: 0, panel: 0 } }">
       <div class="panel0"><div class="anchor"></div></div>
       <div class="panel1"><div class="anchor"></div></div>
       <div class="panel2"><div class="anchor"></div></div>
@@ -35,13 +35,14 @@
     <h2>Custom Align</h2>
     <h3>hanger: 30%, anchor: 50px</h3>
     <div class="hanger hanger2"></div>
-    <flicking class="flicking flicking2" :options="{ hanger: '30%', anchor: '50px' }">
-      <div class="panel0"><div class="anchor"></div></div>
+    <flicking class="flicking flicking2" :options="{ align: { camera: '30%', panel: '50px' } }">
+      <div class="panel0" :class="{ a: this.a }"><div class="anchor"></div></div>
       <div class="panel1"><div class="anchor"></div></div>
       <div class="panel2"><div class="anchor"></div></div>
       <div class="panel3"><div class="anchor"></div></div>
       <div class="panel4"><div class="anchor"></div></div>
     </flicking>
+    <button @click="() => this.a = false">BUTTON</button>
     <div class="pagination pagination2"></div>
     <pre><code class="hljs html" data-script="flicking2">{{ code2 }}</code></pre>
   </div>
@@ -51,6 +52,8 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component({})
 export default class Align extends Vue {
+  public a = true;
+
   public mounted() {
     document.querySelectorAll('.hljs').forEach((block) => {
       (window as any).hljs.highlightBlock(block);

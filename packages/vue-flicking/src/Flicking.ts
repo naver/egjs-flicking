@@ -2,22 +2,19 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-
-import NativeFlicking, { Plugin, FlickingOptions, DestroyOption, withFlickingMethods, DEFAULT_OPTIONS } from "@egjs/flicking";
+import Flicking, { EVENTS, ExternalRenderer, FlickingOptions } from "../../../dist/flicking.esm.js";
 import ChildrenDiffer from "@egjs/vue-children-differ";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { CreateElement, VNodeData, VNode } from "vue";
-import { FlickingType } from "./types";
+import * as uuid from "uuid";
 
 @Component({
   directives: {
     "children-differ": ChildrenDiffer,
   },
 })
-class Flicking extends Vue {
-  // Tag of the wrapper element
-  @Prop({ type: String, default: "div", required: false }) tag!: string;
+class VueFlicking extends Vue {
   // Tag of the viewport element
   @Prop({ type: String, default: "div", required: false }) viewportTag!: string;
   // Tag of the camera element
@@ -25,32 +22,27 @@ class Flicking extends Vue {
   @Prop({ type: Object, default: () => ({}), required: false }) options!: Partial<FlickingOptions>;
   @Prop({ type: Array, default: () => ([]), required: false }) plugins!: Plugin[];
 
-  // Following decorator will inject native Flicking's method into Vue-Flicking
-  @withFlickingMethods
-  private $_nativeFlicking!: NativeFlicking;
-  private $_pluginsDiffer!: ListDiffer<Plugin>;
-  private $_cloneCount!: number;
-  private $_slotDiffer!: ListDiffer<VNode>;
+  private _initialized = false;
+  private _nativeFlicking!: Flicking;
+  private _pluginsDiffer!: ListDiffer<Plugin>;
+  private _slotDiffer!: ListDiffer<VNode>;
 
   public mounted() {
-    this.$_pluginsDiffer = new ListDiffer<Plugin>();
-    this.$_cloneCount = 0;
+    this._pluginsDiffer = new ListDiffer<Plugin>();
 
     const options = {...this.options, ...{ renderExternal: true }};
-    this.$_nativeFlicking = new NativeFlicking(
-      this.$el as HTMLElement,
-      {
-        ...options,
-        framework: "vue",
-        frameworkVersion: Vue.version,
-      } as object,
-    );
+    const viewportEl = this.$el as HTMLElement;
+    this._nativeFlicking = new Flicking(viewportEl, options);
 
-    const slots = this.$_getSlots();
-    this.$_slotDiffer = new ListDiffer<VNode>(slots, vnode => vnode.key!);
+    window.f = this._nativeFlicking;
 
-    this.$_bindEvents();
-    this.$_checkUpdate();
+    const slots = this._getSlots();
+    this._slotDiffer = new ListDiffer<VNode>(slots, vnode => vnode.key!);
+
+    this._bindEvents();
+    this._checkPlugins();
+
+    this._initialized = true;
 
     if (this.options.renderOnlyVisible) {
       // Should update once to update visibles
@@ -59,19 +51,21 @@ class Flicking extends Vue {
   }
 
   public beforeMount() {
-    this.$_fillKeys();
+    this._fillKeys();
+    this._fillClasses();
   }
 
   public beforeUpdate() {
-    this.$_fillKeys();
+    this._fillKeys();
+    this._fillClasses();
   }
 
   public beforeDestroy() {
-    this.$_nativeFlicking.destroy({ preserveUI: true });
+    this._nativeFlicking.destroy();
   }
 
   public render(h: CreateElement) {
-    const classPrefix = this.options.classPrefix || DEFAULT_OPTIONS.classPrefix;
+    const classPrefix = "flicking";
     const viewportData: VNodeData = {
       class: {},
     };
@@ -82,44 +76,40 @@ class Flicking extends Vue {
     viewportData.class[`${classPrefix}-viewport`] = true;
     cameraData.class[`${classPrefix}-camera`] = true;
 
-    const panels = this.$_getPanels(h);
+    const panels = this._getPanelElements(h);
 
-    return h(this.tag,
-      [h(this.viewportTag, viewportData,
-        [h(this.cameraTag, cameraData,
-          panels,
-        )],
+    return h(this.viewportTag, viewportData,
+      [h(this.cameraTag, cameraData,
+        panels,
       )],
-    );
+    )
   }
 
   public onUpdate(diffResult: DiffResult<HTMLElement>) {
-    const flicking = this.$_nativeFlicking;
-    const newCloneCount = flicking.getCloneCount();
+    const flicking = this._nativeFlicking;
+    const renderer = flicking.renderer as unknown as ExternalRenderer;
 
-    this.$_nativeFlicking.sync(diffResult);
-    this.$_cloneCount = newCloneCount;
-    this.$nextTick(() => {
-      this.$_checkUpdate();
+    diffResult.removed.forEach(idx => {
+      renderer.remove(idx, 1);
     });
+
+    diffResult.ordered.forEach(idx => {
+
+    });
+
+    diffResult.added.forEach(idx => {
+      const el = diffResult.list[idx];
+      renderer.insert(idx, el);
+    })
+
+    this._checkPlugins();
   }
 
-  // overrides
-  public destroy(option: Partial<DestroyOption> = {}) {
-    this.$_nativeFlicking.destroy(option);
-  }
-
-  private $_checkUpdate() {
-    this.$_checkPlugins();
-    this.$_checkCloneCount();
-  }
-
-  private $_bindEvents() {
-    const events = Object.keys(NativeFlicking.EVENTS)
-      .map(key => NativeFlicking.EVENTS[key]);
+  private _bindEvents() {
+    const events = Object.values(EVENTS);
 
     events.forEach(eventName => {
-      this.$_nativeFlicking.on(eventName, (e: any) => {
+      this._nativeFlicking.on(eventName, (e: any) => {
         e.currentTarget = this;
         // Make events from camelCase to kebab-case
         this.$emit(eventName.replace(/([A-Z])/g, "-$1").toLowerCase(), e);
@@ -127,118 +117,68 @@ class Flicking extends Vue {
     });
 
     if (this.options.renderOnlyVisible) {
-      this.$_nativeFlicking.on(NativeFlicking.EVENTS.VISIBLE_CHANGE, e => {
+      this._nativeFlicking.on(EVENTS.VISIBLE_CHANGE, e => {
         this.$forceUpdate();
       });
     }
   }
 
-  private $_checkPlugins() {
-    const { list, added, removed, prevList } = this.$_pluginsDiffer.update(this.plugins);
+  private _checkPlugins() {
+    const { list, added, removed, prevList } = this._pluginsDiffer.update(this.plugins);
 
-    this.$_nativeFlicking.addPlugins(added.map(index => list[index]));
-    this.$_nativeFlicking.removePlugins(removed.map(index => prevList[index]));
+    this._nativeFlicking.addPlugins(added.map(index => list[index]));
+    this._nativeFlicking.removePlugins(removed.map(index => prevList[index]));
   }
 
-  private $_checkCloneCount(): void {
-    const prevCloneCount = this.$_cloneCount;
-    const newCloneCount = this.$_nativeFlicking.getCloneCount();
+  private _getPanelElements(h: CreateElement) {
+    const flicking = this._nativeFlicking;
+    const slots = this._getSlots();
 
-    if (prevCloneCount !== newCloneCount) {
-      this.$forceUpdate();
-    }
-  }
+    console.log(slots);
 
-  private $_getPanels(h: CreateElement) {
-    const flicking = this.$_nativeFlicking;
-    const wholeSlots = this.$_getSlots();
+    if (!this._initialized) return slots;
 
-    if (wholeSlots.length === 0) {
-      return [];
-    }
-
-    const lastIndex = flicking
-      ? flicking.getLastIndex()
-      : this.options.lastIndex || DEFAULT_OPTIONS.lastIndex;
-    const slots = wholeSlots.slice(0, lastIndex + 1);
     let panels: VNode[];
-
-    if (this.options.renderOnlyVisible && this.$_slotDiffer) {
-      const slotsDiff = this.$_slotDiffer.update(slots);
-      const panelCnt = slots.length;
-
-      flicking.beforeSync(slotsDiff);
-
-      const indexesToRender = flicking.getRenderingIndexes(slotsDiff);
-      panels = indexesToRender.map(index => {
-        if (index >= panelCnt) {
-          const relativeIndex = index % panelCnt;
-          const origSlot = slots[relativeIndex];
-
-          return this.$_cloneVNode(origSlot, h, Math.floor(index / panelCnt) - 1, relativeIndex);
-        } else {
-          return slots[index];
-        }
-      });
+    if (this.options.renderOnlyVisible) {
+      const indexesToRender = flicking.camera.visiblePanels.map(panel => panel.index);
+      panels = indexesToRender.map(index => slots[index]);
     } else {
-      panels = [...slots, ...this.$_getClonedVNodes()];
+      panels = slots;
     }
 
     return panels;
   }
 
-  private $_getSlots() {
+  private _getSlots() {
     // Only elements are allowed as panel
     return this.$slots.default
       ? this.$slots.default.filter(slot => slot.tag)
       : [];
   }
 
-  private $_getClonedVNodes() {
-    const h = this.$createElement;
-    const cloneCount = this.$_nativeFlicking
-      ? this.$_nativeFlicking.getCloneCount()
-      : 0;
-    const lastIndex = this.$_nativeFlicking
-      ? this.$_nativeFlicking.getLastIndex()
-      : this.options.lastIndex || DEFAULT_OPTIONS.lastIndex;
-    const slots = this.$_getSlots();
-    const children = slots.slice(0, lastIndex + 1);
-    const clones: VNode[] = [];
-
-    for (let cloneIndex = 0; cloneIndex < cloneCount; cloneIndex++) {
-      clones.push(...children.map((child, childIdx) => this.$_cloneVNode(child, h, cloneIndex, childIdx)));
-    }
-    return clones;
-  }
-
-  private $_cloneVNode(vnode: VNode, h: CreateElement, cloneIndex?: number, childIndex?: number): VNode {
-    const key = cloneIndex != null
-      ? `clone${cloneIndex}-${vnode.key != null ? vnode.key : childIndex}`
-      : undefined;
-    const clonedChilds = vnode.children
-      ? vnode.children.map(child => this.$_cloneVNode(child, h))
-      : undefined;
-    const clone = h(vnode.tag, vnode.data, clonedChilds);
-    clone.text = vnode.text;
-    clone.isComment = vnode.isComment;
-    clone.componentOptions = vnode.componentOptions;
-    clone.context = vnode.context;
-    clone.ns = vnode.ns;
-    clone.isStatic = vnode.isStatic;
-    clone.key = key;
-
-    return clone;
-  }
-
-  private $_fillKeys() {
-    this.$_getSlots().forEach((node, index) => {
+  private _fillKeys() {
+    this._getSlots().forEach(node => {
       if (node.key == null) {
-        node.key = `${node.tag}-${index}`;
+        node.key = uuid.v1();
+      }
+    });
+  }
+
+  private _fillClasses() {
+    this._getSlots().forEach(node => {
+      if (node.data?.class) {
+        node.data.class["flicking-panel"] = true;
+      } else if (node.data) {
+        node.data.class = {
+          "flicking-panel": true
+        };
+      } else {
+        node.data = {
+          class: "flicking-panel"
+        };
       }
     });
   }
 }
 
-interface Flicking extends FlickingType<Flicking> {}
-export default Flicking;
+export default VueFlicking;

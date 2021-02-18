@@ -10,7 +10,7 @@ import Viewport from "./core/Viewport";
 import Panel from "./core/Panel";
 import { Control, FreeControl, SnapControl } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
-import { RawRenderer, Renderer, VisibleRenderer } from "./renderer";
+import { ExternalRenderer, RawRenderer, Renderer, RendererOptions, VisibleRenderer } from "./renderer";
 
 import { EVENTS, ALIGN, MOVE_TYPE } from "~/const/external";
 import * as ERROR from "~/const/error";
@@ -100,6 +100,7 @@ export interface FlickingOptions {
   // OTHERS
   autoInit: boolean;
   autoResize: boolean;
+  renderExternal: boolean;
 }
 
 /**
@@ -151,6 +152,7 @@ class Flicking extends Component<FlickingEvents> {
   private _renderOnlyVisible: FlickingOptions["renderOnlyVisible"];
   private _autoResize: FlickingOptions["autoResize"];
   private _autoInit: FlickingOptions["autoInit"];
+  private _renderExternal: FlickingOptions["renderExternal"];
 
   // Internal State
   private _initialized: boolean;
@@ -192,6 +194,7 @@ class Flicking extends Component<FlickingEvents> {
   // OTHERS
   public get autoInit() { return this._autoInit; }
   public get autoResize() { return this._autoResize; }
+  public get renderExternal() { return this._renderExternal; }
 
   // Options Setter
   // UI / LAYOUT
@@ -246,7 +249,8 @@ class Flicking extends Component<FlickingEvents> {
     isConstantSize = false,
     renderOnlyVisible = false,
     autoInit = true,
-    autoResize = true
+    autoResize = true,
+    renderExternal = false
   }: Partial<FlickingOptions> = {}) {
     super();
 
@@ -275,6 +279,7 @@ class Flicking extends Component<FlickingEvents> {
     this._renderOnlyVisible = renderOnlyVisible;
     this._autoResize = autoResize;
     this._autoInit = autoInit;
+    this._renderExternal = renderExternal;
 
     // Create core components
     this._viewport = new Viewport(getElement(root));
@@ -673,12 +678,23 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   private _createRenderer(): Renderer {
-    const rendererOption = { align: this._align };
+    const rendererOptions = { align: this._align };
 
+    if (this._renderExternal) {
+      return new ExternalRenderer({
+        ...rendererOptions,
+        actualRenderer: this._createActualRenderer(rendererOptions)
+      });
+    }
+
+    return this._createActualRenderer(rendererOptions);
+  }
+
+  private _createActualRenderer(rendererOptions: RendererOptions): Renderer {
     if (this._renderOnlyVisible) {
-      return new VisibleRenderer(rendererOption);
-    } else {
-      return new RawRenderer(rendererOption);
+      return new VisibleRenderer(rendererOptions);
+    }else {
+      return new RawRenderer(rendererOptions);
     }
   }
 

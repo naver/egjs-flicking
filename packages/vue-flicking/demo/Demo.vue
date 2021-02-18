@@ -31,6 +31,7 @@ import { Component, Vue } from "vue-property-decorator";
 export default class Demo extends Vue {}
 </script>
 <style>
+  @import url("../../../dist/flicking.css");
   @import url('https://fonts.googleapis.com/css?family=Nanum+Gothic&subset=korean');
   body, em, i {
     font-family: 'Helvetica Neue', sans-serif;

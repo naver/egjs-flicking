@@ -1,5 +1,5 @@
 import { VueConstructor } from "vue";
-import Flicking from "./Flicking";
+import VueFlicking from "./Flicking";
 
 declare global {
   interface Window {
@@ -9,11 +9,11 @@ declare global {
 
 const version = "#__VERSION__#";
 const install = (Vue: VueConstructor): void => {
-  Vue.component("Flicking", Flicking);
+  Vue.component("Flicking", VueFlicking);
 };
 
 const plugin = {
-  Flicking,
+  VueFlicking: Flicking,
   install,
   version,
 };

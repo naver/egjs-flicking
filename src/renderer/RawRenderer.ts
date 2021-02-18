@@ -3,16 +3,57 @@
  * egjs projects are licensed under the MIT license
  */
 import Flicking from "~/Flicking";
-import Renderer from "~/renderer/Renderer";
+import Renderer, { RendererOptions } from "~/renderer/Renderer";
 import ElementPanel from "~/core/ElementPanel";
+import { ALIGN } from "~/const/external";
 import { getFlickingAttached, getMinusCompensatedIndex, includes, parseElement, toArray } from "~/utils";
 import { ElementLike } from "~/type/external";
-class RawRenderer extends Renderer {
+class RawRenderer implements Renderer {
+  // Internal States
+  protected _flicking: Flicking | null;
   protected _panels: ElementPanel[];
 
+  // Options
+  protected _align: RendererOptions["align"];
+
+  // Internal states Getter
+  public get panels() { return this._panels; }
+  public get panelCount() { return this._panels.length; }
+
+  // Options Getter
+  public get align() { return this._align; }
+
+  // Options Setter
+  public set align(val: RendererOptions["align"]) {
+    this._align = val;
+
+    const panelAlign = this._getPanelAlign();
+    this._panels.forEach(panel => { panel.align = panelAlign; });
+  }
+
+  public constructor({
+    align = ALIGN.CENTER
+  }: Partial<RendererOptions> = {}) {
+    this._align = align;
+    this._flicking = null;
+  }
+
   public init(flicking: Flicking): this {
-    super.init(flicking);
+    this._flicking = flicking;
     this._collectPanels();
+    return this;
+  }
+
+  public destroy(): void {
+    this._flicking = null;
+  }
+
+  public getPanel(index: number): ElementPanel | null {
+    return this._panels[index] || null;
+  }
+
+  public updatePanelSize(): this {
+    this._panels.forEach(panel => panel.resize());
     return this;
   }
 
@@ -197,6 +238,14 @@ class RawRenderer extends Renderer {
       (el: HTMLElement, index: number) => new ElementPanel({ flicking, el, index, align })
     );
     return this;
+  }
+
+  protected _getPanelAlign() {
+    const align = this._align;
+
+    return typeof align === "object"
+      ? (align as { panel: string | number }).panel
+      : align;
   }
 }
 
