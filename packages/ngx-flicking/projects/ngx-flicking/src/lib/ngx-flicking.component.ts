@@ -158,11 +158,13 @@ export class NgxFlickingComponent extends FlickingInterface
   ngOnDestroy() {
     if (this.flicking) {
       this.flicking.destroy();
+      this.flicking = null;
     }
   }
 
   onUpdate(diff: DiffResult<any>) {
-    // console.log('Result Callback : added: %o, removed: %o, changed: %o', diff.added, diff.removed, diff.changed);
+    if (!this.flicking) return;
+
     if (diff.added.length > 0 || diff.removed.length > 0 || diff.changed.length > 0) {
       this.flicking.sync(diff);
 
