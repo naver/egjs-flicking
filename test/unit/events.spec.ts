@@ -1,7 +1,7 @@
 import { SinonStatic } from "sinon";
 import Flicking from "../../src/Flicking";
 import { EVENTS, DIRECTION, MOVE_TYPE } from "../../src/consts";
-import { FlickingEvent, NeedPanelEvent, FlickingOptions } from "../../src/types";
+import { FlickingEvent, NeedPanelEvent, FlickingOptions, SelectEvent } from "../../src/types";
 import { horizontal, vertical } from "./assets/fixture";
 import { createFlicking, createHorizontalElement, cleanup, simulate, tick } from "./assets/utils";
 import { merge } from "../../src/utils";
@@ -1144,6 +1144,21 @@ describe("Events", () => {
         prevVisiblePanels = panels;
         return visiblePanelsNotRemoved;
       })).to.be.true;
+    });
+  });
+
+  describe("select event", () => {
+    it("should have property 'element' in it", async () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.full);
+
+      // When
+      await simulate(flickingInfo.element, { deltaX: 0, deltaY: 0, duration: 100 });
+
+      // Then
+      const selectEvent = flickingInfo.events.find(evt => evt.type === EVENTS.SELECT) as SelectEvent;
+
+      expect(selectEvent.element).to.be.an.instanceOf(HTMLElement);
     });
   });
 });
