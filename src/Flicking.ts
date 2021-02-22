@@ -453,6 +453,7 @@ class Flicking extends Component<{
         return {
           html: panel.getElement().outerHTML,
           index: panel.getIndex(),
+          position: panel.getPosition(),
         };
       });
 

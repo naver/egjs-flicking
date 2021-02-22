@@ -158,6 +158,7 @@ export interface FlickingStatus {
   panels: Array<{
     html: string;
     index: number;
+    position: number;
   }>;
   position: number;
 }

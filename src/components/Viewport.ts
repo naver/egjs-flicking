@@ -709,6 +709,7 @@ export default class Viewport {
     panels.forEach((panel, idx) => {
       const createdPanel = createdPanels[idx];
       createdPanel.setIndex(panel.index);
+      createdPanel.setPosition(panel.position);
       orderedPanels[panel.index] = createdPanel;
     });
     panelManager.replacePanels(orderedPanels, []);
