@@ -996,6 +996,7 @@ describe("Methods call", () => {
       expect(state.panels.length).equals(panelCount);
       expect(state.panels.every(panel => typeof panel.html === "string")).to.be.true;
       expect(state.panels.every(panel => typeof panel.index === "number")).to.be.true;
+      expect(state.panels.every(panel => typeof panel.position === "number")).to.be.true;
     });
 
     it("shouldn't return cloned panels", () => {
@@ -1082,6 +1083,28 @@ describe("Methods call", () => {
       // Then
       expect(flicking.getCurrentPanel()).not.to.be.null;
       expect(flicking.getCurrentPanel().getIndex()).equals(2);
+    });
+
+    it("can restore panel's position correctly", () => {
+      // Given
+      const { instance: flicking } = createFlicking(horizontal.fullN(3));
+      const panelSize = flicking.getPanel(0).getSize();
+      const panels = flicking.getAllPanels() as Panel[];
+      panels.forEach((panel, idx) => {
+        // Reset start position to -1000
+        panel.setPosition(-1000 + panelSize * idx);
+      });
+      flicking.moveTo(2, 0); // look at panel 2
+
+      // When
+      flicking.setStatus(flicking.getStatus());
+
+      // Then
+      const restoredPanels = flicking.getAllPanels() as Panel[];
+      expect(restoredPanels[0].getPosition()).to.equal(-1000);
+      expect(restoredPanels[1].getPosition()).to.equal(-1000 + panelSize);
+      expect(restoredPanels[2].getPosition()).to.equal(-1000 + 2 * panelSize);
+      expect((flicking as any).viewport.state.position).to.equal(flicking.getPanel(2).getPosition());
     });
 
     it("can restore panel's position correctly when getStatus is called from non-zero index panel", () => {
