@@ -394,12 +394,14 @@ export type SelectEvent = {
   type: string;
   index: number;
   panel: FlickingPanel | null;
+  element: HTMLElement;
   progress: number;
   isTrusted: boolean;
   holding: boolean;
   direction: ValueOf<Direction> | null;
   axesEvent?: any;
   currentTarget: Flicking;
+  stop: () => void;
 };
 
 /**

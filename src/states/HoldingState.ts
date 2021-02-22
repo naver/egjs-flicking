@@ -5,7 +5,7 @@
 
 import State from "./State";
 import { STATE_TYPE, EVENTS, DIRECTION } from "../consts";
-import { FlickingContext } from "../types";
+import { FlickingContext, SelectEvent } from "../types";
 
 class HoldingState extends State {
   public readonly type = STATE_TYPE.HOLDING;
@@ -93,10 +93,11 @@ class HoldingState extends State {
           : null;
 
       // Don't provide axes event, to use axes instance instead
-      triggerEvent(EVENTS.SELECT, null, true, {
+      triggerEvent<SelectEvent>(EVENTS.SELECT, releaseEvent, true, {
         direction, // Direction to the clicked panel
         index: clickedPanel.getIndex(),
         panel: clickedPanel,
+        element: clickedElement,
       });
     }
   }
