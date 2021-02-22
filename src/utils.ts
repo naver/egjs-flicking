@@ -211,6 +211,27 @@ export const circulatePosition = (pos: number, min: number, max: number) => {
   return pos;
 };
 
+export const find = <T>(array: T[], checker: (val: T) => boolean): T | null => {
+  for (const val of array) {
+    if (checker(val)) {
+      return val;
+    }
+  }
+
+  return null;
+};
+
+export const findRight = <T>(array: T[], checker: (val: T) => boolean): T | null => {
+  for (let idx = array.length - 1; idx >= 0; idx--) {
+    const val = array[idx];
+    if (checker(val)) {
+      return val;
+    }
+  }
+
+  return null;
+};
+
 // export const hasClass = (element: HTMLElement, className: string): boolean => {
 //   if (element.classList) {
 //     return element.classList.contains(className);

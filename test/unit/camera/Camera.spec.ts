@@ -64,6 +64,40 @@ describe("Camera", () => {
       expect(camera.size).not.to.equal(flicking.viewport.width);
       expect(camera.size).to.equal(flicking.viewport.height);
     });
+
+    describe("controlParams", () => {
+      it("should return current range", () => {
+        expect(new CameraImpl().controlParams.range).to.deep.equal(new CameraImpl().range);
+      });
+
+      it("should return current position", () => {
+        const camera = new CameraImpl();
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+
+        camera.init(flicking);
+        camera.lookAt(800);
+
+        expect(camera.controlParams.position).to.equal(800);
+      });
+
+      it("should always return circular as false", () => {
+        expect(new CameraImpl().controlParams.circular).to.be.false;
+      });
+    });
+
+    describe("visibleRange", () => {
+      it("should return visible range from current position", () => {
+        const camera = new CameraImpl({ align: ALIGN.CENTER });
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+
+        camera.init(flicking);
+        camera.updateAlignPos();
+        camera.lookAt(500);
+
+        expect(camera.visibleRange.min).to.equal(500 - flicking.viewport.width / 2);
+        expect(camera.visibleRange.max).to.equal(500 + flicking.viewport.width / 2);
+      });
+    });
   });
 
   describe("Methods", () => {
@@ -89,69 +123,6 @@ describe("Camera", () => {
         camera.init(flicking);
 
         expect(camera.element).to.equal(flicking.getElement().firstChild);
-      });
-    });
-
-    describe("getVisibleRange", () => {
-      it("should return visible range from current position", () => {
-        const camera = new CameraImpl({ align: ALIGN.CENTER });
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-
-        camera.init(flicking);
-        camera.updateAlignPos();
-        camera.lookAt(500);
-
-        expect(camera.getVisibleRange().min).to.equal(500 - flicking.viewport.width / 2);
-        expect(camera.getVisibleRange().max).to.equal(500 + flicking.viewport.width / 2);
-      });
-    });
-
-    describe("getPanelBelow", () => {
-      it("should throw a FlickingError with code NOT_ATTACHED_TO_FLICKING when it's not initialized yet", () => {
-        const camera = new CameraImpl();
-
-        expect(() => camera.getPanelBelow())
-          .to.throw(FlickingError)
-          .with.property("code", ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
-      });
-
-      it("should return null when there're no panels", () => {
-        const camera = new CameraImpl();
-        const flicking = createFlicking(El.viewport().add(El.camera()));
-
-        camera.init(flicking);
-
-        expect(camera.getPanelBelow()).to.be.null;
-      });
-
-      it("should return correct panel underneath it", () => {
-        const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-
-        camera.init(flicking);
-        camera.lookAt(flicking.getPanel(1).position);
-
-        expect(camera.getPanelBelow()).to.equal(flicking.getPanel(1));
-      });
-    });
-
-    describe("getControlParamters", () => {
-      it("should return current range", () => {
-        expect(new CameraImpl().getControlParameters().range).to.deep.equal(new CameraImpl().range);
-      });
-
-      it("should return current position", () => {
-        const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-
-        camera.init(flicking);
-        camera.lookAt(800);
-
-        expect(camera.getControlParameters().position).to.equal(800);
-      });
-
-      it("should always return circular as false", () => {
-        expect(new CameraImpl().getControlParameters().circular).to.be.false;
       });
     });
 
@@ -279,6 +250,60 @@ describe("Camera", () => {
       });
     });
 
+    describe("findAnchorIncludePosition", () => {
+      it("should return panel at given position", () => {
+        const camera = new CameraImpl();
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const panels = flicking.getAllPanels();
+
+        camera.init(flicking);
+        camera.updateAnchors();
+
+        expect(camera.findAnchorIncludePosition(panels[0].position).panel).to.equal(panels[0]);
+        expect(camera.findAnchorIncludePosition(panels[1].position).panel).to.equal(panels[1]);
+        expect(camera.findAnchorIncludePosition(panels[2].position).panel).to.equal(panels[2]);
+      });
+
+      it("should return null when no panel includes given position", () => {
+        const camera = new CameraImpl();
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const panels = flicking.getAllPanels();
+
+        camera.init(flicking);
+        camera.updateAnchors();
+
+        expect(camera.findAnchorIncludePosition(-999999999)).to.be.null;
+        expect(camera.findAnchorIncludePosition(999999999)).to.be.null;
+        expect(camera.findAnchorIncludePosition(panels[2].range.max + 1)).to.be.null;
+        expect(camera.findAnchorIncludePosition(panels[0].range.min - 1)).to.be.null;
+      });
+    });
+
+    describe("findNearestAnchor", () => {
+      it("should return null when there're no panels", () => {
+        const camera = new CameraImpl();
+        const flicking = createFlicking(El.viewport().add(El.camera()));
+
+        camera.init(flicking);
+        camera.updateAnchors();
+
+        expect(camera.findNearestAnchor(0)).to.be.null;
+      });
+
+      it("should return correct panel underneath it", () => {
+        const camera = new CameraImpl();
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+
+        camera.init(flicking);
+        camera.updateAnchors();
+        camera.lookAt(flicking.getPanel(1).position);
+
+        const nearestAnchor = camera.findNearestAnchor(camera.position);
+        expect(nearestAnchor.panel).to.equal(flicking.getPanel(1));
+        expect(nearestAnchor.position).to.equal(flicking.getPanel(1).position);
+      });
+    });
+
     describe("clampToReachablePosition", () => {
       it("should return position if it's inside current range", () => {
         const camera = new CameraImpl();
@@ -291,6 +316,86 @@ describe("Camera", () => {
         camera.range = { min: 0, max: 200 };
         expect(camera.clampToReachablePosition(-100)).to.equal(0);
         expect(camera.clampToReachablePosition(201)).to.equal(200);
+      });
+    });
+
+    describe("canReach", () => {
+      it("should return false when panel's position is outside of camera range", () => {
+        const camera = new CameraImpl();
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const panel = flicking.getPanel(0);
+
+        camera.init(flicking);
+        camera.updateRange();
+
+        sinon.stub(panel, "position")
+          .get(() => camera.range.max + 1);
+
+        expect(camera.canReach(panel)).to.be.false;
+
+        sinon.stub(panel, "position")
+          .get(() => camera.range.min - 1);
+
+        expect(camera.canReach(panel)).to.be.false;
+      });
+
+      it("should return true when panel's position is inside of camera range", () => {
+        const camera = new CameraImpl();
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const panel = flicking.getPanel(0);
+
+        camera.init(flicking);
+        camera.updateRange();
+
+        sinon.stub(panel, "position")
+          .get(() => camera.range.max);
+
+        expect(camera.canReach(panel)).to.be.true;
+
+        sinon.stub(panel, "position")
+          .get(() => camera.range.min);
+
+        expect(camera.canReach(panel)).to.be.true;
+      });
+    });
+
+    describe("canSee", () => {
+      it("should return true when panel is inside of camera's visible range", () => {
+        const camera = new CameraImpl();
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const panel = flicking.getPanel(0);
+
+        camera.init(flicking);
+        camera.updateRange();
+
+        sinon.stub(panel, "position")
+          .get(() => camera.visibleRange.min);
+
+        expect(camera.canSee(panel)).to.be.true;
+
+        sinon.stub(panel, "position")
+          .get(() => camera.visibleRange.max);
+
+        expect(camera.canSee(panel)).to.be.true;
+      });
+
+      it("should return false when panel is outside of camera's visible range", () => {
+        const camera = new CameraImpl();
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const panel = flicking.getPanel(0);
+
+        camera.init(flicking);
+        camera.updateRange();
+
+        sinon.stub(panel, "range")
+          .get(() => ({ min: camera.visibleRange.min - 1, max: camera.visibleRange.min - 1 }));
+
+        expect(camera.canSee(panel)).to.be.false;
+
+        sinon.stub(panel, "range")
+          .get(() => ({ min: camera.visibleRange.max + 1, max: camera.visibleRange.max + 1 }));
+
+        expect(camera.canSee(panel)).to.be.false;
       });
     });
 

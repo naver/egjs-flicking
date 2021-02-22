@@ -59,9 +59,10 @@ class AnimatingState extends State {
     //   viewport.setCurrentPanel(viewport.getNearestPanel() as Panel);
     // }
 
-    const panelBelow = flicking.camera.getPanelBelow();
-    if (flicking.horizontal && flicking.adaptive && panelBelow) {
-      flicking.viewport.setSize({ height: panelBelow.bbox.height });
+    const camera = flicking.camera;
+    const anchorBelow = camera.findAnchorIncludePosition(camera.position);
+    if (flicking.horizontal && flicking.adaptive && anchorBelow) {
+      flicking.viewport.setSize({ height: anchorBelow.panel.bbox.height });
     }
 
     transitTo(STATE_TYPE.IDLE);

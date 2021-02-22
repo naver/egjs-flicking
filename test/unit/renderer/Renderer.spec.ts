@@ -6,7 +6,9 @@ import * as ERROR from "~/const/error";
 import El from "../helper/El";
 import { createFlicking, range } from "../helper/test-util";
 
-class RendererImpl extends Renderer {}
+class RendererImpl extends Renderer {
+  public render() { return this; }
+}
 
 describe("Renderer", () => {
   describe("Properties", () => {
@@ -76,45 +78,6 @@ describe("Renderer", () => {
         expect(renderer.getPanel(0).index).to.equal(0);
         expect(renderer.getPanel(1).index).to.equal(1);
         expect(renderer.getPanel(2).index).to.equal(2);
-      });
-    });
-
-    describe("getPanelFromPosition", () => {
-      it("should throw a FlickingError with code NOT_ATTACHED_TO_FLICKING when it's not initialized yet", () => {
-        const renderer = new RendererImpl();
-
-        expect(() => renderer.getPanelFromPosition(0))
-          .to.throw(FlickingError)
-          .with.property("code", ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
-      });
-
-      it("should return panel at given position", () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-        const renderer = new RendererImpl().init(flicking).updatePanelSize();
-        const panels = renderer.panels;
-
-        expect(renderer.getPanelFromPosition(panels[0].position)).to.equal(panels[0]);
-        expect(renderer.getPanelFromPosition(panels[1].position)).to.equal(panels[1]);
-        expect(renderer.getPanelFromPosition(panels[2].position)).to.equal(panels[2]);
-      });
-
-      it("should return null when no panel includes given position", () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-        const renderer = new RendererImpl().init(flicking).updatePanelSize();
-
-        expect(renderer.getPanelFromPosition(-999999999)).to.be.null;
-        expect(renderer.getPanelFromPosition(999999999)).to.be.null;
-        expect(renderer.getPanelFromPosition(renderer.panels[2].range.max + 1)).to.be.null;
-        expect(renderer.getPanelFromPosition(renderer.panels[0].range.min - 1)).to.be.null;
-      });
-
-      it("should return panel at toggled position if circular is enabled", () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { circular: true });
-        const renderer = new RendererImpl().init(flicking).updatePanelSize();
-        const panels = renderer.panels;
-
-        expect(renderer.getPanelFromPosition(panels[2].range.max + 1)).to.equal(panels[0]);
-        expect(renderer.getPanelFromPosition(panels[0].range.min - 1)).to.equal(panels[2]);
       });
     });
 

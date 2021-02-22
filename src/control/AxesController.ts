@@ -91,7 +91,7 @@ class AxesController {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;
     const axes = this._axes!;
-    const controlParams = camera.getControlParameters();
+    const controlParams = camera.controlParams;
     const axis = axes.axis[AXES.POSITION_KEY];
 
     axis.circular = [controlParams.circular, controlParams.circular];

@@ -4,9 +4,10 @@
  */
 import Camera from "~/camera/Camera";
 import Panel from "~/core/Panel";
+import AnchorPoint from "~/core/AnchorPoint";
 import { DIRECTION } from "~/const/external";
 import { ValueOf } from "~/type/internal";
-import { getFlickingAttached } from "~/utils";
+import { circulatePosition, getFlickingAttached } from "~/utils";
 
 class CircularCamera extends Camera {
   private _circularOffset: number = 0;
@@ -19,7 +20,68 @@ class CircularCamera extends Camera {
     };
   } = {};
 
-  public get circularEnabled() { return this._circularEnabled; }
+  public get controlParams() { return { range: this._range, position: this._position, circular: this._circularEnabled }; }
+
+  public getPrevAnchor(anchor: AnchorPoint): AnchorPoint | null {
+    if (!this._circularEnabled || anchor.index !== 0) return super.getPrevAnchor(anchor);
+
+    const anchors = this._anchors;
+    const rangeDiff = this.rangeDiff;
+    const lastAnchor = anchors[anchors.length - 1];
+
+    return new AnchorPoint({
+      index: lastAnchor.index,
+      position: lastAnchor.position - rangeDiff,
+      panel: lastAnchor.panel
+    });
+  }
+
+  public getNextAnchor(anchor: AnchorPoint): AnchorPoint | null {
+    const anchors = this._anchors;
+
+    if (!this._circularEnabled || anchor.index !== anchors.length - 1) return super.getNextAnchor(anchor);
+
+    const rangeDiff = this.rangeDiff;
+    const firstAnchor = anchors[0];
+
+    return new AnchorPoint({
+      index: firstAnchor.index,
+      position: firstAnchor.position + rangeDiff,
+      panel: firstAnchor.panel
+    });
+  }
+
+  public findAnchorIncludePosition(position: number): AnchorPoint | null {
+    if (!this._circularEnabled) return super.findAnchorIncludePosition(position);
+
+    const range = this._range;
+    const positionInRange = circulatePosition(position, range.min, range.max);
+    const anchorInRange = super.findAnchorIncludePosition(positionInRange);
+
+    if (!anchorInRange) return null;
+
+    const rangeDiff = this.rangeDiff;
+
+    if (position < range.min) {
+      const loopCount = -Math.floor((range.min - position) / rangeDiff) - 1;
+
+      return new AnchorPoint({
+        index: anchorInRange.index,
+        position: anchorInRange.position + rangeDiff * loopCount,
+        panel: anchorInRange.panel
+      });
+    } else if (position > range.max) {
+      const loopCount = Math.floor((position - range.max) / rangeDiff) + 1;
+
+      return new AnchorPoint({
+        index: anchorInRange.index,
+        position: anchorInRange.position + rangeDiff * loopCount,
+        panel: anchorInRange.panel
+      });
+    }
+
+    return anchorInRange;
+  }
 
   public clampToReachablePosition(position: number): number {
     // Basically all position is reachable for circular camera
@@ -28,11 +90,33 @@ class CircularCamera extends Camera {
       : super.clampToReachablePosition(position);
   }
 
-  public getControlParameters() {
-    return {
-      ...super.getControlParameters(),
-      circular: this._circularEnabled
-    };
+  public canReach(panel: Panel): boolean {
+    if (panel.element.parentElement !== this._el) return false;
+
+    return this._circularEnabled
+      // Always reachable on circular mode
+      ? true
+      : super.canReach(panel);
+  }
+
+  public canSee(panel: Panel): boolean {
+    const range = this._range;
+    const rangeDiff = this.rangeDiff;
+    const visibleRange = this.visibleRange;
+    const visibleInCurrentRange = super.canSee(panel);
+
+    if (!this._circularEnabled) {
+      return visibleInCurrentRange;
+    }
+
+    // Check looped visible area for circular case
+    if (visibleRange.min < range.min) {
+      return visibleInCurrentRange || panel.includeRange(visibleRange.min + rangeDiff, visibleRange.max + rangeDiff, false);
+    } else if (visibleRange.max > range.max) {
+      return visibleInCurrentRange || panel.includeRange(visibleRange.min - rangeDiff, visibleRange.max - rangeDiff, false);
+    }
+
+    return visibleInCurrentRange;
   }
 
   public updateRange() {
@@ -131,7 +215,6 @@ class CircularCamera extends Camera {
       }, []);
 
       flicking.renderer.movePanelElementsToEnd(passedPanels);
-
       this._circularOffset -= this._calcPanelAreaSum(passedPanels);
     } else {
       const passedPanels = togglePoints.reduce((passed: Panel[], togglePoint: number) => {
@@ -148,9 +231,10 @@ class CircularCamera extends Camera {
       }, []);
 
       flicking.renderer.movePanelElementsToStart(passedPanels);
-
       this._circularOffset += this._calcPanelAreaSum(passedPanels);
     }
+
+    flicking.renderer.render();
 
     return super.lookAt(pos);
   }
@@ -159,9 +243,11 @@ class CircularCamera extends Camera {
     const el = this._el;
     const flicking = getFlickingAttached(this._flicking, "Camera");
 
+    const actualPosition = this._position - this._alignPos - this._offset + this._circularOffset;
+
     el.style[this._transform] = flicking.horizontal
-      ? `translate(${-(this._position - this._alignPos + this._circularOffset)}px)`
-      : `translate(0, ${-(this._position - this._alignPos + this._circularOffset)}px)`;
+      ? `translate(${-actualPosition}px)`
+      : `translate(0, ${-actualPosition}px)`;
   }
 
   protected _resetInternalValues() {

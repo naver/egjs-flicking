@@ -66,10 +66,8 @@ abstract class Control {
     return this;
   }
 
-  public checkActivePanelIsRemoved(): this {
-    if (this._activePanel?.isRemoved()) {
-      this._activePanel = null;
-    }
+  public resetActivePanel(): this {
+    this._activePanel = null;
 
     return this;
   }
@@ -78,13 +76,22 @@ abstract class Control {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;
 
-    if (!panel.isReachable()) {
-      return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(panel.position), ERROR.CODE.POSITION_NOT_REACHABLE));
+    let position = panel.position;
+
+    if (!camera.canReach(panel)) {
+      const nearestAnchor = camera.findNearestAnchor(position);
+
+      if (!nearestAnchor) {
+        return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(panel.position), ERROR.CODE.POSITION_NOT_REACHABLE));
+      }
+
+      // Override position & panel if that panel is not reachable
+      position = nearestAnchor.position;
+      panel = nearestAnchor.panel;
     }
 
     this._triggerIndexChangeEvent(panel, panel.position, axesEvent);
 
-    const position = camera.clampToReachablePosition(panel.position);
     return this._animateToPosition({ position, duration, newActivePanel: panel, axesEvent });
   }
 

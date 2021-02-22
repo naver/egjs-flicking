@@ -5,7 +5,7 @@
 import Renderer from "./Renderer";
 
 class RawRenderer extends Renderer {
-
+  public render() { return this; }
 }
 
 export default RawRenderer;

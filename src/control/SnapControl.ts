@@ -4,11 +4,11 @@
  */
 import { OnRelease } from "@egjs/axes";
 
-import Panel from "~/core/Panel";
 import Control from "~/control/Control";
 import FlickingError from "~/core/FlickingError";
 import { getFlickingAttached } from "~/utils";
 import * as ERROR from "~/const/error";
+import { Panel } from "~/core";
 
 class SnapControl extends Control {
   public async moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
@@ -16,42 +16,46 @@ class SnapControl extends Control {
     const camera = flicking.camera;
     const activePanel = this._activePanel;
 
-    const targetPos = camera.clampToReachablePosition(position);
-    const panelAtPosition = flicking.renderer.getPanelFromPosition(targetPos);
+    const clampedPosition = camera.clampToReachablePosition(position);
+    const anchorAtPosition = camera.findNearestAnchor(clampedPosition);
 
-    if (!panelAtPosition || !activePanel) {
+    if (!anchorAtPosition || !activePanel) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE));
     }
 
+    const panelAtPosition = anchorAtPosition.panel;
     const prevPos = activePanel.position;
-    const isOverThreshold = Math.abs(position - prevPos) >= flicking.threshold;
-    const adjacentPanel = (position > prevPos) ? activePanel.next() : activePanel.prev();
 
+    const isOverThreshold = Math.abs(position - prevPos) >= flicking.threshold;
+    const adjacentAnchor = (position > prevPos)
+      ? camera.getNextAnchor(anchorAtPosition)
+      : camera.getPrevAnchor(anchorAtPosition);
+
+    let targetPos: number;
     let targetPanel: Panel;
 
-    if (isOverThreshold && panelAtPosition.index !== activePanel.index) {
+    if (isOverThreshold && anchorAtPosition.position !== activePanel.position) {
+      // Move to anchor at position
       targetPanel = panelAtPosition;
-    } else if (isOverThreshold && adjacentPanel && adjacentPanel.isReachable()) {
-      targetPanel = adjacentPanel;
-
-      // Adjust position to adjacentPanel's position
-      const cameraRange = camera.range;
-      const cameraRangeSize = cameraRange.max - cameraRange.min;
-
-      if (position > prevPos && adjacentPanel.index < activePanel.index) {
-        position = adjacentPanel.position + cameraRangeSize;
-      } else if (position < prevPos && adjacentPanel.index > activePanel.index) {
-        position = adjacentPanel.position - cameraRangeSize;
-      }
+      targetPos = anchorAtPosition.position;
+    } else if (isOverThreshold && adjacentAnchor) {
+      // Move to adjacent anchor
+      targetPanel = adjacentAnchor.panel;
+      targetPos = adjacentAnchor.position;
     } else {
+      // Restore to active panel
+      targetPos = activePanel.position;
       targetPanel = activePanel;
     }
 
     this._triggerIndexChangeEvent(targetPanel, position, axesEvent);
 
-    const panelSnapPosition = targetPanel.getSnapPosition(position);
-    const targetPanelPosition = camera.clampToReachablePosition(panelSnapPosition);
-    return this._animateToPosition({ position: targetPanelPosition, duration, newActivePanel: targetPanel, axesEvent });
+    return this._animateToPosition({
+      position: targetPos,
+      duration,
+      newActivePanel: targetPanel,
+      axesEvent
+    });
   }
 }
 

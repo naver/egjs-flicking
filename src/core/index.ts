@@ -5,9 +5,11 @@
 import Panel from "./Panel";
 import Viewport from "./Viewport";
 import FlickingError from "./FlickingError";
+import AnchorPoint from "./AnchorPoint";
 
 export {
   Panel,
   Viewport,
-  FlickingError
+  FlickingError,
+  AnchorPoint
 };
