@@ -10,7 +10,9 @@ import Viewport from "./core/Viewport";
 import Panel from "./core/Panel";
 import { Control, FreeControl, SnapControl } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
-import { ExternalRenderer, RawRenderer, Renderer, RendererOptions, VisibleRenderer } from "./renderer";
+import { RawRenderer, Renderer, RendererOptions, VisibleRenderer } from "./renderer";
+import ElementManipulator from "./renderer/ElementManipulator";
+import ExternalManipulator from "./renderer/ExternalManipulator";
 
 import { EVENTS, ALIGN, MOVE_TYPE } from "~/const/external";
 import * as ERROR from "~/const/error";
@@ -165,6 +167,14 @@ class Flicking extends Component<FlickingEvents> {
   // Internal States
   public get initialized() { return this._initialized; }
   public get circularEnabled() { return this._camera.controlParams.circular; }
+  public get index() { return this._control.activeIndex; }
+  public get element() { return this._viewport.element; }
+  public get currentPanel() { return this._control.activePanel; }
+  public get panels() { return this._renderer.panels; }
+  public get panelCount() { return this._renderer.panelCount; }
+  public get visiblePanels() { return this._camera.visiblePanels; }
+  public get animating() { return this._control.animating; }
+  public get holding() { return this._control.holding; }
 
   // Options Getter
   // UI / LAYOUT
@@ -365,7 +375,7 @@ class Flicking extends Component<FlickingEvents> {
    * @param [duration=options.duration] Duration of the panel movement animation(unit: ms).<ko>패널 이동 애니메이션 진행 시간.(단위: ms)</ko>
    */
   public next(duration: number = this._duration) {
-    return this.moveTo(this._control.activePanel?.next()?.index ?? this.getPanelCount(), duration);
+    return this.moveTo(this._control.activePanel?.next()?.index ?? this._renderer.panelCount, duration);
   }
 
   /**
@@ -385,41 +395,11 @@ class Flicking extends Component<FlickingEvents> {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.INDEX_OUT_OF_RANGE(index, 0, panelCount - 1), ERROR.CODE.INDEX_OUT_OF_RANGE));
     }
 
-    if (this.isPlaying()) {
+    if (this._control.animating) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.ANIMATION_ALREADY_PLAYING, ERROR.CODE.ANIMATION_ALREADY_PLAYING));
     }
 
     return this._control.moveToPanel(panel, duration);
-  }
-
-  /**
-   * Return index of the current panel. `-1` if no panel exists.
-   *
-   * @ko 현재 패널의 인덱스 번호를 반환한다. 패널이 하나도 없을 경우 `-1`을 반환한다.
-   * @return Current panel's index, zero-based integer.<ko>현재 패널의 인덱스 번호. 0부터 시작하는 정수.</ko>
-   */
-  public getIndex(): number {
-    return this._control.activeIndex;
-  }
-
-  /**
-   * Return the wrapper element user provided in constructor.
-   *
-   * @ko 사용자가 생성자에서 제공한 래퍼 엘리먼트를 반환한다.
-   * @return Wrapper element user provided.<ko>사용자가 제공한 래퍼 엘리먼트.</ko>
-   */
-  public getElement(): HTMLElement {
-    return this._viewport.element;
-  }
-
-  /**
-   * Return current panel. `null` if no panel exists.
-   *
-   * @ko 현재 패널을 반환한다. 패널이 하나도 없을 경우 `null`을 반환한다.
-   * @return Current panel.<ko>현재 패널.</ko>
-   */
-  public getCurrentPanel(): Panel | null {
-    return this._control.activePanel;
   }
 
   /**
@@ -430,51 +410,6 @@ class Flicking extends Component<FlickingEvents> {
    */
   public getPanel(index: number): Panel | null {
     return this._renderer.getPanel(index);
-  }
-
-  /**
-   * Return all panels.
-   *
-   * @ko 모든 패널들을 반환한다.
-   * @param - Should include cloned panels or not.<ko>복사된 패널들을 포함할지의 여부.</ko>
-   * @return All panels.<ko>모든 패널들.</ko>
-   */
-  public getAllPanels(): Panel[] {
-    return this._renderer.panels;
-  }
-
-  /**
-   * Return the panels currently shown in viewport area.
-   *
-   * @ko 현재 뷰포트 영역에서 보여지고 있는 패널들을 반환한다.
-   * @return Panels currently shown in viewport area.<ko>현재 뷰포트 영역에 보여지는 패널들</ko>
-   */
-  public getVisiblePanels(): Panel[] {
-    return this._camera.visiblePanels;
-  }
-
-  /**
-   * Return length of original panels.
-   *
-   * @ko 원본 패널의 개수를 반환한다.
-   * @return Length of original panels.<ko>원본 패널의 개수</ko>
-   */
-  public getPanelCount(): number {
-    return this._renderer.panelCount;
-  }
-
-  /**
-   * Return panel movement animation.
-   *
-   * @ko 현재 패널 이동 애니메이션이 진행 중인지를 반환한다.
-   * @return Is animating or not.<ko>애니메이션 진행 여부.</ko>
-   */
-  public isPlaying(): boolean {
-    return this._control.animating;
-  }
-
-  public isHolding(): boolean {
-    return this._control.holding;
   }
 
   /**
@@ -569,7 +504,7 @@ class Flicking extends Component<FlickingEvents> {
 
     viewport.resize();
     renderer.updatePanelSize();
-    renderer.resetPanelElementOrder();
+    renderer.elementManipulator.resetPanelElementOrder(renderer.panels);
     camera.updateAlignPos();
     camera.updateRange();
     camera.updateAnchors();
@@ -608,7 +543,7 @@ class Flicking extends Component<FlickingEvents> {
    * flicking.append("\<div\>Panel 1\</div\>\<div\>Panel 2\</div\>"); // Appended at index 4, 5
    */
   public append(element: ElementLike | ElementLike[]): Panel[] {
-    return this._renderer.insert(this._renderer.panelCount, element);
+    return this.insert(this._renderer.panelCount, element);
   }
 
   /**
@@ -626,10 +561,14 @@ class Flicking extends Component<FlickingEvents> {
    * flicking.prepend("\<div\>Panel\</div\>"); // Prepended at index 0, pushing every panels behind it.
    */
   public prepend(element: ElementLike | ElementLike[]): Panel[] {
-    return this._renderer.insert(0, element);
+    return this.insert(0, element);
   }
 
   public insert(index: number, element: ElementLike | ElementLike[]): Panel[] {
+    if (this._renderExternal) {
+      throw new FlickingError(ERROR.MESSAGE.NOT_ALLOWED_IN_FRAMEWORK, ERROR.CODE.NOT_ALLOWED_IN_FRAMEWORK);
+    }
+
     return this._renderer.insert(index, element);
   }
 
@@ -642,6 +581,10 @@ class Flicking extends Component<FlickingEvents> {
    * @return Array of removed panels<ko>제거된 패널들의 배열</ko>
    */
   public remove(index: number, deleteCount: number = 1): Panel[] {
+    if (this._renderExternal) {
+      throw new FlickingError(ERROR.MESSAGE.NOT_ALLOWED_IN_FRAMEWORK, ERROR.CODE.NOT_ALLOWED_IN_FRAMEWORK);
+    }
+
     return this._renderer.remove(index, deleteCount);
   }
 
@@ -678,14 +621,14 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   private _createRenderer(): Renderer {
-    const rendererOptions = { align: this._align };
+    const elementManipulator = this._renderExternal
+      ? new ExternalManipulator()
+      : new ElementManipulator();
 
-    if (this._renderExternal) {
-      return new ExternalRenderer({
-        ...rendererOptions,
-        actualRenderer: this._createActualRenderer(rendererOptions)
-      });
-    }
+    const rendererOptions = {
+      align: this._align,
+      elementManipulator
+    };
 
     return this._createActualRenderer(rendererOptions);
   }

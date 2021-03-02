@@ -4,7 +4,6 @@
  */
 import RawRenderer from "~/renderer/RawRenderer";
 import Panel from "~/core/Panel";
-import ElementPanel from "~/core/ElementPanel";
 import { getFlickingAttached } from "~/utils";
 
 class VisibleRenderer extends RawRenderer {
@@ -12,9 +11,8 @@ class VisibleRenderer extends RawRenderer {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
     const camera = flicking.camera;
     const cameraElement = camera.element;
-    const visiblePanels = camera.visiblePanels as ElementPanel[];
-
-    const fragment = document.createDocumentFragment();
+    const visiblePanels = camera.visiblePanels;
+    const elementManipulator = this._elementManipulator;
 
     const visibleSortedByActualPosition = [...visiblePanels]
       .sort((a, b) => (a.position + a.offset) - (b.position + b.offset));
@@ -22,16 +20,9 @@ class VisibleRenderer extends RawRenderer {
     const offsetGtZero = this._panels.filter(panel => panel.offset > 0);
     const visibleOffsetLteZero = visiblePanels.filter(panel => panel.offset <= 0);
 
-    visibleSortedByActualPosition.forEach(panel => {
-      fragment.appendChild(panel.element);
-    });
-
     // Remove remaining(removed) elements
-    while (cameraElement.firstChild) {
-      cameraElement.removeChild(cameraElement.firstChild);
-    }
-
-    cameraElement.appendChild(fragment);
+    elementManipulator.removeAllChildNodes(cameraElement);
+    elementManipulator.insertPanelElements(visibleSortedByActualPosition, null);
 
     const invisiblePrevPanels = this._panels.slice(0, visibleOffsetLteZero[0]?.index ?? 0);
 

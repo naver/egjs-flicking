@@ -3,6 +3,7 @@
     <header>
       <div>
         <span>Features:</span>
+        <router-link to="/test">Test</router-link>
         <router-link to="/align">Align</router-link>
         <router-link to="/bound">Bound</router-link>
         <router-link to="/freeScroll">FreeScroll</router-link>

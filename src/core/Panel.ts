@@ -11,22 +11,25 @@ export interface PanelOptions {
   index: number;
   align: LiteralUnion<ValueOf<typeof ALIGN>> | number;
   flicking: Flicking;
+  el: HTMLElement;
 }
 
-abstract class Panel {
-  protected _flicking: Flicking;
-  protected _align: PanelOptions["align"];
+class Panel {
+  private _flicking: Flicking;
+  private _el: HTMLElement;
+  private _align: PanelOptions["align"];
 
   // Internal States
-  protected _index: number;
-  protected _size: { width: number; height: number };
-  protected _pos: { left: number; top: number };
-  protected _margin: { left: number; right: number; top: number; bottom: number };
-  protected _alignPos: number; // Actual align pos
-  protected _offset: number;
-  protected _removed: boolean;
+  private _index: number;
+  private _size: { width: number; height: number };
+  private _pos: { left: number; top: number };
+  private _margin: { left: number; right: number; top: number; bottom: number };
+  private _alignPos: number; // Actual align pos
+  private _offset: number;
+  private _removed: boolean;
 
   // Internal States Getter
+  public get element() { return this._el; }
   public get index() { return this._index; }
   public get bbox() { return { ...this._pos, ...this._size }; }
   public get position() { return (this._flicking.horizontal ? this._pos.left : this._pos.top) + this._alignPos; }
@@ -50,10 +53,12 @@ abstract class Panel {
   public set align(val: PanelOptions["align"]) { this._align = val; }
 
   public constructor({
+    el,
     index,
     align,
     flicking
   }: PanelOptions) {
+    this._el = el;
     this._index = index;
     this._flicking = flicking;
 
@@ -63,8 +68,34 @@ abstract class Panel {
     this._resetInternalStates();
   }
 
-  public abstract resize(): this;
-  public abstract contains(element: HTMLElement): boolean;
+  public resize(): this {
+    const el = this._el;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const elStyle = window.getComputedStyle(el) || (el as any).currentStyle as CSSStyleDeclaration;
+
+    this._size = {
+      width: el.offsetWidth,
+      height: el.offsetHeight
+    };
+    this._pos = {
+      left: el.offsetLeft,
+      top: el.offsetTop
+    };
+    this._margin = {
+      left: parseFloat(elStyle.marginLeft),
+      right: parseFloat(elStyle.marginRight),
+      top: parseFloat(elStyle.marginTop),
+      bottom: parseFloat(elStyle.marginBottom)
+    };
+
+    this._updateAlignPos();
+
+    return this;
+  }
+
+  public contains(element: HTMLElement): boolean {
+    return this._el.contains(element);
+  }
 
   public destroy(): void {
     this._resetInternalStates();
@@ -128,6 +159,18 @@ abstract class Panel {
     return this;
   }
 
+  public moveBy(val: number): this {
+    const flicking = this._flicking;
+
+    if (flicking.horizontal) {
+      this._pos.left += val;
+    } else {
+      this._pos.top += val;
+    }
+
+    return this;
+  }
+
   public increaseOffset(val: number): this {
     this._offset += val;
     return this;
@@ -143,12 +186,12 @@ abstract class Panel {
     return this;
   }
 
-  protected _updateAlignPos() {
+  private _updateAlignPos() {
     const size = this._size;
     this._alignPos = parseAlign(this._align, this._flicking.horizontal ? size.width : size.height);
   }
 
-  protected _resetInternalStates() {
+  private _resetInternalStates() {
     this._size = { width: 0, height: 0 };
     this._pos = { left: 0, top: 0 };
     this._margin = { left: 0, right: 0, top: 0, bottom: 0 };

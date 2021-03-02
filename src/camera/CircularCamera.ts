@@ -174,7 +174,7 @@ class CircularCamera extends Camera {
         }
       });
 
-      flicking.renderer.movePanelElementsToStart(shouldBeToggled);
+      renderer.elementManipulator.movePanelElementsToStart(shouldBeToggled);
 
       this._circularOffset += this._calcPanelAreaSum(shouldBeToggled);
 
@@ -194,6 +194,7 @@ class CircularCamera extends Camera {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const prevPos = this._position;
     const panelTooglePoints = this._panelTooglePoints;
+    const elementManipulator = flicking.renderer.elementManipulator;
     const togglePoints = Object.keys(panelTooglePoints)
       .map(pointString => parseFloat(pointString))
       .sort((a, b) => a - b);
@@ -214,7 +215,7 @@ class CircularCamera extends Camera {
         return passed;
       }, []);
 
-      flicking.renderer.movePanelElementsToEnd(passedPanels);
+      elementManipulator.movePanelElementsToEnd(passedPanels);
       this._circularOffset -= this._calcPanelAreaSum(passedPanels);
     } else {
       const passedPanels = togglePoints.reduce((passed: Panel[], togglePoint: number) => {
@@ -230,7 +231,7 @@ class CircularCamera extends Camera {
         return passed;
       }, []);
 
-      flicking.renderer.movePanelElementsToStart(passedPanels);
+      elementManipulator.movePanelElementsToStart(passedPanels);
       this._circularOffset += this._calcPanelAreaSum(passedPanels);
     }
 

@@ -43,8 +43,9 @@
       <li>You can make continuous carousel UI with asynchronous data by adding placeholder panel first, then update panel with fetched data later.</li>
     </ul>
     <flicking
-      class="flicking flicking2" :options="{ gap: 10, infinite: true, moveType: 'freeScroll' }"
-      @need-panel="() => {
+      class="flicking flicking2" :options="{ gap: 10, infinite: true, moveType: 'freeScroll', renderOnlyVisible: true }"
+      @need-panel="e => {
+        if (e.direction === 'PREV') return;
         const end = list2[list2.length - 1] || 0;
         list2.push(end + 1, end + 2);
       }">

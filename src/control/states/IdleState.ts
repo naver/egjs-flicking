@@ -14,7 +14,7 @@ class IdleState extends State {
     // Shouldn't do any action until any panels on flicking area
     const { flicking, axesEvent, transitTo } = ctx;
 
-    if (flicking.getPanelCount() <= 0) {
+    if (flicking.renderer.panelCount <= 0) {
       transitTo(STATE_TYPE.DISABLED);
       return;
     }

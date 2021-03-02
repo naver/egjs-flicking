@@ -6,6 +6,7 @@ import Progress from "./features/Progress.vue";
 import Snap from "./features/Snap.vue";
 import VariableSize from "./features/VariableSize.vue";
 import Infinite from "./features/Infinite.vue";
+import Test from "./features/Test.vue";
 
 import AutoPlay from "./plugins/Autoplay.vue";
 import Fade from "./plugins/Fade.vue";
@@ -13,6 +14,11 @@ import Parallax from "./plugins/Parallax.vue";
 
 export default {
   routes: [
+    {
+      path: "/test",
+      name: "Test",
+      component: Test,
+    },
     {
       path: "/align",
       name: "Align",
