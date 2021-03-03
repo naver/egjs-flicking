@@ -4,20 +4,20 @@
  */
 import Flicking, { FlickingOptions } from "~/Flicking";
 import Panel from "~/core/Panel";
-import ElementManipulator from "~/renderer/ElementManipulator";
+import ExternalManipulator from "~/renderer/ExternalManipulator";
 import { ALIGN } from "~/const/external";
 import { getFlickingAttached, getMinusCompensatedIndex, includes, parseElement, toArray } from "~/utils";
 import { ElementLike } from "~/type/external";
 
 export interface RendererOptions {
   align: FlickingOptions["align"];
-  elementManipulator: ElementManipulator;
+  elementManipulator: ExternalManipulator;
 }
 
 abstract class Renderer {
   // Internal States
   protected _flicking: Flicking | null;
-  protected _elementManipulator: ElementManipulator;
+  protected _elementManipulator: ExternalManipulator;
   protected _panels: Panel[];
 
   // Options
@@ -41,7 +41,7 @@ abstract class Renderer {
 
   public constructor({
     align = ALIGN.CENTER,
-    elementManipulator = new ElementManipulator()
+    elementManipulator = new ExternalManipulator()
   }: Partial<RendererOptions> = {}) {
     this._align = align;
     this._flicking = null;
@@ -80,28 +80,41 @@ abstract class Renderer {
     const panelsPushed = panels.slice(insertingIdx);
     const newPanels = elements.map((el, elIdx) => new Panel({ el, index: insertingIdx + elIdx, align, flicking }));
 
+    if (newPanels.length <= 0) return [];
+
     // Reset the order of the elements first
     elementManipulator.resetPanelElementOrder(panels);
 
     panels.splice(insertingIdx, 0, ...newPanels);
-
-    // Update panel indexes & positions
-    panelsPushed.forEach(panel => {
-      panel.increaseIndex(newPanels.length);
-      panel.resize();
-    });
 
     // Insert the actual elements as camera element's children
     elementManipulator.insertPanelElements(newPanels, panelsPushed[0] || null);
 
     // Resize the newly added panels
     newPanels.forEach(panel => panel.resize());
+    if (camera.offset !== 0) {
+      if (camera.offset > 0) {
+        newPanels.forEach(panel => panel.increasePosition(camera.offset));
+      } else {
+        newPanels.forEach(panel => panel.decreasePosition(camera.offset));
+      }
+    }
+
+    const insertedSize = this._getPanelSizeSum(newPanels);
+
+    // Update panel indexes & positions
+    panelsPushed.forEach(panel => {
+      panel.increaseIndex(newPanels.length);
+      panel.increasePosition(insertedSize);
+    });
 
     // Update camera & control
     camera.updateRange();
     camera.updateAnchors();
     camera.resetNeedPanelHistory();
     control.updateInput();
+
+    this.render();
 
     // Move to the first panel added if no panels existed
     // FIXME: fix for animating case
@@ -118,45 +131,45 @@ abstract class Renderer {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
 
     const { camera, control } = flicking;
+    const activePanel = control.activePanel;
     const removingIdx = getMinusCompensatedIndex(index, panels.length);
 
     const panelsPulled = panels.slice(removingIdx + deleteCount);
     const panelsRemoved = panels.splice(removingIdx, deleteCount);
 
-    const firstRemoved = panelsRemoved[0];
-    const lastRemoved = panelsRemoved[panelsRemoved.length - 1];
-    // TODO: calc removedSize
-
-    panelsRemoved.forEach(panel => panel.destroy());
+    if (panelsRemoved.length <= 0) return [];
 
     // Reset the order of the elements first
     elementManipulator.resetPanelElementOrder(panels);
 
     // Update panel indexes & positions
+    const removedSize = this._getPanelSizeSum(panelsRemoved);
     panelsPulled.forEach(panel => {
       panel.decreaseIndex(panelsRemoved.length);
-      panel.moveBy(-removedSize);
+      panel.decreasePosition(removedSize);
     });
 
     // Remove panel elements
     elementManipulator.removePanelElements(panelsRemoved);
+    panelsRemoved.forEach(panel => panel.destroy());
 
     // Update camera & control
-    console.log("before", camera.range.min, camera.range.max);
     camera.updateRange();
-    console.log("updated to", camera.range.min, camera.range.max);
     camera.updateAnchors();
     camera.resetNeedPanelHistory();
     control.updateInput();
 
-    if (includes(panelsRemoved, control.activePanel)) {
+    if (includes(panelsRemoved, activePanel)) {
       control.resetActivePanel();
     }
 
+    this.render();
+
     // FIXME: fix for animating case
     if (panelsRemoved.length > 0 && !control.animating) {
-      const activePanel = control.activePanel;
-      const targetPanel = includes(panelsRemoved, activePanel) ? panelsPulled[0] || panels[panels.length - 1] : activePanel;
+      const targetPanel = includes(panelsRemoved, activePanel)
+        ? (panelsPulled[0] || panels[panels.length - 1])
+        : activePanel;
 
       if (targetPanel) {
         void control.moveToPanel(targetPanel, 0).catch(() => void 0);
@@ -197,6 +210,18 @@ abstract class Renderer {
     return typeof align === "object"
       ? (align as { panel: string | number }).panel
       : align;
+  }
+
+  protected _getPanelSizeSum(panels: Panel[]): number {
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const firstPanel = panels[0];
+    const lastPanel = panels[panels.length - 1];
+
+    const marginDiff = flicking.horizontal
+      ? lastPanel.margin.right - firstPanel.margin.left
+      : lastPanel.margin.bottom - firstPanel.margin.top;
+
+    return (lastPanel.range.max - firstPanel.range.min) + marginDiff;
   }
 }
 

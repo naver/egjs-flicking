@@ -5,7 +5,7 @@
 import Camera from "~/camera/Camera";
 import Panel from "~/core/Panel";
 import AnchorPoint from "~/core/AnchorPoint";
-import { DIRECTION } from "~/const/external";
+import { DIRECTION, EVENTS } from "~/const/external";
 import { ValueOf } from "~/type/internal";
 import { circulatePosition, getFlickingAttached } from "~/utils";
 

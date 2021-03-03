@@ -11,11 +11,11 @@
     <h3>hanger: 50%, anchor: 50%</h3>
     <div class="hanger flicking0"></div>
     <flicking class="flicking flicking0">
-      <div class="panel0"><div class="anchor"></div></div>
-      <div class="panel1"><div class="anchor"></div></div>
-      <div class="panel2"><div class="anchor"></div></div>
-      <div class="panel3"><div class="anchor"></div></div>
-      <div class="panel4"><div class="anchor"></div></div>
+      <panel v-once class="panel0"><div class="anchor"></div></panel>
+      <panel v-once class="panel1"><div class="anchor"></div></panel>
+      <panel v-once class="panel2"><div class="anchor"></div></panel>
+      <panel v-once class="panel3"><div class="anchor"></div></panel>
+      <panel v-once class="panel4"><div class="anchor"></div></panel>
     </flicking>
     <pre><code class="hljs html" data-script="flicking0">{{ code0 }}</code></pre>
 
@@ -23,11 +23,11 @@
     <h2>hanger: 0, anchor: 0</h2>
     <div class="hanger hanger1"></div>
     <flicking class="flicking flicking1" :options="{ align: { camera: 0, panel: 0 } }">
-      <div class="panel0"><div class="anchor"></div></div>
-      <div class="panel1"><div class="anchor"></div></div>
-      <div class="panel2"><div class="anchor"></div></div>
-      <div class="panel3"><div class="anchor"></div></div>
-      <div class="panel4"><div class="anchor"></div></div>
+      <panel v-once class="panel0"><div class="anchor"></div></panel>
+      <panel v-once class="panel1"><div class="anchor"></div></panel>
+      <panel v-once class="panel2"><div class="anchor"></div></panel>
+      <panel v-once class="panel3"><div class="anchor"></div></panel>
+      <panel v-once class="panel4"><div class="anchor"></div></panel>
     </flicking>
     <div class="pagination pagination1"></div>
     <pre><code class="hljs html" data-script="flicking1">{{ code1 }}</code></pre>
@@ -36,13 +36,12 @@
     <h3>hanger: 30%, anchor: 50px</h3>
     <div class="hanger hanger2"></div>
     <flicking class="flicking flicking2" :options="{ align: { camera: '30%', panel: '50px' } }">
-      <div class="panel0" :class="{ a: this.a }"><div class="anchor"></div></div>
-      <div class="panel1"><div class="anchor"></div></div>
-      <div class="panel2"><div class="anchor"></div></div>
-      <div class="panel3"><div class="anchor"></div></div>
-      <div class="panel4"><div class="anchor"></div></div>
+      <panel v-once class="panel0"><div class="anchor"></div></panel>
+      <panel v-once class="panel1"><div class="anchor"></div></panel>
+      <panel v-once class="panel2"><div class="anchor"></div></panel>
+      <panel v-once class="panel3"><div class="anchor"></div></panel>
+      <panel v-once class="panel4"><div class="anchor"></div></panel>
     </flicking>
-    <button @click="() => this.a = false">BUTTON</button>
     <div class="pagination pagination2"></div>
     <pre><code class="hljs html" data-script="flicking2">{{ code2 }}</code></pre>
   </div>

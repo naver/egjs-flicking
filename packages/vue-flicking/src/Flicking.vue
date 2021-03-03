@@ -48,8 +48,9 @@ class VueFlicking extends Vue {
     this._initialized = false;
     this._renderInfo = {};
 
-    this._fillKeys();
-    this.panels = [...this._getSlots()];
+    const slots = this._getSlots();
+    this._checkKeys(slots);
+    this.panels = [...slots];
   }
 
   public mounted() {
@@ -67,9 +68,7 @@ class VueFlicking extends Vue {
 
     this._initialized = true;
 
-    if (this.options.renderOnlyVisible) {
-      this.panels = this._getPanelVNodes();
-    }
+    this.$forceUpdate();
   }
 
   public beforeDestroy() {
@@ -77,57 +76,66 @@ class VueFlicking extends Vue {
   }
 
   public beforeUpdate() {
-    this._fillKeys();
-
     const slots = this._getSlots();
     const diffResult = this._slotDiffer.update(slots);
-    const flicking = this._nativeFlicking;
+    const flicking = this._nativeFlicking!;
 
-    if (!this.options.renderOnlyVisible || !flicking) {
-      return;
-    }
+    this._diffResult = diffResult;
+    this._checkKeys(diffResult.added.map(idx => diffResult.list[idx]));
 
     const removedPanels = diffResult.removed.reduce((map, idx) => {
       map[idx] = true;
       return map;
     }, {});
 
+    const panelsToRender = this.options.renderOnlyVisible
+      ? flicking.camera.visiblePanels
+      : flicking.renderer.panels;
+
     this.panels = [
-      ...flicking.camera.visiblePanels
+      ...panelsToRender
         .filter(panel => !removedPanels[panel.index])
+        // Sort panels by position
+        .sort((panel1, panel2) => (panel1.position + panel1.offset) - (panel2.position + panel2.offset))
         .map(panel => diffResult.prevList[panel.index]),
       ...diffResult.added.map(idx => diffResult.list[idx])
     ];
-
-    this._diffResult = diffResult;
   }
 
   public updated() {
     const flicking = this._nativeFlicking;
     const renderer = flicking.renderer;
 
-    const slots = this._getSlots();
     const diffResult = this._diffResult;
 
     diffResult.removed.forEach(idx => {
       renderer.remove(idx, 1);
-      console.log("removed", idx);
     });
 
     diffResult.ordered.forEach(([prevIdx, newIdx]) => {
       const prevPanel = renderer.getPanel(prevIdx);
       const indexDiff = newIdx - prevIdx;
+
       if (indexDiff > 0) {
         prevPanel.increaseIndex(indexDiff);
       } else {
         prevPanel.decreaseIndex(-indexDiff);
       }
+      // Update position
+      prevPanel.resize();
     });
 
-    diffResult.added.forEach(idx => {
-      const el = diffResult.list[idx].elm;
-      renderer.insert(idx, el);
-    })
+    if (diffResult.added.length > 0) {
+      const childNodes = this._vnode.children[0].children.reduce((childMap, child) => {
+        childMap[child.key] = child;
+        return childMap;
+      }, {});
+
+      diffResult.added.forEach(idx => {
+        const el = childNodes[diffResult.list[idx].key].elm;
+        renderer.insert(idx, el);
+      })
+    };
 
     this._checkPlugins();
 
@@ -139,10 +147,11 @@ class VueFlicking extends Vue {
   }
 
   private _bindEvents() {
+    const flicking = this._nativeFlicking;
     const events = Object.values(EVENTS);
 
     events.forEach(eventName => {
-      this._nativeFlicking.on(eventName, (e: any) => {
+      flicking.on(eventName, (e: any) => {
         e.currentTarget = this;
         // Make events from camelCase to kebab-case
         this.$emit(eventName.replace(/([A-Z])/g, "-$1").toLowerCase(), e);
@@ -150,8 +159,13 @@ class VueFlicking extends Vue {
     });
 
     if (this.options.renderOnlyVisible) {
-      this._nativeFlicking.on(EVENTS.VISIBLE_CHANGE, e => {
-        this.panels = this._getPanelVNodes();
+      flicking.on(EVENTS.VISIBLE_CHANGE, e => {
+        this.$forceUpdate();
+      });
+    } else if (this.options.circular) {
+      flicking.renderer.elementManipulator.on("orderChanged", e => {
+        console.log("update");
+        this.$forceUpdate();
       });
     }
   }
@@ -184,11 +198,11 @@ class VueFlicking extends Vue {
       : [];
   }
 
-  private _fillKeys() {
-    const slots = this._getSlots();
-
-    slots.forEach(slot => {
-      slot.key = slot.key ?? uuid.v4();
+  private _checkKeys(vnodes: VNode[]) {
+    vnodes.forEach(node => {
+      if (node.key == null) {
+        throw new Error("'key' should be provided for every panel of Flicking.");
+      }
     });
   }
 }

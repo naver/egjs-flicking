@@ -1,22 +1,12 @@
-import Flicking from "~/Flicking";
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 import Panel from "~/core/Panel";
+import ExternalManipulator from "~/renderer/ExternalManipulator";
 import { getFlickingAttached, includes } from "~/utils";
 
-class ElementManipulator {
-  private _flicking: Flicking | null;
-
-  public constructor() {
-    this._flicking = null;
-  }
-
-  public init(flicking: Flicking) {
-    this._flicking = flicking;
-  }
-
-  public destroy() {
-    this._flicking = null;
-  }
-
+class ElementManipulator extends ExternalManipulator {
   public insertPanelElements(panels: Panel[], nextSibling: Panel | null): this {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
     const camera = flicking.camera;
@@ -65,7 +55,10 @@ class ElementManipulator {
   }
 
   public resetPanelElementOrder(panels: Panel[]): this {
-    this._relocatePanelElements(panels, null);
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const cameraElement = flicking.camera.element;
+
+    this._relocatePanelElements(panels.filter(panel => panel.element.parentElement === cameraElement), null);
 
     panels.forEach(panel => {
       panel.resetOffset();

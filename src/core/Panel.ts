@@ -159,7 +159,32 @@ class Panel {
     return this;
   }
 
-  public moveBy(val: number): this {
+  public increasePosition(val: number): this {
+    this._moveBy(Math.max(val, 0));
+    return this;
+  }
+
+  public decreasePosition(val: number): this {
+    this._moveBy(-Math.max(val, 0));
+    return this;
+  }
+
+  public increaseOffset(val: number): this {
+    this._offset += Math.max(val, 0);
+    return this;
+  }
+
+  public decreaseOffset(val: number): this {
+    this._offset -= Math.max(val, 0);
+    return this;
+  }
+
+  public resetOffset(): this {
+    this._offset = 0;
+    return this;
+  }
+
+  private _moveBy(val: number): this {
     const flicking = this._flicking;
 
     if (flicking.horizontal) {
@@ -168,21 +193,6 @@ class Panel {
       this._pos.top += val;
     }
 
-    return this;
-  }
-
-  public increaseOffset(val: number): this {
-    this._offset += val;
-    return this;
-  }
-
-  public decreaseOffset(val: number): this {
-    this._offset -= val;
-    return this;
-  }
-
-  public resetOffset(): this {
-    this._offset = 0;
     return this;
   }
 
