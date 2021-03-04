@@ -1,4 +1,4 @@
-import { ChangeEvent, FlickingEvent, SelectEvent, NeedPanelEvent, VisibleChangeEvent } from "@egjs/flicking";
+import { ChangeEvent, HoldEndEvent, HoldStartEvent, MoveEndEvent, MoveEvent, MoveStartEvent, NeedPanelEvent, RestoreEvent, SelectEvent, VisibleChangeEvent } from "../../../../src";
 import { FlickingProps } from "./types";
 
 export const FLICKING_PROPS: FlickingProps = {
@@ -8,13 +8,13 @@ export const FLICKING_PROPS: FlickingProps = {
   classPrefix: "eg-flick",
   plugins: [],
   onNeedPanel: (e: NeedPanelEvent) => {},
-  onMoveStart: (e: FlickingEvent) => {},
-  onMove: (e: FlickingEvent) => {},
-  onMoveEnd: (e: FlickingEvent) => {},
-  onHoldStart: (e: FlickingEvent) => {},
-  onHoldEnd: (e: FlickingEvent) => {},
-  onRestore: (e: FlickingEvent) => {},
-  onSelect: (e: SelectEvent) => {},
+  onMoveStart: (e: MoveStartEvent) => {},
+  onMove: (e: MoveEvent) => {},
+  onMoveEnd: (e: MoveEndEvent) => {},
+  onHoldStart: (e: HoldStartEvent) => {},
+  onHoldEnd: (e: HoldEndEvent) => {},
   onChange: (e: ChangeEvent) => {},
+  onRestore: (e: RestoreEvent) => {},
+  onSelect: (e: SelectEvent) => {},
   onVisibleChange: (e: VisibleChangeEvent) => {},
 };

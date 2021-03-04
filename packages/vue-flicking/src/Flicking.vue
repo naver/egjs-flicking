@@ -39,7 +39,7 @@ class VueFlicking extends Vue {
 
   private _initialized = false;
   private _nativeFlicking!: Flicking;
-  private _pluginsDiffer!: ListDiffer<Plugin>;
+  private _pluginsDiffer!: ListDiffer<any>;
   private _slotDiffer!: ListDiffer<VNode>;
   private _renderInfo: {[key: string]: boolean} = {};
   private _diffResult: DiffResult<VNode>;
@@ -210,4 +210,5 @@ class VueFlicking extends Vue {
 export default VueFlicking;
 </script>
 <style>
+@import url("../../../dist/flicking.css");
 </style>

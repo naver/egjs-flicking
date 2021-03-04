@@ -1,4 +1,4 @@
-import NativeFlicking, { FlickingOptions, Plugin, FlickingEvent, NeedPanelEvent, withFlickingMethods, DEFAULT_OPTIONS, VisibleChangeEvent } from "@egjs/flicking";
+import NativeFlicking, { FlickingOptions, NeedPanelEvent, VisibleChangeEvent } from "../../../../src/index";
 import * as React from "react";
 import { CloneComponent } from "./Clone";
 import { FLICKING_PROPS } from "./consts";
@@ -8,11 +8,7 @@ import ChildrenDiffer from "@egjs/children-differ";
 
 class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = FLICKING_PROPS;
-  public state: {
-    cloneCount: number,
-  } = {
-      cloneCount: 0,
-    };
+
   // Flicking
   @withFlickingMethods
   private flicking?: NativeFlicking | null;
@@ -21,7 +17,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     renderExternal: true,
   };
   // differ
-  private pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
+  private pluginsDiffer: ListDiffer<any> = new ListDiffer<any>();
   private childrenDiffer: ChildrenDiffer<HTMLElement>;
   private jsxDiffer: ListDiffer<string>;
   private containerElement: HTMLElement;

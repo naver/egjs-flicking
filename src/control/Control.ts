@@ -3,6 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 import { OnRelease } from "@egjs/axes";
+import { ComponentEvent } from "@egjs/component";
 
 import Flicking from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
@@ -95,24 +96,23 @@ abstract class Control {
     return this._animateToPosition({ position, duration, newActivePanel: panel, axesEvent });
   }
 
-  protected _triggerIndexChangeEvent(panel: Panel, position: number, axesEvent?: OnRelease): boolean {
+  protected _triggerIndexChangeEvent(panel: Panel, position: number, axesEvent?: OnRelease): void {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const triggeringEvent = panel !== this._activePanel ? EVENTS.CHANGE : EVENTS.RESTORE;
     const camera = flicking.camera;
     const activePanel = this._activePanel;
 
-    const eventSuccess = flicking.trigger(triggeringEvent, {
+    const event = new ComponentEvent(triggeringEvent, {
       index: panel.index,
       panel,
       isTrusted: axesEvent?.isTrusted || false,
       direction: getDirection(activePanel?.position ?? camera.position, position)
     });
+    flicking.trigger(event);
 
-    if (!eventSuccess) {
+    if (event.isCanceled()) {
       throw new FlickingError(ERROR.MESSAGE.STOP_CALLED_BY_USER, ERROR.CODE.STOP_CALLED_BY_USER);
     }
-
-    return eventSuccess;
   }
 
   protected async _animateToPosition({

@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Component from "@egjs/component";
+import Component, { ComponentEvent } from "@egjs/component";
 import ImReady from "@egjs/imready";
 
 import FlickingError from "./core/FlickingError";
@@ -21,8 +21,7 @@ import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, M
 import { LiteralUnion, ValueOf } from "~/type/internal";
 import { ElementLike } from "~/type/external";
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export type FlickingEvents = {
+export interface FlickingEvents {
   [EVENTS.READY]: ReadyEvent;
   [EVENTS.BEFORE_RESIZE]: BeforeResizeEvent;
   [EVENTS.AFTER_RESIZE]: AfterResizeEvent;
@@ -38,13 +37,13 @@ export type FlickingEvents = {
   [EVENTS.VISIBLE_CHANGE]: VisibleChangeEvent;
   [EVENTS.REACH_EDGE]: ReachEdgeEvent;
   [EVENTS.CONTENT_ERROR]: void;
-};
+}
 
 /**
  * @param element A base element for the eg.Flicking module. When specifying a value as a `string` type, you must specify a css selector string to select the element.<ko>eg.Flicking 모듈을 사용할 기준 요소. `string`타입으로 값 지정시 요소를 선택하기 위한 css 선택자 문자열을 지정해야 한다.</ko>
  * @param options An option object of the eg.Flicking module<ko>eg.Flicking 모듈의 옵션 객체</ko>
  * @param {string} [options.classPrefix="eg-flick"] A prefix of class names will be added for the panels, viewport, and camera.<ko>패널들과 뷰포트, 카메라에 추가될 클래스 이름의 접두사.</ko>
- * @param {number} [options.deceleration=0.0075] Deceleration value for panel movement animation for animation triggered by manual user input. A higher value means a shorter running time.<ko>사용자의 동작으로 가속도가 적용된 패널 이동 애니메이션의 감속도. 값이 높을수록 애니메이션 실행 시간이 짧아진다.</ko>
+ * @param {$ts:FlickingOptions["deceleration"]} [options.deceleration=0.0075] Deceleration value for panel movement animation for animation triggered by manual user input. A higher value means a shorter running time.<ko>사용자의 동작으로 가속도가 적용된 패널 이동 애니메이션의 감속도. 값이 높을수록 애니메이션 실행 시간이 짧아진다.</ko>
  * @param {boolean} [options.horizontal=true] The direction of panel movement. (true: horizontal, false: vertical)<ko>패널 이동 방향. (true: 가로방향, false: 세로방향)</ko>
  * @param {boolean} [options.circular=false] Enables circular mode, which connects first/last panel for continuous scrolling.<ko>순환 모드를 활성화한다. 순환 모드에서는 양 끝의 패널이 서로 연결되어 끊김없는 스크롤이 가능하다.</ko>
  * @param {boolean} [options.infinite=false] Enables infinite mode, which can automatically trigger needPanel until reaching the last panel's index reaches the lastIndex.<ko>무한 모드를 활성화한다. 무한 모드에서는 needPanel 이벤트를 자동으로 트리거한다. 해당 동작은 마지막 패널의 인덱스가 lastIndex와 일치할때까지 일어난다.</ko>
@@ -328,7 +327,7 @@ class Flicking extends Component<FlickingEvents> {
 
     // Done initializing & emit ready event
     this._initialized = true;
-    this.trigger(EVENTS.READY);
+    this.trigger(new ComponentEvent(EVENTS.READY));
 
     return this;
   }
@@ -496,11 +495,11 @@ class Flicking extends Component<FlickingEvents> {
     const prevWidth = viewport.width;
     const prevHeight = viewport.height;
 
-    this.trigger(EVENTS.BEFORE_RESIZE, {
+    this.trigger(new ComponentEvent(EVENTS.BEFORE_RESIZE, {
       width: prevWidth,
       height: prevHeight,
       element: viewport.element
-    });
+    }));
 
     viewport.resize();
     renderer.updatePanelSize();
@@ -514,7 +513,7 @@ class Flicking extends Component<FlickingEvents> {
     const newHeight = viewport.height;
     const sizeChanged = newWidth !== prevWidth || newHeight !== prevHeight;
 
-    this.trigger(EVENTS.AFTER_RESIZE, {
+    this.trigger(new ComponentEvent(EVENTS.AFTER_RESIZE, {
       width: viewport.width,
       height: viewport.height,
       prev: {
@@ -523,7 +522,7 @@ class Flicking extends Component<FlickingEvents> {
       },
       sizeChanged,
       element: viewport.element
-    });
+    }));
     return this;
   };
 

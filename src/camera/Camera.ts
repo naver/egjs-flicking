@@ -2,6 +2,8 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { ComponentEvent } from "@egjs/component";
+
 import Flicking, { FlickingOptions } from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
 import Panel from "~/core/Panel";
@@ -218,11 +220,11 @@ abstract class Camera {
     if (added.length > 0 || removed.length > 0) {
       flicking.renderer.render();
 
-      flicking.trigger(EVENTS.VISIBLE_CHANGE, {
+      flicking.trigger(new ComponentEvent(EVENTS.VISIBLE_CHANGE, {
         added,
         removed,
         visiblePanels: newVisiblePanels
-      });
+      }));
     }
   }
 
@@ -236,11 +238,11 @@ abstract class Camera {
 
     if (panels.length <= 0) {
       if (!needPanelTriggered.prev) {
-        flicking.trigger(EVENTS.NEED_PANEL, { direction: DIRECTION.PREV });
+        flicking.trigger(new ComponentEvent(EVENTS.NEED_PANEL, { direction: DIRECTION.PREV }));
         needPanelTriggered.prev = true;
       }
       if (!needPanelTriggered.next) {
-        flicking.trigger(EVENTS.NEED_PANEL, { direction: DIRECTION.NEXT });
+        flicking.trigger(new ComponentEvent(EVENTS.NEED_PANEL, { direction: DIRECTION.NEXT }));
         needPanelTriggered.next = true;
       }
 
@@ -262,7 +264,7 @@ abstract class Camera {
       const firstPanelPrev = firstPanel.range.min;
 
       if (cameraPrev <= (firstPanelPrev + needPanelThreshold) || cameraPosition <= (cameraRange.min + needPanelThreshold)) {
-        flicking.trigger(EVENTS.NEED_PANEL, { direction: DIRECTION.PREV });
+        flicking.trigger(new ComponentEvent(EVENTS.NEED_PANEL, { direction: DIRECTION.PREV }));
         needPanelTriggered.prev = true;
       }
     }
@@ -271,7 +273,7 @@ abstract class Camera {
       const lastPanelNext = lastPanel.range.max;
 
       if (cameraNext >= (lastPanelNext - needPanelThreshold) || cameraPosition >= (cameraRange.max - needPanelThreshold)) {
-        flicking.trigger(EVENTS.NEED_PANEL, { direction: DIRECTION.NEXT });
+        flicking.trigger(new ComponentEvent(EVENTS.NEED_PANEL, { direction: DIRECTION.NEXT }));
         needPanelTriggered.next = true;
       }
     }
@@ -288,9 +290,9 @@ abstract class Camera {
 
     const direction = newPos <= range.min ? DIRECTION.PREV : DIRECTION.NEXT;
 
-    flicking.trigger(EVENTS.REACH_EDGE, {
+    flicking.trigger(new ComponentEvent(EVENTS.REACH_EDGE, {
       direction
-    });
+    }));
   }
 
   protected _applyTransform(): void {

@@ -17,7 +17,7 @@ class AxesController {
   private _panInput: PanInput | null;
   private _stateMachine: StateMachine;
 
-  private _animatingContext: { start: number; end: number };
+  private _animatingContext: { start: number; end: number; offset: number };
 
   public get axes() { return this._axes; }
   public get state() { return this._stateMachine.state; }
@@ -122,12 +122,13 @@ class AxesController {
 
     this._animatingContext = {
       start: startPos,
-      end: position
+      end: position,
+      offset: 0
     };
 
     const animate = () => {
       axes.once(AXES.EVENT.FINISH, () => {
-        this._animatingContext = { start: 0, end: 0 };
+        this._animatingContext = { start: 0, end: 0, offset: 0 };
       });
 
       if (axesEvent) {
@@ -169,7 +170,7 @@ class AxesController {
     this._flicking = null;
     this._axes = null;
     this._panInput = null;
-    this._animatingContext = { start: 0, end: 0 };
+    this._animatingContext = { start: 0, end: 0, offset: 0 };
   }
 }
 
