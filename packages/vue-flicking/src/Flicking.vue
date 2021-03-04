@@ -10,7 +10,6 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import ChildrenDiffer from "@egjs/vue-children-differ";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { CreateElement, VNodeData, VNode } from "vue";
@@ -20,9 +19,6 @@ import Flicking, { EVENTS, FlickingOptions } from "../../../src/index";
 import VNodes from "./VNodes";
 
 @Component({
-  directives: {
-    "children-differ": ChildrenDiffer
-  },
   components: {
     VNodes
   }
@@ -54,14 +50,13 @@ class VueFlicking extends Vue {
   }
 
   public mounted() {
-    this._pluginsDiffer = new ListDiffer<Plugin>();
-
     const options = {...this.options, ...{ renderExternal: true }};
     const viewportEl = this.$el as HTMLElement;
     this._nativeFlicking = new Flicking(viewportEl, options);
 
     const slots = this._getSlots();
     this._slotDiffer = new ListDiffer<VNode>(slots, vnode => vnode.key!);
+    this._pluginsDiffer = new ListDiffer<Plugin>();
 
     this._bindEvents();
     this._checkPlugins();
@@ -134,12 +129,12 @@ class VueFlicking extends Vue {
       diffResult.added.forEach(idx => {
         const el = childNodes[diffResult.list[idx].key].elm;
         renderer.insert(idx, el);
-      })
+      });
     };
 
     this._checkPlugins();
 
-    if (diffResult.added > 0 || diffResult.removed > 0) {
+    if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
       this.panels = this._getPanelVNodes();
     }
 
@@ -164,7 +159,6 @@ class VueFlicking extends Vue {
       });
     } else if (this.options.circular) {
       flicking.renderer.elementManipulator.on("orderChanged", e => {
-        console.log("update");
         this.$forceUpdate();
       });
     }

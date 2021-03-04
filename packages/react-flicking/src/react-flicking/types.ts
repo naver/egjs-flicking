@@ -8,16 +8,20 @@ import {
   MoveStartEvent,
   MoveEvent,
   MoveEndEvent,
-  RestoreEvent
-} from "../../../../src/index";
-
-import { FlickingEvents } from "../../../../src/Flicking";
+  RestoreEvent,
+  ReadyEvent,
+  BeforeResizeEvent,
+  AfterResizeEvent,
+  ReachEdgeEvent
+} from "@egjs/flicking";
 
 export interface FlickingProps {
-  tag: keyof JSX.IntrinsicElements;
   viewportTag: keyof JSX.IntrinsicElements;
   cameraTag: keyof JSX.IntrinsicElements;
   plugins: any[];
+  onReady: (e: ReadyEvent) => any;
+  onBeforeResize: (e: BeforeResizeEvent) => any;
+  onAfterResize: (e: AfterResizeEvent) => any;
   onHoldStart: (e: HoldStartEvent) => any;
   onHoldEnd: (e: HoldEndEvent) => any;
   onMoveStart: (e: MoveStartEvent) => any;
@@ -28,5 +32,6 @@ export interface FlickingProps {
   onSelect: (e: SelectEvent) => any;
   onNeedPanel: (e: NeedPanelEvent) => any;
   onVisibleChange: (e: VisibleChangeEvent) => any;
+  onReachEdge: (e: ReachEdgeEvent) => any;
   [key: string]: any;
 }

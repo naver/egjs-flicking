@@ -18,15 +18,15 @@ export default class Progress extends React.Component<{}> {
         <Flicking className="flicking flicking0"
           gap={10}
           circular={true}
-          moveType={{type: "snap", count: 5}}
+          moveType="snap"
           onMove={e => {
-            this.thumb.style.width = (e.progress * 100) + "%";
+            // this.thumb.style.width = (e.progress * 100) + "%";
           }}>
-          <div className="panel"></div>
-          <div className="panel"></div>
-          <div className="panel"></div>
-          <div className="panel"></div>
-          <div className="panel"></div>
+          <div className="panel0"></div>
+          <div className="panel1"></div>
+          <div className="panel2"></div>
+          <div className="panel3"></div>
+          <div className="panel4"></div>
         </Flicking>
         <div className="progress">
           <div className="thumb" ref={e => { this.thumb = e as HTMLElement; }}></div>
@@ -39,20 +39,20 @@ export default class Progress extends React.Component<{}> {
       <Flicking className="flicking flicking1"
           gap={10}
           circular={true}
-          moveType={{type: "snap", count: 5}}
+          moveType="snap"
           ref={e => { this.flicking1 = e as Flicking; }}
           onMove={e => {
-            const flicking = e.currentTarget;
+            // const flicking = e.currentTarget;
 
-            flicking.getAllPanels(true).forEach(panel => {
-              panel.getElement().innerHTML = panel.getProgress().toFixed(2);
-            });
+            // flicking.getAllPanels(true).forEach(panel => {
+            //   panel.getElement().innerHTML = panel.getProgress().toFixed(2);
+            // });
           }}>
-        <div className="panel"></div>
-        <div className="panel"></div>
-        <div className="panel"></div>
-        <div className="panel"></div>
-        <div className="panel"></div>
+        <div className="panel0"></div>
+        <div className="panel1"></div>
+        <div className="panel2"></div>
+        <div className="panel3"></div>
+        <div className="panel4"></div>
       </Flicking>
       <div className="pagination pagination1"></div>
       <pre><code className="hljs html" data-script="flicking1"></code></pre>
@@ -64,20 +64,20 @@ export default class Progress extends React.Component<{}> {
       <Flicking className="flicking flicking2"
           gap={10}
           circular={true}
-          moveType={{type: "snap", count: 5}}
+          moveType="snap"
           ref={e => { this.flicking2 = e as Flicking; }}
           onMove={e => {
-            const flicking = e.currentTarget;
+            // const flicking = e.currentTarget;
 
-            flicking.getAllPanels(true).forEach(panel => {
-              panel.getElement().innerHTML = panel.getOutsetProgress().toFixed(2);
-            });
+            // flicking.getAllPanels(true).forEach(panel => {
+            //   panel.getElement().innerHTML = panel.getOutsetProgress().toFixed(2);
+            // });
           }}>
-        <div className="panel"></div>
-        <div className="panel"></div>
-        <div className="panel"></div>
-        <div className="panel"></div>
-        <div className="panel"></div>
+        <div className="panel0"></div>
+        <div className="panel1"></div>
+        <div className="panel2"></div>
+        <div className="panel3"></div>
+        <div className="panel4"></div>
       </Flicking>
       <div className="pagination pagination2"></div>
       <pre><code className="hljs html" data-script="flicking2"></code></pre>
@@ -89,35 +89,35 @@ export default class Progress extends React.Component<{}> {
       <Flicking className="flicking flicking3"
           gap={10}
           circular={true}
-          moveType={{type: "snap", count: 5}}
+          moveType="snap"
           ref={e => { this.flicking3 = e as Flicking; }}
           onMove={e => {
-            const flicking = e.currentTarget;
+            // const flicking = e.currentTarget;
 
-            flicking.getAllPanels(true).forEach(panel => {
-              panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
-            });
+            // flicking.getAllPanels(true).forEach(panel => {
+            //   panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
+            // });
           }}>
-        <div className="panel"></div>
-        <div className="panel"></div>
-        <div className="panel"></div>
-        <div className="panel"></div>
-        <div className="panel"></div>
+        <div className="panel0"></div>
+        <div className="panel1"></div>
+        <div className="panel2"></div>
+        <div className="panel3"></div>
+        <div className="panel4"></div>
       </Flicking>
       <div className="pagination pagination3"></div>
       <pre><code className="hljs html" data-script="flicking3"></code></pre>
 </div >);
   }
   public componentDidMount() {
-    this.flicking1.getAllPanels(true).forEach(panel => {
-      panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
-    });
-    this.flicking2.getAllPanels(true).forEach(panel => {
-      panel.getElement().innerHTML = panel.getOutsetProgress().toFixed(2);
-    });
-    this.flicking3.getAllPanels(true).forEach(panel => {
-      panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
-    });
+    // this.flicking1.getAllPanels(true).forEach(panel => {
+    //   panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
+    // });
+    // this.flicking2.getAllPanels(true).forEach(panel => {
+    //   panel.getElement().innerHTML = panel.getOutsetProgress().toFixed(2);
+    // });
+    // this.flicking3.getAllPanels(true).forEach(panel => {
+    //   panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
+    // });
     insertCode("progress", 0, `
   <Flicking className="flicking flicking0"
     gap={10}

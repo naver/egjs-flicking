@@ -22,9 +22,9 @@ export default class App extends Component<{}> {
   public render() {
     return (
       <div>
-        <Header/>
+        {/* <Header/> */}
         <InfiniteFlicking/>
-        <FreeScroll/>
+        {/* <FreeScroll/>
         <VariableSize/>
         <Align/>
         <Snap/>
@@ -33,7 +33,7 @@ export default class App extends Component<{}> {
         <Bound/>
         <ParallaxDemo/>
         <FadeDemo/>
-        <AutoPlayDemo/>
+        <AutoPlayDemo/> */}
       </div>);
   }
   public componentDidMount() {

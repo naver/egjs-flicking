@@ -13,23 +13,23 @@ export default class Gap extends React.Component<{}> {
         </ul>
         <h2>Default</h2>
         <Flicking className="flicking flicking0" bound={true}>
-          <div className="panel"></div>
-          <div className="panel"></div>
-          <div className="panel"></div>
-          <div className="panel"></div>
-          <div className="panel"></div>
-          <div className="panel"></div>
+          <div className="panel0"></div>
+          <div className="panel1"></div>
+          <div className="panel2"></div>
+          <div className="panel3"></div>
+          <div className="panel4"></div>
+          <div className="panel0"></div>
         </Flicking>
         <div className="pagination pagination0"></div>
         <pre><code className="hljs html" data-script="flicking0"></code></pre>
         <h2>gap: 20</h2>
         <Flicking className="flicking flicking1" gap={20} bound={true}>
-          <div className="panel"></div>
-          <div className="panel"></div>
-          <div className="panel"></div>
-          <div className="panel"></div>
-          <div className="panel"></div>
-          <div className="panel"></div>
+          <div className="panel0"></div>
+          <div className="panel1"></div>
+          <div className="panel2"></div>
+          <div className="panel3"></div>
+          <div className="panel4"></div>
+          <div className="panel0"></div>
         </Flicking>
         <div className="pagination pagination1"></div>
         <pre><code className="hljs html" data-script="flicking1"></code></pre>

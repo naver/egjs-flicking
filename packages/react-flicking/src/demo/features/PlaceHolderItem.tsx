@@ -7,7 +7,7 @@ export default class PlaceHolderItem extends React.Component<{num: number}, {loa
   public render() {
     const num = this.props.num;
     const loaded = this.state.loaded;
-    return <div className={`infinite infinite${Math.abs(num) % 5} ${loaded ? "" : "placeholder"}`}>{num}</div>;
+    return <div className={`infinite infinite${Math.abs(num) % 5} ${loaded ? "" : "placeholder"} flicking-panel`}>{num}</div>;
   }
   public componentDidMount() {
     setTimeout(() => {

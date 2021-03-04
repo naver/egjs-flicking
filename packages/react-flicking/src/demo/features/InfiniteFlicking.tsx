@@ -44,8 +44,10 @@ export default class InfiniteFlicking extends React.Component<{}, { list0: numbe
           <li>Enabling the infinite option can make <strong>needPanel</strong> event to be triggered when more panels at moving direction should be fetched within <strong>infiniteThreshold</strong> value.</li>
         </ul>
         <Flicking
-          className="flicking flicking1" gap={10} infinite={true} infiniteThreshold={50}
-          onNeedPanel={() => {
+          className="flicking flicking1" gap={10} needPanelThreshold={50}
+          onNeedPanel={e => {
+            if (e.direction !== "NEXT") return;
+
             this.setState(state => {
               const end = state.list1[state.list1.length - 1] || 0;
 
@@ -63,8 +65,10 @@ export default class InfiniteFlicking extends React.Component<{}, { list0: numbe
           <li>You can make continuous carousel UI with asynchronous data by adding placeholder panel first, then update panel with fetched data later.</li>
         </ul>
         <Flicking
-          className="flicking flicking2" gap={10} infinite={true} moveType={"freeScroll"}
-          onNeedPanel={() => {
+          className="flicking flicking2" gap={10} moveType={"freeScroll"}
+          onNeedPanel={e => {
+            if (e.direction !== "NEXT") return;
+
             this.setState(state => {
               const end = state.list2[state.list2.length - 1] || 0;
 
@@ -101,7 +105,7 @@ export default class InfiniteFlicking extends React.Component<{}, { list0: numbe
 `);
     insertCode("infinite", 1, `
 <Flicking
-  className="flicking flicking1" gap={10} infinite={true} infiniteThreshold={50}
+  className="flicking flicking1" gap={10} infiniteThreshold={50}
   onNeedPanel={() => {
     this.setState(state => {
       const end = state.list1[state.list1.length - 1] || 0;
@@ -117,7 +121,7 @@ export default class InfiniteFlicking extends React.Component<{}, { list0: numbe
     `);
     insertCode("infinite", 2, `
 <Flicking
-  className="flicking flicking2" gap={10} infinite={true} moveType={"freeScroll"}
+  className="flicking flicking2" gap={10} moveType={"freeScroll"}
   onNeedPanel={() => {
     this.setState(state => {
       const end = state.list2[state.list2.length - 1] || 0;

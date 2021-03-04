@@ -7,7 +7,7 @@
   margin-left: 10px;
   /* color: #55e; */
 }
-.plugins .flicking {
+.plugins .flicking-viewport {
   width: 500px;
   height: 200px;
   margin: 0px auto;
@@ -15,7 +15,7 @@
   background: rgba(55, 55, 55 0.1);
   border-radius: 5px;
 }
-.plugins .flicking .panel {
+.plugins .flicking-viewport .panel {
   position: relative;
   display: block;
   border-radius: 5px;

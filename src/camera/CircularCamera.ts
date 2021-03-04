@@ -5,7 +5,7 @@
 import Camera from "~/camera/Camera";
 import Panel from "~/core/Panel";
 import AnchorPoint from "~/core/AnchorPoint";
-import { DIRECTION, EVENTS } from "~/const/external";
+import { DIRECTION } from "~/const/external";
 import { ValueOf } from "~/type/internal";
 import { circulatePosition, getFlickingAttached } from "~/utils";
 
@@ -150,15 +150,16 @@ class CircularCamera extends Camera {
       const alignPos = this._alignPos;
       const shouldBeToggled: Panel[] = [];
 
+      const range = this._range;
+      const minimumVisible = range.min - alignPos;
+      const maximumVisible = range.max - alignPos + visibleSize;
+
       panels.forEach(panel => {
-        const range = this._range;
-        const minimumVisible = range.min - alignPos;
-        const maximumVisible = range.max - alignPos + visibleSize;
         const shouldBeVisibleAtMin = panel.includeRange(maximumVisible - visibleSize, maximumVisible, false);
         const shouldBeVisibleAtMax = panel.includeRange(minimumVisible, minimumVisible + visibleSize, false);
 
         if (shouldBeVisibleAtMin) {
-          panelTooglePoints[panel.range.max - (maximumVisible - visibleSize)] = {
+          panelTooglePoints[panel.range.max + range.min - range.max + alignPos] = {
             panel,
             direction: DIRECTION.PREV,
             toggled: true
@@ -166,7 +167,7 @@ class CircularCamera extends Camera {
           shouldBeToggled.push(panel);
         }
         if (shouldBeVisibleAtMax) {
-          panelTooglePoints[panel.range.min - (minimumVisible - visibleSize)] = {
+          panelTooglePoints[panel.range.min + range.max - visibleSize + alignPos] = {
             panel,
             direction: DIRECTION.NEXT,
             toggled: false
