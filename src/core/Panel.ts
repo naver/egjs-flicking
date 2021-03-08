@@ -72,14 +72,20 @@ class Panel {
     const el = this._el;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const elStyle = window.getComputedStyle(el) || (el as any).currentStyle as CSSStyleDeclaration;
+    const flicking = this._flicking;
+    const cameraOffset = flicking.camera.offset;
+    const posOffset = {
+      left: flicking.horizontal ? cameraOffset : 0,
+      top: flicking.horizontal ? 0 : cameraOffset
+    };
 
     this._size = {
       width: el.offsetWidth,
       height: el.offsetHeight
     };
     this._pos = {
-      left: el.offsetLeft,
-      top: el.offsetTop
+      left: el.offsetLeft + posOffset.left,
+      top: el.offsetTop + posOffset.top
     };
     this._margin = {
       left: parseFloat(elStyle.marginLeft),

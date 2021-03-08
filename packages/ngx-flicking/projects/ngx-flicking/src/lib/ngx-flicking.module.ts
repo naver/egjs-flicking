@@ -1,14 +1,12 @@
-import { NgModule } from '@angular/core';
-import { NgxFlickingComponent } from './ngx-flicking.component';
-import { NgxChildrenDifferModule } from '@egjs/ngx-children-differ';
-// import { NgxFlickingPanelDirective } from './ngx-flicking-panel.directive';
-import { CommonModule } from '@angular/common';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+
+import { NgxFlickingComponent } from "./ngx-flicking.component";
 
 @NgModule({
   declarations: [NgxFlickingComponent],
   imports: [
-    CommonModule,
-    NgxChildrenDifferModule
+    CommonModule
   ],
   exports: [NgxFlickingComponent]
 })

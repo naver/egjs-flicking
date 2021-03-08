@@ -10,12 +10,12 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import NativeFlicking, { EVENTS, FlickingOptions } from "@egjs/flicking";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { CreateElement, VNodeData, VNode } from "vue";
 import * as uuid from "uuid";
 
-import Flicking, { EVENTS, FlickingOptions } from "../../../src/index";
 import VNodes from "./VNodes";
 
 @Component({
@@ -23,7 +23,7 @@ import VNodes from "./VNodes";
     VNodes
   }
 })
-class VueFlicking extends Vue {
+class Flicking extends Vue {
   // Tag of the viewport element
   @Prop({ type: String, default: "div", required: false }) public viewportTag!: string;
   // Tag of the camera element
@@ -34,7 +34,7 @@ class VueFlicking extends Vue {
   public panels: VNode[] = [];
 
   private _initialized = false;
-  private _nativeFlicking!: Flicking;
+  private _nativeFlicking!: NativeFlicking;
   private _pluginsDiffer!: ListDiffer<any>;
   private _slotDiffer!: ListDiffer<VNode>;
   private _renderInfo: {[key: string]: boolean} = {};
@@ -44,15 +44,16 @@ class VueFlicking extends Vue {
     this._initialized = false;
     this._renderInfo = {};
 
+    this._fillKeys();
+
     const slots = this._getSlots();
-    this._checkKeys(slots);
     this.panels = [...slots];
   }
 
   public mounted() {
     const options = {...this.options, ...{ renderExternal: true }};
     const viewportEl = this.$el as HTMLElement;
-    this._nativeFlicking = new Flicking(viewportEl, options);
+    this._nativeFlicking = new NativeFlicking(viewportEl, options);
 
     const slots = this._getSlots();
     this._slotDiffer = new ListDiffer<VNode>(slots, vnode => vnode.key!);
@@ -71,12 +72,13 @@ class VueFlicking extends Vue {
   }
 
   public beforeUpdate() {
+    this._fillKeys();
+
     const slots = this._getSlots();
     const diffResult = this._slotDiffer.update(slots);
     const flicking = this._nativeFlicking!;
 
     this._diffResult = diffResult;
-    this._checkKeys(diffResult.added.map(idx => diffResult.list[idx]));
 
     const removedPanels = diffResult.removed.reduce((map, idx) => {
       map[idx] = true;
@@ -100,7 +102,6 @@ class VueFlicking extends Vue {
   public updated() {
     const flicking = this._nativeFlicking;
     const renderer = flicking.renderer;
-
     const diffResult = this._diffResult;
 
     diffResult.removed.forEach(idx => {
@@ -125,10 +126,23 @@ class VueFlicking extends Vue {
         childMap[child.key] = child;
         return childMap;
       }, {});
+      const cameraEl = flicking.camera.element;
 
-      diffResult.added.forEach(idx => {
+      const addedElements = diffResult.added.map(idx => {
         const el = childNodes[diffResult.list[idx].key].elm;
-        renderer.insert(idx, el);
+        const elNext = renderer.panels[idx]
+          ? renderer.panels[idx].element
+          : null;
+
+        if (el.nextElementSibling !== elNext) {
+          cameraEl.insertBefore(el, elNext);
+        }
+
+        return el;
+      });
+
+      diffResult.added.forEach((panelIdx, elIdx) => {
+        renderer.insert(panelIdx, addedElements[elIdx]);
       });
     };
 
@@ -157,7 +171,8 @@ class VueFlicking extends Vue {
       flicking.on(EVENTS.VISIBLE_CHANGE, e => {
         this.$forceUpdate();
       });
-    } else if (this.options.circular) {
+    }
+    if (this.options.circular) {
       flicking.renderer.elementManipulator.on("orderChanged", e => {
         this.$forceUpdate();
       });
@@ -192,17 +207,19 @@ class VueFlicking extends Vue {
       : [];
   }
 
-  private _checkKeys(vnodes: VNode[]) {
-    vnodes.forEach(node => {
+  private _fillKeys() {
+    const vnodes = this._getSlots();
+
+    vnodes.forEach((node, idx) => {
       if (node.key == null) {
-        throw new Error("'key' should be provided for every panel of Flicking.");
+        node.key = `$_${idx}`;
       }
     });
   }
 }
 
-export default VueFlicking;
+export default Flicking;
 </script>
 <style>
-@import url("../../../dist/flicking.css");
+@import url("../node_modules/@egjs/flicking/dist/flicking.css");
 </style>

@@ -23,7 +23,6 @@ class SnapControl extends Control {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE));
     }
 
-    const panelAtPosition = anchorAtPosition.panel;
     const prevPos = activePanel.position;
 
     const isOverThreshold = Math.abs(position - prevPos) >= flicking.threshold;
@@ -36,7 +35,7 @@ class SnapControl extends Control {
 
     if (isOverThreshold && anchorAtPosition.position !== activePanel.position) {
       // Move to anchor at position
-      targetPanel = panelAtPosition;
+      targetPanel = anchorAtPosition.panel;
       targetPos = anchorAtPosition.position;
     } else if (isOverThreshold && adjacentAnchor) {
       // Move to adjacent anchor

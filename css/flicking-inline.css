@@ -20,23 +20,17 @@
   will-change: transform;
 }
 
-.flicking-camera img {
-  user-select: none;
-  user-drag: none;
-  -webkit-user-drag: none;
-}
-
-.flicking-panel {
+.flicking-camera>* {
   display: inline-block;
   white-space: normal;
   vertical-align: top;
 }
-.flicking-viewport.vertical-middle>.flicking-camera .flicking-panel {
+.flicking-viewport.vertical-middle>.flicking-camera>* {
   vertical-align: middle;
 }
-.flicking-viewport.vertical-bottom>.flicking-camera .flicking-panel {
+.flicking-viewport.vertical-bottom>.flicking-camera>* {
   vertical-align: bottom;
 }
-.flicking-viewport.vertical>.flicking-camera .flicking-panel {
+.flicking-viewport.vertical>.flicking-camera>* {
   display: block;
 }

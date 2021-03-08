@@ -3,19 +3,19 @@
     <h1>Flexible Align</h1>
       <ul class="extra">
         <li>Use Hanger and Anchor to provide customizable alignment.</li>
-        <li>The Hanger and Anchor have magnetically bonded effect which allows the panel position to be aligned</li>
-        <li><strong>Hanger:</strong> An alignment point within flicking area. It hangs panel anchors to its position.</li>
-        <li><strong>Anchor:</strong> Alignment points based on each panels. Panel's anchor position is determined by this value. <br /> It will be used for a reference point where panel should stop when selected, interacting with hanger position.</li>
+        <li>The Hanger and Anchor have magnetically bonded effect which allows the div position to be aligned</li>
+        <li><strong>Hanger:</strong> An alignment point within flicking area. It hangs div anchors to its position.</li>
+        <li><strong>Anchor:</strong> Alignment points based on each panels. Panel's anchor position is determined by this value. <br /> It will be used for a reference point where div should stop when selected, interacting with hanger position.</li>
       </ul>
     <h2>Center Align (Default)</h2>
     <h3>hanger: 50%, anchor: 50%</h3>
     <div class="hanger flicking0"></div>
     <flicking class="flicking flicking0">
-      <panel v-once class="panel0"><div class="anchor"></div></panel>
-      <panel v-once class="panel1"><div class="anchor"></div></panel>
-      <panel v-once class="panel2"><div class="anchor"></div></panel>
-      <panel v-once class="panel3"><div class="anchor"></div></panel>
-      <panel v-once class="panel4"><div class="anchor"></div></panel>
+      <div class="panel0"><div class="anchor"></div></div>
+      <div class="panel1"><div class="anchor"></div></div>
+      <div class="panel2"><div class="anchor"></div></div>
+      <div class="panel3"><div class="anchor"></div></div>
+      <div class="panel4"><div class="anchor"></div></div>
     </flicking>
     <pre><code class="hljs html" data-script="flicking0">{{ code0 }}</code></pre>
 
@@ -23,11 +23,11 @@
     <h2>hanger: 0, anchor: 0</h2>
     <div class="hanger hanger1"></div>
     <flicking class="flicking flicking1" :options="{ align: { camera: 0, panel: 0 } }">
-      <panel v-once class="panel0"><div class="anchor"></div></panel>
-      <panel v-once class="panel1"><div class="anchor"></div></panel>
-      <panel v-once class="panel2"><div class="anchor"></div></panel>
-      <panel v-once class="panel3"><div class="anchor"></div></panel>
-      <panel v-once class="panel4"><div class="anchor"></div></panel>
+      <div class="panel0"><div class="anchor"></div></div>
+      <div class="panel1"><div class="anchor"></div></div>
+      <div class="panel2"><div class="anchor"></div></div>
+      <div class="panel3"><div class="anchor"></div></div>
+      <div class="panel4"><div class="anchor"></div></div>
     </flicking>
     <div class="pagination pagination1"></div>
     <pre><code class="hljs html" data-script="flicking1">{{ code1 }}</code></pre>
@@ -36,11 +36,11 @@
     <h3>hanger: 30%, anchor: 50px</h3>
     <div class="hanger hanger2"></div>
     <flicking class="flicking flicking2" :options="{ align: { camera: '30%', panel: '50px' } }">
-      <panel v-once class="panel0"><div class="anchor"></div></panel>
-      <panel v-once class="panel1"><div class="anchor"></div></panel>
-      <panel v-once class="panel2"><div class="anchor"></div></panel>
-      <panel v-once class="panel3"><div class="anchor"></div></panel>
-      <panel v-once class="panel4"><div class="anchor"></div></panel>
+      <div class="panel0"><div class="anchor"></div></div>
+      <div class="panel1"><div class="anchor"></div></div>
+      <div class="panel2"><div class="anchor"></div></div>
+      <div class="panel3"><div class="anchor"></div></div>
+      <div class="panel4"><div class="anchor"></div></div>
     </flicking>
     <div class="pagination pagination2"></div>
     <pre><code class="hljs html" data-script="flicking2">{{ code2 }}</code></pre>

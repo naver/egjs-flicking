@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Fade, AutoPlay} from '@egjs/flicking-plugins';
-import { Plugin } from '@egjs/flicking';
+// import { Plugin } from '@egjs/flicking';
 
 @Component({
   selector: 'demo-autoplay',
@@ -8,7 +8,7 @@ import { Plugin } from '@egjs/flicking';
   styleUrls: ['../app.component.css', './autoplay.component.css']
 })
 export class AutoplayComponent implements OnInit {
-  plugins: Plugin[] = [new Fade(), new AutoPlay(2000, 'NEXT')];
+  // plugins: Plugin[] = [new Fade(), new AutoPlay(2000, 'NEXT')];
 
   constructor() { }
 

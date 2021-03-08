@@ -1,7 +1,7 @@
 <template>
-  <panel class="infinite" :class="classes">
+  <div class="infinite" :class="classes">
     <slot></slot>
-  </panel>
+  </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";

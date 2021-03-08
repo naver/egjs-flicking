@@ -8,10 +8,10 @@
       :options="{
         gap: 10,
         circular: true,
-        moveType: { type: 'snap', count: 5 },
+        moveType: 'snap',
       }"
       @move="e => {
-        this.$refs.thumb.style.width = (e.progress * 100) + '%';
+        // this.$refs.thumb.style.width = (e.progress * 100) + '%';
       }">
       <div class="panel0"></div>
       <div class="panel1"></div>
@@ -31,12 +31,12 @@
       :option="{
         gap: 10,
         circular: true,
-        moveType: { type: 'snap', count: 5 },
+        moveType: 'snap',
       }"
       @move="e => {
-        e.currentTarget.getAllPanels(true).forEach(panel => {
-          panel.getElement().innerHTML = panel.getProgress().toFixed(2);
-        });
+        // e.currentTarget.getAllPanels(true).forEach(panel => {
+        //   panel.getElement().innerHTML = panel.getProgress().toFixed(2);
+        // });
       }"
       ref="flick1">
       <div class="panel0"></div>
@@ -56,14 +56,14 @@
       :options="{
         gap: 10,
         circular: true,
-        moveType: { type: 'snap', count: 5 }
+        moveType: 'snap'
       }"
       @move="e => {
-        const flicking = e.currentTarget;
+        // const flicking = e.currentTarget;
 
-        flicking.getAllPanels(true).forEach(panel => {
-          panel.getElement().innerHTML = panel.getOutsetProgress().toFixed(2);
-        });
+        // flicking.getAllPanels(true).forEach(panel => {
+        //   panel.getElement().innerHTML = panel.getOutsetProgress().toFixed(2);
+        // });
       }"
       ref="flick2">
       <div class="panel0"></div>
@@ -83,14 +83,14 @@
       :options="{
         gap: 10,
         circular: true,
-        moveType: { type: 'snap', count: 5}
+        moveType: 'snap'
       }"
       @move="e => {
-        const flicking = e.currentTarget;
+        // const flicking = e.currentTarget;
 
-        flicking.getAllPanels(true).forEach(panel => {
-          panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
-        });
+        // flicking.getAllPanels(true).forEach(panel => {
+        //   panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
+        // });
       }"
       ref="flick3">
       <div class="panel0"></div>
@@ -185,17 +185,17 @@ export default class Progress extends Vue {
       (window as any).hljs.highlightBlock(block);
     });
 
-    this.$nextTick(() => {
-      (this.$refs.flick1 as Flicking).getAllPanels(true).forEach(panel => {
-        panel.getElement().innerHTML = panel.getProgress().toFixed(2);
-      });
-      (this.$refs.flick2 as Flicking).getAllPanels(true).forEach(panel => {
-        panel.getElement().innerHTML = panel.getOutsetProgress().toFixed(2);
-      });
-      (this.$refs.flick3 as Flicking).getAllPanels(true).forEach(panel => {
-        panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
-      });
-    });
+    // this.$nextTick(() => {
+    //   (this.$refs.flick1 as Flicking).getAllPanels(true).forEach(panel => {
+    //     panel.getElement().innerHTML = panel.getProgress().toFixed(2);
+    //   });
+    //   (this.$refs.flick2 as Flicking).getAllPanels(true).forEach(panel => {
+    //     panel.getElement().innerHTML = panel.getOutsetProgress().toFixed(2);
+    //   });
+    //   (this.$refs.flick3 as Flicking).getAllPanels(true).forEach(panel => {
+    //     panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
+    //   });
+    // });
   }
 }
 </script>

@@ -1,12 +1,15 @@
-import { EVENTS } from './../../../../../../../src/consts';
+/* eslint-disable max-classes-per-file */
+
 import { Component, OnInit, Input, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
+
+import { EVENTS } from '~/index';
 
 @Component({
   selector: 'demo-infinite',
   templateUrl: './infinite.component.html',
   styleUrls: ['../app.component.css', './infinite.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InfiniteComponent implements OnInit {
   list0 = [0, 1, 2, 3, 4];
@@ -21,22 +24,23 @@ export class InfiniteComponent implements OnInit {
 
   onPrepend() {
     const start = this.list0[0] || 0;
-    this.list0.splice(0, 0, start - 2, start - 1);
+    this.list0 = [start - 2, start - 1, ...this.list0];
   }
 
   onAppend() {
     const end = this.list0[this.list0.length - 1] || 0;
-    this.list0.push(end + 1, end + 2);
+    this.list0 = [...this.list0, end + 1, end + 2];
   }
 
   onNeedPanel1(e) {
-    if (e.type === EVENTS.NEED_PANEL) {
+    if (e.eventType === EVENTS.NEED_PANEL) {
       const end = this.list1[this.list1.length - 1] || 0;
       this.list1.push(end + 1, end + 2);
     }
   }
+
   onNeedPanel2(e) {
-    if (e.type === EVENTS.NEED_PANEL) {
+    if (e.eventType === EVENTS.NEED_PANEL) {
       const end = this.list2[this.list2.length - 1] || 0;
       this.list2.push(end + 1, end + 2);
     }

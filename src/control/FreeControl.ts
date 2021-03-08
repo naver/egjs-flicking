@@ -15,6 +15,7 @@ class FreeControl extends Control {
 
     const camera = flicking.camera;
     const targetPos = camera.clampToReachablePosition(position);
+
     const anchorAtPosition = camera.findAnchorIncludePosition(targetPos);
     const activePanel = this._activePanel;
 

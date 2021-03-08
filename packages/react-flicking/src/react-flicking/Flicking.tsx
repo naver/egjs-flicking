@@ -98,8 +98,6 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const flicking = this._nativeFlicking;
 
     this._diffResult = diffResult;
-    console.log("should?", children.map(children => children.key))
-    // this._checkKeys(diffResult.added.map(idx => diffResult.list[idx]));
 
     const removedPanels = diffResult.removed.reduce((map, idx) => {
       map[idx] = true;
@@ -118,8 +116,6 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
         .map(panel => diffResult.prevList[panel.index]),
       ...diffResult.added.map(idx => diffResult.list[idx])
     ];
-
-    console.log(diffResult.added.map(idx => diffResult.list[idx]))
 
     return true;
   }
@@ -151,6 +147,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     if (diffResult.added.length > 0) {
       const children: HTMLElement[] = [].slice.call(this._cameraElement.children);
       const addedElements = children.slice(-diffResult.added.length);
+      const cameraEl = this._cameraElement;
 
       diffResult.added.forEach((panelIdx, elIdx) => {
         const el = addedElements[elIdx];
@@ -159,10 +156,12 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
           : null;
 
         if (el.nextElementSibling !== elNext) {
-          this._cameraElement.insertBefore(el, elNext);
+          cameraEl.insertBefore(el, elNext);
         }
+      });
 
-        renderer.insert(panelIdx, el);
+      diffResult.added.forEach((panelIdx, elIdx) => {
+        renderer.insert(panelIdx, addedElements[elIdx]);
       });
     };
 
@@ -214,10 +213,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
 
     return childs.map(child => {
       return React.cloneElement(child, {
-        key: child.key!,
-        className: child.props.className
-          ? `${child.props.className} flicking-panel`
-          : "flicking-panel"
+        key: child.key!
       });
     });
   }

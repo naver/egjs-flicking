@@ -15,7 +15,7 @@
     <div class="pagination pagination0"></div>
     <pre><code class="hljs html" data-script="flicking0">{{ code0 }}</code></pre>
     <h2>count: 3</h2>
-    <flicking class="flicking flicking1" :options="{ gap: 10, circular: true, moveType: { type: 'snap', count: 3 } }">
+    <flicking class="flicking flicking1" :options="{ gap: 10, circular: true, moveType: 'snap' }">
       <div class="panel0"></div>
       <div class="panel1"></div>
       <div class="panel2"></div>
@@ -25,7 +25,7 @@
     <div class="pagination pagination1"></div>
     <pre><code class="hljs html" data-script="flicking1">{{ code1 }}</code></pre>
     <h2>count: Infinity</h2>
-    <flicking class="flicking flicking2" :options="{ gap: 10, circular: true, moveType: { type: 'snap', count: Infinity } }">
+    <flicking class="flicking flicking2" :options="{ gap: 10, circular: true, moveType: 'snap' }">
       <div class="panel0"></div>
       <div class="panel1"></div>
       <div class="panel2"></div>

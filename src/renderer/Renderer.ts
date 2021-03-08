@@ -92,13 +92,6 @@ abstract class Renderer {
 
     // Resize the newly added panels
     newPanels.forEach(panel => panel.resize());
-    if (camera.offset !== 0) {
-      if (camera.offset > 0) {
-        newPanels.forEach(panel => panel.increasePosition(camera.offset));
-      } else {
-        newPanels.forEach(panel => panel.decreasePosition(camera.offset));
-      }
-    }
 
     const insertedSize = this._getPanelSizeSum(newPanels);
 
