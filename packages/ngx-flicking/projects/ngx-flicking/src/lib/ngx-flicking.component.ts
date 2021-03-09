@@ -21,9 +21,8 @@ import * as uuid from "uuid";
 
 import NativeFlicking, {
   FlickingOptions,
-  EVENTS,
   FlickingEvents,
-  NeedPanelEvent
+  EVENTS
 } from "~/index";
 
 export interface RenderPanelChangeEvent {
@@ -51,10 +50,23 @@ implements AfterViewInit, OnDestroy, OnChanges {
   @Input() public plugins: Plugin[] = [];
   @Input() public panels: any[] = [];
 
-  @Output() public needPanel = new EventEmitter<NeedPanelEvent>();
+  @Output() public ready = new EventEmitter<FlickingEvents[typeof EVENTS.READY]>();
+  @Output() public beforeResize = new EventEmitter<FlickingEvents[typeof EVENTS.BEFORE_RESIZE]>();
+  @Output() public afterResize = new EventEmitter<FlickingEvents[typeof EVENTS.AFTER_RESIZE]>();
+  @Output() public holdStart = new EventEmitter<FlickingEvents[typeof EVENTS.HOLD_START]>();
+  @Output() public holdEnd = new EventEmitter<FlickingEvents[typeof EVENTS.HOLD_END]>();
+  @Output() public moveStart = new EventEmitter<FlickingEvents[typeof EVENTS.MOVE_START]>();
+  @Output() public move = new EventEmitter<FlickingEvents[typeof EVENTS.MOVE]>();
+  @Output() public moveEnd = new EventEmitter<FlickingEvents[typeof EVENTS.MOVE_END]>();
+  @Output() public change = new EventEmitter<FlickingEvents[typeof EVENTS.CHANGE]>();
+  @Output() public restore = new EventEmitter<FlickingEvents[typeof EVENTS.RESTORE]>();
+  @Output() public select = new EventEmitter<FlickingEvents[typeof EVENTS.SELECT]>();
+  @Output() public needPanel = new EventEmitter<FlickingEvents[typeof EVENTS.NEED_PANEL]>();
+  @Output() public visibleChange = new EventEmitter<FlickingEvents[typeof EVENTS.VISIBLE_CHANGE]>();
+  @Output() public reachEdge = new EventEmitter<FlickingEvents[typeof EVENTS.REACH_EDGE]>();
   @Output() public renderPanelChange = new EventEmitter<RenderPanelChangeEvent>();
-  @ViewChild("camera") camera: ElementRef<HTMLElement>;
 
+  @ViewChild("camera") private _camera: ElementRef<HTMLElement>;
   private _elRef: ElementRef<HTMLDivElement>;
   private _zone: NgZone;
   private _nativeFlicking: NativeFlicking | null;
@@ -221,7 +233,7 @@ implements AfterViewInit, OnDestroy, OnChanges {
 
   private _getChildKeys() {
     // Fill keys if not exist
-    const children = ([].slice.apply(this.camera.nativeElement.children) as HTMLElement[])
+    const children = ([].slice.apply(this._camera.nativeElement.children) as HTMLElement[])
       .filter(node => node.nodeType === Node.ELEMENT_NODE);
     children.forEach(child => {
       if (!(child as any).__NGX_FLICKING_KEY__) {
