@@ -11,8 +11,9 @@ import Panel from "./core/Panel";
 import { Control, FreeControl, SnapControl } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
 import { RawRenderer, Renderer, RendererOptions, VisibleRenderer } from "./renderer";
-import ElementManipulator from "./renderer/ElementManipulator";
 import ExternalManipulator from "./renderer/ExternalManipulator";
+import ElementManipulator from "./renderer/ElementManipulator";
+import OffsetManipulator from "./renderer/OffsetManipulator";
 
 import { EVENTS, ALIGN, MOVE_TYPE } from "~/const/external";
 import * as ERROR from "~/const/error";
@@ -100,6 +101,7 @@ export interface FlickingOptions {
   autoInit: boolean;
   autoResize: boolean;
   renderExternal: boolean;
+  useOffsetManipulator: boolean;
 }
 
 /**
@@ -152,6 +154,7 @@ class Flicking extends Component<FlickingEvents> {
   private _autoResize: FlickingOptions["autoResize"];
   private _autoInit: FlickingOptions["autoInit"];
   private _renderExternal: FlickingOptions["renderExternal"];
+  private _useOffsetManipulator: FlickingOptions["useOffsetManipulator"];
 
   // Internal State
   private _initialized: boolean;
@@ -202,6 +205,7 @@ class Flicking extends Component<FlickingEvents> {
   public get autoInit() { return this._autoInit; }
   public get autoResize() { return this._autoResize; }
   public get renderExternal() { return this._renderExternal; }
+  public get useOffsetManipulator() { return this._useOffsetManipulator; }
 
   // Options Setter
   // UI / LAYOUT
@@ -230,7 +234,7 @@ class Flicking extends Component<FlickingEvents> {
   // PERFORMANCE
   public set isEqualSize(val: FlickingOptions["isEqualSize"]) { this._isEqualSize = val; }
   public set isConstantSize(val: FlickingOptions["isConstantSize"]) { this._isConstantSize = val; }
-  public set isRenderOnlyVisible(val: FlickingOptions["renderOnlyVisible"]) { this._renderOnlyVisible = val; }
+  public set renderOnlyVisible(val: FlickingOptions["renderOnlyVisible"]) { this._renderOnlyVisible = val; }
   // OTHERS
   public set autoInit(val: FlickingOptions["autoInit"]) { this._autoInit = val; }
   public set autoResize(val: FlickingOptions["autoResize"]) { this._autoResize = val; }
@@ -257,7 +261,8 @@ class Flicking extends Component<FlickingEvents> {
     renderOnlyVisible = false,
     autoInit = true,
     autoResize = true,
-    renderExternal = false
+    renderExternal = false,
+    useOffsetManipulator = false
   }: Partial<FlickingOptions> = {}) {
     super();
 
@@ -287,6 +292,7 @@ class Flicking extends Component<FlickingEvents> {
     this._autoResize = autoResize;
     this._autoInit = autoInit;
     this._renderExternal = renderExternal;
+    this._useOffsetManipulator = useOffsetManipulator;
 
     // Create core components
     this._viewport = new Viewport(getElement(root));
@@ -618,9 +624,11 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   private _createRenderer(): Renderer {
-    const elementManipulator = this._renderExternal
-      ? new ExternalManipulator()
-      : new ElementManipulator();
+    const elementManipulator = this._useOffsetManipulator
+      ? new OffsetManipulator()
+      : this._renderExternal
+        ? new ExternalManipulator()
+        : new ElementManipulator();
 
     const rendererOptions = {
       align: this._align,

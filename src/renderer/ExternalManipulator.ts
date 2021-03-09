@@ -7,7 +7,7 @@ import Component from "@egjs/component";
 import Flicking from "~/Flicking";
 import Panel from "~/core/Panel";
 import { getFlickingAttached } from "~/utils";
-import CircularCamera, { TogglePoint } from "~/camera/CircularCamera";
+import { TogglePoint } from "~/camera/CircularCamera";
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 class ExternalManipulator extends Component<{
@@ -39,11 +39,6 @@ class ExternalManipulator extends Component<{
 
     panels.forEach((panel, idx) => {
       panel.decreaseOffset(camRangeDiff);
-      if (togglePoints[idx].toggled) {
-        panel.element.style.order = "-1";
-      } else {
-        panel.element.style.order = "0";
-      }
     });
 
     if (panels.length > 0) {
@@ -58,12 +53,6 @@ class ExternalManipulator extends Component<{
 
     panels.forEach((panel, idx) => {
       panel.increaseOffset(camRangeDiff);
-
-      if (togglePoints[idx].toggled) {
-        panel.element.style.order = "1";
-      } else {
-        panel.element.style.order = "0";
-      }
     });
 
     if (panels.length > 0) {
@@ -75,7 +64,6 @@ class ExternalManipulator extends Component<{
   public resetPanelElementOrder(panels: Panel[]): this {
     panels.forEach(panel => {
       panel.resetOffset();
-      panel.element.style.order = "0";
     });
 
     if (panels.length > 0) {

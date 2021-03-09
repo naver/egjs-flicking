@@ -21,9 +21,12 @@
     <li>Enabling the infinite option can make <strong>needPanel</strong> event to be triggered when more panels at moving direction should be fetched within <strong>infiniteThreshold</strong> value.</li>
   </ul>
   <ngx-flicking
-    class="flicking flicking1" [options]="{ gap: 10, infinite: true, infiniteThreshold: 50 }"
-    (needPanel)="onNeedPanel1($event)">
-    <div *ngFor="let num of list1" class='infinite infinite{{ math.abs(num) % 5 }}' [attr.key]="num">
+    class="flicking flicking1"
+    [options]="{ needPanelThreshold: 50, renderOnlyVisible: true }"
+    [panels]="list1"
+    (needPanel)="onNeedPanel1($event)"
+    (renderPanelChange)="onRenderPanelChange($event)">
+    <div *ngFor="let num of visible1" class='infinite infinite{{ math.abs(num) % 5 }}'>
       {{ num }}
     </div>
   </ngx-flicking>

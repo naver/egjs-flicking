@@ -131,14 +131,11 @@ class CircularCamera extends Camera {
       return this;
     }
 
+    const position = this._position;
     const firstPanel = panels[0]!;
     const lastPanel = panels[panels.length - 1]!;
-    const firstPanelPrev = flicking.horizontal
-      ? firstPanel.bbox.left - firstPanel.margin.left
-      : firstPanel.bbox.top - firstPanel.margin.top;
-    const lastPanelNext = flicking.horizontal
-      ? lastPanel.bbox.left + lastPanel.bbox.width + lastPanel.margin.right
-      : lastPanel.bbox.top + lastPanel.bbox.height + lastPanel.margin.bottom;
+    const firstPanelPrev = firstPanel.range.min - firstPanel.margin.prev;
+    const lastPanelNext = lastPanel.range.max + lastPanel.margin.next;
 
     const visibleSize = this.size;
     const panelSizeSum = lastPanelNext - firstPanelPrev;
@@ -148,10 +145,15 @@ class CircularCamera extends Camera {
 
     if (canSetCircularMode) {
       this._range = { min: firstPanelPrev, max: lastPanelNext };
+
       const panelTooglePoints: CircularCamera["_panelTooglePoints"] = {};
       const alignPos = this._alignPos;
-      const shouldBeToggled: Panel[] = [];
-      const shouldBeToggledInfos: TogglePoint[] = [];
+
+      const shouldBeToggledPrev: Panel[] = [];
+      const togglePointPrev: TogglePoint[] = [];
+
+      const shouldBeToggledNext: Panel[] = [];
+      const togglePointNext: TogglePoint[] = [];
 
       const range = this._range;
       const minimumVisible = range.min - alignPos;
@@ -162,28 +164,43 @@ class CircularCamera extends Camera {
         const shouldBeVisibleAtMax = panel.includeRange(minimumVisible, minimumVisible + visibleSize, false);
 
         if (shouldBeVisibleAtMin) {
-          const togglePointInfo = {
+          const togglePos = panel.range.max + range.min - range.max + alignPos;
+          const shouldToggle = togglePos > position;
+          const togglePoint = {
             panel,
             direction: DIRECTION.PREV,
-            toggled: true
+            toggled: shouldToggle
           };
-          panelTooglePoints[panel.range.max + range.min - range.max + alignPos] = togglePointInfo;
-          shouldBeToggled.push(panel);
-          shouldBeToggledInfos.push(togglePointInfo);
+
+          panelTooglePoints[togglePos] = togglePoint;
+
+          if (shouldToggle) {
+            shouldBeToggledPrev.push(panel);
+            togglePointPrev.push(togglePoint);
+          }
         }
         if (shouldBeVisibleAtMax) {
-          panelTooglePoints[panel.range.min + range.max - visibleSize + alignPos] = {
+          const togglePos = panel.range.min + range.max - visibleSize + alignPos;
+          const shouldToggle = togglePos < position;
+          const togglePoint = {
             panel,
             direction: DIRECTION.NEXT,
             toggled: false
           };
+
+          panelTooglePoints[togglePos] = togglePoint;
+
+          if (shouldToggle) {
+            shouldBeToggledNext.push(panel);
+            togglePointNext.push(togglePoint);
+          }
         }
       });
 
-      renderer.elementManipulator.movePanelElementsToStart(shouldBeToggled, shouldBeToggledInfos);
+      renderer.elementManipulator.movePanelElementsToStart(shouldBeToggledPrev, togglePointPrev);
+      renderer.elementManipulator.movePanelElementsToEnd(shouldBeToggledNext, togglePointNext);
 
-      this._circularOffset += this._calcPanelAreaSum(shouldBeToggled);
-
+      this._circularOffset = this._calcPanelAreaSum(shouldBeToggledPrev) - this._calcPanelAreaSum(shouldBeToggledNext);
       this._panelTooglePoints = panelTooglePoints;
     } else {
       this._range = { min: firstPanel.position, max: lastPanel.position };
@@ -269,13 +286,7 @@ class CircularCamera extends Camera {
   }
 
   private _calcPanelAreaSum(panels: Panel[]) {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
-    const isHorizontal = flicking.horizontal;
-
-    return panels.reduce((sum: number, panel: Panel) => {
-      const panelMargin = panel.margin;
-      return sum + panel.size + (isHorizontal ? panelMargin.right + panelMargin.left : panelMargin.bottom + panelMargin.top);
-    }, 0);
+    return panels.reduce((sum: number, panel: Panel) => sum + panel.sizeIncludingMargin, 0);
   }
 }
 

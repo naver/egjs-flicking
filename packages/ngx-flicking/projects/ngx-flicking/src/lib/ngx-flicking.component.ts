@@ -11,16 +11,10 @@ import {
   Output,
   EventEmitter,
   OnDestroy,
-  ContentChild,
-  TemplateRef,
   SimpleChanges,
-  AfterViewChecked,
-  DoCheck,
-  ChangeDetectorRef,
   ViewEncapsulation,
-  QueryList,
-  ContentChildren,
-  ViewChild
+  ViewChild,
+  NgZone
 } from "@angular/core";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import * as uuid from "uuid";
@@ -33,11 +27,7 @@ import NativeFlicking, {
 } from "~/index";
 
 export interface RenderPanelChangeEvent {
-  visibles: {
-    index: number;
-    key: number; /* Unique value */
-    data: any; /* User panel data */
-  }[];
+  visibles: any[];
 }
 
 @Component({
@@ -56,20 +46,22 @@ export interface RenderPanelChangeEvent {
   encapsulation: ViewEncapsulation.None
 })
 export class NgxFlickingComponent
-implements AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
+implements AfterViewInit, OnDestroy, OnChanges {
   @Input() public options: Partial<FlickingOptions> = {};
   @Input() public plugins: Plugin[] = [];
   @Input() public panels: any[] = [];
 
-  @Output() public needPanel = new EventEmitter<RenderPanelChangeEvent>();
+  @Output() public needPanel = new EventEmitter<NeedPanelEvent>();
   @Output() public renderPanelChange = new EventEmitter<RenderPanelChangeEvent>();
   @ViewChild("camera") camera: ElementRef<HTMLElement>;
 
   private _elRef: ElementRef<HTMLDivElement>;
-  private _cdr: ChangeDetectorRef;
+  private _zone: NgZone;
   private _nativeFlicking: NativeFlicking | null;
   private _pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
-  private _panelDiffer: ListDiffer<string | number> | null = null;
+  private _elementDiffer: ListDiffer<string | number> | null = null;
+  private _panelsDiffer: ListDiffer<any> | null = null;
+  private _diffResult: DiffResult<any> | null = null;
   /**
    * To prevent 'ExpressionChangedAfterItHasBeenCheckedError'
    * It would trigger above error if you changed the value after DOM operation is started. It makes unstable DOM tree.
@@ -79,54 +71,86 @@ implements AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
    */
   private criticalSection = true;
 
-  public constructor(elRef: ElementRef, cdr: ChangeDetectorRef) {
+  public constructor(elRef: ElementRef, zone: NgZone) {
     this._elRef = elRef;
-    this._cdr = cdr;
+    this._zone = zone;
     this._nativeFlicking = null;
   }
 
   public ngAfterViewInit() {
     const viewportEl = this._elRef.nativeElement as HTMLElement;
-    const options = { ...this.options, renderExternal: true };
+    const options: Partial<FlickingOptions> = {
+      ...this.options,
+      renderExternal: true,
+      useOffsetManipulator: true
+    };
 
-    this._nativeFlicking = new NativeFlicking(viewportEl, options);
-    this._panelDiffer = new ListDiffer(this._getChildKeys());
-
-    // this._syncPanelDataIfRenderOnlyVisible(this.panels);
+    // This prevents mousemove to call ngDoCheck & noAfterContentChecked everytime
+    this._zone.runOutsideAngular(() => {
+      this._nativeFlicking = new NativeFlicking(viewportEl, options);
+    });
+    this._elementDiffer = new ListDiffer(this._getChildKeys());
+    this._panelsDiffer = new ListDiffer(this.panels);
 
     this._bindEvents();
     this._checkPlugins();
 
-    // Re-render component
-    this._cdr.markForCheck();
+    if (this.options.renderOnlyVisible) {
+      this._reRender();
+    }
   }
 
   public ngOnDestroy() {
     if (!this._nativeFlicking) return;
 
-    // this._nativeFlicking.destroy();
+    this._nativeFlicking.destroy();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    console.log("changes", changes);
-    // if (this._nativeFlicking && this.prevPanels !== this.panels) {
-    //   this._syncPanelDataIfRenderOnlyVisible(this.panels);
-    //   this.prevPanels = this.panels;
-    // }
+    const flicking = this._nativeFlicking;
+    if (!flicking) return;
+
+    if (changes.panels && !changes.panels.firstChange) {
+      const diffResult = this._panelsDiffer.update(this.panels);
+
+      const removedPanels = diffResult.removed.reduce((map, idx) => {
+        map[idx] = true;
+        return map;
+      }, {});
+      let removedCnt = 0;
+
+      this.renderPanelChange.emit({
+        visibles: [
+          ...flicking.visiblePanels
+            .filter(panel => {
+              const removed = removedPanels[panel.index];
+              if (removed) removedCnt += 1;
+              return !removed;
+            }).map(panel => diffResult.maintained[panel.index - removedCnt][1]),
+          ...diffResult.added
+        ].sort((a, b) => a - b).map(idx => diffResult.list[idx])
+      })
+
+      this._diffResult = diffResult;
+    }
 
     this._checkPlugins();
   }
 
-  public ngDoCheck() {
-    this.criticalSection = true;
-  }
-
   public ngAfterContentChecked() {
-    if (!this._panelDiffer) return;
+    if (!this._elementDiffer) return;
 
     const flicking = this._nativeFlicking;
     const renderer = flicking.renderer;
-    const diffResult = this._panelDiffer.update(this._getChildKeys());
+    const diffResult = this.options.renderOnlyVisible
+      ? this._diffResult
+      : this._elementDiffer.update(this._getChildKeys());
+
+    if (!diffResult) return;
+
+    if (this.options.renderOnlyVisible) {
+      flicking.off(EVENTS.VISIBLE_CHANGE, this._reRender);
+    }
 
     diffResult.removed.forEach(idx => {
       renderer.remove(idx, 1);
@@ -147,36 +171,21 @@ implements AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
 
     if (diffResult.added.length > 0) {
       const cameraEl = flicking.camera.element;
-      const children = [].slice.apply(cameraEl.children);
+      const children: HTMLElement[] = [].slice.call(cameraEl.children);
+      const addedElements = children.slice(-diffResult.added.length);
 
-      diffResult.added.forEach(panelIdx => {
-        renderer.insert(panelIdx, children[panelIdx]);
+      diffResult.added.forEach((panelIdx, elIdx) => {
+        renderer.insert(panelIdx, addedElements[elIdx]);
       });
     };
 
+    if (this.options.renderOnlyVisible) {
+      this._reRender();
+      flicking.on(EVENTS.VISIBLE_CHANGE, this._reRender);
+    }
+
     this._checkPlugins();
-
-    if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
-      // this.panels = this._getPanelVNodes();
-    }
-  }
-
-  public ngAfterViewChecked() {
-    this.criticalSection = false;
-  }
-
-  private _syncPanelDataIfRenderOnlyVisible(panelData: any[]) {
-    if (!panelData || !this.options.renderOnlyVisible) {
-      return;
-    }
-
-    // const panelDiff = this._panelDiffer.update(this.panels);
-
-    // console.log(panelDiff);
-    // this._nativeFlicking.beforeSync(panelDiff);
-    // const renderingIndexes = this._nativeFlicking.getRenderingIndexes(panelDiff);
-
-    // this._triggerRenderChange(renderingIndexes);
+    this._diffResult = null;
   }
 
   private _bindEvents() {
@@ -196,9 +205,7 @@ implements AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
     });
 
     if (this.options.renderOnlyVisible) {
-      flicking.on(EVENTS.VISIBLE_CHANGE, () => {
-        // this._triggerRenderChange();
-      });
+      flicking.on(EVENTS.VISIBLE_CHANGE, this._reRender);
     }
   }
 
@@ -217,46 +224,24 @@ implements AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
     const children = ([].slice.apply(this.camera.nativeElement.children) as HTMLElement[])
       .filter(node => node.nodeType === Node.ELEMENT_NODE);
     children.forEach(child => {
-      if (!child.hasAttribute("key")) {
-        child.setAttribute("key", uuid.v4());
+      if (!(child as any).__NGX_FLICKING_KEY__) {
+        (child as any).__NGX_FLICKING_KEY__ =  uuid.v4();
       }
     });
 
-    return children.map(child => child.getAttribute("key"));
+    return children.map(child => (child as any).__NGX_FLICKING_KEY__);
   }
 
-  // private _triggerRenderChange(visibles: number[]) {
-  //   // visible panel is not changed
-  //   if (visibles.length === this.prevVisibles.length &&
-  //     visibles.every((v, i) => this.prevVisibles[i] === v)) {
-  //       return;
-  //   }
+  private _reRender = () => {
+    const flicking = this._nativeFlicking;
+    const visiblePanels = flicking.visiblePanels;
 
-  //   this.prevVisibles = visibles;
-
-  //   const l = this.panels.length;
-  //   const renderChangeEvent: RenderPanelChangeEvent = {
-  //     visibles: visibles.map(i => ({
-  //       key: i,
-  //       index: i % l,
-  //       data: this.panels[i % l]
-  //     }))
-  //   };
-
-  //   if (Promise) {
-  //     Promise.resolve()
-  //     .then(() => this.renderPanelChange.emit(renderChangeEvent));
-  //     return;
-  //   }
-
-  //   // If Promise is not supported (IE)
-  //   if (this.criticalSection) {
-  //     setTimeout(() => {
-  //       // This works OK but it may cause blink when panel is appended or added
-  //       this.renderPanelChange.emit(renderChangeEvent);
-  //     });
-  //   } else {
-  //     this.renderPanelChange.emit(renderChangeEvent);
-  //   }
-  // }
+    Promise.resolve().then(() => {
+      this.renderPanelChange.emit({
+        visibles: visiblePanels
+          .sort((panel1, panel2) => (panel1.position + panel1.offset) - (panel2.position + panel2.offset))
+          .map(panel => this.panels[panel.index])
+      });
+    })
+  }
 }

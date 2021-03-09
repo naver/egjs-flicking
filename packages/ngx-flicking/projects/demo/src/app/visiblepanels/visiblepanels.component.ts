@@ -1,8 +1,6 @@
 /* eslint-disable max-classes-per-file */
-import { Component, OnInit, Input, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ElementRef, Renderer2, ChangeDetectorRef } from '@angular/core';
 import { RenderPanelChangeEvent } from 'projects/ngx-flicking/src/lib/ngx-flicking.component';
-
-import { EVENTS } from '~/index';
 
 @Component({
   selector: 'demo-visiblepanels',
@@ -14,31 +12,25 @@ export class VisiblePanelsComponent implements OnInit {
   math = Math;
   visiblePanels = [];
 
-  constructor() { }
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.visiblePanels = this.list0.map(i => ({
-      key: i,
-      index: i,
-      data: this.list0[i]
-    }));
+    this.visiblePanels = [...this.list0];
   }
 
   onPrepend() {
     const start = this.list0[0] || 0;
-    this.list0.splice(0, 0, ...[start - 2, start - 1]);
-
-    this.list0 = this.list0.slice();
+    this.list0 = [start - 2, start - 1, ...this.list0]
   }
 
   onAppend() {
     const end = this.list0[this.list0.length - 1] || 0;
-    this.list0.push(end + 1, end + 2);
-    this.list0 = this.list0.slice();
+    this.list0 = [...this.list0, end + 1, end + 2];
   }
 
   onRenderPanelChange(event: RenderPanelChangeEvent) {
-    this.visiblePanels = event.visibles;
+    this.visiblePanels = [...event.visibles];
+    this.cdr.detectChanges();
   }
 
   // TODO: We can use trackByFn for the performance.

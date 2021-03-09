@@ -1,7 +1,8 @@
 /* eslint-disable max-classes-per-file */
 
-import { Component, OnInit, Input, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ElementRef, Renderer2, ChangeDetectorRef } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
+import { RenderPanelChangeEvent } from 'projects/ngx-flicking/src/public-api';
 
 import { EVENTS } from '~/index';
 
@@ -15,11 +16,13 @@ export class InfiniteComponent implements OnInit {
   list0 = [0, 1, 2, 3, 4];
   list1 = [0, 1, 2, 3, 4];
   list2 = [0, 1, 2, 3, 4];
+  visible1 = [];
   math = Math;
 
-  constructor() { }
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.visible1 = [...this.list1];
   }
 
   onPrepend() {
@@ -32,17 +35,24 @@ export class InfiniteComponent implements OnInit {
     this.list0 = [...this.list0, end + 1, end + 2];
   }
 
+  onRenderPanelChange(event: RenderPanelChangeEvent) {
+    this.visible1 = [...event.visibles];
+    this.cdr.detectChanges();
+  }
+
   onNeedPanel1(e) {
-    if (e.eventType === EVENTS.NEED_PANEL) {
+    if (e.eventType === EVENTS.NEED_PANEL && e.direction === "NEXT") {
       const end = this.list1[this.list1.length - 1] || 0;
-      this.list1.push(end + 1, end + 2);
+      this.list1 = [...this.list1, end + 1, end + 2];
+      this.cdr.detectChanges();
     }
   }
 
   onNeedPanel2(e) {
-    if (e.eventType === EVENTS.NEED_PANEL) {
+    if (e.eventType === EVENTS.NEED_PANEL && e.direction === "NEXT") {
       const end = this.list2[this.list2.length - 1] || 0;
-      this.list2.push(end + 1, end + 2);
+      this.list2 = [...this.list2, end + 1, end + 2];
+      this.cdr.detectChanges();
     }
   }
 }

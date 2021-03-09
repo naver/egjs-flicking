@@ -4,53 +4,44 @@
  */
 import RawRenderer from "~/renderer/RawRenderer";
 import Panel from "~/core/Panel";
-import { getFlickingAttached } from "~/utils";
+import { findIndex, getFlickingAttached } from "~/utils";
 
 class VisibleRenderer extends RawRenderer {
   public render() {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
     const camera = flicking.camera;
     const cameraElement = camera.element;
+    const panels = flicking.renderer.panels;
     const visiblePanels = camera.visiblePanels;
     const elementManipulator = this._elementManipulator;
 
+    if (panels.length <= 0 || visiblePanels.length <= 0) {
+      camera.offset = 0;
+      return this;
+    }
+
+    const panelsSortedByActualPosition = [...panels]
+      .sort((a, b) => (a.position + a.offset) - (b.position + b.offset));
     const visibleSortedByActualPosition = [...visiblePanels]
       .sort((a, b) => (a.position + a.offset) - (b.position + b.offset));
-
-    const offsetGtZero = this._panels.filter(panel => panel.offset > 0);
-    const visibleOffsetLteZero = visiblePanels.filter(panel => panel.offset <= 0);
 
     // Remove remaining(removed) elements
     elementManipulator.removeAllChildNodes(cameraElement);
     elementManipulator.insertPanelElements(visibleSortedByActualPosition, null);
 
-    const invisiblePrevPanels = this._panels.slice(0, visibleOffsetLteZero[0]?.index ?? 0);
+    const firstVisibleIdx = findIndex(panelsSortedByActualPosition, panel => panel.index === visibleSortedByActualPosition[0].index);
 
-    const firstPanel = invisiblePrevPanels[0];
-    const lastPanel = invisiblePrevPanels[invisiblePrevPanels.length - 1];
+    const invisiblePrevPanels = panelsSortedByActualPosition.slice(0, firstVisibleIdx);
 
-    // Calibrate offset created by circular
-    const firstGtPanel = offsetGtZero[0];
-    const lastGtPanel = offsetGtZero[offsetGtZero.length - 1];
-
-    const invisibleSize = this._calcPanelRangeSize(firstPanel, lastPanel)
-      - this._calcPanelRangeSize(firstGtPanel, lastGtPanel);
+    const invisibleSize = this._calcPanelRangeSize(invisiblePrevPanels);
 
     camera.offset = invisibleSize;
 
     return this;
   }
 
-  private _calcPanelRangeSize(firstPanel: Panel | null, lastPanel: Panel | null) {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
-
-    if (!firstPanel || !lastPanel) {
-      return 0;
-    }
-
-    return lastPanel.range.max - firstPanel.range.min
-      + (flicking.horizontal ? firstPanel.margin.left : firstPanel.margin.top)
-      + (flicking.horizontal ? lastPanel.margin.right : lastPanel.margin.bottom);
+  private _calcPanelRangeSize(panels: Panel[]) {
+    return panels.reduce((sum, panel) => sum + panel.sizeIncludingMargin, 0);
   }
 }
 

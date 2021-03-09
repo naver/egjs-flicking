@@ -7,10 +7,8 @@
     <li>Note: The number displayed above each panel is not panel's index.</li>
   </ul>
   <ngx-flicking class="flicking flicking0" [options]="{ gap: 10, renderOnlyVisible: true, circular: true, moveType: 'snap'}" [panels]="list0" (renderPanelChange)="onRenderPanelChange($event)">
-    <div *ngFor="let panel of visiblePanels;" class='infinite infinite{{ math.abs(panel.data) % 5 }}'>
-        data:{{ panel.data }}
-        {{ panel.key < list0.length ? "" : "(Clone)"}}
-        index: {{panel.index}}
+    <div *ngFor="let num of visiblePanels" class='infinite infinite{{ math.abs(num) % 5 }}'>
+      {{ num }}
     </div>
   </ngx-flicking>
   <div class="buttons">

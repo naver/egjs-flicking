@@ -21,9 +21,10 @@ class Panel {
 
   // Internal States
   private _index: number;
-  private _size: { width: number; height: number };
-  private _pos: { left: number; top: number };
-  private _margin: { left: number; right: number; top: number; bottom: number };
+  private _pos: number;
+  private _size: number;
+  private _height: number;
+  private _margin: { prev: number; next: number };
   private _alignPos: number; // Actual align pos
   private _offset: number;
   private _removed: boolean;
@@ -31,20 +32,15 @@ class Panel {
   // Internal States Getter
   public get element() { return this._el; }
   public get index() { return this._index; }
-  public get bbox() { return { ...this._pos, ...this._size }; }
-  public get position() { return (this._flicking.horizontal ? this._pos.left : this._pos.top) + this._alignPos; }
-  public get size() { return this._flicking.horizontal ? this._size.width : this._size.height; }
+  public get position() { return this._pos + this._alignPos; }
+  public get size() { return this._size; }
+  public get sizeIncludingMargin() { return this._size + this._margin.prev + this._margin.next; }
+  public get height() { return this._height; }
   public get margin() { return this._margin; }
   public get alignPosition() { return this._alignPos; }
   public get offset() { return this._offset; }
   public get removed() { return this._removed; }
-  public get range() {
-    const pos = this._pos;
-    const size = this._size;
-    return this._flicking.horizontal
-      ? { min: pos.left, max: pos.left + size.width }
-      : { min: pos.top, max: pos.top + size.height };
-  }
+  public get range() { return { min: this._pos, max: this._pos + this._size }; }
 
   // Options Getter
   public get align() { return this._align; }
@@ -73,26 +69,24 @@ class Panel {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const elStyle = window.getComputedStyle(el) || (el as any).currentStyle as CSSStyleDeclaration;
     const flicking = this._flicking;
-    const cameraOffset = flicking.camera.offset;
-    const posOffset = {
-      left: flicking.horizontal ? cameraOffset : 0,
-      top: flicking.horizontal ? 0 : cameraOffset
-    };
+    const horizontal = flicking.horizontal;
+    const prevPanel = flicking.renderer.panels[this._index - 1];
 
-    this._size = {
-      width: el.offsetWidth,
-      height: el.offsetHeight
-    };
-    this._pos = {
-      left: el.offsetLeft + posOffset.left,
-      top: el.offsetTop + posOffset.top
-    };
-    this._margin = {
-      left: parseFloat(elStyle.marginLeft),
-      right: parseFloat(elStyle.marginRight),
-      top: parseFloat(elStyle.marginTop),
-      bottom: parseFloat(elStyle.marginBottom)
-    };
+    this._size = horizontal ? el.offsetWidth : el.offsetHeight;
+    this._margin = horizontal
+      ? {
+        prev: parseFloat(elStyle.marginLeft),
+        next: parseFloat(elStyle.marginRight)
+      } : {
+        prev: parseFloat(elStyle.marginTop),
+        next: parseFloat(elStyle.marginBottom)
+      };
+
+    this._pos = prevPanel
+      ? prevPanel.range.max + prevPanel.margin.next + this._margin.prev
+      : this._margin.prev;
+
+    this._height = horizontal ? el.offsetHeight : this._size;
 
     this._updateAlignPos();
 
@@ -114,12 +108,11 @@ class Panel {
 
   public includeRange(min: number, max: number, includeMargin: boolean = false): boolean {
     const margin = this._margin;
-    const isHorizontal = this._flicking.horizontal;
     const panelRange = this.range;
 
     if (includeMargin) {
-      panelRange.min -= isHorizontal ? margin.left : margin.top;
-      panelRange.max += isHorizontal ? margin.right : margin.bottom;
+      panelRange.min -= margin.prev;
+      panelRange.max += margin.next;
     }
 
     return max >= panelRange.min && min <= panelRange.max;
@@ -191,26 +184,20 @@ class Panel {
   }
 
   private _moveBy(val: number): this {
-    const flicking = this._flicking;
-
-    if (flicking.horizontal) {
-      this._pos.left += val;
-    } else {
-      this._pos.top += val;
-    }
+    this._pos += val;
 
     return this;
   }
 
   private _updateAlignPos() {
-    const size = this._size;
-    this._alignPos = parseAlign(this._align, this._flicking.horizontal ? size.width : size.height);
+    this._alignPos = parseAlign(this._align, this._size);
   }
 
   private _resetInternalStates() {
-    this._size = { width: 0, height: 0 };
-    this._pos = { left: 0, top: 0 };
-    this._margin = { left: 0, right: 0, top: 0, bottom: 0 };
+    this._size = 0;
+    this._pos = 0;
+    this._margin = { prev: 0, next: 0 };
+    this._height = 0;
     this._alignPos = 0;
     this._offset = 0;
   }

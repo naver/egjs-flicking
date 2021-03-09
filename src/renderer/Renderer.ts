@@ -206,13 +206,10 @@ abstract class Renderer {
   }
 
   protected _getPanelSizeSum(panels: Panel[]): number {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
     const firstPanel = panels[0];
     const lastPanel = panels[panels.length - 1];
 
-    const marginDiff = flicking.horizontal
-      ? lastPanel.margin.right - firstPanel.margin.left
-      : lastPanel.margin.bottom - firstPanel.margin.top;
+    const marginDiff = lastPanel.margin.next - firstPanel.margin.prev;
 
     return (lastPanel.range.max - firstPanel.range.min) + marginDiff;
   }

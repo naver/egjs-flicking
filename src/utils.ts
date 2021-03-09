@@ -232,6 +232,16 @@ export const findRight = <T>(array: T[], checker: (val: T) => boolean): T | null
   return null;
 };
 
+export const findIndex = <T>(array: T[], checker: (val: T) => boolean): number => {
+  for (let idx = 0; idx < array.length; idx++) {
+    if (checker(array[idx])) {
+      return idx;
+    }
+  }
+
+  return -1;
+};
+
 // export const hasClass = (element: HTMLElement, className: string): boolean => {
 //   if (element.classList) {
 //     return element.classList.contains(className);
