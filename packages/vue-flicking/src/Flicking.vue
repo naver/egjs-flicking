@@ -10,11 +10,10 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import NativeFlicking, { EVENTS, FlickingOptions } from "@egjs/flicking";
+import NativeFlicking, { EVENTS, FlickingOptions, withFlickingMethods } from "@egjs/flicking";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
-import { CreateElement, VNodeData, VNode } from "vue";
-import * as uuid from "uuid";
+import { VNode } from "vue";
 
 import VNodes from "./VNodes";
 
@@ -31,23 +30,21 @@ class Flicking extends Vue {
   @Prop({ type: Object, default: () => ({}), required: false }) public options!: Partial<FlickingOptions>;
   @Prop({ type: Array, default: () => ([]), required: false }) public plugins!: Plugin[];
 
-  public panels: VNode[] = [];
+  private _panels: VNode[] = [];
 
-  private _initialized = false;
-  private _nativeFlicking!: NativeFlicking;
+  @withFlickingMethods private _nativeFlicking!: NativeFlicking;
   private _pluginsDiffer!: ListDiffer<any>;
   private _slotDiffer!: ListDiffer<VNode>;
   private _renderInfo: {[key: string]: boolean} = {};
-  private _diffResult: DiffResult<VNode>;
+  private _diffResult: DiffResult<VNode> | null = null;
 
   public created() {
-    this._initialized = false;
     this._renderInfo = {};
 
     this._fillKeys();
 
     const slots = this._getSlots();
-    this.panels = [...slots];
+    this._panels = [...slots];
   }
 
   public mounted() {
@@ -61,8 +58,6 @@ class Flicking extends Vue {
 
     this._bindEvents();
     this._checkPlugins();
-
-    this._initialized = true;
 
     this.$forceUpdate();
   }
@@ -89,7 +84,7 @@ class Flicking extends Vue {
       ? flicking.camera.visiblePanels
       : flicking.renderer.panels;
 
-    this.panels = [
+    this._panels = [
       ...panelsToRender
         .filter(panel => !removedPanels[panel.index])
         // Sort panels by position
@@ -103,13 +98,16 @@ class Flicking extends Vue {
     const flicking = this._nativeFlicking;
     const renderer = flicking.renderer;
     const diffResult = this._diffResult;
+    const panels = renderer.panels;
+
+    if (!diffResult) return;
 
     diffResult.removed.forEach(idx => {
       renderer.remove(idx, 1);
     });
 
     diffResult.ordered.forEach(([prevIdx, newIdx]) => {
-      const prevPanel = renderer.getPanel(prevIdx);
+      const prevPanel = panels[prevIdx];
       const indexDiff = newIdx - prevIdx;
 
       if (indexDiff > 0) {
@@ -122,14 +120,14 @@ class Flicking extends Vue {
     });
 
     if (diffResult.added.length > 0) {
-      const childNodes = this._vnode.children[0].children.reduce((childMap, child) => {
+      const childNodes = (this as any)._vnode.children[0].children.reduce((childMap, child) => {
         childMap[child.key] = child;
         return childMap;
-      }, {});
+      }, {}) as { [key: string]: VNode };
       const cameraEl = flicking.camera.element;
 
       const addedElements = diffResult.added.map(idx => {
-        const el = childNodes[diffResult.list[idx].key].elm;
+        const el = childNodes[diffResult.list[idx].key!].elm as HTMLElement;
         const elNext = renderer.panels[idx]
           ? renderer.panels[idx].element
           : null;
@@ -149,7 +147,7 @@ class Flicking extends Vue {
     this._checkPlugins();
 
     if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
-      this.panels = this._getPanelVNodes();
+      this._panels = this._getPanelVNodes();
     }
 
     this._diffResult = null;
@@ -173,7 +171,7 @@ class Flicking extends Vue {
       });
     }
     if (this.options.circular) {
-      flicking.renderer.elementManipulator.on("orderChanged", e => {
+      flicking.renderer.elementManipulator.on("orderChanged", () => {
         this.$forceUpdate();
       });
     }
@@ -218,6 +216,7 @@ class Flicking extends Vue {
   }
 }
 
+interface Flicking extends NativeFlicking {}
 export default Flicking;
 </script>
 <style>

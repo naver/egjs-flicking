@@ -15,8 +15,9 @@ import NativeFlicking, {
   ChangeEvent,
   SelectEvent,
   RestoreEvent,
+  ReachEdgeEvent,
   EVENTS,
-  ReachEdgeEvent
+  withFlickingMethods
 } from "@egjs/flicking";
 import "@egjs/flicking/dist/flicking.css";
 
@@ -26,8 +27,9 @@ import { FlickingProps } from "./types";
 class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = DEFAULT_PROPS;
 
-  private _panels: React.ReactElement[] = [];
+  @withFlickingMethods
   private _nativeFlicking: NativeFlicking;
+  private _panels: React.ReactElement[] = [];
   private _pluginsDiffer: ListDiffer<any>;
   private _jsxDiffer: ListDiffer<React.ReactElement>;
   private _viewportElement: HTMLElement;

@@ -14,16 +14,18 @@ import {
   SimpleChanges,
   ViewEncapsulation,
   ViewChild,
-  NgZone
+  NgZone,
+  AfterViewChecked,
+  DoCheck
 } from "@angular/core";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import * as uuid from "uuid";
-
 import NativeFlicking, {
   FlickingOptions,
   FlickingEvents,
-  EVENTS
-} from "~/index";
+  EVENTS,
+  withFlickingMethods
+} from "@egjs/flicking";
 
 export interface RenderPanelChangeEvent {
   visibles: any[];
@@ -44,8 +46,7 @@ export interface RenderPanelChangeEvent {
   ],
   encapsulation: ViewEncapsulation.None
 })
-export class NgxFlickingComponent
-implements AfterViewInit, OnDestroy, OnChanges {
+export class NgxFlickingComponent implements AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
   @Input() public options: Partial<FlickingOptions> = {};
   @Input() public plugins: Plugin[] = [];
   @Input() public panels: any[] = [];
@@ -66,10 +67,10 @@ implements AfterViewInit, OnDestroy, OnChanges {
   @Output() public reachEdge = new EventEmitter<FlickingEvents[typeof EVENTS.REACH_EDGE]>();
   @Output() public renderPanelChange = new EventEmitter<RenderPanelChangeEvent>();
 
-  @ViewChild("camera") private _camera: ElementRef<HTMLElement>;
+  @withFlickingMethods private _nativeFlicking: NativeFlicking | null;
+  @ViewChild("camera") private _cameraElRef: ElementRef<HTMLElement>;
   private _elRef: ElementRef<HTMLDivElement>;
   private _zone: NgZone;
-  private _nativeFlicking: NativeFlicking | null;
   private _pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
   private _elementDiffer: ListDiffer<string | number> | null = null;
   private _panelsDiffer: ListDiffer<any> | null = null;
@@ -81,7 +82,7 @@ implements AfterViewInit, OnDestroy, OnChanges {
    *
    * Ref: https://indepth.dev/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error/
    */
-  private criticalSection = true;
+  private _criticalSection = true;
 
   public constructor(elRef: ElementRef, zone: NgZone) {
     this._elRef = elRef;
@@ -147,6 +148,14 @@ implements AfterViewInit, OnDestroy, OnChanges {
     }
 
     this._checkPlugins();
+  }
+
+  public ngDoCheck() {
+    this._criticalSection = true;
+  }
+
+  public ngAfterViewChecked() {
+    this._criticalSection = false;
   }
 
   public ngAfterContentChecked() {
@@ -233,7 +242,7 @@ implements AfterViewInit, OnDestroy, OnChanges {
 
   private _getChildKeys() {
     // Fill keys if not exist
-    const children = ([].slice.apply(this._camera.nativeElement.children) as HTMLElement[])
+    const children = ([].slice.apply(this._cameraElRef.nativeElement.children) as HTMLElement[])
       .filter(node => node.nodeType === Node.ELEMENT_NODE);
     children.forEach(child => {
       if (!(child as any).__NGX_FLICKING_KEY__) {
@@ -257,3 +266,5 @@ implements AfterViewInit, OnDestroy, OnChanges {
     })
   }
 }
+
+export interface NgxFlickingComponent extends NativeFlicking {};

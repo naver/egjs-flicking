@@ -12,6 +12,7 @@ export * from "./renderer";
 export * from "./const/external";
 export * from "./type/event";
 export * from "./type/external";
+export * from "./cfc";
 
 export type { FlickingOptions, FlickingEvents };
 export default Flicking;
