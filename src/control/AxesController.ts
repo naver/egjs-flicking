@@ -127,9 +127,11 @@ class AxesController {
     };
 
     const animate = () => {
-      axes.once(AXES.EVENT.FINISH, () => {
+      const resetContext = () => {
         this._animatingContext = { start: 0, end: 0, offset: 0 };
-      });
+      };
+
+      axes.once(AXES.EVENT.FINISH, resetContext);
 
       if (axesEvent) {
         axesEvent.setTo({ [AXES.POSITION_KEY]: position }, duration);

@@ -1,7 +1,6 @@
 import { ALIGN } from "~/const/external";
 import Renderer from "~/renderer/Renderer";
-import FlickingError from "~/core/FlickingError";
-import * as ERROR from "~/const/error";
+import ElementManipulator from "~/renderer/ElementManipulator";
 
 import El from "../helper/El";
 import { createFlicking, range } from "../helper/test-util";
@@ -136,7 +135,9 @@ describe("Renderer", () => {
 
       it("should place inserted element to have correct siblings", () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-        const renderer = new RendererImpl().init(flicking);
+        const renderer = new RendererImpl({
+          elementManipulator: new ElementManipulator()
+        }).init(flicking);
         const element = El.panel().el;
 
         const shouldBePrev = renderer.panels[0];

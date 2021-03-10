@@ -17,7 +17,7 @@ describe("CircularCamera", () => {
       it("should return panel at toggled position if circular is enabled", () => {
         const camera = new CircularCamera();
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-        const panels = flicking.getAllPanels();
+        const panels = flicking.panels;
 
         camera.init(flicking);
         camera.updateRange();

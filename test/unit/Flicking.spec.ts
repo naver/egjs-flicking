@@ -232,29 +232,29 @@ describe("Flicking", () => {
 
       it("should change panel when moving above threshold", async () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 50 });
-        const beforeIndex = flicking.getIndex();
+        const beforeIndex = flicking.index;
 
-        await simulate(flicking.getElement(), { deltaX: -51, duration: 3000 });
+        await simulate(flicking.element, { deltaX: -51, duration: 3000 });
 
-        expect(flicking.getIndex()).not.to.equal(beforeIndex);
+        expect(flicking.index).not.to.equal(beforeIndex);
       });
 
       it("should change panel when moving same as threshold", async () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 50 });
-        const beforeIndex = flicking.getIndex();
+        const beforeIndex = flicking.index;
 
-        await simulate(flicking.getElement(), { deltaX: -50, duration: 3000 });
+        await simulate(flicking.element, { deltaX: -50, duration: 3000 });
 
-        expect(flicking.getIndex()).not.to.equal(beforeIndex);
+        expect(flicking.index).not.to.equal(beforeIndex);
       });
 
       it("should not change panel when moving below threshold", async () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 50 });
-        const beforeIndex = flicking.getIndex();
+        const beforeIndex = flicking.index;
 
-        await simulate(flicking.getElement(), { deltaX: -49, duration: 3000 });
+        await simulate(flicking.element, { deltaX: -49, duration: 3000 });
 
-        expect(flicking.getIndex()).equals(beforeIndex);
+        expect(flicking.index).equals(beforeIndex);
       });
     });
 
@@ -281,7 +281,7 @@ describe("Flicking", () => {
           cameraPositionOnHoldEnd = flicking.camera.position;
         });
 
-        await simulate(flicking.getElement(), {
+        await simulate(flicking.element, {
           deltaX: 999999999
         });
 
@@ -296,7 +296,7 @@ describe("Flicking", () => {
           cameraPositionOnHoldEnd = flicking.camera.position;
         });
 
-        await simulate(flicking.getElement(), {
+        await simulate(flicking.element, {
           deltaX: -999999999
         });
 
@@ -311,7 +311,7 @@ describe("Flicking", () => {
           cameraPositionOnHoldEnd = flicking.camera.position;
         });
 
-        await simulate(flicking.getElement(), {
+        await simulate(flicking.element, {
           deltaY: 999999999
         });
 
@@ -326,7 +326,7 @@ describe("Flicking", () => {
           cameraPositionOnHoldEnd = flicking.camera.position;
         });
 
-        await simulate(flicking.getElement(), {
+        await simulate(flicking.element, {
           deltaY: -999999999
         });
 
@@ -664,7 +664,7 @@ describe("Flicking", () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 10 });
         attachEventOrderRecognizer(flicking);
 
-        await simulate(flicking.getElement(), { deltaX: -50 });
+        await simulate(flicking.element, { deltaX: -50 });
 
         expect(eventsFired).to.deep.equal(expectedEventOrder);
       });
@@ -683,7 +683,7 @@ describe("Flicking", () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 50 });
         attachEventOrderRecognizer(flicking);
 
-        await simulate(flicking.getElement(), { deltaX: -49 });
+        await simulate(flicking.element, { deltaX: -49 });
 
         expect(eventsFired).to.deep.equal(expectedEventOrder);
       });
@@ -836,7 +836,7 @@ describe("Flicking", () => {
           });
           collectEvents(flicking);
 
-          await simulate(flicking.getElement(), { deltaX: -20 });
+          await simulate(flicking.element, { deltaX: -20 });
 
           expect(eventsFired).not.to.be.empty;
           expect(eventsFired.filter(e => e.direction).every(e => e.direction === DIRECTION.NEXT)).to.be.true;
@@ -850,7 +850,7 @@ describe("Flicking", () => {
           });
           collectEvents(flicking);
 
-          await simulate(flicking.getElement(), { deltaX: 20 });
+          await simulate(flicking.element, { deltaX: 20 });
 
           expect(eventsFired).not.to.be.empty;
           expect(eventsFired.filter(e => e.direction).every(e => e.direction === DIRECTION.PREV)).to.be.true;
@@ -884,7 +884,7 @@ describe("Flicking", () => {
           const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 10 });
           collectEvents(flicking);
 
-          await simulate(flicking.getElement(), { deltaX: -20 });
+          await simulate(flicking.element, { deltaX: -20 });
 
           expect(eventsFired).not.to.be.empty;
           expect(eventsFired.filter(e => e.isTrusted != null).every(e => e.isTrusted === true)).to.be.true;
@@ -928,9 +928,9 @@ describe("Flicking", () => {
       it("should move to default index", () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false, defaultIndex: 1 });
 
-        const beforeIdx = flicking.getIndex();
+        const beforeIdx = flicking.index;
         flicking.init();
-        const afterIdx = flicking.getIndex();
+        const afterIdx = flicking.index;
 
         expect(beforeIdx).to.equal(-1);
         expect(afterIdx).to.equal(1);
@@ -994,8 +994,8 @@ describe("Flicking", () => {
     describe("getElement()", () => {
       it("should return viewport element", () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-        expect(flicking.getElement()).to.be.an.instanceOf(HTMLElement);
-        expect(flicking.getElement()).to.equal(flicking.viewport.element);
+        expect(flicking.element).to.be.an.instanceOf(HTMLElement);
+        expect(flicking.element).to.equal(flicking.viewport.element);
       });
     });
 
@@ -1005,9 +1005,9 @@ describe("Flicking", () => {
         flicking.disableInput();
 
         flicking.enableInput();
-        const beforeIdx = flicking.getIndex();
-        await simulate(flicking.getElement(), { deltaX: -100 });
-        const afterIdx = flicking.getIndex();
+        const beforeIdx = flicking.index;
+        await simulate(flicking.element, { deltaX: -100 });
+        const afterIdx = flicking.index;
 
         expect(beforeIdx).to.equal(0);
         expect(afterIdx).to.equal(1);
@@ -1027,9 +1027,9 @@ describe("Flicking", () => {
 
         flicking.disableInput();
 
-        const beforeIdx = flicking.getIndex();
-        await simulate(flicking.getElement(), { deltaX: -100 });
-        const afterIdx = flicking.getIndex();
+        const beforeIdx = flicking.index;
+        await simulate(flicking.element, { deltaX: -100 });
+        const afterIdx = flicking.index;
 
         expect(beforeIdx).to.equal(afterIdx);
         expect(beforeIdx).to.equal(0);
@@ -1043,7 +1043,7 @@ describe("Flicking", () => {
       });
     });
 
-    describe("next", () => {
+    describe("next()", () => {
       const next = async (flicking: Flicking, duration?: number) => {
         const nextPromise = flicking.next(duration);
         tick(10000);
@@ -1053,9 +1053,9 @@ describe("Flicking", () => {
       it("should move to the next panel that has index + 1", async () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
-        const prevIndex = flicking.getIndex();
+        const prevIndex = flicking.index;
         await next(flicking);
-        const nextIndex = flicking.getIndex();
+        const nextIndex = flicking.index;
 
         expect(prevIndex).to.equal(0);
         expect(nextIndex).to.equal(1);
@@ -1067,6 +1067,8 @@ describe("Flicking", () => {
 
         await next(flicking);
         flicking.duration = 2000;
+
+        console.log(flicking.control.controller.axes.hasOn("finish"));
         await next(flicking);
 
         expect(moveToSpy.calledTwice).to.be.true;
@@ -1087,7 +1089,7 @@ describe("Flicking", () => {
       it("should throw FlickingError with code ANIMATION_ALREADY_PLAYING if it is animating", async () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
-        void simulate(flicking.getElement(), { duration: 1000 }, 500);
+        void simulate(flicking.element, { duration: 1000 }, 500);
         const err = await next(flicking).catch(e => e);
 
         expect(err)
@@ -1096,7 +1098,7 @@ describe("Flicking", () => {
       });
     });
 
-    describe("prev", () => {
+    describe("prev()", () => {
       const prev = async (flicking: Flicking, duration?: number) => {
         const nextPromise = flicking.prev(duration);
         tick(10000);
@@ -1106,9 +1108,9 @@ describe("Flicking", () => {
       it("should move to the previous panel that has index - 1", async () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
 
-        const prevIndex = flicking.getIndex();
+        const prevIndex = flicking.index;
         await prev(flicking);
-        const nextIndex = flicking.getIndex();
+        const nextIndex = flicking.index;
 
         expect(prevIndex).to.equal(2);
         expect(nextIndex).to.equal(1);
@@ -1140,7 +1142,7 @@ describe("Flicking", () => {
       it("should throw FlickingError with code ANIMATION_ALREADY_PLAYING if it is animating", async () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
 
-        void simulate(flicking.getElement(), { duration: 1000 }, 500);
+        void simulate(flicking.element, { duration: 1000 }, 500);
         const err = await prev(flicking).catch(e => e);
 
         expect(err)
@@ -1159,9 +1161,9 @@ describe("Flicking", () => {
       it("should move to the previous panel that has index - 1", async () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
 
-        const prevIndex = flicking.getIndex();
+        const prevIndex = flicking.index;
         await prev(flicking);
-        const nextIndex = flicking.getIndex();
+        const nextIndex = flicking.index;
 
         expect(prevIndex).to.equal(2);
         expect(nextIndex).to.equal(1);
@@ -1180,7 +1182,7 @@ describe("Flicking", () => {
       it("should throw FlickingError with code ANIMATION_ALREADY_PLAYING if it is animating", async () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
 
-        void simulate(flicking.getElement(), { duration: 1000 }, 500);
+        void simulate(flicking.element, { duration: 1000 }, 500);
         const err = await prev(flicking).catch(e => e);
 
         expect(err)

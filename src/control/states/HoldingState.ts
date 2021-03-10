@@ -28,7 +28,7 @@ class HoldingState extends State {
     const moveStartEvent = new ComponentEvent(EVENTS.MOVE_START, {
       isTrusted: axesEvent.isTrusted,
       holding: this.holding,
-      direction: getDirection(0, offset),
+      direction: getDirection(0, -offset),
       axesEvent
     });
     flicking.trigger(moveStartEvent);

@@ -46,6 +46,7 @@ abstract class Renderer {
     this._align = align;
     this._flicking = null;
     this._elementManipulator = elementManipulator;
+    this._panels = [];
   }
 
   public abstract render(): this;
@@ -59,6 +60,7 @@ abstract class Renderer {
 
   public destroy(): void {
     this._flicking = null;
+    this._panels = [];
     this._elementManipulator.destroy();
   }
 
