@@ -113,7 +113,7 @@
   },
   "dependencies": {
     "@egjs/axes": "^2.7.2",
-    "@egjs/component": "^3.0.0",
+    "@egjs/component": "^3.0.1",
     "@egjs/imready": "^1.1.2",
     "@egjs/list-differ": "^1.0.0"
   },
