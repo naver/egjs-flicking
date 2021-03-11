@@ -17,7 +17,9 @@ import NativeFlicking, {
   RestoreEvent,
   ReachEdgeEvent,
   EVENTS,
-  withFlickingMethods
+  withFlickingMethods,
+  sync,
+  getRenderingPanels
 } from "@egjs/flicking";
 import "@egjs/flicking/dist/flicking.css";
 
@@ -33,7 +35,6 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   private _pluginsDiffer: ListDiffer<any>;
   private _jsxDiffer: ListDiffer<React.ReactElement>;
   private _viewportElement: HTMLElement;
-  private _cameraElement: HTMLElement;
   private _diffResult: DiffResult<React.ReactElement>;
 
   public constructor(props: Partial<FlickingProps & FlickingOptions>) {
@@ -74,7 +75,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     });
 
     if (props.circular) {
-      flicking.renderer.elementManipulator.on("orderChanged", e => {
+      flicking.renderer.elementManipulator.on("orderChanged", () => {
         this.setState({});
       });
     }
@@ -100,78 +101,24 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const flicking = this._nativeFlicking;
 
     this._diffResult = diffResult;
-
-    const removedPanels = diffResult.removed.reduce((map, idx) => {
-      map[idx] = true;
-      return map;
-    }, {});
-
-    const panelsToRender = flicking.renderOnlyVisible
-      ? flicking.camera.visiblePanels
-      : flicking.renderer.panels;
-
-    this._panels = [
-      ...panelsToRender
-        .filter(panel => !removedPanels[panel.index])
-        // Sort panels by position
-        .sort((panel1, panel2) => (panel1.position + panel1.offset) - (panel2.position + panel2.offset))
-        .map(panel => diffResult.prevList[panel.index]),
-      ...diffResult.added.map(idx => diffResult.list[idx])
-    ];
+    this._panels = getRenderingPanels(flicking, diffResult);
 
     return true;
   }
 
   public componentDidUpdate() {
     const flicking = this._nativeFlicking;
-    const renderer = flicking.renderer;
     const diffResult = this._diffResult;
 
     if (!diffResult) return;
 
-    diffResult.removed.forEach(idx => {
-      renderer.remove(idx, 1);
-    });
+    sync(flicking, diffResult);
 
-    diffResult.ordered.forEach(([prevIdx, newIdx]) => {
-      const prevPanel = renderer.panels[prevIdx];
-      const indexDiff = newIdx - prevIdx;
-
-      if (indexDiff > 0) {
-        prevPanel.increaseIndex(indexDiff);
-      } else {
-        prevPanel.decreaseIndex(-indexDiff);
-      }
-      // Update position
-      prevPanel.resize();
-    });
-
-    if (diffResult.added.length > 0) {
-      const children: HTMLElement[] = [].slice.call(this._cameraElement.children);
-      const addedElements = children.slice(-diffResult.added.length);
-      const cameraEl = this._cameraElement;
-
-      diffResult.added.forEach((panelIdx, elIdx) => {
-        const el = addedElements[elIdx];
-        const elNext = renderer.panels[panelIdx]
-          ? renderer.panels[panelIdx].element
-          : null;
-
-        if (el.nextElementSibling !== elNext) {
-          cameraEl.insertBefore(el, elNext);
-        }
-      });
-
-      diffResult.added.forEach((panelIdx, elIdx) => {
-        renderer.insert(panelIdx, addedElements[elIdx]);
-      });
-    };
+    this._checkPlugins();
 
     if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
       this.setState({});
     }
-
-    this._checkPlugins();
   }
 
   public render() {
@@ -194,9 +141,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       <Viewport {...attributes} className={viewportClassName} ref={(e?: HTMLElement) => {
         e && (this._viewportElement = e);
       }}>
-        <Camera className="flicking-camera" ref={(e?: HTMLElement) => {
-          e && (this._cameraElement = e);
-        }}>
+        <Camera className="flicking-camera">
           { this._panels }
         </Camera>
       </Viewport>

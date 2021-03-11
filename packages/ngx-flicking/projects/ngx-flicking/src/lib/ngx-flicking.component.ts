@@ -20,12 +20,15 @@ import {
 } from "@angular/core";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import * as uuid from "uuid";
+
 import NativeFlicking, {
   FlickingOptions,
   FlickingEvents,
   EVENTS,
-  withFlickingMethods
-} from "@egjs/flicking";
+  withFlickingMethods,
+  sync,
+  getRenderingPanels
+} from "../../../../../../src/index";
 
 export interface RenderPanelChangeEvent {
   visibles: any[];
@@ -49,7 +52,7 @@ export interface RenderPanelChangeEvent {
 export class NgxFlickingComponent implements AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
   @Input() public options: Partial<FlickingOptions> = {};
   @Input() public plugins: Plugin[] = [];
-  @Input() public panels: any[] = [];
+  @Input() public data: any[] = [];
 
   @Output() public ready = new EventEmitter<FlickingEvents[typeof EVENTS.READY]>();
   @Output() public beforeResize = new EventEmitter<FlickingEvents[typeof EVENTS.BEFORE_RESIZE]>();
@@ -103,7 +106,7 @@ export class NgxFlickingComponent implements AfterViewInit, OnDestroy, OnChanges
       this._nativeFlicking = new NativeFlicking(viewportEl, options);
     });
     this._elementDiffer = new ListDiffer(this._getChildKeys());
-    this._panelsDiffer = new ListDiffer(this.panels);
+    this._panelsDiffer = new ListDiffer(this.data);
 
     this._bindEvents();
     this._checkPlugins();
@@ -123,25 +126,11 @@ export class NgxFlickingComponent implements AfterViewInit, OnDestroy, OnChanges
     const flicking = this._nativeFlicking;
     if (!flicking) return;
 
-    if (changes.panels && !changes.panels.firstChange) {
-      const diffResult = this._panelsDiffer.update(this.panels);
-
-      const removedPanels = diffResult.removed.reduce((map, idx) => {
-        map[idx] = true;
-        return map;
-      }, {});
-      let removedCnt = 0;
+    if (changes.data && !changes.data.firstChange) {
+      const diffResult = this._panelsDiffer.update(this.data);
 
       this.renderPanelChange.emit({
-        visibles: [
-          ...flicking.visiblePanels
-            .filter(panel => {
-              const removed = removedPanels[panel.index];
-              if (removed) removedCnt += 1;
-              return !removed;
-            }).map(panel => diffResult.maintained[panel.index - removedCnt][1]),
-          ...diffResult.added
-        ].sort((a, b) => a - b).map(idx => diffResult.list[idx])
+        visibles: getRenderingPanels(flicking, diffResult)
       })
 
       this._diffResult = diffResult;
@@ -162,45 +151,20 @@ export class NgxFlickingComponent implements AfterViewInit, OnDestroy, OnChanges
     if (!this._elementDiffer) return;
 
     const flicking = this._nativeFlicking;
-    const renderer = flicking.renderer;
+    const options = this.options;
     const diffResult = this.options.renderOnlyVisible
       ? this._diffResult
       : this._elementDiffer.update(this._getChildKeys());
 
     if (!diffResult) return;
 
-    if (this.options.renderOnlyVisible) {
+    if (options.renderOnlyVisible) {
       flicking.off(EVENTS.VISIBLE_CHANGE, this._reRender);
     }
 
-    diffResult.removed.forEach(idx => {
-      renderer.remove(idx, 1);
-    });
+    sync(flicking, diffResult);
 
-    diffResult.ordered.forEach(([prevIdx, newIdx]) => {
-      const prevPanel = renderer.getPanel(prevIdx);
-      const indexDiff = newIdx - prevIdx;
-
-      if (indexDiff > 0) {
-        prevPanel.increaseIndex(indexDiff);
-      } else {
-        prevPanel.decreaseIndex(-indexDiff);
-      }
-      // Update position
-      prevPanel.resize();
-    });
-
-    if (diffResult.added.length > 0) {
-      const cameraEl = flicking.camera.element;
-      const children: HTMLElement[] = [].slice.call(cameraEl.children);
-      const addedElements = children.slice(-diffResult.added.length);
-
-      diffResult.added.forEach((panelIdx, elIdx) => {
-        renderer.insert(panelIdx, addedElements[elIdx]);
-      });
-    };
-
-    if (this.options.renderOnlyVisible) {
+    if (options.renderOnlyVisible) {
       this._reRender();
       flicking.on(EVENTS.VISIBLE_CHANGE, this._reRender);
     }
@@ -261,7 +225,7 @@ export class NgxFlickingComponent implements AfterViewInit, OnDestroy, OnChanges
       this.renderPanelChange.emit({
         visibles: visiblePanels
           .sort((panel1, panel2) => (panel1.position + panel1.offset) - (panel2.position + panel2.offset))
-          .map(panel => this.panels[panel.index])
+          .map(panel => this.data[panel.index])
       });
     })
   }

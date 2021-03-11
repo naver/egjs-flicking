@@ -23,7 +23,7 @@
   <ngx-flicking
     class="flicking flicking1"
     [options]="{ needPanelThreshold: 50, renderOnlyVisible: true }"
-    [panels]="list1"
+    [data]="list1"
     (needPanel)="onNeedPanel1($event)"
     (renderPanelChange)="onRenderPanelChange($event)">
     <div *ngFor="let num of visible1" class='infinite infinite{{ math.abs(num) % 5 }}'>

@@ -13,31 +13,31 @@ export default class Snap extends React.Component<{}> {
         </ul>
         <h2>Default (count: 1)</h2>
         <Flicking className="flicking flicking0" gap={10} circular={true}>
-          <div className="panel0"></div>
-          <div className="panel1"></div>
-          <div className="panel2"></div>
-          <div className="panel3"></div>
-          <div className="panel4"></div>
+          <div className="panel panel0"></div>
+          <div className="panel panel1"></div>
+          <div className="panel panel2"></div>
+          <div className="panel panel3"></div>
+          <div className="panel panel4"></div>
         </Flicking>
         <div className="pagination pagination0"></div>
         <pre><code className="hljs html" data-script="flicking0"></code></pre>
         <h2>count: 3</h2>
         <Flicking className="flicking flicking1" gap={10} circular={true} moveType="snap">
-          <div className="panel0"></div>
-          <div className="panel1"></div>
-          <div className="panel2"></div>
-          <div className="panel3"></div>
-          <div className="panel4"></div>
+          <div className="panel panel0"></div>
+          <div className="panel panel1"></div>
+          <div className="panel panel2"></div>
+          <div className="panel panel3"></div>
+          <div className="panel panel4"></div>
         </Flicking>
         <div className="pagination pagination1"></div>
         <pre><code className="hljs html" data-script="flicking1"></code></pre>
         <h2>count: Infinity</h2>
         <Flicking className="flicking flicking2" gap={10} circular={true} moveType="snap">
-          <div className="panel0"></div>
-          <div className="panel1"></div>
-          <div className="panel2"></div>
-          <div className="panel3"></div>
-          <div className="panel4"></div>
+          <div className="panel panel0"></div>
+          <div className="panel panel1"></div>
+          <div className="panel panel2"></div>
+          <div className="panel panel3"></div>
+          <div className="panel panel4"></div>
         </Flicking>
         <div className="pagination pagination2"></div>
         <pre><code className="hljs html" data-script="flicking2"></code></pre>

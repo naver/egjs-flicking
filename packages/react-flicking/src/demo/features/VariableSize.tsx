@@ -13,11 +13,11 @@ export default class VariableSize extends React.Component<{}> {
           <li>You can specify various sizes for each panel.</li>
         </ul>
         <Flicking className="flicking flicking0" circular={true} gap={10}>
-          <div className="panel0"></div>
-          <div className="panel1"></div>
-          <div className="panel2"></div>
-          <div className="panel3"></div>
-          <div className="panel4"></div>
+          <div className="panel panel0"></div>
+          <div className="panel panel1"></div>
+          <div className="panel panel2"></div>
+          <div className="panel panel3"></div>
+          <div className="panel panel4"></div>
         </Flicking>
         <pre><code className="hljs html" data-script="flicking0"></code></pre>
       </div>);

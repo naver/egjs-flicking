@@ -12,11 +12,11 @@ export default class FreeScroll extends React.Component<{}> {
       </ul>
       <h2>moveType: "freeScroll", deceleration: 0.0075(default)</h2>
       <Flicking className="flicking flicking0" gap={10} circular={true} moveType="freeScroll">
-        <div className="panel0"></div>
-        <div className="panel1"></div>
-        <div className="panel2"></div>
-        <div className="panel3"></div>
-        <div className="panel4"></div>
+        <div className="panel panel0"></div>
+        <div className="panel panel1"></div>
+        <div className="panel panel2"></div>
+        <div className="panel panel3"></div>
+        <div className="panel panel4"></div>
       </Flicking>
       <pre><code className="hljs html" data-script="flicking0"></code></pre>
       <h2>moveType: "freeScroll", deceleration: 0.015</h2>
@@ -26,11 +26,11 @@ export default class FreeScroll extends React.Component<{}> {
         circular={true}
         deceleration={0.015}
         moveType="freeScroll">
-        <div className="panel0"></div>
-        <div className="panel1"></div>
-        <div className="panel2"></div>
-        <div className="panel3"></div>
-        <div className="panel4"></div>
+        <div className="panel panel0"></div>
+        <div className="panel panel1"></div>
+        <div className="panel panel2"></div>
+        <div className="panel panel3"></div>
+        <div className="panel panel4"></div>
       </Flicking>
       <pre><code className="hljs html" data-script="flicking1"></code></pre>
     </div>);

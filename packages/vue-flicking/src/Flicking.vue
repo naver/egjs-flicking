@@ -1,7 +1,7 @@
 <template>
   <component :is="this.viewportTag" class="flicking-viewport">
     <component :is="this.cameraTag" class="flicking-camera">
-      <VNodes :vnodes="panels" />
+      <VNodes :vnodes="_panels" />
     </component>
   </component>
 </template>
@@ -10,7 +10,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import NativeFlicking, { EVENTS, FlickingOptions, withFlickingMethods } from "@egjs/flicking";
+import NativeFlicking, { EVENTS, FlickingOptions, withFlickingMethods, sync, getRenderingPanels } from "../../../src/index";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { VNode } from "vue";
@@ -35,12 +35,9 @@ class Flicking extends Vue {
   @withFlickingMethods private _nativeFlicking!: NativeFlicking;
   private _pluginsDiffer!: ListDiffer<any>;
   private _slotDiffer!: ListDiffer<VNode>;
-  private _renderInfo: {[key: string]: boolean} = {};
   private _diffResult: DiffResult<VNode> | null = null;
 
   public created() {
-    this._renderInfo = {};
-
     this._fillKeys();
 
     const slots = this._getSlots();
@@ -74,80 +71,21 @@ class Flicking extends Vue {
     const flicking = this._nativeFlicking!;
 
     this._diffResult = diffResult;
-
-    const removedPanels = diffResult.removed.reduce((map, idx) => {
-      map[idx] = true;
-      return map;
-    }, {});
-
-    const panelsToRender = this.options.renderOnlyVisible
-      ? flicking.camera.visiblePanels
-      : flicking.renderer.panels;
-
-    this._panels = [
-      ...panelsToRender
-        .filter(panel => !removedPanels[panel.index])
-        // Sort panels by position
-        .sort((panel1, panel2) => (panel1.position + panel1.offset) - (panel2.position + panel2.offset))
-        .map(panel => diffResult.prevList[panel.index]),
-      ...diffResult.added.map(idx => diffResult.list[idx])
-    ];
+    this._panels = getRenderingPanels(flicking, diffResult);
   }
 
   public updated() {
     const flicking = this._nativeFlicking;
-    const renderer = flicking.renderer;
     const diffResult = this._diffResult;
-    const panels = renderer.panels;
 
     if (!diffResult) return;
 
-    diffResult.removed.forEach(idx => {
-      renderer.remove(idx, 1);
-    });
-
-    diffResult.ordered.forEach(([prevIdx, newIdx]) => {
-      const prevPanel = panels[prevIdx];
-      const indexDiff = newIdx - prevIdx;
-
-      if (indexDiff > 0) {
-        prevPanel.increaseIndex(indexDiff);
-      } else {
-        prevPanel.decreaseIndex(-indexDiff);
-      }
-      // Update position
-      prevPanel.resize();
-    });
-
-    if (diffResult.added.length > 0) {
-      const childNodes = (this as any)._vnode.children[0].children.reduce((childMap, child) => {
-        childMap[child.key] = child;
-        return childMap;
-      }, {}) as { [key: string]: VNode };
-      const cameraEl = flicking.camera.element;
-
-      const addedElements = diffResult.added.map(idx => {
-        const el = childNodes[diffResult.list[idx].key!].elm as HTMLElement;
-        const elNext = renderer.panels[idx]
-          ? renderer.panels[idx].element
-          : null;
-
-        if (el.nextElementSibling !== elNext) {
-          cameraEl.insertBefore(el, elNext);
-        }
-
-        return el;
-      });
-
-      diffResult.added.forEach((panelIdx, elIdx) => {
-        renderer.insert(panelIdx, addedElements[elIdx]);
-      });
-    };
+    sync(flicking, diffResult);
 
     this._checkPlugins();
 
     if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
-      this._panels = this._getPanelVNodes();
+      this.$forceUpdate();
     }
 
     this._diffResult = null;
@@ -182,20 +120,6 @@ class Flicking extends Vue {
 
     this._nativeFlicking.addPlugins(added.map(index => list[index]));
     this._nativeFlicking.removePlugins(removed.map(index => prevList[index]));
-  }
-
-  private _getPanelVNodes() {
-    const flicking = this._nativeFlicking;
-    const slots = this._getSlots();
-
-    let nodes: VNode[];
-    if (this.options.renderOnlyVisible) {
-      nodes = flicking.camera.visiblePanels.map(panel => slots[panel.index]);
-    } else {
-      nodes = slots;
-    }
-
-    return nodes;
   }
 
   private _getSlots() {

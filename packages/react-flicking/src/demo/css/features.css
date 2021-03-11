@@ -6,7 +6,7 @@
   background: rgba(55, 55, 55 0.1);
   border-radius: 5px;
 }
-.flicking-panel {
+.panel {
   position: relative;
   display: block;
   border-radius: 5px;

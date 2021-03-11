@@ -22,11 +22,11 @@ export default class Progress extends React.Component<{}> {
           onMove={e => {
             // this.thumb.style.width = (e.progress * 100) + "%";
           }}>
-          <div className="panel0"></div>
-          <div className="panel1"></div>
-          <div className="panel2"></div>
-          <div className="panel3"></div>
-          <div className="panel4"></div>
+          <div className="panel panel0"></div>
+          <div className="panel panel1"></div>
+          <div className="panel panel2"></div>
+          <div className="panel panel3"></div>
+          <div className="panel panel4"></div>
         </Flicking>
         <div className="progress">
           <div className="thumb" ref={e => { this.thumb = e as HTMLElement; }}></div>
@@ -48,11 +48,11 @@ export default class Progress extends React.Component<{}> {
             //   panel.getElement().innerHTML = panel.getProgress().toFixed(2);
             // });
           }}>
-        <div className="panel0"></div>
-        <div className="panel1"></div>
-        <div className="panel2"></div>
-        <div className="panel3"></div>
-        <div className="panel4"></div>
+        <div className="panel panel0"></div>
+        <div className="panel panel1"></div>
+        <div className="panel panel2"></div>
+        <div className="panel panel3"></div>
+        <div className="panel panel4"></div>
       </Flicking>
       <div className="pagination pagination1"></div>
       <pre><code className="hljs html" data-script="flicking1"></code></pre>
@@ -73,11 +73,11 @@ export default class Progress extends React.Component<{}> {
             //   panel.getElement().innerHTML = panel.getOutsetProgress().toFixed(2);
             // });
           }}>
-        <div className="panel0"></div>
-        <div className="panel1"></div>
-        <div className="panel2"></div>
-        <div className="panel3"></div>
-        <div className="panel4"></div>
+        <div className="panel panel0"></div>
+        <div className="panel panel1"></div>
+        <div className="panel panel2"></div>
+        <div className="panel panel3"></div>
+        <div className="panel panel4"></div>
       </Flicking>
       <div className="pagination pagination2"></div>
       <pre><code className="hljs html" data-script="flicking2"></code></pre>
@@ -98,11 +98,11 @@ export default class Progress extends React.Component<{}> {
             //   panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
             // });
           }}>
-        <div className="panel0"></div>
-        <div className="panel1"></div>
-        <div className="panel2"></div>
-        <div className="panel3"></div>
-        <div className="panel4"></div>
+        <div className="panel panel0"></div>
+        <div className="panel panel1"></div>
+        <div className="panel panel2"></div>
+        <div className="panel panel3"></div>
+        <div className="panel panel4"></div>
       </Flicking>
       <div className="pagination pagination3"></div>
       <pre><code className="hljs html" data-script="flicking3"></code></pre>
