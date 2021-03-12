@@ -207,6 +207,7 @@ GitHub.sublime-settings
 doc/
 report/
 temp/
+test/e2e/log/
 demo/release
 packages/*/dist/
 demo/_data/version.yml

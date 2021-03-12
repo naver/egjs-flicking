@@ -8,16 +8,3 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 indent_style = space
 indent_size = 2
-
-[*.{ts,js,vue}]
-indent_style = space
-indent_size = 2
-max_line_length = 80
-
-[{*.json,.travis.yml}]
-indent_style = space
-indent_size = 2
-
-[*.html]
-indent_style = space
-indent_size = 4
