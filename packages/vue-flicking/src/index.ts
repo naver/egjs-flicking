@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { VueConstructor } from "vue";
-import Flicking from "./Flicking";
+
+import Flicking from "./Flicking.vue";
 
 declare global {
   interface Window {

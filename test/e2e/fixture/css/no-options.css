@@ -1,0 +1,11 @@
+#flicking-container {
+  width: 200px;
+  overflow: hidden;
+}
+
+.flicking-panel {
+  width: 200px;
+  height: 200px;
+  background-color: #333;
+  flex-shrink: 0;
+}

@@ -9,8 +9,7 @@ import { EVENTS } from '~/index';
 @Component({
   selector: 'demo-infinite',
   templateUrl: './infinite.component.html',
-  styleUrls: ['../app.component.css', './infinite.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['../app.component.css', './infinite.component.css']
 })
 export class InfiniteComponent implements OnInit {
   list0 = [0, 1, 2, 3, 4];
@@ -44,7 +43,7 @@ export class InfiniteComponent implements OnInit {
     if (e.eventType === EVENTS.NEED_PANEL && e.direction === "NEXT") {
       const end = this.list1[this.list1.length - 1] || 0;
       this.list1 = [...this.list1, end + 1, end + 2];
-      this.cdr.detectChanges();
+      // this.cdr.detectChanges();
     }
   }
 

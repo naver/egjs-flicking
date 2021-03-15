@@ -41,21 +41,22 @@ const callAllScenarios = (title: string, page: string, callback: CodeceptJS.Hook
     ScenarioMethod = Scenario.only;
   }
 
-  ScenarioMethod(`✨${chalk.hex("FFFFFF").bold("[Vanilla]")} ${title}`, async ({ I }) => {
+  ScenarioMethod(`${title}-vanilla`, async ({ I }) => {
     I.amOnPage(`/test/e2e/fixture/${page}`);
     await I.amLoadingNativeFlicking();
+    return callback({ I });
+  });
+  ScenarioMethod(`${title}-react`, async ({ I }) => {
+    I.amOnPage(`/test/e2e/fixture/${page}`);
+    await I.amLoadingReactFlicking();
     I.seeElement(".flicking-camera");
     return callback({ I });
   });
-  ScenarioMethod(`✨${chalk.hex("00d8ff").bold("[React]")} ${title}`, async ({ I }) => {
+  ScenarioMethod(`${title}-vue`, async ({ I }) => {
     I.amOnPage(`/test/e2e/fixture/${page}`);
     return callback({ I });
   });
-  ScenarioMethod(`✨${chalk.hex("42b883").bold("[Vue]")} ${title}`, async ({ I }) => {
-    I.amOnPage(`/test/e2e/fixture/${page}`);
-    return callback({ I });
-  });
-  ScenarioMethod(`✨${chalk.hex("dd0031").bold("[Angular]")} ${title}`, async ({ I }) => {
+  ScenarioMethod(`${title}-angular`, async ({ I }) => {
     I.amOnPage(`/test/e2e/fixture/${page}`);
     return callback({ I });
   });

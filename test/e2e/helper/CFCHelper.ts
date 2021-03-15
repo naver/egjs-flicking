@@ -5,10 +5,16 @@ class CFCHelper extends Helper {
   public async amLoadingNativeFlicking() {
     const I = this.helpers.Playwright as CodeceptJS.I;
 
-    await I.executeScript(this._load);
+    await I.executeScript(this._loadNative);
   }
 
-  private _load = () => {
+  public async amLoadingReactFlicking() {
+    const I = this.helpers.Playwright as CodeceptJS.I;
+
+    await I.executeScript(this._loadReact);
+  }
+
+  private _loadNative = () => {
     const script = document.createElement("script");
     const stylesheet = document.createElement("link");
 
@@ -65,6 +71,36 @@ class CFCHelper extends Helper {
     });
 
     return Promise.all([loadScript(), loadStylesheet()]);
+  };
+
+  private _loadReact = async () => {
+    const loadScript = async (src: string) => new Promise<void>((resolve, reject) => {
+      const script = document.createElement("script");
+
+      script.setAttribute("type", "text/javascript");
+
+      script.addEventListener("load", () => {
+        resolve();
+      });
+
+      script.addEventListener("error", e => {
+        reject(e);
+      });
+
+      document.head.appendChild(script);
+      script.src = src;
+    });
+
+    await Promise.all([
+      loadScript("../../../packages/react-flicking/node_modules/react/umd/react.production.min.js"),
+      loadScript("../../../packages/react-flicking/node_modules/react-dom/umd/react-dom.production.min.js")
+    ]);
+
+    // @ts-expect-error
+    ReactDOM.render(
+      document.getElementById("flicking-container")!.innerHTML,
+      document.getElementById("flicking-container")
+    );
   };
 }
 
