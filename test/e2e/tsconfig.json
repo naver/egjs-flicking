@@ -9,9 +9,14 @@
     "module": "commonjs",
     "strictNullChecks": true,
     "types": ["codeceptjs"],
+    "jsx": "react",
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["../../src/*"]
+    }
   },
   "include": [
     "../../src/**/*.ts",
     "./**/*.ts"
-  ]
+, "stories/html.stories.tsx", "template/NativeFlickingTemplate.tsx", "stories/html.stories.tsx", "helper/createReactFlicking.tsx", "stories/no-options/no-options.react.tsxsd", "stories/no-options/React.stories.tsx", "helper/createReactFlicking.tsx"  ]
 }

@@ -43,7 +43,7 @@ export class InfiniteComponent implements OnInit {
     if (e.eventType === EVENTS.NEED_PANEL && e.direction === "NEXT") {
       const end = this.list1[this.list1.length - 1] || 0;
       this.list1 = [...this.list1, end + 1, end + 2];
-      // this.cdr.detectChanges();
+      this.cdr.detectChanges();
     }
   }
 
