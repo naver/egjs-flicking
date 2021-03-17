@@ -1,15 +1,9 @@
-
-// flicking.js
-// flicking.min.js
-// flicking.pkgd.js
-// flicking.pkgd.min.js
-// flicking.esm.js
-
 const buildHelper = require("@egjs/build-helper");
 
 const external = {
 	"@egjs/axes": "eg.Axes",
 	"@egjs/component": "eg.Component",
+  "@egjs/imready": "eg.ImReady",
 }
 const name = "eg.Flicking";
 

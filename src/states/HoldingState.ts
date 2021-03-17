@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-
+import type { OnChange, OnRelease, OnFinish } from "@egjs/axes";
 import State from "./State";
 import { STATE_TYPE, EVENTS, DIRECTION } from "../consts";
 import { FlickingContext, SelectEvent } from "../types";
@@ -14,7 +14,7 @@ class HoldingState extends State {
 
   private releaseEvent: any = null;
 
-  public onChange(e: any, context: FlickingContext): void {
+  public onChange(e: OnChange, context: FlickingContext): void {
     const { flicking, triggerEvent, transitTo } = context;
 
     const offset = flicking.options.horizontal
@@ -35,7 +35,7 @@ class HoldingState extends State {
       });
   }
 
-  public onRelease(e: any, context: FlickingContext): void {
+  public onRelease(e: OnRelease, context: FlickingContext): void {
     const { viewport, triggerEvent, transitTo } = context;
 
     triggerEvent(EVENTS.HOLD_END, e, true);
@@ -52,12 +52,17 @@ class HoldingState extends State {
       return;
     }
 
+    if (!e.inputEvent.srcEvent.cancelable) {
+      // Released by scrolling
+      return;
+    }
+
     // Can't handle select event here,
     // As "finish" axes event happens
     this.releaseEvent = e;
   }
 
-  public onFinish(e: any, { viewport, triggerEvent, transitTo }: FlickingContext): void {
+  public onFinish(e: OnFinish, { viewport, triggerEvent, transitTo }: FlickingContext): void {
     // Should transite to IDLE state before select event
     // As user expects hold is already finished
     transitTo(STATE_TYPE.IDLE);

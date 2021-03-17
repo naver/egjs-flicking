@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-
+import type { OnHold, OnChange } from "@egjs/axes";
 import State from "./State";
 import { EVENTS, STATE_TYPE } from "../consts";
 import { FlickingContext } from "../types";
@@ -19,7 +19,7 @@ class IdleState extends State {
     this.lastPosition = 0;
   }
 
-  public onHold(e: any, { flicking, viewport, triggerEvent, transitTo }: FlickingContext): void {
+  public onHold(e: OnHold, { flicking, viewport, triggerEvent, transitTo }: FlickingContext): void {
     // Shouldn't do any action until any panels on flicking area
     if (flicking.getPanelCount() <= 0) {
       if (viewport.options.infinite) {
@@ -40,7 +40,7 @@ class IdleState extends State {
   }
 
   // By methods call
-  public onChange(e: any, context: FlickingContext): void {
+  public onChange(e: OnChange, context: FlickingContext): void {
     const { triggerEvent, transitTo } = context;
 
     triggerEvent(EVENTS.MOVE_START, e, false)

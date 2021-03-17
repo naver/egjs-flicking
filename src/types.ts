@@ -10,6 +10,7 @@ import Panel from "./components/Panel";
 import Component from "@egjs/component";
 import State from "./states/State";
 import { DiffResult } from "@egjs/list-differ";
+import { OnRelease } from "@egjs/axes";
 
 export type ValueOf<T> = T[keyof T];
 /**
@@ -93,12 +94,7 @@ export type MoveTypeStringOption = MoveTypeObjectOption["type"];
 
 export interface MoveTypeContext {
   viewport: Viewport;
-  axesEvent: {
-    delta: { flick: number };
-    depaPos: { flick: number };
-    destPos: { flick: number };
-    duration: number;
-  };
+  axesEvent: OnRelease;
   state: State;
   swipeDistance: number;
   isNextDirection: boolean;

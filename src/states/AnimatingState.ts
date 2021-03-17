@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-
+import type { OnChange, OnFinish, OnHold } from "@egjs/axes";
 import State from "./State";
 import { STATE_TYPE, EVENTS } from "../consts";
 import { FlickingContext } from "../types";
@@ -13,7 +13,7 @@ class AnimatingState extends State {
   public readonly holding = false;
   public readonly playing = true;
 
-  public onHold(e: any, { viewport, triggerEvent, transitTo }: FlickingContext): void {
+  public onHold(e: OnHold, { viewport, triggerEvent, transitTo }: FlickingContext): void {
     const options = viewport.options;
     const scrollArea = viewport.getScrollArea();
     const scrollAreaSize = viewport.getScrollAreaSize();
@@ -49,7 +49,7 @@ class AnimatingState extends State {
       });
   }
 
-  public onChange(e: any, { moveCamera, transitTo }: FlickingContext): void {
+  public onChange(e: OnChange, { moveCamera, transitTo }: FlickingContext): void {
     if (!e.delta.flick) {
       return;
     }
@@ -60,7 +60,7 @@ class AnimatingState extends State {
       });
   }
 
-  public onFinish(e: any, { flicking, viewport, triggerEvent, transitTo }: FlickingContext) {
+  public onFinish(e: OnFinish, { flicking, viewport, triggerEvent, transitTo }: FlickingContext) {
     const isTrusted = e && e.isTrusted;
 
     viewport.options.bound
