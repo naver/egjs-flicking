@@ -73,7 +73,7 @@ abstract class Renderer {
     const elementManipulator = this._elementManipulator;
     const flicking = getFlickingAttached(this._flicking, "Renderer");
 
-    const { camera, control } = flicking;
+    const { control } = flicking;
     const align = this._getPanelAlign();
 
     const elements = parseElement(element);
@@ -104,10 +104,7 @@ abstract class Renderer {
     });
 
     // Update camera & control
-    camera.updateRange();
-    camera.updateAnchors();
-    camera.resetNeedPanelHistory();
-    control.updateInput();
+    this._updateCameraAndControl();
 
     this.render();
 
@@ -149,10 +146,7 @@ abstract class Renderer {
     panelsRemoved.forEach(panel => panel.destroy());
 
     // Update camera & control
-    camera.updateRange();
-    camera.updateAnchors();
-    camera.resetNeedPanelHistory();
-    control.updateInput();
+    this._updateCameraAndControl();
 
     if (includes(panelsRemoved, activePanel)) {
       control.resetActivePanel();
@@ -214,6 +208,16 @@ abstract class Renderer {
     const marginDiff = lastPanel.margin.next - firstPanel.margin.prev;
 
     return (lastPanel.range.max - firstPanel.range.min) + marginDiff;
+  }
+
+  protected _updateCameraAndControl() {
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const { camera, control } = flicking;
+
+    camera.updateRange();
+    camera.updateAnchors();
+    camera.resetNeedPanelHistory();
+    control.updateInput();
   }
 }
 

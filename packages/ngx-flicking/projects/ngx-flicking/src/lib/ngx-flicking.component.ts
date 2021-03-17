@@ -18,17 +18,17 @@ import {
   AfterViewChecked,
   DoCheck
 } from "@angular/core";
-import ListDiffer, { DiffResult } from "@egjs/list-differ";
-import * as uuid from "uuid";
-
 import NativeFlicking, {
   FlickingOptions,
   FlickingEvents,
   EVENTS,
-  withFlickingMethods,
   sync,
   getRenderingPanels
-} from "../../../../../../src/index";
+} from "@egjs/flicking";
+import ListDiffer, { DiffResult } from "@egjs/list-differ";
+import * as uuid from "uuid";
+
+import FlickingInterface from "./FlickingInterface";
 
 export interface RenderPanelChangeEvent {
   visibles: any[];
@@ -49,7 +49,8 @@ export interface RenderPanelChangeEvent {
   ],
   encapsulation: ViewEncapsulation.None
 })
-export class NgxFlickingComponent implements AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
+export class NgxFlickingComponent extends FlickingInterface
+  implements AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
   @Input() public options: Partial<FlickingOptions> = {};
   @Input() public plugins: Plugin[] = [];
   @Input() public data: any[] = [];
@@ -70,7 +71,6 @@ export class NgxFlickingComponent implements AfterViewInit, OnDestroy, OnChanges
   @Output() public reachEdge = new EventEmitter<FlickingEvents[typeof EVENTS.REACH_EDGE]>();
   @Output() public renderPanelChange = new EventEmitter<RenderPanelChangeEvent>();
 
-  @withFlickingMethods private _nativeFlicking: NativeFlicking | null;
   @ViewChild("camera") private _cameraElRef: ElementRef<HTMLElement>;
   private _elRef: ElementRef<HTMLDivElement>;
   private _zone: NgZone;
@@ -88,6 +88,8 @@ export class NgxFlickingComponent implements AfterViewInit, OnDestroy, OnChanges
   private _criticalSection = true;
 
   public constructor(elRef: ElementRef, zone: NgZone) {
+    super();
+
     this._elRef = elRef;
     this._zone = zone;
     this._nativeFlicking = null;
@@ -230,5 +232,3 @@ export class NgxFlickingComponent implements AfterViewInit, OnDestroy, OnChanges
     })
   }
 }
-
-export interface NgxFlickingComponent extends NativeFlicking {};
