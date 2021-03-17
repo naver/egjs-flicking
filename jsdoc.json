@@ -4,7 +4,7 @@
     "dictionaries": ["jsdoc","closure"]
   },
   "source": {
-      "include": ["src", "README.md", "node_modules/@egjs/component/src/component.ts"],
+      "include": ["src", "README.md", "node_modules/@egjs/component/src/Component.ts"],
       "includePattern": ".+\\.(j|t)s(doc|x)?$",
       "excludePattern": "(^|\\/|\\\\)_"
   },
