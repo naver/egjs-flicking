@@ -1932,6 +1932,7 @@ export default class Viewport {
       thresholdAngle: options.thresholdAngle,
       iOSEdgeSwipeThreshold: options.iOSEdgeSwipeThreshold,
       scale: options.horizontal ? [-1, 0] : [0, -1],
+      releaseOnScroll: true,
     });
 
     this.axes.connect(options.horizontal ? ["flick", ""] : ["", "flick"], this.panInput);

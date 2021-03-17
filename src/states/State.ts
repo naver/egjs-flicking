@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-
+import type { OnAnimationEnd, OnChange, OnFinish, OnHold, OnRelease } from "@egjs/axes";
 import Panel from "../components/Panel";
 import { ValueOf, Direction, StateType, FlickingContext } from "../types";
 
@@ -26,23 +26,23 @@ abstract class State {
     // DO NOTHING
   }
 
-  public onHold(e: any, context: FlickingContext): void {
+  public onHold(e: OnHold, context: FlickingContext): void {
     // DO NOTHING
   }
 
-  public onChange(e: any, context: FlickingContext): void {
+  public onChange(e: OnChange, context: FlickingContext): void {
     // DO NOTHING
   }
 
-  public onRelease(e: any, context: FlickingContext): void {
+  public onRelease(e: OnRelease, context: FlickingContext): void {
     // DO NOTHING
   }
 
-  public onAnimationEnd(e: any, context: FlickingContext): void {
+  public onAnimationEnd(e: OnAnimationEnd, context: FlickingContext): void {
     // DO NOTHING
   }
 
-  public onFinish(e: any, context: FlickingContext): void {
+  public onFinish(e: OnFinish, context: FlickingContext): void {
     // DO NOTHING
   }
 }

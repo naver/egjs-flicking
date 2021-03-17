@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-
+import type { OnChange, OnRelease } from "@egjs/axes";
 import State from "./State";
 import { STATE_TYPE, EVENTS } from "../consts";
 import { FlickingContext } from "../types";
@@ -12,7 +12,7 @@ class DraggingState extends State {
   public readonly holding = true;
   public readonly playing = true;
 
-  public onChange(e: any, { moveCamera, transitTo }: FlickingContext): void {
+  public onChange(e: OnChange, { moveCamera, transitTo }: FlickingContext): void {
     if (!e.delta.flick) {
       return;
     }
@@ -23,7 +23,7 @@ class DraggingState extends State {
       });
   }
 
-  public onRelease(e: any, context: FlickingContext): void {
+  public onRelease(e: OnRelease, context: FlickingContext): void {
     const { flicking, viewport, triggerEvent, transitTo, stopCamera } = context;
 
     const delta = this.delta;
@@ -90,7 +90,7 @@ class DraggingState extends State {
 
     if (!currentPanel || !nearestPanel) {
       // There're no panels
-      e.stop();
+      (e as any).stop();
       transitTo(STATE_TYPE.IDLE);
       return;
     }

@@ -45,7 +45,7 @@ setTimeout(function() {
     // Events & Methods
     fe = createFlicking("#flick-event", {
         circular: true,
-        moveType: "freeScroll",
+        moveType: "snap",
         autoResize: true
     }).on({
         holdStart: log,
