@@ -12,6 +12,14 @@ module.exports = {
     react: {
       title: "React",
       url: "http://localhost:9006",
+    },
+    vue: {
+      title: "Vue",
+      url: "http://localhost:9007",
+    },
+    ngx: {
+      title: "Angular",
+      url: "http://localhost:9008",
     }
   },
   webpackFinal: async (config) => {

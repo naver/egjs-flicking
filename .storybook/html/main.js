@@ -17,7 +17,6 @@ module.exports = {
       silent: true,
       configFile: "./test/e2e/tsconfig.json"
     }));
-    // config.presets.push("@babel/preset-react");
     return config;
   }
 }

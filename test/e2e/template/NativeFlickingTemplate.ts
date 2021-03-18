@@ -1,7 +1,8 @@
 import Flicking, { FlickingOptions } from "../../../src";
 import "../../../css/flicking.css";
 
-export default (options: Partial<FlickingOptions>, panels: string[]): React.FC => {
+export default (options: Partial<FlickingOptions>, panels: string[]) => {
+  const wrapperEl = document.createElement("div");
   const viewportEl = document.createElement("div");
   const cameraEl = document.createElement("div");
 
@@ -15,7 +16,11 @@ export default (options: Partial<FlickingOptions>, panels: string[]): React.FC =
   panelEls.forEach(panel => cameraEl.appendChild(panel));
   viewportEl.appendChild(cameraEl);
 
-  new Flicking(viewportEl, options);
+  setTimeout(() => {
+    new Flicking(viewportEl);
+  });
 
-  return viewportEl;
+  wrapperEl.appendChild(viewportEl);
+
+  return wrapperEl;
 };
