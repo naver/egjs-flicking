@@ -3,10 +3,12 @@ import { Parser } from "html-to-react";
 import { FlickingOptions } from "../../../src";
 import Flicking from "../../../packages/react-flicking/src/react-flicking/Flicking";
 
-export default (options: Partial<FlickingOptions>, panels: string[]) => {
+export default (options: Partial<FlickingOptions>, panels: string[], styles: string[]) => {
   const HTMLParser = Parser();
 
-  return <Flicking>
+  styles.forEach(style => require(`../public/${style}`));
+
+  return <Flicking {...options}>
     { HTMLParser.parse(panels.join("")) }
   </Flicking>
 };

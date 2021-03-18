@@ -3,8 +3,11 @@ config
 bower.json
 
 #tests
-test
+test/
 karma.conf.js
+angular.json
+codecept.conf.js
+.storybook/
 
 #build tools
 webpack.*.js

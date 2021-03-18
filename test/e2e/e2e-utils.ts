@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import chalk from "chalk";
-
 export const CFCScenario = (title: string, page: string, callback?: CodeceptJS.HookCallback) => {
   if (!callback) {
     Scenario(title);
@@ -41,23 +39,22 @@ const callAllScenarios = (title: string, page: string, callback: CodeceptJS.Hook
     ScenarioMethod = Scenario.only;
   }
 
+  const pageName = page.replace(/-/g, "");
+
   ScenarioMethod(`${title}-vanilla`, async ({ I }) => {
-    I.amOnPage(`/test/e2e/fixture/${page}`);
-    await I.amLoadingNativeFlicking();
+    I.amOnPage(`http://localhost:9005/iframe.html?id=html--${pageName}`);
     return callback({ I });
   });
   ScenarioMethod(`${title}-react`, async ({ I }) => {
-    I.amOnPage(`/test/e2e/fixture/${page}`);
-    await I.amLoadingReactFlicking();
-    I.seeElement(".flicking-camera");
+    I.amOnPage(`http://localhost:9006/iframe.html?id=react--${pageName}`);
     return callback({ I });
   });
   ScenarioMethod(`${title}-vue`, async ({ I }) => {
-    I.amOnPage(`/test/e2e/fixture/${page}`);
+    I.amOnPage(`http://localhost:9007/iframe.html?id=vue--${pageName}`);
     return callback({ I });
   });
   ScenarioMethod(`${title}-angular`, async ({ I }) => {
-    I.amOnPage(`/test/e2e/fixture/${page}`);
+    I.amOnPage(`http://localhost:9008/iframe.html?id=angular--${pageName}`);
     return callback({ I });
   });
 };

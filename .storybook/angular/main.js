@@ -1,4 +1,5 @@
-const TsconfigPathsPlugin  = require("tsconfig-paths-webpack-plugin");
+const path = require("path");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 module.exports = {
   "stories": [
@@ -30,8 +31,6 @@ module.exports = {
       else
         checkUse(rule);
     }
-
-    return config;
 
     return config;
   }

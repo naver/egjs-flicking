@@ -11,7 +11,7 @@ exports.config = {
   output: './test/e2e/log',
   helpers: {
     Playwright: {
-      url: 'http://localhost:8080',
+      url: 'http://localhost:6006',
       show: true,
       browser: 'chromium'
     },

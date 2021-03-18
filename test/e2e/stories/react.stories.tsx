@@ -5,6 +5,6 @@ import ReactFlickingTemplate from "../template/ReactFlickingTemplate";
 const stories = storiesOf("React", module);
 
 Object.keys(testCases).forEach(testCaseName => {
-  const { options, panels } = testCases[testCaseName];
-  stories.add(testCaseName, () => <>{ ReactFlickingTemplate(options, panels) }</>);
+  const { options, panels, styles } = testCases[testCaseName];
+  stories.add(testCaseName, () => <>{ ReactFlickingTemplate(options, panels, styles) }</>);
 });

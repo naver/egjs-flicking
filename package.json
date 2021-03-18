@@ -1,6 +1,6 @@
 {
   "name": "@egjs/flicking",
-  "version": "3.7.1-snapshot",
+  "version": "4.0.0-beta.1",
   "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
   "main": "dist/flicking.js",
   "module": "dist/flicking.esm.js",
@@ -14,7 +14,6 @@
     "css": "postcss css/*.css --use autoprefixer postcss-clean -d dist/ -m",
     "printsizes": "print-sizes ./dist --exclude=\\.map",
     "test": "karma start",
-    "e2e:prepare": "npm run build",
     "e2e": "concurrently -k -r -s \"first\" npm:e2e:open npm:e2e:once",
     "e2e:once": "codeceptjs run --steps",
     "e2e:headless": "HEADLESS=true codeceptjs run --steps",
@@ -42,10 +41,10 @@
     "storybook": "npm run storybook:all & npm run storybook:main",
     "storybook:main": "node_modules/@storybook/react/bin/index.js -p 6006",
     "storybook:all": "concurrently -r npm:storybook:html npm:storybook:react npm:storybook:vue npm:storybook:angular",
-    "storybook:html": "node_modules/@storybook/html/bin/index.js -p 9005 -c .storybook/html --quiet",
-    "storybook:react": "node_modules/@storybook/react/bin/index.js -p 9006 -c .storybook/react --quiet",
-    "storybook:vue": "node_modules/@storybook/vue/bin/index.js -p 9007 -c .storybook/vue --quiet",
-    "storybook:angular": "node_modules/@storybook/angular/bin/index.js -p 9008 -c .storybook/angular --quiet",
+    "storybook:html": "node_modules/@storybook/html/bin/index.js -p 9005 -c .storybook/html -s ./test/e2e/public --quiet",
+    "storybook:react": "node_modules/@storybook/react/bin/index.js -p 9006 -c .storybook/react -s ./test/e2e/public --quiet",
+    "storybook:vue": "node_modules/@storybook/vue/bin/index.js -p 9007 -c .storybook/vue -s ./test/e2e/public --quiet",
+    "storybook:angular": "node_modules/@storybook/angular/bin/index.js -p 9008 -c .storybook/angular -s ./test/e2e/public --quiet",
     "build-storybook": "build-storybook"
   },
   "repository": {
@@ -152,6 +151,7 @@
     "ts-mock-imports": "^1.3.3",
     "ts-node": "^9.1.1",
     "tsconfig-paths-webpack-plugin": "^3.5.1",
+    "tslib": "^2.1.0",
     "tslint": "^5.12.1",
     "ttypescript": "^1.5.12",
     "typescript": "^4.2.3",
