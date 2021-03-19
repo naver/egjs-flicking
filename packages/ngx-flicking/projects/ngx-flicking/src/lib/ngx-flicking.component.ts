@@ -45,7 +45,7 @@ export interface RenderPanelChangeEvent {
     style: "display: block;"
   },
   styleUrls: [
-    "../../../../node_modules/@egjs/flicking/dist/flicking.css"
+    "../../node_modules/@egjs/flicking/dist/flicking.css"
   ],
   encapsulation: ViewEncapsulation.None
 })
