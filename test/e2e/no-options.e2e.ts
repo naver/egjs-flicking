@@ -1,25 +1,29 @@
-import { Page } from "playwright";
+import { expect } from "chai";
 
 import { CFCScenario } from "./e2e-utils";
 
 Feature("no-options");
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
-CFCScenario("sample", "no-options", async ({ I }) => {
+CFCScenario("Initial rendering status", "no-options", async ({ I }) => {
   I.seeElement(".flicking-camera");
-  I.dragSlider(".flicking-viewport", -70);
 
-  I.usePlaywrightTo("click and move panels", async ({ page }: { page: Page }) => {
-    const mouse = page.mouse;
-    await mouse.move(0, 0);
-    await mouse.down();
-    await mouse.move(0, 100);
-    await mouse.move(100, 100);
-    await mouse.move(100, 0);
-    await mouse.move(0, 0);
-    await mouse.up();
-  });
+  I.saveElementScreenshot(".flicking-viewport", "no-options-initial.png");
+  I.seeVisualDiff("no-options-initial.png", {tolerance: 2, prepareBaseImage: false});
 
   const numOfElements = await I.grabNumberOfVisibleElements(".flicking-panel");
-  console.log(numOfElements);
+
+  expect(numOfElements).to.equal(3);
+});
+
+CFCScenario("Moving to next panel", "no-options", async ({ I }) => {
+  I.seeElement(".flicking-camera");
+  await I.dontSeeElementInViewport(".flicking-panel:last-child");
+  I.dragSlider(".flicking-viewport", -70);
+
+  I.wait(0.5);
+
+  I.saveElementScreenshot(".flicking-viewport", "no-options-next.png");
+  I.seeVisualDiff("no-options-next.png", {tolerance: 2, prepareBaseImage: false});
+
+  await I.seeElementInViewport(".flicking-panel:last-child");
 });

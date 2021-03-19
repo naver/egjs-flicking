@@ -17,6 +17,12 @@ exports.config = {
     },
     CFCHelper: {
       require: './test/e2e/helper/CFCHelper'
+    },
+    ResembleHelper : {
+      require: "codeceptjs-resemblehelper",
+      screenshotFolder : "./test/e2e/screenshots/output/",
+      baseFolder: "./test/e2e/screenshots/base/",
+      diffFolder: "./test/e2e/screenshots/diff/"
     }
   },
   bootstrap: null,

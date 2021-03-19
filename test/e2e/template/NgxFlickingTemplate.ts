@@ -3,12 +3,8 @@ import { NgxFlickingComponent } from "../../../packages/ngx-flicking/projects/ng
 
 
 export default (options: Partial<FlickingOptions>, panels: string[], styles: string[]) => {
-  styles.forEach(style => {
-    const stylesheet = document.createElement("link");
-    stylesheet.rel = "stylesheet";
-    document.head.appendChild(stylesheet);
-    stylesheet.href = style;
-  });
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const styleStrings = styles.map(style => require(`../public/${style}`).default);
 
   return {
     template: `
@@ -16,6 +12,7 @@ export default (options: Partial<FlickingOptions>, panels: string[], styles: str
         ${panels.join("")}
       </ngx-flicking>
     `,
+    styles: styleStrings,
     props: {
       options: options
     },

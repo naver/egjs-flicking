@@ -203,11 +203,14 @@ GitHub.sublime-settings
 ### Nuxt ###
 .nuxt
 
+### e2e ###
+test/e2e/log/
+test/e2e/screenshots/diff/
+
 ### Custom ###
 doc/
 report/
 temp/
-test/e2e/log/
 demo/release
 packages/*/dist/
 demo/_data/version.yml
