@@ -27,7 +27,7 @@ class ControlImpl extends Control {
     const promise = super.moveToPanel(panel, duration, axesEvent);
 
     tick(duration / 2);
-    await simulate((panel as any)._flicking.getElement());
+    await simulate((panel as any)._flicking.element);
 
     return promise;
   }

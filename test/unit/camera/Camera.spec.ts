@@ -107,8 +107,8 @@ describe("Camera", () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         // Remove viewport's children
-        while (flicking.getElement().firstChild) {
-          flicking.getElement().firstChild.remove();
+        while (flicking.element.firstChild) {
+          flicking.element.firstChild.remove();
         }
 
         expect(() => camera.init(flicking))
@@ -122,7 +122,7 @@ describe("Camera", () => {
 
         camera.init(flicking);
 
-        expect(camera.element).to.equal(flicking.getElement().firstChild);
+        expect(camera.element).to.equal(flicking.element.firstChild);
       });
     });
 
@@ -254,7 +254,7 @@ describe("Camera", () => {
       it("should return panel at given position", () => {
         const camera = new CameraImpl();
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-        const panels = flicking.getAllPanels();
+        const panels = flicking.panels;
 
         camera.init(flicking);
         camera.updateAnchors();
@@ -267,7 +267,7 @@ describe("Camera", () => {
       it("should return null when no panel includes given position", () => {
         const camera = new CameraImpl();
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-        const panels = flicking.getAllPanels();
+        const panels = flicking.panels;
 
         camera.init(flicking);
         camera.updateAnchors();

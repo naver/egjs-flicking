@@ -18,25 +18,25 @@ export default class Align extends React.Component<{}> {
         <h3>hanger: 50%, anchor: 50%</h3>
         <div className="hanger hanger0"></div>
         <Flicking className="flicking flicking0">
-          <div className="panel"><div className="anchor"></div></div>
-          <div className="panel"><div className="anchor"></div></div>
-          <div className="panel"><div className="anchor"></div></div>
-          <div className="panel"><div className="anchor"></div></div>
-          <div className="panel"><div className="anchor"></div></div>
-          <div className="panel"><div className="anchor"></div></div>
+          <div className="panel panel0"><div className="anchor"></div></div>
+          <div className="panel panel1"><div className="anchor"></div></div>
+          <div className="panel panel2"><div className="anchor"></div></div>
+          <div className="panel panel3"><div className="anchor"></div></div>
+          <div className="panel panel4"><div className="anchor"></div></div>
+          <div className="panel panel0"><div className="anchor"></div></div>
         </Flicking>
         <pre><code className="hljs html" data-script="flicking0"></code></pre>
 
         <h2>Left Align</h2>
         <h2>hanger: 0, anchor: 0</h2>
         <div className="hanger hanger1"></div>
-        <Flicking className="flicking flicking1" hanger={"0"} anchor={"0"}>
-          <div className="panel"><div className="anchor"></div></div>
-          <div className="panel"><div className="anchor"></div></div>
-          <div className="panel"><div className="anchor"></div></div>
-          <div className="panel"><div className="anchor"></div></div>
-          <div className="panel"><div className="anchor"></div></div>
-          <div className="panel"><div className="anchor"></div></div>
+        <Flicking className="flicking flicking1" align="prev">
+          <div className="panel panel0"><div className="anchor"></div></div>
+          <div className="panel panel1"><div className="anchor"></div></div>
+          <div className="panel panel2"><div className="anchor"></div></div>
+          <div className="panel panel3"><div className="anchor"></div></div>
+          <div className="panel panel4"><div className="anchor"></div></div>
+          <div className="panel panel0"><div className="anchor"></div></div>
         </Flicking>
         <div className="pagination pagination1"></div>
         <pre><code className="hljs html" data-script="flicking1"></code></pre>
@@ -44,13 +44,13 @@ export default class Align extends React.Component<{}> {
         <h2>Custom Align</h2>
         <h3>hanger: 30%, anchor: 50px</h3>
         <div className="hanger hanger2"></div>
-        <Flicking className="flicking flicking2" hanger={"30%"} anchor={"50px"}>
-          <div className="panel"><div className="anchor"></div></div>
-          <div className="panel"><div className="anchor"></div></div>
-          <div className="panel"><div className="anchor"></div></div>
-          <div className="panel"><div className="anchor"></div></div>
-          <div className="panel"><div className="anchor"></div></div>
-          <div className="panel"><div className="anchor"></div></div>
+        <Flicking className="flicking flicking2" align={{ camera: "30%", panel: "50px" }}>
+          <div className="panel panel0"><div className="anchor"></div></div>
+          <div className="panel panel1"><div className="anchor"></div></div>
+          <div className="panel panel2"><div className="anchor"></div></div>
+          <div className="panel panel3"><div className="anchor"></div></div>
+          <div className="panel panel4"><div className="anchor"></div></div>
+          <div className="panel panel0"><div className="anchor"></div></div>
         </Flicking>
         <div className="pagination pagination2"></div>
         <pre><code className="hljs html" data-script="flicking2"></code></pre>

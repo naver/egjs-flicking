@@ -10,9 +10,9 @@ export default class AutoPlayDemo extends React.Component<{}> {
     return (
       <div id="autoplay" className="plugins container">
       <h1>AutoPlay<a href="https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.Flicking.plugins.AutoPlay.html"
-              target="_blank">API</a></h1>
+        target="_blank" rel="noopener noreferrer">API</a></h1>
       <ul className="extra">
-          <li>You can set flicking to move to the next/previous panel periodically.</li>
+        <li>You can set flicking to move to the next/previous panel periodically.</li>
       </ul>
       <Flicking
         className="flicking"
@@ -21,15 +21,15 @@ export default class AutoPlayDemo extends React.Component<{}> {
         duration={500}
         plugins={this.plugins}
       >
-          <div className="panel">
-              <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
-          </div>
-          <div className="panel">
-              <img src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
-          </div>
-          <div className="panel">
-              <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
-          </div>
+        <div className="panel">
+          <img alt="img" src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
+        </div>
+        <div className="panel">
+          <img alt="img" src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
+        </div>
+        <div className="panel">
+          <img alt="img" src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
+        </div>
       </Flicking>
       <div className="pagination"></div>
       <pre><code className="hljs html" data-script="flicking0"></code></pre>

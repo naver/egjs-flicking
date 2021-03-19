@@ -18,29 +18,19 @@
   z-index: 1;
   white-space: nowrap;
   will-change: transform;
-  font-size: 0;
 }
 
-.flicking-camera img {
-  user-select: none;
-  user-drag: none;
-  -webkit-user-drag: none;
-}
-
-.flicking-panel {
+.flicking-camera>* {
   display: inline-block;
   white-space: normal;
   vertical-align: top;
-  font-size: 16px; /* IE8 */
-  font-size: 1rem; /* IE9~11 */
-  font-size: initial;
 }
-.flicking-viewport.vertical-middle>.flicking-camera .flicking-panel {
+.flicking-viewport.vertical-middle>.flicking-camera>* {
   vertical-align: middle;
 }
-.flicking-viewport.vertical-bottom>.flicking-camera .flicking-panel {
+.flicking-viewport.vertical-bottom>.flicking-camera>* {
   vertical-align: bottom;
 }
-.flicking-viewport.vertical>.flicking-camera .flicking-panel {
+.flicking-viewport.vertical>.flicking-camera>* {
   display: block;
 }

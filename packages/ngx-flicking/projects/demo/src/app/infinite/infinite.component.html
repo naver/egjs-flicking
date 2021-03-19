@@ -6,12 +6,10 @@
     <li>The panel's indexes are zero-based integer.</li>
     <li>Note: The number displayed above each panel is not panel's index.</li>
   </ul>
-  <ngx-flicking class="flicking flicking0" [options]="{ gap: 10 }">
-    <ng-template>
-      <div *ngFor="let num of list0" class='infinite infinite{{ math.abs(num) % 5 }}' [attr.key]="num">
-        {{ num }}
-      </div>
-    </ng-template>
+  <ngx-flicking class="flicking flicking0">
+    <div *ngFor="let num of list0" class='infinite infinite{{ math.abs(num) % 5 }}'>
+      {{ num }}
+    </div>
   </ngx-flicking>
   <div class="buttons">
     <button id="prepend" (click)="onPrepend()">Prepend</button>
@@ -23,13 +21,14 @@
     <li>Enabling the infinite option can make <strong>needPanel</strong> event to be triggered when more panels at moving direction should be fetched within <strong>infiniteThreshold</strong> value.</li>
   </ul>
   <ngx-flicking
-    class="flicking flicking1" [options]="{ gap: 10, infinite: true, infiniteThreshold: 50 }"
-    (needPanel)="onNeedPanel1($event)">
-    <ng-template>
-      <div *ngFor="let num of list1" class='infinite infinite{{ math.abs(num) % 5 }}' [attr.key]="num">
-        {{ num }}
-      </div>
-    </ng-template>
+    class="flicking flicking1"
+    [options]="{ needPanelThreshold: 50, renderOnlyVisible: true }"
+    [data]="list1"
+    (needPanel)="onNeedPanel1($event)"
+    (renderPanelChange)="onRenderPanelChange($event)">
+    <div *ngFor="let num of visible1" class='infinite infinite{{ math.abs(num) % 5 }}'>
+      {{ num }}
+    </div>
   </ngx-flicking>
   <pre><code class="hljs html" data-script="flicking1">{{ code1 }}</code></pre>
   <h2>infinite: true &amp; placeholder</h2>
@@ -39,11 +38,9 @@
   <ngx-flicking
     class="flicking flicking2" [options]="{ gap: 10, infinite: true, moveType: 'freeScroll' }"
     (needPanel)="onNeedPanel2($event)">
-    <ng-template>
-      <place-holder class="infinite" *ngFor="let num of list2" [num]="num" [attr.key]="num">
-        {{ num }}
-      </place-holder>
-    </ng-template>
+    <place-holder class="infinite" *ngFor="let num of list2" [num]="num" [attr.key]="num">
+      {{ num }}
+    </place-holder>
   </ngx-flicking>
   <pre><code class="hljs html" data-script="flicking2">{{ code2 }}</code></pre>
 </div>

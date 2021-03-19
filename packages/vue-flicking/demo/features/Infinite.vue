@@ -1,7 +1,7 @@
 <template>
   <div id="infinite" class="container">
     <h1>Infinite flicking</h1>
-    <h2>Append  &amp; Prepend panel dynamically</h2>
+    <h2>Append  &amp; Prepend  dynamically</h2>
     <ul class="extra">
       <li>You can dynamically add panels to the flicking.</li>
       <li>The panel's indexes are zero-based integer.</li>
@@ -28,8 +28,9 @@
       <li>Enabling the infinite option can make <strong>needPanel</strong> event to be triggered when more panels at moving direction should be fetched within <strong>infiniteThreshold</strong> value.</li>
     </ul>
     <flicking
-      class="flicking flicking1" :options="{ gap: 10, infinite: true, infiniteThreshold: 50 }"
+      class="flicking flicking1" :options="{ needPanelThreshold: 50 }"
       @need-panel="e => {
+        if (e.direction === 'PREV') return;
         const end = list1[list1.length - 1] || 0;
         list1.push(end + 1, end + 2);
       }">
@@ -43,8 +44,9 @@
       <li>You can make continuous carousel UI with asynchronous data by adding placeholder panel first, then update panel with fetched data later.</li>
     </ul>
     <flicking
-      class="flicking flicking2" :options="{ gap: 10, infinite: true, moveType: 'freeScroll' }"
-      @need-panel="() => {
+      class="flicking flicking2" :options="{ moveType: 'freeScroll', renderOnlyVisible: true, bounce: '100%' }"
+      @need-panel="e => {
+        if (e.direction === 'PREV') return;
         const end = list2[list2.length - 1] || 0;
         list2.push(end + 1, end + 2);
       }">

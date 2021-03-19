@@ -1,4 +1,3 @@
-import { ChildrenDiffResult } from '@egjs/children-differ';
 import { Component, ElementRef, OnInit, Input } from '@angular/core';
 
 @Component({
@@ -44,10 +43,6 @@ export class CustomComponent {
   addCloneCount() {
     this.testCloneCount++;
     console.log("CustomComponent addCloneClout", this.testCloneCount);
-  }
-
-  onUpdate(diffResult: ChildrenDiffResult) {
-    console.log('Result Callback : added: %o, removed: %o, changed: %o', diffResult.added, diffResult.removed, diffResult.changed);
   }
 }
 

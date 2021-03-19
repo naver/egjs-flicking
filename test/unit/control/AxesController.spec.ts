@@ -23,7 +23,7 @@ describe("AxesController", () => {
     });
 
     it("has {start: 0, end: 0} as a default animating context", () => {
-      expect(new AxesController().animatingContext).to.deep.equal({ start: 0, end: 0 });
+      expect(new AxesController().animatingContext).to.deep.equal({ start: 0, end: 0, offset: 0 });
     });
 
     it("has 0 as a default position", () => {

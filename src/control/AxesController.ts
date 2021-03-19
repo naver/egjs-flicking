@@ -17,7 +17,7 @@ class AxesController {
   private _panInput: PanInput | null;
   private _stateMachine: StateMachine;
 
-  private _animatingContext: { start: number; end: number };
+  private _animatingContext: { start: number; end: number; offset: number };
 
   public get axes() { return this._axes; }
   public get state() { return this._stateMachine.state; }
@@ -113,18 +113,25 @@ class AxesController {
     const startPos = axes.get([AXES.POSITION_KEY])[AXES.POSITION_KEY];
 
     if (startPos === position) {
+      const flicking = getFlickingAttached(this._flicking, "Control");
+
+      flicking.camera.lookAt(position);
+
       return Promise.resolve();
     }
 
     this._animatingContext = {
       start: startPos,
-      end: position
+      end: position,
+      offset: 0
     };
 
     const animate = () => {
-      axes.once(AXES.EVENT.FINISH, () => {
-        this._animatingContext = { start: 0, end: 0 };
-      });
+      const resetContext = () => {
+        this._animatingContext = { start: 0, end: 0, offset: 0 };
+      };
+
+      axes.once(AXES.EVENT.FINISH, resetContext);
 
       if (axesEvent) {
         axesEvent.setTo({ [AXES.POSITION_KEY]: position }, duration);
@@ -165,7 +172,7 @@ class AxesController {
     this._flicking = null;
     this._axes = null;
     this._panInput = null;
-    this._animatingContext = { start: 0, end: 0 };
+    this._animatingContext = { start: 0, end: 0, offset: 0 };
   }
 }
 

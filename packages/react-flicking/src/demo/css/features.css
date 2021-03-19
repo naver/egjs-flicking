@@ -1,4 +1,4 @@
-.flicking {
+.flicking-viewport {
   width: 500px;
   height: 130px;
   margin: 0px auto;
@@ -6,7 +6,7 @@
   background: rgba(55, 55, 55 0.1);
   border-radius: 5px;
 }
-.flicking .panel, .flicking .infinite {
+.panel {
   position: relative;
   display: block;
   border-radius: 5px;
@@ -17,33 +17,33 @@
   text-align: center;
   line-height: 120px;
 }
-.flicking .panel:nth-child(5n + 1) {
+.flicking-viewport .panel0 {
   background: #F47071;
 }
-.flicking .panel:nth-child(5n + 2) {
+.flicking-viewport .panel1 {
   background: #F69462;
 }
-.flicking .panel:nth-child(5n + 3) {
+.flicking-viewport .panel2 {
   background: #EDE484;
 }
-.flicking .panel:nth-child(5n + 4) {
+.flicking-viewport .panel3 {
   background: #90F290;
 }
-.flicking .panel:nth-child(5n + 5) {
+.flicking-viewport .panel4 {
   background: #78CAFF;
 }
-.flicking .infinite0 {
+.flicking-viewport .infinite0 {
   background: #F47071;
 }
-.flicking .infinite1 {
+.flicking-viewport .infinite1 {
   background: #F69462;
 }
-.flicking .infinite2 {
+.flicking-viewport .infinite2 {
   background: #EDE484;
 }
-.flicking .infinite3 {
+.flicking-viewport .infinite3 {
   background: #90F290;
 }
-.flicking .infinite4 {
+.flicking-viewport .infinite4 {
   background: #78CAFF;
 }

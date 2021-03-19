@@ -5,12 +5,13 @@
 import Renderer, { RendererOptions } from "./Renderer";
 import RawRenderer from "./RawRenderer";
 import VisibleRenderer from "./VisibleRenderer";
-import ExternalRenderer from "./ExternalRenderer";
 
 export {
   Renderer,
-  RendererOptions,
   RawRenderer,
-  VisibleRenderer,
-  ExternalRenderer
+  VisibleRenderer
+};
+
+export type {
+  RendererOptions
 };

@@ -2,6 +2,8 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { ComponentEvent } from "@egjs/component";
+
 import State, { STATE_TYPE } from "~/control/states/State";
 import { EVENTS } from "~/const/external";
 import * as AXES from "~/const/axes";
@@ -23,14 +25,15 @@ class DraggingState extends State {
 
     camera.lookAt(axesEvent.pos[AXES.POSITION_KEY]);
 
-    const isSuccess = flicking.trigger(EVENTS.MOVE, {
+    const moveEvent = new ComponentEvent(EVENTS.MOVE, {
       isTrusted: axesEvent.isTrusted,
       holding: this.holding,
       direction: getDirection(0, axesEvent.delta[AXES.POSITION_KEY]),
       axesEvent
     });
+    flicking.trigger(moveEvent);
 
-    if (!isSuccess) {
+    if (moveEvent.isCanceled()) {
       // Return to previous position
       camera.lookAt(prevPosition);
       transitTo(STATE_TYPE.DISABLED);
@@ -42,9 +45,9 @@ class DraggingState extends State {
 
     // Update last position to cope with Axes's animating behavior
     // Axes uses start position when animation start
-    flicking.trigger(EVENTS.HOLD_END, {
+    flicking.trigger(new ComponentEvent(EVENTS.HOLD_END, {
       axesEvent
-    });
+    }));
 
     if (flicking.renderer.panelCount <= 0) {
       // There're no panels

@@ -2,6 +2,8 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { ComponentEvent } from "@egjs/component";
+
 import State, { STATE_TYPE } from "~/control/states/State";
 import { EVENTS } from "~/const/external";
 import { getDirection } from "~/utils";
@@ -14,19 +16,21 @@ class IdleState extends State {
     // Shouldn't do any action until any panels on flicking area
     const { flicking, axesEvent, transitTo } = ctx;
 
-    if (flicking.getPanelCount() <= 0) {
+    if (flicking.renderer.panelCount <= 0) {
       transitTo(STATE_TYPE.DISABLED);
       return;
     }
 
-    const eventSuccess = flicking.trigger(EVENTS.HOLD_START, {
+    const holdStartEvent = new ComponentEvent(EVENTS.HOLD_START, {
       axesEvent
     });
 
-    if (eventSuccess) {
-      transitTo(STATE_TYPE.HOLDING);
-    } else {
+    flicking.trigger(holdStartEvent);
+
+    if (holdStartEvent.isCanceled()) {
       transitTo(STATE_TYPE.DISABLED);
+    } else {
+      transitTo(STATE_TYPE.HOLDING);
     }
   }
 
@@ -36,19 +40,19 @@ class IdleState extends State {
     const controller = flicking.control.controller;
     const animatingContext = controller.animatingContext;
 
-    const eventSuccess = flicking.trigger(EVENTS.MOVE_START, {
+    const moveStartEvent = new ComponentEvent(EVENTS.MOVE_START, {
       isTrusted: axesEvent.isTrusted,
       holding: this.holding,
       direction: getDirection(animatingContext.start, animatingContext.end),
       axesEvent
     });
+    flicking.trigger(moveStartEvent);
 
-    if (eventSuccess) {
-      // Trigger AnimatingState's onChange, to trigger "move" event immediately
-      transitTo(STATE_TYPE.ANIMATING)
-        .onChange(ctx);
-    } else {
+    if (moveStartEvent.isCanceled()) {
       transitTo(STATE_TYPE.DISABLED);
+    } else {
+      // Trigger AnimatingState's onChange, to trigger "move" event immediately
+      transitTo(STATE_TYPE.ANIMATING).onChange(ctx);
     }
   }
 }

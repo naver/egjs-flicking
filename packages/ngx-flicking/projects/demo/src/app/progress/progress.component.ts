@@ -1,5 +1,5 @@
 // import { MOVE_TYPE, EVENTS } from './../../../../../../../src/consts';
-import { FlickingEvent } from '@egjs/flicking';
+import { MoveEvent } from '@egjs/flicking';
 import { Component, OnInit, ViewChild, ViewContainerRef, AfterViewInit } from '@angular/core';
 import { NgxFlickingComponent } from 'projects/ngx-flicking/src/lib/ngx-flicking.component';
 
@@ -50,19 +50,19 @@ export class ProgressComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onMove0(e: FlickingEvent) {
-    this.updateProgressThumb(e.progress * 100);
+  onMove0(e: MoveEvent) {
+    // this.updateProgressThumb(e.progress * 100);
   }
 
-  onMove1(e: FlickingEvent) {
-    this.updateAllProgress(e.currentTarget);
+  onMove1(e: MoveEvent) {
+    // this.updateAllProgress(e.currentTarget);
   }
 
-  onMove2(e: FlickingEvent) {
-    this.updateAllOutsetProgress(e.currentTarget);
+  onMove2(e: MoveEvent) {
+    // this.updateAllOutsetProgress(e.currentTarget);
   }
 
   onMove3(e) {
-    this.updateAllVisibleRatio(e.currentTarget);
+    // this.updateAllVisibleRatio(e.currentTarget);
   }
 }

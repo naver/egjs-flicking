@@ -3,6 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 import { OnRelease } from "@egjs/axes";
+import { ComponentEvent } from "@egjs/component";
 
 import Panel from "~/core/Panel";
 import State, { STATE_TYPE } from "~/control/states/State";
@@ -20,32 +21,30 @@ class HoldingState extends State {
 
     const inputEvent = axesEvent.inputEvent as { offsetX: number; offsetY: number };
 
-    const offset = flicking.options.horizontal
+    const offset = flicking.horizontal
       ? inputEvent.offsetX
       : inputEvent.offsetY;
 
-    const eventSuccess = flicking.trigger(EVENTS.MOVE_START, {
+    const moveStartEvent = new ComponentEvent(EVENTS.MOVE_START, {
       isTrusted: axesEvent.isTrusted,
       holding: this.holding,
-      direction: getDirection(0, offset),
+      direction: getDirection(0, -offset),
       axesEvent
     });
+    flicking.trigger(moveStartEvent);
 
-    if (eventSuccess) {
-      // Trigger DraggingState's onChange, to trigger "move" event immediately
-      transitTo(STATE_TYPE.DRAGGING)
-        .onChange(ctx);
-    } else {
+    if (moveStartEvent.isCanceled()) {
       transitTo(STATE_TYPE.DISABLED);
+    } else {
+      // Trigger DraggingState's onChange, to trigger "move" event immediately
+      transitTo(STATE_TYPE.DRAGGING).onChange(ctx);
     }
   }
 
   public onRelease(ctx: Parameters<State["onRelease"]>[0]): void {
     const { flicking, axesEvent, transitTo } = ctx;
 
-    flicking.trigger(EVENTS.HOLD_END, {
-      axesEvent
-    });
+    flicking.trigger(new ComponentEvent(EVENTS.HOLD_END, { axesEvent }));
 
     if (axesEvent.delta.flick !== 0) {
       // Sometimes "release" event on axes triggered before "change" event
@@ -97,7 +96,7 @@ class HoldingState extends State {
     let clickedPanel: Panel | null = null;
 
     for (const panel of panels) {
-      if (panel.element.contains(clickedElement)) {
+      if (panel.contains(clickedElement)) {
         clickedPanel = panel;
         break;
       }
@@ -107,12 +106,12 @@ class HoldingState extends State {
       const cameraPosition = flicking.camera.position;
       const clickedPanelPosition = clickedPanel.position;
 
-      flicking.trigger(EVENTS.SELECT, {
+      flicking.trigger(new ComponentEvent(EVENTS.SELECT, {
         index: clickedPanel.index,
         panel: clickedPanel,
         // Direction to the clicked panel
         direction: getDirection(cameraPosition, clickedPanelPosition)
-      });
+      }));
     }
   }
 }

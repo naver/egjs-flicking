@@ -21,3 +21,14 @@
   background: #ddd;
   color: transparent;
 }
+
+#infinite .infinite {
+  position: relative;
+  display: block;
+  border-radius: 5px;
+  width: 200px;
+  margin-top: 5px;
+  height: 120px;
+  text-align: center;
+  line-height: 120px;
+}

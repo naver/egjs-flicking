@@ -2,22 +2,22 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { OnChange, OnFinish, OnHold, OnRelease } from "@egjs/axes";
+import { ComponentEvent } from "@egjs/component";
 
 import Panel from "~/core/Panel";
 import { DIRECTION } from "~/const/external";
 import { ValueOf } from "~/type/internal";
 
-export type ReadyEvent = void;
+export type ReadyEvent = ComponentEvent;
 
-export type BeforeResizeEvent = {
+export interface BeforeResizeEvent extends ComponentEvent {
   width: number;
   height: number;
   element: HTMLElement;
-};
+}
 
-export type AfterResizeEvent = {
+export interface AfterResizeEvent extends ComponentEvent {
   width: number;
   height: number;
   prev: {
@@ -26,7 +26,7 @@ export type AfterResizeEvent = {
   };
   sizeChanged: boolean;
   element: HTMLElement;
-};
+}
 
 /**
  * @typedef
@@ -43,66 +43,66 @@ export type AfterResizeEvent = {
  * @property {object | undefined} axesEvent Original event emitted from {@link https://naver.github.io/egjs-axes/release/latest/doc/ Axes} instance.<ko>내부의 {@link https://naver.github.io/egjs-axes/release/latest/doc Axes} 인스턴스로부터 발생된 원본 이벤트.</ko>
  * @property {eg.Flicking} currentTarget Flicking instance that triggered event.<ko>이벤트를 발생시킨 Flicking의 인스턴스</ko>
  */
-export type HoldStartEvent = {
+export interface HoldStartEvent extends ComponentEvent {
   axesEvent: OnHold;
-};
+}
 
-export type HoldEndEvent = {
+export interface HoldEndEvent extends ComponentEvent {
   axesEvent: OnRelease;
-};
+}
 
-export type MoveStartEvent = {
+export interface MoveStartEvent extends ComponentEvent {
   isTrusted: boolean;
   holding: boolean;
   direction: ValueOf<typeof DIRECTION>;
   axesEvent: OnChange;
-};
+}
 
-export type MoveEvent = {
+export interface MoveEvent extends ComponentEvent {
   isTrusted: boolean;
   holding: boolean;
   direction: ValueOf<typeof DIRECTION>;
   axesEvent: OnChange;
-};
+}
 
-export type MoveEndEvent = {
+export interface MoveEndEvent extends ComponentEvent {
   isTrusted: boolean;
   direction: ValueOf<typeof DIRECTION>;
   axesEvent: OnFinish;
-};
+}
 
-export type ChangeEvent = {
+export interface ChangeEvent extends ComponentEvent {
   index: number;
   panel: Panel;
   isTrusted: boolean;
   direction: ValueOf<typeof DIRECTION>;
   axesEvent?: OnRelease;
-};
+}
 
-export type RestoreEvent = {
+export interface RestoreEvent extends ComponentEvent {
   index: number;
   panel: Panel;
   isTrusted: boolean;
   direction: ValueOf<typeof DIRECTION>;
   axesEvent?: OnRelease;
-};
+}
 
-export type SelectEvent = {
+export interface SelectEvent extends ComponentEvent {
   index: number;
   panel: Panel;
   direction: ValueOf<typeof DIRECTION> | null;
-};
+}
 
-export type NeedPanelEvent = {
+export interface NeedPanelEvent extends ComponentEvent {
   direction: ValueOf<typeof DIRECTION>;
-};
+}
 
-export type VisibleChangeEvent = {
+export interface VisibleChangeEvent extends ComponentEvent {
   added: Panel[];
   removed: Panel[];
   visiblePanels: Panel[];
-};
+}
 
-export type ReachEdgeEvent = {
+export interface ReachEdgeEvent extends ComponentEvent {
   direction: ValueOf<typeof DIRECTION>;
-};
+}

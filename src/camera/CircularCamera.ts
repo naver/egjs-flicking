@@ -9,15 +9,17 @@ import { DIRECTION } from "~/const/external";
 import { ValueOf } from "~/type/internal";
 import { circulatePosition, getFlickingAttached } from "~/utils";
 
+export interface TogglePoint {
+  panel: Panel;
+  direction: ValueOf<typeof DIRECTION>;
+  toggled: boolean;
+}
+
 class CircularCamera extends Camera {
   private _circularOffset: number = 0;
   private _circularEnabled: boolean = false;
   private _panelTooglePoints: {
-    [pos: number]: {
-      panel: Panel;
-      direction: ValueOf<typeof DIRECTION>;
-      toggled: boolean;
-    };
+    [pos: number]: TogglePoint;
   } = {};
 
   public get controlParams() { return { range: this._range, position: this._position, circular: this._circularEnabled }; }
@@ -91,7 +93,7 @@ class CircularCamera extends Camera {
   }
 
   public canReach(panel: Panel): boolean {
-    if (panel.element.parentElement !== this._el) return false;
+    if (panel.removed) return false;
 
     return this._circularEnabled
       // Always reachable on circular mode
@@ -129,14 +131,11 @@ class CircularCamera extends Camera {
       return this;
     }
 
+    const position = this._position;
     const firstPanel = panels[0]!;
     const lastPanel = panels[panels.length - 1]!;
-    const firstPanelPrev = flicking.horizontal
-      ? firstPanel.bbox.left - firstPanel.margin.left
-      : firstPanel.bbox.top - firstPanel.margin.top;
-    const lastPanelNext = flicking.horizontal
-      ? lastPanel.bbox.left + lastPanel.bbox.width + lastPanel.margin.right
-      : lastPanel.bbox.top + lastPanel.bbox.height + lastPanel.margin.bottom;
+    const firstPanelPrev = firstPanel.range.min - firstPanel.margin.prev;
+    const lastPanelNext = lastPanel.range.max + lastPanel.margin.next;
 
     const visibleSize = this.size;
     const panelSizeSum = lastPanelNext - firstPanelPrev;
@@ -146,38 +145,62 @@ class CircularCamera extends Camera {
 
     if (canSetCircularMode) {
       this._range = { min: firstPanelPrev, max: lastPanelNext };
+
       const panelTooglePoints: CircularCamera["_panelTooglePoints"] = {};
       const alignPos = this._alignPos;
-      const shouldBeToggled: Panel[] = [];
+
+      const shouldBeToggledPrev: Panel[] = [];
+      const togglePointPrev: TogglePoint[] = [];
+
+      const shouldBeToggledNext: Panel[] = [];
+      const togglePointNext: TogglePoint[] = [];
+
+      const range = this._range;
+      const minimumVisible = range.min - alignPos;
+      const maximumVisible = range.max - alignPos + visibleSize;
 
       panels.forEach(panel => {
-        const range = this._range;
-        const minimumVisible = range.min - alignPos;
-        const maximumVisible = range.max - alignPos + visibleSize;
         const shouldBeVisibleAtMin = panel.includeRange(maximumVisible - visibleSize, maximumVisible, false);
         const shouldBeVisibleAtMax = panel.includeRange(minimumVisible, minimumVisible + visibleSize, false);
 
         if (shouldBeVisibleAtMin) {
-          panelTooglePoints[panel.range.max - (maximumVisible - visibleSize)] = {
+          const togglePos = panel.range.max + range.min - range.max + alignPos;
+          const shouldToggle = togglePos > position;
+          const togglePoint = {
             panel,
             direction: DIRECTION.PREV,
-            toggled: true
+            toggled: shouldToggle
           };
-          shouldBeToggled.push(panel);
+
+          panelTooglePoints[togglePos] = togglePoint;
+
+          if (shouldToggle) {
+            shouldBeToggledPrev.push(panel);
+            togglePointPrev.push(togglePoint);
+          }
         }
         if (shouldBeVisibleAtMax) {
-          panelTooglePoints[panel.range.min - (minimumVisible - visibleSize)] = {
+          const togglePos = panel.range.min + range.max - visibleSize + alignPos;
+          const shouldToggle = togglePos < position;
+          const togglePoint = {
             panel,
             direction: DIRECTION.NEXT,
             toggled: false
           };
+
+          panelTooglePoints[togglePos] = togglePoint;
+
+          if (shouldToggle) {
+            shouldBeToggledNext.push(panel);
+            togglePointNext.push(togglePoint);
+          }
         }
       });
 
-      flicking.renderer.movePanelElementsToStart(shouldBeToggled);
+      renderer.elementManipulator.movePanelElementsToStart(shouldBeToggledPrev, togglePointPrev);
+      renderer.elementManipulator.movePanelElementsToEnd(shouldBeToggledNext, togglePointNext);
 
-      this._circularOffset += this._calcPanelAreaSum(shouldBeToggled);
-
+      this._circularOffset = this._calcPanelAreaSum(shouldBeToggledPrev) - this._calcPanelAreaSum(shouldBeToggledNext);
       this._panelTooglePoints = panelTooglePoints;
     } else {
       this._range = { min: firstPanel.position, max: lastPanel.position };
@@ -194,6 +217,7 @@ class CircularCamera extends Camera {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const prevPos = this._position;
     const panelTooglePoints = this._panelTooglePoints;
+    const elementManipulator = flicking.renderer.elementManipulator;
     const togglePoints = Object.keys(panelTooglePoints)
       .map(pointString => parseFloat(pointString))
       .sort((a, b) => a - b);
@@ -201,6 +225,7 @@ class CircularCamera extends Camera {
     if (pos === prevPos) return super.lookAt(pos);
 
     if (pos > prevPos) {
+      const togglePointInfos: TogglePoint[] = [];
       const passedPanels = togglePoints.reduce((passed: Panel[], togglePoint: number) => {
         const togglePointInfo = panelTooglePoints[togglePoint];
         const passedPoint = togglePoint >= prevPos && togglePoint <= pos;
@@ -210,13 +235,15 @@ class CircularCamera extends Camera {
         if (passedPoint && shouldToggle) {
           togglePointInfo.toggled = !togglePointInfo.toggled;
           passed.push(togglePointInfo.panel);
+          togglePointInfos.push(togglePointInfo);
         }
         return passed;
       }, []);
 
-      flicking.renderer.movePanelElementsToEnd(passedPanels);
+      elementManipulator.movePanelElementsToEnd(passedPanels, togglePointInfos);
       this._circularOffset -= this._calcPanelAreaSum(passedPanels);
     } else {
+      const togglePointInfos: TogglePoint[] = [];
       const passedPanels = togglePoints.reduce((passed: Panel[], togglePoint: number) => {
         const togglePointInfo = panelTooglePoints[togglePoint];
         const passedPoint = togglePoint <= prevPos && togglePoint >= pos;
@@ -226,11 +253,12 @@ class CircularCamera extends Camera {
         if (passedPoint && shouldToggle) {
           togglePointInfo.toggled = !togglePointInfo.toggled;
           passed.push(togglePointInfo.panel);
+          togglePointInfos.push(togglePointInfo);
         }
         return passed;
       }, []);
 
-      flicking.renderer.movePanelElementsToStart(passedPanels);
+      elementManipulator.movePanelElementsToStart(passedPanels, togglePointInfos);
       this._circularOffset += this._calcPanelAreaSum(passedPanels);
     }
 
@@ -258,13 +286,7 @@ class CircularCamera extends Camera {
   }
 
   private _calcPanelAreaSum(panels: Panel[]) {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
-    const isHorizontal = flicking.horizontal;
-
-    return panels.reduce((sum: number, panel: Panel) => {
-      const panelMargin = panel.margin;
-      return sum + panel.size + (isHorizontal ? panelMargin.right + panelMargin.left : panelMargin.bottom + panelMargin.top);
-    }, 0);
+    return panels.reduce((sum: number, panel: Panel) => sum + panel.sizeIncludingMargin, 0);
   }
 }
 

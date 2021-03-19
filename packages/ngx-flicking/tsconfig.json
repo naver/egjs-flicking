@@ -24,6 +24,9 @@
       ],
       "ngx-flicking/*": [
         "dist/ngx-flicking/*"
+      ],
+      "~/*": [
+        "../../src/*"
       ]
     }
   }

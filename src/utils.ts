@@ -232,13 +232,15 @@ export const findRight = <T>(array: T[], checker: (val: T) => boolean): T | null
   return null;
 };
 
-// export const hasClass = (element: HTMLElement, className: string): boolean => {
-//   if (element.classList) {
-//     return element.classList.contains(className);
-//   } else {
-//     return (element.className.split(" ").indexOf(className) >= 0);
-//   }
-// };
+export const findIndex = <T>(array: T[], checker: (val: T) => boolean): number => {
+  for (let idx = 0; idx < array.length; idx++) {
+    if (checker(array[idx])) {
+      return idx;
+    }
+  }
+
+  return -1;
+};
 
 // export const getProgress = (pos: number, range: number[]) => {
 //   // start, anchor, end
@@ -256,41 +258,3 @@ export const findRight = <T>(array: T[], checker: (val: T) => boolean): T | null
 //   }
 //   return 0;
 // };
-
-// /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-// /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// /**
-//  * Decorator that makes the method of flicking available in the framework.
-//  *
-//  * @ko 프레임워크에서 플리킹의 메소드를 사용할 수 있게 하는 데코레이터.
-//  * @memberof eg.Flicking
-//  * @private
-//  * @example
-//  * ```js
-//  * import Flicking, { withFlickingMethods } from "@egjs/flicking";
-//  *
-//  * class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
-//  *   &#64;withFlickingMethods
-//  *   private flicking: Flicking;
-//  * }
-//  * ```
-//  */
-// export const withFlickingMethods = (prototype: any, flickingName: string) => {
-//   Object.keys(FLICKING_METHODS).forEach((name: keyof Flicking) => {
-//     if (prototype[name]) {
-//       return;
-//     }
-//     prototype[name] = function(...args) {
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-//       const result = this[flickingName][name](...args);
-
-//       // fix `this` type to return your own `flicking` instance to the instance using the decorator.
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-//       return result === this[flickingName]
-//         ? this
-//         : result;
-//     };
-//   });
-// };
-// /* eslint-enable @typescript-eslint/no-unsafe-member-access */
-// /* eslint-enable @typescript-eslint/no-unsafe-assignment */

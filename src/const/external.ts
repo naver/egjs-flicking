@@ -34,8 +34,7 @@ export const EVENTS = {
   SELECT: "select",
   NEED_PANEL: "needPanel",
   VISIBLE_CHANGE: "visibleChange",
-  REACH_EDGE: "reachEdge",
-  CONTENT_ERROR: "contentError"
+  REACH_EDGE: "reachEdge"
 } as const;
 
 export const ALIGN = {

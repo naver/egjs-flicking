@@ -21,6 +21,7 @@
  * @property {number} STOP_CALLED_BY_USER 8
  * @property {number} ANIMATION_INTERRUPTED 9
  * @property {number} ANIMATION_ALREADY_PLAYING 10
+ * @property {number} NOT_ALLOWED_IN_FRAMEWORK 11
  */
 export const CODE = {
   WRONG_TYPE: 0,
@@ -33,7 +34,8 @@ export const CODE = {
   TRANSFORM_NOT_SUPPORTED: 7,
   STOP_CALLED_BY_USER: 8,
   ANIMATION_INTERRUPTED: 9,
-  ANIMATION_ALREADY_PLAYING: 10
+  ANIMATION_ALREADY_PLAYING: 10,
+  NOT_ALLOWED_IN_FRAMEWORK: 11
 } as const;
 
 export const MESSAGE = {
@@ -47,5 +49,6 @@ export const MESSAGE = {
   TRANSFORM_NOT_SUPPORTED: "Browser does not support CSS transform",
   STOP_CALLED_BY_USER: "Event stop() is called by user",
   ANIMATION_INTERRUPTED: "Animation is interrupted by user input",
-  ANIMATION_ALREADY_PLAYING: "Animation is already playing"
+  ANIMATION_ALREADY_PLAYING: "Animation is already playing",
+  NOT_ALLOWED_IN_FRAMEWORK: "This behavior is not allowed in the frameworks like React, Vue, or Angular"
 } as const;

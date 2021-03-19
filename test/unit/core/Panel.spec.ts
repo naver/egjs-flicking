@@ -20,25 +20,14 @@ describe("Panel", () => {
       expect(panel.index).to.equal(999);
     });
 
-    it("should have position & size as all 0 on the bbox", () => {
-      expect(createPanel(El.panel()).bbox.left).to.equal(0);
-      expect(createPanel(El.panel()).bbox.top).to.equal(0);
-      expect(createPanel(El.panel()).bbox.width).to.equal(0);
-      expect(createPanel(El.panel()).bbox.height).to.equal(0);
-    });
-
     it("has size 0 on creation", () => {
-      const panel = createPanel(El.panel());
-
-      expect(panel.size).to.equal(0);
-      expect(panel.size).to.equal(0);
+      expect(createPanel(El.panel()).size).to.equal(0);
     });
 
-    it("has width/height 0 on creation", () => {
+    it("has sizeIncludingMargin 0 on creation", () => {
       const panel = createPanel(El.panel());
 
-      expect(panel.bbox.width).to.equal(0);
-      expect(panel.bbox.height).to.equal(0);
+      expect(panel.sizeIncludingMargin).to.equal(0);
     });
 
     it("has position 0 on creation", () => {
@@ -47,13 +36,34 @@ describe("Panel", () => {
       expect(panel.position).to.equal(0);
     });
 
+    it("has height 0 on creation", () => {
+      expect(createPanel(El.panel(), {}, { horizontal: true }).height).to.equal(0);
+      expect(createPanel(El.panel(), {}, { horizontal: false }).height).to.equal(0);
+    });
+
     it("has margin 0 on creation", () => {
       const panel = createPanel(El.panel());
 
-      expect(panel.margin.top).to.equal(0);
-      expect(panel.margin.left).to.equal(0);
-      expect(panel.margin.bottom).to.equal(0);
-      expect(panel.margin.right).to.equal(0);
+      expect(panel.margin.prev).to.equal(0);
+      expect(panel.margin.next).to.equal(0);
+    });
+
+    it("has alignPos 0 on creation", () => {
+      const panel = createPanel(El.panel());
+
+      expect(panel.alignPosition).to.equal(0);
+    });
+
+    it("has offset 0 on creation", () => {
+      const panel = createPanel(El.panel());
+
+      expect(panel.offset).to.equal(0);
+    });
+
+    it("is not removed on creation", () => {
+      const panel = createPanel(El.panel());
+
+      expect(panel.removed).to.be.false;
     });
 
     it("has range from 0 to 0 as default", () => {
@@ -110,24 +120,27 @@ describe("Panel", () => {
   describe("Methods", () => {
     describe("resize", () => {
       it("should update its size", () => {
-        const panel = createPanel(El.panel().setWidth(300).setHeight(300));
+        const panel = createPanel(El.panel().setWidth(300).setHeight(500));
 
         panel.resize();
 
         expect(panel.size).to.equal(300);
-        expect(panel.bbox.width).to.equal(300);
-        expect(panel.bbox.height).to.equal(300);
+        expect(panel.height).to.equal(500);
       });
 
       it("should update its margin", () => {
-        const panel = createPanel(El.panel().setMargin({ top: 10, left: "20px", bottom: 30, right: "40px" }));
+        const margin = { top: 10, left: "20px", bottom: 30, right: "40px" };
+        const horizontal = createPanel(El.panel().setMargin(margin), {}, { horizontal: true });
+        const vertical = createPanel(El.panel().setMargin(margin), {}, { horizontal: false });
 
-        panel.resize();
+        horizontal.resize();
+        vertical.resize();
 
-        expect(panel.margin.top).to.equal(10);
-        expect(panel.margin.left).to.equal(20);
-        expect(panel.margin.bottom).to.equal(30);
-        expect(panel.margin.right).to.equal(40);
+        expect(horizontal.margin.prev).to.equal(20);
+        expect(horizontal.margin.next).to.equal(40);
+
+        expect(vertical.margin.prev).to.equal(10);
+        expect(vertical.margin.next).to.equal(30);
       });
 
       it("should update its position", () => {

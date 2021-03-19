@@ -12,7 +12,7 @@ export default class ParallaxDemo extends React.Component<{}> {
       <div id="parallax" className="plugins container">
         <h1>Parallax <a
           href="https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.Flicking.plugins.Parallax.html"
-          target="_blank">API</a></h1>
+          target="_blank" rel="noopener noreferrer">API</a></h1>
         <ul className="extra">
           <li>Parallax effect will be applied to each panel while moving.</li>
         </ul>
@@ -23,13 +23,13 @@ export default class ParallaxDemo extends React.Component<{}> {
           plugins={this.plugins}
         >
           <div className="panel">
-            <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
+            <img alt="img" src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
           </div>
           <div className="panel">
-            <img src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
+            <img alt="img" src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
           </div>
           <div className="panel">
-            <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
+            <img alt="img" src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
           </div>
         </Flicking>
         <div className="pagination"></div>

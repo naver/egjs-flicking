@@ -2,6 +2,8 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { ComponentEvent } from "@egjs/component";
+
 import State, { STATE_TYPE } from "~/control/states/State";
 import { EVENTS } from "~/const/external";
 import { getDirection } from "~/utils";
@@ -13,14 +15,13 @@ class AnimatingState extends State {
   public onHold(ctx: Parameters<State["onHold"]>[0]): void {
     const { flicking, axesEvent, transitTo } = ctx;
 
-    const isSuccess = flicking.trigger(EVENTS.HOLD_START, {
-      axesEvent
-    });
+    const holdStartEvent = new ComponentEvent(EVENTS.HOLD_START, { axesEvent });
+    flicking.trigger(holdStartEvent);
 
-    if (isSuccess) {
-      transitTo(STATE_TYPE.DRAGGING);
-    } else {
+    if (holdStartEvent.isCanceled()) {
       transitTo(STATE_TYPE.DISABLED);
+    } else {
+      transitTo(STATE_TYPE.DRAGGING);
     }
   }
 
@@ -36,14 +37,16 @@ class AnimatingState extends State {
 
     camera.lookAt(axesEvent.pos.flick);
 
-    const isSuccess = flicking.trigger(EVENTS.MOVE, {
+    const moveEvent = new ComponentEvent(EVENTS.MOVE, {
       isTrusted: axesEvent.isTrusted,
       holding: this.holding,
       direction: getDirection(0, axesEvent.delta.flick),
       axesEvent
     });
 
-    if (!isSuccess) {
+    flicking.trigger(moveEvent);
+
+    if (moveEvent.isCanceled()) {
       // Return to previous position
       flicking.camera.lookAt(prevPosition);
       transitTo(STATE_TYPE.DISABLED);
@@ -62,7 +65,7 @@ class AnimatingState extends State {
     const camera = flicking.camera;
     const anchorBelow = camera.findAnchorIncludePosition(camera.position);
     if (flicking.horizontal && flicking.adaptive && anchorBelow) {
-      flicking.viewport.setSize({ height: anchorBelow.panel.bbox.height });
+      flicking.viewport.setSize({ height: anchorBelow.panel.height });
     }
 
     transitTo(STATE_TYPE.IDLE);
@@ -70,11 +73,11 @@ class AnimatingState extends State {
     const controller = flicking.control.controller;
     const animatingContext = controller.animatingContext;
 
-    flicking.trigger(EVENTS.MOVE_END, {
+    flicking.trigger(new ComponentEvent(EVENTS.MOVE_END, {
       isTrusted: axesEvent.isTrusted,
       direction: getDirection(animatingContext.start, animatingContext.end),
       axesEvent
-    });
+    }));
   }
 }
 

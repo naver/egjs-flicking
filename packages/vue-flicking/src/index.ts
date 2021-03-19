@@ -15,7 +15,7 @@ const install = (Vue: VueConstructor): void => {
 const plugin = {
   Flicking,
   install,
-  version,
+  version
 };
 export default plugin;
 export {

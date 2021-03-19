@@ -9,8 +9,11 @@ import BoundCamera from "./BoundCamera";
 
 export {
   Camera,
-  CameraOptions,
   LinearCamera,
   CircularCamera,
   BoundCamera
+};
+
+export type {
+  CameraOptions
 };

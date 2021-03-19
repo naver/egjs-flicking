@@ -10,9 +10,9 @@ export default class FadeDemo extends React.Component<{}> {
     return (
       <div id="fade" className="plugins container">
       <h1>Fade<a href="https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.Flicking.plugins.Fade.html"
-              target="_blank">API</a></h1>
+        target="_blank" rel="noopener noreferrer">API</a></h1>
       <ul className="extra">
-          <li>You can give fade in / out effect while moving panels. </li>
+        <li>You can give fade in / out effect while moving panels. </li>
       </ul>
       <Flicking
         className="flicking"
@@ -20,15 +20,15 @@ export default class FadeDemo extends React.Component<{}> {
         gap={10}
         plugins={this.plugins}
       >
-          <div className="panel">
-              <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
-          </div>
-          <div className="panel">
-              <img src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
-          </div>
-          <div className="panel">
-              <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
-          </div>
+        <div className="panel">
+          <img alt="img" src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
+        </div>
+        <div className="panel">
+          <img alt="img" src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
+        </div>
+        <div className="panel">
+          <img alt="img" src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
+        </div>
       </Flicking>
       <div className="pagination"></div>
       <pre><code className="hljs html" data-script="flicking0"></code></pre>
