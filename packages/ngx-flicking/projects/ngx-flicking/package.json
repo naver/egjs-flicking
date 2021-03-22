@@ -7,8 +7,8 @@
     "@angular/core": "^7.2.15"
   },
   "dependencies": {
-    "@egjs/flicking": "^3.7.0",
-    "@egjs/ngx-children-differ": "^1.0.0"
+    "@egjs/flicking": "^4.0.0-beta.1",
+    "@egjs/list-differ": "^1.0.0"
   },
   "repository": {
     "type": "git",

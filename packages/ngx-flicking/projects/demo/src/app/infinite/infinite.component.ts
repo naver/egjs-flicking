@@ -9,8 +9,7 @@ import { EVENTS } from '~/index';
 @Component({
   selector: 'demo-infinite',
   templateUrl: './infinite.component.html',
-  styleUrls: ['../app.component.css', './infinite.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['../app.component.css', './infinite.component.css']
 })
 export class InfiniteComponent implements OnInit {
   list0 = [0, 1, 2, 3, 4];

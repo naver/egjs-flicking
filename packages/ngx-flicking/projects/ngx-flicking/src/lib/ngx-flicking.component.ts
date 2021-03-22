@@ -45,7 +45,7 @@ export interface RenderPanelChangeEvent {
     style: "display: block;"
   },
   styleUrls: [
-    "../../../../node_modules/@egjs/flicking/dist/flicking.css"
+    "../../node_modules/@egjs/flicking/dist/flicking.css"
   ],
   encapsulation: ViewEncapsulation.None
 })
@@ -72,7 +72,7 @@ export class NgxFlickingComponent extends FlickingInterface
   @Output() public renderPanelChange = new EventEmitter<RenderPanelChangeEvent>();
 
   @ViewChild("camera") private _cameraElRef: ElementRef<HTMLElement>;
-  private _elRef: ElementRef<HTMLDivElement>;
+  private _elRef: ElementRef<HTMLElement>;
   private _zone: NgZone;
   private _pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
   private _elementDiffer: ListDiffer<string | number> | null = null;
@@ -87,7 +87,7 @@ export class NgxFlickingComponent extends FlickingInterface
    */
   private _criticalSection = true;
 
-  public constructor(elRef: ElementRef, zone: NgZone) {
+  public constructor(elRef: ElementRef<HTMLElement>, zone: NgZone) {
     super();
 
     this._elRef = elRef;
@@ -96,7 +96,7 @@ export class NgxFlickingComponent extends FlickingInterface
   }
 
   public ngAfterViewInit() {
-    const viewportEl = this._elRef.nativeElement as HTMLElement;
+    const viewportEl = this._elRef.nativeElement;
     const options: Partial<FlickingOptions> = {
       ...this.options,
       renderExternal: true,
@@ -133,7 +133,7 @@ export class NgxFlickingComponent extends FlickingInterface
 
       this.renderPanelChange.emit({
         visibles: getRenderingPanels(flicking, diffResult)
-      })
+      });
 
       this._diffResult = diffResult;
     }
@@ -177,7 +177,7 @@ export class NgxFlickingComponent extends FlickingInterface
 
   private _bindEvents() {
     const flicking = this._nativeFlicking;
-    const events = Object.keys(EVENTS).map(key => EVENTS[key]) as Array<typeof EVENTS[keyof typeof EVENTS]>;
+    const events = Object.keys(EVENTS).map((key: keyof typeof EVENTS) => EVENTS[key]);
 
     events.forEach(evtName => {
       flicking.on(evtName, e => {
@@ -186,8 +186,9 @@ export class NgxFlickingComponent extends FlickingInterface
 
         e.currentTarget = this;
 
-        if (emitter)
-        emitter.emit(e);
+        if (emitter) {
+          emitter.emit(e);
+        }
       });
     });
 
@@ -210,6 +211,7 @@ export class NgxFlickingComponent extends FlickingInterface
     // Fill keys if not exist
     const children = ([].slice.apply(this._cameraElRef.nativeElement.children) as HTMLElement[])
       .filter(node => node.nodeType === Node.ELEMENT_NODE);
+    /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
     children.forEach(child => {
       if (!(child as any).__NGX_FLICKING_KEY__) {
         (child as any).__NGX_FLICKING_KEY__ =  uuid.v4();
@@ -217,18 +219,35 @@ export class NgxFlickingComponent extends FlickingInterface
     });
 
     return children.map(child => (child as any).__NGX_FLICKING_KEY__);
+    /* eslint-enable */
   }
 
   private _reRender = () => {
     const flicking = this._nativeFlicking;
     const visiblePanels = flicking.visiblePanels;
 
-    Promise.resolve().then(() => {
-      this.renderPanelChange.emit({
-        visibles: visiblePanels
-          .sort((panel1, panel2) => (panel1.position + panel1.offset) - (panel2.position + panel2.offset))
-          .map(panel => this.data[panel.index])
+    const renderChangeEvent = {
+      visibles: visiblePanels
+        .sort((panel1, panel2) => (panel1.position + panel1.offset) - (panel2.position + panel2.offset))
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        .map(panel => this.data[panel.index])
+    };
+
+    if (Promise) {
+      void Promise.resolve().then(() => {
+        this.renderPanelChange.emit(renderChangeEvent);
       });
-    })
-  }
+      return;
+    }
+
+    // If Promise is not supported (IE)
+    if (this._criticalSection) {
+      setTimeout(() => {
+        // This works OK but it may cause blink when panel is appended or added
+        this.renderPanelChange.emit(renderChangeEvent);
+      });
+    } else {
+      this.renderPanelChange.emit(renderChangeEvent);
+    }
+  };
 }

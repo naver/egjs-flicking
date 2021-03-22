@@ -19,7 +19,7 @@ module.exports = {
   "overrides": [
     {
       "files": [
-        "src/**/*.{ts,tsx}"
+        "./**/*.{ts,tsx}"
       ],
       "extends": [
         "plugin:@typescript-eslint/recommended",

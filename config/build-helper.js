@@ -62,6 +62,7 @@ module.exports = function config(options) {
     "/** @class */": "/*#__PURE__*/",
     delimiters: ["", ""],
     sourcemap: true,
+    preventAssignment: true
   });
   const nextPlugins = plugins.concat([
     typescriptPlugin({

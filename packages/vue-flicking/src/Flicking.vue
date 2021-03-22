@@ -10,7 +10,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import NativeFlicking, { EVENTS, FlickingOptions, withFlickingMethods, sync, getRenderingPanels } from "../../../src/index";
+import NativeFlicking, { EVENTS, FlickingOptions, withFlickingMethods, sync, getRenderingPanels } from "@egjs/flicking";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { VNode } from "vue";
@@ -93,7 +93,7 @@ class Flicking extends Vue {
 
   private _bindEvents() {
     const flicking = this._nativeFlicking;
-    const events = Object.values(EVENTS);
+    const events = Object.keys(EVENTS).map((key: keyof typeof EVENTS) => EVENTS[key]);
 
     events.forEach(eventName => {
       flicking.on(eventName, (e: any) => {
