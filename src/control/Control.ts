@@ -9,10 +9,14 @@ import Flicking from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
 import Panel from "~/core/Panel";
 import AxesController from "~/control/AxesController";
-import { EVENTS } from "~/const/external";
+import { DIRECTION, EVENTS } from "~/const/external";
 import * as ERROR from "~/const/error";
 import { getDirection, getFlickingAttached } from "~/utils";
 
+/**
+ * A component that manages inputs and animation of Flicking
+ * @ko Flicking의 입력 장치 & 애니메이션을 담당하는 컴포넌트
+ */
 abstract class Control {
   // Internal States
   protected _flicking: Flicking | null;
@@ -25,6 +29,9 @@ abstract class Control {
   public get animating() { return this._controller.state.animating; }
   public get holding() { return this._controller.state.holding; }
 
+  /**
+   *
+   */
   public constructor() {
     this._flicking = null;
     this._controller = new AxesController();
@@ -82,7 +89,7 @@ abstract class Control {
     if (!camera.canReach(panel)) {
       const nearestAnchor = camera.findNearestAnchor(position);
 
-      if (!nearestAnchor) {
+      if (panel.removed || !nearestAnchor) {
         return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(panel.position), ERROR.CODE.POSITION_NOT_REACHABLE));
       }
 
@@ -98,7 +105,7 @@ abstract class Control {
 
   protected _triggerIndexChangeEvent(panel: Panel, position: number, axesEvent?: OnRelease): void {
     const flicking = getFlickingAttached(this._flicking, "Control");
-    const triggeringEvent = panel !== this._activePanel ? EVENTS.CHANGE : EVENTS.RESTORE;
+    const triggeringEvent = panel !== this._activePanel ? EVENTS.WILL_CHANGE : EVENTS.WILL_RESTORE;
     const camera = flicking.camera;
     const activePanel = this._activePanel;
 
@@ -126,18 +133,34 @@ abstract class Control {
     newActivePanel: Panel;
     axesEvent?: OnRelease;
   }) {
+    const currentPanel = this._activePanel;
     const animate = () => this._controller.animateTo(position, duration, axesEvent);
+    const isTrusted = axesEvent?.isTrusted || false;
 
     if (duration === 0) {
-      this._setActivePanel(newActivePanel);
+      this._setActivePanel(newActivePanel, currentPanel, isTrusted);
       return animate();
     } else {
-      return animate().then(() => this._setActivePanel(newActivePanel));
+      return animate().then(() => this._setActivePanel(newActivePanel, currentPanel, isTrusted));
     }
   }
 
-  protected _setActivePanel = (panel: Panel) => {
-    this._activePanel = panel;
+  protected _setActivePanel = (newActivePanel: Panel, prevActivePanel: Panel | null, isTrusted: boolean) => {
+    const flicking = getFlickingAttached(this._flicking, "Control");
+    this._activePanel = newActivePanel;
+
+    if (newActivePanel !== prevActivePanel) {
+      flicking.trigger(new ComponentEvent(EVENTS.CHANGED, {
+        index: newActivePanel.index,
+        prevIndex: prevActivePanel?.index ?? -1,
+        isTrusted,
+        direction: prevActivePanel ? getDirection(prevActivePanel.position, newActivePanel.position) : DIRECTION.NONE
+      }));
+    } else {
+      flicking.trigger(new ComponentEvent(EVENTS.RESTORED, {
+        isTrusted
+      }));
+    }
   };
 }
 

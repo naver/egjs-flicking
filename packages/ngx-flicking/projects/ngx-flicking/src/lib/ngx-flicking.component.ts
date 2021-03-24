@@ -63,8 +63,10 @@ export class NgxFlickingComponent extends FlickingInterface
   @Output() public moveStart = new EventEmitter<FlickingEvents[typeof EVENTS.MOVE_START]>();
   @Output() public move = new EventEmitter<FlickingEvents[typeof EVENTS.MOVE]>();
   @Output() public moveEnd = new EventEmitter<FlickingEvents[typeof EVENTS.MOVE_END]>();
-  @Output() public change = new EventEmitter<FlickingEvents[typeof EVENTS.CHANGE]>();
-  @Output() public restore = new EventEmitter<FlickingEvents[typeof EVENTS.RESTORE]>();
+  @Output() public willChange = new EventEmitter<FlickingEvents[typeof EVENTS.WILL_CHANGE]>();
+  @Output() public changed = new EventEmitter<FlickingEvents[typeof EVENTS.CHANGED]>();
+  @Output() public willRestore = new EventEmitter<FlickingEvents[typeof EVENTS.WILL_RESTORE]>();
+  @Output() public restored = new EventEmitter<FlickingEvents[typeof EVENTS.RESTORED]>();
   @Output() public select = new EventEmitter<FlickingEvents[typeof EVENTS.SELECT]>();
   @Output() public needPanel = new EventEmitter<FlickingEvents[typeof EVENTS.NEED_PANEL]>();
   @Output() public visibleChange = new EventEmitter<FlickingEvents[typeof EVENTS.VISIBLE_CHANGE]>();

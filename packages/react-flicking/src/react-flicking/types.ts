@@ -1,5 +1,4 @@
 import {
-  ChangeEvent,
   SelectEvent,
   NeedPanelEvent,
   VisibleChangeEvent,
@@ -8,7 +7,10 @@ import {
   MoveStartEvent,
   MoveEvent,
   MoveEndEvent,
-  RestoreEvent,
+  WillChangeEvent,
+  ChangedEvent,
+  WillRestoreEvent,
+  RestoredEvent,
   ReadyEvent,
   BeforeResizeEvent,
   AfterResizeEvent,
@@ -27,8 +29,10 @@ export interface FlickingProps {
   onMoveStart: (e: MoveStartEvent) => any;
   onMove: (e: MoveEvent) => any;
   onMoveEnd: (e: MoveEndEvent) => any;
-  onChange: (e: ChangeEvent) => any;
-  onRestore: (e: RestoreEvent) => any;
+  onWillChange: (e: WillChangeEvent) => any;
+  onChanged: (e: ChangedEvent) => any;
+  onWillRestore: (e: WillRestoreEvent) => any;
+  onRestored: (e: RestoredEvent) => any;
   onSelect: (e: SelectEvent) => any;
   onNeedPanel: (e: NeedPanelEvent) => any;
   onVisibleChange: (e: VisibleChangeEvent) => any;

@@ -342,22 +342,6 @@ describe("Flicking", () => {
       });
     });
 
-    describe("isEqualSize", () => {
-      it("is false by default", () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-
-        expect(flicking.isEqualSize).to.equal(false);
-      });
-    });
-
-    describe("isConstantSize", () => {
-      it("is false by default", () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-
-        expect(flicking.isConstantSize).to.equal(false);
-      });
-    });
-
     describe("renderOnlyVisible", () => {
       it("is false by default", () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
@@ -637,7 +621,7 @@ describe("Flicking", () => {
     describe("Input & Move Event Order", () => {
       const eventsFired: string[] = [];
       const attachEventOrderRecognizer = (flicking: Flicking) => {
-        [EVENTS.HOLD_START, EVENTS.HOLD_END, EVENTS.MOVE_START, EVENTS.MOVE, EVENTS.MOVE_END, EVENTS.CHANGE, EVENTS.RESTORE].forEach(event => {
+        [EVENTS.HOLD_START, EVENTS.HOLD_END, EVENTS.MOVE_START, EVENTS.MOVE, EVENTS.MOVE_END, EVENTS.WILL_CHANGE, EVENTS.WILL_RESTORE].forEach(event => {
           flicking.on(event, e => {
             if (eventsFired.length === 0 || eventsFired[eventsFired.length - 1] !== e.eventType) {
               eventsFired.push(e.eventType);
@@ -650,13 +634,13 @@ describe("Flicking", () => {
         eventsFired.splice(0, eventsFired.length);
       });
 
-      it(`should be ${EVENTS.HOLD_START} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.HOLD_END} -> ${EVENTS.CHANGE} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when panel changed with user input`, async () => {
+      it(`should be ${EVENTS.HOLD_START} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.HOLD_END} -> ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when panel changed with user input`, async () => {
         const expectedEventOrder = [
           EVENTS.HOLD_START,
           EVENTS.MOVE_START,
           EVENTS.MOVE,
           EVENTS.HOLD_END,
-          EVENTS.CHANGE,
+          EVENTS.WILL_CHANGE,
           EVENTS.MOVE,
           EVENTS.MOVE_END
         ];
@@ -669,13 +653,13 @@ describe("Flicking", () => {
         expect(eventsFired).to.deep.equal(expectedEventOrder);
       });
 
-      it(`should be ${EVENTS.HOLD_START} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.HOLD_END} -> ${EVENTS.RESTORE} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when panel restored with user input`, async () => {
+      it(`should be ${EVENTS.HOLD_START} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.HOLD_END} -> ${EVENTS.WILL_RESTORE} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when panel restored with user input`, async () => {
         const expectedEventOrder = [
           EVENTS.HOLD_START,
           EVENTS.MOVE_START,
           EVENTS.MOVE,
           EVENTS.HOLD_END,
-          EVENTS.RESTORE,
+          EVENTS.WILL_RESTORE,
           EVENTS.MOVE,
           EVENTS.MOVE_END
         ];
@@ -689,9 +673,9 @@ describe("Flicking", () => {
       });
 
       describe("moveTo's event order", () => {
-        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
           const expectedEventOrder = [
-            EVENTS.CHANGE,
+            EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
             EVENTS.MOVE_END
@@ -706,9 +690,9 @@ describe("Flicking", () => {
           expect(eventsFired).to.deep.equal(expectedEventOrder);
         });
 
-        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method and duration is 0`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method and duration is 0`, () => {
           const expectedEventOrder = [
-            EVENTS.CHANGE,
+            EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
             EVENTS.MOVE_END
@@ -724,9 +708,9 @@ describe("Flicking", () => {
       });
 
       describe("prev's event order", () => {
-        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
           const expectedEventOrder = [
-            EVENTS.CHANGE,
+            EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
             EVENTS.MOVE_END
@@ -741,9 +725,9 @@ describe("Flicking", () => {
           expect(eventsFired).to.deep.equal(expectedEventOrder);
         });
 
-        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method and duration is 0`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method and duration is 0`, () => {
           const expectedEventOrder = [
-            EVENTS.CHANGE,
+            EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
             EVENTS.MOVE_END
@@ -759,9 +743,9 @@ describe("Flicking", () => {
       });
 
       describe("next's event order", () => {
-        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
           const expectedEventOrder = [
-            EVENTS.CHANGE,
+            EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
             EVENTS.MOVE_END
@@ -776,9 +760,9 @@ describe("Flicking", () => {
           expect(eventsFired).to.deep.equal(expectedEventOrder);
         });
 
-        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method and duration is 0`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method and duration is 0`, () => {
           const expectedEventOrder = [
-            EVENTS.CHANGE,
+            EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
             EVENTS.MOVE_END
@@ -979,15 +963,6 @@ describe("Flicking", () => {
         expect(controlSpy.calledOnce).to.be.true;
         expect(cameraSpy.calledOnce).to.be.true;
         expect(rendererSpy.calledOnce).to.be.true;
-      });
-
-      it("should call destroy of the viewport", () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-        const destroySpy = sinon.spy(flicking.viewport, "destroy");
-
-        flicking.destroy();
-
-        expect(destroySpy.calledOnce).to.be.true;
       });
     });
 

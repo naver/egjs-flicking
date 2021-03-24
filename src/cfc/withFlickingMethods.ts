@@ -7,7 +7,6 @@ import Flicking from "~/Flicking";
 
 /**
  * Decorator that makes the method of flicking available in the framework.
- *
  * @ko 프레임워크에서 플리킹의 메소드를 사용할 수 있게 하는 데코레이터.
  * @memberof eg.Flicking
  * @private
@@ -21,7 +20,7 @@ import Flicking from "~/Flicking";
  * }
  * ```
  */
-export default (prototype: any, flickingName: string) => {
+const withFlickingMethods = (prototype: any, flickingName: string) => {
   Object.getOwnPropertyNames(Flicking.prototype)
     .filter(name => !prototype[name] && !name.startsWith("_") && name !== "constructor")
     .forEach((name: keyof Flicking) => {
@@ -51,5 +50,7 @@ export default (prototype: any, flickingName: string) => {
       }
     });
 };
+
+export default withFlickingMethods;
 /* eslint-enable @typescript-eslint/no-unsafe-member-access */
 /* eslint-enable @typescript-eslint/no-unsafe-assignment */

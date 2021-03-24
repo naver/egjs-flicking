@@ -140,13 +140,13 @@ describe("Control", () => {
         expect(activePanelAfter).to.equal(panel);
       });
 
-      it(`should trigger ${EVENTS.CHANGE} if active panel was null`, async () => {
+      it(`should trigger ${EVENTS.WILL_CHANGE} if active panel was null`, async () => {
         const control = new ControlImpl();
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
         const changeSpy = sinon.spy();
         const restoreSpy = sinon.spy();
-        flicking.on(EVENTS.CHANGE, changeSpy);
-        flicking.on(EVENTS.RESTORE, restoreSpy);
+        flicking.on(EVENTS.WILL_CHANGE, changeSpy);
+        flicking.on(EVENTS.WILL_RESTORE, restoreSpy);
 
         control.init(flicking);
         control.updateInput();
@@ -157,7 +157,7 @@ describe("Control", () => {
         expect(restoreSpy.called).to.be.false;
       });
 
-      it(`should trigger ${EVENTS.CHANGE} if given panel is not same to active panel`, async () => {
+      it(`should trigger ${EVENTS.WILL_CHANGE} if given panel is not same to active panel`, async () => {
         const control = new ControlImpl();
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
@@ -167,8 +167,8 @@ describe("Control", () => {
 
         const changeSpy = sinon.spy();
         const restoreSpy = sinon.spy();
-        flicking.on(EVENTS.CHANGE, changeSpy);
-        flicking.on(EVENTS.RESTORE, restoreSpy);
+        flicking.on(EVENTS.WILL_CHANGE, changeSpy);
+        flicking.on(EVENTS.WILL_RESTORE, restoreSpy);
 
         await control.moveToPanel(flicking.getPanel(2), 500);
 
@@ -176,7 +176,7 @@ describe("Control", () => {
         expect(restoreSpy.called).to.be.false;
       });
 
-      it(`should trigger ${EVENTS.RESTORE} if give panel is same to active panel`, async () => {
+      it(`should trigger ${EVENTS.WILL_RESTORE} if give panel is same to active panel`, async () => {
         const control = new ControlImpl();
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
@@ -186,8 +186,8 @@ describe("Control", () => {
 
         const changeSpy = sinon.spy();
         const restoreSpy = sinon.spy();
-        flicking.on(EVENTS.CHANGE, changeSpy);
-        flicking.on(EVENTS.RESTORE, restoreSpy);
+        flicking.on(EVENTS.WILL_CHANGE, changeSpy);
+        flicking.on(EVENTS.WILL_RESTORE, restoreSpy);
 
         await control.moveToPanel(flicking.getPanel(1), 500);
 
@@ -195,10 +195,10 @@ describe("Control", () => {
         expect(restoreSpy.calledOnce).to.be.true;
       });
 
-      it(`should be rejected with FlickingError with STOP_CALLED_BY_USER as code when stop() is called from ${EVENTS.CHANGE} event`, async () => {
+      it(`should be rejected with FlickingError with STOP_CALLED_BY_USER as code when stop() is called from ${EVENTS.WILL_CHANGE} event`, async () => {
         const control = new ControlImpl();
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-        flicking.on(EVENTS.CHANGE, e => e.stop());
+        flicking.on(EVENTS.WILL_CHANGE, e => e.stop());
 
         control.init(flicking);
         control.updateInput();
@@ -210,14 +210,14 @@ describe("Control", () => {
           .with.property("code", ERROR.CODE.STOP_CALLED_BY_USER);
       });
 
-      it(`should be rejected with FlickingError with STOP_CALLED_BY_USER as code when stop() is called from ${EVENTS.RESTORE} event`, async () => {
+      it(`should be rejected with FlickingError with STOP_CALLED_BY_USER as code when stop() is called from ${EVENTS.WILL_RESTORE} event`, async () => {
         const control = new ControlImpl();
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         control.init(flicking);
         control.updateInput();
         await control.moveToPanel(flicking.getPanel(1), 0);
-        flicking.on(EVENTS.RESTORE, e => e.stop());
+        flicking.on(EVENTS.WILL_RESTORE, e => e.stop());
 
         const err = await control.moveToPanel(flicking.getPanel(1), 500).catch(e => e);
 

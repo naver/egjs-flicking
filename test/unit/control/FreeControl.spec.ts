@@ -34,7 +34,7 @@ describe("FreeControl", () => {
         }
       });
 
-      it(`should not trigger either ${EVENTS.CHANGE} or ${EVENTS.RESTORE} if active panel is not changed`, async () => {
+      it(`should not trigger either ${EVENTS.WILL_CHANGE} or ${EVENTS.WILL_RESTORE} if active panel is not changed`, async () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, {
           moveType: MOVE_TYPE.FREE_SCROLL,
           threshold: 100
@@ -46,8 +46,8 @@ describe("FreeControl", () => {
         const restoreSpy = sinon.spy();
 
         flicking.on({
-          [EVENTS.CHANGE]: changeSpy,
-          [EVENTS.RESTORE]: restoreSpy
+          [EVENTS.WILL_CHANGE]: changeSpy,
+          [EVENTS.WILL_RESTORE]: restoreSpy
         });
 
         const promise = control.moveToPosition(control.activePanel.position + 50, 500);
