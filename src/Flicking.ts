@@ -317,8 +317,10 @@ class Flicking extends Component<FlickingEvents> {
    */
   public get circular() { return this._circular; }
   /**
-   * Prevent the view(camera element) from going out of the first/last panel. Only can be enabled when `circular=false`.
-   * @ko 뷰(카메라 엘리먼트)가 첫번째와 마지막 패널 밖으로 넘어가는 것을 막아줍니다. `circular=false`인 경우에만 사용할 수 있습니다.
+   * Prevent the view(camera element) from going out of the first/last panel, so it won't show empty spaces before/after the first/last panel
+   * Only can be enabled when `circular=false`
+   * @ko 뷰(카메라 엘리먼트)가 첫번째와 마지막 패널 밖으로 넘어가지 못하게 하여, 첫번째/마지막 패널 전/후의 빈 공간을 보이지 않도록 하는 옵션입니다
+   * `circular=false`인 경우에만 사용할 수 있습니다
    * @type {boolean}
    * @default false
    */

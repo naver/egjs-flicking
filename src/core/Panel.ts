@@ -93,7 +93,7 @@ class Panel {
   public get margin() { return this._margin; }
   /**
    * Align position inside the panel where {@link Camera}'s {@link Camera#alignPosition alignPosition} inside viewport should be located at
-   * @ko 패널의 정렬 기준 위치. {@link Camera}의 뷰포트 내에서의 {@link Camera#alignPosition alignPosition}이 위치해야 하는 값입니다
+   * @ko 패널의 정렬 기준 위치. {@link Camera}의 뷰포트 내에서의 {@link Camera#alignPosition alignPosition}이 위치해야 하는 곳입니다
    * @type {number}
    * @readonly
    */
@@ -125,7 +125,7 @@ class Panel {
 
   // Options Getter
   /**
-   * A value indicating where the {@link Panel#alignPosition alignPosition} should be positioned at inside the panel element
+   * A value indicating where the {@link Panel#alignPosition alignPosition} should be located at inside the panel element
    * @ko {@link Panel#alignPosition alignPosition}이 패널 내의 어디에 위치해야 하는지를 나타내는 값
    * @type {Constants.ALIGN | string | number}
    */

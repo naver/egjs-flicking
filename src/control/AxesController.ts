@@ -157,7 +157,7 @@ class AxesController {
    * @ko {@link https://naver.github.io/egjs-axes/ @egjs/axes}의 상태를 갱신합니다
    * @chainable
    * @throws {FlickingError}
-   * {@link Constants.ERROR_CODE.NOT_ATTACHED_TO_FLICKING NOT_ATTACHED_TO_FLICKING} When {@link AxesController#init init} is not called before
+   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link AxesController#init init} is not called before
    * <ko>{@link AxesController#init init}이 이전에 호출되지 않은 경우</ko>
    * @return {this}
    */

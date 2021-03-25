@@ -15,6 +15,10 @@ export interface TogglePoint {
   toggled: boolean;
 }
 
+/**
+ * A {@link Camera} that connects the last panel and the first panel, enabling continuous loop
+ * @ko 첫번째 패널과 마지막 패널이 이어진 상태로, 무한히 회전할 수 있는 종류의 {@link Camera}
+ */
 class CircularCamera extends Camera {
   private _circularOffset: number = 0;
   private _circularEnabled: boolean = false;
@@ -121,6 +125,15 @@ class CircularCamera extends Camera {
     return visibleInCurrentRange;
   }
 
+  /**
+   * Update {@link Camera#range range} of Camera
+   * @ko Camera의 {@link Camera#range range}를 업데이트합니다
+   * @chainable
+   * @throws {FlickingError}
+   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
+   * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
+   * @return {this}
+   */
   public updateRange() {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const renderer = flicking.renderer;
