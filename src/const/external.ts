@@ -18,23 +18,26 @@
 export { CODE as ERROR_CODE } from "./error";
 
 /**
- * Event type object with event name strings.
- * @ko 이벤트 이름 문자열들을 담은 객체
+ * Event type object with event name strings of {@link Flicking}
+ * @ko {@link Flicking}의 이벤트 이름 문자열들을 담은 객체
  * @type {object}
- * @property {"holdStart"} HOLD_START - holdStart event<ko>holdStart 이벤트</ko>
- * @property {"holdEnd"} HOLD_END - holdEnd event<ko>holdEnd 이벤트</ko>
- * @property {"moveStart"} MOVE_START - moveStart event<ko>moveStart 이벤트</ko>
- * @property {"move"} MOVE - move event<ko>move 이벤트</ko>
- * @property {"moveEnd"} MOVE_END - moveEnd event<ko>moveEnd 이벤트</ko>
- * @property {"willChange"} WILL_CHANGE - willChange event<ko>willChange 이벤트</ko>
- * @property {"changed"} CHANGED - changed event<ko>changed 이벤트</ko>
- * @property {"willRestore"} WILL_RESTORE - willRestore event<ko>willRestore 이벤트</ko>
- * @property {"restored"} RESTORED - restored event<ko>restored 이벤트</ko>
- * @property {"select"} SELECT - select event<ko>select 이벤트</ko>
- * @property {"needPanel"} NEED_PANEL - needPanel event<ko>needPanel 이벤트</ko>
+ * @memberof Constants
+ * @property {"holdStart"} HOLD_START holdStart event<ko>holdStart 이벤트</ko>
+ * @property {"holdEnd"} HOLD_END holdEnd event<ko>holdEnd 이벤트</ko>
+ * @property {"moveStart"} MOVE_START moveStart event<ko>moveStart 이벤트</ko>
+ * @property {"move"} MOVE move event<ko>move 이벤트</ko>
+ * @property {"moveEnd"} MOVE_END moveEnd event<ko>moveEnd 이벤트</ko>
+ * @property {"willChange"} WILL_CHANGE willChange event<ko>willChange 이벤트</ko>
+ * @property {"changed"} CHANGED changed event<ko>changed 이벤트</ko>
+ * @property {"willRestore"} WILL_RESTORE willRestore event<ko>willRestore 이벤트</ko>
+ * @property {"restored"} RESTORED restored event<ko>restored 이벤트</ko>
+ * @property {"select"} SELECT select event<ko>select 이벤트</ko>
+ * @property {"needPanel"} NEED_PANEL needPanel event<ko>needPanel 이벤트</ko>
  * @example
+ * ```ts
  * import { EVENTS } from "@egjs/flicking";
- * EVENTS.MOVE_START; // "MOVE_START"
+ * EVENTS.MOVE_START; // "moveStart"
+ * ```
  */
 export const EVENTS = {
   READY: "ready",
@@ -56,7 +59,13 @@ export const EVENTS = {
 } as const;
 
 /**
+ * An object with all possible predefined literal string for the {@link Flicking#align align} option
+ * @ko {@link Flicking#align align} 옵션에 사용되는 미리 정의된 리터럴 상수들을 담고 있는 객체
  * @memberof Constants
+ * @type {object}
+ * @property {"prev"} PREV left/top align<ko>좌/상 정렬</ko>
+ * @property {"center"} CENTER center align<ko>중앙 정렬</ko>
+ * @property {"next"} NEXT right/bottom align<ko>우/하 정렬</ko>
  */
 export const ALIGN = {
   PREV: "prev",
@@ -65,12 +74,15 @@ export const ALIGN = {
 } as const;
 
 /**
+ * An object of directions
+ * @ko 방향을 나타내는 값들을 담고 있는 객체
  * @memberof Constants
+ * @type {object}
  * @property {"PREV"} PREV "left" when {@link Flicking#horizontal horizontal} is true, and "top" when {@link Flicking#horizontal horizontal} is false
- * <ko>{@link Flicking#horizontal horizontal}가 `true`일 경우 왼쪽, {@link Flicking#horizontal horizontal}가 `false`일 경우 위쪽을 의미한다</ko>
+ * <ko>{@link Flicking#horizontal horizontal}가 `true`일 경우 왼쪽, {@link Flicking#horizontal horizontal}가 `false`일 경우 위쪽을 의미합니다</ko>
  * @property {"NEXT"} NEXT "right" when {@link Flicking#horizontal horizontal} is true, and "bottom" when {@link Flicking#horizontal horizontal} is false
- * <ko>{@link Flicking#horizontal horizontal}가 `true`일 경우 오른쪽, {@link Flicking#horizontal horizontal}가 `false`일 경우 아래쪽을 의미한다</ko>
- * @property {null} NONE This value usually means it's the same position<ko>주로 제자리인 경우를 의미한다</ko>
+ * <ko>{@link Flicking#horizontal horizontal}가 `true`일 경우 오른쪽, {@link Flicking#horizontal horizontal}가 `false`일 경우 아래쪽을 의미합니다</ko>
+ * @property {null} NONE This value usually means it's the same position<ko>주로 제자리인 경우를 의미합니다</ko>
  */
 export const DIRECTION = {
   PREV: "PREV",
@@ -79,7 +91,14 @@ export const DIRECTION = {
 } as const;
 
 /**
+ * An object with all possible {@link Flicking#moveType moveType}s
+ * @ko Flicking이 제공하는 {@link Flicking#moveType moveType}들을 담고 있는 객체
  * @memberof Constants
+ * @type {object}
+ * @property {"snap"} SNAP Flicking's {@link Flicking#moveType moveType} that enables {@link SnapControl} as a Flicking's {@link Flicking#control control}
+ * <ko>Flicking의 {@link Flicking#control control}을 {@link SnapControl}로 설정하게 하는 {@link Flicking#moveType moveType}</ko>
+ * @property {"freeScroll"} FREE_SCROLL Flicking's {@link Flicking#moveType moveType} that enables {@link FreeControl} as a Flicking's {@link Flicking#control control}
+ * <ko>Flicking의 {@link Flicking#control control}을 {@link FreeControl}로 설정하게 하는 {@link Flicking#moveType moveType}</ko>
  */
 export const MOVE_TYPE = {
   SNAP: "snap",

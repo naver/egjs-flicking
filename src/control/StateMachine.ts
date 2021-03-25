@@ -14,6 +14,9 @@ import Flicking from "~/Flicking";
 import State, { STATE_TYPE } from "~/control/states/State";
 import * as AXES from "~/const/axes";
 
+/**
+ * @internal
+ */
 class StateMachine {
   private _state: State;
 

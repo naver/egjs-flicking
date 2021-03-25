@@ -89,8 +89,10 @@ export interface FlickingOptions {
  * @fires Flicking#moveStart
  * @fires Flicking#move
  * @fires Flicking#moveEnd
- * @fires Flicking#change
- * @fires Flicking#restore
+ * @fires Flicking#willChange
+ * @fires Flicking#changed
+ * @fires Flicking#willRestore
+ * @fires Flicking#restored
  * @fires Flicking#select
  * @fires Flicking#needPanel
  * @fires Flicking#visibleChange
@@ -607,10 +609,10 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   /**
-   * Initialize Flicking and move to the default index.
-   * This is automatically called on Flicking's constructor when `autoInit` is true(default).
-   * @ko Flicking을 초기화하고, 디폴트 인덱스로 이동합니다.
-   * 이 메소드는 `autoInit` 옵션이 true(default)일 경우 Flicking이 생성될 때 자동으로 호출됩니다.
+   * Initialize Flicking and move to the default index
+   * This is automatically called on Flicking's constructor when `autoInit` is true(default)
+   * @ko Flicking을 초기화하고, 디폴트 인덱스로 이동합니다
+   * 이 메소드는 `autoInit` 옵션이 true(default)일 경우 Flicking이 생성될 때 자동으로 호출됩니다
    * @fires Flicking#ready
    * @return {this}
    */
@@ -642,8 +644,8 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   /**
-   * Destroy Flicking and remove all event handlers.
-   * @ko Flicking과 하위 컴포넌트들을 초기화 이전의 상태로 되돌리고, 부착된 모든 이벤트 핸들러를 제거한다.
+   * Destroy Flicking and remove all event handlers
+   * @ko Flicking과 하위 컴포넌트들을 초기 상태로 되돌리고, 부착된 모든 이벤트 핸들러를 제거합니다
    * @return {void}
    */
   public destroy(): void {
@@ -661,14 +663,15 @@ class Flicking extends Component<FlickingEvents> {
 
   /**
    * Move to the previous panel (current index - 1)
-   * @ko 이전 패널로 이동한다 (현재 인덱스 - 1)
-   * @param [duration={@link Flicking#duration options.duration}] Duration of the panel movement animation (unit: ms)<ko>패널 이동 애니메이션 진행 시간 (단위: ms)</ko>
+   * @ko 이전 패널로 이동합니다 (현재 인덱스 - 1)
+   * @param {number} [duration={@link Flicking#duration options.duration}] Duration of the panel movement animation (unit: ms)<ko>패널 이동 애니메이션 진행 시간 (단위: ms)</ko>
    * @fires Flicking#moveStart
    * @fires Flicking#move
    * @fires Flicking#moveEnd
-   * @fires Flicking#change
-   * @fires Flicking#restore
-   * @fires Flicking#select
+   * @fires Flicking#willChange
+   * @fires Flicking#changed
+   * @fires Flicking#willRestore
+   * @fires Flicking#restored
    * @fires Flicking#needPanel
    * @fires Flicking#visibleChange
    * @fires Flicking#reachEdge
@@ -677,14 +680,18 @@ class Flicking extends Component<FlickingEvents> {
    * |---|---|
    * |{@link Constants.ERROR_CODE INDEX_OUT_OF_RANGE}|When the previous panel does not exist|
    * |{@link Constants.ERROR_CODE ANIMATION_ALREADY_PLAYING}|When the animation is already playing|
+   * |{@link Constants.ERROR_CODE ANIMATION_INTERRUPTED}|When the animation is interrupted by user input|
+   * |{@link Constants.ERROR_CODE STOP_CALLED_BY_USER}|When the any of the event's `stop()` is called|
    * <ko>
    *
    * |code|condition|
    * |---|---|
    * |{@link Constants.ERROR_CODE INDEX_OUT_OF_RANGE}|이전 패널이 존재하지 않을 경우|
    * |{@link Constants.ERROR_CODE ANIMATION_ALREADY_PLAYING}|애니메이션이 이미 진행중인 경우|
+   * |{@link Constants.ERROR_CODE ANIMATION_INTERRUPTED}|사용자 입력에 의해 애니메이션이 중단된 경우|
+   * |{@link Constants.ERROR_CODE STOP_CALLED_BY_USER}|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|
    * </ko>
-   * @return {Promise<void>} Promise which will be resolved after reaching the previous panel<ko>이전 패널 도달시에 resolve되는 Promise</ko>
+   * @return {Promise<void>} A Promise which will be resolved after reaching the previous panel<ko>이전 패널 도달시에 resolve되는 Promise</ko>
    */
   public prev(duration: number = this._duration): Promise<void> {
     return this.moveTo(this._control.activePanel?.prev()?.index ?? -1, duration);
@@ -692,14 +699,15 @@ class Flicking extends Component<FlickingEvents> {
 
   /**
    * Move to the next panel (current index + 1)
-   * @ko 다음 패널로 이동한다 (현재 인덱스 + 1)
-   * @param [duration={@link Flicking#duration options.duration}] Duration of the panel movement animation (unit: ms).<ko>패널 이동 애니메이션 진행 시간 (단위: ms)</ko>
+   * @ko 다음 패널로 이동합니다 (현재 인덱스 + 1)
+   * @param {number} [duration={@link Flicking#duration options.duration}] Duration of the panel movement animation (unit: ms).<ko>패널 이동 애니메이션 진행 시간 (단위: ms)</ko>
    * @fires Flicking#moveStart
    * @fires Flicking#move
    * @fires Flicking#moveEnd
-   * @fires Flicking#change
-   * @fires Flicking#restore
-   * @fires Flicking#select
+   * @fires Flicking#willChange
+   * @fires Flicking#changed
+   * @fires Flicking#willRestore
+   * @fires Flicking#restored
    * @fires Flicking#needPanel
    * @fires Flicking#visibleChange
    * @fires Flicking#reachEdge
@@ -708,15 +716,19 @@ class Flicking extends Component<FlickingEvents> {
    * |---|---|
    * |{@link Constants.ERROR_CODE INDEX_OUT_OF_RANGE}|When the next panel does not exist|
    * |{@link Constants.ERROR_CODE ANIMATION_ALREADY_PLAYING}|When the animation is already playing|
+   * |{@link Constants.ERROR_CODE ANIMATION_INTERRUPTED}|When the animation is interrupted by user input|
+   * |{@link Constants.ERROR_CODE STOP_CALLED_BY_USER}|When the any of the event's `stop()` is called|
    * <ko>
    *
    * |code|condition|
    * |---|---|
    * |{@link Constants.ERROR_CODE INDEX_OUT_OF_RANGE}|다음 패널이 존재하지 않을 경우|
    * |{@link Constants.ERROR_CODE ANIMATION_ALREADY_PLAYING}|애니메이션이 이미 진행중인 경우|
+   * |{@link Constants.ERROR_CODE ANIMATION_INTERRUPTED}|사용자 입력에 의해 애니메이션이 중단된 경우|
+   * |{@link Constants.ERROR_CODE STOP_CALLED_BY_USER}|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|
    *
    * </ko>
-   * @return {Promise<void>} Promise which will be resolved after reaching the next panel<ko>다음 패널 도달시에 resolve되는 Promise</ko>
+   * @return {Promise<void>} A Promise which will be resolved after reaching the next panel<ko>다음 패널 도달시에 resolve되는 Promise</ko>
    */
   public next(duration: number = this._duration) {
     return this.moveTo(this._control.activePanel?.next()?.index ?? this._renderer.panelCount, duration);
@@ -724,15 +736,16 @@ class Flicking extends Component<FlickingEvents> {
 
   /**
    * Move to the panel with given index
-   * @ko 주어진 인덱스에 해당하는 패널로 이동한다
-   * @param index The index of the panel to move<ko>이동할 패널의 인덱스</ko>
-   * @param [duration={@link Flicking#duration options.duration}] Duration of the animation (unit: ms)<ko>애니메이션 진행 시간 (단위: ms)</ko>
+   * @ko 주어진 인덱스에 해당하는 패널로 이동합니다
+   * @param {number} index The index of the panel to move<ko>이동할 패널의 인덱스</ko>
+   * @param {number} [duration={@link Flicking#duration options.duration}] Duration of the animation (unit: ms)<ko>애니메이션 진행 시간 (단위: ms)</ko>
    * @fires Flicking#moveStart
    * @fires Flicking#move
    * @fires Flicking#moveEnd
-   * @fires Flicking#change
-   * @fires Flicking#restore
-   * @fires Flicking#select
+   * @fires Flicking#willChange
+   * @fires Flicking#changed
+   * @fires Flicking#willRestore
+   * @fires Flicking#restored
    * @fires Flicking#needPanel
    * @fires Flicking#visibleChange
    * @fires Flicking#reachEdge
@@ -741,15 +754,19 @@ class Flicking extends Component<FlickingEvents> {
    * |---|---|
    * |{@link Constants.ERROR_CODE INDEX_OUT_OF_RANGE}|When the root is not either string or HTMLElement|
    * |{@link Constants.ERROR_CODE ANIMATION_ALREADY_PLAYING}|When the animation is already playing|
+   * |{@link Constants.ERROR_CODE ANIMATION_INTERRUPTED}|When the animation is interrupted by user input|
+   * |{@link Constants.ERROR_CODE STOP_CALLED_BY_USER}|When the any of the event's `stop()` is called|
    * <ko>
    *
    * |code|condition|
    * |---|---|
    * |{@link Constants.ERROR_CODE INDEX_OUT_OF_RANGE}|해당 인덱스를 가진 패널이 존재하지 않을 경우|
    * |{@link Constants.ERROR_CODE ANIMATION_ALREADY_PLAYING}|애니메이션이 이미 진행중인 경우|
+   * |{@link Constants.ERROR_CODE ANIMATION_INTERRUPTED}|사용자 입력에 의해 애니메이션이 중단된 경우|
+   * |{@link Constants.ERROR_CODE STOP_CALLED_BY_USER}|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|
    *
    * </ko>
-   * @return {Promise<void>} Promise which will be resolved after reaching the target panel<ko>해당 패널 도달시에 resolve되는 Promise</ko>
+   * @return {Promise<void>} A Promise which will be resolved after reaching the target panel<ko>해당 패널 도달시에 resolve되는 Promise</ko>
    */
   public moveTo(index: number, duration: number = this._duration) {
     const renderer = this._renderer;
@@ -790,7 +807,7 @@ class Flicking extends Component<FlickingEvents> {
    * @return {this}
    */
   public enableInput(): this {
-    this._control.controller?.enable();
+    this._control.enable();
     return this;
   }
 
@@ -800,7 +817,7 @@ class Flicking extends Component<FlickingEvents> {
    * @return {this}
    */
   public disableInput(): this {
-    this._control.controller?.disable();
+    this._control.disable();
     return this;
   }
 
@@ -902,7 +919,7 @@ class Flicking extends Component<FlickingEvents> {
   /**
    * Add new panels after the last panel
    * @ko 패널 목록의 제일 끝에 새로운 패널들을 추가합니다
-   * @param element - A new HTMLElement, a outerHTML of element, or an array of both
+   * @param {Flicking.ElementLike | Flicking.ElementLike[]} element A new HTMLElement, a outerHTML of element, or an array of both
    * <ko>새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열</ko>
    * @return {Panel[]} An array of appended panels<ko>추가된 패널들의 배열</ko>
    * @see Panel
@@ -926,7 +943,7 @@ class Flicking extends Component<FlickingEvents> {
   /**
    * Add new panels before the first panel. This will increase index of panels after by the number of panels added
    * @ko 패널 목록의 제일 앞(index 0)에 새로운 패널들을 추가합니다. 추가한 패널의 개수만큼 기존 패널들의 인덱스가 증가합니다.
-   * @param element - A new HTMLElement, a outerHTML of element, or an array of both
+   * @param {Flicking.ElementLike | Flicking.ElementLike[]} element A new HTMLElement, a outerHTML of element, or an array of both
    * <ko>새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열</ko>
    * @return {Panel[]} An array of prepended panels<ko>추가된 패널들의 배열</ko>
    * @see Panel
@@ -948,8 +965,9 @@ class Flicking extends Component<FlickingEvents> {
 
   /**
    * Insert new panels at given index. This will increase index of panels after by the number of panels added
-   * @ko =주어진 인덱스에 새로운 패널들을 추가합니다. 해당 인덱스보다 같거나 큰 인덱스를 가진 기존 패널들은 추가한 패널의 개수만큼 인덱스가 증가합니다.
-   * @param element - A new HTMLElement, a outerHTML of element, or an array of both
+   * @ko 주어진 인덱스에 새로운 패널들을 추가합니다. 해당 인덱스보다 같거나 큰 인덱스를 가진 기존 패널들은 추가한 패널의 개수만큼 인덱스가 증가합니다.
+   * @param {number} index Index to insert new panels at<ko>새로 패널들을 추가할 인덱스</ko>
+   * @param {Flicking.ElementLike | Flicking.ElementLike[]} element A new HTMLElement, a outerHTML of element, or an array of both
    * <ko>새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열</ko>
    * @return {Panel[]} An array of prepended panels<ko>추가된 패널들의 배열</ko>
    * @see Panel
@@ -975,9 +993,9 @@ class Flicking extends Component<FlickingEvents> {
 
   /**
    * Remove the panel at the given index. This will decrease index of panels after by the number of panels removed
-   * @ko 주어진 인덱스의 패널을 제거합니다. 해당 인덱스보다 큰 인덱스를 가진 기존 패널들은 제거한 패널의 개수만큼 인덱스가 감소합니다.
-   * @param index - Index of panel to remove.<ko>제거할 패널의 인덱스</ko>
-   * @param {number} [deleteCount=1] - Number of panels to remove from index.<ko>`index` 이후로 제거할 패널의 개수.</ko>
+   * @ko 주어진 인덱스의 패널을 제거합니다. 해당 인덱스보다 큰 인덱스를 가진 기존 패널들은 제거한 패널의 개수만큼 인덱스가 감소합니다
+   * @param {number} index Index of panel to remove<ko>제거할 패널의 인덱스</ko>
+   * @param {number} [deleteCount=1] Number of panels to remove from index<ko>`index` 이후로 제거할 패널의 개수</ko>
    * @return Array of removed panels<ko>제거된 패널들의 배열</ko>
    */
   public remove(index: number, deleteCount: number = 1): Panel[] {

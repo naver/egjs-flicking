@@ -11,6 +11,11 @@ import * as AXES from "~/const/axes";
 import * as ERROR from "~/const/error";
 import { getFlickingAttached, parseBounce } from "~/utils";
 
+/**
+ * A controller that handles the {@link https://naver.github.io/egjs-axes/ @egjs/axes} events
+ * @ko {@link https://naver.github.io/egjs-axes/ @egjs/axes}의 이벤트를 처리하는 컨트롤러 컴포넌트
+ * @internal
+ */
 class AxesController {
   private _flicking: Flicking | null;
   private _axes: Axes | null;
@@ -19,18 +24,59 @@ class AxesController {
 
   private _animatingContext: { start: number; end: number; offset: number };
 
+  /**
+   * An {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html Axes} instance
+   * @ko {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html Axes}의 인스턴스
+   * @type {Axes}
+   * @see https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html
+   * @readonly
+   */
   public get axes() { return this._axes; }
+  /**
+   * A activated {@link State} that shows the current status of the user input or the animation
+   * @ko 현재 활성화된 {@link State} 인스턴스로 사용자 입력 또는 애니메이션 상태를 나타냅니다
+   * @type {State}
+   */
   public get state() { return this._stateMachine.state; }
+  /**
+   * A context of the current animation playing
+   * @ko 현재 재생중인 애니메이션 정보
+   * @type {object}
+   * @property {number} start A start position of the animation<ko>애니메이션 시작 지점</ko>
+   * @property {number} end A end position of the animation<ko>애니메이션 끝 지점</ko>
+   * @property {number} offset camera offset<ko>카메라 오프셋</ko>
+   * @readonly
+   */
   public get animatingContext() { return this._animatingContext; }
+  /**
+   * A Boolean indicating whether the user input is enabled
+   * @ko 현재 사용자 입력이 활성화되었는지를 나타내는 값
+   * @type {boolean}
+   * @readonly
+   */
   public get enabled() { return this._panInput?.isEnable() ?? false; }
+  /**
+   * Current position value in {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html Axes} instance
+   * @ko {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html Axes} 인스턴스 내부의 현재 좌표 값
+   * @type {number}
+   * @readonly
+   */
   public get position() { return this._axes?.get([AXES.POSITION_KEY])[AXES.POSITION_KEY] ?? 0; }
 
+  /** */
   public constructor() {
     this._resetInternalValues();
     this._stateMachine = new StateMachine();
   }
 
-  public init(flicking: Flicking) {
+  /**
+   * Initialize AxesController
+   * @ko AxesController를 초기화합니다
+   * @param {Flicking} flicking An instance of Flicking
+   * @chainable
+   * @return {this}
+   */
+  public init(flicking: Flicking): this {
     this._flicking = flicking;
 
     this._axes = new Axes({
@@ -64,8 +110,15 @@ class AxesController {
         });
       });
     }
+
+    return this;
   }
 
+  /**
+   * Destroy AxesController and return to initial state
+   * @ko AxesController를 초기 상태로 되돌립니다
+   * @return {void}
+   */
   public destroy() {
     this._axes?.destroy();
     this._panInput?.destroy();
@@ -75,18 +128,39 @@ class AxesController {
     return this;
   }
 
+  /**
+   * Enable input from the user (mouse/touch)
+   * @ko 사용자의 입력(마우스/터치)를 활성화합니다
+   * @chainable
+   * @return {this}
+   */
   public enable(): this {
     this._panInput?.enable();
 
     return this;
   }
 
+  /**
+   * Disable input from the user (mouse/touch)
+   * @ko 사용자의 입력(마우스/터치)를 막습니다
+   * @chainable
+   * @return {this}
+   */
   public disable(): this {
     this._panInput?.disable();
 
     return this;
   }
 
+  /**
+   * Update {@link https://naver.github.io/egjs-axes/ @egjs/axes}'s state
+   * @ko {@link https://naver.github.io/egjs-axes/ @egjs/axes}의 상태를 갱신합니다
+   * @chainable
+   * @throws {FlickingError}
+   * {@link Constants.ERROR_CODE.NOT_ATTACHED_TO_FLICKING NOT_ATTACHED_TO_FLICKING} When {@link AxesController#init init} is not called before
+   * <ko>{@link AxesController#init init}이 이전에 호출되지 않은 경우</ko>
+   * @return {this}
+   */
   public update(): this {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;
@@ -103,6 +177,27 @@ class AxesController {
     return this;
   }
 
+  /**
+   * Run Axes's {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#setTo setTo} using the given position
+   * @ko Axes의 {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#setTo setTo} 메소드를 주어진 좌표를 이용하여 수행합니다
+   * @param {number} position A position to move<ko>이동할 좌표</ko>
+   * @param {number} duration Duration of the animation (unit: ms)<ko>애니메이션 진행 시간 (단위: ms)</ko>
+   * @param {number} [axesEvent] If provided, it'll use its {@link setTo} method instead
+   * @throws {FlickingError}
+   * |code|condition|
+   * |---|---|
+   * |{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING}|When {@link Control#init init} is not called before|
+   * |{@link Constants.ERROR_CODE ANIMATION_INTERRUPTED}|When the animation is interrupted by user input|
+   * <ko>
+   *
+   * |code|condition|
+   * |---|---|
+   * |{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING}|{@link Control#init init}이 이전에 호출되지 않은 경우|
+   * |{@link Constants.ERROR_CODE ANIMATION_INTERRUPTED}|사용자 입력에 의해 애니메이션이 중단된 경우|
+   *
+   * </ko>
+   * @return {Promise<void>} A Promise which will be resolved after reaching the target position<ko>해당 좌표 도달시에 resolve되는 Promise</ko>
+   */
   public animateTo(position: number, duration: number, axesEvent?: OnRelease): Promise<void> {
     const axes = this._axes;
 

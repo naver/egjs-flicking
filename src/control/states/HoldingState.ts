@@ -10,9 +10,26 @@ import State, { STATE_TYPE } from "~/control/states/State";
 import { EVENTS } from "~/const/external";
 import { getDirection } from "~/utils";
 
+/**
+ * A state that activates when user's holding the Flicking area, but not moved a single pixel yet
+ * @ko 사용자의 입력이 시작되었으나, 아직 움직이지는 않은 상태
+ * @internal
+ */
 class HoldingState extends State {
+  /**
+   * Whether user is clicking or touching
+   * @ko 현재 사용자가 클릭/터치중인지 여부
+   * @type {true}
+   * @readonly
+   */
   public readonly holding = true;
-  public readonly animating = true;
+  /**
+   * Whether Flicking's animating
+   * @ko 현재 애니메이션 동작 여부
+   * @type {false}
+   * @readonly
+   */
+  public readonly animating = false;
 
   private _releaseEvent: OnRelease | null = null;
 

@@ -244,10 +244,10 @@ class Panel {
   }
 
   /**
-   * Move to this panel
-   * @ko 이 패널로 이동합니다
+   * Move {@link Camera} to this panel
+   * @ko {@link Camera}를 이 패널로 이동합니다
    * @param {number} [duration] Duration of the animation (unit: ms)<ko>애니메이션 진행 시간 (단위: ms)</ko>
-   * @returns {Promise<void>} Promise which will be resolved after reaching the panel<ko>패널 도달시에 resolve되는 Promise</ko>
+   * @returns {Promise<void>} A Promise which will be resolved after reaching the panel<ko>패널 도달시에 resolve되는 Promise</ko>
    */
   public focus(duration?: number) {
     return this._flicking.moveTo(this._index, duration);

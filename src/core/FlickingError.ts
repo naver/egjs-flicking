@@ -7,6 +7,7 @@
  * Special type of known error that {@link Flicking} throws.
  * @ko Flicking 내부에서 알려진 오류 발생시 throw되는 에러
  * @property {number} code Error code<ko>에러 코드</ko>
+ * @property {string} message Error message<ko>에러 메시지</ko>
  * @see {@link Constants.ERROR_CODE ERROR_CODE}
  * @example
  * ```ts
