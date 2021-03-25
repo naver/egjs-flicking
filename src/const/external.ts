@@ -66,6 +66,11 @@ export const ALIGN = {
 
 /**
  * @memberof Constants
+ * @property {"PREV"} PREV "left" when {@link Flicking#horizontal horizontal} is true, and "top" when {@link Flicking#horizontal horizontal} is false
+ * <ko>{@link Flicking#horizontal horizontal}가 `true`일 경우 왼쪽, {@link Flicking#horizontal horizontal}가 `false`일 경우 위쪽을 의미한다</ko>
+ * @property {"NEXT"} NEXT "right" when {@link Flicking#horizontal horizontal} is true, and "bottom" when {@link Flicking#horizontal horizontal} is false
+ * <ko>{@link Flicking#horizontal horizontal}가 `true`일 경우 오른쪽, {@link Flicking#horizontal horizontal}가 `false`일 경우 아래쪽을 의미한다</ko>
+ * @property {null} NONE This value usually means it's the same position<ko>주로 제자리인 경우를 의미한다</ko>
  */
 export const DIRECTION = {
   PREV: "PREV",

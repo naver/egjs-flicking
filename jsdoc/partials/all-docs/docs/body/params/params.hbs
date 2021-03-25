@@ -1,0 +1,4 @@
+{{#if (optionEquals "param-list-format" "list")}}{{>params-list~}}{{/if~}}
+{{#if (optionEquals "param-list-format" "table")~}}
+{{#if (optionEquals "no-gfm" true)}}{{>params-table-html~}}{{else}}{{>params-table~}}{{/if~}}
+{{/if~}}

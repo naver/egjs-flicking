@@ -19,15 +19,19 @@
 - getAllPanels => panels
 - getElement => element
 - getCurrentPanel => currentPanel
+- needPanel => 0번 패널에서도 발생 가능
+- replace => 삭제
 
 ## 추가
 - interruptable 추가
 - autoInit 추가
 - useOffsetManipulator 추가
 - 옵션별 getter/setter 추가
+- insert 추가
 
 ## 그 외
 - DOM 구조 필요
 - CSS import 필요
 - 사라진 CSS 관련 옵션(zIndex, overflow) 직접 설정 필요
 - gap 옵션을 CSS로 설정 필요
+- 이제 패널 인덱스는 항상 연속함

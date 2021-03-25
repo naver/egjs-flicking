@@ -43,6 +43,7 @@ abstract class Camera {
   public get visibleRange() { return { min: this._position - this._alignPos, max: this._position - this._alignPos + this.size }; }
   public get anchorPoints() { return this._anchors; }
   public get controlParams() { return { range: this._range, position: this._position, circular: false }; }
+  public get atEdge() { return this._position <= this._range.min || this._position >= this._range.max; }
   public get size() {
     const flicking = this._flicking;
     return flicking

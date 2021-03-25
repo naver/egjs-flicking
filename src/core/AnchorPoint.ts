@@ -1,5 +1,8 @@
 import Panel from "./Panel";
 
+/**
+ *
+ */
 class AnchorPoint {
   private _index: number;
   private _pos: number;
