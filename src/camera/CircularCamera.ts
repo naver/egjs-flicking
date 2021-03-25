@@ -9,6 +9,14 @@ import { DIRECTION } from "~/const/external";
 import { ValueOf } from "~/type/internal";
 import { circulatePosition, getFlickingAttached } from "~/utils";
 
+/**
+ * A data of the position that changes order of the panel elements
+ * @ko 패널 엘리먼트 순서가 변경되는 좌표의 데이터
+ * @interface
+ * @property {Panel} panel Toggling panel<ko>순서를 변경할 패널</ko>
+ * @property {Constants.DIRECTION} direction Toggling position<ko>순서를 변경할 방향</ko>
+ * @property {boolean} toggled Whether the panel has toggled its position to `direction`<ko>`direction` 방향으로 패널 위치를 변경했는지 여부를 나타내는 값</ko>
+ */
 export interface TogglePoint {
   panel: Panel;
   direction: ValueOf<typeof DIRECTION>;

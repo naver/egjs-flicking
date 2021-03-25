@@ -10,9 +10,9 @@ import Panel from "./core/Panel";
 import { Control, FreeControl, SnapControl } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
 import { RawRenderer, Renderer, RendererOptions, VisibleRenderer } from "./renderer";
-import ExternalManipulator from "./renderer/ExternalManipulator";
-import ElementManipulator from "./renderer/ElementManipulator";
 import OffsetManipulator from "./renderer/OffsetManipulator";
+import ElementManipulator from "./renderer/ElementManipulator";
+import OrderManipulator from "./renderer/OrderManipulator";
 
 import { EVENTS, ALIGN, MOVE_TYPE } from "~/const/external";
 import * as ERROR from "~/const/error";
@@ -73,7 +73,7 @@ export interface FlickingOptions {
   autoInit: boolean;
   autoResize: boolean;
   renderExternal: boolean;
-  useOffsetManipulator: boolean;
+  useOrderManipulator: boolean;
 }
 
 /**
@@ -135,7 +135,7 @@ class Flicking extends Component<FlickingEvents> {
   private _autoResize: FlickingOptions["autoResize"];
   private _autoInit: FlickingOptions["autoInit"];
   private _renderExternal: FlickingOptions["renderExternal"];
-  private _useOffsetManipulator: FlickingOptions["useOffsetManipulator"];
+  private _useOrderManipulator: FlickingOptions["useOrderManipulator"];
 
   // Internal State
   private _initialized: boolean;
@@ -229,7 +229,7 @@ class Flicking extends Component<FlickingEvents> {
   public get currentPanel() { return this._control.activePanel; }
   /**
    * Array of panels
-   * @ko 현재 활성화된 패널들의 배열
+   * @ko 전체 패널들의 배열
    * @type {Panel[]}
    * @readonly
    * @see Panel
@@ -479,16 +479,16 @@ class Flicking extends Component<FlickingEvents> {
    */
   public get renderExternal() { return this._renderExternal; }
   /**
-   * Use {@link OffsetManipulator} for the element order managing in {@link Renderer}.
+   * Use {@link OrderManipulator} for the element order managing in {@link Renderer}.
    * Instead of isnerting/removing element to change order, this will use CSS {@link https://developer.mozilla.org/en-US/docs/Web/CSS/order order}.
    * ⚠️ Enabling this option will decrease browser coverage to IE11+
-   * @ko {@link Renderer}에서 엘리먼트 순서 관리를 위해 {@link OffsetManipulator}를 사용합니다.
+   * @ko {@link Renderer}에서 엘리먼트 순서 관리를 위해 {@link OrderManipulator}를 사용합니다.
    * 엘리먼트를 직접적으로 추가/삭제하는 대신 CSS {@link https://developer.mozilla.org/ko/docs/Web/CSS/order order} 속성을 사용해서 순서를 관리합니다.
    * ⚠️ 이 옵션을 사용시 IE10 이하의 브라우저는 지원할 수 없습니다.
    * @type {boolean}
    * @default false
    */
-  public get useOffsetManipulator() { return this._useOffsetManipulator; }
+  public get useOrderManipulator() { return this._useOrderManipulator; }
 
   // Options Setter
   // UI / LAYOUT
@@ -518,7 +518,7 @@ class Flicking extends Component<FlickingEvents> {
   public set renderOnlyVisible(val: FlickingOptions["renderOnlyVisible"]) { this._renderOnlyVisible = val; }
   // OTHERS
   public set autoResize(val: FlickingOptions["autoResize"]) { this._autoResize = val; }
-  public set useOffsetManipulator(val: FlickingOptions["useOffsetManipulator"]) { this._useOffsetManipulator = val; }
+  public set useOrderManipulator(val: FlickingOptions["useOrderManipulator"]) { this._useOrderManipulator = val; }
 
   /**
    * @param root A root HTMLElement to initialize Flicking on it. When it's a typeof `string`, it should be a css selector string
@@ -569,7 +569,7 @@ class Flicking extends Component<FlickingEvents> {
     autoInit = true,
     autoResize = true,
     renderExternal = false,
-    useOffsetManipulator = false
+    useOrderManipulator = false
   }: Partial<FlickingOptions> = {}) {
     super();
 
@@ -597,7 +597,7 @@ class Flicking extends Component<FlickingEvents> {
     this._autoResize = autoResize;
     this._autoInit = autoInit;
     this._renderExternal = renderExternal;
-    this._useOffsetManipulator = useOffsetManipulator;
+    this._useOrderManipulator = useOrderManipulator;
 
     // Create core components
     this._viewport = new Viewport(getElement(root));
@@ -788,8 +788,8 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   /**
-   * Return the panel at the given index. `null` if it doesn't exists.
-   * @ko 주어진 인덱스에 해당하는 패널을 반환합니다. 주어진 인덱스에 해당하는 패널이 존재하지 않을 경우 `null`을 반환합니다.
+   * Return the {@link Panel} at the given index. `null` if it doesn't exists.
+   * @ko 주어진 인덱스에 해당하는 {@link Panel}을 반환합니다. 주어진 인덱스에 해당하는 패널이 존재하지 않을 경우 `null`을 반환합니다.
    * @return {Panel | null} Panel at the given index<ko>주어진 인덱스에 해당하는 패널</ko>
    * @see Panel
    * @example
@@ -943,8 +943,10 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   /**
-   * Add new panels before the first panel. This will increase index of panels after by the number of panels added
-   * @ko 패널 목록의 제일 앞(index 0)에 새로운 패널들을 추가합니다. 추가한 패널의 개수만큼 기존 패널들의 인덱스가 증가합니다.
+   * Add new panels before the first panel
+   * This will increase index of panels after by the number of panels added
+   * @ko 패널 목록의 제일 앞(index 0)에 새로운 패널들을 추가합니다
+   * 추가한 패널의 개수만큼 기존 패널들의 인덱스가 증가합니다.
    * @param {Flicking.ElementLike | Flicking.ElementLike[]} element A new HTMLElement, a outerHTML of element, or an array of both
    * <ko>새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열</ko>
    * @return {Panel[]} An array of prepended panels<ko>추가된 패널들의 배열</ko>
@@ -966,14 +968,14 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   /**
-   * Insert new panels at given index. This will increase index of panels after by the number of panels added
-   * @ko 주어진 인덱스에 새로운 패널들을 추가합니다. 해당 인덱스보다 같거나 큰 인덱스를 가진 기존 패널들은 추가한 패널의 개수만큼 인덱스가 증가합니다.
+   * Insert new panels at given index
+   * This will increase index of panels after by the number of panels added
+   * @ko 주어진 인덱스에 새로운 패널들을 추가합니다
+   * 해당 인덱스보다 같거나 큰 인덱스를 가진 기존 패널들은 추가한 패널의 개수만큼 인덱스가 증가합니다.
    * @param {number} index Index to insert new panels at<ko>새로 패널들을 추가할 인덱스</ko>
    * @param {Flicking.ElementLike | Flicking.ElementLike[]} element A new HTMLElement, a outerHTML of element, or an array of both
    * <ko>새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열</ko>
    * @return {Panel[]} An array of prepended panels<ko>추가된 패널들의 배열</ko>
-   * @see Panel
-   * @see Flicking.ElementLike
    * @throws {FlickingError} {@link Constants.ERROR_CODE ERROR_CODE.NOT_ALLOWED_IN_FRAMEWORK} if called on frameworks (React, Angular, Vue...)
    * @example
    * ```ts
@@ -994,11 +996,13 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   /**
-   * Remove the panel at the given index. This will decrease index of panels after by the number of panels removed
-   * @ko 주어진 인덱스의 패널을 제거합니다. 해당 인덱스보다 큰 인덱스를 가진 기존 패널들은 제거한 패널의 개수만큼 인덱스가 감소합니다
+   * Remove the panel at the given index
+   * This will decrease index of panels after by the number of panels removed
+   * @ko 주어진 인덱스의 패널을 제거합니다
+   * 해당 인덱스보다 큰 인덱스를 가진 기존 패널들은 제거한 패널의 개수만큼 인덱스가 감소합니다
    * @param {number} index Index of panel to remove<ko>제거할 패널의 인덱스</ko>
    * @param {number} [deleteCount=1] Number of panels to remove from index<ko>`index` 이후로 제거할 패널의 개수</ko>
-   * @return Array of removed panels<ko>제거된 패널들의 배열</ko>
+   * @return An array of removed panels<ko>제거된 패널들의 배열</ko>
    */
   public remove(index: number, deleteCount: number = 1): Panel[] {
     if (this._renderExternal) {
@@ -1041,10 +1045,10 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   private _createRenderer(): Renderer {
-    const elementManipulator = this._useOffsetManipulator
-      ? new OffsetManipulator()
+    const elementManipulator = this._useOrderManipulator
+      ? new OrderManipulator()
       : this._renderExternal
-        ? new ExternalManipulator()
+        ? new OffsetManipulator()
         : new ElementManipulator();
 
     const rendererOptions = {

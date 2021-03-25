@@ -114,7 +114,7 @@ abstract class Control {
   /**
    * Initialize Control
    * @ko Control을 초기화합니다
-   * @param {Flicking} flicking An instance of Flicking
+   * @param {Flicking} flicking An instance of {@link Flicking}<ko>Flicking의 인스턴스</ko>
    * @chainable
    * @return {this}
    */

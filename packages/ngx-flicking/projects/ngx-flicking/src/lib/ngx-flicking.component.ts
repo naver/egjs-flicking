@@ -102,7 +102,7 @@ export class NgxFlickingComponent extends FlickingInterface
     const options: Partial<FlickingOptions> = {
       ...this.options,
       renderExternal: true,
-      useOffsetManipulator: true
+      useOrderManipulator: true
     };
 
     // This prevents mousemove to call ngDoCheck & noAfterContentChecked everytime

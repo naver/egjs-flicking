@@ -138,7 +138,7 @@ class Panel {
    * @param {object} options An options object<ko>옵션 오브젝트</ko>
    * @param {HTMLElement} [options.el] A `HTMLElement` panel's referencing<ko>패널이 참조하는 `HTMLElement`</ko>
    * @param {number} [options.index] An initial index of the panel<ko>패널의 초기 인덱스</ko>
-   * @param {align} [options.align] An initial {@link Flicking#align align} value of the panel<ko>패널의 초기 {@link Flicking#align align}값</ko>
+   * @param {Constants.ALIGN | string | number} [options.align] An initial {@link Flicking#align align} value of the panel<ko>패널의 초기 {@link Flicking#align align}값</ko>
    * @param {Flicking} [options.flicking] A Flicking instance panel's referencing<ko>패널이 참조하는 {@link Flicking} 인스턴스</ko>
    */
   public constructor({

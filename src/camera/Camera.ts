@@ -181,7 +181,7 @@ abstract class Camera {
   /**
    * Initialize Camera
    * @ko Camera를 초기화합니다
-   * @param {Flicking} flicking An instance of Flicking
+   * @param {Flicking} flicking An instance of {@link Flicking}<ko>Flicking의 인스턴스</ko>
    * @chainable
    * @throws {FlickingError}
    * {@link Constants.ERROR_CODE VAL_MUST_NOT_NULL} If the camera element(`.flicking-camera`) does not exist inside viewport element

@@ -25,7 +25,7 @@
 ## 추가
 - interruptable 추가
 - autoInit 추가
-- useOffsetManipulator 추가
+- useOrderManipulator 추가
 - 옵션별 getter/setter 추가
 - insert 추가
 
