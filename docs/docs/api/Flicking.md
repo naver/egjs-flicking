@@ -4,7 +4,7 @@
 
 **Kind**: global class
 **Extends**: [Component](#Component)  
-**Emits**: [ready](#Flicking+event_ready), [beforeResize](#Flicking+event_beforeResize), [afterResize](#Flicking+event_afterResize), [holdStart](#Flicking+event_holdStart), [holdEnd](#Flicking+event_holdEnd), [moveStart](#Flicking+event_moveStart), [move](#Flicking+event_move), [moveEnd](#Flicking+event_moveEnd), `Flicking#event:change`, `Flicking#event:restore`, `Flicking#event:select`, `Flicking#event:needPanel`, `Flicking#event:visibleChange`, `Flicking#event:reachEdge`  
+**Emits**: [ready](#Flicking+event_ready), [beforeResize](#Flicking+event_beforeResize), [afterResize](#Flicking+event_afterResize), [holdStart](#Flicking+event_holdStart), [holdEnd](#Flicking+event_holdEnd), [moveStart](#Flicking+event_moveStart), [move](#Flicking+event_move), [moveEnd](#Flicking+event_moveEnd), [willChange](#Flicking+event_willChange), [changed](#Flicking+event_changed), [willRestore](#Flicking+event_willRestore), [restored](#Flicking+event_restored), [select](#Flicking+event_select), [needPanel](#Flicking+event_needPanel), [visibleChange](#Flicking+event_visibleChange), [reachEdge](#Flicking+event_reachEdge)  
 **Requires**: `{@link https://github.com/naver/egjs-component\|@egjs/component}`, `{@link https://github.com/naver/egjs-axes\|@egjs/axes}`  
 
 * [Flicking](#Flicking) ⇐ [Component](#Component)
@@ -40,17 +40,18 @@
         * [interruptable](#Flicking+interruptable) ⇒
         * [bounce](#Flicking+bounce) ⇒
         * [iOSEdgeSwipeThreshold](#Flicking+iOSEdgeSwipeThreshold) ⇒
+        * [preventClickOnDrag](#Flicking+preventClickOnDrag) ⇒
         * [renderOnlyVisible](#Flicking+renderOnlyVisible) ⇒
         * [autoInit](#Flicking+autoInit) ⇒
         * [autoResize](#Flicking+autoResize) ⇒
         * [renderExternal](#Flicking+renderExternal) ⇒
-        * [useOffsetManipulator](#Flicking+useOffsetManipulator) ⇒
+        * [useOrderManipulator](#Flicking+useOrderManipulator) ⇒
         * [init()](#Flicking+init) ⇒ `this`
         * [destroy()](#Flicking+destroy) ⇒ `void`
         * [prev([duration])](#Flicking+prev) ⇒ `Promise&lt;void&gt;`
         * [next([duration])](#Flicking+next) ⇒ `Promise&lt;void&gt;`
-        * [moveTo(index, [duration])](#Flicking+moveTo) ⇒ `Promise&lt;void&gt;`
-        * [getPanel(index)](#Flicking+getPanel) ⇒ `Panel` \| `null`
+        * [moveTo(index, [duration], [direction])](#Flicking+moveTo) ⇒ `Promise&lt;void&gt;`
+        * [getPanel(index)](#Flicking+getPanel) ⇒ [Panel](#Panel) \| `null`
         * [enableInput()](#Flicking+enableInput) ⇒ `this`
         * [disableInput()](#Flicking+disableInput) ⇒ `this`
         * [getStatus()](#Flicking+getStatus) ⇒
@@ -58,9 +59,9 @@
         * [addPlugins(plugins)](#Flicking+addPlugins) ⇒ `this`
         * [removePlugins(plugins)](#Flicking+removePlugins) ⇒ `this`
         * [resize()](#Flicking+resize) ⇒ `this`
-        * [append(element)](#Flicking+append) ⇒ `Array&lt;Panel&gt;`
-        * [prepend(element)](#Flicking+prepend) ⇒ `Array&lt;Panel&gt;`
-        * [insert(element, element)](#Flicking+insert) ⇒ `Array&lt;Panel&gt;`
+        * [append(element)](#Flicking+append) ⇒ [Array&lt;Panel&gt;](#Panel)
+        * [prepend(element)](#Flicking+prepend) ⇒ [Array&lt;Panel&gt;](#Panel)
+        * [insert(index, element)](#Flicking+insert) ⇒ [Array&lt;Panel&gt;](#Panel)
         * [remove(index, [deleteCount])](#Flicking+remove) ⇒ `$ts:Panel[]&lt;file&gt;/home/wn/egjs-flicking/src/Flicking.ts&lt;/file&gt;`
         * [trigger(event, ...params)](#Component+trigger) ⇒ `$ts:this&lt;file&gt;/home/wn/egjs-flicking/node\_modules/@egjs/component/src/Component.ts&lt;/file&gt;`
         * [once(eventName, [handlerToAttach])](#Component+once) ⇒ `$ts:this&lt;file&gt;/home/wn/egjs-flicking/node\_modules/@egjs/component/src/Component.ts&lt;/file&gt;`
@@ -76,6 +77,13 @@
         * ["move"](#Flicking+event_move) ⇒
         * ["moveEnd"](#Flicking+event_moveEnd) ⇒
         * ["willChange"](#Flicking+event_willChange) ⇒
+        * ["changed"](#Flicking+event_changed) ⇒
+        * ["willRestore"](#Flicking+event_willRestore) ⇒
+        * ["restored"](#Flicking+event_restored) ⇒
+        * ["select"](#Flicking+event_select) ⇒
+        * ["needPanel"](#Flicking+event_needPanel) ⇒
+        * ["visibleChange"](#Flicking+event_visibleChange) ⇒
+        * ["reachEdge"](#Flicking+event_reachEdge) ⇒
     * _static_
         * [VERSION](#Flicking.VERSION) ⇒
         * [ElementLike](#Flicking.ElementLike) ⇒
@@ -105,8 +113,8 @@
 | --- | --- | --- | --- |
 | root | `$ts:HTMLElement \| string&lt;file&gt;/home/wn/egjs-flicking/src/Flicking.ts&lt;/file&gt;` | 
  | A root HTMLElement to initialize Flicking on it. When it's a typeof `string`, it should be a css selector string Flicking을 초기화할 HTMLElement로, `string` 타입으로 지정시 css 선택자 문자열을 지정해야 합니다. |
-| [options] | [$ts:Partial&lt;FlickingOptions&gt;&lt;file&gt;/home/wn/egjs-flicking/src/Flicking.ts&lt;/file&gt;](#FlickingOptions) | `{}`
- | An option object for Flicking.Flicking에 적용할 옵션 오브젝트 |
+| [options] | `object` | `{}`
+ | An options object for Flicking.Flicking에 적용할 옵션 오브젝트 |
 
 **Example**  
 ```ts
@@ -129,6 +137,7 @@ const flicking2 = new Flicking(".flicking-viewport", { circular: true });
 **Default**: `SnapControl`
   
 **Read only**: true  
+**Id**: Flicking.control  
 **See**
 
 - Control
@@ -139,7 +148,7 @@ const flicking2 = new Flicking(".flicking-viewport", { circular: true });
 
 ### camera
 
-[Camera](Camera) instance of the Flicking
+[Camera](#Camera) instance of the Flicking
 
 **Kind**: instance property of [Flicking](#Flicking)
 **Default**: `LinearCamera`
@@ -156,7 +165,7 @@ const flicking2 = new Flicking(".flicking-viewport", { circular: true });
 
 ### renderer
 
-[Renderer](Renderer) instance of the Flicking
+[Renderer](#Renderer) instance of the Flicking
 
 **Kind**: instance property of [Flicking](#Flicking)
 **Default**: `RawRenderer`
@@ -281,8 +290,8 @@ Align position of the panels within viewport. You can set different values each 
 
 | Name | Type | Description |
 | --- | --- | --- |
-| panel | `string` \| `number` | 패널에 적용할 값 |
-| camera | `string` \| `number` |  |
+| panel | [ALIGN](#Constants.ALIGN) \| `string` \| `number` | 개개의 [Panel](#Panel)에 적용할 값 |
+| camera | [ALIGN](#Constants.ALIGN) \| `string` \| `number` | [Camera](#Camera)에 적용할 값 |
 
 **Example**  
 ```ts
@@ -334,7 +343,8 @@ Enables circular(continuous loop) mode, which connects first/last panel for cont
 
 ### bound
 
-Prevent the view(camera element) from going out of the first/last panel. Only can be enabled when `circular=false`.
+Prevent the view(camera element) from going out of the first/last panel, so it won't show empty spaces before/after the first/last panel
+Only can be enabled when `circular=false`
 
 **Kind**: instance property of [Flicking](#Flicking)
 **Default**: `false`
@@ -439,7 +449,7 @@ Set animation to be interruptable by click/touch.
 The size value of the bounce area. Only can be enabled when `circular=false`.
 You can set different bounce value for prev/next direction by using array.
 `number` for px value, and `string` for px, and % value relative to viewport size.
-You have to call [Control#updateInput](Control#updateInput) after changing this to take effect.
+You have to call [updateInput](#Control+updateInput) after changing this to take effect.
 
 **Kind**: instance property of [Flicking](#Flicking)
 **Default**: `&quot;\&quot;20%\&quot;&quot;`
@@ -470,12 +480,21 @@ Size of the area from the right edge in iOS safari (in px) which enables swipe-b
 **Kind**: instance property of [Flicking](#Flicking)
 **Default**: `30`
   
+<a name="Flicking+preventClickOnDrag"></a>
+
+### preventClickOnDrag
+
+Automatically prevent `click` event if the user has dragged at least a single pixel on the viewport element
+
+**Kind**: instance property of [Flicking](#Flicking)
+**Default**: `true`
+  
 <a name="Flicking+renderOnlyVisible"></a>
 
 ### renderOnlyVisible
 
 Whether to render visible panels only. This can dramatically increase performance when there're many panels.
-This will set [renderer](#Flicking+renderer)'s type to [VisibleRenderer](VisibleRenderer)
+This will set [renderer](#Flicking+renderer)'s type to [VisibleRenderer](#VisibleRenderer)
 
 **Kind**: instance property of [Flicking](#Flicking)
 **Default**: `false`
@@ -511,11 +530,11 @@ This is an option for the frameworks(React, Vue, Angular, ...). Don't set it as 
   
 **Read only**: true  
 **Internal**:   
-<a name="Flicking+useOffsetManipulator"></a>
+<a name="Flicking+useOrderManipulator"></a>
 
-### useOffsetManipulator
+### useOrderManipulator
 
-Use [OffsetManipulator](OffsetManipulator) for the element order managing in [Renderer](Renderer).
+Use [OrderManipulator](#OrderManipulator) for the element order managing in [Renderer](#Renderer).
 Instead of isnerting/removing element to change order, this will use CSS [order](https://developer.mozilla.org/en-US/docs/Web/CSS/order).
 ⚠️ Enabling this option will decrease browser coverage to IE11+
 
@@ -538,8 +557,8 @@ Flicking.VERSION;  // ex) 4.0.0
 
 ### init
 `init()`<br/>
-Initialize Flicking and move to the default index.
-This is automatically called on Flicking's constructor when `autoInit` is true(default).
+Initialize Flicking and move to the default index
+This is automatically called on Flicking's constructor when `autoInit` is true(default)
 
 **Kind**: instance method of [Flicking](#Flicking)
 **Emits**: [ready](#Flicking+event_ready)  
@@ -547,7 +566,7 @@ This is automatically called on Flicking's constructor when `autoInit` is true(d
 
 ### destroy
 `destroy()`<br/>
-Destroy Flicking and remove all event handlers.
+Destroy Flicking and remove all event handlers
 
 **Kind**: instance method of [Flicking](#Flicking)
 <a name="Flicking+prev"></a>
@@ -557,26 +576,30 @@ Destroy Flicking and remove all event handlers.
 Move to the previous panel (current index - 1)
 
 **Kind**: instance method of [Flicking](#Flicking)
-**Returns**: `Promise&lt;void&gt;` - Promise which will be resolved after reaching the previous panel이전 패널 도달시에 resolve되는 Promise  
+**Returns**: `Promise&lt;void&gt;` - A Promise which will be resolved after reaching the previous panel이전 패널 도달시에 resolve되는 Promise  
 **Throws**:
 
 - [FlickingError](#FlickingError) |code|condition|
 |---|---|
 |[INDEX_OUT_OF_RANGE](#Constants.ERROR_CODE)|When the previous panel does not exist|
 |[ANIMATION_ALREADY_PLAYING](#Constants.ERROR_CODE)|When the animation is already playing|
+|[ANIMATION_INTERRUPTED](#Constants.ERROR_CODE)|When the animation is interrupted by user input|
+|[STOP_CALLED_BY_USER](#Constants.ERROR_CODE)|When the any of the event's `stop()` is called|
 
 
 |code|condition|
 |---|---|
 |[INDEX_OUT_OF_RANGE](#Constants.ERROR_CODE)|이전 패널이 존재하지 않을 경우|
 |[ANIMATION_ALREADY_PLAYING](#Constants.ERROR_CODE)|애니메이션이 이미 진행중인 경우|
+|[ANIMATION_INTERRUPTED](#Constants.ERROR_CODE)|사용자 입력에 의해 애니메이션이 중단된 경우|
+|[STOP_CALLED_BY_USER](#Constants.ERROR_CODE)|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|
 
 
-**Emits**: [moveStart](#Flicking+event_moveStart), [move](#Flicking+event_move), [moveEnd](#Flicking+event_moveEnd), `Flicking#event:change`, `Flicking#event:restore`, `Flicking#event:select`, `Flicking#event:needPanel`, `Flicking#event:visibleChange`, `Flicking#event:reachEdge`  
+**Emits**: [moveStart](#Flicking+event_moveStart), [move](#Flicking+event_move), [moveEnd](#Flicking+event_moveEnd), [willChange](#Flicking+event_willChange), [changed](#Flicking+event_changed), [willRestore](#Flicking+event_willRestore), [restored](#Flicking+event_restored), [needPanel](#Flicking+event_needPanel), [visibleChange](#Flicking+event_visibleChange), [reachEdge](#Flicking+event_reachEdge)  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [duration] | `$ts:number&lt;file&gt;/home/wn/egjs-flicking/src/Flicking.ts&lt;/file&gt;` | `{@link Flicking#duration options.duration}`
+| [duration] | `number` | `{@link Flicking#duration options.duration}`
  | Duration of the panel movement animation (unit: ms)패널 이동 애니메이션 진행 시간 (단위: ms) |
 
 <a name="Flicking+next"></a>
@@ -586,69 +609,79 @@ Move to the previous panel (current index - 1)
 Move to the next panel (current index + 1)
 
 **Kind**: instance method of [Flicking](#Flicking)
-**Returns**: `Promise&lt;void&gt;` - Promise which will be resolved after reaching the next panel다음 패널 도달시에 resolve되는 Promise  
+**Returns**: `Promise&lt;void&gt;` - A Promise which will be resolved after reaching the next panel다음 패널 도달시에 resolve되는 Promise  
 **Throws**:
 
 - [FlickingError](#FlickingError) |code|condition|
 |---|---|
 |[INDEX_OUT_OF_RANGE](#Constants.ERROR_CODE)|When the next panel does not exist|
 |[ANIMATION_ALREADY_PLAYING](#Constants.ERROR_CODE)|When the animation is already playing|
+|[ANIMATION_INTERRUPTED](#Constants.ERROR_CODE)|When the animation is interrupted by user input|
+|[STOP_CALLED_BY_USER](#Constants.ERROR_CODE)|When the any of the event's `stop()` is called|
 
 
 |code|condition|
 |---|---|
 |[INDEX_OUT_OF_RANGE](#Constants.ERROR_CODE)|다음 패널이 존재하지 않을 경우|
 |[ANIMATION_ALREADY_PLAYING](#Constants.ERROR_CODE)|애니메이션이 이미 진행중인 경우|
+|[ANIMATION_INTERRUPTED](#Constants.ERROR_CODE)|사용자 입력에 의해 애니메이션이 중단된 경우|
+|[STOP_CALLED_BY_USER](#Constants.ERROR_CODE)|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|
 
 
 
-**Emits**: [moveStart](#Flicking+event_moveStart), [move](#Flicking+event_move), [moveEnd](#Flicking+event_moveEnd), `Flicking#event:change`, `Flicking#event:restore`, `Flicking#event:select`, `Flicking#event:needPanel`, `Flicking#event:visibleChange`, `Flicking#event:reachEdge`  
+**Emits**: [moveStart](#Flicking+event_moveStart), [move](#Flicking+event_move), [moveEnd](#Flicking+event_moveEnd), [willChange](#Flicking+event_willChange), [changed](#Flicking+event_changed), [willRestore](#Flicking+event_willRestore), [restored](#Flicking+event_restored), [needPanel](#Flicking+event_needPanel), [visibleChange](#Flicking+event_visibleChange), [reachEdge](#Flicking+event_reachEdge)  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [duration] | `$ts:number&lt;file&gt;/home/wn/egjs-flicking/src/Flicking.ts&lt;/file&gt;` | `{@link Flicking#duration options.duration}`
+| [duration] | `number` | `{@link Flicking#duration options.duration}`
  | Duration of the panel movement animation (unit: ms).패널 이동 애니메이션 진행 시간 (단위: ms) |
 
 <a name="Flicking+moveTo"></a>
 
 ### moveTo
-`moveTo(index, [duration])`<br/>
+`moveTo(index, [duration], [direction])`<br/>
 Move to the panel with given index
 
 **Kind**: instance method of [Flicking](#Flicking)
-**Returns**: `Promise&lt;void&gt;` - Promise which will be resolved after reaching the target panel해당 패널 도달시에 resolve되는 Promise  
+**Returns**: `Promise&lt;void&gt;` - A Promise which will be resolved after reaching the target panel해당 패널 도달시에 resolve되는 Promise  
 **Throws**:
 
 - [FlickingError](#FlickingError) |code|condition|
 |---|---|
 |[INDEX_OUT_OF_RANGE](#Constants.ERROR_CODE)|When the root is not either string or HTMLElement|
 |[ANIMATION_ALREADY_PLAYING](#Constants.ERROR_CODE)|When the animation is already playing|
+|[ANIMATION_INTERRUPTED](#Constants.ERROR_CODE)|When the animation is interrupted by user input|
+|[STOP_CALLED_BY_USER](#Constants.ERROR_CODE)|When the any of the event's `stop()` is called|
 
 
 |code|condition|
 |---|---|
 |[INDEX_OUT_OF_RANGE](#Constants.ERROR_CODE)|해당 인덱스를 가진 패널이 존재하지 않을 경우|
 |[ANIMATION_ALREADY_PLAYING](#Constants.ERROR_CODE)|애니메이션이 이미 진행중인 경우|
+|[ANIMATION_INTERRUPTED](#Constants.ERROR_CODE)|사용자 입력에 의해 애니메이션이 중단된 경우|
+|[STOP_CALLED_BY_USER](#Constants.ERROR_CODE)|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|
 
 
 
-**Emits**: [moveStart](#Flicking+event_moveStart), [move](#Flicking+event_move), [moveEnd](#Flicking+event_moveEnd), `Flicking#event:change`, `Flicking#event:restore`, `Flicking#event:select`, `Flicking#event:needPanel`, `Flicking#event:visibleChange`, `Flicking#event:reachEdge`  
+**Emits**: [moveStart](#Flicking+event_moveStart), [move](#Flicking+event_move), [moveEnd](#Flicking+event_moveEnd), [willChange](#Flicking+event_willChange), [changed](#Flicking+event_changed), [willRestore](#Flicking+event_willRestore), [restored](#Flicking+event_restored), [needPanel](#Flicking+event_needPanel), [visibleChange](#Flicking+event_visibleChange), [reachEdge](#Flicking+event_reachEdge)  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| index | `$ts:number&lt;file&gt;/home/wn/egjs-flicking/src/Flicking.ts&lt;/file&gt;` | 
+| index | `number` | 
  | The index of the panel to move이동할 패널의 인덱스 |
-| [duration] | `$ts:number&lt;file&gt;/home/wn/egjs-flicking/src/Flicking.ts&lt;/file&gt;` | `{@link Flicking#duration options.duration}`
+| [duration] | `number` | `{@link Flicking#duration options.duration}`
  | Duration of the animation (unit: ms)애니메이션 진행 시간 (단위: ms) |
+| [direction] | `Constants#DIRECTION` | `DIRECTION.NONE`
+ | Direction to move, only available in the [circular](#Flicking+circular) mode이동할 방향. [circular](#Flicking+circular) 옵션 활성화시에만 사용 가능합니다 |
 
 <a name="Flicking+getPanel"></a>
 
 ### getPanel
 `getPanel(index)`<br/>
-Return the panel at the given index. `null` if it doesn't exists.
+Return the [Panel](#Panel) at the given index. `null` if it doesn't exists.
 
 **Kind**: instance method of [Flicking](#Flicking)
-**Returns**: `Panel` \| `null` - Panel at the given index주어진 인덱스에 해당하는 패널  
+**Returns**: [Panel](#Panel) \| `null` - Panel at the given index주어진 인덱스에 해당하는 패널  
 **See**: Panel  
 
 | Param | Type | Default | Description |
@@ -735,7 +768,7 @@ Update viewport/panel sizes
 Add new panels after the last panel
 
 **Kind**: instance method of [Flicking](#Flicking)
-**Returns**: `Array&lt;Panel&gt;` - An array of appended panels추가된 패널들의 배열  
+**Returns**: [Array&lt;Panel&gt;](#Panel) - An array of appended panels추가된 패널들의 배열  
 **Throws**:
 
 - [FlickingError](#FlickingError) [ERROR_CODE.NOT_ALLOWED_IN_FRAMEWORK](#Constants.ERROR_CODE) if called on frameworks (React, Angular, Vue...)
@@ -748,7 +781,7 @@ Add new panels after the last panel
 
 | Param | Type | Description |
 | --- | --- | --- |
-| element | `$ts:ElementLike \| ElementLike[]&lt;file&gt;/home/wn/egjs-flicking/src/Flicking.ts&lt;/file&gt;` | A new HTMLElement, a outerHTML of element, or an array of both 새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열 |
+| element | [ElementLike](#Flicking.ElementLike) \| [Array.&lt;ElementLike&gt;](#Flicking.ElementLike) | A new HTMLElement, a outerHTML of element, or an array of both 새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열 |
 
 **Example**  
 ```ts
@@ -764,10 +797,11 @@ flicking.append("\<div\>Panel 1\</div\>\<div\>Panel 2\</div\>");
 
 ### prepend
 `prepend(element)`<br/>
-Add new panels before the first panel. This will increase index of panels after by the number of panels added
+Add new panels before the first panel
+This will increase index of panels after by the number of panels added
 
 **Kind**: instance method of [Flicking](#Flicking)
-**Returns**: `Array&lt;Panel&gt;` - An array of prepended panels추가된 패널들의 배열  
+**Returns**: [Array&lt;Panel&gt;](#Panel) - An array of prepended panels추가된 패널들의 배열  
 **Throws**:
 
 - [FlickingError](#FlickingError) [ERROR_CODE.NOT_ALLOWED_IN_FRAMEWORK](#Constants.ERROR_CODE) if called on frameworks (React, Angular, Vue...)
@@ -780,7 +814,7 @@ Add new panels before the first panel. This will increase index of panels after 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| element | `$ts:ElementLike \| ElementLike[]&lt;file&gt;/home/wn/egjs-flicking/src/Flicking.ts&lt;/file&gt;` | A new HTMLElement, a outerHTML of element, or an array of both 새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열 |
+| element | [ElementLike](#Flicking.ElementLike) \| [Array.&lt;ElementLike&gt;](#Flicking.ElementLike) | A new HTMLElement, a outerHTML of element, or an array of both 새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열 |
 
 **Example**  
 ```ts
@@ -794,27 +828,21 @@ flicking.prepend("\<div\>Panel 1\</div\>\<div\>Panel 2\</div\>");
 <a name="Flicking+insert"></a>
 
 ### insert
-`insert(element, element)`<br/>
-Insert new panels at given index. This will increase index of panels after by the number of panels added
+`insert(index, element)`<br/>
+Insert new panels at given index
+This will increase index of panels after by the number of panels added
 
 **Kind**: instance method of [Flicking](#Flicking)
-**Returns**: `Array&lt;Panel&gt;` - An array of prepended panels추가된 패널들의 배열  
+**Returns**: [Array&lt;Panel&gt;](#Panel) - An array of prepended panels추가된 패널들의 배열  
 **Throws**:
 
 - [FlickingError](#FlickingError) [ERROR_CODE.NOT_ALLOWED_IN_FRAMEWORK](#Constants.ERROR_CODE) if called on frameworks (React, Angular, Vue...)
 
-**See**
 
-- Panel
-- Flicking.ElementLike
-
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| element | `$ts:number&lt;file&gt;/home/wn/egjs-flicking/src/Flicking.ts&lt;/file&gt;` | 
- | A new HTMLElement, a outerHTML of element, or an array of both 새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열 |
-| element | `$ts:ElementLike \| ElementLike[]&lt;file&gt;/home/wn/egjs-flicking/src/Flicking.ts&lt;/file&gt;` | ``
- |  |
+| Param | Type | Description |
+| --- | --- | --- |
+| index | `number` | Index to insert new panels at새로 패널들을 추가할 인덱스 |
+| element | [ElementLike](#Flicking.ElementLike) \| [Array.&lt;ElementLike&gt;](#Flicking.ElementLike) | A new HTMLElement, a outerHTML of element, or an array of both 새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열 |
 
 **Example**  
 ```ts
@@ -829,17 +857,18 @@ flicking.insert(3, "\<div\>Panel 1\</div\>\<div\>Panel 2\</div\>");
 
 ### remove
 `remove(index, [deleteCount])`<br/>
-Remove the panel at the given index. This will decrease index of panels after by the number of panels removed
+Remove the panel at the given index
+This will decrease index of panels after by the number of panels removed
 
 **Kind**: instance method of [Flicking](#Flicking)
-**Returns**: `$ts:Panel[]&lt;file&gt;/home/wn/egjs-flicking/src/Flicking.ts&lt;/file&gt;` - Array of removed panels제거된 패널들의 배열  
+**Returns**: `$ts:Panel[]&lt;file&gt;/home/wn/egjs-flicking/src/Flicking.ts&lt;/file&gt;` - An array of removed panels제거된 패널들의 배열  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| index | `$ts:number&lt;file&gt;/home/wn/egjs-flicking/src/Flicking.ts&lt;/file&gt;` | 
- | Index of panel to remove.제거할 패널의 인덱스 |
+| index | `number` | 
+ | Index of panel to remove제거할 패널의 인덱스 |
 | [deleteCount] | `number` | `1`
- | Number of panels to remove from index.`index` 이후로 제거할 패널의 개수. |
+ | Number of panels to remove from index`index` 이후로 제거할 패널의 개수 |
 
 <a name="Component+trigger"></a>
 
@@ -1102,7 +1131,7 @@ Event that fires when user stopped dragging.
 
 ### moveStart
 
-Event that fires once before first [move](#Flicking+event_move) event.
+Event that fires once before first [move](#Flicking+event_move) event
 
 **Kind**: event emitted by [Flicking](#Flicking)
 **Properties**
@@ -1158,7 +1187,7 @@ Event that fires when the movement is finished by user input release or animatio
 
 ### willChange
 
-Event that fires when Flicking's active index will be changed. Index will be changed at the [changed](Flicking#event:changed) event.
+Event that fires when Flicking's active index will be changed. Index will be changed at the [changed](#Flicking+event_changed) event.
 It can be triggered when user finished input, or flicking start to move by method.
 Calling `stop()` in event will prevent index change and camera movement.
 
@@ -1171,7 +1200,126 @@ Calling `stop()` in event will prevent index change and camera movement.
 | eventType | `string` | Name of the event이벤트명 |
 | stop | `function` | Stop the event action and prevent user from dragging이벤트 동작을 멈추고, 사용자가 드래그하지 못하도록 막습니다. |
 | index | `number` | New active index변경할 인덱스 |
-| panel | `Panel` | New active panel인덱스 변경 이후 활성화된 패널로 설정할 패널 |
+| panel | [Panel](#Panel) | New active panel인덱스 변경 이후 활성화된 패널로 설정할 패널 |
 | isTrusted | `boolean` | Boolean that indicates whether the event was generated by a user action이벤트가 사용자 입력에 의하여 발생되었는지를 나타내는 값 |
 | direction | [DIRECTION](#Constants.DIRECTION) | Moving direction from the active panel to the target panel현재 활성화된 패널로부터 이동하고자 하는 패널의 방향 |
+
+<a name="Flicking+event_changed"></a>
+
+### changed
+
+Event that fires when Flicking's index is changed.
+
+**Kind**: event emitted by [Flicking](#Flicking)
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| currentTaget | [Flicking](#Flicking) | An Flicking instance that triggered this event이 이벤트를 트리거한 Flicking의 인스턴스 |
+| eventType | `string` | Name of the event이벤트명 |
+| index | `number` | New index새 인덱스 |
+| panel | [Panel](#Panel) | New active panel새로 선택된 패널 |
+| prevIndex | `number` | Previous index이전 인덱스 |
+| prevPanel | [Panel](#Panel) \| `null` | Previous active panel이전 패널 |
+| isTrusted | `boolean` | Boolean that indicates whether the event was generated by a user action이벤트가 사용자 입력에 의하여 발생되었는지를 나타내는 값 |
+| direction | [DIRECTION](#Constants.DIRECTION) | Moving direction from the active panel to the target panel현재 활성화된 패널로부터 이동하고자 하는 패널의 방향 |
+
+<a name="Flicking+event_willRestore"></a>
+
+### willRestore
+
+Event fires when user drag amount not reached [threshold](#Flicking+threshold) and is returning to [currentPanel](#Flicking+currentPanel)
+
+**Kind**: event emitted by [Flicking](#Flicking)
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| currentTaget | [Flicking](#Flicking) | An Flicking instance that triggered this event이 이벤트를 트리거한 Flicking의 인스턴스 |
+| eventType | `string` | Name of the event이벤트명 |
+| stop | `function` | Stop the event action and prevent user from dragging이벤트 동작을 멈추고, 사용자가 드래그하지 못하도록 막습니다 |
+| index | `number` | Index of the panel to restore복귀하고자 하는 패널의 인덱스 |
+| panel | [Panel](#Panel) | Panel to restore복귀하고자 하는 패널 |
+| isTrusted | `boolean` | Boolean that indicates whether the event was generated by a user action이벤트가 사용자 입력에 의하여 발생되었는지를 나타내는 값 |
+| direction | [DIRECTION](#Constants.DIRECTION) | Moving direction relative to previous position of the camera이전 카메라 위치 대비 이동 방향 |
+
+<a name="Flicking+event_restored"></a>
+
+### restored
+
+Event that fires when Flicking has returned to [currentPanel](#Flicking+currentPanel)
+
+**Kind**: event emitted by [Flicking](#Flicking)
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| currentTaget | [Flicking](#Flicking) | An Flicking instance that triggered this event이 이벤트를 트리거한 Flicking의 인스턴스 |
+| eventType | `string` | Name of the event이벤트명 |
+| isTrusted | `boolean` | Boolean that indicates whether the event was generated by a user action이벤트가 사용자 입력에 의하여 발생되었는지를 나타내는 값 |
+
+<a name="Flicking+event_select"></a>
+
+### select
+
+Event that fires when panel is statically click / touched
+
+**Kind**: event emitted by [Flicking](#Flicking)
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| currentTaget | [Flicking](#Flicking) | An Flicking instance that triggered this event이 이벤트를 트리거한 Flicking의 인스턴스 |
+| eventType | `string` | Name of the event이벤트명 |
+| index | `number` | Selected panel's index선택된 패널의 인덱스 |
+| panel | [Panel](#Panel) | Selected panel선택된 패널 |
+| direction | [DIRECTION](#Constants.DIRECTION) | Direction from current camera position to the selected panel's position현재 카메라 위치 대비 선택된 패널의 위치 |
+
+<a name="Flicking+event_needPanel"></a>
+
+### needPanel
+
+Event that fires when an empty panel area is visible at the edge of viewport
+You can set its threshold with [needPanelThreshold](#Flicking+needPanelThreshold)
+
+**Kind**: event emitted by [Flicking](#Flicking)
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| currentTaget | [Flicking](#Flicking) | An Flicking instance that triggered this event이 이벤트를 트리거한 Flicking의 인스턴스 |
+| eventType | `string` | Name of the event이벤트명 |
+| direction | [DIRECTION](#Constants.DIRECTION) | Direction where new panel is needed. `DIRECTION.PREV` means panels should be [prepend](#Flicking+prepend)ed and `DIRECTION.NEXT` means panels should be [append](#Flicking+append)ed 패널이 필요한 방향. `DIRECTION.PREV`의 경우 패널이 [prepend](#Flicking+prepend)되어야 함을 의미하고, `DIRECTION.NEXT`는 패널이 [append](#Flicking+append)되어야 함을 의미한다 |
+
+<a name="Flicking+event_visibleChange"></a>
+
+### visibleChange
+
+Event that fires when visible panel inside the viewport changes
+
+**Kind**: event emitted by [Flicking](#Flicking)
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| currentTaget | [Flicking](#Flicking) | An Flicking instance that triggered this event이 이벤트를 트리거한 Flicking의 인스턴스 |
+| eventType | `string` | Name of the event이벤트명 |
+| added | [Array&lt;Panel&gt;](#Panel) | Panels that added from previous visible panels새로 보이는 패널의 배열 |
+| removed | [Array&lt;Panel&gt;](#Panel) | Panels that removed from previous visible panels보이지 않게 된 패널의 배열 |
+| visiblePanels | [Array&lt;Panel&gt;](#Panel) | Current visible panels현재 보이는 패널의 배열 |
+
+<a name="Flicking+event_reachEdge"></a>
+
+### reachEdge
+
+Event that fires when camera reaches the maximum/minimum range
+
+**Kind**: event emitted by [Flicking](#Flicking)
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| currentTaget | [Flicking](#Flicking) | An Flicking instance that triggered this event이 이벤트를 트리거한 Flicking의 인스턴스 |
+| eventType | `string` | Name of the event이벤트명 |
+| direction | [DIRECTION](#Constants.DIRECTION) | Direction indicates whether the camera's position is at the maximum range([DIRECTION.NEXT](#Constants.DIRECTION)) or minimum range([DIRECTION.PREV](#Constants.DIRECTION)) 카메라의 위치가 이동 가능한 범위의 최대점([DIRECTION.NEXT](#Constants.DIRECTION)) 혹은 최소점([DIRECTION.PREV](#Constants.DIRECTION))에 도달했는지를 나타내는 값 |
 

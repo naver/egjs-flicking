@@ -12,6 +12,7 @@ import AxesController from "~/control/AxesController";
 import { DIRECTION, EVENTS } from "~/const/external";
 import * as ERROR from "~/const/error";
 import { getDirection, getFlickingAttached } from "~/utils";
+import { ValueOf } from "~/type/internal";
 
 /**
  * A component that manages inputs and animation of Flicking
@@ -189,8 +190,10 @@ abstract class Control {
    * Move {@link Camera} to the given panel
    * @ko {@link Camera}를 해당 패널 위로 이동합니다
    * @param {Panel} panel The target panel to move<ko>이동할 패널</ko>
+   * @param {object} options An options object<ko>옵션 오브젝트</ko>
    * @param {number} duration Duration of the animation (unit: ms)<ko>애니메이션 진행 시간 (단위: ms)</ko>
    * @param {object} [axesEvent] {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:release release} event of {@link https://naver.github.io/egjs-axes/ Axes}
+   * @param {Constants#DIRECTION} [direction=DIRECTION.NONE] Direction to move, only available in the {@link Flicking#circular circular} mode<ko>이동할 방향. {@link Flicking#circular circular} 옵션 활성화시에만 사용 가능합니다</ko>
    * <ko>{@link https://naver.github.io/egjs-axes/ Axes}의 {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:release release} 이벤트</ko>
    * @fires Flicking#moveStart
    * @fires Flicking#move
@@ -221,7 +224,15 @@ abstract class Control {
    * </ko>
    * @return {Promise<void>} A Promise which will be resolved after reaching the target panel<ko>해당 패널 도달시에 resolve되는 Promise</ko>
    */
-  public async moveToPanel(panel: Panel, duration: number, axesEvent?: OnRelease) {
+  public async moveToPanel(panel: Panel, {
+    duration,
+    direction = DIRECTION.NONE,
+    axesEvent
+  }: {
+    duration: number;
+    direction?: ValueOf<typeof DIRECTION>;
+    axesEvent?: OnRelease;
+  }) {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;
 
@@ -237,6 +248,26 @@ abstract class Control {
       // Override position & panel if that panel is not reachable
       position = nearestAnchor.position;
       panel = nearestAnchor.panel;
+    } else if (camera.controlParams.circular) {
+      // Circular mode is enabled, find nearest distance to panel
+      const camPos = this._controller.position; // Actual position of the Axes
+      const camRangeDiff = camera.rangeDiff;
+      const possiblePositions = [position, position + camRangeDiff, position - camRangeDiff]
+        .filter(pos => {
+          if (direction === DIRECTION.NONE) return true;
+
+          return direction === DIRECTION.PREV
+            ? pos <= camPos
+            : pos >= camPos;
+        });
+
+      position = possiblePositions.reduce((nearestPosition, pos) => {
+        if (Math.abs(camPos - pos) < Math.abs(camPos - nearestPosition)) {
+          return pos;
+        } else {
+          return nearestPosition;
+        }
+      }, Infinity);
     }
 
     this._triggerIndexChangeEvent(panel, panel.position, axesEvent);
@@ -288,12 +319,15 @@ abstract class Control {
 
   protected _setActivePanel = (newActivePanel: Panel, prevActivePanel: Panel | null, isTrusted: boolean) => {
     const flicking = getFlickingAttached(this._flicking, "Control");
+
     this._activePanel = newActivePanel;
 
     if (newActivePanel !== prevActivePanel) {
       flicking.trigger(new ComponentEvent(EVENTS.CHANGED, {
         index: newActivePanel.index,
+        panel: newActivePanel,
         prevIndex: prevActivePanel?.index ?? -1,
+        prevPanel: prevActivePanel,
         isTrusted,
         direction: prevActivePanel ? getDirection(prevActivePanel.position, newActivePanel.position) : DIRECTION.NONE
       }));

@@ -386,6 +386,26 @@ abstract class Camera {
   }
 
   /**
+   * Update position after resizing
+   * @ko resize 이후에 position을 업데이트합니다
+   * @throws {FlickingError}
+   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
+   * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
+   * @chainable
+   * @return {this}
+   */
+  public updatePosition(): this {
+    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const activePanel = flicking.control.activePanel;
+
+    if (activePanel) {
+      this.lookAt(activePanel.position);
+    }
+
+    return this;
+  }
+
+  /**
    * Reset the history of {@link Flicking#event:needPanel needPanel} events so it can be triggered again
    * @ko 발생한 {@link Flicking#event:needPanel needPanel} 이벤트들을 초기화하여 다시 발생할 수 있도록 합니다
    * @chainable

@@ -21,6 +21,7 @@
 - getCurrentPanel => currentPanel
 - needPanel => 0번 패널에서도 발생 가능
 - replace => 삭제
+- needPanel의 fill => 삭제
 
 ## 추가
 - interruptable 추가

@@ -40,7 +40,7 @@ class BoundCamera extends Camera {
     const canSetBoundMode = viewportSize < panelAreaSize;
 
     if (canSetBoundMode) {
-      this._range = { min: firstPanelPrev + alignPos, max: lastPanelNext - alignPos };
+      this._range = { min: firstPanelPrev + alignPos, max: lastPanelNext - viewportSize + alignPos };
     } else {
       this._range = { min: firstPanel.position, max: lastPanel.position };
     }

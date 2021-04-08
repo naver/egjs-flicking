@@ -9,17 +9,16 @@
     "excludePattern": "(^|\\/|\\\\)_"
   },
   "opts": {
-    "template": "node_modules/egjs-jsdoc-template",
+    "template": "egjs-jsdoc-template",
     "destination": "./doc/",
     "ignores": ["Component"],
     "expendsItemMembers": true,
     "recurse": true
   },
   "plugins": [
-    "plugins/markdown",
-    "node_modules/egjs-jsdoc-template/jsdoc-plugin/ko",
-    "node_modules/egjs-jsdoc-template/jsdoc-plugin/group",
-    "node_modules/egjs-jsdoc-template/jsdoc-plugin/support"
+    "egjs-jsdoc-template/jsdoc-plugin/ko",
+    "egjs-jsdoc-template/jsdoc-plugin/group",
+    "egjs-jsdoc-template/jsdoc-plugin/support"
   ],
   "templates": {
     "cleverLinks": true,
@@ -49,10 +48,5 @@
       "canonical": "https://naver.github.io/egjs-flicking/release/latest/doc/"
     },
     "defaultLanguage": "en"
-  },
-  "markdown": {
-    "parser": "gfm",
-    "hardwrap": true,
-    "tags": ["examples", "ko"]
   }
 }

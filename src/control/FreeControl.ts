@@ -57,16 +57,13 @@ class FreeControl extends Control {
     const targetPos = camera.clampToReachablePosition(position);
 
     const anchorAtPosition = camera.findAnchorIncludePosition(targetPos);
-    const activePanel = this._activePanel;
 
     if (!anchorAtPosition) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE));
     }
 
     const targetPanel = anchorAtPosition.panel;
-    if (targetPanel !== activePanel) {
-      this._triggerIndexChangeEvent(targetPanel, position, axesEvent);
-    }
+    this._triggerIndexChangeEvent(targetPanel, position, axesEvent);
 
     return this._animateToPosition({ position, duration, newActivePanel: targetPanel, axesEvent });
   }

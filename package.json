@@ -28,6 +28,7 @@
     "jsdoc": "jsdoc -c jsdoc.json",
     "jsdoc:watch": "npm-watch jsdoc",
     "docs": "node jsdoc/generate",
+    "demo:start": "rollup -w --config ./rollup.config.demo.js",
     "demo:build": "npm run build && cpx 'dist/**/*' demo/release/latest/dist --clean",
     "demo:prebuild-version": "cpx 'dist/**/*' demo/release/$npm_package_version/dist --clean && cpx 'doc/**/*' demo/release/$npm_package_version/doc --clean",
     "demo:prebuild-latest": "cpx 'dist/**/*' demo/release/latest/dist --clean && cpx 'doc/**/*' demo/release/latest/doc --clean",

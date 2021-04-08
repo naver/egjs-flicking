@@ -183,7 +183,9 @@ abstract class Renderer {
     // Move to the first panel added if no panels existed
     // FIXME: fix for animating case
     if (newPanels.length > 0 && !control.animating) {
-      void control.moveToPanel(control.activePanel || newPanels[0], 0).catch(() => void 0);
+      void control.moveToPanel(control.activePanel || newPanels[0], {
+        duration: 0
+      }).catch(() => void 0);
     }
 
     return newPanels;
@@ -242,7 +244,9 @@ abstract class Renderer {
         : activePanel;
 
       if (targetPanel) {
-        void control.moveToPanel(targetPanel, 0).catch(() => void 0);
+        void control.moveToPanel(targetPanel, {
+          duration: 0
+        }).catch(() => void 0);
       } else {
         // All panels removed
         camera.lookAt(0);

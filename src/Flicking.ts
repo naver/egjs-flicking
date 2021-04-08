@@ -14,7 +14,7 @@ import OffsetManipulator from "./renderer/OffsetManipulator";
 import ElementManipulator from "./renderer/ElementManipulator";
 import OrderManipulator from "./renderer/OrderManipulator";
 
-import { EVENTS, ALIGN, MOVE_TYPE } from "~/const/external";
+import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "~/const/external";
 import * as ERROR from "~/const/error";
 import { getElement, includes } from "~/utils";
 import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, WillChangeEvent, WillRestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent, ChangedEvent, RestoredEvent } from "~/type/event";
@@ -67,6 +67,7 @@ export interface FlickingOptions {
   interruptable: boolean;
   bounce: number | string | [number | string, number | string];
   iOSEdgeSwipeThreshold: number;
+  preventClickOnDrag: boolean;
   // PERFORMANCE
   renderOnlyVisible: boolean;
   // OTHERS
@@ -131,6 +132,7 @@ class Flicking extends Component<FlickingEvents> {
   private _interruptable: FlickingOptions["interruptable"];
   private _bounce: FlickingOptions["bounce"];
   private _iOSEdgeSwipeThreshold: FlickingOptions["iOSEdgeSwipeThreshold"];
+  private _preventClickOnDrag: FlickingOptions["preventClickOnDrag"];
   private _renderOnlyVisible: FlickingOptions["renderOnlyVisible"];
   private _autoResize: FlickingOptions["autoResize"];
   private _autoInit: FlickingOptions["autoInit"];
@@ -147,6 +149,7 @@ class Flicking extends Component<FlickingEvents> {
    * @type {Control}
    * @default SnapControl
    * @readonly
+   * @id Flicking.control
    * @see Control
    * @see SnapControl
    * @see FreeControl
@@ -441,6 +444,13 @@ class Flicking extends Component<FlickingEvents> {
    * @default 30
    */
   public get iOSEdgeSwipeThreshold() { return this._iOSEdgeSwipeThreshold; }
+  /**
+   * Automatically prevent `click` event if the user has dragged at least a single pixel on the viewport element
+   * @ko 사용자가 뷰포트 영역을 1픽셀이라도 드래그했을 경우 자동으로 {@link https://developer.mozilla.org/ko/docs/Web/API/Element/click_event click} 이벤트를 취소합니다
+   * @type {boolean}
+   * @default true
+   */
+  public get preventClickOnDrag() { return this._preventClickOnDrag; }
   // PERFORMANCE
   /**
    * Whether to render visible panels only. This can dramatically increase performance when there're many panels.
@@ -514,6 +524,7 @@ class Flicking extends Component<FlickingEvents> {
   public set interruptable(val: FlickingOptions["interruptable"]) { this._interruptable = val; }
   public set bounce(val: FlickingOptions["bounce"]) { this._bounce = val; }
   public set iOSEdgeSwipeThreshold(val: FlickingOptions["iOSEdgeSwipeThreshold"]) { this._iOSEdgeSwipeThreshold = val; }
+  public set preventClickOnDrag(val: FlickingOptions["preventClickOnDrag"]) { this._preventClickOnDrag = val; }
   // PERFORMANCE
   public set renderOnlyVisible(val: FlickingOptions["renderOnlyVisible"]) { this._renderOnlyVisible = val; }
   // OTHERS
@@ -565,6 +576,7 @@ class Flicking extends Component<FlickingEvents> {
     interruptable = true,
     bounce = "20%",
     iOSEdgeSwipeThreshold = 30,
+    preventClickOnDrag = true,
     renderOnlyVisible = false,
     autoInit = true,
     autoResize = true,
@@ -593,6 +605,7 @@ class Flicking extends Component<FlickingEvents> {
     this._interruptable = interruptable;
     this._bounce = bounce;
     this._iOSEdgeSwipeThreshold = iOSEdgeSwipeThreshold;
+    this._preventClickOnDrag = preventClickOnDrag;
     this._renderOnlyVisible = renderOnlyVisible;
     this._autoResize = autoResize;
     this._autoInit = autoInit;
@@ -624,6 +637,7 @@ class Flicking extends Component<FlickingEvents> {
     const camera = this._camera;
     const renderer = this._renderer;
     const control = this._control;
+    const viewport = this._viewport;
 
     camera.init(this);
     renderer.init(this);
@@ -636,6 +650,9 @@ class Flicking extends Component<FlickingEvents> {
 
     if (this._autoResize) {
       window.addEventListener("resize", this.resize);
+    }
+    if (this._preventClickOnDrag) {
+      viewport.element.addEventListener("click", this._preventClickWhenDragged);
     }
 
     // Done initializing & emit ready event
@@ -655,6 +672,7 @@ class Flicking extends Component<FlickingEvents> {
 
     this.off();
     window.removeEventListener("resize", this.resize);
+    this._viewport.element.removeEventListener("click", this._preventClickWhenDragged);
 
     this._control.destroy();
     this._camera.destroy();
@@ -696,7 +714,7 @@ class Flicking extends Component<FlickingEvents> {
    * @return {Promise<void>} A Promise which will be resolved after reaching the previous panel<ko>이전 패널 도달시에 resolve되는 Promise</ko>
    */
   public prev(duration: number = this._duration): Promise<void> {
-    return this.moveTo(this._control.activePanel?.prev()?.index ?? -1, duration);
+    return this.moveTo(this._control.activePanel?.prev()?.index ?? -1, duration, DIRECTION.PREV);
   }
 
   /**
@@ -733,7 +751,7 @@ class Flicking extends Component<FlickingEvents> {
    * @return {Promise<void>} A Promise which will be resolved after reaching the next panel<ko>다음 패널 도달시에 resolve되는 Promise</ko>
    */
   public next(duration: number = this._duration) {
-    return this.moveTo(this._control.activePanel?.next()?.index ?? this._renderer.panelCount, duration);
+    return this.moveTo(this._control.activePanel?.next()?.index ?? this._renderer.panelCount, duration, DIRECTION.NEXT);
   }
 
   /**
@@ -741,6 +759,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 주어진 인덱스에 해당하는 패널로 이동합니다
    * @param {number} index The index of the panel to move<ko>이동할 패널의 인덱스</ko>
    * @param {number} [duration={@link Flicking#duration options.duration}] Duration of the animation (unit: ms)<ko>애니메이션 진행 시간 (단위: ms)</ko>
+   * @param {Constants#DIRECTION} [direction=DIRECTION.NONE] Direction to move, only available in the {@link Flicking#circular circular} mode<ko>이동할 방향. {@link Flicking#circular circular} 옵션 활성화시에만 사용 가능합니다</ko>
    * @fires Flicking#moveStart
    * @fires Flicking#move
    * @fires Flicking#moveEnd
@@ -770,7 +789,7 @@ class Flicking extends Component<FlickingEvents> {
    * </ko>
    * @return {Promise<void>} A Promise which will be resolved after reaching the target panel<ko>해당 패널 도달시에 resolve되는 Promise</ko>
    */
-  public moveTo(index: number, duration: number = this._duration) {
+  public moveTo(index: number, duration: number = this._duration, direction: ValueOf<typeof DIRECTION> = DIRECTION.NONE) {
     const renderer = this._renderer;
     const panelCount = renderer.panelCount;
 
@@ -784,7 +803,10 @@ class Flicking extends Component<FlickingEvents> {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.ANIMATION_ALREADY_PLAYING, ERROR.CODE.ANIMATION_ALREADY_PLAYING));
     }
 
-    return this._control.moveToPanel(panel, duration);
+    return this._control.moveToPanel(panel, {
+      duration,
+      direction
+    });
   }
 
   /**
@@ -900,6 +922,7 @@ class Flicking extends Component<FlickingEvents> {
     camera.updateRange();
     camera.updateAnchors();
     control.updateInput();
+    camera.updatePosition();
 
     const newWidth = viewport.width;
     const newHeight = viewport.height;
@@ -915,6 +938,7 @@ class Flicking extends Component<FlickingEvents> {
       sizeChanged,
       element: viewport.element
     }));
+
     return this;
   };
 
@@ -1074,8 +1098,16 @@ class Flicking extends Component<FlickingEvents> {
 
     if (!initialPanel) return;
 
-    void control.moveToPanel(initialPanel, 0);
+    void control.moveToPanel(initialPanel, {
+      duration: 0
+    });
   }
+
+  private _preventClickWhenDragged = (e: MouseEvent) => {
+    if (this._control.animating) {
+      e.preventDefault();
+    }
+  };
 }
 
 export default Flicking;
