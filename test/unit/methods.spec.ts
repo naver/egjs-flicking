@@ -1661,6 +1661,44 @@ describe("Methods call", () => {
       expect(flicking.getPanelCount()).equals(5);
       expect(flicking.getAllPanels().every(panel => panel !== removingPanel));
     });
+
+    it("should set currentPanel after adding the panel when there're no panels", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.none, {
+        renderExternal: true,
+        renderOnlyVisible: true,
+      });
+      const flicking = flickingInfo.instance;
+
+      // When
+      const newElement = createHorizontalElement(100);
+      (flicking as any).viewport.getCameraElement().appendChild(newElement);
+      const addPanel = diff([], [newElement])
+      const currentPanelBefore = flicking.getCurrentPanel();
+      flicking.beforeSync(addPanel);
+
+      // Then
+      expect(currentPanelBefore).to.be.null;
+      expect(flicking.getCurrentPanel()).not.to.be.null;
+    });
+
+    it("should set currentPanel to null after removing all the panels", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.full, {
+        renderExternal: true,
+        renderOnlyVisible: true,
+      });
+      const flicking = flickingInfo.instance;
+
+      // When
+      const removeAllPanels = diff(flicking.getAllPanels().map(panel => panel.getElement()), []);
+      const currentPanelBefore = flicking.getCurrentPanel();
+      flicking.beforeSync(removeAllPanels);
+
+      // Then
+      expect(currentPanelBefore).not.to.be.null;
+      expect(flicking.getCurrentPanel()).to.be.null;
+    });
   });
 
   describe("sync()", () => {

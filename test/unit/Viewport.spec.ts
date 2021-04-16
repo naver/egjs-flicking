@@ -138,8 +138,10 @@ describe("Viewport", () => {
 
       // Then
       expect(viewport.getCheckedIndexes().length).equals(1);
+
+      // As there's only one panel with index 0, needPanel should check from index 1 to lastIndex
       const checked = viewport.getCheckedIndexes()[0];
-      expect(checked[0]).equals(0);
+      expect(checked[0]).equals(1);
       expect(checked[1]).equals(DEFAULT_OPTIONS.lastIndex);
     });
 
