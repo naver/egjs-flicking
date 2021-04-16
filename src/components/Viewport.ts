@@ -955,7 +955,7 @@ export default class Viewport {
     return this.visiblePanels;
   }
 
-  public setCurrentPanel(panel: Panel): void {
+  public setCurrentPanel(panel: Panel | undefined): void {
     this.currentPanel = panel;
   }
 
