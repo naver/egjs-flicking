@@ -695,6 +695,7 @@ class Flicking extends Component<{
     const viewport = this.viewport;
     const panelManager = viewport.panelManager;
     const isCircular = this.options.circular;
+    const currentPanel = viewport.getCurrentPanel();
     const cloneCount = panelManager.getCloneCount();
     const prevClonedPanels = panelManager.clonedPanels();
 
@@ -765,6 +766,13 @@ class Flicking extends Component<{
       maintained.forEach(([, next]) => { viewport.updateCheckedIndexes({ min: next, max: next }); });
     }
     panelManager.replacePanels(newPanels, newClones);
+
+    if (!currentPanel && newPanels.length > 0) {
+      viewport.setCurrentPanel(newPanels[0]);
+    } else if (newPanels.length <= 0) {
+      viewport.setCurrentPanel(undefined);
+    }
+
     this.isPanelChangedAtBeforeSync = true;
   }
 
