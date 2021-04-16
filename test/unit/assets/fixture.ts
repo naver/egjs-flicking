@@ -49,10 +49,15 @@ export const panel = (index: number, className: string) => `
     <p>Layer ${index}</p>
   </div>`;
 
-export const image = (index: number, className: string, src: string, lazy: boolean = false) => `
+export const image = (index: number, className: string, src: string) => `
   <div class="${className}" style="background-color:${colors[index % colors.length]}">
-    <img src="${src}" loading="${lazy ? "lazy" : "default"}" alt="image">Layer ${index}</img>
+    <img src="${src}" alt="image">Layer ${index}</img>
   </div>`;
+
+export const lazyImage = (index: number, className: string, src: string) => `
+<div class="${className}" style="background-color:${colors[index % colors.length]}">
+  <img src="${src}" loading="lazy" alt="image" width="100" height="100">Layer ${index}</img>
+</div>`;
 
 export const horizontal = {
   full: wrapper(
@@ -184,9 +189,9 @@ export const horizontal = {
   hasEmptyLazyImagesInside: inlineWrapper(
     viewport(
       camera(
-        [image, "panel-inline", "./images/non-exist.png", true],
-        [image, "panel-inline", "./images/non-exist.png", true],
-        [image, "panel-inline", "./images/non-exist.png", true],
+        [lazyImage, "panel-inline", "./images/non-exist.png"],
+        [lazyImage, "panel-inline", "./images/non-exist.png"],
+        [lazyImage, "panel-inline", "./images/non-exist.png"],
       ),
     ),
   ),

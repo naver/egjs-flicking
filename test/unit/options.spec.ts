@@ -1470,8 +1470,11 @@ describe("Initialization", () => {
       return new Promise(res => img.addEventListener("error", res));
     };
 
-    const imageLoaded = img => {
-      return new Promise(res => img.addEventListener("load", res));
+    const imageLoaded = (img, src) => {
+      return new Promise<void>(res => {
+        img.addEventListener("load", res)
+        img.src = src;
+      });
     };
 
     it("should call resize even if all images are failed", async () => {
@@ -1511,8 +1514,7 @@ describe("Initialization", () => {
       // Then
       expect(resizeSpy.called).to.be.false;
       await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
-        img.src = "./images/30x30.png";
-        return imageLoaded(img);
+        return imageLoaded(img, "./images/30x30.png");
       }));
       expect(resizeSpy.calledOnce).to.be.true;
     });
@@ -1529,8 +1531,7 @@ describe("Initialization", () => {
 
       const prevPanelSizes = flicking.getAllPanels().map(panel => panel.getSize());
       await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
-        img.src = "./images/100x100.png";
-        return imageLoaded(img);
+        return imageLoaded(img, "./images/100x100.png");
       }));
 
       // Then
@@ -1550,8 +1551,9 @@ describe("Initialization", () => {
 
       const prevPanelSizes = flicking.getAllPanels().map(panel => panel.getSize());
       await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
-        img.src = "./images/200x200.png";
-        return imageLoaded(img);
+        img.width = "200";
+        img.height = "200";
+        return imageLoaded(img, "./images/200x200.png");
       }));
 
       // Then
@@ -1588,8 +1590,7 @@ describe("Initialization", () => {
 
       await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
         // Images are loaded
-        img.src = "./images/150x150.png";
-        return imageLoaded(img);
+        return imageLoaded(img, "./images/150x150.png");
       }));
 
       // Then
@@ -1648,8 +1649,7 @@ describe("Initialization", () => {
 
         waitImagesToLoad = async () => {
           await Promise.all([].slice.call(wrapper.querySelectorAll("img")).map(img => {
-            img.src = "./images/200x200.png";
-            return imageLoaded(img);
+            return imageLoaded(img, "./images/200x200.png");
           }));
         };
 
