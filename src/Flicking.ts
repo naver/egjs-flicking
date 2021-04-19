@@ -82,24 +82,17 @@ export interface FlickingOptions {
  * @support {"ie": "9+(with polyfill)", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "4.X+"}
  * @requires {@link https://github.com/naver/egjs-component|@egjs/component}
  * @requires {@link https://github.com/naver/egjs-axes|@egjs/axes}
- * @fires Flicking#ready
- * @fires Flicking#beforeResize
- * @fires Flicking#afterResize
- * @fires Flicking#holdStart
- * @fires Flicking#holdEnd
- * @fires Flicking#moveStart
- * @fires Flicking#move
- * @fires Flicking#moveEnd
- * @fires Flicking#willChange
- * @fires Flicking#changed
- * @fires Flicking#willRestore
- * @fires Flicking#restored
- * @fires Flicking#select
- * @fires Flicking#needPanel
- * @fires Flicking#visibleChange
- * @fires Flicking#reachEdge
  */
 class Flicking extends Component<FlickingEvents> {
+  /**
+   * A Static test methods
+   * @ko 테스트용 스태틱 메소드
+   * @returns {boolean} A boolean<ko>불린 값</ko>
+   */
+  public static test() {
+    return true;
+  }
+
   /**
    * Version info string
    * @ko 버전정보 문자열
@@ -149,7 +142,6 @@ class Flicking extends Component<FlickingEvents> {
    * @type {Control}
    * @default SnapControl
    * @readonly
-   * @id Flicking.control
    * @see Control
    * @see SnapControl
    * @see FreeControl
@@ -490,7 +482,7 @@ class Flicking extends Component<FlickingEvents> {
   public get renderExternal() { return this._renderExternal; }
   /**
    * Use {@link OrderManipulator} for the element order managing in {@link Renderer}.
-   * Instead of isnerting/removing element to change order, this will use CSS {@link https://developer.mozilla.org/en-US/docs/Web/CSS/order order}.
+   * Instead of inserting/removing element to change order, this will use CSS {@link https://developer.mozilla.org/en-US/docs/Web/CSS/order order}.
    * ⚠️ Enabling this option will decrease browser coverage to IE11+
    * @ko {@link Renderer}에서 엘리먼트 순서 관리를 위해 {@link OrderManipulator}를 사용합니다.
    * 엘리먼트를 직접적으로 추가/삭제하는 대신 CSS {@link https://developer.mozilla.org/ko/docs/Web/CSS/order order} 속성을 사용해서 순서를 관리합니다.

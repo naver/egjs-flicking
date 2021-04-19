@@ -1,7 +1,7 @@
 
-class Control 
+class FreeControl extends $ts:Control<file>/home/wn/egjs-flicking/src/control/FreeControl.ts</file>
 
-A component that manages inputs and animation of Flicking
+A {@link Control} that can be scrolled freely without alignment
 
 |properties|methods|
 |---|---|

@@ -143,6 +143,7 @@ module.exports = {
         "@typescript-eslint/prefer-function-type": "error",
         "@typescript-eslint/prefer-namespace-keyword": "error",
         "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/restrict-template-expressions": "off",
         "@typescript-eslint/quotes": [
           "error",
           "double"
