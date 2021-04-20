@@ -1,11 +1,12 @@
 import DocumentedClass from "../../types/class";
+import Identifier from "../../types/identifier";
 
-import Property from "./Property";
+import Member from "./Member";
 
-export default (classData: DocumentedClass) => {
+export default (classData: DocumentedClass, dataMap: Map<string, Identifier>) => {
   if (classData.members.length <= 0 && classData.static.members.length <= 0) return "";
 
   return `## Properties
-${classData.static.members.map(member => Property(member)).join("\n")}
-${classData.members.map(member => Property(member)).join("\n")}`;
+${classData.static.members.map(member => Member(member, dataMap)).join("\n")}
+${classData.members.map(member => Member(member, dataMap)).join("\n")}`;
 };

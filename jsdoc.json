@@ -4,14 +4,14 @@
     "dictionaries": ["jsdoc", "closure"]
   },
   "source": {
-    "include": ["src", "README.md", "node_modules/@egjs/component/src/Component.ts"],
+    "include": ["src", "README.md", "node_modules/@egjs/component/src/Component.ts", "node_modules/@egjs/component/src/ComponentEvent.ts"],
     "includePattern": ".+\\.(j|t)s(doc|x)?$",
     "excludePattern": "(^|\\/|\\\\)_"
   },
   "opts": {
     "template": "egjs-jsdoc-template",
     "destination": "./doc/",
-    "ignores": ["Component"],
+    "ignores": [],
     "expendsItemMembers": true,
     "recurse": true
   },

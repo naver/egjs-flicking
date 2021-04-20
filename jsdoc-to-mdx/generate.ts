@@ -30,7 +30,12 @@ jsdoc.on("close", (code) => {
     const classes: {[key: string]: DocumentedClass} = {};
     const interfaces: {[key: string]: DocumentedInterface} = {};
 
+    const dataMap = new Map<string, Identifier>();
+
     fs.ensureDirSync(outputDir);
+    templateData.forEach(identifier => {
+      dataMap.set(identifier.longname, identifier);
+    });
 
     templateData
       .filter(identifier => identifier.kind === "interface" || identifier.kind === "class")
@@ -91,7 +96,7 @@ jsdoc.on("close", (code) => {
     Object.keys(classes).forEach(async className => {
       await fs.writeFile(
         path.resolve(outputDir, `${className}.md`),
-        classTemplate(classes[className])
+        classTemplate(classes[className], dataMap)
       );
     });
 

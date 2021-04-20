@@ -1,21 +1,25 @@
 import DocumentedClass from "../types/class";
+import Identifier from "../types/identifier";
+import { inlineLink, showExtends } from "../utils";
 
+import Import from "./partials/Import";
 import ClassSummary from "./partials/ClassSummary";
 import ClassConstructor from "./partials/ClassConstructor";
 import ClassProperties from "./partials/ClassProperties";
 import ClassMethods from "./partials/ClassMethods";
 import ClassEvents from "./partials/ClassEvents";
 
-export default (classData: DocumentedClass): string => `
-class ${classData.name} ${classData.augments ? `extends ${classData.augments.join(", ")}` : ""}
+export default (classData: DocumentedClass, dataMap: Map<string, Identifier>): string => `${Import()}
+\`\`\`ts
+class ${classData.name} ${showExtends(classData)}
+\`\`\`
+${inlineLink(classData.description)}
 
-${classData.description ? classData.description : ""}
+${ClassSummary(classData, dataMap)}
 
-${ClassSummary(classData)}
+${ClassConstructor(classData, dataMap)}
 
-${ClassConstructor(classData)}
-
-${ClassProperties(classData)}
-${ClassMethods(classData)}
-${ClassEvents(classData)}
+${ClassProperties(classData, dataMap)}
+${ClassMethods(classData, dataMap)}
+${ClassEvents(classData, dataMap)}
 `;

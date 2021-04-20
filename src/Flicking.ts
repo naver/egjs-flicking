@@ -96,9 +96,10 @@ class Flicking extends Component<FlickingEvents> {
   /**
    * Version info string
    * @ko 버전정보 문자열
+   * @type {string}
+   * @readonly
    * @example
    * Flicking.VERSION;  // ex) 4.0.0
-   * @memberof Flicking
    */
   public static VERSION = "#__VERSION__#";
 
@@ -419,6 +420,7 @@ class Flicking extends Component<FlickingEvents> {
    *   // numbers, same to number + px ("0px", "100px")
    *   0, 100, 1000
    * ];
+   * ```
    *
    * @example
    * ```ts
@@ -677,6 +679,7 @@ class Flicking extends Component<FlickingEvents> {
    * Move to the previous panel (current index - 1)
    * @ko 이전 패널로 이동합니다 (현재 인덱스 - 1)
    * @param {number} [duration={@link Flicking#duration options.duration}] Duration of the panel movement animation (unit: ms)<ko>패널 이동 애니메이션 진행 시간 (단위: ms)</ko>
+   * @async
    * @fires Flicking#moveStart
    * @fires Flicking#move
    * @fires Flicking#moveEnd
@@ -713,6 +716,7 @@ class Flicking extends Component<FlickingEvents> {
    * Move to the next panel (current index + 1)
    * @ko 다음 패널로 이동합니다 (현재 인덱스 + 1)
    * @param {number} [duration={@link Flicking#duration options.duration}] Duration of the panel movement animation (unit: ms).<ko>패널 이동 애니메이션 진행 시간 (단위: ms)</ko>
+   * @async
    * @fires Flicking#moveStart
    * @fires Flicking#move
    * @fires Flicking#moveEnd
@@ -752,6 +756,7 @@ class Flicking extends Component<FlickingEvents> {
    * @param {number} index The index of the panel to move<ko>이동할 패널의 인덱스</ko>
    * @param {number} [duration={@link Flicking#duration options.duration}] Duration of the animation (unit: ms)<ko>애니메이션 진행 시간 (단위: ms)</ko>
    * @param {Constants#DIRECTION} [direction=DIRECTION.NONE] Direction to move, only available in the {@link Flicking#circular circular} mode<ko>이동할 방향. {@link Flicking#circular circular} 옵션 활성화시에만 사용 가능합니다</ko>
+   * @async
    * @fires Flicking#moveStart
    * @fires Flicking#move
    * @fires Flicking#moveEnd
@@ -937,11 +942,11 @@ class Flicking extends Component<FlickingEvents> {
   /**
    * Add new panels after the last panel
    * @ko 패널 목록의 제일 끝에 새로운 패널들을 추가합니다
-   * @param {Flicking.ElementLike | Flicking.ElementLike[]} element A new HTMLElement, a outerHTML of element, or an array of both
+   * @param {ElementLike | ElementLike[]} element A new HTMLElement, a outerHTML of element, or an array of both
    * <ko>새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열</ko>
    * @return {Panel[]} An array of appended panels<ko>추가된 패널들의 배열</ko>
    * @see Panel
-   * @see Flicking.ElementLike
+   * @see ElementLike
    * @throws {FlickingError} {@link Constants.ERROR_CODE ERROR_CODE.NOT_ALLOWED_IN_FRAMEWORK} if called on frameworks (React, Angular, Vue...)
    * @example
    * ```ts
@@ -963,11 +968,11 @@ class Flicking extends Component<FlickingEvents> {
    * This will increase index of panels after by the number of panels added
    * @ko 패널 목록의 제일 앞(index 0)에 새로운 패널들을 추가합니다
    * 추가한 패널의 개수만큼 기존 패널들의 인덱스가 증가합니다.
-   * @param {Flicking.ElementLike | Flicking.ElementLike[]} element A new HTMLElement, a outerHTML of element, or an array of both
+   * @param {ElementLike | ElementLike[]} element A new HTMLElement, a outerHTML of element, or an array of both
    * <ko>새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열</ko>
    * @return {Panel[]} An array of prepended panels<ko>추가된 패널들의 배열</ko>
    * @see Panel
-   * @see Flicking.ElementLike
+   * @see ElementLike
    * @throws {FlickingError} {@link Constants.ERROR_CODE ERROR_CODE.NOT_ALLOWED_IN_FRAMEWORK} if called on frameworks (React, Angular, Vue...)
    * @example
    * ```ts
@@ -989,7 +994,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 주어진 인덱스에 새로운 패널들을 추가합니다
    * 해당 인덱스보다 같거나 큰 인덱스를 가진 기존 패널들은 추가한 패널의 개수만큼 인덱스가 증가합니다.
    * @param {number} index Index to insert new panels at<ko>새로 패널들을 추가할 인덱스</ko>
-   * @param {Flicking.ElementLike | Flicking.ElementLike[]} element A new HTMLElement, a outerHTML of element, or an array of both
+   * @param {ElementLike | ElementLike[]} element A new HTMLElement, a outerHTML of element, or an array of both
    * <ko>새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열</ko>
    * @return {Panel[]} An array of prepended panels<ko>추가된 패널들의 배열</ko>
    * @throws {FlickingError} {@link Constants.ERROR_CODE ERROR_CODE.NOT_ALLOWED_IN_FRAMEWORK} if called on frameworks (React, Angular, Vue...)
@@ -1018,7 +1023,7 @@ class Flicking extends Component<FlickingEvents> {
    * 해당 인덱스보다 큰 인덱스를 가진 기존 패널들은 제거한 패널의 개수만큼 인덱스가 감소합니다
    * @param {number} index Index of panel to remove<ko>제거할 패널의 인덱스</ko>
    * @param {number} [deleteCount=1] Number of panels to remove from index<ko>`index` 이후로 제거할 패널의 개수</ko>
-   * @return An array of removed panels<ko>제거된 패널들의 배열</ko>
+   * @return {Panel[]} An array of removed panels<ko>제거된 패널들의 배열</ko>
    */
   public remove(index: number, deleteCount: number = 1): Panel[] {
     if (this._renderExternal) {

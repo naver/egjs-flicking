@@ -1,6 +1,8 @@
 import DocumentedClass from "../../types/class";
+import Identifier from "../../types/identifier";
+import { showParameters } from "../../utils";
 
-export default (classData: DocumentedClass) => {
+export default (classData: DocumentedClass, dataMap: Map<string, Identifier>) => {
   if (!classData.constructorData) return "";
 
   const constructorData = classData.constructorData;
@@ -8,6 +10,9 @@ export default (classData: DocumentedClass) => {
   const params = constructorData.params || [];
 
   return `## Constructor
-### new ${classData.name}(${params.map(param => param.name).join(", ")})
+\`\`\`ts
+new ${classData.name}(${params.map(param => param.name).join(", ")})
+\`\`\`
+${showParameters(constructorData.params, dataMap)}
 `;
 };

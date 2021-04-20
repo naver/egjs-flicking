@@ -69,7 +69,8 @@ module.exports = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: "https://github.com/naver/egjs-flicking/edit/master/docs/"
+          editUrl: "https://github.com/naver/egjs-flicking/edit/master/docs/",
+          remarkPlugins: [require("remark-breaks")]
         },
         blog: {
           showReadingTime: true,
@@ -77,7 +78,10 @@ module.exports = {
           editUrl: "https://github.com/naver/egjs-flicking/edit/master/docs/blog/"
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css')
+          customCss: [
+            require.resolve('./src/css/custom.css'),
+            require.resolve('./src/css/bulma.css')
+          ]
         }
       }
     ]

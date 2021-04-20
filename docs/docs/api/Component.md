@@ -1,69 +1,260 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
+```ts
 class Component 
-
+```
 A class used to manage events in a component
 
-|properties|methods|
-|---|---|
-|[VERSION](#VERSION)|[trigger](#trigger)<br/>[once](#once)<br/>[hasOn](#hasOn)<br/>[on](#on)<br/>[off](#off)|
+<div className="container">
+    <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
+    <div className="row"><div className="col col--6"><a href="#VERSION">VERSION</a><span className="badge has-background-info ml-2">static</span></div><div className="col col--6"><a href="#trigger">trigger</a><br/><a href="#once">once</a><br/><a href="#hasOn">hasOn</a><br/><a href="#on">on</a><br/><a href="#off">off</a></div></div>
+  </div>
 
 
 
 ## Properties
 ### VERSION {#VERSION}
+<div className="bulma-tags">
+<span className="bulma-tag is-warning">static</span>
+
+
+
+</div>
+
 Version info string
 
+**Type**: string
 
-**Type**: $ts:string&lt;file&gt;/home/wn/egjs-flicking/node_modules/@egjs/component/src/Component.ts&lt;/file&gt;
 
+
+
+
+
+
+```ts
+Component.VERSION;  // ex) 3.0.0
+```
 
 
 
 
 ## Methods
 
-### trigger
+### trigger {#trigger}
+<div className="bulma-tags">
+
+
+
+
+</div>
+
 Trigger a custom event.
 
 
 
+**Returns**: this
+- An instance of the component itself<ko>컴포넌트 자신의 인스턴스</ko>
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|event|string \| ComponentEvent|no||The name of the custom event to be triggered or an instance of the ComponentEvent<ko>발생할 커스텀 이벤트의 이름 또는 ComponentEvent의 인스턴스</ko>|
+|params|Array&lt;any&gt; \| $ts:...|no||Event data to be sent when triggering a custom event <ko>커스텀 이벤트가 발생할 때 전달할 데이터</ko>|
+
+
+
+```ts
+import Component, { ComponentEvent } from "@egjs/component";
+
+class Some extends Component<{
+  beforeHi: ComponentEvent<{ foo: number; bar: string }>;
+  hi: { foo: { a: number; b: boolean } };
+  someEvent: (foo: number, bar: string) => void;
+  someOtherEvent: void; // When there's no event argument
+}> {
+  some(){
+    if(this.trigger("beforeHi")){ // When event call to stop return false.
+      this.trigger("hi");// fire hi event.
+    }
+  }
+}
+
+const some = new Some();
+some.on("beforeHi", e => {
+  if(condition){
+    e.stop(); // When event call to stop, `hi` event not call.
+  }
+  // `currentTarget` is component instance.
+  console.log(some === e.currentTarget); // true
+
+  typeof e.foo; // number
+  typeof e.bar; // string
+});
+some.on("hi", e => {
+  typeof e.foo.b; // boolean
+});
+// If you want to more know event design. You can see article.
+// https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F
+```
+
+
+
+### once {#once}
+<div className="bulma-tags">
 
 
 
 
-### once
+</div>
+
 Executed event just one time.
 
 
 
+**Returns**: this
+- An instance of the component itself<ko>컴포넌트 자신의 인스턴스</ko>
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|eventName|string \| $ts:...|no||The name of the event to be attached or an event name - event handler mapped object.<ko>등록할 이벤트의 이름 또는 이벤트 이름-핸들러 오브젝트</ko>|
+|handlerToAttach|function \| $ts:...|yes||The handler function of the event to be attached <ko>등록할 이벤트의 핸들러 함수</ko>|
+
+
+
+```ts
+import Component, { ComponentEvent } from "@egjs/component";
+
+class Some extends Component<{
+  hi: ComponentEvent;
+}> {
+  hi() {
+    alert("hi");
+  }
+  thing() {
+    this.once("hi", this.hi);
+  }
+}
+
+var some = new Some();
+some.thing();
+some.trigger(new ComponentEvent("hi"));
+// fire alert("hi");
+some.trigger(new ComponentEvent("hi"));
+// Nothing happens
+```
+
+
+
+### hasOn {#hasOn}
+<div className="bulma-tags">
 
 
 
 
-### hasOn
+</div>
+
 Checks whether an event has been attached to a component.
 
 
 
+**Returns**: boolean
+- Indicates whether the event is attached. <ko>이벤트 등록 여부</ko>
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|eventName|string|no||The name of the event to be attached <ko>등록 여부를 확인할 이벤트의 이름</ko>|
+
+
+
+```ts
+import Component from "@egjs/component";
+
+class Some extends Component<{
+  hi: void;
+}> {
+  some() {
+    this.hasOn("hi");// check hi event.
+  }
+}
+```
+
+
+
+### on {#on}
+<div className="bulma-tags">
 
 
 
 
-### on
+</div>
+
 Attaches an event to a component.
 
 
 
+**Returns**: this
+- An instance of a component itself<ko>컴포넌트 자신의 인스턴스</ko>
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|eventName|string \| $ts:...|no||The name of the event to be attached or an event name - event handler mapped object.<ko>등록할 이벤트의 이름 또는 이벤트 이름-핸들러 오브젝트</ko>|
+|handlerToAttach|function \| $ts:...|yes||The handler function of the event to be attached <ko>등록할 이벤트의 핸들러 함수</ko>|
+
+
+
+```ts
+import Component, { ComponentEvent } from "@egjs/component";
+
+class Some extends Component<{
+  hi: void;
+}> {
+  hi() {
+    console.log("hi");
+  }
+  some() {
+    this.on("hi",this.hi); //attach event
+  }
+}
+```
+
+
+
+### off {#off}
+<div className="bulma-tags">
 
 
 
 
-### off
+</div>
+
 Detaches an event from the component.<br/>If the `eventName` is not given this will detach all event handlers attached.<br/>If the `handlerToDetach` is not given, this will detach all event handlers for `eventName`.
 
 
 
+**Returns**: this
+- An instance of a component itself <ko>컴포넌트 자신의 인스턴스</ko>
 
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|eventName|string \| $ts:...|yes||The name of the event to be detached <ko>해제할 이벤트의 이름</ko>|
+|handlerToDetach|function \| $ts:...|yes||The handler function of the event to be detached <ko>해제할 이벤트의 핸들러 함수</ko>|
+
+
+
+```ts
+import Component, { ComponentEvent } from "@egjs/component";
+
+class Some extends Component<{
+  hi: void;
+}> {
+  hi() {
+    console.log("hi");
+  }
+  some() {
+    this.off("hi",this.hi); //detach event
+  }
+}
+```
 
 
 

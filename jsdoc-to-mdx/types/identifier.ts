@@ -19,7 +19,8 @@ interface Identifier {
     path: string;
   };
   returns?: Array<{
-    type: Type;
+    type?: Type;
+    description?: string;
   }>;
   type?: Type;
   readonly?: boolean;
@@ -50,7 +51,7 @@ interface Identifier {
   // Throws
   exceptions?: Array<{
     type: Type;
-    desription: string;
+    description: string;
   }>;
   // Inherits
   augments?: string[];
