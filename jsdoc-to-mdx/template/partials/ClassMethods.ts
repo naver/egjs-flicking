@@ -1,5 +1,5 @@
-import DocumentedClass from "../../types/class";
-import Identifier from "../../types/identifier";
+import DocumentedClass from "../../types/DocumentedClass";
+import Identifier from "../../types/Identifier";
 
 import Member from "./Member";
 

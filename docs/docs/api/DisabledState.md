@@ -1,6 +1,8 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
+<div className="notification is-warning my-2">⚠️ This class is for <strong>internal</strong> use only.</div>
+
 ```ts
 class DisabledState extends State
 ```
@@ -18,7 +20,7 @@ A state that activates when Flicking is stopped by event's `stop` method
 ### holding {#holding}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -37,10 +39,15 @@ Whether user is clicking or touching
 
 
 
+
+
+
+
+
 ### animating {#animating}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -48,6 +55,11 @@ Whether user is clicking or touching
 Whether Flicking's animating
 
 **Type**: true
+
+
+
+
+
 
 
 
@@ -69,20 +81,25 @@ Whether Flicking's animating
 
 </div>
 
-An event handler for Axes's [hold](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event-hold) event
+An event handler for Axes's [hold](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-hold) event
+
+
 
 
 
 **Returns**: void
 
 
+
+
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |ctx|object|yes||Event context<ko>이벤트 콘텍스트</ko>|
 |ctx.flicking|[Flicking](Flicking)|yes||An instance of Flicking<ko>Flicking 인스턴스</ko>|
-|ctx.axesEvent|object|yes||A [hold](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event-hold) event of Axes
-<ko>Axes의 [hold](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event-hold) 이벤트</ko>|
+|ctx.axesEvent|object|yes||A [hold](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-hold) event of Axes
+<ko>Axes의 [hold](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-hold) 이벤트</ko>|
 |ctx.transitTo|function|yes||A function for changing current state to other state<ko>다른 상태로 변경하기 위한 함수</ko>|
+
 
 
 
@@ -98,20 +115,25 @@ An event handler for Axes's [hold](https://naver.github.io/egjs-axes/release/lat
 
 </div>
 
-An event handler for Axes's [change](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event-change) event
+An event handler for Axes's [change](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-change) event
+
+
 
 
 
 **Returns**: void
 
 
+
+
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |ctx|object|yes||Event context<ko>이벤트 콘텍스트</ko>|
 |ctx.flicking|[Flicking](Flicking)|yes||An instance of Flicking<ko>Flicking 인스턴스</ko>|
-|ctx.axesEvent|object|yes||A [change](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event-change) event of Axes
-<ko>Axes의 [change](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event-change) 이벤트</ko>|
+|ctx.axesEvent|object|yes||A [change](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-change) event of Axes
+<ko>Axes의 [change](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-change) 이벤트</ko>|
 |ctx.transitTo|function|yes||A function for changing current state to other state<ko>다른 상태로 변경하기 위한 함수</ko>|
+
 
 
 
@@ -127,20 +149,25 @@ An event handler for Axes's [change](https://naver.github.io/egjs-axes/release/l
 
 </div>
 
-An event handler for Axes's [release](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event-release) event
+An event handler for Axes's [release](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-release) event
+
+
 
 
 
 **Returns**: void
 
 
+
+
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |ctx|object|yes||Event context<ko>이벤트 콘텍스트</ko>|
 |ctx.flicking|[Flicking](Flicking)|yes||An instance of Flicking<ko>Flicking 인스턴스</ko>|
-|ctx.axesEvent|object|yes||A [release](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event-release) event of Axes
-<ko>Axes의 [release](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event-release) 이벤트</ko>|
+|ctx.axesEvent|object|yes||A [release](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-release) event of Axes
+<ko>Axes의 [release](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-release) 이벤트</ko>|
 |ctx.transitTo|function|yes||A function for changing current state to other state<ko>다른 상태로 변경하기 위한 함수</ko>|
+
 
 
 
@@ -156,20 +183,25 @@ An event handler for Axes's [release](https://naver.github.io/egjs-axes/release/
 
 </div>
 
-An event handler for Axes's [animationEnd](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event-animationEnd) event
+An event handler for Axes's [animationEnd](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-animationEnd) event
+
+
 
 
 
 **Returns**: void
 
 
+
+
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |ctx|object|yes||Event context<ko>이벤트 콘텍스트</ko>|
 |ctx.flicking|[Flicking](Flicking)|yes||An instance of Flicking<ko>Flicking 인스턴스</ko>|
-|ctx.axesEvent|object|yes||A [animationEnd](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event-animationEnd) event of Axes
-<ko>Axes의 [animationEnd](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event-animationEnd) 이벤트</ko>|
+|ctx.axesEvent|object|yes||A [animationEnd](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-animationEnd) event of Axes
+<ko>Axes의 [animationEnd](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-animationEnd) 이벤트</ko>|
 |ctx.transitTo|function|yes||A function for changing current state to other state<ko>다른 상태로 변경하기 위한 함수</ko>|
+
 
 
 
@@ -185,19 +217,24 @@ An event handler for Axes's [animationEnd](https://naver.github.io/egjs-axes/rel
 
 </div>
 
-An event handler for Axes's [finish](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event-finish) event
+An event handler for Axes's [finish](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-finish) event
+
+
 
 
 
 **Returns**: void
 
 
+
+
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |ctx|object|yes||Event context<ko>이벤트 콘텍스트</ko>|
 |ctx.flicking|[Flicking](Flicking)|yes||An instance of Flicking<ko>Flicking 인스턴스</ko>|
-|ctx.axesEvent|object|yes||A [finish](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event-finish) event of Axes<ko>Axes의 [finish](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event-finish) 이벤트</ko>|
+|ctx.axesEvent|object|yes||A [finish](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-finish) event of Axes<ko>Axes의 [finish](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-finish) 이벤트</ko>|
 |ctx.transitTo|function|yes||A function for changing current state to other state<ko>다른 상태로 변경하기 위한 함수</ko>|
+
 
 
 

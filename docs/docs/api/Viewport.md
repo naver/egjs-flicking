@@ -1,6 +1,8 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
+
+
 ```ts
 class Viewport 
 ```
@@ -25,7 +27,7 @@ new Viewport(el)
 ### element {#element}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -44,10 +46,15 @@ A viewport(root) element
 
 
 
+
+
+
+
+
 ### width {#width}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -66,10 +73,15 @@ Viewport width
 
 
 
+
+
+
+
+
 ### height {#height}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -77,6 +89,11 @@ Viewport width
 Viewport height
 
 **Type**: number
+
+
+
+
+
 
 
 
@@ -105,11 +122,16 @@ This will change the actual size of `.flicking-viewport` element by changing its
 
 
 
+
+
+
+
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |size|object|yes||New viewport size<ko>새 뷰포트 크기</ko>|
 |size.width|number \| string|yes||CSS string or number(in px)<ko>CSS 문자열 또는 숫자(px)</ko>|
 |size.height|number \| string|yes||CSS string or number(in px)<ko>CSS 문자열 또는 숫자(px)</ko>|
+
 
 
 
@@ -126,6 +148,11 @@ This will change the actual size of `.flicking-viewport` element by changing its
 </div>
 
 Update width/height to the current viewport element's size
+
+
+
+
+
 
 
 

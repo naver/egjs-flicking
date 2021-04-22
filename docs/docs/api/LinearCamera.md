@@ -1,6 +1,8 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
+
+
 ```ts
 class LinearCamera extends Camera
 ```
@@ -18,7 +20,7 @@ A [Camera](Camera) that can move from the position of the first panel to the pos
 ### element {#element}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 <span className="bulma-tag is-danger">inherited</span>
 
 </div>
@@ -37,10 +39,15 @@ The camera(`.flicking-camera`) element
 
 
 
+
+
+
+
+
 ### position {#position}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 <span className="bulma-tag is-danger">inherited</span>
 
 </div>
@@ -59,10 +66,15 @@ Current position of the camera
 
 
 
+
+
+
+
+
 ### alignPosition {#alignPosition}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 <span className="bulma-tag is-danger">inherited</span>
 
 </div>
@@ -70,6 +82,11 @@ Current position of the camera
 Align position inside the viewport where [Panel](Panel)'s [alignPosition](Panel#alignPosition) should be located at
 
 **Type**: number
+
+
+
+
+
 
 
 
@@ -92,7 +109,12 @@ Align position inside the viewport where [Panel](Panel)'s [alignPosition](Panel#
 Position offset, used for the [renderOnlyVisible](Flicking#renderOnlyVisible) option
 
 **Type**: number
+
 **Default**: 0
+
+
+
+
 
 
 
@@ -106,7 +128,7 @@ Position offset, used for the [renderOnlyVisible](Flicking#renderOnlyVisible) op
 ### range {#range}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 <span className="bulma-tag is-danger">inherited</span>
 
 </div>
@@ -122,13 +144,21 @@ A range that Camera's [position](Camera#position) can reach
 
 
 
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|min|number|A minimum position<ko>최소 위치</ko>|
+|min|number|A maximum position<ko>최대 위치</ko>|
+
+
+
+
 
 
 
 ### rangeDiff {#rangeDiff}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 <span className="bulma-tag is-danger">inherited</span>
 
 </div>
@@ -147,10 +177,15 @@ A difference between Camera's minimum and maximum position that can reach
 
 
 
+
+
+
+
+
 ### visiblePanels {#visiblePanels}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 <span className="bulma-tag is-danger">inherited</span>
 
 </div>
@@ -169,10 +204,15 @@ An array of visible panels from the current position
 
 
 
+
+
+
+
+
 ### visibleRange {#visibleRange}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 <span className="bulma-tag is-danger">inherited</span>
 
 </div>
@@ -188,13 +228,21 @@ A range of the visible area from the current position
 
 
 
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|min|number|A minimum position<ko>최소 위치</ko>|
+|min|number|A maximum position<ko>최대 위치</ko>|
+
+
+
+
 
 
 
 ### anchorPoints {#anchorPoints}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 <span className="bulma-tag is-danger">inherited</span>
 
 </div>
@@ -213,10 +261,15 @@ An array of [AnchorPoint](AnchorPoint)s that Camera can be stopped at
 
 
 
+
+
+
+
+
 ### controlParams {#controlParams}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 <span className="bulma-tag is-danger">inherited</span>
 
 </div>
@@ -232,13 +285,22 @@ A current parameters of the Camera for updating [AxesController](AxesController)
 
 
 
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|range|object|Camera [range](Camera#range)<ko>Camera가 도달 가능한 범위([range](Camera#range))</ko>|
+|position|number|Current position<ko>현재 좌표</ko>|
+|circular|boolean|A Boolean indicating whether the [circular](Flicking#circular) option is enabled<ko>[circular](Flicking#circular)옵션 활성화 여부</ko>|
+
+
+
+
 
 
 
 ### atEdge {#atEdge}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 <span className="bulma-tag is-danger">inherited</span>
 
 </div>
@@ -257,10 +319,15 @@ A Boolean value indicating whether Camera's over the minimum or maximum position
 
 
 
+
+
+
+
+
 ### size {#size}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 <span className="bulma-tag is-danger">inherited</span>
 
 </div>
@@ -268,6 +335,11 @@ A Boolean value indicating whether Camera's over the minimum or maximum position
 Return the size of the viewport
 
 **Type**: number
+
+
+
+
+
 
 
 
@@ -289,7 +361,12 @@ Return the size of the viewport
 
 A value indicating where the [alignPosition](Camera#alignPosition) should be located at inside the viewport element
 
-**Type**: [Constants.ALIGN](Constants.ALIGN) \| string \| number
+**Type**: [Constants.ALIGN](Constants:ALIGN) \| string \| number
+
+
+
+
+
 
 
 
@@ -315,15 +392,20 @@ Update [range](Camera#range) of Camera
 
 
 
+
+
 **Returns**: this
+
+
+
 
 
 
 
 **Throws**: [FlickingError](FlickingError)
 
-[NOT_ATTACHED_TO_FLICKING](Constants.ERROR_CODE) When [init](Camera#init) is not called before
-<ko>[NOT_ATTACHED_TO_FLICKING](Constants.ERROR_CODE) [init](Camera#init)이 이전에 호출되지 않은 경우</ko>
+[NOT_ATTACHED_TO_FLICKING](Constants#ERROR_CODE) When [init](Camera#init) is not called before
+<ko>[NOT_ATTACHED_TO_FLICKING](Constants#ERROR_CODE) [init](Camera#init)이 이전에 호출되지 않은 경우</ko>
 
 
 
@@ -341,17 +423,22 @@ Initialize Camera
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |flicking|[Flicking](Flicking)|no||An instance of [Flicking](Flicking)<ko>Flicking의 인스턴스</ko>|
 
+
 **Throws**: [FlickingError](FlickingError)
 
-[VAL_MUST_NOT_NULL](Constants.ERROR_CODE) If the camera element(`.flicking-camera`) does not exist inside viewport element
-<ko>[VAL_MUST_NOT_NULL](Constants.ERROR_CODE) 뷰포트 엘리먼트 내부에 카메라 엘리먼트(`.flicking-camera`)가 존재하지 않을 경우</ko>
+[VAL_MUST_NOT_NULL](Constants#ERROR_CODE) If the camera element(`.flicking-camera`) does not exist inside viewport element
+<ko>[VAL_MUST_NOT_NULL](Constants#ERROR_CODE) 뷰포트 엘리먼트 내부에 카메라 엘리먼트(`.flicking-camera`)가 존재하지 않을 경우</ko>
 
 
 
@@ -369,7 +456,12 @@ Destroy Camera and return to initial state
 
 
 
+
+
 **Returns**: void
+
+
+
 
 
 
@@ -392,17 +484,22 @@ Move to the given position and apply CSS transform
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |pos|number|no||A new position<ko>움직일 위치</ko>|
 
+
 **Throws**: [FlickingError](FlickingError)
 
-[NOT_ATTACHED_TO_FLICKING](Constants.ERROR_CODE) When [init](Camera#init) is not called before
-<ko>[NOT_ATTACHED_TO_FLICKING](Constants.ERROR_CODE) [init](Camera#init)이 이전에 호출되지 않은 경우</ko>
+[NOT_ATTACHED_TO_FLICKING](Constants#ERROR_CODE) When [init](Camera#init) is not called before
+<ko>[NOT_ATTACHED_TO_FLICKING](Constants#ERROR_CODE) [init](Camera#init)이 이전에 호출되지 않은 경우</ko>
 
 
 
@@ -421,12 +518,17 @@ If it does not exist, return `null` instead
 
 
 
+
+
 **Returns**: [AnchorPoint](AnchorPoint) \| null
 - The previous {@link AnchorPoint}<ko>이전 {@link AnchorPoint}</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |anchor|[AnchorPoint](AnchorPoint)|no||A reference [AnchorPoint](AnchorPoint)<ko>기준 [AnchorPoint](AnchorPoint)</ko>|
+
 
 
 
@@ -447,12 +549,17 @@ If it does not exist, return `null` instead
 
 
 
+
+
 **Returns**: [AnchorPoint](AnchorPoint) \| null
 - The next {@link AnchorPoint}<ko>다음 {@link AnchorPoint}</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |anchor|[AnchorPoint](AnchorPoint)|no||A reference [AnchorPoint](AnchorPoint)<ko>기준 [AnchorPoint](AnchorPoint)</ko>|
+
 
 
 
@@ -473,12 +580,17 @@ If there's no [AnchorPoint](AnchorPoint) that includes the given position, retur
 
 
 
+
+
 **Returns**: [AnchorPoint](AnchorPoint) \| null
 - The {@link AnchorPoint} that includes the given position<ko>해당 좌표를 포함하는 {@link AnchorPoint}</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |position|number|no||A position to check<ko>확인할 좌표</ko>|
+
 
 
 
@@ -499,12 +611,17 @@ If there're no [AnchorPoint](AnchorPoint)s, return `null` instead
 
 
 
+
+
 **Returns**: [AnchorPoint](AnchorPoint) \| null
 - The {@link AnchorPoint} nearest to the given position<ko>해당 좌표에 가장 인접한 {@link AnchorPoint}</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |position|number|no||A position to check<ko>확인할 좌표</ko>|
+
 
 
 
@@ -524,12 +641,17 @@ Clamp the given position between camera's range
 
 
 
+
+
 **Returns**: number
 - A clamped position<ko>범위 제한된 좌표</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |position|number|no||A position to clamp<ko>범위를 제한할 좌표</ko>|
+
 
 
 
@@ -549,12 +671,17 @@ Check whether the given panel is inside of the Camera's range
 
 
 
+
+
 **Returns**: boolean
 - Whether the panel's inside Camera's range<ko>도달 가능한 범위 내에 해당 패널이 존재하는지 여부</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |panel|[Panel](Panel)|no||An instance of [Panel](Panel) to check<ko>확인할 [Panel](Panel)의 인스턴스</ko>|
+
 
 
 
@@ -574,12 +701,17 @@ Check whether the given panel element is visible at the current position
 
 
 
+
+
 **Returns**: boolean
 - Whether the panel element is visible at the current position<ko>현재 위치에서 해당 패널 엘리먼트가 보이는지 여부</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |panel|[Panel](Panel)|no||An instance of [Panel](Panel) to check<ko>확인할 [Panel](Panel)의 인스턴스</ko>|
+
 
 
 
@@ -599,7 +731,12 @@ Update Camera's [alignPosition](Camera#alignPosition)
 
 
 
+
+
 **Returns**: this
+
+
+
 
 
 
@@ -622,15 +759,20 @@ Update Camera's [anchorPoints](Camera#anchorPoints)
 
 
 
+
+
 **Returns**: this
+
+
+
 
 
 
 
 **Throws**: [FlickingError](FlickingError)
 
-[NOT_ATTACHED_TO_FLICKING](Constants.ERROR_CODE) When [init](Camera#init) is not called before
-<ko>[NOT_ATTACHED_TO_FLICKING](Constants.ERROR_CODE) [init](Camera#init)이 이전에 호출되지 않은 경우</ko>
+[NOT_ATTACHED_TO_FLICKING](Constants#ERROR_CODE) When [init](Camera#init) is not called before
+<ko>[NOT_ATTACHED_TO_FLICKING](Constants#ERROR_CODE) [init](Camera#init)이 이전에 호출되지 않은 경우</ko>
 
 
 
@@ -648,15 +790,20 @@ Update position after resizing
 
 
 
+
+
 **Returns**: this
+
+
+
 
 
 
 
 **Throws**: [FlickingError](FlickingError)
 
-[NOT_ATTACHED_TO_FLICKING](Constants.ERROR_CODE) When [init](Camera#init) is not called before
-<ko>[NOT_ATTACHED_TO_FLICKING](Constants.ERROR_CODE) [init](Camera#init)이 이전에 호출되지 않은 경우</ko>
+[NOT_ATTACHED_TO_FLICKING](Constants#ERROR_CODE) When [init](Camera#init) is not called before
+<ko>[NOT_ATTACHED_TO_FLICKING](Constants#ERROR_CODE) [init](Camera#init)이 이전에 호출되지 않은 경우</ko>
 
 
 
@@ -674,7 +821,12 @@ Reset the history of [needPanel](Flicking#event-needPanel) events so it can be t
 
 
 
+
+
 **Returns**: this
+
+
+
 
 
 

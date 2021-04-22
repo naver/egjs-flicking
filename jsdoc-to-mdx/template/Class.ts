@@ -1,6 +1,6 @@
-import DocumentedClass from "../types/class";
-import Identifier from "../types/identifier";
-import { inlineLink, showExtends } from "../utils";
+import DocumentedClass from "../types/DocumentedClass";
+import Identifier from "../types/Identifier";
+import { inlineLink, showExtends, showInternalWarning } from "../utils";
 
 import Import from "./partials/Import";
 import ClassSummary from "./partials/ClassSummary";
@@ -10,6 +10,8 @@ import ClassMethods from "./partials/ClassMethods";
 import ClassEvents from "./partials/ClassEvents";
 
 export default (classData: DocumentedClass, dataMap: Map<string, Identifier>): string => `${Import()}
+${showInternalWarning(classData)}
+
 \`\`\`ts
 class ${classData.name} ${showExtends(classData)}
 \`\`\`

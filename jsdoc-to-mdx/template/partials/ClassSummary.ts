@@ -1,5 +1,5 @@
-import DocumentedClass from "../../types/class";
-import Identifier from "../../types/identifier";
+import DocumentedClass from "../../types/DocumentedClass";
+import Identifier from "../../types/Identifier";
 import { hashLink } from "../../utils";
 
 export default (classData: DocumentedClass, dataMap: Map<string, Identifier>) => {
@@ -9,14 +9,14 @@ export default (classData: DocumentedClass, dataMap: Map<string, Identifier>) =>
   if (classData.members.length > 0 || classData.static.members.length > 0) {
     entries.push("Properties");
     values.push([
-      ...classData.static.members.map(identifier => `${hashLink(identifier.name, identifier.name)}<span className="badge has-background-info ml-2">static</span>`),
+      ...classData.static.members.map(identifier => `${hashLink(identifier.name, identifier.name)}<span className="bulma-tag is-info ml-2">static</span>`),
       ...classData.members.map(identifier => `${hashLink(identifier.name, identifier.name)}`)
     ]);
   }
   if (classData.methods.length > 0 || classData.static.methods.length > 0) {
     entries.push("Methods");
     values.push([
-      ...classData.static.methods.map(identifier => `${hashLink(identifier.name, identifier.name)}<span className="badge has-background-info ml-2">static</span>`),
+      ...classData.static.methods.map(identifier => `${hashLink(identifier.name, identifier.name)}<span className="bulma-tag is-info ml-2">static</span>`),
       ...classData.methods.map(identifier => `${hashLink(identifier.name, identifier.name)}`)
     ]);
   }

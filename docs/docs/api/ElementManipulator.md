@@ -1,6 +1,8 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
+
+
 ```ts
 class ElementManipulator extends OffsetManipulator
 ```
@@ -28,12 +30,17 @@ Initialize OffsetManipulator
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |flicking|[Flicking](Flicking)|no||An instance of [Flicking](Flicking)<ko>Flicking의 인스턴스</ko>|
+
 
 
 
@@ -53,7 +60,12 @@ Destroy Renderer and return to initial state
 
 
 
+
+
 **Returns**: void
+
+
+
 
 
 
@@ -76,13 +88,18 @@ Insert panel elements before nextSibling
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |panels|Array&lt;[Panel](Panel)&gt;|no||An array of panels to add<ko>추가할 패널의 배열</ko>|
 |nextSibling|[Panel](Panel) \| null|no|||
+
 
 
 
@@ -102,13 +119,18 @@ Move panel element as the first child of the camera element
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |panels|Array&lt;[Panel](Panel)&gt;|no||Panels to move<ko>위치를 변경할 패널들</ko>|
 |togglePoints|Array&lt;[TogglePoint](TogglePoint)&gt;|no||An array of the positions that triggered element order change<ko>패널 순서를 변경시킨 좌표 정보들의 배열</ko>|
+
 
 
 
@@ -128,13 +150,18 @@ Move panel element as the last child of the camera element
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |panels|Array&lt;[Panel](Panel)&gt;|no||Panels to move<ko>위치를 변경할 패널들</ko>|
 |togglePoints|Array&lt;[TogglePoint](TogglePoint)&gt;|no||An array of the positions that triggered element order change<ko>패널 순서를 변경시킨 좌표 정보들의 배열</ko>|
+
 
 
 
@@ -154,12 +181,17 @@ Reset panel element order by the panel's index
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |panels|Array&lt;[Panel](Panel)&gt;|no||Panels to move<ko>위치를 변경할 패널들</ko>|
+
 
 
 
@@ -179,12 +211,17 @@ Remove panel elements
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |panels|Array&lt;[Panel](Panel)&gt;|no||Panels to remove<ko>삭제할 패널들</ko>|
+
 
 
 
@@ -204,12 +241,17 @@ Remove all child nodes inside the given element
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |element|HTMLElement|no||A HTMLElement to remove all child nodes<ko>Child node를 전부 삭제할 HTMLElement</ko>|
+
 
 
 
@@ -229,12 +271,17 @@ Remove all text nodes inside the given element
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |element|HTMLElement|no||A HTMLElement to remove all text nodes<ko>Text node를 전부 삭제할 HTMLElement</ko>|
+
 
 
 
@@ -254,6 +301,11 @@ Remove all text nodes inside the given element
 Event that fires when order of the elements is changed
 
 **Type**: void
+
+
+
+
+
 
 
 

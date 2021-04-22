@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable arrow-body-style */
-import DocumentedClass from "./types/class";
-import Identifier from "./types/identifier";
+import DocumentedClass from "./types/DocumentedClass";
+import Identifier from "./types/Identifier";
 
 export const isStatic = (data: Identifier) => data.scope && data.scope === "static";
 export const isReadonly = (data: Identifier) => !!data.readonly;
@@ -46,7 +46,7 @@ export const parseType = (type: Required<Identifier>["type"], dataMap: Map<strin
           .forEach(val => {
             if (dataMap.has(val) && !checked[val]) {
               checked[val] = true;
-              name = name.replace(val, `[${val}](${val})`);
+              name = name.replace(val, `[${val}](${val.replace(/event:/g, "event-").replace(/\./g, ":")})`);
             }
           });
       });
@@ -118,7 +118,7 @@ export const parseLink = (text?: string) => {
   }
 
   results.map(result => {
-    result.url = result.url.replace(/event:/g, "event-");
+    result.url = result.url.replace(/event:/g, "event-").replace(/\./g, "#");
     return result;
   });
 
@@ -143,8 +143,8 @@ export const showExtends = (classData: DocumentedClass) => classData.augments
   : "";
 
 export const showTags = (data: Identifier) => `<div className="bulma-tags">
-${isStatic(data) ? "<span className=\"bulma-tag is-warning\">static</span>" : ""}
-${isReadonly(data) ? "<span className=\"bulma-tag is-info\">readonly</span>" : ""}
+${isStatic(data) ? "<span className=\"bulma-tag is-info\">static</span>" : ""}
+${isReadonly(data) ? "<span className=\"bulma-tag is-warning\">readonly</span>" : ""}
 ${isInherited(data) ? "<span className=\"bulma-tag is-danger\">inherited</span>" : ""}
 ${isAsync(data) ? "<span className=\"bulma-tag is-success\">async</span>" : ""}
 </div>`;
@@ -162,10 +162,20 @@ export const showReturn = (returns: Identifier["returns"], dataMap: Map<string, 
 ${returns.map(val => val.description ? `- ${val.description}` : "").join("\n")}`
   : "";
 
+export const showEmit = (emits: Identifier["fires"], dataMap: Map<string, Identifier>) => emits && emits.length > 0
+  ? `**Emits**: ${emits.map(emit => parseType({ names: [emit] }, dataMap)).join(", ")}`
+  : "";
+
 export const showParameters = (params: Identifier["params"], dataMap: Map<string, Identifier>) => params && params.length > 0
   ? `|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 ${params.map(param => `|${param.name}|${parseType(param.type, dataMap)}|${param.optional ? "yes" : "no"}|${inlineLink(param.defaultvalue)}|${inlineLink(param.description)}|`).join("\n")}`
+  : "";
+
+export const showProperties = (properties: Identifier["properties"], dataMap: Map<string, Identifier>) => properties && properties.length > 0
+  ? `|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+${properties.map(param => `|${param.name}|${parseType(param.type, dataMap)}|${inlineLink(param.description)}|`).join("\n")}`
   : "";
 
 export const showThrows = (throws: Identifier["exceptions"], dataMap: Map<string, Identifier>) => throws && throws.length > 0
@@ -181,4 +191,4 @@ export const showExample = (data: Identifier, lang = "ts") => data.examples
   ? data.examples.map(example => example.trim().startsWith("```") ? example : `\`\`\`${lang}\n${example}\n\`\`\``).join("\n\n")
   : "";
 
-export const showInternalWarning = (data: Identifier) => isInternal(data) ? `<div className="notification is-warning mt-2">⚠️ This ${data.kind} is for <strong>internal</strong> use only.</div>` : "";
+export const showInternalWarning = (data: Identifier) => isInternal(data) ? `<div className="notification is-warning my-2">⚠️ This ${data.kind} is for <strong>internal</strong> use only.</div>` : "";

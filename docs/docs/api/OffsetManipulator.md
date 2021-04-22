@@ -1,6 +1,8 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
+<div className="notification is-warning my-2">⚠️ This class is for <strong>internal</strong> use only.</div>
+
 ```ts
 class OffsetManipulator extends Component
 ```
@@ -28,12 +30,17 @@ Initialize OffsetManipulator
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |flicking|[Flicking](Flicking)|no||An instance of [Flicking](Flicking)<ko>Flicking의 인스턴스</ko>|
+
 
 
 
@@ -53,7 +60,12 @@ Destroy Renderer and return to initial state
 
 
 
+
+
 **Returns**: void
+
+
+
 
 
 
@@ -76,13 +88,18 @@ Insert panel elements before nextSibling
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |panels|Array&lt;[Panel](Panel)&gt;|no||An array of panels to add<ko>추가할 패널의 배열</ko>|
 |nextSibling|[Panel](Panel) \| null|no|||
+
 
 
 
@@ -102,13 +119,18 @@ Move panel element as the first child of the camera element
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |panels|Array&lt;[Panel](Panel)&gt;|no||Panels to move<ko>위치를 변경할 패널들</ko>|
 |togglePoints|Array&lt;[TogglePoint](TogglePoint)&gt;|no||An array of the positions that triggered element order change<ko>패널 순서를 변경시킨 좌표 정보들의 배열</ko>|
+
 
 
 
@@ -128,13 +150,18 @@ Move panel element as the last child of the camera element
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |panels|Array&lt;[Panel](Panel)&gt;|no||Panels to move<ko>위치를 변경할 패널들</ko>|
 |togglePoints|Array&lt;[TogglePoint](TogglePoint)&gt;|no||An array of the positions that triggered element order change<ko>패널 순서를 변경시킨 좌표 정보들의 배열</ko>|
+
 
 
 
@@ -154,12 +181,17 @@ Reset panel element order by the panel's index
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |panels|Array&lt;[Panel](Panel)&gt;|no||Panels to move<ko>위치를 변경할 패널들</ko>|
+
 
 
 
@@ -179,12 +211,17 @@ Remove panel elements
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |panels|Array&lt;[Panel](Panel)&gt;|no||Panels to remove<ko>삭제할 패널들</ko>|
+
 
 
 
@@ -204,12 +241,17 @@ Remove all child nodes inside the given element
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |element|HTMLElement|no||A HTMLElement to remove all child nodes<ko>Child node를 전부 삭제할 HTMLElement</ko>|
+
 
 
 
@@ -229,12 +271,17 @@ Remove all text nodes inside the given element
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |element|HTMLElement|no||A HTMLElement to remove all text nodes<ko>Text node를 전부 삭제할 HTMLElement</ko>|
+
 
 
 
@@ -254,13 +301,18 @@ Trigger a custom event.
 
 
 
+
+
 **Returns**: this
 - An instance of the component itself<ko>컴포넌트 자신의 인스턴스</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |event|string \| ComponentEvent|no||The name of the custom event to be triggered or an instance of the ComponentEvent<ko>발생할 커스텀 이벤트의 이름 또는 ComponentEvent의 인스턴스</ko>|
 |params|Array&lt;any&gt; \| $ts:...|no||Event data to be sent when triggering a custom event <ko>커스텀 이벤트가 발생할 때 전달할 데이터</ko>|
+
 
 
 
@@ -312,13 +364,18 @@ Executed event just one time.
 
 
 
+
+
 **Returns**: this
 - An instance of the component itself<ko>컴포넌트 자신의 인스턴스</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |eventName|string \| $ts:...|no||The name of the event to be attached or an event name - event handler mapped object.<ko>등록할 이벤트의 이름 또는 이벤트 이름-핸들러 오브젝트</ko>|
 |handlerToAttach|function \| $ts:...|yes||The handler function of the event to be attached <ko>등록할 이벤트의 핸들러 함수</ko>|
+
 
 
 
@@ -358,12 +415,17 @@ Checks whether an event has been attached to a component.
 
 
 
+
+
 **Returns**: boolean
 - Indicates whether the event is attached. <ko>이벤트 등록 여부</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |eventName|string|no||The name of the event to be attached <ko>등록 여부를 확인할 이벤트의 이름</ko>|
+
 
 
 
@@ -393,13 +455,18 @@ Attaches an event to a component.
 
 
 
+
+
 **Returns**: this
 - An instance of a component itself<ko>컴포넌트 자신의 인스턴스</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |eventName|string \| $ts:...|no||The name of the event to be attached or an event name - event handler mapped object.<ko>등록할 이벤트의 이름 또는 이벤트 이름-핸들러 오브젝트</ko>|
 |handlerToAttach|function \| $ts:...|yes||The handler function of the event to be attached <ko>등록할 이벤트의 핸들러 함수</ko>|
+
 
 
 
@@ -432,13 +499,18 @@ Detaches an event from the component.<br/>If the `eventName` is not given this w
 
 
 
+
+
 **Returns**: this
 - An instance of a component itself <ko>컴포넌트 자신의 인스턴스</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |eventName|string \| $ts:...|yes||The name of the event to be detached <ko>해제할 이벤트의 이름</ko>|
 |handlerToDetach|function \| $ts:...|yes||The handler function of the event to be detached <ko>해제할 이벤트의 핸들러 함수</ko>|
+
 
 
 
@@ -471,6 +543,11 @@ class Some extends Component<{
 Event that fires when order of the elements is changed
 
 **Type**: void
+
+
+
+
+
 
 
 

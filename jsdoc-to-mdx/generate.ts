@@ -1,44 +1,56 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import { spawn } from "child_process";
 import path from "path";
 
 import * as fs from "fs-extra";
 import jsdocParse from "jsdoc-parse";
 
-import Identifier from "./types/identifier";
-import DocumentedClass from "./types/class";
-import DocumentedInterface from "./types/interface";
+import Identifier from "./types/Identifier";
+import DocumentedClass from "./types/DocumentedClass";
+import DocumentedInterface from "./types/DocumentedInterface";
+import DocumentedNamespace from "./types/DocumentedNamespace";
 import classTemplate from "./template/Class";
+import interfaceTemplate from "./template/Interface";
+import namespaceTemplate from "./template/Namespace";
+import constantTemplate from "./template/Constant";
+import sidebarTemplate from "./template/Sidebar";
 
 const jsdoc = spawn("jsdoc", ["-X", "-c", "jsdoc.json"]);
 const tmp = fs.createWriteStream("/tmp/doc-ast.json");
 
+const docsDir = path.resolve(process.cwd(), "./docs");
+const apiDir = path.resolve(process.cwd(), "./docs/docs/api");
+
 jsdoc.stdout.pipe(tmp);
 jsdoc.stderr.pipe(process.stdout);
 
-jsdoc.on("close", (code) => {
+jsdoc.on("close", async (code) => {
   if (code !== 0) {
     console.error(`ps process exited with code ${code}`);
   } else {
     const ast = JSON.parse(fs.readFileSync("/tmp/doc-ast.json").toString());
     const templateData = jsdocParse(ast) as Identifier[];
-    const outputDir = path.resolve(process.cwd(), "./docs/docs/api");
 
     const classes: {[key: string]: DocumentedClass} = {};
     const interfaces: {[key: string]: DocumentedInterface} = {};
+    const namespaces: {[key: string]: DocumentedNamespace} = {};
+    const constants: {[key: string]: Identifier} = {};
 
     const dataMap = new Map<string, Identifier>();
 
-    fs.ensureDirSync(outputDir);
+    fs.removeSync(apiDir);
+    fs.ensureDirSync(apiDir);
     templateData.forEach(identifier => {
       dataMap.set(identifier.longname, identifier);
     });
 
     templateData
-      .filter(identifier => identifier.kind === "interface" || identifier.kind === "class")
+      .filter(identifier => !identifier.memberof)
       .forEach(identifier => {
         if (identifier.kind === "class") {
           const classData = identifier as DocumentedClass;
@@ -59,6 +71,14 @@ jsdoc.on("close", (code) => {
           }
 
           interfaces[interfaceData.name] = interfaceData;
+        } else if (identifier.kind === "namespace") {
+          const namespaceData = identifier as DocumentedNamespace;
+
+          namespaceData.members = [];
+
+          namespaces[identifier.name] = namespaceData;
+        } else if (identifier.kind === "constant") {
+          constants[identifier.name] = identifier;
         }
 
         templateData.splice(templateData.findIndex(val => val === identifier), 1);
@@ -89,42 +109,49 @@ jsdoc.on("close", (code) => {
         } else {
           console.error(identifier.kind, identifier.name, "is not included");
         }
+      } else if (namespaces[identifier.memberof]) {
+        const namespaceData = namespaces[identifier.memberof];
+
+        namespaceData.members.push(identifier);
       }
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     Object.keys(classes).forEach(async className => {
       await fs.writeFile(
-        path.resolve(outputDir, `${className}.md`),
+        path.resolve(apiDir, `${className}.md`),
         classTemplate(classes[className], dataMap)
       );
     });
 
-    /* reduce templateData to an array of class names */
-    // const classNames = templateData.reduce((classNames, identifier) => {
-    //   if (identifier.kind === 'class') classNames.push(identifier.name)
-    //   return classNames
-    // }, []);
+    Object.keys(interfaces).forEach(async interfaceName => {
+      await fs.writeFile(
+        path.resolve(apiDir, `${interfaceName}.md`),
+        interfaceTemplate(interfaces[interfaceName], dataMap)
+      );
+    });
 
-    // classNames.forEach(async className => {
-    //   if (className !== "Flicking") return;
+    Object.keys(namespaces).forEach(async nameSpaceName => {
+      await fs.writeFile(
+        path.resolve(apiDir, `${nameSpaceName}.md`),
+        namespaceTemplate(namespaces[nameSpaceName], dataMap)
+      );
+    });
 
-    //   const template = `{{#class name="${className}"}}{{>docs}}{{/class}}`
-    //   console.log(`rendering ${className}`)
-    //   const output = await jsdoc2md.render({
-    //     data: templateData,
-    //     template: template,
-    //     helper: path.resolve(__dirname, "helpers/**/*"),
-    //     partial: path.resolve(__dirname, "partials/**/*"),
-    //     "example-lang": "ts"
-    //   });
+    Object.keys(constants).forEach(async constantName => {
+      await fs.writeFile(
+        path.resolve(apiDir, `${constantName}.md`),
+        constantTemplate(constants[constantName], dataMap)
+      );
+    });
 
-    //   await fs.writeFile(
-    //     path.resolve(outputDir, `${className}.md`),
-    //     output.replace(/<br>/g, "<br/>")
-    //       .replace(/<ko>/g, "")
-    //       .replace(/<\/ko>/g, "")
-    //   );
-    // });
+    await fs.writeFile(
+      path.resolve(docsDir, "sidebars-api.js"),
+      sidebarTemplate({
+        classes: Object.values(classes),
+        interfaces: Object.values(interfaces),
+        namespaces: Object.values(namespaces),
+        constants: Object.values(constants)
+      })
+    );
   }
 });

@@ -1,6 +1,8 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
+
+
 ```ts
 class Panel 
 ```
@@ -20,7 +22,7 @@ new Panel(options, options.el, options.index, options.align, options.flicking)
 |options|object|no||An options object<ko>옵션 오브젝트</ko>|
 |options.el|HTMLElement|yes||A `HTMLElement` panel's referencing<ko>패널이 참조하는 `HTMLElement`</ko>|
 |options.index|number|yes||An initial index of the panel<ko>패널의 초기 인덱스</ko>|
-|options.align|[Constants.ALIGN](Constants.ALIGN) \| string \| number|yes||An initial [align](Flicking#align) value of the panel<ko>패널의 초기 [align](Flicking#align)값</ko>|
+|options.align|[Constants.ALIGN](Constants:ALIGN) \| string \| number|yes||An initial [align](Flicking#align) value of the panel<ko>패널의 초기 [align](Flicking#align)값</ko>|
 |options.flicking|[Flicking](Flicking)|yes||A Flicking instance panel's referencing<ko>패널이 참조하는 [Flicking](Flicking) 인스턴스</ko>|
 
 
@@ -29,7 +31,7 @@ new Panel(options, options.el, options.index, options.align, options.flicking)
 ### element {#element}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -48,10 +50,15 @@ new Panel(options, options.el, options.index, options.align, options.flicking)
 
 
 
+
+
+
+
+
 ### index {#index}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -70,10 +77,15 @@ Index of the panel
 
 
 
+
+
+
+
+
 ### position {#position}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -92,10 +104,15 @@ Position of the panel, including [alignPosition](Panel#alignPosition)
 
 
 
+
+
+
+
+
 ### size {#size}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -115,10 +132,15 @@ This is equal to [element](Panel#element)'s `offsetWidth` if [horizontal](Flicki
 
 
 
+
+
+
+
+
 ### sizeIncludingMargin {#sizeIncludingMargin}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -138,10 +160,15 @@ This value includes [element](Panel#element)'s margin left/right if [horizontal]
 
 
 
+
+
+
+
+
 ### height {#height}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -160,10 +187,15 @@ Height of the panel element
 
 
 
+
+
+
+
+
 ### margin {#margin}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -179,13 +211,23 @@ Cached CSS `margin` value of the panel element
 
 
 
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|prev|number|CSS `margin-left` when the [horizontal](Flicking#horizontal) is `true`, and `margin-top` else
+<ko>[horizontal](Flicking#horizontal)이 `true`일 경우 `margin-left`, `false`일 경우 `margin-top`에 해당하는 값</ko>|
+|next|number|CSS `margin-right` when the [horizontal](Flicking#horizontal) is `true`, and `margin-bottom` else
+<ko>[horizontal](Flicking#horizontal)이 `true`일 경우 `margin-right`, `false`일 경우 `margin-bottom`에 해당하는 값</ko>|
+
+
+
+
 
 
 
 ### alignPosition {#alignPosition}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -204,10 +246,15 @@ Align position inside the panel where [Camera](Camera)'s [alignPosition](Camera#
 
 
 
+
+
+
+
+
 ### offset {#offset}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -215,7 +262,12 @@ Align position inside the panel where [Camera](Camera)'s [alignPosition](Camera#
 Panel's position offset which is changed after panel element's order changes if [circular](Flicking#circular) is enabled
 
 **Type**: number
+
 **Default**: 0
+
+
+
+
 
 
 
@@ -229,7 +281,7 @@ Panel's position offset which is changed after panel element's order changes if 
 ### removed {#removed}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -248,10 +300,15 @@ A value indicating whether the panel's [remove](Flicking#remove)d
 
 
 
+
+
+
+
+
 ### range {#range}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -263,6 +320,14 @@ Panel element's range of the bounding box
 
 
 
+
+
+
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|min|number|Bounding box's left([horizontal](Flicking#horizontal): true) / top([horizontal](Flicking#horizontal): false)|
+|max|number|Bounding box's right([horizontal](Flicking#horizontal): true) / bottom([horizontal](Flicking#horizontal): false)|
 
 
 
@@ -280,7 +345,12 @@ Panel element's range of the bounding box
 
 A value indicating where the [alignPosition](Panel#alignPosition) should be located at inside the panel element
 
-**Type**: [Constants.ALIGN](Constants.ALIGN) \| string \| number
+**Type**: [Constants.ALIGN](Constants:ALIGN) \| string \| number
+
+
+
+
+
 
 
 
@@ -306,7 +376,12 @@ Update size of the panel
 
 
 
+
+
 **Returns**: this
+
+
+
 
 
 
@@ -329,12 +404,17 @@ Check whether the given element is inside of this panel's [element](Panel#elemen
 
 
 
+
+
 **Returns**: boolean
 - A Boolean value indicating the element is inside of this panel {@link Panel#element element}<ko>패널의 {@link Panel#element element}내에 해당 엘리먼트 포함 여부</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |element|HTMLElement|no||The HTMLElement to check<ko>확인하고자 하는 HTMLElement</ko>|
+
 
 
 
@@ -354,7 +434,12 @@ Reset internal state and set [removed](Panel#removed) to `true`
 
 
 
+
+
 **Returns**: void
+
+
+
 
 
 
@@ -377,13 +462,18 @@ Check whether the given position is inside of this panel's [range](Panel#range)
 
 
 
+
+
 **Returns**: boolean
 - A Boolean value indicating whether the given position is included in the panel range<ko>해당 좌표가 패널 영역 내에 속해있는지 여부</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |pos|number|no||A position to check<ko>확인하고자 하는 좌표</ko>|
 |includeMargin|boolean|yes|false|Include [margin](margin) to the range<ko>패널 영역에 [margin](margin)값을 포함시킵니다</ko>|
+
 
 
 
@@ -403,14 +493,19 @@ Check whether the given range is fully included in this panel's area
 
 
 
+
+
 **Returns**: boolean
 - A Boolean value indicating whether the given range is fully included in the panel range<ko>해당 범위가 패널 영역 내에 완전히 속해있는지 여부</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |min|number|no||Minimum value of the range to check<ko>확인하고자 하는 최소 범위</ko>|
 |max|number|no||Maximum value of the range to check<ko>확인하고자 하는 최대 범위</ko>|
 |includeMargin|boolean|yes|false|Include [margin](margin) to the range<ko>패널 영역에 [margin](margin)값을 포함시킵니다</ko>|
+
 
 
 
@@ -430,12 +525,17 @@ Move [Camera](Camera) to this panel
 
 
 
+
+
 **Returns**: Promise&lt;void&gt;
 - A Promise which will be resolved after reaching the panel<ko>패널 도달시에 resolve되는 Promise</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |duration|number|yes||Duration of the animation (unit: ms)<ko>애니메이션 진행 시간 (단위: ms)</ko>|
+
 
 
 
@@ -456,8 +556,13 @@ If the [circular](Flicking#circularEnabled) is enabled, this will return the las
 
 
 
+
+
 **Returns**: [Panel](Panel) \| null
 - The previous panel<ko>이전 패널</ko>
+
+
+
 
 
 
@@ -480,8 +585,13 @@ If the [circular](Flicking#circularEnabled) is enabled, this will return the fir
 
 
 
+
+
 **Returns**: [Panel](Panel) \| null
 - The previous panel<ko>다음 패널</ko>
+
+
+
 
 
 
@@ -503,7 +613,11 @@ Increase panel's index by the given value
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
@@ -514,7 +628,8 @@ Increase panel's index by the given value
 
 
 
-<div className="notification is-warning mt-2">⚠️ This function is for <strong>internal</strong> use only.</div>
+
+<div className="notification is-warning my-2">⚠️ This function is for <strong>internal</strong> use only.</div>
 
 ### decreaseIndex {#decreaseIndex}
 <div className="bulma-tags">
@@ -528,7 +643,11 @@ Decrease panel's index by the given value
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
@@ -539,7 +658,8 @@ Decrease panel's index by the given value
 
 
 
-<div className="notification is-warning mt-2">⚠️ This function is for <strong>internal</strong> use only.</div>
+
+<div className="notification is-warning my-2">⚠️ This function is for <strong>internal</strong> use only.</div>
 
 ### increasePosition {#increasePosition}
 <div className="bulma-tags">
@@ -553,7 +673,11 @@ Increase panel's position by the given value
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
@@ -564,7 +688,8 @@ Increase panel's position by the given value
 
 
 
-<div className="notification is-warning mt-2">⚠️ This function is for <strong>internal</strong> use only.</div>
+
+<div className="notification is-warning my-2">⚠️ This function is for <strong>internal</strong> use only.</div>
 
 ### decreasePosition {#decreasePosition}
 <div className="bulma-tags">
@@ -578,7 +703,11 @@ Decrease panel's position by the given value
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
@@ -589,7 +718,8 @@ Decrease panel's position by the given value
 
 
 
-<div className="notification is-warning mt-2">⚠️ This function is for <strong>internal</strong> use only.</div>
+
+<div className="notification is-warning my-2">⚠️ This function is for <strong>internal</strong> use only.</div>
 
 ### increaseOffset {#increaseOffset}
 <div className="bulma-tags">
@@ -603,7 +733,11 @@ Increase panel's offset by the given value
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
@@ -614,7 +748,8 @@ Increase panel's offset by the given value
 
 
 
-<div className="notification is-warning mt-2">⚠️ This function is for <strong>internal</strong> use only.</div>
+
+<div className="notification is-warning my-2">⚠️ This function is for <strong>internal</strong> use only.</div>
 
 ### decreaseOffset {#decreaseOffset}
 <div className="bulma-tags">
@@ -628,7 +763,11 @@ Decrease panel's offset by the given value
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
@@ -639,7 +778,8 @@ Decrease panel's offset by the given value
 
 
 
-<div className="notification is-warning mt-2">⚠️ This function is for <strong>internal</strong> use only.</div>
+
+<div className="notification is-warning my-2">⚠️ This function is for <strong>internal</strong> use only.</div>
 
 ### resetOffset {#resetOffset}
 <div className="bulma-tags">
@@ -653,6 +793,8 @@ Reset panel's offset to 0
 
 
 
+
+
 **Returns**: this
 
 
@@ -662,6 +804,9 @@ Reset panel's offset to 0
 
 
 
-<div className="notification is-warning mt-2">⚠️ This function is for <strong>internal</strong> use only.</div>
+
+
+
+<div className="notification is-warning my-2">⚠️ This function is for <strong>internal</strong> use only.</div>
 
 

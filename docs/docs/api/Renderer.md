@@ -1,6 +1,8 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
+
+
 ```ts
 class Renderer 
 ```
@@ -18,7 +20,7 @@ new Renderer(options, options.align, options.elementManipulator)
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |options|object|yes|{}|An options object<ko>옵션 오브젝트</ko>|
-|options.align|[Constants.ALIGN](Constants.ALIGN) \| string \| number|yes||An [align](Flicking#align) value that will be applied to all panels<ko>전체 패널에 적용될 [align](Flicking#align) 값</ko>|
+|options.align|[Constants.ALIGN](Constants:ALIGN) \| string \| number|yes||An [align](Flicking#align) value that will be applied to all panels<ko>전체 패널에 적용될 [align](Flicking#align) 값</ko>|
 |options.elementManipulator|[OffsetManipulator](OffsetManipulator)|yes||An instance of [OffsetManipulator](OffsetManipulator) that renderer will use<ko>Renderer가 사용할 [OffsetManipulator](OffsetManipulator)의 인스턴스</ko>|
 
 
@@ -27,7 +29,7 @@ new Renderer(options, options.align, options.elementManipulator)
 ### panels {#panels}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -35,6 +37,11 @@ new Renderer(options, options.align, options.elementManipulator)
 Array of panels
 
 **Type**: Array&lt;[Panel](Panel)&gt;
+
+
+
+
+
 
 
 
@@ -50,7 +57,7 @@ Array of panels
 ### panelCount {#panelCount}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -69,10 +76,15 @@ Count of panels
 
 
 
+
+
+
+
+
 ### elementManipulator {#elementManipulator}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -80,6 +92,11 @@ Count of panels
 An instance of the [OffsetManipulator](OffsetManipulator) that Renderer's using
 
 **Type**: [OffsetManipulator](OffsetManipulator)
+
+
+
+
+
 
 
 
@@ -101,7 +118,12 @@ An instance of the [OffsetManipulator](OffsetManipulator) that Renderer's using
 
 A [Panel](Panel)'s [align](Panel#align) value that applied to all panels
 
-**Type**: [Constants.ALIGN](Constants.ALIGN) \| string \| number
+**Type**: [Constants.ALIGN](Constants:ALIGN) \| string \| number
+
+
+
+
+
 
 
 
@@ -127,7 +149,12 @@ Render panel elements inside the camera element
 
 
 
+
+
 **Returns**: this
+
+
+
 
 
 
@@ -150,12 +177,17 @@ Initialize Renderer
 
 
 
+
+
 **Returns**: this
+
+
 
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |flicking|[Flicking](Flicking)|no||An instance of [Flicking](Flicking)<ko>Flicking의 인스턴스</ko>|
+
 
 
 
@@ -175,7 +207,12 @@ Destroy Renderer and return to initial state
 
 
 
+
+
 **Returns**: void
+
+
+
 
 
 
@@ -198,12 +235,17 @@ Return the [Panel](Panel) at the given index. `null` if it doesn't exists.
 
 
 
+
+
 **Returns**: [Panel](Panel) \| null
 - Panel at the given index<ko>주어진 인덱스에 해당하는 패널</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |index|number|no|||
+
 
 
 **See**:
@@ -225,14 +267,19 @@ This will increase index of panels after by the number of panels added
 
 
 
+
+
 **Returns**: Array&lt;[Panel](Panel)&gt;
 - An array of prepended panels<ko>추가된 패널들의 배열</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |index|number|no||Index to insert new panels at<ko>새로 패널들을 추가할 인덱스</ko>|
 |element|Flicking.ElementLike \| Array&lt;Flicking.ElementLike&gt;|no||A new HTMLElement, a outerHTML of element, or an array of both
 <ko>새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열</ko>|
+
 
 
 
@@ -253,13 +300,18 @@ This will decrease index of panels after by the number of panels removed
 
 
 
+
+
 **Returns**: [Panel](Panel)[]
 - An array of removed panels<ko>제거된 패널들의 배열</ko>
+
+
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
 |index|number|no||Index of panel to remove<ko>제거할 패널의 인덱스</ko>|
 |deleteCount|number|yes|1|Number of panels to remove from index<ko>`index` 이후로 제거할 패널의 개수</ko>|
+
 
 
 
@@ -279,7 +331,12 @@ Update all panel sizes
 
 
 
+
+
 **Returns**: this
+
+
+
 
 
 

@@ -1,4 +1,4 @@
-import Identifier from "./identifier";
+import Identifier from "./Identifier";
 
 interface DocumentedClass extends Identifier {
   constructorData?: Identifier;

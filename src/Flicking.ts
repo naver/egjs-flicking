@@ -267,8 +267,8 @@ class Flicking extends Component<FlickingEvents> {
    * Align position of the panels within viewport. You can set different values each for the panel and camera
    * @ko 뷰포트 내에서 패널 정렬방식을 설정하는 옵션. 카메라와 패널 개별로 옵션을 설정할 수도 있습니다
    * @type {Constants.ALIGN | string | number | { panel: string | number, camera: string | number }}
-   * @property {Constants.ALIGN | string | number} panel <ko>개개의 {@link Panel}에 적용할 값</ko>
-   * @property {Constants.ALIGN | string | number} camera <ko>{@link Camera}에 적용할 값</ko>
+   * @property {Constants.ALIGN | string | number} panel The align value for each {@link Panel}s<ko>개개의 {@link Panel}에 적용할 값</ko>
+   * @property {Constants.ALIGN | string | number} camera The align value for {@link Camera}<ko>{@link Camera}에 적용할 값</ko>
    * @default "center"
    * @example
    * ```ts
@@ -755,7 +755,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 주어진 인덱스에 해당하는 패널로 이동합니다
    * @param {number} index The index of the panel to move<ko>이동할 패널의 인덱스</ko>
    * @param {number} [duration={@link Flicking#duration options.duration}] Duration of the animation (unit: ms)<ko>애니메이션 진행 시간 (단위: ms)</ko>
-   * @param {Constants#DIRECTION} [direction=DIRECTION.NONE] Direction to move, only available in the {@link Flicking#circular circular} mode<ko>이동할 방향. {@link Flicking#circular circular} 옵션 활성화시에만 사용 가능합니다</ko>
+   * @param {Constants.DIRECTION} [direction=DIRECTION.NONE] Direction to move, only available in the {@link Flicking#circular circular} mode<ko>이동할 방향. {@link Flicking#circular circular} 옵션 활성화시에만 사용 가능합니다</ko>
    * @async
    * @fires Flicking#moveStart
    * @fires Flicking#move

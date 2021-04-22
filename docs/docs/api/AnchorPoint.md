@@ -1,6 +1,8 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
+
+
 ```ts
 class AnchorPoint 
 ```
@@ -28,7 +30,7 @@ new AnchorPoint(options, options.index, options.position, options.panel)
 ### index {#index}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -47,10 +49,15 @@ Index of AnchorPoint
 
 
 
+
+
+
+
+
 ### position {#position}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -69,10 +76,15 @@ Position of AnchorPoint
 
 
 
+
+
+
+
+
 ### panel {#panel}
 <div className="bulma-tags">
 
-<span className="bulma-tag is-info">readonly</span>
+<span className="bulma-tag is-warning">readonly</span>
 
 
 </div>
@@ -80,6 +92,11 @@ Position of AnchorPoint
 A [Panel](Panel) instance AnchorPoint is referencing to
 
 **Type**: [Panel](Panel)
+
+
+
+
+
 
 
 

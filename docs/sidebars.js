@@ -12,5 +12,6 @@ module.exports = {
         'thank-you'
       ]
     }
-  ]
+  ],
+  ...require("./sidebars-api.js")
 };
