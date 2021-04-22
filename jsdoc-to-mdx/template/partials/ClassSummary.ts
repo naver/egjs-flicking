@@ -1,8 +1,7 @@
 import DocumentedClass from "../../types/DocumentedClass";
-import Identifier from "../../types/Identifier";
 import { hashLink } from "../../utils";
 
-export default (classData: DocumentedClass, dataMap: Map<string, Identifier>) => {
+export default (classData: DocumentedClass) => {
   const entries: string[] = [];
   const values: string[][] = [];
 

@@ -26,7 +26,9 @@ interface Identifier {
   readonly?: boolean;
   defaultvalue?: string;
   overrides?: string;
-  see?: string[];
+  see?: Array<{
+    description: string;
+  }>;
   virtual?: boolean;
   async?: boolean;
   params?: Array<{

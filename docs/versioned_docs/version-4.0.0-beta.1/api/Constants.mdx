@@ -1,0 +1,184 @@
+import Translate, {translate} from '@docusaurus/Translate';
+
+List of constants that flicking exports
+
+## Members
+### ERROR_CODE {#ERROR_CODE}
+
+<div className="bulma-tags">
+<span className="bulma-tag is-info">static</span>
+
+
+
+</div>
+
+Error codes of [FlickingError](FlickingError). Below are the conditions where each error code occurs.
+
+**Type**: object
+
+
+
+
+
+
+
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|WRONG_TYPE|number|Parameter type is wrong|
+|ELEMENT_NOT_FOUND|number|Element is not found inside page with the given CSS selector|
+|VAL_MUST_NOT_NULL|number|Expected non-null value, but given `null` or `undefined`|
+|NOT_ATTACHED_TO_FLICKING|number|When Flicking's component is not initialized (i.e. [Flicking#init](Flicking#init) is not called)|
+|WRONG_OPTION|number|One of the options is wrong|
+|INDEX_OUT_OF_RANGE|number|When the given index is out of possible range|
+|POSITION_NOT_REACHABLE|number|When [Control#moveToPosition](Control#moveToPosition)'s position parameter is out of possible range.|
+|TRANSFORM_NOT_SUPPORTED|number|CSS `transform` property is not available(<=IE8)|
+|STOP_CALLED_BY_USER|number|When the event's `stop()` is called by user.|
+|ANIMATION_INTERRUPTED|number|When the animation is interrupted by user.|
+|ANIMATION_ALREADY_PLAYING|number|When the animation is already playing.|
+|NOT_ALLOWED_IN_FRAMEWORK|number|When the non-allowed method is called from frameworks (React, Angular, Vue...)|
+
+
+
+
+
+
+
+### EVENTS {#EVENTS}
+
+<div className="bulma-tags">
+<span className="bulma-tag is-info">static</span>
+
+
+
+</div>
+
+Event type object with event name strings of [Flicking](Flicking)
+
+**Type**: object
+
+
+
+
+
+
+
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|HOLD_START|"holdStart"|holdStart event|
+|HOLD_END|"holdEnd"|holdEnd event|
+|MOVE_START|"moveStart"|moveStart event|
+|MOVE|"move"|move event|
+|MOVE_END|"moveEnd"|moveEnd event|
+|WILL_CHANGE|"willChange"|willChange event|
+|CHANGED|"changed"|changed event|
+|WILL_RESTORE|"willRestore"|willRestore event|
+|RESTORED|"restored"|restored event|
+|SELECT|"select"|select event|
+|NEED_PANEL|"needPanel"|needPanel event|
+
+
+
+```ts
+import { EVENTS } from "@egjs/flicking";
+EVENTS.MOVE_START; // "moveStart"
+```
+
+
+
+### ALIGN {#ALIGN}
+
+<div className="bulma-tags">
+<span className="bulma-tag is-info">static</span>
+
+
+
+</div>
+
+An object with all possible predefined literal string for the [align](Flicking#align) option
+
+**Type**: object
+
+
+
+
+
+
+
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|PREV|"prev"|left/top align|
+|CENTER|"center"|center align|
+|NEXT|"next"|right/bottom align|
+
+
+
+
+
+
+
+### DIRECTION {#DIRECTION}
+
+<div className="bulma-tags">
+<span className="bulma-tag is-info">static</span>
+
+
+
+</div>
+
+An object of directions
+
+**Type**: object
+
+
+
+
+
+
+
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|PREV|"PREV"|"left" when [horizontal](Flicking#horizontal) is true, and "top" when [horizontal](Flicking#horizontal) is false|
+|NEXT|"NEXT"|"right" when [horizontal](Flicking#horizontal) is true, and "bottom" when [horizontal](Flicking#horizontal) is false|
+|NONE|null|This value usually means it's the same position|
+
+
+
+
+
+
+
+### MOVE_TYPE {#MOVE_TYPE}
+
+<div className="bulma-tags">
+<span className="bulma-tag is-info">static</span>
+
+
+
+</div>
+
+An object with all possible [moveType](Flicking#moveType)s
+
+**Type**: object
+
+
+
+
+
+
+
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|SNAP|"snap"|Flicking's [moveType](Flicking#moveType) that enables [SnapControl](SnapControl) as a Flicking's [control](Flicking#control)|
+|FREE_SCROLL|"freeScroll"|Flicking's [moveType](Flicking#moveType) that enables [FreeControl](FreeControl) as a Flicking's [control](Flicking#control)|
+
+
+
+
+
+
+

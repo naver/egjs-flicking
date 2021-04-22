@@ -1,0 +1,247 @@
+import Translate, {translate} from '@docusaurus/Translate';
+
+<div className="notification is-warning my-2">⚠️ This class is for <strong>internal</strong> use only.</div>
+
+```ts
+class AnimatingState extends State
+```
+사용자 입력이나 메소드 호출에 의해 Flicking의 애니메이션이 동작중인 상태
+
+<div className="container">
+    <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
+    <div className="row"><div className="col col--6"><a href="#holding">holding</a><br/><a href="#animating">animating</a></div><div className="col col--6"><a href="#onHold">onHold</a><br/><a href="#onChange">onChange</a><br/><a href="#onRelease">onRelease</a><br/><a href="#onAnimationEnd">onAnimationEnd</a><br/><a href="#onFinish">onFinish</a></div></div>
+  </div>
+
+
+
+## Properties
+
+### holding {#holding}
+
+<div className="bulma-tags">
+
+<span className="bulma-tag is-warning">readonly</span>
+
+
+</div>
+
+현재 사용자가 클릭/터치중인지 여부
+
+**Type**: false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### animating {#animating}
+
+<div className="bulma-tags">
+
+<span className="bulma-tag is-warning">readonly</span>
+
+
+</div>
+
+현재 애니메이션 동작 여부
+
+**Type**: true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Methods
+
+### onHold {#onHold}
+
+<div className="bulma-tags">
+
+
+<span className="bulma-tag is-danger">inherited</span>
+
+</div>
+
+Axes의 [hold](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-hold) 이벤트 핸들러
+
+
+
+
+
+**Returns**: void
+
+
+
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|ctx|object|yes||이벤트 콘텍스트|
+|ctx.flicking|[Flicking](Flicking)|yes||Flicking 인스턴스|
+|ctx.axesEvent|object|yes||Axes의 [hold](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-hold) 이벤트|
+|ctx.transitTo|function|yes||다른 상태로 변경하기 위한 함수|
+
+
+
+
+
+
+
+
+### onChange {#onChange}
+
+<div className="bulma-tags">
+
+
+<span className="bulma-tag is-danger">inherited</span>
+
+</div>
+
+Axes의 [change](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-change) 이벤트 핸들러
+
+
+
+
+
+**Returns**: void
+
+
+
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|ctx|object|yes||이벤트 콘텍스트|
+|ctx.flicking|[Flicking](Flicking)|yes||Flicking 인스턴스|
+|ctx.axesEvent|object|yes||Axes의 [change](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-change) 이벤트|
+|ctx.transitTo|function|yes||다른 상태로 변경하기 위한 함수|
+
+
+
+
+
+
+
+
+### onRelease {#onRelease}
+
+<div className="bulma-tags">
+
+
+<span className="bulma-tag is-danger">inherited</span>
+
+</div>
+
+Axes의 [release](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-release) 이벤트 핸들러
+
+
+
+
+
+**Returns**: void
+
+
+
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|ctx|object|yes||이벤트 콘텍스트|
+|ctx.flicking|[Flicking](Flicking)|yes||Flicking 인스턴스|
+|ctx.axesEvent|object|yes||Axes의 [release](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-release) 이벤트|
+|ctx.transitTo|function|yes||다른 상태로 변경하기 위한 함수|
+
+
+
+
+
+
+
+
+### onAnimationEnd {#onAnimationEnd}
+
+<div className="bulma-tags">
+
+
+<span className="bulma-tag is-danger">inherited</span>
+
+</div>
+
+Axes의 [animationEnd](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-animationEnd) 이벤트 핸들러
+
+
+
+
+
+**Returns**: void
+
+
+
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|ctx|object|yes||이벤트 콘텍스트|
+|ctx.flicking|[Flicking](Flicking)|yes||Flicking 인스턴스|
+|ctx.axesEvent|object|yes||Axes의 [animationEnd](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-animationEnd) 이벤트|
+|ctx.transitTo|function|yes||다른 상태로 변경하기 위한 함수|
+
+
+
+
+
+
+
+
+### onFinish {#onFinish}
+
+<div className="bulma-tags">
+
+
+<span className="bulma-tag is-danger">inherited</span>
+
+</div>
+
+Axes의 [finish](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-finish) 이벤트 핸들러
+
+
+
+
+
+**Returns**: void
+
+
+
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|ctx|object|yes||이벤트 콘텍스트|
+|ctx.flicking|[Flicking](Flicking)|yes||Flicking 인스턴스|
+|ctx.axesEvent|object|yes||Axes의 [finish](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-finish) 이벤트|
+|ctx.transitTo|function|yes||다른 상태로 변경하기 위한 함수|
+
+
+
+
+
+
+
+
+

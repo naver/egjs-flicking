@@ -85,15 +85,6 @@ export interface FlickingOptions {
  */
 class Flicking extends Component<FlickingEvents> {
   /**
-   * A Static test methods
-   * @ko 테스트용 스태틱 메소드
-   * @returns {boolean} A boolean<ko>불린 값</ko>
-   */
-  public static test() {
-    return true;
-  }
-
-  /**
    * Version info string
    * @ko 버전정보 문자열
    * @type {string}

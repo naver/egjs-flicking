@@ -1,14 +1,17 @@
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
+
+const isDev = process.env.NODE_ENV === 'development';
+
 module.exports = {
   title: 'Flicking',
   tagline: "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
-  url: 'https://your-docusaurus-test-site.com',
-  baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  url: 'https://naver.github.io',
+  baseUrl: isDev ? '/' : 'egjs-flicking/',
+  projectName: 'naver.github.io',
+  organizationName: 'naver',
   themeConfig: {
     navbar: {
       title: 'Flicking',
@@ -29,7 +32,20 @@ module.exports = {
           label: "API",
           position: "left"
         },
-        {to: 'blog', label: 'Blog', position: 'left'},
+        {
+          to: 'blog',
+          label: 'Blog',
+          position: 'left'
+        },
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
+          dropdownActiveClassDisabled: true
+        },
+        {
+          type: 'localeDropdown',
+          position: 'right'
+        },
         {
           href: 'https://github.com/facebook/docusaurus',
           label: 'GitHub',
@@ -59,6 +75,11 @@ module.exports = {
           ]
         }
       ],
+      logo: {
+        alt: 'Naver Open Source Logo',
+        src: 'img/naver_opensource.svg',
+        href: 'https://naver.github.io/'
+      },
       copyright: `Copyright © ${new Date().getFullYear()} NAVER, Inc. Built with Docusaurus.`
     }
   },
@@ -70,7 +91,8 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           editUrl: "https://github.com/naver/egjs-flicking/edit/master/docs/",
-          remarkPlugins: [require("remark-breaks")]
+          remarkPlugins: [require("remark-breaks")],
+          lastVersion: isDev ? 'current' : undefined
         },
         blog: {
           showReadingTime: true,
@@ -85,5 +107,9 @@ module.exports = {
         }
       }
     ]
-  ]
+  ],
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en", "ko"]
+  }
 };

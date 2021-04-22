@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -10,6 +11,8 @@ import path from "path";
 import * as fs from "fs-extra";
 import jsdocParse from "jsdoc-parse";
 
+import packageInfo from "../package.json";
+
 import Identifier from "./types/Identifier";
 import DocumentedClass from "./types/DocumentedClass";
 import DocumentedInterface from "./types/DocumentedInterface";
@@ -19,12 +22,19 @@ import interfaceTemplate from "./template/Interface";
 import namespaceTemplate from "./template/Namespace";
 import constantTemplate from "./template/Constant";
 import sidebarTemplate from "./template/Sidebar";
+import { parseLocales } from "./utils";
 
 const jsdoc = spawn("jsdoc", ["-X", "-c", "jsdoc.json"]);
 const tmp = fs.createWriteStream("/tmp/doc-ast.json");
 
-const docsDir = path.resolve(process.cwd(), "./docs");
+const docsRoot = path.resolve(process.cwd(), "./docs");
+const docsDir = path.resolve(process.cwd(), "./docs/docs");
 const apiDir = path.resolve(process.cwd(), "./docs/docs/api");
+const versionDocsDir = path.resolve(process.cwd(), `./docs/versioned_docs/version-${packageInfo.version}`);
+const versionSidebarDir = path.resolve(process.cwd(), "./docs/versioned_sidebars");
+const localesDir = (locale: string) => path.resolve(process.cwd(), `./docs/i18n/${locale}/docusaurus-plugin-content-docs/current/api`);
+
+const locales = ["ko"];
 
 jsdoc.stdout.pipe(tmp);
 jsdoc.stderr.pipe(process.stdout);
@@ -45,8 +55,28 @@ jsdoc.on("close", async (code) => {
 
     fs.removeSync(apiDir);
     fs.ensureDirSync(apiDir);
+    locales.forEach(locale => {
+      fs.ensureDirSync(localesDir(locale));
+    });
+
     templateData.forEach(identifier => {
       dataMap.set(identifier.longname, identifier);
+
+      if (identifier.see) {
+        identifier.see = (identifier.see as unknown as string[]).map(val => ({ description: val }));
+      }
+
+      Object.keys(identifier).forEach(key => {
+        if (typeof identifier[key] === "object" && "description" in identifier[key]) {
+          locales.forEach(locale => parseLocales(identifier[key], locale));
+        } else if (Array.isArray(identifier[key])) {
+          identifier[key].forEach(val => {
+            if (typeof val === "object" && "description" in val) {
+              locales.forEach(locale => parseLocales(val, locale));
+            }
+          });
+        }
+      });
     });
 
     templateData
@@ -116,36 +146,68 @@ jsdoc.on("close", async (code) => {
       }
     });
 
-    Object.keys(classes).forEach(async className => {
+    Object.keys(classes).forEach(async name => {
       await fs.writeFile(
-        path.resolve(apiDir, `${className}.md`),
-        classTemplate(classes[className], dataMap)
+        path.resolve(apiDir, `${name}.mdx`),
+        classTemplate(classes[name], dataMap)
       );
+
+      locales.forEach(async locale => {
+        await fs.writeFile(
+          path.resolve(localesDir(locale), `${name}.mdx`),
+          classTemplate(classes[name], dataMap, locale)
+        );
+      });
     });
 
-    Object.keys(interfaces).forEach(async interfaceName => {
+    Object.keys(interfaces).forEach(async name => {
       await fs.writeFile(
-        path.resolve(apiDir, `${interfaceName}.md`),
-        interfaceTemplate(interfaces[interfaceName], dataMap)
+        path.resolve(apiDir, `${name}.mdx`),
+        interfaceTemplate(interfaces[name], dataMap)
       );
+
+      locales.forEach(async locale => {
+        await fs.writeFile(
+          path.resolve(localesDir(locale), `${name}.mdx`),
+          interfaceTemplate(interfaces[name], dataMap, locale)
+        );
+      });
     });
 
-    Object.keys(namespaces).forEach(async nameSpaceName => {
+    Object.keys(namespaces).forEach(async name => {
       await fs.writeFile(
-        path.resolve(apiDir, `${nameSpaceName}.md`),
-        namespaceTemplate(namespaces[nameSpaceName], dataMap)
+        path.resolve(apiDir, `${name}.mdx`),
+        namespaceTemplate(namespaces[name], dataMap)
       );
+
+      locales.forEach(async locale => {
+        await fs.writeFile(
+          path.resolve(localesDir(locale), `${name}.mdx`),
+          namespaceTemplate(namespaces[name], dataMap, locale)
+        );
+      });
     });
 
-    Object.keys(constants).forEach(async constantName => {
+    Object.keys(constants).forEach(async name => {
       await fs.writeFile(
-        path.resolve(apiDir, `${constantName}.md`),
-        constantTemplate(constants[constantName], dataMap)
+        path.resolve(apiDir, `${name}.mdx`),
+        constantTemplate(constants[name], dataMap)
       );
+
+      locales.forEach(async locale => {
+        await fs.writeFile(
+          path.resolve(localesDir(locale), `${name}.mdx`),
+          constantTemplate(constants[name], dataMap, locale)
+        );
+      });
     });
+
+    // Copy all docs to versions folder
+    await fs.ensureDir(versionDocsDir);
+    await fs.copy(docsDir, versionDocsDir, { overwrite: true });
 
     await fs.writeFile(
-      path.resolve(docsDir, "sidebars-api.js"),
+      path.resolve(docsRoot, "sidebars-api.js"),
       sidebarTemplate({
         classes: Object.values(classes),
         interfaces: Object.values(interfaces),
@@ -153,5 +215,25 @@ jsdoc.on("close", async (code) => {
         constants: Object.values(constants)
       })
     );
+
+    await fs.ensureDir(versionSidebarDir);
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const sidebarCategories = require(path.resolve(docsRoot, "sidebars.js"));
+    Object.keys(sidebarCategories).forEach(category => {
+      sidebarCategories[category].forEach(subcategory => {
+        subcategory.items = subcategory.items.map(item => `version-${packageInfo.version}/${item}`);
+      });
+    });
+
+    await fs.writeJSON(path.resolve(versionSidebarDir, `version-${packageInfo.version}-sidebars.json`), sidebarCategories);
+
+    // Add current version to available versions
+    const versions: string[] = fs.existsSync(path.resolve(docsRoot, "versions.json"))
+      ? await fs.readJSON(path.resolve(docsRoot, "versions.json"))
+      : [];
+    if (versions.findIndex(version => version === packageInfo.version) < 0) {
+      versions.push(packageInfo.version);
+      await fs.writeJSON(path.resolve(docsRoot, "versions.json"), versions, { spaces: 2 });
+    }
   }
 });

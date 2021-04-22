@@ -1,3 +1,1 @@
-export default () => `import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-`;
+export default () => "import Translate, {translate} from '@docusaurus/Translate';";

@@ -1,8 +1,11 @@
 import Identifier from "../types/Identifier";
-import { inlineLink } from "../utils";
+import { getDescription, inlineLink, showProperties } from "../utils";
 
 import Import from "./partials/Import";
 
-export default (constantData: Identifier, dataMap: Map<string, Identifier>): string => `${Import()}
-${inlineLink(constantData.description)}
+export default (constantData: Identifier, dataMap: Map<string, Identifier>, locale: string = "en"): string => `${Import()}
+
+${constantData.longname, inlineLink(getDescription(constantData, locale))}
+
+${showProperties(constantData.properties, dataMap, locale)}
 `;

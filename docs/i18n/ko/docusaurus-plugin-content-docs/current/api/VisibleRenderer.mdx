@@ -1,0 +1,350 @@
+import Translate, {translate} from '@docusaurus/Translate';
+
+
+
+```ts
+class VisibleRenderer extends RawRenderer
+```
+현재 카메라의 보이는 패널들([visiblePanels](Camera#visiblePanels))만을 카메라 엘리먼트 내에 렌더링하는 종류의 [Renderer](Renderer)
+
+<div className="container">
+    <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
+    <div className="row"><div className="col col--6"><a href="#panels">panels</a><br/><a href="#panelCount">panelCount</a><br/><a href="#elementManipulator">elementManipulator</a><br/><a href="#align">align</a></div><div className="col col--6"><a href="#render">render</a><br/><a href="#init">init</a><br/><a href="#destroy">destroy</a><br/><a href="#getPanel">getPanel</a><br/><a href="#insert">insert</a><br/><a href="#remove">remove</a><br/><a href="#updatePanelSize">updatePanelSize</a></div></div>
+  </div>
+
+
+
+## Properties
+
+### panels {#panels}
+
+<div className="bulma-tags">
+
+<span className="bulma-tag is-warning">readonly</span>
+<span className="bulma-tag is-danger">inherited</span>
+
+</div>
+
+전체 패널들의 배열
+
+**Type**: Array&lt;[Panel](Panel)&gt;
+
+
+
+
+
+
+
+
+
+
+
+**See**:
+- [Panel](Panel)
+
+
+
+
+### panelCount {#panelCount}
+
+<div className="bulma-tags">
+
+<span className="bulma-tag is-warning">readonly</span>
+<span className="bulma-tag is-danger">inherited</span>
+
+</div>
+
+전체 패널의 개수
+
+**Type**: number
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### elementManipulator {#elementManipulator}
+
+<div className="bulma-tags">
+
+<span className="bulma-tag is-warning">readonly</span>
+<span className="bulma-tag is-danger">inherited</span>
+
+</div>
+
+Renderer가 현재 사용중인 [OffsetManipulator](OffsetManipulator)의 인스턴스
+
+**Type**: [OffsetManipulator](OffsetManipulator)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### align {#align}
+
+<div className="bulma-tags">
+
+
+<span className="bulma-tag is-danger">inherited</span>
+
+</div>
+
+[Panel](Panel)에 공통적으로 적용할 [align](Panel#align) 값
+
+**Type**: [Constants.ALIGN](Constants:ALIGN) \| string \| number
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Methods
+
+### render {#render}
+
+<div className="bulma-tags">
+
+
+
+
+</div>
+
+보이는 패널 엘리먼트들을 카메라 엘리먼트 내부에 렌더링합니다
+
+
+
+
+
+**Returns**: this
+
+
+
+
+
+
+
+
+
+
+
+
+
+### init {#init}
+
+<div className="bulma-tags">
+
+
+<span className="bulma-tag is-danger">inherited</span>
+
+</div>
+
+Renderer를 초기화합니다
+
+
+
+
+
+**Returns**: this
+
+
+
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|flicking|[Flicking](Flicking)|no||Flicking의 인스턴스|
+
+
+
+
+
+
+
+
+### destroy {#destroy}
+
+<div className="bulma-tags">
+
+
+<span className="bulma-tag is-danger">inherited</span>
+
+</div>
+
+Renderer를 초기 상태로 되돌립니다
+
+
+
+
+
+**Returns**: void
+
+
+
+
+
+
+
+
+
+
+
+
+
+### getPanel {#getPanel}
+
+<div className="bulma-tags">
+
+
+<span className="bulma-tag is-danger">inherited</span>
+
+</div>
+
+주어진 인덱스에 해당하는 [Panel](Panel)을 반환합니다. 주어진 인덱스에 해당하는 패널이 존재하지 않을 경우 `null`을 반환합니다.
+
+
+
+
+
+**Returns**: [Panel](Panel) \| null
+- 주어진 인덱스에 해당하는 패널
+
+
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|index|number|no|||
+
+
+
+**See**:
+- [Panel](Panel)
+
+
+
+
+### insert {#insert}
+
+<div className="bulma-tags">
+
+
+<span className="bulma-tag is-danger">inherited</span>
+
+</div>
+
+주어진 인덱스에 새로운 패널들을 추가합니다
+해당 인덱스보다 같거나 큰 인덱스를 가진 기존 패널들은 추가한 패널의 개수만큼 인덱스가 증가합니다.
+
+
+
+
+
+**Returns**: Array&lt;[Panel](Panel)&gt;
+- 추가된 패널들의 배열
+
+
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|index|number|no||새로 패널들을 추가할 인덱스|
+|element|Flicking.ElementLike \| Array&lt;Flicking.ElementLike&gt;|no||새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열|
+
+
+
+
+
+
+
+
+### remove {#remove}
+
+<div className="bulma-tags">
+
+
+<span className="bulma-tag is-danger">inherited</span>
+
+</div>
+
+주어진 인덱스의 패널을 제거합니다
+해당 인덱스보다 큰 인덱스를 가진 기존 패널들은 제거한 패널의 개수만큼 인덱스가 감소합니다
+
+
+
+
+
+**Returns**: [Panel](Panel)[]
+- 제거된 패널들의 배열
+
+
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|index|number|no||제거할 패널의 인덱스|
+|deleteCount|number|yes|1|`index` 이후로 제거할 패널의 개수|
+
+
+
+
+
+
+
+
+### updatePanelSize {#updatePanelSize}
+
+<div className="bulma-tags">
+
+
+<span className="bulma-tag is-danger">inherited</span>
+
+</div>
+
+모든 패널의 크기를 업데이트합니다
+
+
+
+
+
+**Returns**: this
+
+
+
+
+
+
+
+
+
+
+
+
+
+

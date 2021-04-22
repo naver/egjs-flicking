@@ -9,6 +9,12 @@ export const isInternal = (data: Identifier) => data.customTags && data.customTa
 export const isInherited = (data: Identifier) => !!data.inherited && data.inherits;
 export const isAsync = (data: Identifier) => !!data.async;
 
+export const getDescription = (data: { description?: string; [key: string]: any }, locale: string) => data.description
+  ? data[locale]
+    ? data[locale] as string
+    : data.description
+  : "";
+
 export const parseTypescriptName = (name: string) => {
   const matched = /^\$ts:(.+)(?:<file>(?:.+)<\/file>)$/.exec(name);
 
@@ -136,10 +142,24 @@ export const inlineLink = (text?: string) => {
   return text;
 };
 
+// Add locales to object if the object description has locales in it
+export const parseLocales = (obj: { description: string }, locale: string) => {
+  const localeRegex = new RegExp(`<${locale}>(.+)<\/${locale}>`, "s");
+  const result = localeRegex.exec(obj.description);
+
+  if (result) {
+    obj.description = obj.description.replace(localeRegex, "").trim();
+    obj[locale] = result[1];
+  }
+};
+
 export const hashLink = (name: string, id: string) => `<a href="#${id}">${name}</a>`;
 
-export const showExtends = (classData: DocumentedClass) => classData.augments
-  ? `extends ${classData.augments.map(name => parseTypescriptName(name)).join(", ")}`
+export const showExtends = (classData: DocumentedClass) => classData.augments && classData.augments.length > 0
+  ? ` extends ${classData.augments.map(name => parseTypescriptName(name)).join(", ")}`
+  : "";
+export const showImplements = (data: Identifier) => data.implements && data.implements.length > 0
+  ? ` implements ${data.implements.map(name => parseTypescriptName(name)).join(", ")}`
   : "";
 
 export const showTags = (data: Identifier) => `<div className="bulma-tags">
@@ -157,34 +177,34 @@ export const showDefault = (defaultVal: Identifier["defaultvalue"], dataMap: Map
   ? `**Default**: ${parseType({ names: [defaultVal] }, dataMap)}`
   : "";
 
-export const showReturn = (returns: Identifier["returns"], dataMap: Map<string, Identifier>) => returns && returns.length > 0
+export const showReturn = (returns: Identifier["returns"], dataMap: Map<string, Identifier>, locale: string) => returns && returns.length > 0
   ? `**Returns**: ${returns.filter(val => !!val.type).map(({ type }) => parseType(type!, dataMap))}
-${returns.map(val => val.description ? `- ${val.description}` : "").join("\n")}`
+${returns.map(val => val.description ? `- ${getDescription(val, locale)}` : "").join("\n")}`
   : "";
 
 export const showEmit = (emits: Identifier["fires"], dataMap: Map<string, Identifier>) => emits && emits.length > 0
   ? `**Emits**: ${emits.map(emit => parseType({ names: [emit] }, dataMap)).join(", ")}`
   : "";
 
-export const showParameters = (params: Identifier["params"], dataMap: Map<string, Identifier>) => params && params.length > 0
+export const showParameters = (params: Identifier["params"], dataMap: Map<string, Identifier>, locale: string) => params && params.length > 0
   ? `|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-${params.map(param => `|${param.name}|${parseType(param.type, dataMap)}|${param.optional ? "yes" : "no"}|${inlineLink(param.defaultvalue)}|${inlineLink(param.description)}|`).join("\n")}`
+${params.map(param => `|${param.name}|${parseType(param.type, dataMap)}|${param.optional ? "yes" : "no"}|${inlineLink(param.defaultvalue)}|${inlineLink(getDescription(param, locale))}|`).join("\n")}`
   : "";
 
-export const showProperties = (properties: Identifier["properties"], dataMap: Map<string, Identifier>) => properties && properties.length > 0
+export const showProperties = (properties: Identifier["properties"], dataMap: Map<string, Identifier>, locale: string) => properties && properties.length > 0
   ? `|PROPERTY|TYPE|DESCRIPTION|
 |:---:|:---:|:---:|
-${properties.map(param => `|${param.name}|${parseType(param.type, dataMap)}|${inlineLink(param.description)}|`).join("\n")}`
+${properties.map(param => `|${param.name}|${parseType(param.type, dataMap)}|${inlineLink(getDescription(param, locale))}|`).join("\n")}`
   : "";
 
-export const showThrows = (throws: Identifier["exceptions"], dataMap: Map<string, Identifier>) => throws && throws.length > 0
-  ? `${throws.map(exception => `**Throws**: ${parseType(exception.type, dataMap)}\n\n${inlineLink(exception.description)}`).join("\n")}`
+export const showThrows = (throws: Identifier["exceptions"], dataMap: Map<string, Identifier>, locale: string) => throws && throws.length > 0
+  ? `${throws.map(exception => `**Throws**: ${parseType(exception.type, dataMap)}\n\n${inlineLink(getDescription(exception, locale))}`).join("\n")}`
   : "";
 
-export const showSee = (see: Identifier["see"], dataMap: Map<string, Identifier>) => see
+export const showSee = (see: Identifier["see"], dataMap: Map<string, Identifier>, locale: string) => see
   ? `**See**:
-${see.map(link => parseType({ names: [link] }, dataMap)).map(link => `- ${inlineLink(link)}`).join("\n")}`
+${see.map(val => parseType({ names: [getDescription(val, locale)] }, dataMap)).map(link => `- ${inlineLink(link)}`).join("\n")}`
   : "";
 
 export const showExample = (data: Identifier, lang = "ts") => data.examples
