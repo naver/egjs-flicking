@@ -137,12 +137,17 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       }
     }
 
-    const viewportClassName = attributes.className
-      ? `${attributes.className} flicking-viewport`
-      : "flicking-viewport";
+    const viewportClasses: string[] = ["flicking-viewport"];
+
+    if (!this._nativeFlicking.horizontal) {
+      viewportClasses.push("vertical")
+    }
+    if (attributes.className) {
+      viewportClasses.push(attributes.className);
+    }
 
     return (
-      <Viewport {...attributes} className={viewportClassName} ref={(e?: HTMLElement) => {
+      <Viewport {...attributes} className={viewportClasses.join(" ")} ref={(e?: HTMLElement) => {
         e && (this._viewportElement = e);
       }}>
         <Camera className="flicking-camera">

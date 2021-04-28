@@ -1,5 +1,6 @@
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 
+const packageInfo = require("../package.json");
 const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = {
@@ -12,6 +13,10 @@ module.exports = {
   baseUrl: isDev ? '/' : 'egjs-flicking/',
   projectName: 'naver.github.io',
   organizationName: 'naver',
+  scripts: [
+    "/js/flicking.pkgd.js"
+  ],
+  themes: ['@docusaurus/theme-live-codeblock'],
   themeConfig: {
     navbar: {
       title: 'Flicking',
@@ -25,6 +30,12 @@ module.exports = {
           docId: 'introduction',
           label: 'Docs',
           position: 'left'
+        },
+        {
+          type: "doc",
+          docId: "Options",
+          label: "Options",
+          position: "left"
         },
         {
           type: "doc",
@@ -92,7 +103,12 @@ module.exports = {
           // Please change this to your repo.
           editUrl: "https://github.com/naver/egjs-flicking/edit/master/docs/",
           remarkPlugins: [require("remark-breaks")],
-          lastVersion: isDev ? 'current' : undefined
+          lastVersion: isDev ? 'current' : undefined,
+          versions: {
+            current: {
+              label: `Latest(${packageInfo.version})`
+            }
+          }
         },
         blog: {
           showReadingTime: true,

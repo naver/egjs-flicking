@@ -179,7 +179,7 @@ export const showDefault = (defaultVal: Identifier["defaultvalue"], dataMap: Map
 
 export const showReturn = (returns: Identifier["returns"], dataMap: Map<string, Identifier>, locale: string) => returns && returns.length > 0
   ? `**Returns**: ${returns.filter(val => !!val.type).map(({ type }) => parseType(type!, dataMap))}
-${returns.map(val => val.description ? `- ${getDescription(val, locale)}` : "").join("\n")}`
+${returns.map(val => val.description ? `- ${inlineLink(getDescription(val, locale))}` : "").join("\n")}`
   : "";
 
 export const showEmit = (emits: Identifier["fires"], dataMap: Map<string, Identifier>) => emits && emits.length > 0

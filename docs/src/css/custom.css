@@ -14,6 +14,8 @@
   --ifm-color-primary-light: rgb(70, 203, 174);
   --ifm-color-primary-lighter: rgb(102, 212, 189);
   --ifm-color-primary-lightest: rgb(146, 224, 208);
+  --ifm-color-info: #3298dc;
+  --ifm-color-warnb: #3298dc;
   --ifm-code-font-size: 95%;
 }
 
@@ -22,4 +24,31 @@
   display: block;
   margin: 0 calc(-1 * var(--ifm-pre-padding));
   padding: 0 var(--ifm-pre-padding);
+}
+
+.codesandbox-playground {
+  width:100%;
+  height:500px;
+  border:0;
+  border-radius: 4px;
+  overflow:hidden;
+}
+
+.flicking-viewport {
+  transition: height 500ms;
+}
+
+.flicking-panel {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flicking-panel.high {
+  height: 300px;
+}
+.flicking-panel.higher {
+  height: 400px;
 }
