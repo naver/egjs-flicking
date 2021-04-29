@@ -2,6 +2,7 @@ import Flicking from "../../packages/react-flicking/dist/flicking.esm.js";
 import CFCTabs from "../src/component/CFCTabs"
 import Columns from "../src/component/Columns";
 import ColumnItem from "../src/component/ColumnItem";
+import AutoInit from "../src/demo/AutoInit";
 
 ## align
 Align position of the panels within viewport.
@@ -821,5 +822,121 @@ This will set [renderer](api/Flicking#renderer)'s type to [VisibleRenderer](api/
 </Columns>
 
 ## autoInit
+Call [init()](api/Flicking#init) automatically when creating Flicking's instance.
+
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  autoInit: true
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking autoInit={true}>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+    </Flicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  autoInit: false
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <AutoInit />
+  </ColumnItem>
+</Columns>
+
+## autoResize
 Attach Flicking's [resize](api/Flicking#resize) method to window's resize event.
 Flicking will automatically call [resize](api/Flicking#resize) window size and orientation change.
+
+Change window size or change orientation(on mobile) to see its effect.
+
+<Columns>
+  <ColumnItem is={12}>
+
+  ```js
+  autoResize: true
+  ```
+
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={12}>
+    <Flicking autoResize={true}>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+    </Flicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={12}>
+
+  ```js
+  autoResize: false
+  ```
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={12}>
+    <Flicking autoResize={false}>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+    </Flicking>
+  </ColumnItem>
+</Columns>
+
+## useOrderManipulator
+Use [OrderManipulator](api/OrderManipulator) for the element order managing in [Renderer](api/Renderer).
+Instead of inserting/removing element to change order, this will use CSS [order](https://developer.mozilla.org/en-US/docs/Web/CSS/order).
+⚠️ Enabling this option will decrease browser coverage to IE11+
+
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  useOrderManipulator: false
+  circular: true
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking useOrderManipulator={false} circular={true}>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+    </Flicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  useOrderManipulator: true
+  circular: true
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking useOrderManipulator={true} circular={true}>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
+      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+    </Flicking>
+  </ColumnItem>
+</Columns>

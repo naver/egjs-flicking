@@ -27,7 +27,7 @@ module.exports = {
       items: [
         {
           type: 'doc',
-          docId: 'introduction',
+          docId: 'installation',
           label: 'Docs',
           position: 'left'
         },
@@ -42,11 +42,6 @@ module.exports = {
           docId: "api/Flicking",
           label: "API",
           position: "left"
-        },
-        {
-          to: 'blog',
-          label: 'Blog',
-          position: 'left'
         },
         {
           type: 'docsVersionDropdown',

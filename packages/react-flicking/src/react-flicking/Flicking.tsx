@@ -105,7 +105,9 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const flicking = this._nativeFlicking;
 
     this._diffResult = diffResult;
-    this._panels = getRenderingPanels(flicking, diffResult);
+    this._panels = flicking.initialized
+      ? getRenderingPanels(flicking, diffResult)
+      : children;
 
     return true;
   }
@@ -114,11 +116,11 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const flicking = this._nativeFlicking;
     const diffResult = this._diffResult;
 
-    if (!diffResult) return;
+    this._checkPlugins();
+
+    if (!diffResult || !flicking.initialized) return;
 
     sync(flicking, diffResult);
-
-    this._checkPlugins();
 
     if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
       this.setState({});
@@ -130,6 +132,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const Viewport = props.viewportTag as any;
     const Camera = props.cameraTag as any;
     const attributes: { [key: string]: any } = {};
+    const flicking = this._nativeFlicking;
 
     for (const name in props) {
       if (!(name in DEFAULT_PROPS) && !(name in NativeFlicking.prototype)) {
@@ -138,8 +141,11 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     }
 
     const viewportClasses: string[] = ["flicking-viewport"];
+    const isHorizontal = flicking
+      ? flicking.horizontal
+      : props.horizontal ?? true;
 
-    if (!this._nativeFlicking.horizontal) {
+    if (!isHorizontal) {
       viewportClasses.push("vertical")
     }
     if (attributes.className) {

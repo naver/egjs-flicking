@@ -1,7 +1,7 @@
 <template>
-  <component :is="this.viewportTag" class="flicking-viewport">
+  <component :is="this.viewportTag" :class="{'flicking-viewport': true, 'vertical': this.vertical}">
     <component :is="this.cameraTag" class="flicking-camera">
-      <VNodes :vnodes="_panels" />
+      <VNodes :vnodes="this._panels" />
     </component>
   </component>
 </template>
@@ -29,6 +29,15 @@ class Flicking extends Vue {
   @Prop({ type: String, default: "div", required: false }) public cameraTag!: string;
   @Prop({ type: Object, default: () => ({}), required: false }) public options!: Partial<FlickingOptions>;
   @Prop({ type: Array, default: () => ([]), required: false }) public plugins!: Plugin[];
+
+  public get vertical() {
+    const flicking = this._nativeFlicking;
+    const isHorizontal = flicking
+      ? flicking.horizontal
+      : this.options.horizontal ?? true;
+
+    return !isHorizontal;
+  }
 
   private _panels: VNode[] = [];
 
@@ -71,7 +80,9 @@ class Flicking extends Vue {
     const flicking = this._nativeFlicking!;
 
     this._diffResult = diffResult;
-    this._panels = getRenderingPanels(flicking, diffResult);
+    this._panels = flicking.initialized
+      ? getRenderingPanels(flicking, diffResult)
+      : slots;
   }
 
   public updated() {

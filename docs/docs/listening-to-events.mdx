@@ -1,0 +1,17 @@
+---
+title: Listening to Events
+id: listening-to-events
+slug: /listening-to-events
+---
+
+You can listen to Flicking's events with [Flicking#on](api/Flicking#on)
+```js
+// If you're using a package manager
+import { EVENTS } from "@egjs/flicking";
+// Or, if you're using a CDN
+const EVENTS = Flicking.EVENTS;
+
+flicking.on(EVENTS.MOVE, evt => {
+  console.log(evt);
+})
+```

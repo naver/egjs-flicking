@@ -42,6 +42,7 @@ export interface RenderPanelChangeEvent {
     </div>`,
   host: {
     class: "flicking-viewport",
+    "[class.vertical]": "_isVertical",
     style: "display: block;"
   },
   styleUrls: [
@@ -80,6 +81,7 @@ export class NgxFlickingComponent extends FlickingInterface
   private _elementDiffer: ListDiffer<string | number> | null = null;
   private _panelsDiffer: ListDiffer<any> | null = null;
   private _diffResult: DiffResult<any> | null = null;
+  private _isVertical: boolean = false;
   /**
    * To prevent 'ExpressionChangedAfterItHasBeenCheckedError'
    * It would trigger above error if you changed the value after DOM operation is started. It makes unstable DOM tree.
@@ -108,6 +110,7 @@ export class NgxFlickingComponent extends FlickingInterface
     // This prevents mousemove to call ngDoCheck & noAfterContentChecked everytime
     this._zone.runOutsideAngular(() => {
       this._nativeFlicking = new NativeFlicking(viewportEl, options);
+      this._isVertical = !this._nativeFlicking.horizontal;
     });
     this._elementDiffer = new ListDiffer(this._getChildKeys());
     this._panelsDiffer = new ListDiffer(this.data);
