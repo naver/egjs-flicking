@@ -55,6 +55,13 @@ module.exports = {
         "api/EVENT",
         "api/POSITION_KEY"
       ]
+    },
+    {
+      "type": "category",
+      "label": "Typedef",
+      "items": [
+        "api/ElementLike"
+      ]
     }
   ]
 };

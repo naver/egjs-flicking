@@ -216,7 +216,7 @@ class Panel {
    * Check whether the given position is inside of this panel's {@link Panel#range range}
    * @ko 주어진 좌표가 현재 패널의 {@link Panel#range range}내에 속해있는지를 반환합니다.
    * @param {number} pos A position to check<ko>확인하고자 하는 좌표</ko>
-   * @param {boolean} [includeMargin=false] Include {@link margin} to the range<ko>패널 영역에 {@link margin}값을 포함시킵니다</ko>
+   * @param {boolean} [includeMargin=false] Include {@link Panel#margin margin} to the range<ko>패널 영역에 {@link Panel#margin margin}값을 포함시킵니다</ko>
    * @return {boolean} A Boolean value indicating whether the given position is included in the panel range<ko>해당 좌표가 패널 영역 내에 속해있는지 여부</ko>
    */
   public includePosition(pos: number, includeMargin: boolean = false): boolean {
@@ -228,7 +228,7 @@ class Panel {
    * @ko 주어진 범위가 이 패널 내부에 완전히 포함되는지를 반환합니다
    * @param {number} min Minimum value of the range to check<ko>확인하고자 하는 최소 범위</ko>
    * @param {number} max Maximum value of the range to check<ko>확인하고자 하는 최대 범위</ko>
-   * @param {boolean} [includeMargin=false] Include {@link margin} to the range<ko>패널 영역에 {@link margin}값을 포함시킵니다</ko>
+   * @param {boolean} [includeMargin=false] Include {@link Panel#margin margin} to the range<ko>패널 영역에 {@link Panel#margin margin}값을 포함시킵니다</ko>
    * @returns {boolean} A Boolean value indicating whether the given range is fully included in the panel range<ko>해당 범위가 패널 영역 내에 완전히 속해있는지 여부</ko>
    */
   public includeRange(min: number, max: number, includeMargin: boolean = false): boolean {

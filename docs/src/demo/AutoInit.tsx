@@ -2,11 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from "react";
-
-import Flicking from "../../../packages/react-flicking/dist/flicking.esm";
+import Flicking from "@egjs/react-flicking";
 
 export default () => {
-  const flickingRef = React.createRef<typeof Flicking>();
+  const flickingRef = React.createRef<Flicking>();
 
   return (<><Flicking autoInit={false} ref={flickingRef}>
     <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>

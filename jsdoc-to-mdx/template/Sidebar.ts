@@ -4,12 +4,14 @@ export default ({
   classes,
   interfaces,
   namespaces,
-  constants
+  constants,
+  typedefs
 }: {
   classes: Identifier[];
   interfaces: Identifier[];
   namespaces: Identifier[];
   constants: Identifier[];
+  typedefs: Identifier[];
 }) => {
   const sidebar: {[key: string]: any} = {};
 
@@ -45,6 +47,14 @@ export default ({
       type: "category",
       label: "Constant",
       items: constants.map(item => `api/${item.name}`)
+    });
+  }
+
+  if (typedefs.length > 0) {
+    categories.push({
+      type: "category",
+      label: "Typedef",
+      items: typedefs.map(item => `api/${item.name}`)
     });
   }
 

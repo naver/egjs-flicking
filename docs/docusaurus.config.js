@@ -10,12 +10,9 @@ module.exports = {
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   url: 'https://naver.github.io',
-  baseUrl: isDev ? '/' : 'egjs-flicking/',
+  baseUrl: isDev ? '/' : '/egjs-flicking/',
   projectName: 'naver.github.io',
   organizationName: 'naver',
-  scripts: [
-    "/js/flicking.pkgd.js"
-  ],
   themes: ['@docusaurus/theme-live-codeblock'],
   themeConfig: {
     navbar: {
@@ -46,14 +43,20 @@ module.exports = {
         {
           type: 'docsVersionDropdown',
           position: 'right',
-          dropdownActiveClassDisabled: true
+          dropdownActiveClassDisabled: true,
+          dropdownItemsAfter: [
+            {
+              to: 'https://naver.github.io/egjs-flicking/3.8.2',
+              label: '3.x.x'
+            }
+          ]
         },
         {
           type: 'localeDropdown',
           position: 'right'
         },
         {
-          href: 'https://github.com/facebook/docusaurus',
+          href: 'https://github.com/naver/egjs-flicking',
           label: 'GitHub',
           position: 'right'
         }
@@ -98,10 +101,10 @@ module.exports = {
           // Please change this to your repo.
           editUrl: "https://github.com/naver/egjs-flicking/edit/master/docs/",
           remarkPlugins: [require("remark-breaks")],
-          lastVersion: isDev ? 'current' : undefined,
+          lastVersion: isDev ? "current" : undefined,
           versions: {
             current: {
-              label: `Latest(${packageInfo.version})`
+              label: `Next`
             }
           }
         },
@@ -113,7 +116,8 @@ module.exports = {
         theme: {
           customCss: [
             require.resolve('./src/css/custom.css'),
-            require.resolve('./src/css/bulma.css')
+            require.resolve('./src/css/bulma.css'),
+            require.resolve('./src/css/flicking.css')
           ]
         }
       }

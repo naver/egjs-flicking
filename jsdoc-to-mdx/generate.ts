@@ -21,6 +21,7 @@ import classTemplate from "./template/Class";
 import interfaceTemplate from "./template/Interface";
 import namespaceTemplate from "./template/Namespace";
 import constantTemplate from "./template/Constant";
+import typedefTemplate from "./template/Typedef";
 import sidebarTemplate from "./template/Sidebar";
 import { parseLocales } from "./utils";
 
@@ -32,7 +33,8 @@ const docsDir = path.resolve(process.cwd(), "./docs/docs");
 const apiDir = path.resolve(process.cwd(), "./docs/docs/api");
 const versionDocsDir = path.resolve(process.cwd(), `./docs/versioned_docs/version-${packageInfo.version}`);
 const versionSidebarDir = path.resolve(process.cwd(), "./docs/versioned_sidebars");
-const localesDir = (locale: string) => path.resolve(process.cwd(), `./docs/i18n/${locale}/docusaurus-plugin-content-docs/current/api`);
+const localesDir = (locale: string) => path.resolve(process.cwd(), `./docs/i18n/${locale}/docusaurus-plugin-content-docs`);
+const localeVersionDir = (locale: string) => path.resolve(process.cwd(), `./docs/i18n/${locale}/docusaurus-plugin-content-docs/version-${packageInfo.version}`);
 
 const locales = ["ko"];
 
@@ -50,13 +52,15 @@ jsdoc.on("close", async (code) => {
     const interfaces: {[key: string]: DocumentedInterface} = {};
     const namespaces: {[key: string]: DocumentedNamespace} = {};
     const constants: {[key: string]: Identifier} = {};
+    const typedefs: {[key: string]: Identifier} = {};
 
     const dataMap = new Map<string, Identifier>();
 
     fs.removeSync(apiDir);
     fs.ensureDirSync(apiDir);
     locales.forEach(locale => {
-      fs.ensureDirSync(localesDir(locale));
+      fs.ensureDirSync(path.resolve(localesDir(locale), "./current/api"));
+      fs.ensureDirSync(localeVersionDir(locale));
     });
 
     templateData.forEach(identifier => {
@@ -109,6 +113,8 @@ jsdoc.on("close", async (code) => {
           namespaces[identifier.name] = namespaceData;
         } else if (identifier.kind === "constant") {
           constants[identifier.name] = identifier;
+        } else if (identifier.kind === "typedef") {
+          typedefs[identifier.name] = identifier;
         }
 
         templateData.splice(templateData.findIndex(val => val === identifier), 1);
@@ -154,7 +160,7 @@ jsdoc.on("close", async (code) => {
 
       locales.forEach(async locale => {
         await fs.writeFile(
-          path.resolve(localesDir(locale), `${name}.mdx`),
+          path.resolve(localesDir(locale), `./current/api/${name}.mdx`),
           classTemplate(classes[name], dataMap, locale)
         );
       });
@@ -168,7 +174,7 @@ jsdoc.on("close", async (code) => {
 
       locales.forEach(async locale => {
         await fs.writeFile(
-          path.resolve(localesDir(locale), `${name}.mdx`),
+          path.resolve(localesDir(locale), `./current/api/${name}.mdx`),
           interfaceTemplate(interfaces[name], dataMap, locale)
         );
       });
@@ -182,7 +188,7 @@ jsdoc.on("close", async (code) => {
 
       locales.forEach(async locale => {
         await fs.writeFile(
-          path.resolve(localesDir(locale), `${name}.mdx`),
+          path.resolve(localesDir(locale), `./current/api/${name}.mdx`),
           namespaceTemplate(namespaces[name], dataMap, locale)
         );
       });
@@ -196,10 +202,33 @@ jsdoc.on("close", async (code) => {
 
       locales.forEach(async locale => {
         await fs.writeFile(
-          path.resolve(localesDir(locale), `${name}.mdx`),
+          path.resolve(localesDir(locale), `./current/api/${name}.mdx`),
           constantTemplate(constants[name], dataMap, locale)
         );
       });
+    });
+
+    Object.keys(typedefs).forEach(async name => {
+      await fs.writeFile(
+        path.resolve(apiDir, `${name}.mdx`),
+        typedefTemplate(typedefs[name], dataMap)
+      );
+
+      locales.forEach(async locale => {
+        await fs.writeFile(
+          path.resolve(localesDir(locale), `./current/api/${name}.mdx`),
+          typedefTemplate(typedefs[name], dataMap, locale)
+        );
+      });
+    });
+
+    // Copy all docs to i18n folder
+    locales.forEach(async locale => {
+      await fs.copy(docsDir, path.resolve(localesDir(locale), "./current"), {
+        recursive: false,
+        filter: src => !/api/.test(path.parse(src).dir)
+      });
+      await fs.copy(path.resolve(localesDir(locale), "./current"), localeVersionDir(locale), { overwrite: true, recursive: true });
     });
 
     // Copy all docs to versions folder
@@ -212,7 +241,8 @@ jsdoc.on("close", async (code) => {
         classes: Object.values(classes),
         interfaces: Object.values(interfaces),
         namespaces: Object.values(namespaces),
-        constants: Object.values(constants)
+        constants: Object.values(constants),
+        typedefs: Object.values(typedefs)
       })
     );
 
@@ -232,7 +262,7 @@ jsdoc.on("close", async (code) => {
       ? await fs.readJSON(path.resolve(docsRoot, "versions.json"))
       : [];
     if (versions.findIndex(version => version === packageInfo.version) < 0) {
-      versions.push(packageInfo.version);
+      versions.splice(0, 0, packageInfo.version);
       await fs.writeJSON(path.resolve(docsRoot, "versions.json"), versions, { spaces: 2 });
     }
   }

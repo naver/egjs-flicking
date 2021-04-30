@@ -1,0 +1,184 @@
+import Translate, {translate} from '@docusaurus/Translate';
+
+List of constants that flicking exports
+
+## Members
+### ERROR_CODE {#ERROR_CODE}
+
+<div className="bulma-tags">
+<span className="bulma-tag is-info">static</span>
+
+
+
+</div>
+
+[FlickingError](FlickingError)의 에러 코드. 아래는 각각의 에러 코드가 발생하는 조건입니다.
+
+**Type**: object
+
+
+
+
+
+
+
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|WRONG_TYPE|number|패러미터의 타입이 잘못되었을 경우|
+|ELEMENT_NOT_FOUND|number|주어진 CSS selector로 페이지 내에서 해당 엘리먼트를 찾지 못했을 경우|
+|VAL_MUST_NOT_NULL|number|값을 기대했으나, `null`이나 `undefined`를 받은 경우|
+|NOT_ATTACHED_TO_FLICKING|number|Flicking 내부 컴포넌트가 초기화되지 않은 경우 ([Flicking#init](Flicking#init)이 호출되지 않은 경우)|
+|WRONG_OPTION|number|옵션들 중 잘못된 값이 있을 때|
+|INDEX_OUT_OF_RANGE|number|인덱스가 주어진 범위를 벗어난 경우|
+|POSITION_NOT_REACHABLE|number|[Control#moveToPosition](Control#moveToPosition)의 `position` 패러미터가 도달 가능한 범위를 벗어난 경우|
+|TRANSFORM_NOT_SUPPORTED|number|CSS `transform` 속성을 사용할 수 없는 경우(<=IE8)|
+|STOP_CALLED_BY_USER|number|사용자에 의해 이벤트의 `stop()`이 호출된 경우|
+|ANIMATION_INTERRUPTED|number|사용자에 의해 애니메이션이 중단된 경우|
+|ANIMATION_ALREADY_PLAYING|number|현재 애니메이션이 이미 진행중인 경우|
+|NOT_ALLOWED_IN_FRAMEWORK|number|프레임워크(React, Angular, Vue ...)에서 사용 불가능한 메소드를 호출했을 경우|
+
+
+
+
+
+
+
+### EVENTS {#EVENTS}
+
+<div className="bulma-tags">
+<span className="bulma-tag is-info">static</span>
+
+
+
+</div>
+
+[Flicking](Flicking)의 이벤트 이름 문자열들을 담은 객체
+
+**Type**: object
+
+
+
+
+
+
+
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|HOLD_START|"holdStart"|holdStart 이벤트|
+|HOLD_END|"holdEnd"|holdEnd 이벤트|
+|MOVE_START|"moveStart"|moveStart 이벤트|
+|MOVE|"move"|move 이벤트|
+|MOVE_END|"moveEnd"|moveEnd 이벤트|
+|WILL_CHANGE|"willChange"|willChange 이벤트|
+|CHANGED|"changed"|changed 이벤트|
+|WILL_RESTORE|"willRestore"|willRestore 이벤트|
+|RESTORED|"restored"|restored 이벤트|
+|SELECT|"select"|select 이벤트|
+|NEED_PANEL|"needPanel"|needPanel 이벤트|
+
+
+
+```ts
+import { EVENTS } from "@egjs/flicking";
+EVENTS.MOVE_START; // "moveStart"
+```
+
+
+
+### ALIGN {#ALIGN}
+
+<div className="bulma-tags">
+<span className="bulma-tag is-info">static</span>
+
+
+
+</div>
+
+[align](Flicking#align) 옵션에 사용되는 미리 정의된 리터럴 상수들을 담고 있는 객체
+
+**Type**: object
+
+
+
+
+
+
+
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|PREV|"prev"|좌/상 정렬|
+|CENTER|"center"|중앙 정렬|
+|NEXT|"next"|우/하 정렬|
+
+
+
+
+
+
+
+### DIRECTION {#DIRECTION}
+
+<div className="bulma-tags">
+<span className="bulma-tag is-info">static</span>
+
+
+
+</div>
+
+방향을 나타내는 값들을 담고 있는 객체
+
+**Type**: object
+
+
+
+
+
+
+
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|PREV|"PREV"|[horizontal](Flicking#horizontal)가 `true`일 경우 왼쪽, [horizontal](Flicking#horizontal)가 `false`일 경우 위쪽을 의미합니다|
+|NEXT|"NEXT"|[horizontal](Flicking#horizontal)가 `true`일 경우 오른쪽, [horizontal](Flicking#horizontal)가 `false`일 경우 아래쪽을 의미합니다|
+|NONE|null|주로 제자리인 경우를 의미합니다|
+
+
+
+
+
+
+
+### MOVE_TYPE {#MOVE_TYPE}
+
+<div className="bulma-tags">
+<span className="bulma-tag is-info">static</span>
+
+
+
+</div>
+
+Flicking이 제공하는 [moveType](Flicking#moveType)들을 담고 있는 객체
+
+**Type**: object
+
+
+
+
+
+
+
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|SNAP|"snap"|Flicking의 [control](Flicking#control)을 [SnapControl](SnapControl)로 설정하게 하는 [moveType](Flicking#moveType)|
+|FREE_SCROLL|"freeScroll"|Flicking의 [control](Flicking#control)을 [FreeControl](FreeControl)로 설정하게 하는 [moveType](Flicking#moveType)|
+
+
+
+
+
+
+
