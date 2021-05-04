@@ -242,19 +242,4 @@ export const findIndex = <T>(array: T[], checker: (val: T) => boolean): number =
   return -1;
 };
 
-// export const getProgress = (pos: number, range: number[]) => {
-//   // start, anchor, end
-//   // -1 , 0 , 1
-//   const [min, center, max] = range;
-
-//   if (pos > center && (max - center)) {
-//     // 0 ~ 1
-//     return (pos - center) / (max - center);
-//   } else if (pos < center && (center - min)) {
-//     // -1 ~ 0
-//     return (pos - center) / (center - min);
-//   } else if (pos !== center && max - min) {
-//     return (pos - min) / (max - min);
-//   }
-//   return 0;
-// };
+export const getProgress = (pos: number, prev: number, next: number) => (pos - prev) / (next - prev);

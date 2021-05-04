@@ -16,10 +16,10 @@ import OrderManipulator from "./renderer/OrderManipulator";
 
 import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "~/const/external";
 import * as ERROR from "~/const/error";
-import { getElement, includes } from "~/utils";
+import { findIndex, getElement, includes } from "~/utils";
 import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, WillChangeEvent, WillRestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent, ChangedEvent, RestoredEvent } from "~/type/event";
 import { LiteralUnion, ValueOf } from "~/type/internal";
-import { ElementLike } from "~/type/external";
+import { ElementLike, Plugin } from "~/type/external";
 
 /**
  * @interface
@@ -126,6 +126,7 @@ class Flicking extends Component<FlickingEvents> {
 
   // Internal State
   private _initialized: boolean;
+  private _plugins: Plugin[];
 
   // Components
   /**
@@ -251,6 +252,13 @@ class Flicking extends Component<FlickingEvents> {
    * @readonly
    */
   public get holding() { return this._control.holding; }
+  /**
+   * A current list of activated plugins
+   * @ko 현재 활성화된 플러그인 목록
+   * @type {Plugin[]}
+   * @readonly
+   */
+  public get plugins() { return this._plugins; }
 
   // Options Getter
   // UI / LAYOUT
@@ -572,6 +580,7 @@ class Flicking extends Component<FlickingEvents> {
 
     // Internal states
     this._initialized = false;
+    this._plugins = [];
 
     // Bind options
     this._align = align;
@@ -640,6 +649,8 @@ class Flicking extends Component<FlickingEvents> {
       viewport.element.addEventListener("click", this._preventClickWhenDragged);
     }
 
+    this._plugins.forEach(plugin => plugin.init(this));
+
     // Done initializing & emit ready event
     this._initialized = true;
     this.trigger(new ComponentEvent(EVENTS.READY));
@@ -662,6 +673,8 @@ class Flicking extends Component<FlickingEvents> {
     this._control.destroy();
     this._camera.destroy();
     this._renderer.destroy();
+
+    this._plugins.forEach(plugin => plugin.destroy());
 
     this._initialized = false;
   }
@@ -700,7 +713,7 @@ class Flicking extends Component<FlickingEvents> {
    * @return {Promise<void>} A Promise which will be resolved after reaching the previous panel<ko>이전 패널 도달시에 resolve되는 Promise</ko>
    */
   public prev(duration: number = this._duration): Promise<void> {
-    return this.moveTo(this._control.activePanel?.prev()?.index ?? -1, duration, DIRECTION.PREV);
+    return this.moveTo(this._control.activePanel?.next()?.index ?? -1, duration, DIRECTION.PREV);
   }
 
   /**
@@ -861,22 +874,37 @@ class Flicking extends Component<FlickingEvents> {
   /**
    * Add plugins that can have different effects on Flicking
    * @ko 플리킹에 다양한 효과를 부여할 수 있는 플러그인을 추가합니다
-   * @param - The plugin(s) to add<ko>추가할 플러그인(들)</ko>
+   * @param {...Plugin} plugins The plugin(s) to add<ko>추가할 플러그인(들)</ko>
    * @return {this}
+   * @see https://github.com/naver/egjs-flicking-plugins
    */
-  public addPlugins(plugins: Plugin | Plugin[]) {
-    // TODO:
+  public addPlugins(...plugins: Plugin[]) {
+    if (this._initialized) {
+      plugins.forEach(item => item.init(this));
+    }
+
+    this._plugins.push(...plugins);
+
     return this;
   }
 
   /**
    * Remove plugins from Flicking.
    * @ko 플리킹으로부터 플러그인들을 제거합니다.
-   * @param - The plugin(s) to remove.<ko>제거 플러그인(들).</ko>
+   * @param {...Plugin} plugin The plugin(s) to remove.<ko>제거 플러그인(들).</ko>
    * @return {this}
+   * @see https://github.com/naver/egjs-flicking-plugins
    */
-  public removePlugins(plugins: Plugin | Plugin[]) {
-    // TODO:
+  public removePlugins(...plugins: Plugin[]) {
+    plugins.forEach(item => {
+      const foundIndex = findIndex(this._plugins, val => val === item);
+
+      if (foundIndex >= 0) {
+        item.destroy();
+        this._plugins.splice(foundIndex, 1);
+      }
+    });
+
     return this;
   }
 

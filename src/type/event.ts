@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 /*
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
@@ -6,8 +7,9 @@ import { OnChange, OnFinish, OnHold, OnRelease } from "@egjs/axes";
 import { ComponentEvent } from "@egjs/component";
 
 import Panel from "~/core/Panel";
-import { DIRECTION } from "~/const/external";
+import { EVENTS, DIRECTION } from "~/const/external";
 import { ValueOf } from "~/type/internal";
+import Flicking from "~/Flicking";
 
 /**
  * Event that fires when Flicking's {@link Flicking#init init()} is called
@@ -17,7 +19,7 @@ import { ValueOf } from "~/type/internal";
  * @property {Flicking} currentTarget An Flicking instance that triggered this event<ko>이 이벤트를 트리거한 Flicking의 인스턴스</ko>
  * @property {string} eventType Name of the event<ko>이벤트명</ko>
  */
-export type ReadyEvent = ComponentEvent;
+export type ReadyEvent<T extends Flicking = Flicking> = ComponentEvent<{}, typeof EVENTS["READY"], T>;
 
 /**
  * Event that fires when Flicking's {@link Flicking#resize resize()} is called, before updating the sizes of panels and viewport.
@@ -32,7 +34,7 @@ export type ReadyEvent = ComponentEvent;
  * @property {number} height Previous height of the viewport<ko>기존 뷰포트 높이</ko>
  * @property {HTMLElement} element The viewport element<ko>뷰포트 엘리먼트</ko>
  */
-export interface BeforeResizeEvent extends ComponentEvent {
+export interface BeforeResizeEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["BEFORE_RESIZE"], T> {
   width: number;
   height: number;
   element: HTMLElement;
@@ -53,7 +55,7 @@ export interface BeforeResizeEvent extends ComponentEvent {
  * @property {boolean} sizeChanged A Boolean value indicating whether the width/height of the viewport element is changed<ko>뷰포트 너비/크기가 변경되었는지 여부를 나타내는 값</ko>
  * @property {HTMLElement} element The viewport element<ko>뷰포트 엘리먼트</ko>
  */
-export interface AfterResizeEvent extends ComponentEvent {
+export interface AfterResizeEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["AFTER_RESIZE"], T> {
   width: number;
   height: number;
   prev: {
@@ -75,7 +77,7 @@ export interface AfterResizeEvent extends ComponentEvent {
  * @property {object} axesEvent {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:hold hold} event of {@link https://naver.github.io/egjs-axes/ Axes}
  * <ko>{@link https://naver.github.io/egjs-axes/ Axes}의 {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:hold hold} 이벤트</ko>
  */
-export interface HoldStartEvent extends ComponentEvent {
+export interface HoldStartEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["HOLD_START"], T> {
   axesEvent: OnHold;
 }
 
@@ -89,7 +91,7 @@ export interface HoldStartEvent extends ComponentEvent {
  * @property {object} axesEvent {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:release release} event of {@link https://naver.github.io/egjs-axes/ Axes}
  * <ko>{@link https://naver.github.io/egjs-axes/ Axes}의 {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:release release} 이벤트</ko>
  */
-export interface HoldEndEvent extends ComponentEvent {
+export interface HoldEndEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["HOLD_END"], T> {
   axesEvent: OnRelease;
 }
 
@@ -107,7 +109,7 @@ export interface HoldEndEvent extends ComponentEvent {
  * @property {object} axesEvent {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:change change} event of {@link https://naver.github.io/egjs-axes/ Axes}
  * <ko>{@link https://naver.github.io/egjs-axes/ Axes}의 {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:change change} 이벤트</ko>
  */
-export interface MoveStartEvent extends ComponentEvent {
+export interface MoveStartEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["MOVE_START"], T> {
   isTrusted: boolean;
   holding: boolean;
   direction: ValueOf<typeof DIRECTION>;
@@ -128,7 +130,7 @@ export interface MoveStartEvent extends ComponentEvent {
  * @property {object} axesEvent {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:change change} event of {@link https://naver.github.io/egjs-axes/ Axes}
  * <ko>{@link https://naver.github.io/egjs-axes/ Axes}의 {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:change change} 이벤트</ko>
  */
-export interface MoveEvent extends ComponentEvent {
+export interface MoveEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["MOVE"], T> {
   isTrusted: boolean;
   holding: boolean;
   direction: ValueOf<typeof DIRECTION>;
@@ -148,7 +150,7 @@ export interface MoveEvent extends ComponentEvent {
  * @property {object} axesEvent {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:finish finish} event of {@link https://naver.github.io/egjs-axes/ Axes}
  * <ko>{@link https://naver.github.io/egjs-axes/ Axes}의 {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:finish finish} 이벤트</ko>
  */
-export interface MoveEndEvent extends ComponentEvent {
+export interface MoveEndEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["MOVE_END"], T> {
   isTrusted: boolean;
   direction: ValueOf<typeof DIRECTION>;
   axesEvent: OnFinish;
@@ -171,7 +173,7 @@ export interface MoveEndEvent extends ComponentEvent {
  * @property {boolean} isTrusted Boolean that indicates whether the event was generated by a user action<ko>이벤트가 사용자 입력에 의하여 발생되었는지를 나타내는 값</ko>
  * @property {Constants.DIRECTION} direction Moving direction from the active panel to the target panel<ko>현재 활성화된 패널로부터 이동하고자 하는 패널의 방향</ko>
  */
-export interface WillChangeEvent extends ComponentEvent {
+export interface WillChangeEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["WILL_CHANGE"], T> {
   index: number;
   panel: Panel;
   isTrusted: boolean;
@@ -191,7 +193,7 @@ export interface WillChangeEvent extends ComponentEvent {
  * @property {boolean} isTrusted Boolean that indicates whether the event was generated by a user action<ko>이벤트가 사용자 입력에 의하여 발생되었는지를 나타내는 값</ko>
  * @property {Constants.DIRECTION} direction Moving direction from the active panel to the target panel<ko>현재 활성화된 패널로부터 이동하고자 하는 패널의 방향</ko>
  */
-export interface ChangedEvent extends ComponentEvent {
+export interface ChangedEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["CHANGED"], T> {
   index: number;
   panel: Panel;
   prevIndex: number;
@@ -213,7 +215,7 @@ export interface ChangedEvent extends ComponentEvent {
  * @property {boolean} isTrusted Boolean that indicates whether the event was generated by a user action<ko>이벤트가 사용자 입력에 의하여 발생되었는지를 나타내는 값</ko>
  * @property {Constants.DIRECTION} direction Moving direction relative to previous position of the camera<ko>이전 카메라 위치 대비 이동 방향</ko>
  */
-export interface WillRestoreEvent extends ComponentEvent {
+export interface WillRestoreEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["WILL_RESTORE"], T> {
   index: number;
   panel: Panel;
   isTrusted: boolean;
@@ -229,7 +231,7 @@ export interface WillRestoreEvent extends ComponentEvent {
  * @property {string} eventType Name of the event<ko>이벤트명</ko>
  * @property {boolean} isTrusted Boolean that indicates whether the event was generated by a user action<ko>이벤트가 사용자 입력에 의하여 발생되었는지를 나타내는 값</ko>
  */
-export interface RestoredEvent extends ComponentEvent {
+export interface RestoredEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["RESTORED"], T> {
   isTrusted: boolean;
 }
 
@@ -244,7 +246,7 @@ export interface RestoredEvent extends ComponentEvent {
  * @property {Panel} panel Selected panel<ko>선택된 패널</ko>
  * @property {Constants.DIRECTION} direction Direction from current camera position to the selected panel's position<ko>현재 카메라 위치 대비 선택된 패널의 위치</ko>
  */
-export interface SelectEvent extends ComponentEvent {
+export interface SelectEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["SELECT"], T> {
   index: number;
   panel: Panel;
   direction: ValueOf<typeof DIRECTION> | null;
@@ -264,7 +266,7 @@ export interface SelectEvent extends ComponentEvent {
  * <ko>패널이 필요한 방향.
  * `DIRECTION.PREV`의 경우 패널이 {@link Flicking#prepend prepend}되어야 함을 의미하고, `DIRECTION.NEXT`는 패널이 {@link Flicking#append append}되어야 함을 의미한다</ko>
  */
-export interface NeedPanelEvent extends ComponentEvent {
+export interface NeedPanelEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["NEED_PANEL"], T> {
   direction: ValueOf<typeof DIRECTION>;
 }
 
@@ -279,7 +281,7 @@ export interface NeedPanelEvent extends ComponentEvent {
  * @property {Panel[]} removed Panels that removed from previous visible panels<ko>보이지 않게 된 패널의 배열</ko>
  * @property {Panel[]} visiblePanels Current visible panels<ko>현재 보이는 패널의 배열</ko>
  */
-export interface VisibleChangeEvent extends ComponentEvent {
+export interface VisibleChangeEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["VISIBLE_CHANGE"], T> {
   added: Panel[];
   removed: Panel[];
   visiblePanels: Panel[];
@@ -295,6 +297,6 @@ export interface VisibleChangeEvent extends ComponentEvent {
  * @property {Constants.DIRECTION} direction Direction indicates whether the camera's position is at the maximum range({@link Constants.DIRECTION DIRECTION.NEXT}) or minimum range({@link Constants.DIRECTION DIRECTION.PREV})
  * <ko>카메라의 위치가 이동 가능한 범위의 최대점({@link Constants.DIRECTION DIRECTION.NEXT}) 혹은 최소점({@link Constants.DIRECTION DIRECTION.PREV})에 도달했는지를 나타내는 값</ko>
  */
-export interface ReachEdgeEvent extends ComponentEvent {
+export interface ReachEdgeEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["REACH_EDGE"], T> {
   direction: ValueOf<typeof DIRECTION>;
 }

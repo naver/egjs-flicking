@@ -27,20 +27,20 @@ const CustomPagination = (container) => {
       if (selectedElement) {
         selectedElement.className = selectedElement.className.replace(/\s*selected/g, "");
       }
-      items[flicking.getIndex()].className += " selected";
+      items[flicking.index].className += " selected";
     },
     init: function(flicking) {
       element = typeof container === "object" ? container : document.querySelector(container);
       element.className += " flicking-pagination";
       itemTag = element.nodeName === "UL" ? "li" : "div";
 
-      flicking.on("moveEnd", (e) => {
+      flicking.on("changed", (e) => {
         const selectedElement = element.querySelector(".selected");
         if (selectedElement) {
           selectedElement.className = selectedElement.className.replace(/\s*selected/g, "");
         }
 
-        items[flicking.getIndex()].className += " selected";
+        items[e.index].className += " selected";
       });
       this.update(flicking);
     }

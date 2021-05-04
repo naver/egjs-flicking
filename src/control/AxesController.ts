@@ -62,6 +62,13 @@ class AxesController {
    * @readonly
    */
   public get position() { return this._axes?.get([AXES.POSITION_KEY])[AXES.POSITION_KEY] ?? 0; }
+  /**
+   * Actual bounce size(px)
+   * @ko 적용된 bounce 크기(px 단위)
+   * @type {number[]}
+   * @readonly
+   */
+  public get bounce() { return this._axes?.axis[AXES.POSITION_KEY].bounce as number[] | undefined; }
 
   /** */
   public constructor() {

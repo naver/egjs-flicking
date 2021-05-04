@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 import Flicking from "~/Flicking";
-import { parseAlign } from "~/utils";
+import { getProgress, parseAlign } from "~/utils";
 import { ALIGN } from "~/const/external";
 import { LiteralUnion, ValueOf } from "~/type/internal";
 
@@ -122,6 +122,60 @@ class Panel {
    * @readonly
    */
   public get range() { return { min: this._pos, max: this._pos + this._size }; }
+
+  public get progress() {
+    const flicking = this._flicking;
+
+    return this.index - flicking.camera.progress;
+  }
+
+  public get outsetProgress() {
+    const position = this.position + this._offset;
+    const alignPosition = this._alignPos;
+    const camera = this._flicking.camera;
+    const camPos = camera.position;
+
+    if (camPos === position) {
+      return 0;
+    }
+
+    if (camPos < position) {
+      const disappearPosNext = position + (camera.size - camera.alignPosition) + alignPosition;
+
+      return -getProgress(camPos, position, disappearPosNext);
+    } else {
+      const disappearPosPrev = position - (camera.alignPosition + this._size - alignPosition);
+
+      return 1 - getProgress(camPos, disappearPosPrev, position);
+    }
+  }
+
+  public get visibleRatio() {
+    const range = this.range;
+    const size = this._size;
+    const offset = this._offset;
+    const visibleRange = this._flicking.camera.visibleRange;
+
+    const checkingRange = {
+      min: range.min + offset,
+      max: range.max + offset
+    };
+
+    if (checkingRange.max <= visibleRange.min || checkingRange.min >= visibleRange.max) {
+      return 0;
+    }
+
+    let visibleSize = size;
+
+    if (visibleRange.min > checkingRange.min) {
+      visibleSize -= visibleRange.min - checkingRange.min;
+    }
+    if (visibleRange.max < checkingRange.max) {
+      visibleSize -= checkingRange.max - visibleRange.max;
+    }
+
+    return visibleSize / size;
+  }
 
   // Options Getter
   /**

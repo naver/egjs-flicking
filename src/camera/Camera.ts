@@ -10,7 +10,7 @@ import Panel from "~/core/Panel";
 import AnchorPoint from "~/core/AnchorPoint";
 import * as ERROR from "~/const/error";
 import { ALIGN, DIRECTION, EVENTS } from "~/const/external";
-import { checkExistence, clamp, getFlickingAttached, includes, parseAlign } from "~/utils";
+import { checkExistence, clamp, getFlickingAttached, getProgress, includes, parseAlign } from "~/utils";
 
 export interface CameraOptions {
   align: FlickingOptions["align"];
@@ -134,6 +134,53 @@ abstract class Camera {
         ? flicking.viewport.width
         : flicking.viewport.height
       : 0;
+  }
+
+  public get progress() {
+    const flicking = this._flicking;
+    const position = this._position + this._offset;
+    const nearestAnchor = this.findNearestAnchor(this._position);
+
+    if (!flicking || !nearestAnchor) {
+      return NaN;
+    }
+
+    const nearestPanel = nearestAnchor.panel;
+    const panelPos = nearestPanel.position + nearestPanel.offset;
+    const bounceSize = flicking.control.controller.bounce!;
+
+    const { min: prevRange, max: nextRange } = this.range;
+    const rangeDiff = this.rangeDiff;
+
+    if (position === panelPos) {
+      return nearestPanel.index;
+    }
+
+    if (position < panelPos) {
+      const prevPanel = nearestPanel.prev();
+      let prevPosition = prevPanel
+        ? prevPanel.position + prevPanel.offset
+        : prevRange - bounceSize[0];
+
+      // Looped
+      if (prevPosition > panelPos) {
+        prevPosition -= rangeDiff;
+      }
+
+      return nearestPanel.index - 1 + getProgress(position, prevPosition, panelPos);
+    } else {
+      const nextPanel = nearestPanel.next();
+      let nextPosition = nextPanel
+        ? nextPanel.position + nextPanel.offset
+        : nextRange + bounceSize[1];
+
+      // Looped
+      if (nextPosition < panelPos) {
+        nextPosition += rangeDiff;
+      }
+
+      return nearestPanel.index + getProgress(position, panelPos, nextPosition);
+    }
   }
 
   public set offset(val: number) { this._offset = val; }

@@ -1,13 +1,15 @@
-<!doctype html>
-<meta charset="utf-8" />
-<link rel="stylesheet" href="../common/common.css">
-<link rel="stylesheet" href="../common/highlight.css">
-<link rel="stylesheet" href="./plugins.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
-<script src="../common/highlight.js"></script>
-<script src="../release/latest/dist/flicking.pkgd.js"></script>
-<script src="https://naver.github.io/egjs-flicking-plugins/release/latest/dist/plugins.js"></script>
-
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="../common/common.css">
+  <link rel="stylesheet" href="../common/highlight.css">
+  <link rel="stylesheet" href="./plugins.css">
+  <link rel="stylesheet" href="../release/latest/dist/flicking.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
+  <script src="../common/highlight.js"></script>
+  <script src="../release/latest/dist/flicking.pkgd.js"></script>
+  <script src="https://naver.github.io/egjs-flicking-plugins/release/latest/dist/plugins.js"></script>
+</head>
 
 <div class="container">
     <h1>AutoPlay<a
@@ -16,7 +18,8 @@
     <ul class="extra">
         <li>You can set flicking to move to the next/previous panel periodically.</li>
     </ul>
-    <div class="flicking">
+    <div class="flicking flicking-viewport">
+      <div class="flicking-camera">
         <div class="panel">
             <img src="../images/bg01.jpg" />
         </div>
@@ -26,18 +29,18 @@
         <div class="panel">
             <img src="../images/bg03.jpg" />
         </div>
+      </div>
     </div>
     <div class="pagination"></div>
     <pre><code class="hljs javascript"></code></pre>
 </div>
 <script>
-var flicking = new eg.Flicking(".flicking", {
+var flicking = new Flicking(".flicking", {
     circular: true,
-    gap: 10,
     duration: 500,
 });
 
-flicking.addPlugins(new eg.Flicking.plugins.AutoPlay(2000, "NEXT"));
+flicking.addPlugins(new Flicking.Plugins.AutoPlay(2000, "NEXT"));
 </script>
 <script src="../common/codepen.js"></script>
 <script src="../common/analytics.js"></script>

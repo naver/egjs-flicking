@@ -1,6 +1,22 @@
+import Flicking from "~/Flicking";
+
 /**
  * HTML `string` of single/mutiple HTMLElement, or an instance of `HTMLElement`
  * @ko 단일/복수의 HTMLElement의 outerHTML에 해당하는 `string`, 혹은 `HTMLElement`의 인스턴스
  * @typedef
  */
 export type ElementLike = string | HTMLElement;
+
+/**
+ * Flicking Plugin
+ * @ko Flicking 플러그인
+ * @property - Initialize the plugin<ko>플러그인을 초기화합니다</ko>
+ * @property - Destroy plugin and detach all events binded<ko>플러그인을 제거하고 부착된 모든 이벤트들을 제거합니다.</ko>
+ * @property - Update plugin to match current Flicking's status<ko>현재 Flicking의 상태에 대응하도록 플러그인을 업데이트합니다.</ko>
+ * @typedef
+ */
+export interface Plugin {
+  init(flicking: Flicking): void;
+  destroy(): void;
+  update(flicking: Flicking): void;
+}
