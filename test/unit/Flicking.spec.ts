@@ -1195,6 +1195,79 @@ describe("Flicking", () => {
         expect(status.panels.length).equals(panels.length);
         expect(status.panels.every((panelHTML, panelIdx) => panelHTML === panels[panelIdx].element.outerHTML));
       });
+
+      it("should include index to a returned object if index = true", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ index: true });
+
+        expect(status.index).to.exist;
+        expect(typeof status.index).to.equal("number");
+      });
+
+      it("should not include index to a returned object if index = false", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ index: false });
+
+        expect(status.index).to.be.undefined;
+      });
+
+      it("should include position to a returned object if position = true", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ position: true });
+
+        expect(status.position).to.exist;
+        expect(typeof status.position).to.equal("number");
+      });
+
+      it("should not include position to a returned object if position = false", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ position: false });
+
+        expect(status.position).to.be.undefined;
+      });
+
+      it("should include a panel outerHTML array to a returned object if includePanelHTML = true", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ includePanelHTML: true });
+
+        expect(status.panels).to.exist;
+        expect(status.panels).to.be.an.instanceOf(Array);
+        expect(status.panels.length).to.equal(flicking.panelCount);
+        expect(status.panels.every(panel => typeof panel === "string")).to.be.true;
+      });
+
+      it("should not include a panel outerHTML array to a returned object if includePanelHTML = false", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ includePanelHTML: false });
+
+        expect(status.panels).to.be.undefined;
+      });
+
+      it("should include a panel outerHTML array of the visible panels to a returned object if includePanelHTML = true and visiblePanelsOnly = true", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ includePanelHTML: true, visiblePanelsOnly: true });
+
+        expect(status.panels).to.exist;
+        expect(status.panels).to.be.an.instanceOf(Array);
+        expect(status.panels.length).to.equal(flicking.visiblePanels.length);
+        expect(status.panels.length).not.to.equal(flicking.panels.length);
+        expect(status.panels.every(panel => typeof panel === "string")).to.be.true;
+      });
+
+      it("should not include a panel outerHTML array of the visible panels to a returned object if includePanelHTML = false and visiblePanelsOnly = true", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ includePanelHTML: false });
+
+        expect(status.panels).to.be.undefined;
+      });
     });
 
     describe("setStatus()", () => {
