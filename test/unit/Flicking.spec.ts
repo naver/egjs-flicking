@@ -6,7 +6,8 @@ import { ALIGN, DIRECTION, EVENTS } from "~/const/external";
 import { AfterResizeEvent, BeforeResizeEvent } from "~/type/event";
 
 import El from "./helper/El";
-import { cleanup, createFlicking, simulate, tick } from "./helper/test-util";
+import { cleanup, createFlicking, range, simulate, tick } from "./helper/test-util";
+import { Plugin } from "~/type/external";
 
 describe("Flicking", () => {
   afterEach(() => {
@@ -1216,6 +1217,101 @@ describe("Flicking", () => {
         flicking.setStatus(status);
 
         expect(flicking.currentPanel.element.classList.contains(classToAdd)).to.be.false;
+      });
+    });
+
+    describe("plugin-related methods", () => {
+      class TestPlugin implements Plugin {
+        public init = sinon.spy();
+        public destroy = sinon.spy();
+        public update = sinon.spy();
+      }
+
+      describe("addPlugins()", () => {
+        it("can add new plugin to a `plugins` array", () => {
+          const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+          const plugin = new TestPlugin();
+
+          flicking.addPlugins(plugin);
+
+          expect(flicking.plugins.includes(plugin)).to.be.true;
+        });
+
+        it("can add multiple plugins to a `plugins` array", () => {
+          const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+          const plugins = range(100).map(() => new TestPlugin());
+
+          flicking.addPlugins(...plugins);
+
+          expect(plugins.every(plugin => flicking.plugins.includes(plugin))).to.be.true;
+        });
+
+        it("should call `init` of the plugin when Flicking's already initialized", () => {
+          const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: true });
+          const plugin = new TestPlugin();
+
+          const initCalledBefore = plugin.init.called;
+          flicking.addPlugins(plugin);
+
+          expect(initCalledBefore).to.be.false;
+          expect(plugin.init.calledOnce).to.be.true;
+        });
+
+        it("shouldn't call `init` of the plugin when Flicking's not initialized", () => {
+          const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false });
+          const plugin = new TestPlugin();
+
+          const initCalledBefore = plugin.init.called;
+          flicking.addPlugins(plugin);
+
+          expect(initCalledBefore).to.be.false;
+          expect(plugin.init.called).to.be.false;
+        });
+
+        it("should call `init` on Flicking's init() called", () => {
+          const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false });
+          const plugin = new TestPlugin();
+
+          flicking.addPlugins(plugin);
+          const initCalledBefore = plugin.init.called;
+
+          flicking.init();
+
+          expect(initCalledBefore).to.be.false;
+          expect(plugin.init.calledOnce).to.be.true;
+        });
+      });
+
+      describe("removePlugins()", () => {
+        it("should remove a plugin from `plugins` array", () => {
+          const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+          const plugin = new TestPlugin();
+
+          flicking.addPlugins(plugin);
+          flicking.removePlugins(plugin);
+
+          expect(flicking.plugins.includes(plugin)).to.be.false;
+        });
+
+        it("can be called with plugin that is not added before but will not throw any error", () => {
+          const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+          const plugin = new TestPlugin();
+
+          flicking.removePlugins(plugin);
+
+          expect(flicking.plugins.includes(plugin)).to.be.false;
+        });
+
+        it("can remove a plugin from `plugins` array even if the plugin's not initialized", () => {
+          const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false });
+          const plugin = new TestPlugin();
+
+          flicking.addPlugins(plugin);
+          flicking.removePlugins(plugin);
+
+          expect(plugin.init.called).to.be.false;
+          expect(flicking.plugins.includes(plugin)).to.be.false;
+        });
       });
     });
   });

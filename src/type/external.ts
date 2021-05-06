@@ -24,6 +24,9 @@ export interface Plugin {
 /**
  * Flicking Status returned by {@link Flicking#getStatus}
  * @ko {@link Flicking#getStatus}에 의해 반환된 Flicking 상태 객체
+ * @property {number} index An index of the active panel<ko>활성화된 패널의 인덱스</ko>
+ * @property {number} position A camera {@link Camera#position position}<ko>카메라 {@link Camera#position position}</ko>
+ * @property {string[]} panels An `outerHTML` array of panel elements<ko>패널의 `outerHTML` 배열</ko>
  */
 export interface Status {
   index: number;
