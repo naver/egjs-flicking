@@ -20,3 +20,13 @@ export interface Plugin {
   destroy(): void;
   update(flicking: Flicking): void;
 }
+
+/**
+ * Flicking Status returned by {@link Flicking#getStatus}
+ * @ko {@link Flicking#getStatus}에 의해 반환된 Flicking 상태 객체
+ */
+export interface Status {
+  index: number;
+  position: number;
+  panels: string[];
+}

@@ -24,6 +24,7 @@
  * @property {number} ANIMATION_ALREADY_PLAYING When the animation is already playing.<ko>현재 애니메이션이 이미 진행중인 경우</ko>
  * @property {number} NOT_ALLOWED_IN_FRAMEWORK When the non-allowed method is called from frameworks (React, Angular, Vue...)
  * <ko>프레임워크(React, Angular, Vue ...)에서 사용 불가능한 메소드를 호출했을 경우</ko>
+ * @property {number} NOT_INITIALIZED When the {@link Flicking#init} is not called before but is needed<ko>{@link Flicking#init}의 호출이 필요하나, 아직 호출되지 않았을 경우</ko>
  */
 export const CODE = {
   WRONG_TYPE: 0,
@@ -37,7 +38,8 @@ export const CODE = {
   STOP_CALLED_BY_USER: 8,
   ANIMATION_INTERRUPTED: 9,
   ANIMATION_ALREADY_PLAYING: 10,
-  NOT_ALLOWED_IN_FRAMEWORK: 11
+  NOT_ALLOWED_IN_FRAMEWORK: 11,
+  NOT_INITIALIZED: 12
 } as const;
 
 export const MESSAGE = {
@@ -52,5 +54,6 @@ export const MESSAGE = {
   STOP_CALLED_BY_USER: "Event stop() is called by user",
   ANIMATION_INTERRUPTED: "Animation is interrupted by user input",
   ANIMATION_ALREADY_PLAYING: "Animation is already playing",
-  NOT_ALLOWED_IN_FRAMEWORK: "This behavior is not allowed in the frameworks like React, Vue, or Angular"
+  NOT_ALLOWED_IN_FRAMEWORK: "This behavior is not allowed in the frameworks like React, Vue, or Angular",
+  NOT_INITIALIZED: "Flicking is not initialized yet, call init() first"
 } as const;

@@ -23,7 +23,9 @@ import NativeFlicking, {
   FlickingEvents,
   EVENTS,
   sync,
-  getRenderingPanels
+  getRenderingPanels,
+  Plugin,
+  Status
 } from "@egjs/flicking";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import * as uuid from "uuid";
@@ -54,6 +56,7 @@ export class NgxFlickingComponent extends FlickingInterface
   implements AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
   @Input() public options: Partial<FlickingOptions> = {};
   @Input() public plugins: Plugin[] = [];
+  @Input() public status: Partial<Status> = {};
   @Input() public data: any[] = [];
 
   @Output() public ready = new EventEmitter<FlickingEvents[typeof EVENTS.READY]>();
@@ -104,7 +107,7 @@ export class NgxFlickingComponent extends FlickingInterface
     const options: Partial<FlickingOptions> = {
       ...this.options,
       renderExternal: true,
-      useOrderManipulator: true
+      useOffsetManipulator: true
     };
 
     // This prevents mousemove to call ngDoCheck & noAfterContentChecked everytime
@@ -117,6 +120,10 @@ export class NgxFlickingComponent extends FlickingInterface
 
     this._bindEvents();
     this._checkPlugins();
+
+    if (this.status) {
+      this._nativeFlicking.setStatus(this.status);
+    }
 
     if (this.options.renderOnlyVisible) {
       this._reRender();

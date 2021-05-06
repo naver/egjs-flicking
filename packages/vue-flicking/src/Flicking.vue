@@ -10,7 +10,15 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import NativeFlicking, { EVENTS, FlickingOptions, withFlickingMethods, sync, getRenderingPanels } from "@egjs/flicking";
+import NativeFlicking, {
+  EVENTS,
+  FlickingOptions,
+  withFlickingMethods,
+  sync,
+  getRenderingPanels,
+  Plugin,
+  Status
+} from "@egjs/flicking";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { VNode } from "vue";
@@ -29,6 +37,7 @@ class Flicking extends Vue {
   @Prop({ type: String, default: "div", required: false }) public cameraTag!: string;
   @Prop({ type: Object, default: () => ({}), required: false }) public options!: Partial<FlickingOptions>;
   @Prop({ type: Array, default: () => ([]), required: false }) public plugins!: Plugin[];
+  @Prop({ type: Object, required: false }) public status!: Partial<Status>;
 
   public get vertical() {
     const flicking = this._nativeFlicking;
@@ -64,6 +73,9 @@ class Flicking extends Vue {
 
     this._bindEvents();
     this._checkPlugins();
+    if (this.status) {
+      this._nativeFlicking.setStatus(this.status);
+    }
 
     this.$forceUpdate();
   }

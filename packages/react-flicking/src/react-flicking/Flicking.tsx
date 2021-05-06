@@ -84,6 +84,10 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       });
     }
 
+    if (this.props.status) {
+      this.setStatus(this.props.status);
+    }
+
     this._nativeFlicking = flicking;
 
     const children = this._getChildren(this.props.children);

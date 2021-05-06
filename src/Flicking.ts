@@ -19,7 +19,7 @@ import * as ERROR from "~/const/error";
 import { findIndex, getElement, includes } from "~/utils";
 import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, WillChangeEvent, WillRestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent, ChangedEvent, RestoredEvent } from "~/type/event";
 import { LiteralUnion, ValueOf } from "~/type/internal";
-import { ElementLike, Plugin } from "~/type/external";
+import { ElementLike, Plugin, Status } from "~/type/external";
 
 /**
  * @interface
@@ -847,27 +847,70 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   /**
-   * Get current flicking status. You can restore current state by giving returned value to [setStatus()]{@link Flicking#setStatus}
-   * @ko 현재 상태를 반환합니다. 반환받은 값을 [setStatus()]{@link Flicking#setStatus} 메소드의 인자로 지정하면 현재 상태를 복원할 수 있습니다
-   * @return An object with current status value information.<ko>현재 상태값 정보를 가진 객체.</ko>
+   * Get current flicking status. You can restore current state by giving returned value to {@link Flicking#setStatus setStatus()}
+   * @ko 현재 상태를 반환합니다. 반환받은 값을 {@link Flicking#setStatus setStatus()} 메소드의 인자로 지정하면 현재 상태를 복원할 수 있습니다
+   * @return An object with current status value information<ko>현재 상태값 정보를 가진 객체.</ko>
    */
-  public getStatus() {
-    // TODO:
-    return {
-      index: -1,
-      panels: [],
-      position: 0
-    };
+  public getStatus({
+    index = true,
+    position = true,
+    includePanelHTML = false,
+    visibleOnly = false
+  }: Partial<{
+    index: boolean;
+    position: boolean;
+    includePanelHTML: boolean;
+    visibleOnly: boolean;
+  }> = {}): Partial<Status> {
+    const status: Partial<Status> = {};
+
+    if (index) {
+      status.index = this.index;
+    }
+    if (position) {
+      status.position = this._camera.position;
+    }
+    if (includePanelHTML) {
+      const panels = visibleOnly ? this.visiblePanels : this.panels;
+
+      status.panels = panels.map(panel => panel.element.outerHTML);
+    }
+
+    return status;
   }
 
   /**
-   * Restore to the state of the `status`
-   * @ko `status`의 상태로 복원합니다
-   * @param status Status value to be restored. You can specify the return value of the [getStatus()]{@link Flicking#getStatus} method<ko>복원할 상태 값. [getStatus()]{@link Flicking#getStatus}메서드의 반환값을 지정하면 됩니다</ko>
+   * Restore to the state of the given {@link Status}
+   * @ko 주어진 {@link Status}의 상태로 복원합니다
+   * @param status Status value to be restored. You can specify the return value of the {@link Flicking#getStatus getStatus()} method<ko>복원할 상태 값. {@link Flicking#getStatus getStatus()} 메서드의 반환값을 지정하면 됩니다</ko>
    * @return {void}
    */
-  public setStatus(status): void {
-    // TODO:
+  public setStatus({
+    index,
+    position,
+    panels
+  }: Partial<Status>): void {
+    if (!this._initialized) {
+      throw new FlickingError(ERROR.MESSAGE.NOT_INITIALIZED, ERROR.CODE.NOT_INITIALIZED);
+    }
+
+    const renderer = this._renderer;
+    const control = this._control;
+
+    // Can't add/remove panels on external rendering
+    if (panels && !this._renderExternal) {
+      renderer.remove(0, this.panels.length);
+      renderer.insert(0, panels);
+    }
+
+    if (index) {
+      void this.moveTo(index, 0).catch(() => void 0);
+    }
+
+    if (position) {
+      void control.moveToPosition(position, 0).catch(() => void 0);
+    }
+
     return;
   }
 
