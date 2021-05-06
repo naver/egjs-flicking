@@ -849,6 +849,12 @@ class Flicking extends Component<FlickingEvents> {
   /**
    * Get current flicking status. You can restore current state by giving returned value to {@link Flicking#setStatus setStatus()}
    * @ko 현재 상태를 반환합니다. 반환받은 값을 {@link Flicking#setStatus setStatus()} 메소드의 인자로 지정하면 현재 상태를 복원할 수 있습니다
+   * @param {object} options Status retrieving options<ko>Status 반환 옵션</ko>
+   * @param {boolean} [options.index=true] Include current panel index to the returning status. Camera will automatically move to the given index when the {@link Flicking#setStatus setStatus} is called<ko>현재 패널 인덱스를 반환값에 포함시킵니다. {@link Flicking#setStatus setStatus} 호출시 자동으로 해당 인덱스로 카메라를 움직입니다</ko>
+   * @param {boolean} [options.position=true] Include camera position to the returning status. This works only when the {@link Flicking#moveType moveType} is `freeScroll`<ko>카메라의 현재 위치를 반환값에 포함시킵니다. 이 옵션은 {@link Flicking#moveType moveType}이 `freeScroll`일 경우에만 동작합니다</ko>
+   * @param {boolean} [options.includePanelHTML=false] Include panel's `outerHTML` to the returning status<ko>패널의 `outerHTML`을 반환값에 포함시킵니다</ko>
+   * @param {boolean} [options.visibleOnly=false] Include only {@link Flicking#visiblePanel visiblePanel}'s HTML. This option is available only when the `includePanelHTML` is true
+   * <ko>현재 보이는 패널({@link Flicking#visiblePanel visiblePanel})의 HTML만 반환합니다. `includePanelHTML`이 `true`일 경우에만 동작합니다.</ko>
    * @return An object with current status value information<ko>현재 상태값 정보를 가진 객체.</ko>
    */
   public getStatus({
@@ -882,7 +888,7 @@ class Flicking extends Component<FlickingEvents> {
   /**
    * Restore to the state of the given {@link Status}
    * @ko 주어진 {@link Status}의 상태로 복원합니다
-   * @param status Status value to be restored. You can specify the return value of the {@link Flicking#getStatus getStatus()} method<ko>복원할 상태 값. {@link Flicking#getStatus getStatus()} 메서드의 반환값을 지정하면 됩니다</ko>
+   * @param {Partial<Status>} status Status value to be restored. You should use the return value of the {@link Flicking#getStatus getStatus()} method<ko>복원할 상태 값. {@link Flicking#getStatus getStatus()} 메서드의 반환값을 지정하면 됩니다</ko>
    * @return {void}
    */
   public setStatus({
@@ -907,7 +913,7 @@ class Flicking extends Component<FlickingEvents> {
       void this.moveTo(index, 0).catch(() => void 0);
     }
 
-    if (position) {
+    if (position && this._moveType === MOVE_TYPE.FREE_SCROLL) {
       void control.moveToPosition(position, 0).catch(() => void 0);
     }
 
