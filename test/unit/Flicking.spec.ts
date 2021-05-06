@@ -1043,12 +1043,11 @@ describe("Flicking", () => {
         await next(flicking);
         flicking.duration = 2000;
 
-        console.log(flicking.control.controller.axes.hasOn("finish"));
         await next(flicking);
 
         expect(moveToSpy.calledTwice).to.be.true;
-        expect(moveToSpy.firstCall.calledWith(flicking.getPanel(1), 1000)).to.be.true;
-        expect(moveToSpy.secondCall.calledWith(flicking.getPanel(2), 2000)).to.be.true;
+        expect(moveToSpy.firstCall.calledWith(flicking.getPanel(1), { duration: 1000 })).to.be.true;
+        expect(moveToSpy.secondCall.calledWith(flicking.getPanel(2), { duration: 2000 })).to.be.true;
       });
 
       it("should throw FlickingError with code INDEX_OUT_OF_RANGE if called on the last index", async () => {
@@ -1100,8 +1099,8 @@ describe("Flicking", () => {
         await prev(flicking);
 
         expect(moveToSpy.calledTwice).to.be.true;
-        expect(moveToSpy.firstCall.calledWith(flicking.getPanel(1), 1000)).to.be.true;
-        expect(moveToSpy.secondCall.calledWith(flicking.getPanel(0), 2000)).to.be.true;
+        expect(moveToSpy.firstCall.calledWith(flicking.getPanel(1), { duration: 1000 })).to.be.true;
+        expect(moveToSpy.secondCall.calledWith(flicking.getPanel(0), { duration: 2000 })).to.be.true;
       });
 
       it("should throw FlickingError with code INDEX_OUT_OF_RANGE if called on the first index", async () => {
@@ -1163,6 +1162,60 @@ describe("Flicking", () => {
         expect(err)
           .to.be.instanceOf(FlickingError)
           .with.property("code", ERROR.CODE.ANIMATION_ALREADY_PLAYING);
+      });
+    });
+
+    describe("getStatus()", () => {
+      it("should return correct index", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus();
+
+        expect(status.index).equals(1);
+      });
+
+      it("should return correct index after moving", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 0 });
+
+        void flicking.moveTo(2, 0);
+        const status = flicking.getStatus();
+
+        expect(status.index).equals(2);
+      });
+
+      it("should return panel's outerHTML if `includePanelHTML` is true", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+
+        const panels = flicking.panels;
+        const status = flicking.getStatus({ includePanelHTML: true });
+
+        expect(status.panels).not.to.be.undefined;
+        expect(status.panels.length).above(0);
+        expect(status.panels.length).equals(panels.length);
+        expect(status.panels.every((panelHTML, panelIdx) => panelHTML === panels[panelIdx].element.outerHTML));
+      });
+    });
+
+    describe("setStatus()", () => {
+      it("can restore index", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 0 });
+        const status = flicking.getStatus();
+
+        void flicking.moveTo(2, 0);
+        flicking.setStatus(status);
+
+        expect(flicking.index).equals(0);
+      });
+
+      it("should restore previous state of panels if panel outerHTML is included", () => {
+        const classToAdd = "this-is-test-class";
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const status = flicking.getStatus({ includePanelHTML: true });
+
+        flicking.currentPanel.element.classList.add(classToAdd);
+        flicking.setStatus(status);
+
+        expect(flicking.currentPanel.element.classList.contains(classToAdd)).to.be.false;
       });
     });
   });
