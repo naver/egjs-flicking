@@ -2,7 +2,7 @@ import FlickingError from "~/core/FlickingError";
 import Viewport from "~/core/Viewport";
 import Flicking from "~/Flicking";
 import * as ERROR from "~/const/error";
-import { ALIGN, DIRECTION, EVENTS } from "~/const/external";
+import { ALIGN, DIRECTION, EVENTS, MOVE_TYPE } from "~/const/external";
 import { AfterResizeEvent, BeforeResizeEvent } from "~/type/event";
 
 import El from "./helper/El";
@@ -622,7 +622,7 @@ describe("Flicking", () => {
     describe("Input & Move Event Order", () => {
       const eventsFired: string[] = [];
       const attachEventOrderRecognizer = (flicking: Flicking) => {
-        [EVENTS.HOLD_START, EVENTS.HOLD_END, EVENTS.MOVE_START, EVENTS.MOVE, EVENTS.MOVE_END, EVENTS.WILL_CHANGE, EVENTS.WILL_RESTORE].forEach(event => {
+        [EVENTS.HOLD_START, EVENTS.HOLD_END, EVENTS.MOVE_START, EVENTS.MOVE, EVENTS.MOVE_END, EVENTS.WILL_CHANGE, EVENTS.WILL_RESTORE, EVENTS.CHANGED, EVENTS.RESTORED].forEach(event => {
           flicking.on(event, e => {
             if (eventsFired.length === 0 || eventsFired[eventsFired.length - 1] !== e.eventType) {
               eventsFired.push(e.eventType);
@@ -635,7 +635,7 @@ describe("Flicking", () => {
         eventsFired.splice(0, eventsFired.length);
       });
 
-      it(`should be ${EVENTS.HOLD_START} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.HOLD_END} -> ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when panel changed with user input`, async () => {
+      it(`should be ${EVENTS.HOLD_START} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.HOLD_END} -> ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when panel changed with user input`, async () => {
         const expectedEventOrder = [
           EVENTS.HOLD_START,
           EVENTS.MOVE_START,
@@ -643,7 +643,8 @@ describe("Flicking", () => {
           EVENTS.HOLD_END,
           EVENTS.WILL_CHANGE,
           EVENTS.MOVE,
-          EVENTS.MOVE_END
+          EVENTS.MOVE_END,
+          EVENTS.CHANGED
         ];
 
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 10 });
@@ -654,7 +655,7 @@ describe("Flicking", () => {
         expect(eventsFired).to.deep.equal(expectedEventOrder);
       });
 
-      it(`should be ${EVENTS.HOLD_START} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.HOLD_END} -> ${EVENTS.WILL_RESTORE} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when panel restored with user input`, async () => {
+      it(`should be ${EVENTS.HOLD_START} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.HOLD_END} -> ${EVENTS.WILL_RESTORE} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.RESTORED} when panel restored with user input`, async () => {
         const expectedEventOrder = [
           EVENTS.HOLD_START,
           EVENTS.MOVE_START,
@@ -662,7 +663,8 @@ describe("Flicking", () => {
           EVENTS.HOLD_END,
           EVENTS.WILL_RESTORE,
           EVENTS.MOVE,
-          EVENTS.MOVE_END
+          EVENTS.MOVE_END,
+          EVENTS.RESTORED
         ];
 
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 50 });
@@ -674,29 +676,31 @@ describe("Flicking", () => {
       });
 
       describe("moveTo's event order", () => {
-        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method`, () => {
           const expectedEventOrder = [
             EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
-            EVENTS.MOVE_END
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
           ];
 
           const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
           attachEventOrderRecognizer(flicking);
 
-          void flicking.moveTo(2, 10);
+          void flicking.moveTo(2, 10).then(() => {
+            expect(eventsFired).to.deep.equal(expectedEventOrder);
+          });
           tick(1000);
-
-          expect(eventsFired).to.deep.equal(expectedEventOrder);
         });
 
-        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method and duration is 0`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method and duration is 0`, () => {
           const expectedEventOrder = [
             EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
-            EVENTS.MOVE_END
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
           ];
 
           const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
@@ -709,29 +713,31 @@ describe("Flicking", () => {
       });
 
       describe("prev's event order", () => {
-        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method`, async () => {
           const expectedEventOrder = [
             EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
-            EVENTS.MOVE_END
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
           ];
 
           const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
           attachEventOrderRecognizer(flicking);
 
-          void flicking.prev(10);
+          void flicking.prev(10).then(() => {
+            expect(eventsFired).to.deep.equal(expectedEventOrder);
+          });
           tick(1000);
-
-          expect(eventsFired).to.deep.equal(expectedEventOrder);
         });
 
-        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method and duration is 0`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method and duration is 0`, () => {
           const expectedEventOrder = [
             EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
-            EVENTS.MOVE_END
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
           ];
 
           const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
@@ -744,29 +750,31 @@ describe("Flicking", () => {
       });
 
       describe("next's event order", () => {
-        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method`, () => {
           const expectedEventOrder = [
             EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
-            EVENTS.MOVE_END
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
           ];
 
           const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
           attachEventOrderRecognizer(flicking);
 
-          void flicking.next(10);
+          void flicking.next(10).then(() => {
+            expect(eventsFired).to.deep.equal(expectedEventOrder);
+          });
           tick(1000);
-
-          expect(eventsFired).to.deep.equal(expectedEventOrder);
         });
 
-        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method and duration is 0`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method and duration is 0`, () => {
           const expectedEventOrder = [
             EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
-            EVENTS.MOVE_END
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
           ];
 
           const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
@@ -1047,8 +1055,8 @@ describe("Flicking", () => {
         await next(flicking);
 
         expect(moveToSpy.calledTwice).to.be.true;
-        expect(moveToSpy.firstCall.calledWith(flicking.getPanel(1), { duration: 1000 })).to.be.true;
-        expect(moveToSpy.secondCall.calledWith(flicking.getPanel(2), { duration: 2000 })).to.be.true;
+        expect(moveToSpy.firstCall.calledWith(flicking.getPanel(1), { duration: 1000, direction: DIRECTION.NEXT })).to.be.true;
+        expect(moveToSpy.secondCall.calledWith(flicking.getPanel(2), { duration: 2000, direction: DIRECTION.NEXT })).to.be.true;
       });
 
       it("should throw FlickingError with code INDEX_OUT_OF_RANGE if called on the last index", async () => {
@@ -1064,7 +1072,7 @@ describe("Flicking", () => {
       it("should throw FlickingError with code ANIMATION_ALREADY_PLAYING if it is animating", async () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
-        void simulate(flicking.element, { duration: 1000 }, 500);
+        void flicking.next(1000);
         const err = await next(flicking).catch(e => e);
 
         expect(err)
@@ -1100,8 +1108,8 @@ describe("Flicking", () => {
         await prev(flicking);
 
         expect(moveToSpy.calledTwice).to.be.true;
-        expect(moveToSpy.firstCall.calledWith(flicking.getPanel(1), { duration: 1000 })).to.be.true;
-        expect(moveToSpy.secondCall.calledWith(flicking.getPanel(0), { duration: 2000 })).to.be.true;
+        expect(moveToSpy.firstCall.calledWith(flicking.getPanel(1), { duration: 1000, direction: DIRECTION.PREV })).to.be.true;
+        expect(moveToSpy.secondCall.calledWith(flicking.getPanel(0), { duration: 2000, direction: DIRECTION.PREV })).to.be.true;
       });
 
       it("should throw FlickingError with code INDEX_OUT_OF_RANGE if called on the first index", async () => {
@@ -1117,7 +1125,7 @@ describe("Flicking", () => {
       it("should throw FlickingError with code ANIMATION_ALREADY_PLAYING if it is animating", async () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
 
-        void simulate(flicking.element, { duration: 1000 }, 500);
+        void flicking.prev(1000);
         const err = await prev(flicking).catch(e => e);
 
         expect(err)
@@ -1157,7 +1165,7 @@ describe("Flicking", () => {
       it("should throw FlickingError with code ANIMATION_ALREADY_PLAYING if it is animating", async () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
 
-        void simulate(flicking.element, { duration: 1000 }, 500);
+        void flicking.prev(1000);
         const err = await prev(flicking).catch(e => e);
 
         expect(err)
@@ -1250,12 +1258,13 @@ describe("Flicking", () => {
       });
 
       it("should include a panel outerHTML array of the visible panels to a returned object if includePanelHTML = true and visiblePanelsOnly = true", () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
         const status = flicking.getStatus({ includePanelHTML: true, visiblePanelsOnly: true });
 
         expect(status.panels).to.exist;
         expect(status.panels).to.be.an.instanceOf(Array);
+
         expect(status.panels.length).to.equal(flicking.visiblePanels.length);
         expect(status.panels.length).not.to.equal(flicking.panels.length);
         expect(status.panels.every(panel => typeof panel === "string")).to.be.true;
@@ -1272,13 +1281,16 @@ describe("Flicking", () => {
 
     describe("setStatus()", () => {
       it("can restore index", () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 0 });
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
         const status = flicking.getStatus();
 
-        void flicking.moveTo(2, 0);
+        void flicking.moveTo(0, 0);
+        const indexBefore = flicking.index;
         flicking.setStatus(status);
 
-        expect(flicking.index).equals(0);
+        expect(indexBefore).to.equal(0);
+        expect(flicking.index).equals(2);
+        expect(flicking.camera.position).to.equal(flicking.panels[2].position);
       });
 
       it("should restore previous state of panels if panel outerHTML is included", () => {
@@ -1290,6 +1302,28 @@ describe("Flicking", () => {
         flicking.setStatus(status);
 
         expect(flicking.currentPanel.element.classList.contains(classToAdd)).to.be.false;
+      });
+
+      it("should move to the given camera position if moveType is freeScroll", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.FREE_SCROLL });
+        const status = flicking.getStatus({ index: false, position: true });
+        const prevPosition = flicking.camera.position;
+
+        flicking.setStatus({ ...status, position: flicking.camera.range.max });
+
+        expect(flicking.camera.position).not.equals(prevPosition);
+        expect(flicking.camera.position).equals(flicking.camera.range.max);
+      });
+
+      it("should not move to the given camera position if moveType is not freeScroll", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.SNAP });
+        const status = flicking.getStatus({ index: false, position: true });
+        const prevPosition = flicking.camera.position;
+
+        flicking.setStatus({ ...status, position: flicking.camera.range.max });
+
+        expect(flicking.camera.position).equals(prevPosition);
+        expect(flicking.camera.position).not.equals(flicking.camera.range.max);
       });
     });
 

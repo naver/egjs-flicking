@@ -50,7 +50,7 @@ describe("FreeControl", () => {
           [EVENTS.WILL_RESTORE]: restoreSpy
         });
 
-        const promise = control.moveToPosition(control.activePanel.position + 50, 500);
+        const promise = control.moveToPosition(control.activePanel.position + 1, 500);
         tick(1000);
         await promise;
 

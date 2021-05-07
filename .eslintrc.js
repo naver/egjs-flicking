@@ -162,6 +162,7 @@ module.exports = {
         ],
         "@typescript-eslint/type-annotation-spacing": "error",
         "@typescript-eslint/unified-signatures": "error",
+        "@typescript-eslint/no-unsafe-assignment": "off",
         "@typescript-eslint/no-shadow": ["error"],
         "@typescript-eslint/naming-convention": [
           "error",

@@ -310,8 +310,9 @@ abstract class Control {
     const isTrusted = axesEvent?.isTrusted || false;
 
     if (duration === 0) {
+      const animation = animate();
       this._setActivePanel(newActivePanel, currentPanel, isTrusted);
-      return animate();
+      return animation;
     } else {
       return animate().then(() => this._setActivePanel(newActivePanel, currentPanel, isTrusted));
     }

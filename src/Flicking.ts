@@ -713,7 +713,7 @@ class Flicking extends Component<FlickingEvents> {
    * @return {Promise<void>} A Promise which will be resolved after reaching the previous panel<ko>이전 패널 도달시에 resolve되는 Promise</ko>
    */
   public prev(duration: number = this._duration): Promise<void> {
-    return this.moveTo(this._control.activePanel?.next()?.index ?? -1, duration, DIRECTION.PREV);
+    return this.moveTo(this._control.activePanel?.prev()?.index ?? -1, duration, DIRECTION.PREV);
   }
 
   /**

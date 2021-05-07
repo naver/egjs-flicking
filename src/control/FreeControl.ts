@@ -63,7 +63,11 @@ class FreeControl extends Control {
     }
 
     const targetPanel = anchorAtPosition.panel;
-    this._triggerIndexChangeEvent(targetPanel, position, axesEvent);
+
+    // Trigger only change event
+    if (targetPanel !== this._activePanel) {
+      this._triggerIndexChangeEvent(targetPanel, position, axesEvent);
+    }
 
     return this._animateToPosition({ position, duration, newActivePanel: targetPanel, axesEvent });
   }
