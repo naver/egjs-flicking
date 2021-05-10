@@ -46,7 +46,7 @@ module.exports = {
           dropdownActiveClassDisabled: true,
           dropdownItemsAfter: [
             {
-              to: 'https://naver.github.io/egjs-flicking/3.8.2',
+              to: 'https://naver.github.io/egjs-flicking/release/3.8.2/doc/index.html',
               label: '3.x.x'
             }
           ]
@@ -79,7 +79,7 @@ module.exports = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus'
+              href: 'https://github.com/naver/egjs-flicking'
             }
           ]
         }
@@ -106,7 +106,8 @@ module.exports = {
             current: {
               label: `Next`
             }
-          }
+          },
+          editCurrentVersion: true
         },
         blog: {
           showReadingTime: true,
