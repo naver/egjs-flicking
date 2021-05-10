@@ -9,7 +9,9 @@ import Columns from "@site/src/component/Columns";
 import ColumnItem from "@site/src/component/ColumnItem";
 import AutoInit from "@site/src/demo/AutoInit";
 
-## align
+# Options
+## UI / Layout
+### align
 Align position of the panels within viewport.
 You can set different values each for the panel and camera.
 
@@ -82,7 +84,7 @@ You can set different values each for the panel and camera.
   </ColumnItem>
 </Columns>
 
-## defaultIndex
+### defaultIndex
 Index of the panel to move when Flicking's [init](api/Flicking#init) is called.
 A zero-based integer.
 
@@ -119,7 +121,7 @@ A zero-based integer.
   </ColumnItem>
 </Columns>
 
-## horizontal
+### horizontal
 Direction of panel movement (true: horizontal, false: vertical)
 
 <Columns>
@@ -165,7 +167,7 @@ Direction of panel movement (true: horizontal, false: vertical)
   </ColumnItem>
 </Columns>
 
-## circular
+### circular
 Enables circular(continuous loop) mode, which connects first/last panel for continuous scrolling.
 
 <Columns>
@@ -205,7 +207,7 @@ Enables circular(continuous loop) mode, which connects first/last panel for cont
   </ColumnItem>
 </Columns>
 
-## bound
+### bound
 Prevent the view(camera element) from going out of the first/last panel, so it won't show empty spaces before/after the first/last panel
 Only can be enabled when `circular=false`
 
@@ -242,7 +244,7 @@ Only can be enabled when `circular=false`
   </ColumnItem>
 </Columns>
 
-## adaptive
+### adaptive
 Update height of the viewport element after movement same to the height of the panel below.
 This can be only enabled when `horizontal=true`
 
@@ -289,7 +291,8 @@ This can be only enabled when `horizontal=true`
 You should add CSS `transition` property to `flicking-viewport` to animate height.
 :::
 
-## needPanelThreshold
+## Event
+### needPanelThreshold
 A Threshold from viewport edge before triggering [needPanel](api/Flicking#event-needPanel) event
 
 <Columns>
@@ -325,7 +328,8 @@ A Threshold from viewport edge before triggering [needPanel](api/Flicking#event-
   </ColumnItem>
 </Columns>
 
-## deceleration
+## Animation
+### deceleration
 Deceleration value for panel movement animation which is triggered by user input. A higher value means a shorter animation time
 
 <Columns>
@@ -361,7 +365,7 @@ Deceleration value for panel movement animation which is triggered by user input
   </ColumnItem>
 </Columns>
 
-## easing
+### easing
 An easing function applied to the panel movement animation. Default value is `easeOutCubic`
 
 <Columns>
@@ -397,7 +401,8 @@ An easing function applied to the panel movement animation. Default value is `ea
   </ColumnItem>
 </Columns>
 
-## duration
+## Input
+### duration
 Default duration of the animation (ms)
 
 <Columns>
@@ -449,7 +454,7 @@ Default duration of the animation (ms)
   </ColumnItem>
 </Columns>
 
-## inputType
+### inputType
 Types of input devices to enable
 
 <Columns>
@@ -501,7 +506,7 @@ Types of input devices to enable
   </ColumnItem>
 </Columns>
 
-## moveType
+### moveType
 Movement style by user input. This will change instance type of [Flicking#control](api/Flicking#control).
 
 <Columns>
@@ -541,7 +546,7 @@ Movement style by user input. This will change instance type of [Flicking#contro
   </ColumnItem>
 </Columns>
 
-## threshold
+### threshold
 Movement threshold to change panel (unit: px).
 It should be dragged above the threshold to change the current panel.
 
@@ -600,7 +605,7 @@ It should be dragged above the threshold to change the current panel.
   </ColumnItem>
 </Columns>
 
-## interruptable
+### interruptable
 Set animation to be interruptable by click/touch.
 
 <Columns>
@@ -640,7 +645,7 @@ Set animation to be interruptable by click/touch.
   </ColumnItem>
 </Columns>
 
-## bounce
+### bounce
 The size value of the bounce area. Only can be enabled when `circular=false`.
 You can set different bounce value for prev/next direction by using array.
 `number` for px value, and `string` for px, and % value relative to viewport size.
@@ -701,7 +706,7 @@ You have to call [Control#updateInput](api/Control#updateInput) after changing t
   </ColumnItem>
 </Columns>
 
-## iOSEdgeSwipeThreshold
+### iOSEdgeSwipeThreshold
 Size of the area from the right edge in iOS safari (in px) which enables swipe-back or swipe-forward
 
 <Columns>
@@ -745,7 +750,7 @@ Size of the area from the right edge in iOS safari (in px) which enables swipe-b
   </ColumnItem>
 </Columns>
 
-## preventClickOnDrag
+### preventClickOnDrag
 Automatically prevent `click` event if the user has dragged at least a single pixel on the viewport element.
 
 <Columns>
@@ -785,7 +790,8 @@ Automatically prevent `click` event if the user has dragged at least a single pi
   </ColumnItem>
 </Columns>
 
-## renderOnlyVisible
+## Performance
+### renderOnlyVisible
 Whether to render visible panels only. This can dramatically increase performance when there're many panels.
 This will set [renderer](api/Flicking#renderer)'s type to [VisibleRenderer](api/VisibleRenderer).
 
@@ -826,7 +832,8 @@ This will set [renderer](api/Flicking#renderer)'s type to [VisibleRenderer](api/
   </ColumnItem>
 </Columns>
 
-## autoInit
+## Others
+### autoInit
 Call [init()](api/Flicking#init) automatically when creating Flicking's instance.
 
 <Columns>
@@ -860,7 +867,7 @@ Call [init()](api/Flicking#init) automatically when creating Flicking's instance
   </ColumnItem>
 </Columns>
 
-## autoResize
+### autoResize
 Attach Flicking's [resize](api/Flicking#resize) method to window's resize event.
 Flicking will automatically call [resize](api/Flicking#resize) window size and orientation change.
 
@@ -902,7 +909,7 @@ Change window size or change orientation(on mobile) to see its effect.
   </ColumnItem>
 </Columns>
 
-## useOrderManipulator
+### useOrderManipulator
 Use [OrderManipulator](api/OrderManipulator) for the element order managing in [Renderer](api/Renderer).
 Instead of inserting/removing element to change order, this will use CSS [order](https://developer.mozilla.org/en-US/docs/Web/CSS/order).
 ⚠️ Enabling this option will decrease browser coverage to IE11+

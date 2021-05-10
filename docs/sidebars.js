@@ -1,15 +1,10 @@
 module.exports = {
   docs: [
-    {
-      type: "category",
-      label: "Flicking Tutorial",
-      items: [
-        "installation",
-        "quick-start",
-        "using-the-methods",
-        "listening-to-events"
-      ]
-    }
+    "installation",
+    "quick-start",
+    "using-the-methods",
+    "listening-to-events",
+    "error-handling"
   ],
   ...require("./sidebars-api.js")
 };

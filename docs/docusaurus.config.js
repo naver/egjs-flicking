@@ -29,8 +29,7 @@ module.exports = {
           position: 'left'
         },
         {
-          type: "doc",
-          docId: "Options",
+          to: "Options",
           label: "Options",
           position: "left"
         },
@@ -90,6 +89,9 @@ module.exports = {
         href: 'https://naver.github.io/'
       },
       copyright: `Copyright © ${new Date().getFullYear()} NAVER, Inc. Built with Docusaurus.`
+    },
+    prism: {
+      theme: require('prism-react-renderer/themes/oceanicNext')
     }
   },
   presets: [
@@ -113,6 +115,9 @@ module.exports = {
           showReadingTime: true,
           // Please change this to your repo.
           editUrl: "https://github.com/naver/egjs-flicking/edit/master/docs/blog/"
+        },
+        pages: {
+          remarkPlugins: [require("remark-breaks")]
         },
         theme: {
           customCss: [
