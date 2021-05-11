@@ -855,7 +855,7 @@ class Flicking extends Component<FlickingEvents> {
    * @param {boolean} [options.includePanelHTML=false] Include panel's `outerHTML` to the returning status<ko>패널의 `outerHTML`을 반환값에 포함시킵니다</ko>
    * @param {boolean} [options.visiblePanelsOnly=false] Include only {@link Flicking#visiblePanel visiblePanel}'s HTML. This option is available only when the `includePanelHTML` is true
    * <ko>현재 보이는 패널({@link Flicking#visiblePanel visiblePanel})의 HTML만 반환합니다. `includePanelHTML`이 `true`일 경우에만 동작합니다.</ko>
-   * @return An object with current status value information<ko>현재 상태값 정보를 가진 객체.</ko>
+   * @return {Partial<Status>} An object with current status value information<ko>현재 상태값 정보를 가진 객체.</ko>
    */
   public getStatus({
     index = true,
@@ -881,6 +881,16 @@ class Flicking extends Component<FlickingEvents> {
 
       status.panels = panels.map(panel => panel.element.outerHTML);
     }
+    if (visiblePanelsOnly) {
+      const visiblePanels = this.visiblePanels;
+
+      status.visibleOffset = {
+        index: visiblePanels[0]?.index ?? 0,
+        position: visiblePanels[0]
+          ? (visiblePanels[0].range.min - visiblePanels[0].margin.prev)
+          : 0
+      };
+    }
 
     return status;
   }
@@ -891,14 +901,17 @@ class Flicking extends Component<FlickingEvents> {
    * @param {Partial<Status>} status Status value to be restored. You should use the return value of the {@link Flicking#getStatus getStatus()} method<ko>복원할 상태 값. {@link Flicking#getStatus getStatus()} 메서드의 반환값을 지정하면 됩니다</ko>
    * @return {void}
    */
-  public setStatus({
-    index,
-    position,
-    panels
-  }: Partial<Status>): void {
+  public setStatus(status: Partial<Status>): void {
     if (!this._initialized) {
       throw new FlickingError(ERROR.MESSAGE.NOT_INITIALIZED, ERROR.CODE.NOT_INITIALIZED);
     }
+
+    const {
+      index,
+      position,
+      visibleOffset,
+      panels
+    } = status;
 
     const renderer = this._renderer;
     const control = this._control;
@@ -910,14 +923,20 @@ class Flicking extends Component<FlickingEvents> {
     }
 
     if (index) {
-      void this.moveTo(index, 0).catch(() => void 0);
+      const panelIndex = visibleOffset
+        ? index - visibleOffset.index
+        : index;
+
+      void this.moveTo(panelIndex, 0).catch(() => void 0);
     }
 
     if (position && this._moveType === MOVE_TYPE.FREE_SCROLL) {
-      void control.moveToPosition(position, 0).catch(() => void 0);
-    }
+      const cameraPosition = visibleOffset
+        ? position - visibleOffset.position
+        : position;
 
-    return;
+      void control.moveToPosition(cameraPosition, 0).catch(() => void 0);
+    }
   }
 
   /**

@@ -26,10 +26,16 @@ export interface Plugin {
  * @ko {@link Flicking#getStatus}에 의해 반환된 Flicking 상태 객체
  * @property {number} index An index of the active panel<ko>활성화된 패널의 인덱스</ko>
  * @property {number} position A camera {@link Camera#position position}<ko>카메라 {@link Camera#position position}</ko>
+ * @property {object} visibleOffset An offset to visible panel's original index and position. This value is available only when `visiblePanelsOnly` is `true`
+ * <ko>현재 보이는 패널들을 저장했을 때, 원래의 인덱스와 위치 좌표 대비 offset. `visiblePanelsOnly` 옵션을 사용했을 때만 사용 가능합니다</ko>
  * @property {string[]} panels An `outerHTML` array of panel elements<ko>패널의 `outerHTML` 배열</ko>
  */
 export interface Status {
   index: number;
   position: number;
+  visibleOffset?: {
+    index: number;
+    position: number;
+  };
   panels: string[];
 }
