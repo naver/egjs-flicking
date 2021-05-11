@@ -126,13 +126,11 @@ class AxesController {
    * @ko AxesController를 초기 상태로 되돌립니다
    * @return {void}
    */
-  public destroy() {
+  public destroy(): void {
     this._axes?.destroy();
     this._panInput?.destroy();
 
     this._resetInternalValues();
-
-    return this;
   }
 
   /**
