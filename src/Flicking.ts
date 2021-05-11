@@ -867,8 +867,20 @@ class Flicking extends Component<FlickingEvents> {
     position: boolean;
     includePanelHTML: boolean;
     visiblePanelsOnly: boolean;
-  }> = {}): Partial<Status> {
-    const status: Partial<Status> = {};
+  }> = {}): Status {
+    const panels = visiblePanelsOnly ? this.visiblePanels : this.panels;
+
+    const status: Status = {
+      panels: panels.map(panel => {
+        const panelInfo: Status["panels"][0] = { index: panel.index };
+
+        if (includePanelHTML) {
+          panelInfo.html = panel.element.outerHTML;
+        }
+
+        return panelInfo;
+      })
+    };
 
     if (index) {
       status.index = this.index;
@@ -876,11 +888,7 @@ class Flicking extends Component<FlickingEvents> {
     if (position) {
       status.position = this._camera.position;
     }
-    if (includePanelHTML) {
-      const panels = visiblePanelsOnly ? this.visiblePanels : this.panels;
 
-      status.panels = panels.map(panel => panel.element.outerHTML);
-    }
     if (visiblePanelsOnly) {
       const visiblePanels = this.visiblePanels;
 
@@ -901,7 +909,7 @@ class Flicking extends Component<FlickingEvents> {
    * @param {Partial<Status>} status Status value to be restored. You should use the return value of the {@link Flicking#getStatus getStatus()} method<ko>복원할 상태 값. {@link Flicking#getStatus getStatus()} 메서드의 반환값을 지정하면 됩니다</ko>
    * @return {void}
    */
-  public setStatus(status: Partial<Status>): void {
+  public setStatus(status: Status): void {
     if (!this._initialized) {
       throw new FlickingError(ERROR.MESSAGE.NOT_INITIALIZED, ERROR.CODE.NOT_INITIALIZED);
     }
@@ -917,9 +925,9 @@ class Flicking extends Component<FlickingEvents> {
     const control = this._control;
 
     // Can't add/remove panels on external rendering
-    if (panels && !this._renderExternal) {
+    if (panels[0]?.html && !this._renderExternal) {
       renderer.remove(0, this.panels.length);
-      renderer.insert(0, panels);
+      renderer.insert(0, panels.map(panel => panel.html!));
     }
 
     if (index) {

@@ -31,11 +31,14 @@ export interface Plugin {
  * @property {string[]} panels An `outerHTML` array of panel elements<ko>패널의 `outerHTML` 배열</ko>
  */
 export interface Status {
-  index: number;
-  position: number;
+  index?: number;
+  position?: number;
   visibleOffset?: {
     index: number;
     position: number;
   };
-  panels: string[];
+  panels: Array<{
+    index: number;
+    html?: string;
+  }>;
 }

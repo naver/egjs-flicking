@@ -1201,7 +1201,7 @@ describe("Flicking", () => {
         expect(status.panels).not.to.be.undefined;
         expect(status.panels.length).above(0);
         expect(status.panels.length).equals(panels.length);
-        expect(status.panels.every((panelHTML, panelIdx) => panelHTML === panels[panelIdx].element.outerHTML));
+        expect(status.panels.every((panel, panelIdx) => panel.html === panels[panelIdx].element.outerHTML));
       });
 
       it("should include index to a returned object if index = true", () => {
@@ -1246,7 +1246,7 @@ describe("Flicking", () => {
         expect(status.panels).to.exist;
         expect(status.panels).to.be.an.instanceOf(Array);
         expect(status.panels.length).to.equal(flicking.panelCount);
-        expect(status.panels.every(panel => typeof panel === "string")).to.be.true;
+        expect(status.panels.every(panel => typeof panel.html === "string")).to.be.true;
       });
 
       it("should not include a panel outerHTML array to a returned object if includePanelHTML = false", () => {
@@ -1254,7 +1254,7 @@ describe("Flicking", () => {
 
         const status = flicking.getStatus({ includePanelHTML: false });
 
-        expect(status.panels).to.be.undefined;
+        expect(status.panels.every(panel => panel.html === undefined)).to.be.true;
       });
 
       it("should include a panel outerHTML array of the visible panels to a returned object if includePanelHTML = true and visiblePanelsOnly = true", () => {
@@ -1267,7 +1267,7 @@ describe("Flicking", () => {
 
         expect(status.panels.length).to.equal(flicking.visiblePanels.length);
         expect(status.panels.length).not.to.equal(flicking.panels.length);
-        expect(status.panels.every(panel => typeof panel === "string")).to.be.true;
+        expect(status.panels.every(panel => typeof panel.html === "string")).to.be.true;
       });
 
       it("should not include a panel outerHTML array of the visible panels to a returned object if includePanelHTML = false and visiblePanelsOnly = true", () => {
@@ -1275,7 +1275,42 @@ describe("Flicking", () => {
 
         const status = flicking.getStatus({ includePanelHTML: false });
 
-        expect(status.panels).to.be.undefined;
+        expect(status.panels.every(panel => panel.html === undefined)).to.be.true;
+      });
+
+      it("should include visible offsets to the return value if visiblePanelsOnly = true", () => {
+        const flicking = createFlicking(
+          El.viewport("1000px", "400px").add(
+            El.camera().add(
+              ...range(10).map(() => El.panel("100%", "100%"))
+            )
+          ),
+          { defaultIndex: 5 }
+        );
+
+        const visiblePanels = flicking.visiblePanels;
+        const status = flicking.getStatus({ visiblePanelsOnly: true });
+
+        expect(status.visibleOffset).not.to.be.undefined;
+        expect(status.visibleOffset.index).to.be.above(0);
+        expect(status.visibleOffset.index).to.equal(visiblePanels[0].index);
+        expect(status.visibleOffset.position).to.be.above(0);
+        expect(status.visibleOffset.position).to.equal(visiblePanels[0].range.min - visiblePanels[0].margin.prev);
+      });
+
+      it("should not include visible offsets to the return value if visiblePanelsOnly = true", () => {
+        const flicking = createFlicking(
+          El.viewport("1000px", "400px").add(
+            El.camera().add(
+              ...range(10).map(() => El.panel("100%", "100%"))
+            )
+          ),
+          { defaultIndex: 5 }
+        );
+
+        const status = flicking.getStatus({ visiblePanelsOnly: false });
+
+        expect(status.visibleOffset).to.be.undefined;
       });
     });
 
@@ -1324,6 +1359,46 @@ describe("Flicking", () => {
 
         expect(flicking.camera.position).equals(prevPosition);
         expect(flicking.camera.position).not.equals(flicking.camera.range.max);
+      });
+
+      it("should restore index using the visible offset if given", () => {
+        const flicking = createFlicking(
+          El.viewport("1000px", "400px").add(
+            El.camera().add(
+              ...range(10).map(() => El.panel("100%", "100%"))
+            )
+          ),
+          { defaultIndex: 5 }
+        );
+
+        const visiblePanels = flicking.visiblePanels;
+        const status = flicking.getStatus({ visiblePanelsOnly: true });
+
+        flicking.setStatus(status);
+
+        expect(visiblePanels.length).not.equals(10);
+        expect(flicking.index).not.equals(5);
+        expect(flicking.index).to.equal(5 - status.visibleOffset.index);
+      });
+
+      it("should move to the given camera position using the visible offset if given", () => {
+        const flicking = createFlicking(
+          El.viewport("1000px", "400px").add(
+            El.camera().add(
+              ...range(10).map(() => El.panel("100%", "100%"))
+            )
+          ),
+          { moveType: MOVE_TYPE.FREE_SCROLL, defaultIndex: 5 }
+        );
+        const status = flicking.getStatus({ index: false, position: true, includePanelHTML: true, visiblePanelsOnly: true });
+        const prevPosition = flicking.camera.position;
+        const prevRange = flicking.camera.range;
+
+        flicking.setStatus(status);
+
+        expect(flicking.camera.position).not.equals(prevPosition);
+        expect(flicking.camera.position).equals(prevPosition - status.visibleOffset.position);
+        expect(flicking.camera.range).not.deep.equals(prevRange);
       });
     });
 
