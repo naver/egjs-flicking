@@ -22,6 +22,7 @@
 - needPanel => 0번 패널에서도 발생 가능
 - replace => 삭제
 - needPanel의 fill => 삭제
+- addPlugins, removePlugins => array 안받음
 
 ## 추가
 - interruptable 추가

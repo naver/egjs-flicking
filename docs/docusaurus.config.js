@@ -34,6 +34,16 @@ module.exports = {
           position: "left"
         },
         {
+          to: "Plugins",
+          label: "Plugins",
+          position: "left"
+        },
+        {
+          to: "Demos",
+          label: "Demos",
+          position: "left"
+        },
+        {
           type: "doc",
           docId: "api/Flicking",
           label: "API",
