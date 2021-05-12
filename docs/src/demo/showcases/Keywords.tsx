@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable arrow-body-style */
-import React, { useState, createRef } from "react";
+import React, { useState } from "react";
 import Flicking from "@egjs/react-flicking";
 import "@site/src/css/demo/keywords.css";
 

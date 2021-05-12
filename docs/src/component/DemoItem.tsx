@@ -13,7 +13,7 @@ export default ({ thumbnail, demo, ...others }) => {
         ? demo
         : <><div className="card-image">
           <figure className="image is-4by3">
-            <img src={thumbnail} />
+            <img src={thumbnail} style={{ objectFit: "contain" }} />
           </figure>
         </div>
         <footer className="card-footer">

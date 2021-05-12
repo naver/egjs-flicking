@@ -36,6 +36,7 @@
 
 .flicking-viewport {
   transition: height 500ms;
+  width: 100%;
 }
 
 .flicking-panel {
@@ -51,4 +52,11 @@
 }
 .flicking-panel.higher {
   height: 400px;
+}
+
+.panel-with-link {
+  width: 100%;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
