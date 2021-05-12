@@ -13,7 +13,7 @@ import "@site/src/css/demo/plugins.css";
 
 # Plugins
 
-All plugins are available by installing `@egjs/flicking-plugins`
+All plugins are available by installing [@egjs/flicking-plugins](https://github.com/naver/egjs-flicking-plugins)
 
 ```bash
 npm install @egjs/flicking-plguins
@@ -36,7 +36,7 @@ npm install @egjs/flicking-plguins
 ```js
 import { AutoPlay } from "@egjs/flicking-plugins";
 
-flicking.addPlugins(new AutoPlay());
+flicking.addPlugins(new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: false }));
 ```
 
   </TabItem>
@@ -47,7 +47,7 @@ import Flicking from "@egjs/react-flicking";
 import { AutoPlay } from "@egjs/flicking-plugins";
 
 export default () => {
-  const plugins = [new AutoPlay()];
+  const plugins = [new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: false })];
 
   return (<Flicking plugins={plugins}>
     { ... }
@@ -68,7 +68,7 @@ export default () => {
 import { Component, Vue } from "vue-property-decorator";
 import { AutoPlay } from "@egjs/flicking-plugins";
 
-const plugins = [new AutoPlay()];
+const plugins = [new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: false })];
 
 module.exports = {
   data: function () {
@@ -99,7 +99,7 @@ import { AutoPlay } from "@egjs/flicking-plugins";
   templateUrl: './autoplay.component.html'
 })
 export class AutoplayComponent {
-  plugins: Plugin[] = [new AutoPlay()];
+  plugins: Plugin[] = [new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: false })];
 }
 ```
 
@@ -111,7 +111,7 @@ import Flicking from "@egjs/preact-flicking";
 import { AutoPlay } from "@egjs/flicking-plugins";
 
 export default () => {
-  const plugins = [new AutoPlay()];
+  const plugins = [new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: false })];
 
   return (<Flicking plugins={plugins}>
     { ... }

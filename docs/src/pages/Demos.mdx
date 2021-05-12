@@ -3,7 +3,10 @@ title: Demos
 custom_edit_url: null
 ---
 
+import DemoItem from "@site/src/component/DemoItem"
 import ShoppingSearch from "@site/src/demo/showcases/ShoppingSearch"
+import "@site/src/css/demo/demos.css";
 
 # Demos
-
+## ShoppingSearch
+<DemoItem thumbnail={require("@site/static/img/demo/shoppingsearch.png").default} demo={<ShoppingSearch />} />

@@ -4417,14 +4417,14 @@ fieldset[disabled] .select select:hover {
   padding: 1.5rem;
 }
 
-.card-bulma-footer {
+.card-footer {
   background-color: transparent;
   border-top: 1px solid #ededed;
   align-items: stretch;
   display: flex;
 }
 
-.card-bulma-footer-item {
+.card-footer-item {
   align-items: center;
   display: flex;
   flex-basis: 0;
@@ -4434,7 +4434,7 @@ fieldset[disabled] .select select:hover {
   padding: 0.75rem;
 }
 
-.card-bulma-footer-item:not(:last-child) {
+.card-footer-item:not(:last-child) {
   border-right: 1px solid #ededed;
 }
 
