@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 export default ({ thumbnail, demo, ...others }) => {
   const [clicked, setClicked] = useState(false);
-  const wrapperClasses = ["card"];
+  const wrapperClasses = ["card", "mb-6"];
 
   if (clicked) wrapperClasses.push("has-background-white-ter");
 

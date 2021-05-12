@@ -1,0 +1,132 @@
+.artwindow-banner {
+  position: relative;
+  width: 100%;
+  height: 325px;
+}
+.artwindow-banner ul {
+  height: 100%;
+}
+.artwindow-banner ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.artwindow-banner li {
+  margin: 0;
+  padding: 0;
+  width: 60%;
+  overflow: hidden;
+  height: 100%;
+  filter: grayscale(100%);
+  -webkit-filter: grayscale(100%);
+  opacity: 0.4;
+}
+.artwindow-banner li>div {
+    height: 100%;
+}
+.artwindow-banner li.checked {
+  filter: none;
+  -webkit-filter: none;
+  opacity: 1;
+}
+
+
+.artwindow-banner li img {
+  width: 100%;
+  height: 100%;
+}
+.artwindow-banner a {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+.artwindow-blind {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  width: 0;
+  height: 0;
+  font-size: 0;
+}
+.artwindow-overlay {
+  position: absolute;
+  left: 20%;
+  top: 0;
+  width: 60%;
+  bottom: 0;
+  z-index: 2001;
+  padding: 52px 50px 0 50px;
+  background-color: rgba(255, 255, 255, 0.85);
+  box-sizing: border-box;
+  pointer-events: none;
+}
+.artwindow-overlay em {
+  position: relative;
+  display: block;
+  width: 81px;
+  height: 81px;
+  padding: 0px 11px 0px 13px;
+  background-color: #333;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 18px;
+  word-break: break-all;
+  color: #fff;
+  box-sizing: border-box;
+}
+.artwindow-overlay em span {
+  position: relative;
+  display: block;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.artwindow-overlay strong {
+  display: block;
+  margin-top: 43px;
+  font-size: 40px;
+  line-height: 52px;
+  letter-spacing: -2.5px;
+  word-break: break-all;
+  color: #333;
+}
+.artwindow-btn {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 2001;
+  top: 50%;
+  margin-top: -30px;
+  font-size: 0;
+  outline: none;
+}
+.artwindow-btn.prev {
+  right: 80%;
+}
+.artwindow-btn.next {
+  left: 80%;
+}
+.artwindow-btn:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 60px;
+  display: block;
+}
+.artwindow-btn.prev:after {
+  background-image: url(https://ssl.pstatic.net/imgshopping/display/p/static/20190215115147/img/sprite/svg/spSw_window_svg.svg);
+  background-size: 672px 612px;
+  background-position: -72px -344px;
+}
+.artwindow-btn.next:after {
+  background-image: url(https://ssl.pstatic.net/imgshopping/display/p/static/20190215115147/img/sprite/svg/spSw_window_svg.svg);
+  background-size: 672px 612px;
+  background-position: -4px -344px;
+}
