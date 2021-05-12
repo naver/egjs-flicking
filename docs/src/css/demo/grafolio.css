@@ -1,0 +1,229 @@
+.patron_reward {
+  max-width: 1100px;
+  width: 100%;
+  margin: 0px auto;
+}
+.patron_reward p, .patron_reward ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.curation_area {
+  position: relative;
+}
+.section_patron .title {
+  margin-bottom: 0;
+}
+.slide_list {
+  height: 426px;
+  margin: 0 auto;
+}
+
+.content_inner {
+  position: relative;
+  margin: 0 auto;
+}
+.section_patron .title {
+  display: inline-block;
+  margin-bottom: 23px;
+  font-size: 16px;
+  color: #111;
+  line-height: 21px;
+}
+.section_patron .follow_area {
+  position: relative;
+}
+.banner_list .paginate .btn_next, .banner_list .paginate .btn_prev, .challenge_form-default .ico_calendar, .challenge_form-default .winner_count .btn_delete:before, .challenge_preview .ly_close:before, .challenge_preview .sort_select button:after, .challenge_table.select .success:before, .count .following strong, .count .illust strong, .count .like strong, .group_card .art_area .star_score .ico, .group_card .btn_area .btn_comment .ico, .group_card .btn_area .hits .ico, .group_card .ico_sound_area .button_play[aria-pressed=false]:after, .ico_help, .search_creator_area .search_more:after, .search_detail .search .search_inn:hover+.search_remove:before, .search_detail .search .search_remove:before, .search_detail .search .search_remove:hover:before, .search_detail .search:after, .section_patron .follow_area .btn_next, .section_patron .follow_area .btn_next:hover, .section_patron .follow_area .btn_prev, .section_patron .follow_area .btn_prev:hover, .section_yearend2018 .section_collaboration .btn_next, .section_yearend2018 .section_collaboration .btn_next:hover, .section_yearend2018 .section_collaboration .btn_prev, .section_yearend2018 .section_collaboration .btn_prev:hover, .selection_work:before {
+  background-image: url(https://ssl.pstatic.net/static/grafolio/pc/img/190215/sp_grafolio_ratio.png);
+  background-size: 630px 546px;
+}
+
+.section_patron .follow_area .btn_prev {
+  display: none;
+  position: absolute;
+  left: 50px;
+  top: 145px;
+  background-size: 315px 273px;
+  background-position: -57px -77px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.1);
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.1);
+  z-index: 100;
+}
+.section_patron .follow_area .btn_next {
+  display: block;
+  position: absolute;
+  right: 50px;
+  top: 145px;
+  background-size: 315px 273px;
+  background-position: -228px -77px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.1);
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.1);
+  z-index: 101;
+}
+
+.section_patron .follow_area .btn_next:hover {
+  background-size: 315px 273px;
+  background-position: -57px -134px;
+  width: 56px;
+  height: 56px;
+}
+.section_patron .follow_area .btn_prev:hover {
+  background-size: 315px 273px;
+  background-position: 0 -77px;
+  width: 56px;
+  height: 56px;
+}
+.section_patron .slide_list .item {
+  position: relative;
+  width: 50%;
+  background-color: #fff;
+}
+.patron_reward .slide_list .art_area {
+  width: 100%;
+  height: 324px;
+  box-sizing: border-box;
+}
+.section_patron .slide_list .art_area {
+  overflow: hidden;
+  position: relative;
+  border-radius: 5px;
+  border: 1px solid rgba(0,0,0,.03);
+}
+.patron_reward .slide_list .art_area:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 224px;
+  bottom: 0;
+  height: 100px;
+  background: url(https://ssl.pstatic.net/static/grafolio/pc/img/190215/patron/bg_gradient.png) no-repeat;
+  z-index: 5;
+}
+.section_patron .slide_list .item:hover .art_area:after {
+  background-color: rgba(0,0,0,.3);
+}
+.section_patron .slide_list .art_area:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,.1);
+  -webkit-transition: background-color .5s linear;
+  transition: background-color .5s linear;
+}
+.section_patron .slide_list .art_area:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,.1);
+  -webkit-transition: background-color .5s linear;
+  transition: background-color .5s linear;
+}
+.patron_reward .slide_list .group_info {
+  position: relative;
+  margin-top: -30px;
+  padding: 0 92px 0;
+  width: 100%;
+  height: 112px;
+  border: 0;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  z-index: 10;
+}
+.patron_reward .slide_list .tag_area {
+  position: absolute;
+  right: 20px;
+  top: 25px;
+  display: inline-block;
+  padding: 8px 12px 7px;
+  background-color: rgba(0,0,0,.35);
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 100px;
+}
+.patron_reward .slide_list .tag_area .text {
+  font-size: 12px;
+  color: #fff;
+  letter-spacing: -.2px;
+  font-weight: 400;
+  font-family: '나눔고딕',NanumGothic,'맑은고딕',MalgunGothic,HelveticaNeue,AppleSDGothicNeo-Regular,sans-serif;
+}
+.patron_reward .slide_list .txt_area {
+  overflow: hidden;
+  width: 100%;
+  text-align: center;
+}
+.patron_reward .slide_list .title_txt {
+  font-size: 24px;
+  font-family: '나눔고딕',NanumGothic,'맑은고딕',MalgunGothic,AppleSDGothicNeo-Bold,AppleSDGothicNeo-Medium,Helvetica,sans-serif;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -1px;
+  color: #111;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.patron_reward .slide_list .sub_txt {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #424242;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.patron_reward .slide_list .info_creator {
+  margin-top: 20px;
+  text-align: center;
+}
+.patron_reward .slide_list .thumb_creator {
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
+  margin-right: 4px;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  vertical-align: top;
+}
+.patron_reward .slide_list .creator_name {
+  display: inline-block;
+  padding-top: 2px;
+  font-weight: 400;
+  font-size: 15px;
+  color: #aaa;
+}
+.blind, legend {
+  position: absolute;
+  clip: rect(0 0 0 0);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+}
+
+.section_patron .slide_list .art_area:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,.1);
+  -webkit-transition: background-color .5s linear;
+  transition: background-color .5s linear;
+}
