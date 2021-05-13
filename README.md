@@ -8,17 +8,21 @@
   <a href="https://www.npmjs.com/package/@egjs/flicking" target="_blank"><img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@egjs/flicking.svg?style=flat-square&label=%F0%9F%92%BE%20gzipped&color=007acc" /></a>
   <a href="https://travis-ci.org/naver/egjs-flicking" target="_blank"><img alt="Travis (.org)" src="https://img.shields.io/travis/naver/egjs-flicking.svg?style=flat-square&label=build&logo=travis%20ci" /></a>
   <a href="https://coveralls.io/github/naver/egjs-flicking?branch=master&style=flat-square" target="_blank"><img alt="Coveralls github" src="https://img.shields.io/coveralls/github/naver/egjs-flicking.svg?style=flat-square&label=%E2%9C%85%20coverage" /></a>
+  <a href="https://deepscan.io/dashboard#view=project&tid=3998&pid=5802&bid=46086"><img src="https://deepscan.io/api/teams/3998/projects/5802/branches/46086/badge/grade.svg" alt="DeepScan grade" /></a>
+</p>
+<p align="center" style="line-height: 2;">
   <a href="https://github.com/naver/egjs-flicking/graphs/commit-activity">
 <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/naver/egjs-flicking.svg?color=08CE5D&label=%E2%AC%86%20commits&style=flat-square" /></a>
   <a href="https://www.npmjs.com/package/@egjs/flicking" target="_blank"><img src="https://img.shields.io/npm/dm/@egjs/flicking.svg?style=flat-square&label=%E2%AC%87%20downloads&color=08CE5D" alt="npm downloads per month" /></a>
   <a href="https://github.com/naver/egjs-flicking/graphs/contributors" target="_blank"><img alt="GitHub contributors" src="https://img.shields.io/github/contributors/naver/egjs-flicking.svg?label=%F0%9F%91%A5%20contributors&style=flat-square&color=08CE5D" /></a>
   <a href="https://github.com/naver/egjs-flicking/blob/master/LICENSE" target="_blank"><img alt="GitHub" src="https://img.shields.io/github/license/naver/egjs-flicking.svg?style=flat-square&label=%F0%9F%93%9C%20license&color=08CE5D" /></a>
+</p>
+<p align="center" style="line-height: 2;">
   <a href="https://github.com/naver/egjs-flicking/blob/master/packages/ngx-flicking/README.md" target="_blank"><img alt="Angular" src="https://img.shields.io/static/v1.svg?label=&message=Angular&style=flat-square&logo=Angular&color=dd0031" /></a>
   <a href="https://github.com/naver/egjs-flicking/blob/master/packages/react-flicking/README.md" target="_blank"><img alt="React" src="https://img.shields.io/static/v1.svg?label=&message=React&style=flat-square&logo=React&logoColor=white&color=61dafb" /></a>
   <a href="https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md" target="_blank"><img alt="Vue" src="https://img.shields.io/static/v1.svg?label=&message=Vue&style=flat-square&logo=Vue.js&logoColor=white&color=42b883" /></a>
   <a href="https://github.com/naver/egjs-flicking/blob/master/packages/preact-flicking/README.md" target="_blank"><img alt="Vue" src="https://img.shields.io/static/v1.svg?label=&message=Preact&style=flat-square&logo=Preact&logoColor=white&color=673ab8" /></a>
-<img src="https://img.shields.io/static/v1.svg?label=&message=TypeScript&color=294E80&style=flat-square&logo=typescript" />
-<a href="https://deepscan.io/dashboard#view=project&tid=3998&pid=5802&bid=46086"><img src="https://deepscan.io/api/teams/3998/projects/5802/branches/46086/badge/grade.svg" alt="DeepScan grade" /></a>
+  <img src="https://img.shields.io/static/v1.svg?label=&message=TypeScript&color=294E80&style=flat-square&logo=typescript" />
 </p>
 
 <h3 align="center">
@@ -29,11 +33,6 @@
   <b>Everyday 30 million people experience. It's reliable, flexible and extendable carousel.</b><br />📱💻🖥
 </p>
 
-<p align="center">
-  Translations:
-  <a href="https://github.com/naver/egjs-flicking/blob/master/README.md">🇺🇸</a>
-  <a href="https://github.com/naver/egjs-flicking/blob/master/README_KR.md">🇰🇷</a>
-</p>
 <p align="center">
   <b>Supported Frameworks</b><br/>
   <a href="https://github.com/naver/egjs-flicking/blob/master/packages/ngx-flicking/README.md"><img width="45" src="https://naver.github.io/egjs-flicking/images/angular.svg" alt="AngularJS" /></a>&nbsp;&nbsp;
@@ -62,18 +61,19 @@
   🖱️Click each images to see its source or check our <a href="https://naver.github.io/egjs-flicking/">full demos</a>.
 </h6>
 
-<p align="center">
-  <img width="300" src="https://user-images.githubusercontent.com/26213435/59832831-cebaf780-937f-11e9-84cd-e21f8cf1fd07.gif" />
-</p>
-
-- Easy-to-use and performant infinite carousel(slider).
-  - You can use 3 [options](https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#.FlickingOptions)(`renderOnlyVisible`, `isEqualsSize`, `isConstantSize`) to make your carousel more performant.
-  - Check the effect! ⇒ [https://www.youtube.com/watch?v=R-DKq-fqeSI](https://www.youtube.com/watch?v=R-DKq-fqeSI)
-- Every options are compatible with each others.
-  - Except for mutual exclusive options (like `circular` and `bound`).
-- Provides various scroll movement types that you can choose.
+## ✨ Features
+- Use it in a framework you like.
+  - We supports all major JS frameworks like React, Vue, Angular
+- SSR(Server Side Rendering) ready
+  - You can use Flicking at your favorite SSR frameworks like [Next.js](https://nextjs.org/) or [Nuxt.js](https://nuxtjs.org/).
+- Circular(Loop) Mode
 - Ready-to-use plugins you can grab right away.
-- Supports all major frameworks(Angular, React, Vue).
+  - Autoplay, Fade effect, Parallax effect, ...
+- Restore state like position and active slide with [persist](https://naver.github.io/egjs-persist/)
+- You can make native-scroll like UI with `bound` and `moveType: freeScroll`
+- Supports both Desktop & Mobile
+- Rich API
+- Supports IE9+ with the polyfill
 
 ## ⚙️ Installation
 #### npm
@@ -87,58 +87,39 @@ $ npm install --save @egjs/flicking
 - cdnjs: https://cdnjs.com/libraries/egjs-flicking
 
 ## 🏃 Quick Start
-#### Typescript
+#### HTML
+Flicking requires minimal structure to initialize properly.
+> You don't need to consider this when using Flicking with the frameworks.
+
+```html
+<div id="my-flicking" class="flicking-viewport">
+  <div class="flicking-camera">
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+  </div>
+</div>
+```
+
+#### ES Modules
 ```ts
 import Flicking from "@egjs/flicking";
+// import styles
+import "@egjs/flicking/dist/flicking.css"; // Supports IE10+, using CSS flex
+// Or...
+import "@egjs/flicking/dist/flicking.inline.css"; //Supports IE9+, using CSS inline-box
 
-const flicking = new Flicking("#el", { circular: true });
+const flicking = new Flicking("#my-flicking", { circular: true });
 ```
 
-#### Browser
+#### With CDN
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/egjs-flicking/3.x.x/flicking.js"></script>
+<!-- Packaged with all dependencies -->
+<script src="https://unpkg.com/@egjs/flicking@4.0.0-beta.4/dist/flicking.pkgd.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/@egjs/flicking@4.0.0/dist/flicking.css">
 ```
 ```js
-var flicking = new eg.Flicking("#el", { circular: true });
-```
-
-#### DOM Structure
-⚠️ NOTICE: Flicking requires minimal structure to initialize properly.
-
-As Flicking applies `position: absolute` for panels, either wrapper or panel should have fixed height value.
-
-✅
-```html
-<div id="wrapper" style="height: 120px">
-  <div class="panel"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-</div>
-```
-```html
-<div id="wrapper">
-  <!-- Least one of them should have fixed height -->
-  <div class="panel" style="height: 120px;"></div>
-  <div class="panel"></div>
-  <div class="panel"></div>
-</div>
-```
-
-❌
-```html
-<div id="wrapper"> <!-- Wrapper height is dependent on panel height -->
-  <div class="panel" style="height: 100%;"></div>
-  <div class="panel" style="height: 100%;"></div>
-  <div class="panel" style="height: 100%;"></div>
-</div>
-```
-
-#### Collect statistics
-
-Flicking applies Google Analytics (GA) to collect which features are useful to users. For example, the use of the `freeScroll` option, or the value of the `gap` option, and so on. Statistics also DO NOT contain any information that can identify an individual. Statistics on the usage will serve as basis for making better products. To disable GA, set the `collectStatistics` option to `false` as follows:
-
-```js
-var flicking = new eg.Flicking("#el", { collectStatistics: false });
+var flicking = new Flicking("#my-flicking", { circular: true });
 ```
 
 ## 📦 Packages
@@ -153,7 +134,7 @@ var flicking = new eg.Flicking("#el", { collectStatistics: false });
 ## 🌐 Supported Browsers
 |<img width="20" src="https://simpleicons.org/icons/internetexplorer.svg" alt="IE" />|<img width="20" src="https://simpleicons.org/icons/googlechrome.svg" alt="Chrome" />|<img width="20" src="https://simpleicons.org/icons/firefoxbrowser.svg" alt="Firefox" />|<img width="20" src="https://simpleicons.org/icons/safari.svg" alt="Safari" />|<img width="20" src="https://simpleicons.org/icons/apple.svg" alt="iOS" />|<img width="20" src="https://simpleicons.org/icons/android.svg" alt="Android" />|
 |:---:|:---:|:---:|:---:|:---:|:---:|
-|10+|Latest|Latest|Latest|7+|4+|
+|9+(With polyfill)|Latest|Latest|Latest|7+|4+|
 
 ## 📼 Demos
 Check our [Demos](https://naver.github.io/egjs-flicking/).

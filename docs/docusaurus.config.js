@@ -44,6 +44,11 @@ module.exports = {
           position: "left"
         },
         {
+          to: "Showcases",
+          label: "Showcases",
+          position: "left"
+        },
+        {
           type: "doc",
           docId: "api/Flicking",
           label: "API",

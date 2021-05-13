@@ -1,0 +1,32 @@
+---
+title: Showcases
+custom_edit_url: null
+---
+
+import ShowcaseItem from "@site/src/component/ShowcaseItem"
+import ArtWindow from "@site/src/showcases/ArtWindow"
+import ArtWindowMobile from "@site/src/showcases/ArtWindowMobile"
+import Keywords from "@site/src/showcases/Keywords"
+import Grafolio from "@site/src/showcases/Grafolio"
+import Post from "@site/src/showcases/Post"
+import ShoppingSearch from "@site/src/showcases/ShoppingSearch"
+import "@site/src/css/showcases/showcases.css";
+
+# Showcases
+## Naver Art Window
+<ShowcaseItem thumbnail={require("@site/static/img/demo/artwindow.png").default} demo={<ArtWindow />} />
+
+## Naver Art Window (Mobile)
+<ShowcaseItem thumbnail={require("@site/static/img/demo/mobileartwindow.png").default} demo={<ArtWindowMobile/>} />
+
+## Keywords
+<ShowcaseItem thumbnail={require("@site/static/img/demo/keyword.png").default} demo={<Keywords/>} />
+
+## Grafolio
+<ShowcaseItem thumbnail={require("@site/static/img/demo/grafolio.png").default} demo={<Grafolio/>} />
+
+## Naver Blog Post
+<ShowcaseItem thumbnail={require("@site/static/img/demo/post.png").default} demo={<Post/>} />
+
+## Naver Shopping Search
+<ShowcaseItem thumbnail={require("@site/static/img/demo/shoppingsearch.png").default} demo={<ShoppingSearch />} />

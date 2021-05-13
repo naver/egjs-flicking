@@ -4,7 +4,8 @@ module.exports = {
     "quick-start",
     "using-the-methods",
     "listening-to-events",
-    "error-handling"
+    "error-handling",
+    "migration-from-v3"
   ],
   ...require("./sidebars-api.js")
 };

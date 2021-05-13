@@ -1,6 +1,6 @@
 import React, { useState, createRef } from "react";
 import Flicking from "@egjs/react-flicking";
-import "@site/src/css/demo/grafolio.css";
+import "@site/src/css/showcases/grafolio.css";
 
 export default () => {
   const [index, setIndex] = useState(0);

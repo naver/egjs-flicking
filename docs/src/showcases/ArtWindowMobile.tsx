@@ -2,7 +2,7 @@
 import React, { useState, createRef } from "react";
 import Flicking from "@egjs/react-flicking";
 import { AutoPlay, Parallax } from "@egjs/flicking-plugins";
-import "@site/src/css/demo/artwindow-mobile.css";
+import "@site/src/css/showcases/artwindow-mobile.css";
 
 const plugins = [new AutoPlay(), new Parallax("img", 0.7)];
 

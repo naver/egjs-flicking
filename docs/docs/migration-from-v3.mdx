@@ -1,0 +1,81 @@
+---
+title: Migration Guide from v3 to v4
+id: migration-from-v3
+slug: /migration-from-v3
+custom_edit_url: null
+---
+
+## HTML structure
+- To support SSR(Server Side Rendering), Flicking no longer generates viewport & camera element.
+- So you have to create a viewport & camera element in your HTML template yourself.
+- Also, now you have to import CSS file we're providing and place a correct class names
+  - We're now using `flicking-viewport` and `flicking-camera` instead of `eg-flick-viewport` and `eg-flick-camera`
+- All framework-based Flickings don't have to consider this change, as they're still generating inner elements for you.
+```html {2,5-6,10-11}
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/@egjs/flicking@4.0.0/dist/flicking.css">
+</head>
+<body>
+  <div id="my-flicking" class="flicking-viewport">
+    <div class="flicking-camera">
+      <div>Panel 1</div>
+      <div>Panel 2</div>
+      <div>Panel 3</div>
+    </div>
+  </div>
+</body>
+```
+```js
+const flicking = new Flicking("#my-flicking");
+```
+
+## Changes when using umd modules
+- We've removed `eg` namespace on umd modules.
+  - `eg.Flicking` is now just `Flicking`
+
+## Removed Options
+- CSS-related options
+  - To support SSR, we've removed all CSS-related properties to guarantee UI when rendered in SSR frameworks.
+  - **gap**
+    - You can now set gaps between panels with CSS margins like `margin-right` or `margin-bottom`.
+  - **zIndex**
+    - You can now directly use CSS `z-index` to viewport element(`.flicking-viewport`) instead.
+  - **overflow**
+    - You can set `overflow: visible` to viewport element(`.flicking-viewport`) instead.
+- **infinite** and **lastIndex**
+  - `needPanel` event is now always triggered without the option **infinite**
+- **collectStatistics**
+- **thresholdAngle**
+- **isEqualSize** and **isConstantSize**
+- **anchor** and **hanger** is now merged into the new option named **align**.
+  - `anchor: 20` and `hanger: "40%"` is same to `align: { panel: 20, camera: "40%" }`
+- **infiniteThreshold** is now renamed to **needPanelThreshold**
+
+## Removed methods
+- **replace**
+  - As Flicking no longer supports isolated indexes, we've removed Flicking's **replace** and added **prepend** and **insert** instead.
+- Getters
+  - We're now usinge a getter property instead of `get-` methods
+  - **getIndex()** > **index**
+  - **getAllPanels()** > **panels**
+  - **getElement()** > **element**
+  - **getCurrentPanel()** > **currentPanel**
+
+## Option Changes
+- **adaptive** is now only applicable when `horizontal: true`
+- **moveType** is now always a `string`
+
+## Option's default value changes
+- Default value of **duration** is now `500` (was `100`)
+- Default value of **bounce** is now `20%` (was `[10, 10]`)
+- Default value of **autoResize** is now `true` (was `false`)
+
+## Method Changes
+- **addPlugins** and **removePlugins** do not longer accept arrays
+  -
+
+## Event Changes
+- **needPanel** is now can be triggered on the index 0
+  - It always has `direction: "PREV"`
+- We don't longer provide the method **fill()** in **needPanel** event
+  - As all panels now have continuous indexes, you can use `prepend()` or `append()` instead

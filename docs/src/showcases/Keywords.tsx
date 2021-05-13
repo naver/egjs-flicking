@@ -3,7 +3,7 @@
 /* eslint-disable arrow-body-style */
 import React, { useState } from "react";
 import Flicking from "@egjs/react-flicking";
-import "@site/src/css/demo/keywords.css";
+import "@site/src/css/showcases/keywords.css";
 
 export default () => {
   const [age, setAge] = useState(10);

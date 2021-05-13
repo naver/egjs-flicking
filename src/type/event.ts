@@ -267,7 +267,7 @@ export interface SelectEvent<T extends Flicking = Flicking> extends ComponentEve
  * `DIRECTION.PREV`의 경우 패널이 {@link Flicking#prepend prepend}되어야 함을 의미하고, `DIRECTION.NEXT`는 패널이 {@link Flicking#append append}되어야 함을 의미한다</ko>
  */
 export interface NeedPanelEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["NEED_PANEL"], T> {
-  direction: ValueOf<typeof DIRECTION>;
+  direction: Exclude<ValueOf<typeof DIRECTION>, null>;
 }
 
 /**

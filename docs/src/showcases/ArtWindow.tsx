@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useState, createRef } from "react";
 import Flicking from "@egjs/react-flicking";
-import "@site/src/css/demo/artwindow.css";
+import "@site/src/css/showcases/artwindow.css";
 
 export default () => {
   const flicking = createRef<Flicking>();

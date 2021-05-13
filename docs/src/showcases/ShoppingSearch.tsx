@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { useState, createRef } from "react";
 import Flicking from "@egjs/react-flicking";
-import "@site/src/css/demo/shopping-search.css";
+import "@site/src/css/showcases/shopping-search.css";
 
 import ShoppingPanel from "./component/ShoppingPanel";
 

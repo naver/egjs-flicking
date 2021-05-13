@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { useState, useMemo } from "react";
 import Flicking from "@egjs/react-flicking";
-import "@site/src/css/demo/post.css";
+import "@site/src/css/showcases/post.css";
 
 export default () => {
   const [index, setIndex] = useState(0);
