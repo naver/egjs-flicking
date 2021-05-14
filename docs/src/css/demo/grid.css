@@ -1,0 +1,12 @@
+.grid-panel {
+  width: 50%;
+  margin-right: 5px;
+  font-size: 2rem;
+}
+.grid-panel,
+.grid-panel > div {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}

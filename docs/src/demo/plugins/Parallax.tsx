@@ -8,13 +8,13 @@ export default () => {
   const plugins = [new Parallax()];
 
   return (<Flicking className="mb-2" plugins={plugins} circular={true}>
-    <div className="flicking-panel has-background-primary has-text-white is-size-1">
+    <div className="plugins-panel has-background-primary has-text-white is-size-1">
       <img className="panel-image" src={require("@site/static/img/demo/bg01.jpg").default} />
     </div>
-    <div className="flicking-panel has-background-primary has-text-white is-size-1">
+    <div className="plugins-panel has-background-primary has-text-white is-size-1">
       <img className="panel-image" src={require("@site/static/img/demo/bg02.jpg").default} />
     </div>
-    <div className="flicking-panel has-background-primary has-text-white is-size-1">
+    <div className="plugins-panel has-background-primary has-text-white is-size-1">
       <img className="panel-image" src={require("@site/static/img/demo/bg03.jpg").default} />
     </div>
   </Flicking>);

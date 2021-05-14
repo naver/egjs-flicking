@@ -21,7 +21,7 @@ export default () => {
           <div className={styles.buttons}>
             <Link
               className={clsx(
-                'button button--outline button--secondary button--lg',
+                'button is-outlined is-primary',
                 styles.getStarted,
               )}
               to={useBaseUrl('docs/')}>

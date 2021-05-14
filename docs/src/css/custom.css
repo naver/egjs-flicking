@@ -7,16 +7,27 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: rgb(33, 175, 144);
-  --ifm-color-primary-darker: rgb(31, 165, 136);
-  --ifm-color-primary-darkest: rgb(26, 136, 112);
-  --ifm-color-primary-light: rgb(70, 203, 174);
-  --ifm-color-primary-lighter: rgb(102, 212, 189);
-  --ifm-color-primary-lightest: rgb(146, 224, 208);
-  --ifm-color-info: #3298dc;
-  --ifm-color-warnb: #3298dc;
+  --ifm-color-primary: #5ab552;
+  --ifm-color-primary-dark: #4fa647;
+  --ifm-color-primary-darker: #4a9d43;
+  --ifm-color-primary-darkest: #3d8137;
+  --ifm-color-primary-light: #6cbd64;
+  --ifm-color-primary-lighter: #74c16e;
+  --ifm-color-primary-lightest: #8fcd89;
+  --ifm-color-info: #68c2d3;
+  --ifm-color-warnb: #68c2d3;
   --ifm-code-font-size: 95%;
+}
+html[data-theme='dark'] {
+  --ifm-background-color: #242526 !important;
+}
+
+.navbar__title {
+  text-transform: uppercase;
+}
+
+.footer--dark {
+  background-color: #45444f !important;
 }
 
 .docusaurus-highlight-code-line {
@@ -37,12 +48,20 @@
 .flicking-viewport {
   transition: height 500ms;
   width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.flicking-viewport.vertical > .flicking-camera {
+  align-items: center;
 }
 
 .flicking-panel {
-  width: 200px;
+  width: 50%;
   height: 200px;
   display: flex;
+  border-radius: 5px;
+  margin-right: 10px;
+  margin-bottom: 10px;
   align-items: center;
   justify-content: center;
 }
@@ -56,7 +75,12 @@
 
 .panel-with-link {
   width: 100%;
+  margin-right: 10px;
   -webkit-user-drag: none;
   user-select: none;
   -webkit-user-select: none;
+}
+.panel-with-link .flicking-panel {
+  width: 100%;
+  margin: 0;
 }

@@ -1,4 +1,4 @@
-.flicking-panel {
+.plugins-panel {
   position: relative;
   display: block;
   border-radius: 5px;
@@ -10,7 +10,7 @@
   line-height: 200px;
   overflow: hidden;
 }
-.flicking-panel:after {
+.plugins-panel:after {
   content: "";
   position: absolute;
   width: 100%;

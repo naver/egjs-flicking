@@ -13,8 +13,10 @@ module.exports = {
   baseUrl: isDev ? '/' : '/egjs-flicking/',
   projectName: 'naver.github.io',
   organizationName: 'naver',
+  plugins: ['docusaurus-plugin-sass'],
   themes: ['@docusaurus/theme-live-codeblock'],
   themeConfig: {
+    hideableSidebar: false,
     navbar: {
       title: 'Flicking',
       logo: {
@@ -27,6 +29,12 @@ module.exports = {
           docId: 'installation',
           label: 'Docs',
           position: 'left'
+        },
+        {
+          type: "doc",
+          docId: "api/Flicking",
+          label: "API",
+          position: "left"
         },
         {
           to: "Options",
@@ -46,12 +54,6 @@ module.exports = {
         {
           to: "Showcases",
           label: "Showcases",
-          position: "left"
-        },
-        {
-          type: "doc",
-          docId: "api/Flicking",
-          label: "API",
           position: "left"
         },
         {
@@ -137,8 +139,7 @@ module.exports = {
         theme: {
           customCss: [
             require.resolve('./src/css/custom.css'),
-            require.resolve('./src/css/bulma.css'),
-            require.resolve('./src/css/flicking.css')
+            require.resolve('./src/css/bulma-override.sass')
           ]
         }
       }
