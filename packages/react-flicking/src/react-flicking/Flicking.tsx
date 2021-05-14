@@ -12,9 +12,11 @@ import NativeFlicking, {
   NeedPanelEvent,
   ReadyEvent,
   VisibleChangeEvent,
-  ChangeEvent,
+  WillChangeEvent,
+  ChangedEvent,
+  WillRestoreEvent,
+  RestoredEvent,
   SelectEvent,
-  RestoreEvent,
   ReachEdgeEvent,
   EVENTS,
   withFlickingMethods,
@@ -61,8 +63,10 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       [EVENTS.MOVE_START]: (e: MoveStartEvent) => props.onMoveStart(e),
       [EVENTS.MOVE]: (e: MoveEvent) => props.onMove(e),
       [EVENTS.MOVE_END]: (e: MoveEndEvent) => props.onMoveEnd(e),
-      [EVENTS.CHANGE]: (e: ChangeEvent) => props.onChange(e),
-      [EVENTS.RESTORE]: (e: RestoreEvent) => props.onRestore(e),
+      [EVENTS.WILL_CHANGE]: (e: WillChangeEvent) => props.onWillChange(e),
+      [EVENTS.CHANGED]: (e: ChangedEvent) => props.onChanged(e),
+      [EVENTS.WILL_RESTORE]: (e: WillRestoreEvent) => props.onWillRestore(e),
+      [EVENTS.RESTORED]: (e: RestoredEvent) => props.onRestored(e),
       [EVENTS.SELECT]: (e: SelectEvent) => props.onSelect(e),
       [EVENTS.NEED_PANEL]: (e: NeedPanelEvent) => props.onNeedPanel(e),
       [EVENTS.VISIBLE_CHANGE]: (e: VisibleChangeEvent) => {
@@ -78,6 +82,10 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       flicking.renderer.elementManipulator.on("orderChanged", () => {
         this.setState({});
       });
+    }
+
+    if (this.props.status) {
+      this.setStatus(this.props.status);
     }
 
     this._nativeFlicking = flicking;
@@ -101,7 +109,9 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const flicking = this._nativeFlicking;
 
     this._diffResult = diffResult;
-    this._panels = getRenderingPanels(flicking, diffResult);
+    this._panels = flicking.initialized
+      ? getRenderingPanels(flicking, diffResult)
+      : children;
 
     return true;
   }
@@ -110,11 +120,11 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const flicking = this._nativeFlicking;
     const diffResult = this._diffResult;
 
-    if (!diffResult) return;
+    this._checkPlugins();
+
+    if (!diffResult || !flicking.initialized) return;
 
     sync(flicking, diffResult);
-
-    this._checkPlugins();
 
     if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
       this.setState({});
@@ -126,6 +136,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const Viewport = props.viewportTag as any;
     const Camera = props.cameraTag as any;
     const attributes: { [key: string]: any } = {};
+    const flicking = this._nativeFlicking;
 
     for (const name in props) {
       if (!(name in DEFAULT_PROPS) && !(name in NativeFlicking.prototype)) {
@@ -133,12 +144,20 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       }
     }
 
-    const viewportClassName = attributes.className
-      ? `${attributes.className} flicking-viewport`
-      : "flicking-viewport";
+    const viewportClasses: string[] = ["flicking-viewport"];
+    const isHorizontal = flicking
+      ? flicking.horizontal
+      : props.horizontal ?? true;
+
+    if (!isHorizontal) {
+      viewportClasses.push("vertical")
+    }
+    if (attributes.className) {
+      viewportClasses.push(attributes.className);
+    }
 
     return (
-      <Viewport {...attributes} className={viewportClassName} ref={(e?: HTMLElement) => {
+      <Viewport {...attributes} className={viewportClasses.join(" ")} ref={(e?: HTMLElement) => {
         e && (this._viewportElement = e);
       }}>
         <Camera className="flicking-camera">

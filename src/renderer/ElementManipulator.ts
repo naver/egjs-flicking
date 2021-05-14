@@ -3,10 +3,14 @@
  * egjs projects are licensed under the MIT license
  */
 import Panel from "~/core/Panel";
-import ExternalManipulator from "~/renderer/ExternalManipulator";
+import OffsetManipulator from "~/renderer/OffsetManipulator";
 import { getFlickingAttached, includes } from "~/utils";
 
-class ElementManipulator extends ExternalManipulator {
+/**
+ * A component that manages element add/remove and element's order change
+ * @ko 엘리먼트 추가/제거 및 순서 변경을 담당하는 컴포넌트
+ */
+class ElementManipulator extends OffsetManipulator {
   public insertPanelElements(panels: Panel[], nextSibling: Panel | null): this {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
     const camera = flicking.camera;

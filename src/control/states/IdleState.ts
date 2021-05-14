@@ -8,8 +8,25 @@ import State, { STATE_TYPE } from "~/control/states/State";
 import { EVENTS } from "~/const/external";
 import { getDirection } from "~/utils";
 
+/**
+ * A default state when there's no user input and no animation's playing
+ * @ko 사용자의 입력이 없고, 애니메이션이 동작하고있지 않은 기본 상태
+ * @internal
+ */
 class IdleState extends State {
+  /**
+   * Whether user is clicking or touching
+   * @ko 현재 사용자가 클릭/터치중인지 여부
+   * @type {false}
+   * @readonly
+   */
   public readonly holding = false;
+  /**
+   * Whether Flicking's animating
+   * @ko 현재 애니메이션 동작 여부
+   * @type {false}
+   * @readonly
+   */
   public readonly animating = false;
 
   public onHold(ctx: Parameters<State["onHold"]>[0]): void {

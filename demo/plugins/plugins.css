@@ -14,13 +14,15 @@ h1 a {
   background: #eee;
   background: rgba(55, 55, 55 0.1);
   border-radius: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 .flicking .panel {
   position: relative;
   display: block;
   border-radius: 5px;
   width: 400px;
-  margin-top: 5px;
+  margin-right: 10px;
   background: #f55;
   height: 200px;
   text-align: center;

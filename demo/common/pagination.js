@@ -1,21 +1,21 @@
-var CustomPagination = function (container){
-  var length = 0;
-  var element;
-  var itemTag;
-  var items = [];
+const CustomPagination = (container) => {
+  let length = 0;
+  let element;
+  let itemTag;
+  const items = [];
 
   return {
-    update: function (flicking) {
-      var prevLength = length;
-      length = flicking.getPanelCount();
+    update: (flicking) => {
+      const prevLength = length;
+      length = flicking.panelCount;
 
       if (prevLength < length) {
-        var fragment = document.createDocumentFragment();
-        for (var i = prevLength; i < length; ++i) {
-          (function (item) {
+        const fragment = document.createDocumentFragment();
+        for (let i = prevLength; i < length; ++i) {
+          ((item) => {
             item.className += "flicking-pagination-item";
             items.push(item);
-            item.addEventListener("click", function () {
+            item.addEventListener("click", () => {
               flicking.moveTo(items.indexOf(item));
             });
             fragment.appendChild(item);
@@ -23,26 +23,26 @@ var CustomPagination = function (container){
         }
         element.appendChild(fragment);
       }
-      var selectedElement = element.querySelector(".selected");
+      const selectedElement = element.querySelector(".selected");
       if (selectedElement) {
         selectedElement.className = selectedElement.className.replace(/\s*selected/g, "");
       }
-      items[flicking.getIndex()].className += " selected";
+      items[flicking.index].className += " selected";
     },
     init: function(flicking) {
       element = typeof container === "object" ? container : document.querySelector(container);
       element.className += " flicking-pagination";
       itemTag = element.nodeName === "UL" ? "li" : "div";
 
-      flicking.on("moveEnd", function (e) {
-        var selectedElement = element.querySelector(".selected");
+      flicking.on("changed", (e) => {
+        const selectedElement = element.querySelector(".selected");
         if (selectedElement) {
           selectedElement.className = selectedElement.className.replace(/\s*selected/g, "");
         }
 
-        items[flicking.getIndex()].className += " selected";
+        items[e.index].className += " selected";
       });
       this.update(flicking);
-    },
+    }
   };
 };

@@ -1,4 +1,22 @@
-import { AfterResizeEvent, BeforeResizeEvent, ChangeEvent, HoldEndEvent, HoldStartEvent, MoveEndEvent, MoveEvent, MoveStartEvent, NeedPanelEvent, ReachEdgeEvent, ReadyEvent, RestoreEvent, SelectEvent, VisibleChangeEvent } from "@egjs/flicking";
+import {
+  SelectEvent,
+  NeedPanelEvent,
+  VisibleChangeEvent,
+  HoldStartEvent,
+  HoldEndEvent,
+  MoveStartEvent,
+  MoveEvent,
+  MoveEndEvent,
+  WillChangeEvent,
+  ChangedEvent,
+  WillRestoreEvent,
+  RestoredEvent,
+  ReadyEvent,
+  BeforeResizeEvent,
+  AfterResizeEvent,
+  ReachEdgeEvent
+} from "@egjs/flicking";
+
 import { FlickingProps } from "./types";
 
 export const DEFAULT_PROPS: FlickingProps = {
@@ -14,8 +32,10 @@ export const DEFAULT_PROPS: FlickingProps = {
   onMoveStart: (e: MoveStartEvent) => {},
   onMove: (e: MoveEvent) => {},
   onMoveEnd: (e: MoveEndEvent) => {},
-  onChange: (e: ChangeEvent) => {},
-  onRestore: (e: RestoreEvent) => {},
+  onWillChange: (e: WillChangeEvent) => {},
+  onChanged: (e: ChangedEvent) => {},
+  onWillRestore: (e: WillRestoreEvent) => {},
+  onRestored: (e: RestoredEvent) => {},
   onSelect: (e: SelectEvent) => {},
   onNeedPanel: (e: NeedPanelEvent) => {},
   onVisibleChange: (e: VisibleChangeEvent) => {},

@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="../common/common.css">
 <link rel="stylesheet" href="../common/highlight.css">
 <link rel="stylesheet" href="./features.css">
+<link rel="stylesheet" href="../release/latest/dist/flicking.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
 <script src="../common/highlight.js"></script>
 <script src="../release/latest/dist/flicking.pkgd.js"></script>
@@ -33,18 +34,20 @@
       <li>You can place multiple panels in the flicking area.</li>
       <li>You can specify various sizes for each panel.</li>
   </ul>
-  <div class="flicking">
-    <div class="panel first"></div>
-    <div class="panel second"></div>
-    <div class="panel third"></div>
-    <div class="panel fourth"></div>
-    <div class="panel fifth"></div>
+  <div class="flicking-viewport">
+    <div class="flicking-camera">
+      <div class="panel first"></div>
+      <div class="panel second"></div>
+      <div class="panel third"></div>
+      <div class="panel fourth"></div>
+      <div class="panel fifth"></div>
+    </div>
   </div>
   <div class="pagination"></div>
   <pre><code class="hljs javascript"></code></pre>
 </div>
 <script>
-var flicking = new eg.Flicking(".flicking", {
+var flicking = new Flicking(".flicking-viewport", {
   circular: true
 });
 </script>

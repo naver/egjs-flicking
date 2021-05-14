@@ -207,6 +207,13 @@ GitHub.sublime-settings
 test/e2e/log/
 test/e2e/screenshots/diff/
 
+### Docs ###
+docs/docs/api/
+docs/i18n/ko/docusaurus-plugin-content-docs/
+docs/versioned_docs/
+docs/versioned_sidebars/
+docs/sidebars-api.js
+
 ### Custom ###
 doc/
 report/

@@ -2,11 +2,12 @@ import FlickingError from "~/core/FlickingError";
 import Viewport from "~/core/Viewport";
 import Flicking from "~/Flicking";
 import * as ERROR from "~/const/error";
-import { ALIGN, DIRECTION, EVENTS } from "~/const/external";
+import { ALIGN, DIRECTION, EVENTS, MOVE_TYPE } from "~/const/external";
 import { AfterResizeEvent, BeforeResizeEvent } from "~/type/event";
 
 import El from "./helper/El";
-import { cleanup, createFlicking, simulate, tick } from "./helper/test-util";
+import { cleanup, createFlicking, range, simulate, tick } from "./helper/test-util";
+import { Plugin } from "~/type/external";
 
 describe("Flicking", () => {
   afterEach(() => {
@@ -342,22 +343,6 @@ describe("Flicking", () => {
       });
     });
 
-    describe("isEqualSize", () => {
-      it("is false by default", () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-
-        expect(flicking.isEqualSize).to.equal(false);
-      });
-    });
-
-    describe("isConstantSize", () => {
-      it("is false by default", () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-
-        expect(flicking.isConstantSize).to.equal(false);
-      });
-    });
-
     describe("renderOnlyVisible", () => {
       it("is false by default", () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
@@ -637,7 +622,7 @@ describe("Flicking", () => {
     describe("Input & Move Event Order", () => {
       const eventsFired: string[] = [];
       const attachEventOrderRecognizer = (flicking: Flicking) => {
-        [EVENTS.HOLD_START, EVENTS.HOLD_END, EVENTS.MOVE_START, EVENTS.MOVE, EVENTS.MOVE_END, EVENTS.CHANGE, EVENTS.RESTORE].forEach(event => {
+        [EVENTS.HOLD_START, EVENTS.HOLD_END, EVENTS.MOVE_START, EVENTS.MOVE, EVENTS.MOVE_END, EVENTS.WILL_CHANGE, EVENTS.WILL_RESTORE, EVENTS.CHANGED, EVENTS.RESTORED].forEach(event => {
           flicking.on(event, e => {
             if (eventsFired.length === 0 || eventsFired[eventsFired.length - 1] !== e.eventType) {
               eventsFired.push(e.eventType);
@@ -650,15 +635,16 @@ describe("Flicking", () => {
         eventsFired.splice(0, eventsFired.length);
       });
 
-      it(`should be ${EVENTS.HOLD_START} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.HOLD_END} -> ${EVENTS.CHANGE} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when panel changed with user input`, async () => {
+      it(`should be ${EVENTS.HOLD_START} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.HOLD_END} -> ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when panel changed with user input`, async () => {
         const expectedEventOrder = [
           EVENTS.HOLD_START,
           EVENTS.MOVE_START,
           EVENTS.MOVE,
           EVENTS.HOLD_END,
-          EVENTS.CHANGE,
+          EVENTS.WILL_CHANGE,
           EVENTS.MOVE,
-          EVENTS.MOVE_END
+          EVENTS.MOVE_END,
+          EVENTS.CHANGED
         ];
 
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 10 });
@@ -669,15 +655,16 @@ describe("Flicking", () => {
         expect(eventsFired).to.deep.equal(expectedEventOrder);
       });
 
-      it(`should be ${EVENTS.HOLD_START} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.HOLD_END} -> ${EVENTS.RESTORE} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when panel restored with user input`, async () => {
+      it(`should be ${EVENTS.HOLD_START} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.HOLD_END} -> ${EVENTS.WILL_RESTORE} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.RESTORED} when panel restored with user input`, async () => {
         const expectedEventOrder = [
           EVENTS.HOLD_START,
           EVENTS.MOVE_START,
           EVENTS.MOVE,
           EVENTS.HOLD_END,
-          EVENTS.RESTORE,
+          EVENTS.WILL_RESTORE,
           EVENTS.MOVE,
-          EVENTS.MOVE_END
+          EVENTS.MOVE_END,
+          EVENTS.RESTORED
         ];
 
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 50 });
@@ -689,29 +676,31 @@ describe("Flicking", () => {
       });
 
       describe("moveTo's event order", () => {
-        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method`, () => {
           const expectedEventOrder = [
-            EVENTS.CHANGE,
+            EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
-            EVENTS.MOVE_END
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
           ];
 
           const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
           attachEventOrderRecognizer(flicking);
 
-          void flicking.moveTo(2, 10);
+          void flicking.moveTo(2, 10).then(() => {
+            expect(eventsFired).to.deep.equal(expectedEventOrder);
+          });
           tick(1000);
-
-          expect(eventsFired).to.deep.equal(expectedEventOrder);
         });
 
-        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method and duration is 0`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method and duration is 0`, () => {
           const expectedEventOrder = [
-            EVENTS.CHANGE,
+            EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
-            EVENTS.MOVE_END
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
           ];
 
           const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
@@ -724,29 +713,31 @@ describe("Flicking", () => {
       });
 
       describe("prev's event order", () => {
-        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method`, async () => {
           const expectedEventOrder = [
-            EVENTS.CHANGE,
+            EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
-            EVENTS.MOVE_END
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
           ];
 
           const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
           attachEventOrderRecognizer(flicking);
 
-          void flicking.prev(10);
+          void flicking.prev(10).then(() => {
+            expect(eventsFired).to.deep.equal(expectedEventOrder);
+          });
           tick(1000);
-
-          expect(eventsFired).to.deep.equal(expectedEventOrder);
         });
 
-        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method and duration is 0`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method and duration is 0`, () => {
           const expectedEventOrder = [
-            EVENTS.CHANGE,
+            EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
-            EVENTS.MOVE_END
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
           ];
 
           const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
@@ -759,29 +750,31 @@ describe("Flicking", () => {
       });
 
       describe("next's event order", () => {
-        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method`, () => {
           const expectedEventOrder = [
-            EVENTS.CHANGE,
+            EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
-            EVENTS.MOVE_END
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
           ];
 
           const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
           attachEventOrderRecognizer(flicking);
 
-          void flicking.next(10);
+          void flicking.next(10).then(() => {
+            expect(eventsFired).to.deep.equal(expectedEventOrder);
+          });
           tick(1000);
-
-          expect(eventsFired).to.deep.equal(expectedEventOrder);
         });
 
-        it(`should be ${EVENTS.CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} when called with method and duration is 0`, () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method and duration is 0`, () => {
           const expectedEventOrder = [
-            EVENTS.CHANGE,
+            EVENTS.WILL_CHANGE,
             EVENTS.MOVE_START,
             EVENTS.MOVE,
-            EVENTS.MOVE_END
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
           ];
 
           const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
@@ -980,15 +973,6 @@ describe("Flicking", () => {
         expect(cameraSpy.calledOnce).to.be.true;
         expect(rendererSpy.calledOnce).to.be.true;
       });
-
-      it("should call destroy of the viewport", () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
-        const destroySpy = sinon.spy(flicking.viewport, "destroy");
-
-        flicking.destroy();
-
-        expect(destroySpy.calledOnce).to.be.true;
-      });
     });
 
     describe("getElement()", () => {
@@ -1068,12 +1052,11 @@ describe("Flicking", () => {
         await next(flicking);
         flicking.duration = 2000;
 
-        console.log(flicking.control.controller.axes.hasOn("finish"));
         await next(flicking);
 
         expect(moveToSpy.calledTwice).to.be.true;
-        expect(moveToSpy.firstCall.calledWith(flicking.getPanel(1), 1000)).to.be.true;
-        expect(moveToSpy.secondCall.calledWith(flicking.getPanel(2), 2000)).to.be.true;
+        expect(moveToSpy.firstCall.calledWith(flicking.getPanel(1), { duration: 1000, direction: DIRECTION.NEXT })).to.be.true;
+        expect(moveToSpy.secondCall.calledWith(flicking.getPanel(2), { duration: 2000, direction: DIRECTION.NEXT })).to.be.true;
       });
 
       it("should throw FlickingError with code INDEX_OUT_OF_RANGE if called on the last index", async () => {
@@ -1089,7 +1072,7 @@ describe("Flicking", () => {
       it("should throw FlickingError with code ANIMATION_ALREADY_PLAYING if it is animating", async () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
 
-        void simulate(flicking.element, { duration: 1000 }, 500);
+        void flicking.next(1000);
         const err = await next(flicking).catch(e => e);
 
         expect(err)
@@ -1125,8 +1108,8 @@ describe("Flicking", () => {
         await prev(flicking);
 
         expect(moveToSpy.calledTwice).to.be.true;
-        expect(moveToSpy.firstCall.calledWith(flicking.getPanel(1), 1000)).to.be.true;
-        expect(moveToSpy.secondCall.calledWith(flicking.getPanel(0), 2000)).to.be.true;
+        expect(moveToSpy.firstCall.calledWith(flicking.getPanel(1), { duration: 1000, direction: DIRECTION.PREV })).to.be.true;
+        expect(moveToSpy.secondCall.calledWith(flicking.getPanel(0), { duration: 2000, direction: DIRECTION.PREV })).to.be.true;
       });
 
       it("should throw FlickingError with code INDEX_OUT_OF_RANGE if called on the first index", async () => {
@@ -1142,7 +1125,7 @@ describe("Flicking", () => {
       it("should throw FlickingError with code ANIMATION_ALREADY_PLAYING if it is animating", async () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
 
-        void simulate(flicking.element, { duration: 1000 }, 500);
+        void flicking.prev(1000);
         const err = await prev(flicking).catch(e => e);
 
         expect(err)
@@ -1182,12 +1165,335 @@ describe("Flicking", () => {
       it("should throw FlickingError with code ANIMATION_ALREADY_PLAYING if it is animating", async () => {
         const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
 
-        void simulate(flicking.element, { duration: 1000 }, 500);
+        void flicking.prev(1000);
         const err = await prev(flicking).catch(e => e);
 
         expect(err)
           .to.be.instanceOf(FlickingError)
           .with.property("code", ERROR.CODE.ANIMATION_ALREADY_PLAYING);
+      });
+    });
+
+    describe("getStatus()", () => {
+      it("should return correct index", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus();
+
+        expect(status.index).equals(1);
+      });
+
+      it("should return correct index after moving", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 0 });
+
+        void flicking.moveTo(2, 0);
+        const status = flicking.getStatus();
+
+        expect(status.index).equals(2);
+      });
+
+      it("should return panel's outerHTML if `includePanelHTML` is true", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+
+        const panels = flicking.panels;
+        const status = flicking.getStatus({ includePanelHTML: true });
+
+        expect(status.panels).not.to.be.undefined;
+        expect(status.panels.length).above(0);
+        expect(status.panels.length).equals(panels.length);
+        expect(status.panels.every((panel, panelIdx) => panel.html === panels[panelIdx].element.outerHTML));
+      });
+
+      it("should include index to a returned object if index = true", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ index: true });
+
+        expect(status.index).to.exist;
+        expect(typeof status.index).to.equal("number");
+      });
+
+      it("should not include index to a returned object if index = false", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ index: false });
+
+        expect(status.index).to.be.undefined;
+      });
+
+      it("should include position to a returned object if position = true", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ position: true });
+
+        expect(status.position).to.exist;
+        expect(typeof status.position).to.equal("number");
+      });
+
+      it("should not include position to a returned object if position = false", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ position: false });
+
+        expect(status.position).to.be.undefined;
+      });
+
+      it("should include a panel outerHTML array to a returned object if includePanelHTML = true", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ includePanelHTML: true });
+
+        expect(status.panels).to.exist;
+        expect(status.panels).to.be.an.instanceOf(Array);
+        expect(status.panels.length).to.equal(flicking.panelCount);
+        expect(status.panels.every(panel => typeof panel.html === "string")).to.be.true;
+      });
+
+      it("should not include a panel outerHTML array to a returned object if includePanelHTML = false", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ includePanelHTML: false });
+
+        expect(status.panels.every(panel => panel.html === undefined)).to.be.true;
+      });
+
+      it("should include a panel outerHTML array of the visible panels to a returned object if includePanelHTML = true and visiblePanelsOnly = true", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+
+        const status = flicking.getStatus({ includePanelHTML: true, visiblePanelsOnly: true });
+
+        expect(status.panels).to.exist;
+        expect(status.panels).to.be.an.instanceOf(Array);
+
+        expect(status.panels.length).to.equal(flicking.visiblePanels.length);
+        expect(status.panels.length).not.to.equal(flicking.panels.length);
+        expect(status.panels.every(panel => typeof panel.html === "string")).to.be.true;
+      });
+
+      it("should not include a panel outerHTML array of the visible panels to a returned object if includePanelHTML = false and visiblePanelsOnly = true", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ includePanelHTML: false });
+
+        expect(status.panels.every(panel => panel.html === undefined)).to.be.true;
+      });
+
+      it("should include visible offsets to the return value if visiblePanelsOnly = true", () => {
+        const flicking = createFlicking(
+          El.viewport("1000px", "400px").add(
+            El.camera().add(
+              ...range(10).map(() => El.panel("100%", "100%"))
+            )
+          ),
+          { defaultIndex: 5 }
+        );
+
+        const visiblePanels = flicking.visiblePanels;
+        const status = flicking.getStatus({ visiblePanelsOnly: true });
+
+        expect(status.visibleOffset).not.to.be.undefined;
+        expect(status.visibleOffset.index).to.be.above(0);
+        expect(status.visibleOffset.index).to.equal(visiblePanels[0].index);
+        expect(status.visibleOffset.position).to.be.above(0);
+        expect(status.visibleOffset.position).to.equal(visiblePanels[0].range.min - visiblePanels[0].margin.prev);
+      });
+
+      it("should not include visible offsets to the return value if visiblePanelsOnly = true", () => {
+        const flicking = createFlicking(
+          El.viewport("1000px", "400px").add(
+            El.camera().add(
+              ...range(10).map(() => El.panel("100%", "100%"))
+            )
+          ),
+          { defaultIndex: 5 }
+        );
+
+        const status = flicking.getStatus({ visiblePanelsOnly: false });
+
+        expect(status.visibleOffset).to.be.undefined;
+      });
+    });
+
+    describe("setStatus()", () => {
+      it("can restore index", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
+        const status = flicking.getStatus();
+
+        void flicking.moveTo(0, 0);
+        const indexBefore = flicking.index;
+        flicking.setStatus(status);
+
+        expect(indexBefore).to.equal(0);
+        expect(flicking.index).equals(2);
+        expect(flicking.camera.position).to.equal(flicking.panels[2].position);
+      });
+
+      it("should restore previous state of panels if panel outerHTML is included", () => {
+        const classToAdd = "this-is-test-class";
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const status = flicking.getStatus({ includePanelHTML: true });
+
+        flicking.currentPanel.element.classList.add(classToAdd);
+        flicking.setStatus(status);
+
+        expect(flicking.currentPanel.element.classList.contains(classToAdd)).to.be.false;
+      });
+
+      it("should move to the given camera position if moveType is freeScroll", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.FREE_SCROLL });
+        const status = flicking.getStatus({ index: false, position: true });
+        const prevPosition = flicking.camera.position;
+
+        flicking.setStatus({ ...status, position: flicking.camera.range.max });
+
+        expect(flicking.camera.position).not.equals(prevPosition);
+        expect(flicking.camera.position).equals(flicking.camera.range.max);
+      });
+
+      it("should not move to the given camera position if moveType is not freeScroll", () => {
+        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.SNAP });
+        const status = flicking.getStatus({ index: false, position: true });
+        const prevPosition = flicking.camera.position;
+
+        flicking.setStatus({ ...status, position: flicking.camera.range.max });
+
+        expect(flicking.camera.position).equals(prevPosition);
+        expect(flicking.camera.position).not.equals(flicking.camera.range.max);
+      });
+
+      it("should restore index using the visible offset if given", () => {
+        const flicking = createFlicking(
+          El.viewport("1000px", "400px").add(
+            El.camera().add(
+              ...range(10).map(() => El.panel("100%", "100%"))
+            )
+          ),
+          { defaultIndex: 5 }
+        );
+
+        const visiblePanels = flicking.visiblePanels;
+        const status = flicking.getStatus({ visiblePanelsOnly: true });
+
+        flicking.setStatus(status);
+
+        expect(visiblePanels.length).not.equals(10);
+        expect(flicking.index).not.equals(5);
+        expect(flicking.index).to.equal(5 - status.visibleOffset.index);
+      });
+
+      it("should move to the given camera position using the visible offset if given", () => {
+        const flicking = createFlicking(
+          El.viewport("1000px", "400px").add(
+            El.camera().add(
+              ...range(10).map(() => El.panel("100%", "100%"))
+            )
+          ),
+          { moveType: MOVE_TYPE.FREE_SCROLL, defaultIndex: 5 }
+        );
+        const status = flicking.getStatus({ index: false, position: true, includePanelHTML: true, visiblePanelsOnly: true });
+        const prevPosition = flicking.camera.position;
+        const prevRange = flicking.camera.range;
+
+        flicking.setStatus(status);
+
+        expect(flicking.camera.position).not.equals(prevPosition);
+        expect(flicking.camera.position).equals(prevPosition - status.visibleOffset.position);
+        expect(flicking.camera.range).not.deep.equals(prevRange);
+      });
+    });
+
+    describe("plugin-related methods", () => {
+      class TestPlugin implements Plugin {
+        public init = sinon.spy();
+        public destroy = sinon.spy();
+        public update = sinon.spy();
+      }
+
+      describe("addPlugins()", () => {
+        it("can add new plugin to a `plugins` array", () => {
+          const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+          const plugin = new TestPlugin();
+
+          flicking.addPlugins(plugin);
+
+          expect(flicking.plugins.includes(plugin)).to.be.true;
+        });
+
+        it("can add multiple plugins to a `plugins` array", () => {
+          const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+          const plugins = range(100).map(() => new TestPlugin());
+
+          flicking.addPlugins(...plugins);
+
+          expect(plugins.every(plugin => flicking.plugins.includes(plugin))).to.be.true;
+        });
+
+        it("should call `init` of the plugin when Flicking's already initialized", () => {
+          const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: true });
+          const plugin = new TestPlugin();
+
+          const initCalledBefore = plugin.init.called;
+          flicking.addPlugins(plugin);
+
+          expect(initCalledBefore).to.be.false;
+          expect(plugin.init.calledOnce).to.be.true;
+        });
+
+        it("shouldn't call `init` of the plugin when Flicking's not initialized", () => {
+          const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false });
+          const plugin = new TestPlugin();
+
+          const initCalledBefore = plugin.init.called;
+          flicking.addPlugins(plugin);
+
+          expect(initCalledBefore).to.be.false;
+          expect(plugin.init.called).to.be.false;
+        });
+
+        it("should call `init` on Flicking's init() called", () => {
+          const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false });
+          const plugin = new TestPlugin();
+
+          flicking.addPlugins(plugin);
+          const initCalledBefore = plugin.init.called;
+
+          flicking.init();
+
+          expect(initCalledBefore).to.be.false;
+          expect(plugin.init.calledOnce).to.be.true;
+        });
+      });
+
+      describe("removePlugins()", () => {
+        it("should remove a plugin from `plugins` array", () => {
+          const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+          const plugin = new TestPlugin();
+
+          flicking.addPlugins(plugin);
+          flicking.removePlugins(plugin);
+
+          expect(flicking.plugins.includes(plugin)).to.be.false;
+        });
+
+        it("can be called with plugin that is not added before but will not throw any error", () => {
+          const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+          const plugin = new TestPlugin();
+
+          flicking.removePlugins(plugin);
+
+          expect(flicking.plugins.includes(plugin)).to.be.false;
+        });
+
+        it("can remove a plugin from `plugins` array even if the plugin's not initialized", () => {
+          const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false });
+          const plugin = new TestPlugin();
+
+          flicking.addPlugins(plugin);
+          flicking.removePlugins(plugin);
+
+          expect(plugin.init.called).to.be.false;
+          expect(flicking.plugins.includes(plugin)).to.be.false;
+        });
       });
     });
   });

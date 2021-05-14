@@ -8,8 +8,25 @@ import State, { STATE_TYPE } from "~/control/states/State";
 import { EVENTS } from "~/const/external";
 import { getDirection } from "~/utils";
 
+/**
+ * A state that activates when Flicking's animating by user input or method call
+ * @ko 사용자 입력이나 메소드 호출에 의해 Flicking의 애니메이션이 동작중인 상태
+ * @internal
+ */
 class AnimatingState extends State {
+  /**
+   * Whether user is clicking or touching
+   * @ko 현재 사용자가 클릭/터치중인지 여부
+   * @type {false}
+   * @readonly
+   */
   public readonly holding = false;
+  /**
+   * Whether Flicking's animating
+   * @ko 현재 애니메이션 동작 여부
+   * @type {true}
+   * @readonly
+   */
   public readonly animating = true;
 
   public onHold(ctx: Parameters<State["onHold"]>[0]): void {

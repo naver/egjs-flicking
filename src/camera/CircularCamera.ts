@@ -9,12 +9,24 @@ import { DIRECTION } from "~/const/external";
 import { ValueOf } from "~/type/internal";
 import { circulatePosition, getFlickingAttached } from "~/utils";
 
+/**
+ * A data of the position that changes order of the panel elements
+ * @ko 패널 엘리먼트 순서가 변경되는 좌표의 데이터
+ * @interface
+ * @property {Panel} panel Toggling panel<ko>순서를 변경할 패널</ko>
+ * @property {Constants.DIRECTION} direction Toggling position<ko>순서를 변경할 방향</ko>
+ * @property {boolean} toggled Whether the panel has toggled its position to `direction`<ko>`direction` 방향으로 패널 위치를 변경했는지 여부를 나타내는 값</ko>
+ */
 export interface TogglePoint {
   panel: Panel;
   direction: ValueOf<typeof DIRECTION>;
   toggled: boolean;
 }
 
+/**
+ * A {@link Camera} that connects the last panel and the first panel, enabling continuous loop
+ * @ko 첫번째 패널과 마지막 패널이 이어진 상태로, 무한히 회전할 수 있는 종류의 {@link Camera}
+ */
 class CircularCamera extends Camera {
   private _circularOffset: number = 0;
   private _circularEnabled: boolean = false;
@@ -121,6 +133,15 @@ class CircularCamera extends Camera {
     return visibleInCurrentRange;
   }
 
+  /**
+   * Update {@link Camera#range range} of Camera
+   * @ko Camera의 {@link Camera#range range}를 업데이트합니다
+   * @chainable
+   * @throws {FlickingError}
+   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
+   * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
+   * @return {this}
+   */
   public updateRange() {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const renderer = flicking.renderer;

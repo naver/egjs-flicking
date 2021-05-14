@@ -6,11 +6,10 @@ class App {
   public constructor() {
     const flicking = new Flicking("#flicking", {
       align: ALIGN.CENTER,
-      // bound: true,
-      // horizontal: false,
+      bound: true,
       circular: true,
-      renderOnlyVisible: true
-      // moveType: MOVE_TYPE.FREE_SCROLL
+      renderOnlyVisible: true,
+      bounce: 1
     });
 
     // Object.values([EVENTS.VISIBLE_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {

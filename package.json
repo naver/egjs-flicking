@@ -1,6 +1,6 @@
 {
   "name": "@egjs/flicking",
-  "version": "4.0.0-beta.1",
+  "version": "4.0.0-beta.4",
   "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
   "main": "dist/flicking.js",
   "module": "dist/flicking.esm.js",
@@ -25,7 +25,10 @@
     "lint": "eslint 'src/**/*.ts'",
     "lint:test": "eslint 'test/unit/**/*.ts'",
     "lint:e2e": "eslint 'test/e2e/**/*.ts'",
-    "jsdoc": "rm -rf ./doc && jsdoc -c jsdoc.json",
+    "jsdoc": "jsdoc -c jsdoc.json",
+    "jsdoc:watch": "npm-watch jsdoc",
+    "docs": "ts-node -P jsdoc-to-mdx/tsconfig.json -T jsdoc-to-mdx/generate",
+    "demo:start": "rollup -w --config ./rollup.config.demo.js",
     "demo:build": "npm run build && cpx 'dist/**/*' demo/release/latest/dist --clean",
     "demo:prebuild-version": "cpx 'dist/**/*' demo/release/$npm_package_version/dist --clean && cpx 'doc/**/*' demo/release/$npm_package_version/doc --clean",
     "demo:prebuild-latest": "cpx 'dist/**/*' demo/release/latest/dist --clean && cpx 'doc/**/*' demo/release/latest/doc --clean",
@@ -65,6 +68,23 @@
     "ie 9-11",
     "not op_mini all"
   ],
+  "keywords": [
+    "carousel",
+    "flicking",
+    "slider",
+    "mouse",
+    "touch",
+    "desktop",
+    "mobile",
+    "react",
+    "vue",
+    "angular",
+    "preact",
+    "gallery",
+    "slideshow",
+    "swipe",
+    "egjs"
+  ],
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.1102.5",
     "@angular-devkit/core": "^11.2.5",
@@ -94,6 +114,7 @@
     "@storybook/react": "^6.1.21",
     "@storybook/vue": "^6.1.21",
     "@types/chai": "^4.2.15",
+    "@types/fs-extra": "^9.0.11",
     "@types/karma-chai": "^0.1.1",
     "@types/mocha": "^5.2.5",
     "@types/node": "^14.14.35",
@@ -131,6 +152,7 @@
     "karma-typescript-egjs": "^4.0.0",
     "karma-viewport": "^1.0.8",
     "mocha": "^5.2.0",
+    "npm-watch": "^0.9.0",
     "playwright": "^1.9.2",
     "postcss-clean": "^1.2.2",
     "postcss-cli": "^7.1.1",
@@ -166,13 +188,21 @@
   "dependencies": {
     "@egjs/axes": "^2.8.0",
     "@egjs/component": "^3.0.1",
-    "@egjs/imready": "^1.1.2",
     "@egjs/list-differ": "^1.0.0"
   },
   "husky": {
     "hooks": {
       "commit-msg": "node config/validate-commit-msg.js",
       "pre-push": "npm run lint"
+    }
+  },
+  "watch": {
+    "jsdoc": {
+      "patterns": [
+        "src"
+      ],
+      "extensions": "ts",
+      "runOnChangeOnly": false
     }
   }
 }

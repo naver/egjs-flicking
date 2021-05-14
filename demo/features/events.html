@@ -2,110 +2,113 @@
 <meta charset="utf-8"/>
 <link rel="stylesheet" href="../common/common.css">
 <link rel="stylesheet" href="./features.css">
+<link rel="stylesheet" href="../release/latest/dist/flicking.css">
 <script src="../release/latest/dist/flicking.pkgd.js"></script>
 <style>
-    #events {
-        width: 100%;
-        height: 80px;
-        display: flex;
-        flex-direction: row;
-        text-align: center;
-        position: relative;
-        padding: 0.4rem;
-        padding-top: 2.8em;
-        padding-bottom: 1.4rem;
-    }
-    #events::before {
-        content: 'event: index (count)';
-        font-weight: bold;
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
-    .flicking {
-        width: 100%;
-        height: 130px;
-    }
-    .event {
-        padding-left: 0.8rem;
-        padding-right: 0.8rem;
-        border-bottom: 4px solid #454545;
-        position: relative;
-    }
-    .event::before {
-        content: '';
-        width: 1px;
-        height: 50px;
-        position: absolute;
-        left: 50%;
-        bottom: 0px;
-        border-left: 1px dashed black;
-    }
-    .event::after {
-        content: '';
-        width: 10px;
-        height: 10px;
-        border-radius: 5px;
-        position: absolute;
-        left: calc(50% - 5px);
-        bottom: -7px;
-    }
-    .event.holdStart::after {
-        background-color: #EEAB2C;
-    }
-    .event.moveStart::after {
-        background-color: #e1656b;
-    }
-    .event.move::after {
-        background-color: #5BA3CA;
-    }
-    .event.moveEnd::after {
-        background-color: #88A148;
-    }
-    .event.holdEnd::after {
-        background-color: #984807;
-    }
-    .event.change::after {
-        background-color: #8064A2;
-    }
-    .event.restore::after {
-        background-color: #495D6F;
-    }
-    .event.select::after {
-        background-color: #11525B;
-    }
-    .event span {
-        display: block;
-        padding-bottom: 0.4rem;
-    }
-    .arrow {
-        display: flex;
-        justify-content: center;
-        position: relative;
-        padding-top: 20px;
-    }
-    .arrow::before {
-        content: '';
-        position: absolute;
-        width: 2px;
-        height: 15px;
-        top: 0px;
-        border-radius: 1px;
-        transform: rotateZ(45deg);
-        transform-origin: 50% 1px;
-        background-color: #333;
-    }
-    .arrow::after {
-        content: '';
-        position: absolute;
-        width: 2px;
-        height: 15px;
-        top: 0px;
-        border-radius: 1px;
-        transform: rotateZ(-45deg);
-        transform-origin: 50% 1px;
-        background-color: #333;
-    }
+  #events {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    position: relative;
+    padding: 0.4rem;
+    padding-top: 2.8em;
+    padding-bottom: 1.4rem;
+  }
+  #events::before {
+    content: 'event: index (count)';
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .flicking {
+    width: 100%;
+    height: 130px;
+  }
+  .event {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    border-bottom: 4px solid #454545;
+    position: relative;
+  }
+  .event::before {
+    content: '';
+    width: 1px;
+    height: 50px;
+    position: absolute;
+    left: 50%;
+    bottom: 0px;
+    border-left: 1px dashed black;
+  }
+  .event::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    position: absolute;
+    left: calc(50% - 5px);
+    bottom: -7px;
+  }
+  .event.holdStart::after {
+    background-color: #EEAB2C;
+  }
+  .event.moveStart::after {
+    background-color: #e1656b;
+  }
+  .event.move::after {
+    background-color: #5BA3CA;
+  }
+  .event.moveEnd::after {
+    background-color: #88A148;
+  }
+  .event.holdEnd::after {
+    background-color: #984807;
+  }
+  .event.willChange::after,
+  .event.changed::after {
+    background-color: #8064A2;
+  }
+  .event.willRestore::after,
+  .event.restored::after {
+    background-color: #495D6F;
+  }
+  .event.select::after {
+    background-color: #11525B;
+  }
+  .event span {
+    display: block;
+    padding-bottom: 0.4rem;
+  }
+  .arrow {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    padding-top: 20px;
+  }
+  .arrow::before {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 15px;
+    top: 0px;
+    border-radius: 1px;
+    transform: rotateZ(45deg);
+    transform-origin: 50% 1px;
+    background-color: #333;
+  }
+  .arrow::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 15px;
+    top: 0px;
+    border-radius: 1px;
+    transform: rotateZ(-45deg);
+    transform-origin: 50% 1px;
+    background-color: #333;
+  }
 </style>
 
 <div class="container">
@@ -115,56 +118,59 @@
     <li>Check <a href="https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#event:change">API documents</a> for details.</li>
   </ul>
   <div id="events"></div>
-  <div class="flicking flicking0">
-    <div class="panel first">0</div>
-    <div class="panel second">1</div>
-    <div class="panel third">2</div>
-    <div class="panel fourth">3</div>
-    <div class="panel fifth">4</div>
+  <div class="flicking-viewport flicking0">
+    <div class="flicking-camera">
+      <div class="panel first">0</div>
+      <div class="panel second">1</div>
+      <div class="panel third">2</div>
+      <div class="panel fourth">3</div>
+      <div class="panel fifth">4</div>
+    </div>
   </div>
   <div class="arrow"><a href="./hangeranchor.html">Hanger</a></div>
 </div>
 <script data-script="flicking0">
-var events = [];
-var eventWrapper = document.querySelector("#events");
-var onEvent = function(e) {
+  var events = [];
+  var eventWrapper = document.querySelector("#events");
+  var onEvent = function(e) {
     var lastEvent = events[events.length - 1];
-    if (!lastEvent || lastEvent.type !== e.type) {
-        var eventEl = document.createElement("div");
-        eventEl.className = "event " + e.type;
-        eventEl.innerHTML = "<span class=\"event-label\">" + e.type + ": " + e.index + "</span>";
-        eventWrapper.appendChild(eventEl);
+    if (!lastEvent || lastEvent.type !== e.eventType) {
+      var eventEl = document.createElement("div");
+      eventEl.className = "event " + e.eventType;
+      eventEl.innerHTML = "<span class=\"event-label\">" + e.eventType + "</span>";
+      eventWrapper.appendChild(eventEl);
 
-        events.push({
-            type: e.type,
-            index: e.index,
-            count: 1,
-            el: eventEl,
-        });
+      events.push({
+        type: e.eventType,
+        index: e.index,
+        count: 1,
+        el: eventEl,
+      });
     } else {
-        lastEvent.count += 1;
-        lastEvent.el.firstChild.innerHTML = e.type + ": " + e.index + " (x" + lastEvent.count + ")";
+      lastEvent.count += 1;
+      lastEvent.el.firstChild.innerHTML = e.eventType + " (x" + lastEvent.count + ")";
     }
-}
-var flicking = new eg.Flicking(".flicking0", {
-  circular: true,
-  gap: 15,
-  duration: 300,
-  moveType: "freeScroll"
-}).on({
+  }
+  var flicking = new Flicking(".flicking0", {
+    circular: true,
+    duration: 300,
+    moveType: "freeScroll"
+  }).on({
     holdStart: function(e) {
-        events = [];
-        eventWrapper.innerHTML = "";
-        onEvent(e);
+      events = [];
+      eventWrapper.innerHTML = "";
+      onEvent(e);
     },
     holdEnd: onEvent,
     moveStart: onEvent,
     move: onEvent,
     moveEnd: onEvent,
-    change: onEvent,
-    restore: onEvent,
+    willChange: onEvent,
+    willRestore: onEvent,
+    changed: onEvent,
+    restored: onEvent,
     select: onEvent,
-});
+  });
 </script>
 <script src="../common/codepen.js"></script>
 <script src="../common/analytics.js"></script>

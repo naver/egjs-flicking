@@ -9,8 +9,25 @@ import { EVENTS } from "~/const/external";
 import * as AXES from "~/const/axes";
 import { getDirection } from "~/utils";
 
+/**
+ * A state that activates when user's dragging the Flicking area
+ * @ko 사용자가 드래깅중인 상태
+ * @internal
+ */
 class DraggingState extends State {
+  /**
+   * Whether user is clicking or touching
+   * @ko 현재 사용자가 클릭/터치중인지 여부
+   * @type {true}
+   * @readonly
+   */
   public readonly holding = true;
+  /**
+   * Whether Flicking's animating
+   * @ko 현재 애니메이션 동작 여부
+   * @type {true}
+   * @readonly
+   */
   public readonly animating = true;
 
   public onChange(ctx: Parameters<State["onChange"]>[0]): void {

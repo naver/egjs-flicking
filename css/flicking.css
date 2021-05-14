@@ -17,9 +17,14 @@
   flex-direction: row;
   z-index: 1;
 }
-.flicking-viewport-vertical>.flicking-camera {
-  flex-direction: column;
-}
 .flicking-camera>* {
   flex-shrink: 0;
+}
+
+.flicking-viewport.vertical {
+  display: inline-flex;
+}
+.flicking-viewport.vertical>.flicking-camera {
+  display: inline-flex;
+  flex-direction: column;
 }

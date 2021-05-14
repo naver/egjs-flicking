@@ -23,7 +23,9 @@ import NativeFlicking, {
   FlickingEvents,
   EVENTS,
   sync,
-  getRenderingPanels
+  getRenderingPanels,
+  Plugin,
+  Status
 } from "@egjs/flicking";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import * as uuid from "uuid";
@@ -42,6 +44,7 @@ export interface RenderPanelChangeEvent {
     </div>`,
   host: {
     class: "flicking-viewport",
+    "[class.vertical]": "_isVertical",
     style: "display: block;"
   },
   styleUrls: [
@@ -53,6 +56,7 @@ export class NgxFlickingComponent extends FlickingInterface
   implements AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
   @Input() public options: Partial<FlickingOptions> = {};
   @Input() public plugins: Plugin[] = [];
+  @Input() public status: Partial<Status> = {};
   @Input() public data: any[] = [];
 
   @Output() public ready = new EventEmitter<FlickingEvents[typeof EVENTS.READY]>();
@@ -63,8 +67,10 @@ export class NgxFlickingComponent extends FlickingInterface
   @Output() public moveStart = new EventEmitter<FlickingEvents[typeof EVENTS.MOVE_START]>();
   @Output() public move = new EventEmitter<FlickingEvents[typeof EVENTS.MOVE]>();
   @Output() public moveEnd = new EventEmitter<FlickingEvents[typeof EVENTS.MOVE_END]>();
-  @Output() public change = new EventEmitter<FlickingEvents[typeof EVENTS.CHANGE]>();
-  @Output() public restore = new EventEmitter<FlickingEvents[typeof EVENTS.RESTORE]>();
+  @Output() public willChange = new EventEmitter<FlickingEvents[typeof EVENTS.WILL_CHANGE]>();
+  @Output() public changed = new EventEmitter<FlickingEvents[typeof EVENTS.CHANGED]>();
+  @Output() public willRestore = new EventEmitter<FlickingEvents[typeof EVENTS.WILL_RESTORE]>();
+  @Output() public restored = new EventEmitter<FlickingEvents[typeof EVENTS.RESTORED]>();
   @Output() public select = new EventEmitter<FlickingEvents[typeof EVENTS.SELECT]>();
   @Output() public needPanel = new EventEmitter<FlickingEvents[typeof EVENTS.NEED_PANEL]>();
   @Output() public visibleChange = new EventEmitter<FlickingEvents[typeof EVENTS.VISIBLE_CHANGE]>();
@@ -78,6 +84,7 @@ export class NgxFlickingComponent extends FlickingInterface
   private _elementDiffer: ListDiffer<string | number> | null = null;
   private _panelsDiffer: ListDiffer<any> | null = null;
   private _diffResult: DiffResult<any> | null = null;
+  private _isVertical: boolean = false;
   /**
    * To prevent 'ExpressionChangedAfterItHasBeenCheckedError'
    * It would trigger above error if you changed the value after DOM operation is started. It makes unstable DOM tree.
@@ -106,12 +113,17 @@ export class NgxFlickingComponent extends FlickingInterface
     // This prevents mousemove to call ngDoCheck & noAfterContentChecked everytime
     this._zone.runOutsideAngular(() => {
       this._nativeFlicking = new NativeFlicking(viewportEl, options);
+      this._isVertical = !this._nativeFlicking.horizontal;
     });
     this._elementDiffer = new ListDiffer(this._getChildKeys());
     this._panelsDiffer = new ListDiffer(this.data);
 
     this._bindEvents();
     this._checkPlugins();
+
+    if (this.status) {
+      this._nativeFlicking.setStatus(this.status);
+    }
 
     if (this.options.renderOnlyVisible) {
       this._reRender();

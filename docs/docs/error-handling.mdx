@@ -1,0 +1,28 @@
+---
+title: Handling errors
+id: error-handling
+slug: /error-handling
+custom_edit_url: null
+---
+
+All known Flicking errors are thrown as [FlickingError](api/FlickingError) with a `code` property set as listed on the [ERROR_CODE](api/ERROR_CODE).
+
+A common use-case for this is when you're calling a [prev](api/Flicking#prev) / [next](api/Flicking#next) / [moveTo](api/Flicking#moveTo) of Flicking which can throw an error when Flicking's already animating.
+
+```js
+import { FlickingError, ERROR_CODE } from "@egjs/flicking";
+
+try {
+  await flicking.next();
+} catch (err) {
+  if (err instanceof FlickingError) {
+    if (err.code === ERROR_CODE.ANIMATION_ALREADY_PLAYING) {
+      console.error("Animation is already playing!");
+    } else if (err.code === ERROR_CODE.ANIMATION_INTERRUPTED) {
+      console.error("Animation is interrupted by user.");
+    }
+  }
+}
+```
+
+See all possible error codes at [ERROR_CODE](api/ERROR_CODE).

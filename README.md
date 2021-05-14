@@ -1,40 +1,40 @@
-<h1 align=center style="max-width: 100%;">
-  <img width="800" alt="Flicking Logo" src="https://naver.github.io/egjs-flicking/images/flicking.svg" style="max-width: 100%;"><br/>
+<h1 align="center" style="max-width: 100%;">
+  <img width="800" alt="Flicking Logo" src="https://naver.github.io/egjs-flicking/images/flicking.svg" style="max-width: 100%;" /><br/>
   <a href="https://naver.github.io/egjs-flicking/">@egjs/flicking</a>
 </h1>
 
-<p align=center style="line-height: 2;">
+<p align="center" style="line-height: 2;">
   <a href="https://www.npmjs.com/package/@egjs/flicking" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/flicking.svg?style=flat-square&color=007acc&label=version&logo=NPM" alt="version" /></a>
-  <a href="https://www.npmjs.com/package/@egjs/flicking" target="_blank"><img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@egjs/flicking.svg?style=flat-square&label=%F0%9F%92%BE%20gzipped&color=007acc"></a>
+  <a href="https://www.npmjs.com/package/@egjs/flicking" target="_blank"><img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@egjs/flicking.svg?style=flat-square&label=%F0%9F%92%BE%20gzipped&color=007acc" /></a>
   <a href="https://travis-ci.org/naver/egjs-flicking" target="_blank"><img alt="Travis (.org)" src="https://img.shields.io/travis/naver/egjs-flicking.svg?style=flat-square&label=build&logo=travis%20ci" /></a>
-  <a href="https://coveralls.io/github/naver/egjs-flicking?branch=master&style=flat-square" target="_blank"><img alt="Coveralls github" src="https://img.shields.io/coveralls/github/naver/egjs-flicking.svg?style=flat-square&label=%E2%9C%85%20coverage"></a>
+  <a href="https://coveralls.io/github/naver/egjs-flicking?branch=master&style=flat-square" target="_blank"><img alt="Coveralls github" src="https://img.shields.io/coveralls/github/naver/egjs-flicking.svg?style=flat-square&label=%E2%9C%85%20coverage" /></a>
   <a href="https://github.com/naver/egjs-flicking/graphs/commit-activity">
-<img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/naver/egjs-flicking.svg?color=08CE5D&label=%E2%AC%86%20commits&style=flat-square"></a>
-  <a href="https://www.npmjs.com/package/@egjs/flicking" target="_blank"><img src="https://img.shields.io/npm/dm/@egjs/flicking.svg?style=flat-square&label=%E2%AC%87%20downloads&color=08CE5D" alt="npm downloads per month"></a>
-  <a href="https://github.com/naver/egjs-flicking/graphs/contributors" target="_blank"><img alt="GitHub contributors" src="https://img.shields.io/github/contributors/naver/egjs-flicking.svg?label=%F0%9F%91%A5%20contributors&style=flat-square&color=08CE5D"></a>
-  <a href="https://github.com/naver/egjs-flicking/blob/master/LICENSE" target="_blank"><img alt="GitHub" src="https://img.shields.io/github/license/naver/egjs-flicking.svg?style=flat-square&label=%F0%9F%93%9C%20license&color=08CE5D"></a>
-  <a href="https://github.com/naver/egjs-flicking/blob/master/packages/ngx-flicking/README.md" target="_blank"><img alt="Angular" src="https://img.shields.io/static/v1.svg?label=&message=Angular&style=flat-square&logo=Angular&color=dd0031"></a>
-  <a href="https://github.com/naver/egjs-flicking/blob/master/packages/react-flicking/README.md" target="_blank"><img alt="React" src="https://img.shields.io/static/v1.svg?label=&message=React&style=flat-square&logo=React&logoColor=white&color=61dafb"></a>
-  <a href="https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md" target="_blank"><img alt="Vue" src="https://img.shields.io/static/v1.svg?label=&message=Vue&style=flat-square&logo=Vue.js&logoColor=white&color=42b883"></a>
-  <a href="https://github.com/naver/egjs-flicking/blob/master/packages/preact-flicking/README.md" target="_blank"><img alt="Vue" src="https://img.shields.io/static/v1.svg?label=&message=Preact&style=flat-square&logo=Preact&logoColor=white&color=673ab8"></a>
-<img src="https://img.shields.io/static/v1.svg?label=&message=TypeScript&color=294E80&style=flat-square&logo=typescript">
-<a href="https://deepscan.io/dashboard#view=project&tid=3998&pid=5802&bid=46086"><img src="https://deepscan.io/api/teams/3998/projects/5802/branches/46086/badge/grade.svg" alt="DeepScan grade"></a>
+<img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/naver/egjs-flicking.svg?color=08CE5D&label=%E2%AC%86%20commits&style=flat-square" /></a>
+  <a href="https://www.npmjs.com/package/@egjs/flicking" target="_blank"><img src="https://img.shields.io/npm/dm/@egjs/flicking.svg?style=flat-square&label=%E2%AC%87%20downloads&color=08CE5D" alt="npm downloads per month" /></a>
+  <a href="https://github.com/naver/egjs-flicking/graphs/contributors" target="_blank"><img alt="GitHub contributors" src="https://img.shields.io/github/contributors/naver/egjs-flicking.svg?label=%F0%9F%91%A5%20contributors&style=flat-square&color=08CE5D" /></a>
+  <a href="https://github.com/naver/egjs-flicking/blob/master/LICENSE" target="_blank"><img alt="GitHub" src="https://img.shields.io/github/license/naver/egjs-flicking.svg?style=flat-square&label=%F0%9F%93%9C%20license&color=08CE5D" /></a>
+  <a href="https://github.com/naver/egjs-flicking/blob/master/packages/ngx-flicking/README.md" target="_blank"><img alt="Angular" src="https://img.shields.io/static/v1.svg?label=&message=Angular&style=flat-square&logo=Angular&color=dd0031" /></a>
+  <a href="https://github.com/naver/egjs-flicking/blob/master/packages/react-flicking/README.md" target="_blank"><img alt="React" src="https://img.shields.io/static/v1.svg?label=&message=React&style=flat-square&logo=React&logoColor=white&color=61dafb" /></a>
+  <a href="https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md" target="_blank"><img alt="Vue" src="https://img.shields.io/static/v1.svg?label=&message=Vue&style=flat-square&logo=Vue.js&logoColor=white&color=42b883" /></a>
+  <a href="https://github.com/naver/egjs-flicking/blob/master/packages/preact-flicking/README.md" target="_blank"><img alt="Vue" src="https://img.shields.io/static/v1.svg?label=&message=Preact&style=flat-square&logo=Preact&logoColor=white&color=673ab8" /></a>
+<img src="https://img.shields.io/static/v1.svg?label=&message=TypeScript&color=294E80&style=flat-square&logo=typescript" />
+<a href="https://deepscan.io/dashboard#view=project&tid=3998&pid=5802&bid=46086"><img src="https://deepscan.io/api/teams/3998/projects/5802/branches/46086/badge/grade.svg" alt="DeepScan grade" /></a>
 </p>
 
-<h3 align=center>
+<h3 align="center">
   <a href="https://naver.github.io/egjs-flicking/">Demo</a> / <a href="https://naver.github.io/egjs-flicking/release/latest/doc/index.html">Documentation</a> / <a href="https://naver.github.io/egjs/"><img height="20" src="https://naver.github.io/egjs/img/logo.svg"/> Other components</a>
 </h3>
 
-<p align=center>
-  <b>Everyday 30 million people experience. It's reliable, flexible and extendable carousel.</b><br>📱💻🖥
+<p align="center">
+  <b>Everyday 30 million people experience. It's reliable, flexible and extendable carousel.</b><br />📱💻🖥
 </p>
 
-<p align=center>
+<p align="center">
   Translations:
   <a href="https://github.com/naver/egjs-flicking/blob/master/README.md">🇺🇸</a>
   <a href="https://github.com/naver/egjs-flicking/blob/master/README_KR.md">🇰🇷</a>
 </p>
-<p align=center>
+<p align="center">
   <b>Supported Frameworks</b><br/>
   <a href="https://github.com/naver/egjs-flicking/blob/master/packages/ngx-flicking/README.md"><img width="45" src="https://naver.github.io/egjs-flicking/images/angular.svg" alt="AngularJS" /></a>&nbsp;&nbsp;
   <a href="https://github.com/naver/egjs-flicking/blob/master/packages/react-flicking/README.md"><img width="45" src="https://naver.github.io/egjs-flicking/images/react.svg" alt="React" /></a>&nbsp;&nbsp;
@@ -58,11 +58,11 @@
     </tr>
   </tbody>
 </table>
-<h6 align=center>
+<h6 align="center">
   🖱️Click each images to see its source or check our <a href="https://naver.github.io/egjs-flicking/">full demos</a>.
 </h6>
 
-<p align=center>
+<p align="center">
   <img width="300" src="https://user-images.githubusercontent.com/26213435/59832831-cebaf780-937f-11e9-84cd-e21f8cf1fd07.gif" />
 </p>
 
@@ -151,7 +151,7 @@ var flicking = new eg.Flicking("#el", { collectStatistics: false });
 |[**@egjs/preact-flicking**](https://github.com/naver/egjs-flicking/blob/master/packages/preact-flicking/README.md)|<a href="https://www.npmjs.com/package/@egjs/preact-flicking" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/preact-flicking.svg?style=flat-square&color=673ab8&label=%F0%9F%94%96" alt="version" /></a>|<img width="15" src="https://naver.github.io/egjs-flicking/images/preact.svg" valign="middle" alt="Preact" /> [Preact](https://preactjs.com/guide/v10/getting-started) port of @egjs/flicking|
 
 ## 🌐 Supported Browsers
-|<img width="20" src="https://simpleicons.org/icons/internetexplorer.svg" alt="IE" />|<img width="20" src="https://simpleicons.org/icons/googlechrome.svg" alt="Chrome" />|<img width="20" src="https://simpleicons.org/icons/firefoxbrowser.svg" alt="Firefox" />|<img width="20" src="https://simpleicons.org/icons/safari.svg" alt="Safari" />|<img width="20" src="https://simpleicons.org/icons/apple.svg" alt="iOS" />|<img width="20" src="https://simpleicons.org/icons/android.svg" alt="Android">|
+|<img width="20" src="https://simpleicons.org/icons/internetexplorer.svg" alt="IE" />|<img width="20" src="https://simpleicons.org/icons/googlechrome.svg" alt="Chrome" />|<img width="20" src="https://simpleicons.org/icons/firefoxbrowser.svg" alt="Firefox" />|<img width="20" src="https://simpleicons.org/icons/safari.svg" alt="Safari" />|<img width="20" src="https://simpleicons.org/icons/apple.svg" alt="iOS" />|<img width="20" src="https://simpleicons.org/icons/android.svg" alt="Android" />|
 |:---:|:---:|:---:|:---:|:---:|:---:|
 |10+|Latest|Latest|Latest|7+|4+|
 
@@ -192,6 +192,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ```
 
-<p align=center>
-  <a href="https://naver.github.io/egjs/"><img height="50" src="https://naver.github.io/egjs/img/logotype1_black.svg" ></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/naver"><img height="50" src="https://naver.github.io/OpenSourceGuide/book/assets/naver_logo.png" /></a>
+<p align="center">
+  <a href="https://naver.github.io/egjs/"><img height="50" src="https://naver.github.io/egjs/img/logotype1_black.svg" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/naver"><img height="50" src="https://naver.github.io/OpenSourceGuide/book/assets/naver_logo.png" /></a>
 </p>

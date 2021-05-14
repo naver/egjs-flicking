@@ -3,203 +3,210 @@
 <link rel="stylesheet" href="../common/common.css">
 <link rel="stylesheet" href="../common/highlight.css">
 <link rel="stylesheet" href="./features.css">
+<link rel="stylesheet" href="../release/latest/dist/flicking.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
 <script src="../common/highlight.js"></script>
 <script src="../release/latest/dist/flicking.pkgd.js"></script>
 <script src="../common/pagination.js"></script>
 <style>
-    .buttons {
-        padding: 10px 0px;
-        text-align: center;
-    }
-    .buttons button {
-        padding: 10px 15px;
-        background: #eee;
-        border: 0;
-    }
-    .buttons button:hover {
-        background: #ccc;
-    }
-    .panel, .infinite {
-        font-weight: bold;
-    }
-    .flicking2 .infinite {
-        transition: all ease 1s;
-    }
-    .flicking .infinite.placeholder {
-        background: #ddd;
-        color: transparent;
-    }
+  .buttons {
+    padding: 10px 0px;
+    text-align: center;
+  }
+  .buttons button {
+    padding: 10px 15px;
+    background: #eee;
+    border: 0;
+  }
+  .buttons button:hover {
+    background: #ccc;
+  }
+  .panel, .infinite {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  .flicking2 .infinite {
+    transition: all ease 1s;
+  }
+  .flicking-viewport .infinite.placeholder {
+    background: #ddd;
+    color: transparent;
+  }
 </style>
 <div class="container">
-    <h1>Infinite Flicking</h1>
-    <h2>Append  &amp; Prepend panel dynamically</h2>
-    <ul class="extra">
-        <li>You can dynamically add panels to the flicking.</li>
-        <li>The panel's indexes are zero-based integer.</li>
-        <li>Note: The number displayed above each panel is not panel's index.</li>
-    </ul>
-    <div class="flicking flicking0">
-        <div class="infinite infinite0">0</div>
-        <div class="infinite infinite1">1</div>
-        <div class="infinite infinite2">2</div>
-        <div class="infinite infinite3">3</div>
-        <div class="infinite infinite4">4</div>
+  <h1>Infinite Flicking</h1>
+  <h2>Append  &amp; Prepend panel dynamically</h2>
+  <ul class="extra">
+    <li>You can dynamically add panels to the flicking.</li>
+    <li>The panel's indexes are zero-based integer.</li>
+    <li>Note: The number displayed above each panel is not panel's index.</li>
+  </ul>
+  <div class="flicking-viewport flicking0">
+    <div class="flicking-camera">
+      <div class="infinite infinite0">0</div>
+      <div class="infinite infinite1">1</div>
+      <div class="infinite infinite2">2</div>
+      <div class="infinite infinite3">3</div>
+      <div class="infinite infinite4">4</div>
     </div>
-    <div class="pagination pagination0"></div>
-    <div class="buttons">
-        <button id="prepend">Prepend</button>
-        <button id="append">Append</button>
+  </div>
+  <div class="pagination pagination0"></div>
+  <div class="buttons">
+    <button id="prepend">Prepend</button>
+    <button id="append">Append</button>
+  </div>
+  <pre><code class="hljs javascript" data-script="flicking0"></code></pre>
+  <h2>infinite: true &amp; needPanel event</h2>
+  <ul class="extra">
+    <li>Enabling the infinite option can make <strong>needPanel</strong> event to be triggered when more panels at moving direction should be fetched within <strong>infiniteThreshold</strong> value.</li>
+  </ul>
+  <div class="flicking-viewport flicking1">
+    <div class="flicking-camera">
+      <div class="infinite infinite0">0</div>
+      <div class="infinite infinite1">1</div>
+      <div class="infinite infinite2">2</div>
+      <div class="infinite infinite3">3</div>
+      <div class="infinite infinite4">4</div>
     </div>
-    <pre><code class="hljs javascript" data-script="flicking0"></code></pre>
-    <h2>infinite: true &amp; needPanel event</h2>
-    <ul class="extra">
-        <li>Enabling the infinite option can make <strong>needPanel</strong> event to be triggered when more panels at moving direction should be fetched within <strong>infiniteThreshold</strong> value.</li>
-    </ul>
-    <div class="flicking flicking1">
-        <div class="infinite infinite0">0</div>
-        <div class="infinite infinite1">1</div>
-        <div class="infinite infinite2">2</div>
-        <div class="infinite infinite3">3</div>
-        <div class="infinite infinite4">4</div>
+  </div>
+  <div class="pagination pagination1"></div>
+  <pre><code class="hljs javascript" data-script="flicking1"></code></pre>
+  <h2>infinite: true &amp; placeholder</h2>
+  <ul class="extra">
+    <li>You can make continuous carousel UI with asynchronous data by adding placeholder panel first, then update panel with fetched data later.</li>
+  </ul>
+  <div class="flicking-viewport flicking2">
+    <div class="flicking-camera">
+      <div class="infinite infinite0">0</div>
+      <div class="infinite infinite1">1</div>
+      <div class="infinite infinite2">2</div>
+      <div class="infinite infinite3">3</div>
+      <div class="infinite infinite4">4</div>
     </div>
-    <div class="pagination pagination1"></div>
-    <pre><code class="hljs javascript" data-script="flicking1"></code></pre>
-    <h2>infinite: true &amp; placeholder</h2>
-    <ul class="extra">
-        <li>You can make continuous carousel UI with asynchronous data by adding placeholder panel first, then update panel with fetched data later.</li>
-    </ul>
-    <div class="flicking flicking2">
-        <div class="infinite infinite0">0</div>
-        <div class="infinite infinite1">1</div>
-        <div class="infinite infinite2">2</div>
-        <div class="infinite infinite3">3</div>
-        <div class="infinite infinite4">4</div>
+  </div>
+  <div class="pagination pagination2"></div>
+  <pre><code class="hljs javascript" data-script="flicking2"></code></pre>
+  <h2>🚀 Increasing performance</h2>
+  <ul class="extra">
+    <li>You can increase performance by enabling <b>renderOnlyVisible</b>, <b>isEqualSize</b>, and <b>isConstantSize</b> of Flicking</li>
+    <li>See its effect: <a href="https://www.youtube.com/watch?v=R-DKq-fqeSI">https://www.youtube.com/watch?v=R-DKq-fqeSI</a></li>
+    <li>Check the details of the options: <a href="https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#.FlickingOptions">Link</a></li>
+  </ul>
+  <div class="flicking-viewport flicking3">
+    <div class="flicking-camera">
+      <div class="infinite infinite0">0</div>
+      <div class="infinite infinite1">1</div>
+      <div class="infinite infinite2">2</div>
+      <div class="infinite infinite3">3</div>
+      <div class="infinite infinite4">4</div>
     </div>
-    <div class="pagination pagination2"></div>
-    <pre><code class="hljs javascript" data-script="flicking2"></code></pre>
-    <h2>🚀 Increasing performance</h2>
-    <ul class="extra">
-        <li>You can increase performance by enabling <b>renderOnlyVisible</b>, <b>isEqualSize</b>, and <b>isConstantSize</b> of Flicking</li>
-        <li>See its effect: <a href="https://www.youtube.com/watch?v=R-DKq-fqeSI">https://www.youtube.com/watch?v=R-DKq-fqeSI</a></li>
-        <li>Check the details of the options: <a href="https://naver.github.io/egjs-flicking/release/latest/doc/eg.Flicking.html#.FlickingOptions">Link</a></li>
-    </ul>
-    <div class="flicking flicking3">
-        <div class="infinite infinite0">0</div>
-        <div class="infinite infinite1">1</div>
-        <div class="infinite infinite2">2</div>
-        <div class="infinite infinite3">3</div>
-        <div class="infinite infinite4">4</div>
-    </div>
-    <div class="buttons">
-        <button id="start">Start</button>
-        <button id="stop">Stop</button>
-    </div>
-    <pre><code class="hljs javascript" data-script="flicking3"></code></pre>
+  </div>
+  <div class="buttons">
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+  </div>
+  <pre><code class="hljs javascript" data-script="flicking3"></code></pre>
 </div>
 <script data-script="flicking0">
-var prev = 0;
-var next = 4;
-var flicking0 = new eg.Flicking(".flicking0", {
-    gap: 10,
-});
+  var prev = 0;
+  var next = 4;
+  var flicking0 = new Flicking(".flicking0");
 
-document.querySelector("#prepend").addEventListener("click", function () {
+  document.querySelector("#prepend").addEventListener("click", function () {
     prev -= 2;
     flicking0.prepend(
-        '<div class="infinite infinite' + Math.abs(prev) % 5 + '">' + (prev) + '</div>'
-        + '<div class="infinite infinite' + Math.abs(prev + 1) % 5 + '">' + (prev + 1) + '</div>'
+    '<div class="infinite infinite' + Math.abs(prev) % 5 + '">' + (prev) + '</div>'
+    + '<div class="infinite infinite' + Math.abs(prev + 1) % 5 + '">' + (prev + 1) + '</div>'
     );
-    flickingPagination0.update(flicking0);
-});
-document.querySelector("#append").addEventListener("click", function () {
+    // flickingPagination0.update(flicking0);
+  });
+  document.querySelector("#append").addEventListener("click", function () {
     next += 2;
     flicking0.append(
-        '<div class="infinite infinite' + (next - 1) % 5 + '">' + (next - 1) + '</div>'
-        + '<div class="infinite infinite' + next % 5 + '">' + next + '</div>'
+    '<div class="infinite infinite' + (next - 1) % 5 + '">' + (next - 1) + '</div>'
+    + '<div class="infinite infinite' + next % 5 + '">' + next + '</div>'
     );
-    flickingPagination0.update(flicking0);
-});
+    // flickingPagination0.update(flicking0);
+  });
 </script>
 <script data-script="flicking1">
-var flicking1 = new eg.Flicking(".flicking1", {
-    gap: 10,
-    infinite: true,
-    infiniteThreshold: 50,
-});
+  var flicking1 = new Flicking(".flicking1", {
+    needPanelThreshold: 50,
+  });
 
-flicking1.on("needPanel", function (e) {
-    var length = flicking1.getPanelCount();
+  flicking1.on("needPanel", function (e) {
+    if (e.direction !== Flicking.DIRECTION.NEXT) return;
 
-    e.fill(
-        '<div class="infinite infinite' + (length + 1) % 5 + '">'+ (length + 1) + '</div>'
-        + '<div class="infinite infinite' + (length + 2) % 5 + '">' + (length + 2) + '</div>'
-    );
-    flickingPagination1.update(flicking1);
-});
+    var length = flicking1.panelCount;
+
+    flicking1.append(
+      '<div class="infinite infinite' + (length + 1) % 5 + '">'+ (length + 1) + '</div>'
+      + '<div class="infinite infinite' + (length + 2) % 5 + '">' + (length + 2) + '</div>'
+    )
+
+    // flickingPagination1.update(flicking1);
+  });
 </script>
 <script data-script="flicking2">
-var flicking2 = new eg.Flicking(".flicking2", {
-    gap: 10,
-    infinite: true,
+  var flicking2 = new Flicking(".flicking2", {
     moveType: "freeScroll"
-});
+  });
 
-flicking2.on("needPanel", function (e) {
-    var length = flicking2.getPanelCount();
+  flicking2.on("needPanel", function (e) {
+    if (e.direction !== Flicking.DIRECTION.NEXT) return;
+
+    var length = flicking2.panelCount;
 
     /* placeholder */
-    var panels = e.fill(
-        '<div class="infinite placeholder infinite' + (length + 1) % 5 + '">'+ (length + 1) + '</div>'
-        + '<div class="infinite placeholder infinite' + (length + 2) % 5 + '">' + (length + 2) + '</div>'
+    var panels = flicking2.append(
+      '<div class="infinite placeholder infinite' + (length + 1) % 5 + '">'+ (length + 1) + '</div>'
+      + '<div class="infinite placeholder infinite' + (length + 2) % 5 + '">' + (length + 2) + '</div>'
     );
-    flickingPagination2.update(flicking2);
+    // flickingPagination2.update(flicking2);
     /* insert data */
     setTimeout(function () {
-        panels.forEach(function (panel) {
-            panel.update(function (el) {
-                el.className = el.className.replace(/\s*placeholder/g, "");
-            });
-        });
+      panels.forEach(function (panel) {
+        panel.element.className = panel.element.className.replace(/\s*placeholder/g, "");
+      });
     }, 1500);
-});
+  });
 </script>
 <script data-script="flicking3">
-    var flicking3 = new eg.Flicking(".flicking3", {
-        renderOnlyVisible: true,
-        isEqualSize: true,
-        isConstantSize: true,
-        infinite: true,
-        gap: 10,
-        duration: 5,
-        moveType: "freeScroll"
-    });
+  var flicking3 = new Flicking(".flicking3", {
+    renderOnlyVisible: true,
+    duration: 5,
+    moveType: "freeScroll"
+  });
 
-    flicking3.on("needPanel", function (e) {
-        var panels = e.fill([
-            '<div class="infinite infinite' + e.range.min % 5 + '">'+ e.range.min + '</div>',
-            '<div class="infinite infinite' + (e.range.min + 1) % 5 + '">' + (e.range.min + 1) + '</div>'
-        ]);
+  flicking3.on("needPanel", function (e) {
+    if (e.direction !== Flicking.DIRECTION.NEXT) return;
+
+    var panels = flicking3.append([
+      '<div class="infinite infinite' + flicking3.panelCount % 5 + '">'+ flicking3.panelCount + '</div>',
+      '<div class="infinite infinite' + (flicking3.panelCount + 1) % 5 + '">' + (flicking3.panelCount + 1) + '</div>'
+    ]);
+  });
+  document.querySelector("#start").addEventListener("click", function () {
+    if (flicking3.hasOn("changed")) return;
+
+    flicking3.on("changed", function(e) {
+      flicking3.next();
     });
-    document.querySelector("#start").addEventListener("click", function () {
-        flicking3.on("moveEnd", function(e) {
-            flicking3.next();
-        });
-        flicking3.next();
-    });
-    document.querySelector("#stop").addEventListener("click", function () {
-        flicking3.off("moveEnd");
-    });
-    </script>
+    flicking3.next();
+  });
+  document.querySelector("#stop").addEventListener("click", function () {
+    flicking3.off("changed");
+  });
+</script>
 <script data-script=".">
-    var flickingPagination0 = CustomPagination(".pagination0");
-    flicking0.addPlugins(flickingPagination0);
+  var flickingPagination0 = CustomPagination(".pagination0");
+  flicking0.addPlugins(flickingPagination0);
 
-    var flickingPagination1 = CustomPagination(".pagination1");
-    flicking1.addPlugins(flickingPagination1);
+  var flickingPagination1 = CustomPagination(".pagination1");
+  flicking1.addPlugins(flickingPagination1);
 
-    var flickingPagination2 = CustomPagination(".pagination2");
-    flicking2.addPlugins(flickingPagination2);
+  var flickingPagination2 = CustomPagination(".pagination2");
+  flicking2.addPlugins(flickingPagination2);
 </script>
 <script src="../common/codepen.js"></script>
 <script src="../common/analytics.js"></script>

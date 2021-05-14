@@ -143,6 +143,7 @@ module.exports = {
         "@typescript-eslint/prefer-function-type": "error",
         "@typescript-eslint/prefer-namespace-keyword": "error",
         "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/restrict-template-expressions": "off",
         "@typescript-eslint/quotes": [
           "error",
           "double"
@@ -161,6 +162,7 @@ module.exports = {
         ],
         "@typescript-eslint/type-annotation-spacing": "error",
         "@typescript-eslint/unified-signatures": "error",
+        "@typescript-eslint/no-unsafe-assignment": "off",
         "@typescript-eslint/no-shadow": ["error"],
         "@typescript-eslint/naming-convention": [
           "error",
@@ -288,8 +290,8 @@ module.exports = {
     "id-match": "off",
     "import/order": "off",
     "jsdoc/check-alignment": "error",
-    "jsdoc/check-indentation": "error",
-    "jsdoc/newline-after-description": "error",
+    "jsdoc/check-indentation": "off",
+    "jsdoc/newline-after-description": ["error", "never"],
     "max-classes-per-file": [
       "error",
       1

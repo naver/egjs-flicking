@@ -1,20 +1,23 @@
-<!doctype html>
-<meta charset="utf-8" />
-<link rel="stylesheet" href="../common/common.css">
-<link rel="stylesheet" href="../common/highlight.css">
-<link rel="stylesheet" href="./plugins.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
-<script src="../common/highlight.js"></script>
-<script src="../release/latest/dist/flicking.pkgd.js"></script>
-<script src="https://naver.github.io/egjs-flicking-plugins/release/latest/dist/plugins.js"></script>
-
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="../common/common.css">
+  <link rel="stylesheet" href="../common/highlight.css">
+  <link rel="stylesheet" href="./plugins.css">
+  <link rel="stylesheet" href="../release/latest/dist/flicking.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
+  <script src="../common/highlight.js"></script>
+  <script src="../release/latest/dist/flicking.pkgd.js"></script>
+  <script src="https://naver.github.io/egjs-flicking-plugins/release/latest/dist/plugins.js"></script>
+</head>
 <div class="container">
     <h1>Fade<a href="https://naver.github.io/egjs-flicking-plugins/release/latest/doc/eg.Flicking.plugins.Fade.html"
             target="_blank">API</a></h1>
     <ul class="extra">
         <li>You can give fade in / out effect while moving panels. </li>
     </ul>
-    <div class="flicking">
+    <div class="flicking flicking-viewport">
+      <div class="flicking-camera">
         <div class="panel">
             <img src="../images/bg01.jpg" />
         </div>
@@ -24,18 +27,19 @@
         <div class="panel">
             <img src="../images/bg03.jpg" />
         </div>
+      </div>
     </div>
     <div class="pagination"></div>
     <pre><code class="hljs javascript"></code></pre>
 </div>
 <script>
-var flicking = new eg.Flicking(".flicking", {
+var flicking = new Flicking(".flicking", {
     circular: true,
     renderOnlyVisible: true,
     gap: 10,
 });
 
-flicking.addPlugins(new eg.Flicking.plugins.Fade());
+flicking.addPlugins(new Flicking.Plugins.Fade());
 </script>
 <script src="../common/codepen.js"></script>
 <script src="../common/analytics.js"></script>

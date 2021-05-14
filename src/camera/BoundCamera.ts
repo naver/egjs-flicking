@@ -6,7 +6,20 @@ import Camera from "~/camera/Camera";
 import AnchorPoint from "~/core/AnchorPoint";
 import { find, findRight, getFlickingAttached } from "~/utils";
 
+/**
+ * A {@link Camera} that set range not to go out of the first/last panel, so it won't show empty spaces before/after the first/last panel
+ * @ko 첫번째와 마지막 패널 밖으로 넘어가지 못하도록 범위를 설정하여, 첫번째/마지막 패널 전/후의 빈 공간을 보이지 않도록 하는 종류의 {@link Camera}
+ */
 class BoundCamera extends Camera {
+  /**
+   * Update {@link Camera#range range} of Camera
+   * @ko Camera의 {@link Camera#range range}를 업데이트합니다
+   * @chainable
+   * @throws {FlickingError}
+   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
+   * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
+   * @return {this}
+   */
   public updateRange() {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const renderer = flicking.renderer;
@@ -27,7 +40,7 @@ class BoundCamera extends Camera {
     const canSetBoundMode = viewportSize < panelAreaSize;
 
     if (canSetBoundMode) {
-      this._range = { min: firstPanelPrev + alignPos, max: lastPanelNext - alignPos };
+      this._range = { min: firstPanelPrev + alignPos, max: lastPanelNext - viewportSize + alignPos };
     } else {
       this._range = { min: firstPanel.position, max: lastPanel.position };
     }

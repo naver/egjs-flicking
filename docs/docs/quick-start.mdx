@@ -1,0 +1,191 @@
+---
+title: Quick Start
+id: quick-start
+slug: /quick-start
+custom_edit_url: null
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs
+  groupId="cfc"
+  defaultValue="js"
+  lazy={true}
+  values={[
+    { label: "JavaScript", value: "js" },
+    { label: "React", value: "react" },
+    { label: "Vue", value: "vue" },
+    { label: "Angular", value: "angular" },
+    { label: "Preact", value: "preact" }
+  ]}>
+  <TabItem value="js">
+
+Add the script/CSS to the page.
+```html
+<script src="https://unpkg.com/@egjs/flicking/dist/flicking.pkgd.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://unpkg.com/@egjs/flicking/dist/flicking.css" crossorigin="anonymous" />
+```
+
+Or, you can rather import them if you're using a bundler like [webpack](https://webpack.js.org/) or [rollup](https://rollupjs.org/guide/en/).
+```js
+import Flicking from "@egjs/flicking";
+import "@egjs/flicking/dist/flicking.css";
+```
+
+Then, add some basic HTML layout of Flicking to your page.
+
+```html
+<!-- Viewport element -->
+<div id="carousel" class="flicking-viewport">
+  <!-- Camera element -->
+  <div class="flicking-camera">
+    <!-- Panels, class names are your choice -->
+    <div class="panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+  </div>
+</div>
+```
+
+You should add the `vertical` class to viewport element, if you're making a vertical carousel.
+```html
+<div class="flicking-viewport vertical">
+```
+
+Then initialize Flicking instance with JavaScript after.
+
+```js
+const flicking = new Flicking("#carousel", {
+  align: "center",
+  circular: true,
+  bound: true,
+  renderOnlyVisible: true
+});
+```
+
+  </TabItem>
+  <TabItem value="react">
+
+You can import & use Flicking as a React Component.
+
+```jsx title="SomeComponent.jsx"
+import Flicking from "@egjs/react-flicking";
+
+export default () => (
+  <Flicking
+    align="prev"
+    circular={true}
+    onMoveEnd={e => {
+      console.log(e);
+    }}>
+    <div class="panel">1</div>
+    <div class="panel">2</div>
+    <div class="panel">3</div>
+  </Flicking>
+)
+```
+
+  </TabItem>
+  <TabItem value="vue">
+
+You can register Flicking either locally...
+
+```js title="SomeComponent.vue"
+import Flicking from "@egjs/vue-flicking";
+
+export default {
+  components: {
+    Flicking: Flicking
+  }
+}
+```
+
+or globally.
+
+```js
+import Flicking from "@egjs/vue-flicking";
+
+Vue.use(Flicking);
+```
+
+Then use Flickinhg like the other Vue components.
+```html
+<Flicking :options="{ align: 'prev', circular: true }" @move-end="onMoveEnd">
+  <div class="panel">1</div>
+  <div class="panel">2</div>
+  <div class="panel">3</div>
+</Flicking>
+```
+
+  </TabItem>
+  <TabItem value="angular">
+
+You can add `NgxFlickingModule` at `imports` of your app module to use Flicking.
+
+```js
+import { NgxFlickingModule } from '@egjs/ngx-flicking';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    NgxFlickingModule /* Add in imports */
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { } /* Your app */
+```
+
+Now you can use `ngx-flicking` in your templates.
+
+```html
+<ngx-flicking
+  [options]="{ circular: true, gap: 10, duration: 500 }"
+  [plugins]="plugins"
+  (needPanel)="onNeedPanel($event)"
+  (moveEnd)="onMoveEnd($event)"
+>
+  <ng-template>
+    <div class="panel">
+      <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
+    </div>
+    <div class="panel">
+      <img src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
+    </div>
+    <div class="panel">
+      <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
+    </div>
+  </ng-template>
+</ngx-flicking>
+```
+
+  </TabItem>
+  <TabItem value="preact">
+
+You can import & use Flicking as a Preact Component.
+
+```jsx title="SomeComponent.jsx"
+import Flicking from "@egjs/react-flicking";
+
+export default () => (
+  <Flicking
+    align="prev"
+    circular={true}
+    onMoveEnd={e => {
+      console.log(e);
+    }}>
+    <div class="panel">1</div>
+    <div class="panel">2</div>
+    <div class="panel">3</div>
+  </Flicking>
+)
+```
+
+  </TabItem>
+</Tabs>

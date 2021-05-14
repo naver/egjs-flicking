@@ -1,16 +1,21 @@
 {
   "name": "@egjs/react-flicking",
-  "version": "3.5.2",
+  "version": "4.0.0-beta.2",
   "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
   "main": "dist/flicking.cjs.js",
   "module": "dist/flicking.esm.js",
   "sideEffects": false,
   "es2015": "dist/flicking.esm.js",
   "types": "declaration/index.d.ts",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "rollup -c && npm run declaration",
+    "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
-    "@egjs/children-differ": "^1.0.1",
-    "@egjs/component": "^3.0.0",
-    "@egjs/flicking": "^4.0.0-beta.1",
+    "@egjs/flicking": "^4.0.0-beta.3",
     "@egjs/list-differ": "^1.0.0"
   },
   "devDependencies": {
@@ -25,6 +30,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
+    "rollup": "^2.45.2",
     "typescript": "^4.2.2"
   },
   "repository": {
@@ -42,13 +48,6 @@
     "url": "https://github.com/naver/egjs-flicking/issues"
   },
   "license": "MIT",
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "rollup -c && npm run declaration",
-    "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
   "eslintConfig": {
     "extends": "react-app"
   },

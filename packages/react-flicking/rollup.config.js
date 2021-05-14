@@ -1,4 +1,4 @@
-const buildHelper = require("@egjs/build-helper");
+const buildHelper = require("../../config/build-helper");
 
 const defaultOptions = {
   input: "./src/react-flicking/index.ts",

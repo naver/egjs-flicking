@@ -221,6 +221,7 @@ html, body {
   height: 100%;
   border-radius: 10px;
   background: #f55;
+  margin-right: 10px;
 }
 .iphone .panel.first {
   background-color:#78CAFF;
@@ -567,6 +568,7 @@ body.scroll .pages {
   position: relative;
   height: 300px;
   white-space: nowrap;
+  overflow: visible;
 }
 .page2 .article .head {
   /* width: 300px;
@@ -583,6 +585,7 @@ body.scroll .pages {
   display: inline-block;
   width: 450px;
   overflow: hidden;
+  margin-right: 50px;
 }
 .page2 .article .feature .flicking img {
  margin: 5px;
@@ -654,6 +657,7 @@ body.scroll .pages {
 }
 .page3 .plugins {
   white-space: nowrap;
+  overflow: visible;
 }
 .page3 .plugin {
   max-width: 550px;
@@ -662,6 +666,7 @@ body.scroll .pages {
   height: 300px;
   display: inline-block;
   white-space: nowrap;
+  margin-right: 50px;
 }
 .page3 .plugin img {
  margin: 5px;
@@ -717,10 +722,12 @@ body.scroll .pages {
 }
 .page4 .uses {
   white-space: nowrap;
+  overflow: visible;
 }
 .page4 .article .use {
   height: 400px;
   display: inline-block;
+  margin-right: 50px;
 }
 .page4 .article .use:last-child {
   border-right: 0px;

@@ -4,8 +4,25 @@
  */
 import State, { STATE_TYPE } from "~/control/states/State";
 
+/**
+ * A state that activates when Flicking is stopped by event's `stop` method
+ * @ko 이벤트의 `stop`호출에 의해 Flicking이 정지된 상태
+ * @internal
+ */
 class DisabledState extends State {
+  /**
+   * Whether user is clicking or touching
+   * @ko 현재 사용자가 클릭/터치중인지 여부
+   * @type {false}
+   * @readonly
+   */
   public readonly holding = false;
+  /**
+   * Whether Flicking's animating
+   * @ko 현재 애니메이션 동작 여부
+   * @type {true}
+   * @readonly
+   */
   public readonly animating = true;
 
   public onAnimationEnd(ctx: Parameters<State["onAnimationEnd"]>[0]): void {

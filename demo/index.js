@@ -1,16 +1,17 @@
-var pages = document.body.querySelectorAll(".page");
-var isMobile = false;
-var itemHeight = 0;
-var currentPage = 0;
-var isEnableScroll = true;
-var timerId = -1;
+/* eslint-disable prefer-arrow/prefer-arrow-functions */
+const pages = document.body.querySelectorAll(".page");
+let isMobile = false;
+let itemHeight = 0;
+let currentPage = 0;
+let isEnableScroll = true;
+let timerId = -1;
 
 function enableScrollTimer() {
   isEnableScroll = false;
   if (timerId) {
     clearTimeout(timerId);
   }
-  timerId = setTimeout(function () {
+  timerId = setTimeout(function() {
     isEnableScroll = true;
   }, 600);
 }
@@ -18,10 +19,10 @@ function getScrollTop() {
   return document.body.scrollTop || document.documentElement.scrollTop || window.pageYOffset;
 }
 function getPage(isNear) {
-  var height = itemHeight;
-  var scrollTop = getScrollTop();
-  var page = Math.floor(scrollTop / height);
-  var progress = scrollTop % height;
+  const height = itemHeight;
+  const scrollTop = getScrollTop();
+  const page = Math.floor(scrollTop / height);
+  const progress = scrollTop % height;
 
   if (isNear && page < 6 && progress > scrollTop / 2) {
     return page + 1;
@@ -40,7 +41,7 @@ function changePagination(from, to) {
   currentPage = to;
 }
 function check() {
-  var page = getPage();
+  const page = getPage();
 
   if (page !== currentPage) {
     changePagination(currentPage, page);
@@ -51,36 +52,36 @@ function scroll(index) {
   if (!isEnableScroll || !pages[index]) {
     return;
   }
-  var scrollTop = getScrollTop();
-  var nextTop = pages[index].getBoundingClientRect().top;
+  const scrollTop = getScrollTop();
+  const nextTop = pages[index].getBoundingClientRect().top;
 
   if (nextTop !== 0) {
     Scene.animateItem({
-      scrollTop: [scrollTop, scrollTop + nextTop],
+      scrollTop: [scrollTop, scrollTop + nextTop]
     }, {
       fillMode: "forwards",
       easing: Scene.EASE_IN_OUT,
-      duration: 0.5,
-    }).on("animate", function (e) {
+      duration: 0.5
+    }).on("animate", function(e) {
       window.scrollTo(0, e.frame.get("scrollTop"));
     });
   }
   enableScrollTimer();
 }
-var paginationLiElements = document.querySelectorAll(".pagination li");
+const paginationLiElements = document.querySelectorAll(".pagination li");
 
-[].slice.call(paginationLiElements).forEach(function (el, i) {
-  el.addEventListener("click", function () {
+[].slice.call(paginationLiElements).forEach(function(el, i) {
+  el.addEventListener("click", function() {
     scroll(i);
   });
 });
 window.addEventListener("scroll", check);
-window.addEventListener("wheel", function (e) {
+window.addEventListener("wheel", function(e) {
   if (!isMobile) {
     e.preventDefault();
     if (isEnableScroll) {
-      var page = getPage();
-      var delta = e.deltaY;
+      const page = getPage();
+      const delta = e.deltaY;
 
       if (page === currentPage) {
         if (Math.abs(delta) > 40) {
@@ -99,13 +100,13 @@ window.addEventListener("wheel", function (e) {
     }
   }
 }, {
-  passive: false,
+  passive: false
 });
 
-var body = document.body;
+const body = document.body;
 function resize() {
-  var width = window.innerWidth;
-  var height = window.innerHeight;
+  const width = window.innerWidth;
+  const height = window.innerHeight;
 
   itemHeight = pages[0].getBoundingClientRect().height;
   isMobile = height < 700 || width < 800;
@@ -116,41 +117,41 @@ window.addEventListener("resize", resize);
 resize();
 check();
 // page1
-var playTimerId = 0;
-var step = 0;
+let playTimerId = 0;
+let step = 0;
 
-var iphoneFlicking = new eg.Flicking(".page1 .iphone .panels", {
+const iphoneFlicking = new Flicking(".page1 .iphone .panels", {
   circular: true,
   gap: 10,
-  panelEffect: Scene.EASE_IN_OUT,
+  panelEffect: Scene.EASE_IN_OUT
 }).on({
-  change: function (e) {
+  willChange: function(e) {
     step = e.index;
   },
-  holdStart: function () {
+  holdStart: function() {
     pause();
   },
-  holdEnd: function (e) {
+  holdEnd: function(e) {
     play();
-  },
+  }
 });
 
-var progressLiElements = document.querySelectorAll(".progress li");
-[].slice.call(progressLiElements).forEach(function (el, i) {
-  el.addEventListener("click", function (e) {
+const progressLiElements = document.querySelectorAll(".progress li");
+[].slice.call(progressLiElements).forEach(function(el, i) {
+  el.addEventListener("click", function(e) {
     cardFlicking.moveTo(i);
     play();
   });
 })
 
-var cardFlicking = new eg.Flicking(".page1 .kingcard .levels", {
+const cardFlicking = new Flicking(".page1 .kingcard .levels", {
   duration: 300,
   panelEffect: Scene.EASE_IN_OUT,
-  circular: true,
+  circular: true
 }).on({
-  move: function (e) {
-    var progress = e.progress;
-    var scale = 0.8;
+  move: function(e) {
+    let progress = e.progress;
+    const scale = 0.8;
     if (progress < 0.4) {
       progress *= scale;
     } else {
@@ -158,84 +159,83 @@ var cardFlicking = new eg.Flicking(".page1 .kingcard .levels", {
     }
     cardScene.setTime((progress * 100) + "%");
   },
-  change: function (e) {
+  willChange: function(e) {
     step = 4 + e.index;
-    progressLiElements[cardFlicking.getIndex()].classList.remove("checked");
+    progressLiElements[cardFlicking.index].classList.remove("checked");
     progressLiElements[e.index].classList.add("checked");
   },
-  holdStart: function (e) {
+  holdStart: function(e) {
     pause();
   },
-  holdEnd: function (e) {
+  holdEnd: function(e) {
     play();
-  },
+  }
 });
 
-var cardScene = new Scene({
+const cardScene = new Scene({
   ".card-wrapper.forward": {
     0: {
-      transform: "rotateY(0deg)",
+      transform: "rotateY(0deg)"
     },
     2: {
       transform: "rotateY(360deg)"
-    },
+    }
   },
   ".card-wrapper.backward": {
     0: {
-      transform: "rotateY(180deg)",
+      transform: "rotateY(180deg)"
     },
     2: {
       transform: "rotateY(540deg)"
-    },
+    }
   },
   ".shadow": {
     0: {
       width: "100px",
-      easing: Scene.EASE_IN,
+      easing: Scene.EASE_IN
     },
     0.5: {
       width: "10px",
-      easing: Scene.EASE_OUT,
+      easing: Scene.EASE_OUT
     },
     1: {
-      width: "100px",
+      width: "100px"
     },
     options: {
-      iterationCount: 2,
+      iterationCount: 2
     }
   }
 }, {
-  selector: true,
+  selector: true
 }).setTime(0);
 
-
-var fingerScene = new Scene({
+const fingerScene = new Scene({
   ".finger": {
     0: {
       transform: {
         translate: "0px",
-        rotate: "-20deg",
+        rotate: "-20deg"
       },
-      opacity: 0,
+      opacity: 0
     },
     0.2: {
-      opacity: 1,
+      opacity: 1
     },
     0.6: {
       transform: {
-        translate: "-110px",
+        translate: "-110px"
       },
-      opacity: 1,
+      opacity: 1
     },
     0.7: {
-      opacity: 0,
+      opacity: 0
     },
     options: {
-      easing: Scene.EASE_IN_OUT,
+      easing: Scene.EASE_IN_OUT
     }
   }
 }, {
-  selector: true,
+  selector: true
 }).setTime(0);
 
 
@@ -243,14 +243,14 @@ function move(cardTransform, iphoneTransform) {
   new Scene({
     ".kingcard": {
       transform: {
-        translate: cardTransform,
-      },
+        translate: cardTransform
+      }
     },
     ".iphone-wrapper": {
       transform: {
-        translate: iphoneTransform,
-      },
-    },
+        translate: iphoneTransform
+      }
+    }
   }, {
     duration: 1,
     easing: Scene.EASE_IN_OUT,
@@ -269,14 +269,14 @@ function move(cardTransform, iphoneTransform) {
   play();
 }
 function next() {
-  var iphoneTransform = step < 4 ? ["0%", "-100%"] : ["100%", "0%"];
-  var cardTransform = step < 4 ? ["0%", "-100%"] : ["-100%", "-200%"];
+  const iphoneTransform = step < 4 ? ["0%", "-100%"] : ["100%", "0%"];
+  const cardTransform = step < 4 ? ["0%", "-100%"] : ["-100%", "-200%"];
 
   move(cardTransform, iphoneTransform);
 }
-document.querySelector(".ex .buttons .prev").addEventListener("click", function () {
-  var iphoneTransform = step < 4 ? ["0%", "100%"] : ["-100%", "0%"];
-  var cardTransform = step < 4 ? ["-200%", "-100%"] : ["-100%", "0%"];
+document.querySelector(".ex .buttons .prev").addEventListener("click", function() {
+  const iphoneTransform = step < 4 ? ["0%", "100%"] : ["-100%", "0%"];
+  const cardTransform = step < 4 ? ["-200%", "-100%"] : ["-100%", "0%"];
 
   move(cardTransform, iphoneTransform);
 });
@@ -285,7 +285,7 @@ document.querySelector(".ex .buttons .next").addEventListener("click", next);
 
 function play() {
   clearTimeout(playTimerId);
-  playTimerId = setTimeout(function () {
+  playTimerId = setTimeout(function() {
     if (step === 3 || step === 7) {
       next();
     } else {
@@ -304,71 +304,40 @@ function pause() {
   clearTimeout(playTimerId);
 }
 
-var featuresFlicking = new eg.Flicking(".page2 .features", {
-  hanger: 0,
-  anchor: 0,
+const featuresFlicking = new Flicking(".page2 .features", {
+  align: Flicking.ALIGN.NEXT,
   duration: 500,
-  gap: 50,
-  moveType: {type: "snap", count: 3},
-  bound: true,
-  overflow: "visible",
+  moveType: "snap",
+  bound: true
 });
-
-document.querySelector(".page2 .features").addEventListener("click", function (e) {
-  if (featuresFlicking.isPlaying()) {
-    e.preventDefault();
-  }
-});
-
 
 // page3
-var pluginsFlicking = new eg.Flicking(".page3 .plugins", {
-  hanger: 0,
-  anchor: 0,
+const pluginsFlicking = new Flicking(".page3 .plugins", {
+  align: Flicking.ALIGN.PREV,
   duration: 500,
-  gap: 50,
-  moveType: {type: "snap", count: 2},
-  bound: true,
-  overflow: "visible",
+  moveType: "snap",
+  bound: true
 });
-
-document.querySelector(".page3 .plugins").addEventListener("click", function (e) {
-  if (pluginsFlicking.isPlaying()) {
-    e.preventDefault();
-  }
-});
-
 
 // page4
-var usesFlicking = new eg.Flicking(".page4 .uses", {
-  hanger: 0,
-  anchor: 0,
+const usesFlicking = new Flicking(".page4 .uses", {
+  align: Flicking.ALIGN.PREV,
   duration: 500,
-  gap: 50,
-  moveType: {type: "snap", count: 2},
-  bound: true,
-  overflow: "visible",
+  moveType: "snap",
+  bound: true
 });
-
-
-document.querySelector(".page4 .uses").addEventListener("click", function (e) {
-  if (usesFlicking.isPlaying()) {
-    e.preventDefault();
-  }
-});
-
 
 // page6 - download
-var copyInput = document.querySelector("input.copy-input");
+const copyInput = document.querySelector("input.copy-input");
 
-copyInput.addEventListener("select", function (e) {
+copyInput.addEventListener("select", function(e) {
   document.execCommand('copy');
 });
 function copyText(text) {
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then (function () {
+    navigator.clipboard.writeText(text).then (function() {
       alert("You have copied the command.");
-    }).catch(function () {
+    }).catch(function() {
       copyTextarea(text);
     });
   } else {
@@ -376,9 +345,9 @@ function copyText(text) {
   }
 }
 function copyTextarea(text) {
-  var oldContentEditable = copyInput.contentEditable;
-  var oldReadOnly = copyInput.readOnly;
-  var range = document.createRange();
+  const oldContentEditable = copyInput.contentEditable;
+  const oldReadOnly = copyInput.readOnly;
+  const range = document.createRange();
 
   copyInput.value = text;
   copyInput.contentEditable = true;
@@ -386,7 +355,7 @@ function copyTextarea(text) {
 
   range.selectNodeContents(copyInput);
 
-  var s = window.getSelection();
+  const s = window.getSelection();
   s.removeAllRanges();
   s.addRange(range);
 
@@ -400,6 +369,6 @@ function copyTextarea(text) {
   alert("You have copied the command.");
 }
 
-document.querySelector(".page6 .target.shell").addEventListener("click", function () {
+document.querySelector(".page6 .target.shell").addEventListener("click", function() {
   copyText("npm install @egjs/flicking");
 });

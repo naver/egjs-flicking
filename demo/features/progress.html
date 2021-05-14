@@ -1,151 +1,168 @@
 <!DOCTYPE html>
-<meta charset="utf-8"/>
-<link rel="stylesheet" href="../common/common.css">
-<link rel="stylesheet" href="../common/highlight.css">
-<link rel="stylesheet" href="./features.css">
-<style>
-.progress {
-    position: relative;
-    width: 400px;
-    height: 10px;
-    border-radius: 5px;
-    background: #eee;
-    margin: 10px auto;
-    overflow: hidden;
-}
-.thumb {
-    position: relative;
-    height: 100%;
-    width: 0;
-    border-radius: inherit;
-    background: #ccc;
-}
-</style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
-<script src="../common/highlight.js"></script>
-<script src="../release/latest/dist/flicking.pkgd.js"></script>
-<script src="../common/pagination.js"></script>
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../common/common.css">
+  <link rel="stylesheet" href="../common/highlight.css">
+  <link rel="stylesheet" href="./features.css">
+  <link rel="stylesheet" href="../release/latest/dist/flicking.css">
+  <style>
+  .progress {
+      position: relative;
+      width: 400px;
+      height: 10px;
+      border-radius: 5px;
+      background: #eee;
+      margin: 10px auto;
+      overflow: hidden;
+  }
+  .thumb {
+      position: relative;
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: #ccc;
+  }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
+  <script src="../common/highlight.js"></script>
+  <script src="../release/latest/dist/flicking.pkgd.js"></script>
+  <script src="../common/pagination.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>e.progress</h1>
+    <ul class="extra">
+      <li>Indicates the overall progress of the Flicking.</li>
+    </ul>
+    <div class="flicking flicking0 flicking-viewport">
+      <div class="flicking-camera">
+        <div class="panel first"></div>
+        <div class="panel second"></div>
+        <div class="panel third"></div>
+        <div class="panel fourth"></div>
+        <div class="panel fifth"></div>
+      </div>
+    </div>
+    <div class="progress">
+      <div class="thumb"></div>
+    </div>
+    <pre><code class="hljs javascript" data-script="flicking0"></code></pre>
+    <h1>panel.getProgress()</h1>
+    <ul class="extra">
+      <li>Indicates the progress of the relative index of each panel.</li>
+    </ul>
+    <div class="flicking flicking1 flicking-viewport">
+      <div class="flicking-camera">
+        <div class="panel first"></div>
+        <div class="panel second"></div>
+        <div class="panel third"></div>
+        <div class="panel fourth"></div>
+        <div class="panel fifth"></div>
+      </div>
+    </div>
+    <div class="pagination pagination1"></div>
+    <pre><code class="hljs javascript" data-script="flicking1"></code></pre>
 
-<div class="container">
-  <h1>e.progress</h1>
-  <ul class="extra">
-    <li>Indicates the overall progress of the Flicking.</li>
-  </ul>
-  <div class="flicking flicking0">
-    <div class="panel first"></div>
-    <div class="panel second"></div>
-    <div class="panel third"></div>
-    <div class="panel fourth"></div>
-    <div class="panel fifth"></div>
-  </div>
-  <div class="progress">
-    <div class="thumb"></div>
-  </div>
-  <pre><code class="hljs javascript" data-script="flicking0"></code></pre>
-  <h1>panel.getProgress()</h1>
-  <ul class="extra">
-    <li>Indicates the progress of the relative index of each panel.</li>
-  </ul>
-  <div class="flicking flicking1">
-    <div class="panel first"></div>
-    <div class="panel second"></div>
-    <div class="panel third"></div>
-    <div class="panel fourth"></div>
-    <div class="panel fifth"></div>
-  </div>
-  <div class="pagination pagination1"></div>
-  <pre><code class="hljs javascript" data-script="flicking1"></code></pre>
+    <h1>panel.getOutsetProgress()</h1>
+    <ul class="extra">
+      <li>When panel is completely invisible, outsetProgress becomes -1 at left(up), 1 at right(down) direction, and 0 when panel's anchor and hanger is overlapped.</li>
+    </ul>
+    <div class="flicking flicking2 flicking-viewport">
+      <div class="flicking-camera">
+        <div class="panel first"></div>
+        <div class="panel second"></div>
+        <div class="panel third"></div>
+        <div class="panel fourth"></div>
+        <div class="panel fifth"></div>
+      </div>
+    </div>
+    <div class="pagination pagination2"></div>
+    <pre><code class="hljs javascript" data-script="flicking2"></code></pre>
 
-  <h1>panel.getOutsetProgress()</h1>
-  <ul class="extra">
-    <li>When panel is completely invisible, outsetProgress becomes -1 at left(up), 1 at right(down) direction, and 0 when panel's anchor and hanger is overlapped.</li>
-  </ul>
-  <div class="flicking flicking2">
-    <div class="panel first"></div>
-    <div class="panel second"></div>
-    <div class="panel third"></div>
-    <div class="panel fourth"></div>
-    <div class="panel fifth"></div>
+    <h1>panel.getVisibleRatio()</h1>
+    <ul class="extra">
+      <li>Indicates the percentage of areas within the viewport that the panel occupies.</li>
+    </ul>
+    <div class="flicking flicking3 flicking-viewport">
+      <div class="flicking-camera">
+        <div class="panel first"></div>
+        <div class="panel second"></div>
+        <div class="panel third"></div>
+        <div class="panel fourth"></div>
+        <div class="panel fifth"></div>
+      </div>
+    </div>
+    <div class="pagination pagination3"></div>
+    <pre><code class="hljs javascript" data-script="flicking3"></code></pre>
   </div>
-  <div class="pagination pagination2"></div>
-  <pre><code class="hljs javascript" data-script="flicking2"></code></pre>
 
-  <h1>panel.getVisibleRatio()</h1>
-  <ul class="extra">
-    <li>Indicates the percentage of areas within the viewport that the panel occupies.</li>
-  </ul>
-  <div class="flicking flicking3">
-    <div class="panel first"></div>
-    <div class="panel second"></div>
-    <div class="panel third"></div>
-    <div class="panel fourth"></div>
-    <div class="panel fifth"></div>
-  </div>
-  <div class="pagination pagination3"></div>
-  <pre><code class="hljs javascript" data-script="flicking3"></code></pre>
-</div>
+  <script data-script="flicking0">
+  var flicking = new Flicking(".flicking", {
+      gap: 10,
+      moveType: "snap",
+      circular: true,
+  });
+  var thumb = document.querySelector(".thumb");
+  var onMove = function() {
+    const progress = flicking.camera.progress < 0
+      ? flicking.panelCount + flicking.camera.progress
+      : flicking.camera.progress;
+    thumb.style.width = (progress / flicking.panelCount * 100) + "%";
+  }
 
-<script data-script="flicking0">
-var flicking = new eg.Flicking(".flicking", {
+  flicking.on("move", onMove);
+  onMove();
+  </script>
+
+  <script data-script="flicking1">
+  var flicking1 = new Flicking(".flicking1", {
     gap: 10,
-    moveType: {type: "snap", count: 5},
     circular: true,
-});
-var thumb = document.querySelector(".thumb");
-
-flicking.on("move", function (e) {
-    thumb.style.width = (e.progress * 100) + "%";
-})
-</script>
-
-<script data-script="flicking1">
-var flicking1 = new eg.Flicking(".flicking1", {
-  gap: 10,
-  circular: true,
-});
-
-function move1() {
-  flicking1.getAllPanels(true).forEach(function (panel) {
-    panel.getElement().innerHTML = panel.getProgress().toFixed(2);
   });
-};
-flicking1.on("move", move1);
-move1();
-</script>
-<script data-script="flicking2">
-var flicking2 = new eg.Flicking(".flicking2", {
-  gap: 10,
-  circular: true,
-});
 
-function move2() {
-  flicking2.getAllPanels(true).forEach(function (panel) {
-    panel.getElement().innerHTML = panel.getOutsetProgress().toFixed(2);
+  function move1() {
+    flicking1.panels.forEach(function (panel) {
+      panel.element.innerHTML = panel.progress.toFixed(2);
+    });
+  };
+  flicking1.on("move", move1);
+  move1();
+  </script>
+  <script data-script="flicking2">
+  var flicking2 = new Flicking(".flicking2", {
+    gap: 10,
+    circular: true,
   });
-};
-flicking2.on("move", move2);
 
-move2();
-</script>
-<script data-script="flicking3">
-var flicking3 = new eg.Flicking(".flicking3", {
-  gap: 10,
-  circular: true,
-});
+  function move2() {
+    flicking2.panels.forEach(function (panel) {
+      panel.element.innerHTML = panel.outsetProgress.toFixed(2);
+    });
+  };
+  flicking2.on("move", move2);
 
-function move3() {
-  flicking3.getAllPanels(true).forEach(function (panel) {
-    panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
+  move2();
+  </script>
+  <script data-script="flicking3">
+  var flicking3 = new Flicking(".flicking3", {
+    gap: 10,
+    circular: true,
   });
-};
-flicking3.on("move", move3);
 
-move3();
-</script>
-<script data-script=".">
-flicking1.addPlugins(CustomPagination(".pagination1"));
-flicking2.addPlugins(CustomPagination(".pagination2"));
-flicking3.addPlugins(CustomPagination(".pagination3"));
-</script>
-<script src="../common/codepen.js"></script>
-<script src="../common/analytics.js"></script>
+  function move3() {
+    flicking3.panels.forEach(function (panel) {
+      panel.element.innerHTML = panel.visibleRatio.toFixed(2);
+    });
+  };
+  flicking3.on("move", move3);
+
+  move3();
+  </script>
+  <script data-script=".">
+    flicking1.addPlugins(CustomPagination(".pagination1"));
+    flicking2.addPlugins(CustomPagination(".pagination2"));
+    flicking3.addPlugins(CustomPagination(".pagination3"));
+  </script>
+  <script src="../common/codepen.js"></script>
+  <script src="../common/analytics.js"></script>
+</body>

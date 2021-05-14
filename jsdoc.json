@@ -1,25 +1,24 @@
 {
   "tags": {
     "allowUnknownTags" : true,
-    "dictionaries": ["jsdoc","closure"]
+    "dictionaries": ["jsdoc", "closure"]
   },
   "source": {
-      "include": ["src", "README.md", "node_modules/@egjs/component/src/component.ts"],
-      "includePattern": ".+\\.(j|t)s(doc|x)?$",
-      "excludePattern": "(^|\\/|\\\\)_"
+    "include": ["src", "README.md", "node_modules/@egjs/component/src/Component.ts", "node_modules/@egjs/component/src/ComponentEvent.ts"],
+    "includePattern": ".+\\.(j|t)s(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
   },
   "opts": {
-      "template": "node_modules/egjs-jsdoc-template",
-      "destination": "./doc/",
-      "ignores": ["eg.Component"],
-      "expendsItemMembers": true,
-      "recurse": true
+    "template": "egjs-jsdoc-template",
+    "destination": "./doc/",
+    "ignores": [],
+    "expendsItemMembers": true,
+    "recurse": true
   },
   "plugins": [
-    "plugins/markdown",
-    "node_modules/egjs-jsdoc-template/jsdoc-plugin/ko",
-    "node_modules/egjs-jsdoc-template/jsdoc-plugin/group",
-    "node_modules/egjs-jsdoc-template/jsdoc-plugin/support"
+    "egjs-jsdoc-template/jsdoc-plugin/ko",
+    "egjs-jsdoc-template/jsdoc-plugin/group",
+    "egjs-jsdoc-template/jsdoc-plugin/support"
   ],
   "templates": {
     "cleverLinks": true,
@@ -27,29 +26,27 @@
     "default": {
       "outputSourceFiles" : true
     },
-    "applicationName": "eg.Flicking",
+    "applicationName": "Flicking",
     "disqus": "egjs",
     "googleAnalytics": "UA-70842526-17",
     "openGraph": {
-      "title": "",
+      "title": "Flicking - API",
       "type": "website",
-      "image": "",
-      "site_name": "",
-      "url": ""
+      "image": "https://naver.github.io/egjs-flicking/images/flicking.svg",
+      "site_name": "@egjs/flicking",
+      "url": "https://naver.github.io/egjs-flicking/release/latest/doc/index.html"
     },
     "meta": {
-      "title": "egjs::Flicking - API",
+      "title": "Flicking - API",
       "description": "A module used to implement flicking interactions. With this module, you can make flicking gestures, which are ways to navigate left and right to move between panels arranged side by side.",
-      "keyword": "UI Component, egjs, flicking, carousel"
+      "keyword": "carousel, flicking, slider, swipe, react, vue, angular, preact, egjs",
+      "github": "https://github.com/naver/egjs-flicking"
     },
     "linenums": true,
     "link": {
+      "demo": "https://naver.github.io/egjs-flicking/",
       "canonical": "https://naver.github.io/egjs-flicking/release/latest/doc/"
-    }
-  },
-  "markdown": {
-    "parser": "gfm",
-    "hardwrap": true,
-    "tags": ["examples", "ko"]
+    },
+    "defaultLanguage": "en"
   }
 }

@@ -21,11 +21,13 @@ tslint*
 #docs
 demo
 jsdoc.json
+doc/
+docs/
+jsdoc-to-mdx/
 
 #editor settings
 .idea
 .editorconfig
-
 coverage/
 node_modules/
 .github

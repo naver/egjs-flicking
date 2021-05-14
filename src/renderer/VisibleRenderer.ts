@@ -6,7 +6,17 @@ import RawRenderer from "~/renderer/RawRenderer";
 import Panel from "~/core/Panel";
 import { findIndex, getFlickingAttached } from "~/utils";
 
+/**
+ * A {@link Renderer} that renders only visible panel elements({@link Camera#visiblePanels visiblePanels}) inside the camera element
+ * @ko 현재 카메라의 보이는 패널들({@link Camera#visiblePanels visiblePanels})만을 카메라 엘리먼트 내에 렌더링하는 종류의 {@link Renderer}
+ */
 class VisibleRenderer extends RawRenderer {
+  /**
+   * Render visible panel elements inside the camera element
+   * @ko 보이는 패널 엘리먼트들을 카메라 엘리먼트 내부에 렌더링합니다
+   * @chainable
+   * @return {this}
+   */
   public render() {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
     const camera = flicking.camera;
