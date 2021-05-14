@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 import Flicking from "~/Flicking";
-import { getProgress, parseAlign } from "~/utils";
+import { getProgress, getStyle, parseAlign } from "~/utils";
 import { ALIGN } from "~/const/external";
 import { LiteralUnion, ValueOf } from "~/type/internal";
 
@@ -219,8 +219,7 @@ class Panel {
    */
   public resize(): this {
     const el = this._el;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const elStyle = window.getComputedStyle(el) || (el as any).currentStyle as CSSStyleDeclaration;
+    const elStyle = getStyle(el);
     const flicking = this._flicking;
     const horizontal = flicking.horizontal;
     const prevPanel = flicking.renderer.panels[this._index - 1];

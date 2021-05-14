@@ -453,6 +453,22 @@ abstract class Camera {
   }
 
   /**
+   *
+   */
+  public updateAdaptiveHeight(): this {
+    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const anchorBelow = this.findAnchorIncludePosition(this._position);
+
+    if (flicking.horizontal && flicking.adaptive && anchorBelow) {
+      flicking.viewport.setSize({
+        height: anchorBelow.panel.height
+      });
+    }
+
+    return this;
+  }
+
+  /**
    * Reset the history of {@link Flicking#event:needPanel needPanel} events so it can be triggered again
    * @ko 발생한 {@link Flicking#event:needPanel needPanel} 이벤트들을 초기화하여 다시 발생할 수 있도록 합니다
    * @chainable

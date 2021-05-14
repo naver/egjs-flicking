@@ -73,12 +73,6 @@ class AnimatingState extends State {
   public onFinish(ctx: Parameters<State["onFinish"]>[0]) {
     const { flicking, axesEvent, transitTo } = ctx;
 
-    // if (viewport.options.bound) {
-    //   viewport.setCurrentPanel(this.targetPanel as Panel);
-    // } else {
-    //   viewport.setCurrentPanel(viewport.getNearestPanel() as Panel);
-    // }
-
     const camera = flicking.camera;
     const anchorBelow = camera.findAnchorIncludePosition(camera.position);
     if (flicking.horizontal && flicking.adaptive && anchorBelow) {

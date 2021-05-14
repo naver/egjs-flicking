@@ -82,7 +82,7 @@ class BoundCamera extends Camera {
       newAnchors.push(new AnchorPoint({
         index: newAnchors.length,
         position: range.max,
-        panel: findRight(panels, panel => panel.includePosition(range.min))!
+        panel: findRight(panels, panel => panel.includePosition(range.max))!
       }));
     }
 

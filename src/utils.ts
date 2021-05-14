@@ -243,3 +243,6 @@ export const findIndex = <T>(array: T[], checker: (val: T) => boolean): number =
 };
 
 export const getProgress = (pos: number, prev: number, next: number) => (pos - prev) / (next - prev);
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+export const getStyle = (el: HTMLElement): CSSStyleDeclaration => window.getComputedStyle(el) || (el as any).currentStyle as CSSStyleDeclaration;
