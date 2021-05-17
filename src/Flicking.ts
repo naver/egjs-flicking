@@ -1013,8 +1013,8 @@ class Flicking extends Component<FlickingEvents> {
     camera.updateAlignPos();
     camera.updateRange();
     camera.updateAnchors();
-    control.updateInput();
     camera.updatePosition();
+    control.updateInput();
 
     const newWidth = viewport.width;
     const newHeight = viewport.height;

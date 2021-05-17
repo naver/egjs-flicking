@@ -446,14 +446,20 @@ abstract class Camera {
     const activePanel = flicking.control.activePanel;
 
     if (activePanel) {
-      this.lookAt(activePanel.position);
+      this.lookAt(this.clampToReachablePosition(activePanel.position));
     }
 
     return this;
   }
 
   /**
-   *
+   * Update viewport's height with the panel's height below this camera
+   * @ko 현재 뷰포트의 높이를 이 카메라의 현재 위치에 있는 패널의 높이로 갱신합니다
+   * @throws {FlickingError}
+   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
+   * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
+   * @chainable
+   * @return {this}
    */
   public updateAdaptiveHeight(): this {
     const flicking = getFlickingAttached(this._flicking, "Camera");

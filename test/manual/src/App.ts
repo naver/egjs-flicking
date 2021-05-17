@@ -1,20 +1,21 @@
 import "../../../css/flicking-inline.css";
 import Flicking, { ALIGN, EVENTS, MOVE_TYPE } from "~/index";
 import { ValueOf } from "~/type/internal";
-import { Parallax } from "@egjs/flicking-plugins";
 
 class App {
   public constructor() {
     const flicking = new Flicking("#flicking", {
       align: ALIGN.CENTER,
-      circular: true
+      moveType: "freeScroll",
+      bound: true
     });
-
-    // @ts-ignore
-    flicking.addPlugins(new Parallax("img"));
 
     Object.values([EVENTS.WILL_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {
       flicking.on(eventName, event => console.log(eventName, event));
+    });
+
+    flicking.on("move", e => {
+      (document.querySelector("#test") as HTMLElement).innerHTML = e.currentTarget.camera.position.toString();
     });
 
     document.getElementById("prev")?.addEventListener("click", () => {

@@ -56,27 +56,27 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
         renderExternal: true
       },
     ).on({
-      [EVENTS.READY]: (e: ReadyEvent) => props.onReady(e),
-      [EVENTS.BEFORE_RESIZE]: (e: BeforeResizeEvent) => props.onBeforeResize(e),
-      [EVENTS.AFTER_RESIZE]: (e: AfterResizeEvent) => props.onAfterResize(e),
-      [EVENTS.HOLD_START]: (e: HoldStartEvent) => props.onHoldStart(e),
-      [EVENTS.HOLD_END]: (e: HoldEndEvent) => props.onHoldEnd(e),
-      [EVENTS.MOVE_START]: (e: MoveStartEvent) => props.onMoveStart(e),
-      [EVENTS.MOVE]: (e: MoveEvent) => props.onMove(e),
-      [EVENTS.MOVE_END]: (e: MoveEndEvent) => props.onMoveEnd(e),
-      [EVENTS.WILL_CHANGE]: (e: WillChangeEvent) => props.onWillChange(e),
-      [EVENTS.CHANGED]: (e: ChangedEvent) => props.onChanged(e),
-      [EVENTS.WILL_RESTORE]: (e: WillRestoreEvent) => props.onWillRestore(e),
-      [EVENTS.RESTORED]: (e: RestoredEvent) => props.onRestored(e),
-      [EVENTS.SELECT]: (e: SelectEvent) => props.onSelect(e),
-      [EVENTS.NEED_PANEL]: (e: NeedPanelEvent) => props.onNeedPanel(e),
+      [EVENTS.READY]: (e: ReadyEvent) => props.onReady({ ...e, currentTarget: this }),
+      [EVENTS.BEFORE_RESIZE]: (e: BeforeResizeEvent) => props.onBeforeResize({ ...e, currentTarget: this }),
+      [EVENTS.AFTER_RESIZE]: (e: AfterResizeEvent) => props.onAfterResize({ ...e, currentTarget: this }),
+      [EVENTS.HOLD_START]: (e: HoldStartEvent) => props.onHoldStart({ ...e, currentTarget: this }),
+      [EVENTS.HOLD_END]: (e: HoldEndEvent) => props.onHoldEnd({ ...e, currentTarget: this }),
+      [EVENTS.MOVE_START]: (e: MoveStartEvent) => props.onMoveStart({ ...e, currentTarget: this }),
+      [EVENTS.MOVE]: (e: MoveEvent) => props.onMove({ ...e, currentTarget: this }),
+      [EVENTS.MOVE_END]: (e: MoveEndEvent) => props.onMoveEnd({ ...e, currentTarget: this }),
+      [EVENTS.WILL_CHANGE]: (e: WillChangeEvent) => props.onWillChange({ ...e, currentTarget: this }),
+      [EVENTS.CHANGED]: (e: ChangedEvent) => props.onChanged({ ...e, currentTarget: this }),
+      [EVENTS.WILL_RESTORE]: (e: WillRestoreEvent) => props.onWillRestore({ ...e, currentTarget: this }),
+      [EVENTS.RESTORED]: (e: RestoredEvent) => props.onRestored({ ...e, currentTarget: this }),
+      [EVENTS.SELECT]: (e: SelectEvent) => props.onSelect({ ...e, currentTarget: this }),
+      [EVENTS.NEED_PANEL]: (e: NeedPanelEvent) => props.onNeedPanel({ ...e, currentTarget: this }),
       [EVENTS.VISIBLE_CHANGE]: (e: VisibleChangeEvent) => {
-        props.onVisibleChange!(e);
+        props.onVisibleChange!({ ...e, currentTarget: this });
         if (flicking.renderOnlyVisible) {
           this.setState({});
         }
       },
-      [EVENTS.REACH_EDGE]: (e: ReachEdgeEvent) => props.onReachEdge(e),
+      [EVENTS.REACH_EDGE]: (e: ReachEdgeEvent) => props.onReachEdge({ ...e, currentTarget: this }),
     });
 
     if (props.circular) {

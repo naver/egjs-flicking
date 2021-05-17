@@ -26,7 +26,6 @@ header {
 }
 
 #flicking {
-  padding: 100px;
   background-color: #435253;
   box-sizing: border-box;
 }
@@ -36,13 +35,14 @@ header {
 }
 
 .flicking-panel {
-  width: 100%;
+  width: 50%;
   background-color: #369;
   margin-left: 5px;
   margin-right: 10px;
   border: 10px solid #963;
   box-sizing: border-box;
   max-width: 100%;
+  height: 200px;
 }
 
 .flicking-panel img {

@@ -83,7 +83,7 @@ class SnapControl extends Control {
       targetPos = adjacentAnchor.position;
     } else {
       // Restore to active panel
-      targetPos = activePanel.position;
+      targetPos = camera.clampToReachablePosition(activePanel.position);
       targetPanel = activePanel;
     }
 

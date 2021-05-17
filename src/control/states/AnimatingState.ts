@@ -74,6 +74,8 @@ class AnimatingState extends State {
     const { flicking, axesEvent, transitTo } = ctx;
 
     const camera = flicking.camera;
+    camera.updateAdaptiveHeight();
+
     const anchorBelow = camera.findAnchorIncludePosition(camera.position);
     if (flicking.horizontal && flicking.adaptive && anchorBelow) {
       flicking.viewport.setSize({ height: anchorBelow.panel.height });

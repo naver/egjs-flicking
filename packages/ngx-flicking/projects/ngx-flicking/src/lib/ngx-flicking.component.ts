@@ -215,8 +215,8 @@ export class NgxFlickingComponent extends FlickingInterface
 
     const { list, added, removed, prevList } = this._pluginsDiffer.update(this.plugins);
 
-    flicking.addPlugins(added.map(index => list[index]));
-    flicking.removePlugins(removed.map(index => prevList[index]));
+    flicking.addPlugins(...added.map(index => list[index]));
+    flicking.removePlugins(...removed.map(index => prevList[index]));
   }
 
   private _getChildKeys() {

@@ -62,8 +62,26 @@ html[data-theme='dark'] {
   border-radius: 5px;
   margin-right: 10px;
   margin-bottom: 10px;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-end;
+  justify-content: start;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+}
+.flicking-panel::before {
+  content: "";
+  position: absolute;
+  bottom: 1.6rem;
+  left: 0.5rem;
+  width: 54px;
+  border-bottom: 1px solid white;
+}
+.flicking-panel::after {
+  content: "PANEL";
+  position: absolute;
+  bottom: 0;
+  left: 0.5rem;
+  font-size: 1.2rem;
 }
 
 .flicking-panel.high {

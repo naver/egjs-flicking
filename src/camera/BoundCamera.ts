@@ -74,7 +74,7 @@ class BoundCamera extends Camera {
       newAnchors.splice(0, 0, new AnchorPoint({
         index: 0,
         position: range.min,
-        panel: find(panels, panel => panel.includePosition(range.min))!
+        panel: find(panels, panel => panel.includePosition(range.min, true))!
       }));
     }
 
@@ -82,7 +82,7 @@ class BoundCamera extends Camera {
       newAnchors.push(new AnchorPoint({
         index: newAnchors.length,
         position: range.max,
-        panel: findRight(panels, panel => panel.includePosition(range.max))!
+        panel: findRight(panels, panel => panel.includePosition(range.max, true))!
       }));
     }
 
