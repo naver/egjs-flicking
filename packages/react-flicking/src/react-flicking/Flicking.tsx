@@ -21,7 +21,8 @@ import NativeFlicking, {
   EVENTS,
   withFlickingMethods,
   sync,
-  getRenderingPanels
+  getRenderingPanels,
+  Plugin
 } from "@egjs/flicking";
 import "@egjs/flicking/dist/flicking.css";
 
@@ -168,10 +169,10 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   }
 
   private _checkPlugins() {
-    const { list, added, removed, prevList } = this._pluginsDiffer.update(this.props.plugins!);
+    const { list, added, removed, prevList } = this._pluginsDiffer.update(this.props.plugins!) as DiffResult<Plugin>;
 
-    this._nativeFlicking.addPlugins(added.map(index => list[index]));
-    this._nativeFlicking.removePlugins(removed.map(index => prevList[index]));
+    this._nativeFlicking.addPlugins(...added.map(index => list[index]));
+    this._nativeFlicking.removePlugins(...removed.map(index => prevList[index]));
   }
 
   private _getChildren(children?: React.ReactNode) {

@@ -26,8 +26,9 @@ header {
 }
 
 #flicking {
-  height: 400px;
+  padding: 100px;
   background-color: #435253;
+  box-sizing: border-box;
 }
 
 .flicking-viewport {
@@ -35,12 +36,16 @@ header {
 }
 
 .flicking-panel {
-  width: 600px;
+  width: 100%;
   background-color: #369;
-  padding: 10px;
   margin-left: 5px;
   margin-right: 10px;
   border: 10px solid #963;
   box-sizing: border-box;
   max-width: 100%;
+}
+
+.flicking-panel img {
+  width: 100%;
+  height: 400px;
 }

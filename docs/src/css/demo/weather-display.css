@@ -1,0 +1,13 @@
+.weather-display {
+  height: 60px;
+}
+
+.weather-panel {
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.weather-panel>* {
+  margin-right: 10px;
+}

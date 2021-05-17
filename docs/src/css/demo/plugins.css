@@ -28,3 +28,7 @@
   left: 50%;
   transform: translate(-50%);
 }
+.parallax .panel-image {
+  width: 200%;
+  max-width: 200%;
+}

@@ -1,6 +1,6 @@
 {
   "name": "@egjs/flicking",
-  "version": "4.0.0-beta.4",
+  "version": "4.0.0-beta.5",
   "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
   "main": "dist/flicking.js",
   "module": "dist/flicking.esm.js",
@@ -101,6 +101,7 @@
     "@codeceptjs/examples": "^1.2.1",
     "@codeceptjs/ui": "^0.4.3",
     "@daybrush/jsdoc": "^0.3.10",
+    "@egjs/flicking-plugins": "^4.0.0-beta.1",
     "@egjs/release-helper": "0.0.3",
     "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-node-resolve": "^7.1.3",

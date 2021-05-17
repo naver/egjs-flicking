@@ -59,8 +59,6 @@ class SnapControl extends Control {
     const clampedPosition = camera.clampToReachablePosition(position);
     const anchorAtPosition = camera.findNearestAnchor(clampedPosition);
 
-    console.log(anchorAtPosition);
-
     if (!anchorAtPosition || !activePanel) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE));
     }
