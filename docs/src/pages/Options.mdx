@@ -699,6 +699,38 @@ Hint: Drag a panel slightly and release it to see its effect
   </ColumnItem>
 </Columns>
 
+### disableOnInit
+Automatically call [disableInput()](api/Flicking#disableInput) on initialization
+
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  disableOnInit: false
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking disableOnInit={false}>
+      <Panels count={5} />
+    </Flicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  disableOnInit: true
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking disableOnInit={true}>
+      <Panels count={5} />
+    </Flicking>
+  </ColumnItem>
+</Columns>
+
 ## Performance
 ### renderOnlyVisible
 Whether to render visible panels only. This can dramatically increase performance when there're many panels.

@@ -232,7 +232,7 @@ abstract class Renderer {
     this._updateCameraAndControl();
 
     if (includes(panelsRemoved, activePanel)) {
-      control.resetActivePanel();
+      control.resetActive();
     }
 
     this.render();

@@ -6,8 +6,9 @@ class App {
   public constructor() {
     const flicking = new Flicking("#flicking", {
       align: ALIGN.CENTER,
-      moveType: "freeScroll",
-      bound: true
+      bound: true,
+      adaptive: true,
+      threshold: 0
     });
 
     Object.values([EVENTS.WILL_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {

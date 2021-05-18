@@ -68,6 +68,7 @@ export interface FlickingOptions {
   bounce: number | string | [number | string, number | string];
   iOSEdgeSwipeThreshold: number;
   preventClickOnDrag: boolean;
+  disableOnInit: boolean;
   // PERFORMANCE
   renderOnlyVisible: boolean;
   // OTHERS
@@ -118,6 +119,7 @@ class Flicking extends Component<FlickingEvents> {
   private _bounce: FlickingOptions["bounce"];
   private _iOSEdgeSwipeThreshold: FlickingOptions["iOSEdgeSwipeThreshold"];
   private _preventClickOnDrag: FlickingOptions["preventClickOnDrag"];
+  private _disableOnInit: FlickingOptions["disableOnInit"];
   private _renderOnlyVisible: FlickingOptions["renderOnlyVisible"];
   private _autoResize: FlickingOptions["autoResize"];
   private _autoInit: FlickingOptions["autoInit"];
@@ -444,6 +446,13 @@ class Flicking extends Component<FlickingEvents> {
    * @default true
    */
   public get preventClickOnDrag() { return this._preventClickOnDrag; }
+  /**
+   * Automatically call {@link Flicking#disableInput disableInput()} on initialization
+   * @ko Flicking init시에 {@link Flicking#disableInput disableInput()}을 바로 호출합니다
+   * @type {boolean}
+   * @default false
+   */
+  public get disableOnInit() { return this._disableOnInit; }
   // PERFORMANCE
   /**
    * Whether to render visible panels only. This can dramatically increase performance when there're many panels.
@@ -518,6 +527,7 @@ class Flicking extends Component<FlickingEvents> {
   public set bounce(val: FlickingOptions["bounce"]) { this._bounce = val; }
   public set iOSEdgeSwipeThreshold(val: FlickingOptions["iOSEdgeSwipeThreshold"]) { this._iOSEdgeSwipeThreshold = val; }
   public set preventClickOnDrag(val: FlickingOptions["preventClickOnDrag"]) { this._preventClickOnDrag = val; }
+  public set disableOnInit(val: FlickingOptions["disableOnInit"]) { this._disableOnInit = val; }
   // PERFORMANCE
   public set renderOnlyVisible(val: FlickingOptions["renderOnlyVisible"]) { this._renderOnlyVisible = val; }
   // OTHERS
@@ -570,6 +580,7 @@ class Flicking extends Component<FlickingEvents> {
     bounce = "20%",
     iOSEdgeSwipeThreshold = 30,
     preventClickOnDrag = true,
+    disableOnInit = false,
     renderOnlyVisible = false,
     autoInit = true,
     autoResize = true,
@@ -600,6 +611,7 @@ class Flicking extends Component<FlickingEvents> {
     this._bounce = bounce;
     this._iOSEdgeSwipeThreshold = iOSEdgeSwipeThreshold;
     this._preventClickOnDrag = preventClickOnDrag;
+    this._disableOnInit = disableOnInit;
     this._renderOnlyVisible = renderOnlyVisible;
     this._autoResize = autoResize;
     this._autoInit = autoInit;
@@ -647,6 +659,9 @@ class Flicking extends Component<FlickingEvents> {
     }
     if (this._preventClickOnDrag) {
       viewport.element.addEventListener("click", this._preventClickWhenDragged);
+    }
+    if (this._disableOnInit) {
+      this.disableInput();
     }
 
     this._plugins.forEach(plugin => plugin.init(this));

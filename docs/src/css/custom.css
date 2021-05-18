@@ -71,10 +71,10 @@ html[data-theme='dark'] {
 .flicking-panel::before {
   content: "";
   position: absolute;
-  bottom: 1.6rem;
+  bottom: 1.8rem;
   left: 0.5rem;
   width: 54px;
-  border-bottom: 1px solid white;
+  border-bottom: 2px solid white;
 }
 .flicking-panel::after {
   content: "PANEL";

@@ -40,11 +40,10 @@ abstract class Control {
    */
   public get activeIndex() { return this._activePanel?.index ?? -1; }
   /**
-   * Currently active panel
+   * An active panel
    * @ko 현재 선택된 패널
-   * @type {Panel}
+   * @type {Panel | null}
    * @readonly
-   * @see Panel
    */
   public get activePanel() { return this._activePanel; }
   /**
@@ -175,12 +174,12 @@ abstract class Control {
   }
 
   /**
-   * Reset {@link Control#activePanel activePanel} to `null`
-   * @ko {@link Control#activePanel activePanel}을 `null`로 초기화합니다
+   * Reset {@link Control#activePanel activePanel} and {@link Control#activeAnchor activeAnchor} to `null`
+   * @ko {@link Control#activePanel activePanel}와 {@link Control#activeAnchor activeAnchor}를 `null`로 초기화합니다
    * @chainable
    * @return {this}
    */
-  public resetActivePanel(): this {
+  public resetActive(): this {
     this._activePanel = null;
 
     return this;
@@ -237,18 +236,16 @@ abstract class Control {
     const camera = flicking.camera;
 
     let position = panel.position;
+    const nearestAnchor = camera.findNearestAnchor(position);
 
+    if (panel.removed || !nearestAnchor) {
+      return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(panel.position), ERROR.CODE.POSITION_NOT_REACHABLE));
+    }
     if (!camera.canReach(panel)) {
-      const nearestAnchor = camera.findNearestAnchor(position);
-
-      if (panel.removed || !nearestAnchor) {
-        return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(panel.position), ERROR.CODE.POSITION_NOT_REACHABLE));
-      }
-
       // Override position & panel if that panel is not reachable
       position = nearestAnchor.position;
       panel = nearestAnchor.panel;
-    } else if (camera.controlParams.circular) {
+    } else if (flicking.circularEnabled) {
       // Circular mode is enabled, find nearest distance to panel
       const camPos = this._controller.position; // Actual position of the Axes
       const camRangeDiff = camera.rangeDiff;
@@ -309,19 +306,21 @@ abstract class Control {
     const animate = () => this._controller.animateTo(position, duration, axesEvent);
     const isTrusted = axesEvent?.isTrusted || false;
 
-    if (duration === 0) {
+    if (duration <= 0) {
       const animation = animate();
-      this._setActivePanel(newActivePanel, currentPanel, isTrusted);
+      this._setActive(newActivePanel, currentPanel, isTrusted);
       return animation;
     } else {
-      return animate().then(() => this._setActivePanel(newActivePanel, currentPanel, isTrusted));
+      return animate().then(() => this._setActive(newActivePanel, currentPanel, isTrusted));
     }
   }
 
-  protected _setActivePanel = (newActivePanel: Panel, prevActivePanel: Panel | null, isTrusted: boolean) => {
+  protected _setActive = (newActivePanel: Panel, prevActivePanel: Panel | null, isTrusted: boolean) => {
     const flicking = getFlickingAttached(this._flicking, "Control");
 
     this._activePanel = newActivePanel;
+
+    this._updateAdaptiveHeight(newActivePanel);
 
     if (newActivePanel !== prevActivePanel) {
       flicking.trigger(new ComponentEvent(EVENTS.CHANGED, {
@@ -338,6 +337,16 @@ abstract class Control {
       }));
     }
   };
+
+  protected _updateAdaptiveHeight(panel: Panel) {
+    const flicking = getFlickingAttached(this._flicking, "Control");
+
+    if (!flicking.horizontal || !flicking.adaptive) return;
+
+    flicking.viewport.setSize({
+      height: panel.height
+    });
+  }
 }
 
 export default Control;

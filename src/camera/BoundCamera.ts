@@ -4,7 +4,7 @@
  */
 import Camera from "~/camera/Camera";
 import AnchorPoint from "~/core/AnchorPoint";
-import { find, findRight, getFlickingAttached } from "~/utils";
+import { getFlickingAttached } from "~/utils";
 
 /**
  * A {@link Camera} that set range not to go out of the first/last panel, so it won't show empty spaces before/after the first/last panel
@@ -74,7 +74,7 @@ class BoundCamera extends Camera {
       newAnchors.splice(0, 0, new AnchorPoint({
         index: 0,
         position: range.min,
-        panel: find(panels, panel => panel.includePosition(range.min, true))!
+        panel: panels[reachablePanels[0].index - 1]
       }));
     }
 
@@ -82,7 +82,7 @@ class BoundCamera extends Camera {
       newAnchors.push(new AnchorPoint({
         index: newAnchors.length,
         position: range.max,
-        panel: findRight(panels, panel => panel.includePosition(range.max, true))!
+        panel: panels[reachablePanels[reachablePanels.length - 1].index + 1]
       }));
     }
 

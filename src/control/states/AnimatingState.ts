@@ -73,14 +73,6 @@ class AnimatingState extends State {
   public onFinish(ctx: Parameters<State["onFinish"]>[0]) {
     const { flicking, axesEvent, transitTo } = ctx;
 
-    const camera = flicking.camera;
-    camera.updateAdaptiveHeight();
-
-    const anchorBelow = camera.findAnchorIncludePosition(camera.position);
-    if (flicking.horizontal && flicking.adaptive && anchorBelow) {
-      flicking.viewport.setSize({ height: anchorBelow.panel.height });
-    }
-
     transitTo(STATE_TYPE.IDLE);
 
     const controller = flicking.control.controller;
