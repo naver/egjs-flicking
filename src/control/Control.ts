@@ -162,6 +162,28 @@ abstract class Control {
   }
 
   /**
+   * Update position after resizing
+   * @ko resize 이후에 position을 업데이트합니다
+   * @param {number} progressInPanel Previous camera's progress in active panel before resize<ko>Resize 이전 현재 선택된 패널 내에서의 카메라 progress 값</ko>
+   * @throws {FlickingError}
+   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
+   * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
+   * @chainable
+   * @return {this}
+   */
+  public updatePosition(_progressInPanel: number): this {   // eslint-disable-line @typescript-eslint/no-unused-vars
+    const flicking = getFlickingAttached(this._flicking, "Control");
+    const camera = flicking.camera;
+    const activePanel = this._activePanel;
+
+    if (activePanel) {
+      camera.lookAt(camera.clampToReachablePosition(activePanel.position));
+    }
+
+    return this;
+  }
+
+  /**
    * Update {@link Control#controller controller}'s state
    * @ko {@link Control#controller controller}의 내부 상태를 갱신합니다
    * @chainable

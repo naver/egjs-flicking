@@ -136,6 +136,14 @@ abstract class Camera {
       : 0;
   }
 
+  /**
+   * Return the camera's position progress from the first panel to last panel
+   * Range is from 0 to last panel's index
+   * @ko 첫번째 패널로부터 마지막 패널까지의 카메라 위치의 진행도를 반환합니다
+   * 범위는 0부터 마지막 패널의 인덱스까지입니다
+   * @type {number}
+   * @readonly
+   */
   public get progress() {
     const flicking = this._flicking;
     const position = this._position + this._offset;
@@ -304,6 +312,20 @@ abstract class Camera {
   }
 
   /**
+   * Return the camera's position progress in the panel below
+   * Value is from 0 to 1 when the camera's inside panel
+   * Value can be lower than 0 or bigger than 1 when it's in the margin area
+   * @ko 현재 카메라 아래 패널에서의 위치 진행도를 반환합니다
+   * 반환값은 카메라가 패널 내부에 있을 경우 0부터 1까지의 값을 갖습니다
+   * 패널의 margin 영역에 있을 경우 0보다 작거나 1보다 큰 값을 반환할 수 있습니다
+   */
+  public getProgressInPanel(panel: Panel) {
+    const panelRange = panel.range;
+
+    return (this._position - panelRange.min) / (panelRange.max - panelRange.min);
+  }
+
+  /**
    * Return {@link AnchorPoint} that includes given position
    * If there's no {@link AnchorPoint} that includes the given position, return `null` instead
    * @ko 주어진 좌표를 포함하는 {@link AnchorPoint}를 반환합니다
@@ -429,26 +451,6 @@ abstract class Camera {
       position: panel.position,
       panel
     }));
-
-    return this;
-  }
-
-  /**
-   * Update position after resizing
-   * @ko resize 이후에 position을 업데이트합니다
-   * @throws {FlickingError}
-   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
-   * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
-   * @chainable
-   * @return {this}
-   */
-  public updatePosition(): this {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
-    const activePanel = flicking.control.activePanel;
-
-    if (activePanel) {
-      this.lookAt(this.clampToReachablePosition(activePanel.position));
-    }
 
     return this;
   }

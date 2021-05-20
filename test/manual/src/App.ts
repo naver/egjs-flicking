@@ -7,8 +7,7 @@ class App {
     const flicking = new Flicking("#flicking", {
       align: ALIGN.CENTER,
       bound: true,
-      adaptive: true,
-      threshold: 0
+      moveType: "freeScroll"
     });
 
     Object.values([EVENTS.WILL_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {

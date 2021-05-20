@@ -15,6 +15,31 @@ import { getFlickingAttached } from "~/utils";
  */
 class FreeControl extends Control {
   /**
+   * Update position after resizing
+   * @ko resize 이후에 position을 업데이트합니다
+   * @param {number} progressInPanel Previous camera's progress in active panel before resize<ko>Resize 이전 현재 선택된 패널 내에서의 카메라 progress 값</ko>
+   * @throws {FlickingError}
+   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
+   * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
+   * @chainable
+   * @return {this}
+   */
+  public updatePosition(progressInPanel: number): this {
+    const flicking = getFlickingAttached(this._flicking, "Control");
+    const camera = flicking.camera;
+    const activePanel = this._activePanel;
+
+    if (activePanel) {
+      const panelRange = activePanel.range;
+      const newPosition = panelRange.min + (panelRange.max - panelRange.min) * progressInPanel;
+
+      camera.lookAt(camera.clampToReachablePosition(newPosition));
+    }
+
+    return this;
+  }
+
+  /**
    * Move {@link Camera} to the given position
    * @ko {@link Camera}를 주어진 좌표로 이동합니다
    * @param {number} position The target position to move<ko>이동할 좌표</ko>

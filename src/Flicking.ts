@@ -883,6 +883,7 @@ class Flicking extends Component<FlickingEvents> {
     includePanelHTML: boolean;
     visiblePanelsOnly: boolean;
   }> = {}): Status {
+    const camera = this._camera;
     const panels = visiblePanelsOnly ? this.visiblePanels : this.panels;
 
     const status: Status = {
@@ -901,18 +902,21 @@ class Flicking extends Component<FlickingEvents> {
       status.index = this.index;
     }
     if (position) {
-      status.position = this._camera.position;
+      const nearestAnchor = camera.findNearestAnchor(camera.position);
+
+      if (nearestAnchor) {
+        status.position = {
+          panel: nearestAnchor.panel.index,
+          progressInPanel: camera.getProgressInPanel(nearestAnchor.panel)
+        };
+      }
+
     }
 
     if (visiblePanelsOnly) {
       const visiblePanels = this.visiblePanels;
 
-      status.visibleOffset = {
-        index: visiblePanels[0]?.index ?? 0,
-        position: visiblePanels[0]
-          ? (visiblePanels[0].range.min - visiblePanels[0].margin.prev)
-          : 0
-      };
+      status.visibleOffset = visiblePanels[0]?.index ?? 0;
     }
 
     return status;
@@ -947,18 +951,21 @@ class Flicking extends Component<FlickingEvents> {
 
     if (index) {
       const panelIndex = visibleOffset
-        ? index - visibleOffset.index
+        ? index - visibleOffset
         : index;
 
       void this.moveTo(panelIndex, 0).catch(() => void 0);
     }
 
     if (position && this._moveType === MOVE_TYPE.FREE_SCROLL) {
-      const cameraPosition = visibleOffset
-        ? position - visibleOffset.position
-        : position;
+      const { panel, progressInPanel } = position;
+      const panelIndex = visibleOffset
+        ? panel - visibleOffset
+        : panel;
+      const panelRange = renderer.panels[panelIndex].range;
+      const newCameraPos = panelRange.min + (panelRange.max - panelRange.min) * progressInPanel;
 
-      void control.moveToPosition(cameraPosition, 0).catch(() => void 0);
+      void control.moveToPosition(newCameraPos, 0).catch(() => void 0);
     }
   }
 
@@ -1013,8 +1020,12 @@ class Flicking extends Component<FlickingEvents> {
     const camera = this._camera;
     const control = this._control;
 
+    const activePanel = control.activePanel;
     const prevWidth = viewport.width;
     const prevHeight = viewport.height;
+    const prevProgressInPanel = activePanel
+      ? camera.getProgressInPanel(activePanel)
+      : 0;
 
     this.trigger(new ComponentEvent(EVENTS.BEFORE_RESIZE, {
       width: prevWidth,
@@ -1028,8 +1039,13 @@ class Flicking extends Component<FlickingEvents> {
     camera.updateAlignPos();
     camera.updateRange();
     camera.updateAnchors();
-    camera.updatePosition();
-    control.updateInput();
+
+    if (control.animating) {
+      // TODO:
+    } else {
+      control.updatePosition(prevProgressInPanel);
+      control.updateInput();
+    }
 
     const newWidth = viewport.width;
     const newHeight = viewport.height;
