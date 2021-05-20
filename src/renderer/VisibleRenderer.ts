@@ -4,7 +4,7 @@
  */
 import RawRenderer from "~/renderer/RawRenderer";
 import Panel from "~/core/Panel";
-import { findIndex, getFlickingAttached } from "~/utils";
+import { getFlickingAttached, includes } from "~/utils";
 
 /**
  * A {@link Renderer} that renders only visible panel elements({@link Camera#visiblePanels visiblePanels}) inside the camera element
@@ -30,18 +30,26 @@ class VisibleRenderer extends RawRenderer {
       return this;
     }
 
-    const panelsSortedByActualPosition = [...panels]
-      .sort((a, b) => (a.position + a.offset) - (b.position + b.offset));
+    if (flicking.holding) {
+      // Do not remove previous visible panel elements
+      // As that can stop the touch events on mobile devices
+      const wasVisiblePanels = [...panels]
+        .filter(panel => panel.element.parentElement === cameraElement && !includes(visiblePanels, panel));
+      visiblePanels.push(...wasVisiblePanels);
+    }
+
     const visibleSortedByActualPosition = [...visiblePanels]
       .sort((a, b) => (a.position + a.offset) - (b.position + b.offset));
 
-    // Remove remaining(removed) elements
-    elementManipulator.removeAllChildNodes(cameraElement);
+    if (!flicking.holding) {
+      // Remove remaining(removed) elements
+      elementManipulator.removeAllChildNodes(cameraElement);
+    }
     elementManipulator.insertPanelElements(visibleSortedByActualPosition, null);
 
-    const firstVisibleIdx = findIndex(panelsSortedByActualPosition, panel => panel.index === visibleSortedByActualPosition[0].index);
-
-    const invisiblePrevPanels = panelsSortedByActualPosition.slice(0, firstVisibleIdx);
+    const invisiblePrevPanels = panels
+      .filter(panel => !includes(visiblePanels, panel))
+      .filter(panel => panel.range.max + panel.offset < camera.visibleRange.min);
 
     const invisibleSize = this._calcPanelRangeSize(invisiblePrevPanels);
 

@@ -283,6 +283,7 @@ class CircularCamera extends Camera {
       this._circularOffset += this._calcPanelAreaSum(passedPanels);
     }
 
+    this._position = pos;
     flicking.renderer.render();
 
     return super.lookAt(pos);

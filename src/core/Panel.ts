@@ -225,13 +225,14 @@ class Panel {
     const prevPanel = flicking.renderer.panels[this._index - 1];
 
     this._size = horizontal ? el.offsetWidth : el.offsetHeight;
+
     this._margin = horizontal
       ? {
-        prev: parseFloat(elStyle.marginLeft),
-        next: parseFloat(elStyle.marginRight)
+        prev: parseFloat(elStyle.marginLeft || "0"),
+        next: parseFloat(elStyle.marginRight || "0")
       } : {
-        prev: parseFloat(elStyle.marginTop),
-        next: parseFloat(elStyle.marginBottom)
+        prev: parseFloat(elStyle.marginTop || "0"),
+        next: parseFloat(elStyle.marginBottom || "0")
       };
 
     this._pos = prevPanel

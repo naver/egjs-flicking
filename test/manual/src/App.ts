@@ -7,7 +7,8 @@ class App {
     const flicking = new Flicking("#flicking", {
       align: ALIGN.CENTER,
       bound: true,
-      moveType: "freeScroll"
+      moveType: "freeScroll",
+      renderOnlyVisible: true
     });
 
     Object.values([EVENTS.WILL_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {
@@ -15,7 +16,7 @@ class App {
     });
 
     flicking.on("move", e => {
-      (document.querySelector("#test") as HTMLElement).innerHTML = e.currentTarget.camera.position.toString();
+      (document.querySelector("#test") as HTMLElement).innerHTML = `${e.currentTarget.camera.position} ${e.currentTarget.camera.offset}`;
     });
 
     document.getElementById("prev")?.addEventListener("click", () => {

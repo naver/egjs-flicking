@@ -106,6 +106,7 @@ abstract class Renderer {
     this._flicking = flicking;
     this._elementManipulator.init(flicking);
     this._collectPanels();
+
     return this;
   }
 

@@ -1034,8 +1034,10 @@ class Flicking extends Component<FlickingEvents> {
     }));
 
     viewport.resize();
+    renderer.elementManipulator.insertPanelElements(renderer.panels, null);
     renderer.updatePanelSize();
     renderer.elementManipulator.resetPanelElementOrder(renderer.panels);
+    renderer.render();
     camera.updateAlignPos();
     camera.updateRange();
     camera.updateAnchors();

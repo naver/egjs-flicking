@@ -22,6 +22,7 @@ export default buildHelper([
       }),
       serve({
         open: true,
+        port: 3000,
         contentBase: "test/manual"
       }),
       livereload(".")
