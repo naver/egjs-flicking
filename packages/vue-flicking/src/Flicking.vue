@@ -19,6 +19,7 @@ import NativeFlicking, {
   Plugin,
   Status
 } from "@egjs/flicking";
+import { ComponentEvent } from "@egjs/component";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { VNode } from "vue";
@@ -65,7 +66,12 @@ class Flicking extends Vue {
   public mounted() {
     const options = {...this.options, ...{ renderExternal: true }};
     const viewportEl = this.$el as HTMLElement;
-    this._nativeFlicking = new NativeFlicking(viewportEl, options);
+    const flicking = new NativeFlicking(viewportEl, options);
+    this._nativeFlicking = flicking;
+
+    if (flicking.initialized) {
+      this.$emit(EVENTS.READY, { ...new ComponentEvent(EVENTS.READY), currentTarget: this });
+    }
 
     const slots = this._getSlots();
     this._slotDiffer = new ListDiffer<VNode>(slots, vnode => vnode.key!);
@@ -74,7 +80,7 @@ class Flicking extends Vue {
     this._bindEvents();
     this._checkPlugins();
     if (this.status) {
-      this._nativeFlicking.setStatus(this.status);
+      flicking.setStatus(this.status);
     }
 
     this.$forceUpdate();

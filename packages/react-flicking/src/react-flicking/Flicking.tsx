@@ -24,6 +24,7 @@ import NativeFlicking, {
   getRenderingPanels,
   Plugin
 } from "@egjs/flicking";
+import { ComponentEvent } from "@egjs/component";
 import "@egjs/flicking/dist/flicking.css";
 
 import { DEFAULT_PROPS } from "./consts";
@@ -79,14 +80,18 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       [EVENTS.REACH_EDGE]: (e: ReachEdgeEvent) => props.onReachEdge({ ...e, currentTarget: this }),
     });
 
+    if (flicking.initialized && props.onReady) {
+      props.onReady({ ...new ComponentEvent(EVENTS.READY), currentTarget: this })
+    }
+
     if (props.circular) {
       flicking.renderer.elementManipulator.on("orderChanged", () => {
         this.setState({});
       });
     }
 
-    if (this.props.status) {
-      this.setStatus(this.props.status);
+    if (props.status) {
+      this.setStatus(props.status);
     }
 
     this._nativeFlicking = flicking;

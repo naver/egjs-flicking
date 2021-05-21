@@ -27,6 +27,7 @@ import NativeFlicking, {
   Plugin,
   Status
 } from "@egjs/flicking";
+import { ComponentEvent } from "@egjs/component";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import * as uuid from "uuid";
 
@@ -121,8 +122,14 @@ export class NgxFlickingComponent extends FlickingInterface
     this._bindEvents();
     this._checkPlugins();
 
+    const flicking = this._nativeFlicking;
+
+    if (flicking.initialized) {
+      this.ready.emit({ ...new ComponentEvent(EVENTS.READY), currentTarget: this });
+    }
+
     if (this.status) {
-      this._nativeFlicking.setStatus(this.status);
+      flicking.setStatus(this.status);
     }
 
     if (this.options.renderOnlyVisible) {
