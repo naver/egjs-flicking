@@ -456,6 +456,26 @@ abstract class Camera {
   }
 
   /**
+   * Update Viewport's height to active panel's height
+   * @ko 현재 선택된 패널의 높이와 동일하도록 뷰포트의 높이를 업데이트합니다
+   * @throws {FlickingError}
+   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
+   * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
+   * @chainable
+   * @return {this}
+   */
+  public updateAdaptiveHeight() {
+    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const activePanel = flicking.control.activePanel;
+
+    if (!flicking.horizontal || !flicking.adaptive || !activePanel) return;
+
+    flicking.viewport.setSize({
+      height: activePanel.height
+    });
+  }
+
+  /**
    * Reset the history of {@link Flicking#event:needPanel needPanel} events so it can be triggered again
    * @ko 발생한 {@link Flicking#event:needPanel needPanel} 이벤트들을 초기화하여 다시 발생할 수 있도록 합니다
    * @chainable

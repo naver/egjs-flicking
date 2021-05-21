@@ -1,4 +1,7 @@
 import Flicking from "~/Flicking";
+import { MOVE_TYPE } from "~/const/external";
+import { ValueOf } from "~/type/internal";
+import { FreeControlOptions } from "~/control/FreeControl";
 
 /**
  * HTML `string` of single/mutiple HTMLElement, or an instance of `HTMLElement`
@@ -46,3 +49,9 @@ export interface Status {
     html?: string;
   }>;
 }
+
+/* eslint-disable @typescript-eslint/indent */
+export type MoveTypeOptions<T extends ValueOf<typeof MOVE_TYPE>> =
+  T extends typeof MOVE_TYPE.FREE_SCROLL ? [T] | [T, Partial<FreeControlOptions>] :
+  [T];
+/* eslint-enable */

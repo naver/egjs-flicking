@@ -22,10 +22,6 @@ html[data-theme='dark'] {
   --ifm-background-color: #242526 !important;
 }
 
-.navbar__title {
-  text-transform: uppercase;
-}
-
 .footer--dark {
   background-color: #45444f !important;
 }

@@ -15,6 +15,7 @@ export default () => {
 
   return <>
     <Flicking ref={flicking0}
+      align="prev"
       onMove={e => {
         const camera = e.currentTarget.camera;
         const progress = (camera.position - camera.range.min) / camera.rangeDiff;
@@ -40,6 +41,7 @@ export default () => {
       <div className="flicking-panel has-background-success has-text-white is-size-1" style={{ width: "100px" }}>5</div>
     </Flicking>
     <Flicking ref={flicking1}
+      align="prev"
       onMove={e => {
         const camera = e.currentTarget.camera;
         const progress = (camera.position - camera.range.min) / camera.rangeDiff;
@@ -65,6 +67,7 @@ export default () => {
       <div className="flicking-panel has-background-info has-text-white is-size-1" style={{ width: "200px" }}>5</div>
     </Flicking>
     <Flicking ref={flicking2}
+      align="prev"
       onMove={e => {
         const camera = e.currentTarget.camera;
         const progress = (camera.position - camera.range.min) / camera.rangeDiff;

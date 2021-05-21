@@ -1,5 +1,5 @@
 import "../../../css/flicking-inline.css";
-import Flicking, { ALIGN, EVENTS, MOVE_TYPE } from "~/index";
+import Flicking, { ALIGN, EVENTS } from "~/index";
 import { ValueOf } from "~/type/internal";
 
 class App {
@@ -7,7 +7,7 @@ class App {
     const flicking = new Flicking("#flicking", {
       align: ALIGN.CENTER,
       bound: true,
-      moveType: "freeScroll",
+      moveType: ["freeScroll"],
       renderOnlyVisible: true
     });
 

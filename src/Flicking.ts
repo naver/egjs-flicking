@@ -19,7 +19,7 @@ import * as ERROR from "~/const/error";
 import { findIndex, getElement, includes } from "~/utils";
 import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, WillChangeEvent, WillRestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent, ChangedEvent, RestoredEvent } from "~/type/event";
 import { LiteralUnion, ValueOf } from "~/type/internal";
-import { ElementLike, Plugin, Status } from "~/type/external";
+import { ElementLike, Plugin, Status, MoveTypeOptions } from "~/type/external";
 
 /**
  * @interface
@@ -62,7 +62,7 @@ export interface FlickingOptions {
   easing: (x: number) => number;
   // INPUT
   inputType: string[];
-  moveType: ValueOf<typeof MOVE_TYPE>;
+  moveType: ValueOf<typeof MOVE_TYPE> | MoveTypeOptions<ValueOf<typeof MOVE_TYPE>>;
   threshold: number;
   interruptable: boolean;
   bounce: number | string | [number | string, number | string];
@@ -356,15 +356,15 @@ class Flicking extends Component<FlickingEvents> {
   /**
    * Default duration of the animation (ms)
    * @ko 디폴트 애니메이션 재생 시간 (ms)
+   * @type {number}
    * @default 500
-   * @type number
    */
   public get duration() { return this._duration; }
   // INPUT
   /**
    * Types of input devices to enable
    * @ko 활성화할 입력 장치 종류
-   * @type string[]
+   * @type {string[]}
    * @default ["touch", "mouse"]
    * @see {@link https://naver.github.io/egjs-axes/release/latest/doc/global.html#PanInputOption Possible values (PanInputOption#inputType)}
    * <ko>{@link https://naver.github.io/egjs-axes/release/latest/doc/global.html#PanInputOption 가능한 값들 (PanInputOption#inputType)}</ko>
@@ -372,16 +372,33 @@ class Flicking extends Component<FlickingEvents> {
   public get inputType() { return this._inputType; }
   /**
    * Movement style by user input. This will change instance type of {@link Flicking#control}
+   * You can use the values of the constant {@link MOVE_TYPE}
    * @ko 사용자 입력에 의한 이동 방식. 이 값에 따라 {@link Flicking#control}의 인스턴스 타입이 결정됩니다
-   * @type string
+   * 상수 {@link MOVE_TYPE}에 정의된 값들을 이용할 수 있습니다
+   * @type {string | [string] | [string, object]}
    * @default "snap"
-   * @see {@link Constants.MOVE_TYPE}
+   * @see {@link MOVE_TYPE}
+   * @see {@link FreeControlOptions}
    * @example
+   * |moveType|control|
+   * |:---:|:---:|
+   * |"snap"|{@link SnapControl}|
+   * |"freeScroll"|{@link FreeControl}|
+   *
    * ```ts
    * import Flicking, { MOVE_TYPE } from "@egjs/flicking";
    *
    * const flicking = new Flicking({
-   *   moveType: MOVE_TYPE.FREE_SCROLL
+   *   moveType: MOVE_TYPE.SNAP
+   * });
+   * ```
+   *
+   * ```ts
+   * const flicking = new Flicking({
+   *   // If you want more specific settings for the moveType
+   *   // [moveType, options for that moveType]
+   *   // In this case, it's ["freeScroll", FreeControlOptions]
+   *   moveType: [MOVE_TYPE.FREE_SCROLL, { stopAtEdge: true }]
    * });
    * ```
    */

@@ -342,7 +342,7 @@ abstract class Control {
 
     this._activePanel = newActivePanel;
 
-    this._updateAdaptiveHeight(newActivePanel);
+    flicking.camera.updateAdaptiveHeight();
 
     if (newActivePanel !== prevActivePanel) {
       flicking.trigger(new ComponentEvent(EVENTS.CHANGED, {
@@ -359,16 +359,6 @@ abstract class Control {
       }));
     }
   };
-
-  protected _updateAdaptiveHeight(panel: Panel) {
-    const flicking = getFlickingAttached(this._flicking, "Control");
-
-    if (!flicking.horizontal || !flicking.adaptive) return;
-
-    flicking.viewport.setSize({
-      height: panel.height
-    });
-  }
 }
 
 export default Control;
