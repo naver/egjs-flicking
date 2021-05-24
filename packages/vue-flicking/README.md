@@ -29,7 +29,7 @@
 </p>
 
 <p align=center>
-  <a href="https://naver.github.io/egjs-flicking/">Demo</a> / <a href="https://naver.github.io/egjs-flicking/release/latest/doc/index.html">Documentation</a> / <a href="https://naver.github.io/egjs/" />Other components</a>
+  <a href="https://naver.github.io/egjs-flicking/">Demo</a> / <a href="https://naver.github.io/egjs-flicking/docs/api/Flicking">Documentation</a> / <a href="https://naver.github.io/egjs/">Other components</a>
 </p>
 
 ## ⚙️ Installation
@@ -41,7 +41,7 @@ npm install --save @egjs/vue-flicking
 - All `camelCased` event names became **`kebab-case`**
   - e.g., `moveEnd` => **`move-end`**
 - You can't use methods that manipulates DOM directly
-  - e.g., `append()`, `remove()`, ...
+  - e.g., `append()`, `prepend()`, `insert()`, `remove()`
 
 ## 🏃 Quick Start
 ### Global registration
@@ -65,16 +65,12 @@ export default {
 ```vue
 <template>
   <flicking
-    :options="{ gap: 10, moveType: 'freeScroll' }"
-    :tag="'div'"
+    :options="{ circular: true, moveType: 'freeScroll' }"
     :viewportTag="'div'"
     :cameraTag="'div'"
     :plugins="plugins"
     @need-panel="e => {
       // ADD PANELS
-    }"
-    @move-end="e => {
-      // HANDLE INDEX CHANGE
     }"
   >
     <div>CONTENTS OF PANEL 0</div>
@@ -93,14 +89,6 @@ export default class DemoClass extends Vue {
 </script>
 ```
 
-## Collect statistics
-
-Flicking applies Google Analytics (GA) to collect which features are useful to users. For example, the use of the `freeScroll` option, or the value of the `gap` option, and so on. Statistics also DO NOT contain any information that can identify an individual. Statistics on the usage will serve as basis for making better products. To disable GA, set the `collectStatistics` option to `false` as follows:
-
-```vue
-<flicking :options="{ collectStatistics: false }"/>
-```
-
 ## 🔍 SSR(Server Side Rendering) Guide
 Check [GUIDE_SSR.md](https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/GUIDE_SSR.md)
 
@@ -109,8 +97,8 @@ You can use all plugins just like native @egjs/flicking.
 
 Check [**@egjs/flicking-plugins**](https://github.com/naver/egjs-flicking-plugins) for readymade effects we're providing.
 
-## 📖 More Examples
-See our code sandbox [examples](https://codesandbox.io/s/egjsvue-flicking-examples-ghbes).
+## 📖 More Options & Examples
+[Options](https://naver.github.io/egjs-flicking/Options) / [Demos](https://naver.github.io/egjs-flicking/Demos)
 
 ## 🙌 Contributing
 See [CONTRIBUTING.md]((https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/CONTRIBUTING.md))
