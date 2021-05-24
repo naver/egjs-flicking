@@ -163,6 +163,9 @@ module.exports = {
         "@typescript-eslint/type-annotation-spacing": "error",
         "@typescript-eslint/unified-signatures": "error",
         "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
         "@typescript-eslint/no-shadow": ["error"],
         "@typescript-eslint/naming-convention": [
           "error",
@@ -288,7 +291,7 @@ module.exports = {
     "guard-for-in": "off",
     "id-blacklist": "off",
     "id-match": "off",
-    "import/order": "off",
+    "import/order": ["error", {"newlines-between": "always"}],
     "jsdoc/check-alignment": "error",
     "jsdoc/check-indentation": "off",
     "jsdoc/newline-after-description": ["error", "never"],
@@ -346,7 +349,6 @@ module.exports = {
     ],
     "use-isnan": "error",
     "valid-typeof": "off",
-    "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
-    "import/order": ["error", {"newlines-between": "always"}]
+    "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }]
   }
 };

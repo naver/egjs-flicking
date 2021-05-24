@@ -2,12 +2,13 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Camera from "~/camera/Camera";
-import Panel from "~/core/Panel";
-import AnchorPoint from "~/core/AnchorPoint";
-import { DIRECTION } from "~/const/external";
-import { ValueOf } from "~/type/internal";
-import { circulatePosition, getFlickingAttached } from "~/utils";
+import Panel from "../core/Panel";
+import AnchorPoint from "../core/AnchorPoint";
+import { DIRECTION } from "../const/external";
+import { circulatePosition, getFlickingAttached } from "../utils";
+import { ValueOf } from "../type/internal";
+
+import Camera from "./Camera";
 
 /**
  * A data of the position that changes order of the panel elements

@@ -10,16 +10,15 @@ import Panel from "./core/Panel";
 import { Control, FreeControl, SnapControl } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
 import { RawRenderer, Renderer, RendererOptions, VisibleRenderer } from "./renderer";
-import OffsetManipulator from "./renderer/OffsetManipulator";
-import ElementManipulator from "./renderer/ElementManipulator";
-import OrderManipulator from "./renderer/OrderManipulator";
-
-import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "~/const/external";
-import * as ERROR from "~/const/error";
-import { findIndex, getElement, includes } from "~/utils";
-import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, WillChangeEvent, WillRestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent, ChangedEvent, RestoredEvent } from "~/type/event";
-import { LiteralUnion, ValueOf } from "~/type/internal";
-import { ElementLike, Plugin, Status, MoveTypeOptions } from "~/type/external";
+import OffsetManipulator from "./renderer/OffsetManipulator/OffsetManipulator";
+import ElementManipulator from "./renderer/OffsetManipulator/ElementManipulator";
+import OrderManipulator from "./renderer/OffsetManipulator/OrderManipulator";
+import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
+import * as ERROR from "./const/error";
+import { findIndex, getElement, includes } from "./utils";
+import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, WillChangeEvent, WillRestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent, ChangedEvent, RestoredEvent } from "./type/event";
+import { LiteralUnion, ValueOf } from "./type/internal";
+import { ElementLike, Plugin, Status, MoveTypeOptions } from "./type/external";
 
 /**
  * @interface

@@ -4,13 +4,13 @@
  */
 import { ComponentEvent } from "@egjs/component";
 
-import Flicking, { FlickingOptions } from "~/Flicking";
-import FlickingError from "~/core/FlickingError";
-import Panel from "~/core/Panel";
-import AnchorPoint from "~/core/AnchorPoint";
-import * as ERROR from "~/const/error";
-import { ALIGN, DIRECTION, EVENTS } from "~/const/external";
-import { checkExistence, clamp, getFlickingAttached, getProgress, includes, parseAlign } from "~/utils";
+import Flicking, { FlickingOptions } from "../Flicking";
+import FlickingError from "../core/FlickingError";
+import Panel from "../core/Panel";
+import AnchorPoint from "../core/AnchorPoint";
+import * as ERROR from "../const/error";
+import { ALIGN, DIRECTION, EVENTS } from "../const/external";
+import { checkExistence, clamp, getFlickingAttached, getProgress, includes, parseAlign } from "../utils";
 
 export interface CameraOptions {
   align: FlickingOptions["align"];

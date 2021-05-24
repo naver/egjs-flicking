@@ -4,10 +4,10 @@
 */
 import Component from "@egjs/component";
 
-import Flicking from "~/Flicking";
-import Panel from "~/core/Panel";
-import { getFlickingAttached } from "~/utils";
-import { TogglePoint } from "~/camera/CircularCamera";
+import Flicking from "../../Flicking";
+import Panel from "../../core/Panel";
+import { TogglePoint } from "../../camera/CircularCamera";
+import { getFlickingAttached } from "../../utils";
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 

@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Renderer from "~/renderer/Renderer";
+import Renderer from "./Renderer";
 
 /**
  * A {@link Renderer} that always renders all panel elements inside the camera element

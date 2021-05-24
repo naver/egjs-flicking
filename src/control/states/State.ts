@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { OnAnimationEnd, OnChange, OnFinish, OnHold, OnRelease } from "@egjs/axes";
 
-import Flicking from "~/Flicking";
+import Flicking from "../../Flicking";
 
 export enum STATE_TYPE {
   IDLE,

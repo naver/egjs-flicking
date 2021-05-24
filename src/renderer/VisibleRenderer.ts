@@ -2,9 +2,10 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import RawRenderer from "~/renderer/RawRenderer";
-import Panel from "~/core/Panel";
-import { getFlickingAttached, includes } from "~/utils";
+import Panel from "../core/Panel";
+import { getFlickingAttached, includes } from "../utils";
+
+import RawRenderer from "./RawRenderer";
 
 /**
  * A {@link Renderer} that renders only visible panel elements({@link Camera#visiblePanels visiblePanels}) inside the camera element

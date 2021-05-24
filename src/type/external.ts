@@ -1,7 +1,7 @@
-import Flicking from "~/Flicking";
-import { MOVE_TYPE } from "~/const/external";
-import { ValueOf } from "~/type/internal";
-import { FreeControlOptions } from "~/control/FreeControl";
+import Flicking from "../Flicking";
+import { FreeControlOptions } from "../control/FreeControl";
+import { MOVE_TYPE } from "../const/external";
+import { ValueOf } from "../type/internal";
 
 /**
  * HTML `string` of single/mutiple HTMLElement, or an instance of `HTMLElement`

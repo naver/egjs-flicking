@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import State, { STATE_TYPE } from "~/control/states/State";
+import State, { STATE_TYPE } from "./State";
 
 /**
  * A state that activates when Flicking is stopped by event's `stop` method

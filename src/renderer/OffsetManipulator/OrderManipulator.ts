@@ -2,10 +2,11 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Panel from "~/core/Panel";
-import OffsetManipulator from "~/renderer/OffsetManipulator";
-import { TogglePoint } from "~/camera/CircularCamera";
-import { getFlickingAttached } from "~/utils";
+import Panel from "../../core/Panel";
+import { TogglePoint } from "../../camera/CircularCamera";
+import { getFlickingAttached } from "../../utils";
+
+import OffsetManipulator from "./OffsetManipulator";
 
 /**
  * A component that manages panel element's order without adding/removing it using CSS {@link https://developer.mozilla.org/en-US/docs/Web/CSS/order order} property

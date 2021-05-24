@@ -2,10 +2,10 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Flicking from "~/Flicking";
-import { getProgress, getStyle, parseAlign } from "~/utils";
-import { ALIGN } from "~/const/external";
-import { LiteralUnion, ValueOf } from "~/type/internal";
+import Flicking from "../Flicking";
+import { getProgress, getStyle, parseAlign } from "../utils";
+import { ALIGN } from "../const/external";
+import { LiteralUnion, ValueOf } from "../type/internal";
 
 export interface PanelOptions {
   index: number;

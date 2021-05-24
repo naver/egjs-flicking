@@ -4,10 +4,11 @@
  */
 import { ComponentEvent } from "@egjs/component";
 
-import State, { STATE_TYPE } from "~/control/states/State";
-import { EVENTS } from "~/const/external";
-import * as AXES from "~/const/axes";
-import { getDirection } from "~/utils";
+import { EVENTS } from "../../const/external";
+import * as AXES from "../../const/axes";
+import { getDirection } from "../../utils";
+
+import State, { STATE_TYPE } from "./State";
 
 /**
  * A state that activates when user's dragging the Flicking area

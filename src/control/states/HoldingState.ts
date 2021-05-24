@@ -5,10 +5,11 @@
 import { OnRelease } from "@egjs/axes";
 import { ComponentEvent } from "@egjs/component";
 
-import Panel from "~/core/Panel";
-import State, { STATE_TYPE } from "~/control/states/State";
-import { EVENTS } from "~/const/external";
-import { getDirection } from "~/utils";
+import Panel from "../../core/Panel";
+import { EVENTS } from "../../const/external";
+import { getDirection } from "../../utils";
+
+import State, { STATE_TYPE } from "./State";
 
 /**
  * A state that activates when user's holding the Flicking area, but not moved a single pixel yet

@@ -2,12 +2,12 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Flicking, { FlickingOptions } from "~/Flicking";
-import FlickingError from "~/core/FlickingError";
-import * as ERROR from "~/const/error";
-import { ALIGN, DIRECTION } from "~/const/external";
-import { LiteralUnion, Merged, ValueOf } from "~/type/internal";
-import { ElementLike } from "~/type/external";
+import Flicking, { FlickingOptions } from "./Flicking";
+import FlickingError from "./core/FlickingError";
+import * as ERROR from "./const/error";
+import { ALIGN, DIRECTION } from "./const/external";
+import { LiteralUnion, Merged, ValueOf } from "./type/internal";
+import { ElementLike } from "./type/external";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const merge = <From extends object, To extends object>(target: From, ...sources: To[]): Merged<From, To> => {

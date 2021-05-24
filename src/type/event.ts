@@ -6,10 +6,10 @@
 import { OnChange, OnFinish, OnHold, OnRelease } from "@egjs/axes";
 import { ComponentEvent } from "@egjs/component";
 
-import Panel from "~/core/Panel";
-import { EVENTS, DIRECTION } from "~/const/external";
-import { ValueOf } from "~/type/internal";
-import Flicking from "~/Flicking";
+import Flicking from "../Flicking";
+import Panel from "../core/Panel";
+import { EVENTS, DIRECTION } from "../const/external";
+import { ValueOf } from "../type/internal";
 
 /**
  * Event that fires when Flicking's {@link Flicking#init init()} is called

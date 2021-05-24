@@ -2,8 +2,9 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Camera from "~/camera/Camera";
-import { getFlickingAttached } from "~/utils";
+import { getFlickingAttached } from "../utils";
+
+import Camera from "./Camera";
 
 /**
  * A {@link Camera} that can move from the position of the first panel to the position of the last panel

@@ -2,12 +2,13 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Flicking, { FlickingOptions } from "~/Flicking";
-import Panel from "~/core/Panel";
-import OffsetManipulator from "~/renderer/OffsetManipulator";
-import { ALIGN } from "~/const/external";
-import { getFlickingAttached, getMinusCompensatedIndex, includes, parseElement, toArray } from "~/utils";
-import { ElementLike } from "~/type/external";
+import Flicking, { FlickingOptions } from "../Flicking";
+import Panel from "../core/Panel";
+import { ALIGN } from "../const/external";
+import { getFlickingAttached, getMinusCompensatedIndex, includes, parseElement, toArray } from "../utils";
+import { ElementLike } from "../type/external";
+
+import OffsetManipulator from "./OffsetManipulator/OffsetManipulator";
 
 export interface RendererOptions {
   align: FlickingOptions["align"];

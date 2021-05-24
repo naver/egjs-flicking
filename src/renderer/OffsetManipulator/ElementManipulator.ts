@@ -2,9 +2,11 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Panel from "~/core/Panel";
-import OffsetManipulator from "~/renderer/OffsetManipulator";
-import { getFlickingAttached, includes } from "~/utils";
+
+import Panel from "../../core/Panel";
+import { getFlickingAttached, includes } from "../../utils";
+
+import OffsetManipulator from "./OffsetManipulator";
 
 /**
  * A component that manages element add/remove and element's order change

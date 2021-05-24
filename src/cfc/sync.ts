@@ -1,6 +1,6 @@
 import { DiffResult } from "@egjs/list-differ";
 
-import Flicking from "~/Flicking";
+import Flicking from "../Flicking";
 
 export default (flicking: Flicking, diffResult: DiffResult<any>) => {
   const renderer = flicking.renderer;

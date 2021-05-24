@@ -1,6 +1,6 @@
 import { DiffResult } from "@egjs/list-differ";
 
-import Flicking from "~/Flicking";
+import Flicking from "../Flicking";
 
 export default <T>(flicking: Flicking, diffResult: DiffResult<T>) => {
   const panelsToRender = flicking.renderOnlyVisible

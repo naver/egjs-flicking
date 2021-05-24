@@ -4,10 +4,11 @@
  */
 import { OnRelease } from "@egjs/axes";
 
-import FlickingError from "~/core/FlickingError";
-import Control from "~/control/Control";
-import * as ERROR from "~/const/error";
-import { getFlickingAttached } from "~/utils";
+import FlickingError from "../core/FlickingError";
+import * as ERROR from "../const/error";
+import { getFlickingAttached } from "../utils";
+
+import Control from "./Control";
 
 export interface FreeControlOptions {
   stopAtEdge: boolean;

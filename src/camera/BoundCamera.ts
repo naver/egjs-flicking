@@ -2,9 +2,10 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Camera from "~/camera/Camera";
-import AnchorPoint from "~/core/AnchorPoint";
-import { getFlickingAttached } from "~/utils";
+import AnchorPoint from "../core/AnchorPoint";
+import { getFlickingAttached } from "../utils";
+
+import Camera from "./Camera";
 
 /**
  * A {@link Camera} that set range not to go out of the first/last panel, so it won't show empty spaces before/after the first/last panel

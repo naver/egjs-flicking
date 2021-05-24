@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { getStyle, isString } from "~/utils";
+import { getStyle, isString } from "../utils";
 
 /**
  * A component that manages viewport size
