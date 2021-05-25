@@ -11,7 +11,7 @@ import "../css/demo/weather-display.css";
 export default () => {
   const plugins = [new AutoPlay()];
 
-  return <Flicking className="weather-display" circular={true} horizontal={false} plugins={plugins}>
+  return <Flicking className="weather-display my-6" circular={true} horizontal={false} plugins={plugins}>
     <div className="weather-panel">
       <span className="has-text-weight-bold">21/05/17</span> <Sunny /><span>Sunny</span><span className="has-text-info">14.0°</span><span>/</span><span className="has-text-danger">17.0°</span>
     </div>

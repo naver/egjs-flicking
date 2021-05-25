@@ -25,4 +25,4 @@ export {
   Flicking,
   install
 };
-export * from "@egjs/flicking";
+export * from "@egjs/flicking/src/exports";

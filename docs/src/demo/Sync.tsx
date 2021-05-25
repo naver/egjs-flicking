@@ -13,9 +13,12 @@ export default () => {
     flicking.camera.lookAt(flicking.camera.range.min + flicking.camera.rangeDiff * progress);
   };
 
-  return <>
+  return <div className="has-background-grey-lighter p-4">
     <Flicking ref={flicking0}
+      className="mb-4"
       align="prev"
+      bound={true}
+      bounce={30}
       onMove={e => {
         const camera = e.currentTarget.camera;
         const progress = (camera.position - camera.range.min) / camera.rangeDiff;
@@ -28,20 +31,27 @@ export default () => {
       }}
       onMoveEnd={() => {
         flicking1.current.enableInput();
+        flicking1.current.control.updateInput();
         flicking2.current.enableInput();
-      }}
-      onChanged={e => {
-        void flicking1.current.moveTo(e.index, 0);
-        void flicking2.current.moveTo(e.index, 0);
+        flicking2.current.control.updateInput();
       }}>
-      <div className="flicking-panel has-background-success has-text-white is-size-1" style={{ width: "100px" }}>1</div>
-      <div className="flicking-panel has-background-success has-text-white is-size-1" style={{ width: "100px" }}>2</div>
-      <div className="flicking-panel has-background-success has-text-white is-size-1" style={{ width: "100px" }}>3</div>
-      <div className="flicking-panel has-background-success has-text-white is-size-1" style={{ width: "100px" }}>4</div>
-      <div className="flicking-panel has-background-success has-text-white is-size-1" style={{ width: "100px" }}>5</div>
+      <span className="button mr-2 is-white">🍎 Apple</span>
+      <span className="button mr-2 is-white">🍉 Watermelon</span>
+      <span className="button mr-2 is-white">🥝 Kiwi</span>
+      <span className="button mr-2 is-white">🍌 Banana</span>
+      <span className="button mr-2 is-white">🍊 Orange</span>
+      <span className="button mr-2 is-white">🍋 Lemon</span>
+      <span className="button mr-2 is-white">🍈 Melon</span>
+      <span className="button mr-2 is-white">🍑 Peach</span>
+      <span className="button mr-2 is-white">🍍 Pineapple</span>
+      <span className="button mr-2 is-white">🍓 Strawberry</span>
+      <span className="button mr-2 is-white">🍒 Cherry</span>
     </Flicking>
     <Flicking ref={flicking1}
+      className="mb-4"
       align="prev"
+      bound={true}
+      bounce={30}
       onMove={e => {
         const camera = e.currentTarget.camera;
         const progress = (camera.position - camera.range.min) / camera.rangeDiff;
@@ -54,20 +64,28 @@ export default () => {
       }}
       onMoveEnd={() => {
         flicking0.current.enableInput();
+        flicking0.current.control.updateInput();
         flicking2.current.enableInput();
-      }}
-      onChanged={e => {
-        void flicking0.current.moveTo(e.index, 0);
-        void flicking2.current.moveTo(e.index, 0);
+        flicking2.current.control.updateInput();
       }}>
-      <div className="flicking-panel has-background-info has-text-white is-size-1" style={{ width: "200px" }}>1</div>
-      <div className="flicking-panel has-background-info has-text-white is-size-1" style={{ width: "200px" }}>2</div>
-      <div className="flicking-panel has-background-info has-text-white is-size-1" style={{ width: "200px" }}>3</div>
-      <div className="flicking-panel has-background-info has-text-white is-size-1" style={{ width: "200px" }}>4</div>
-      <div className="flicking-panel has-background-info has-text-white is-size-1" style={{ width: "200px" }}>5</div>
+      <span className="button mr-2 is-white">🍔 Hamburger</span>
+      <span className="button mr-2 is-white">🍕 Pizza</span>
+      <span className="button mr-2 is-white">🍞 Bread</span>
+      <span className="button mr-2 is-white">🍜 Ramen</span>
+      <span className="button mr-2 is-white">🍦 Ice cream</span>
+      <span className="button mr-2 is-white">🍮 Pudding</span>
+      <span className="button mr-2 is-white">🍩 Donut</span>
+      <span className="button mr-2 is-white">🍪 Cookie</span>
+      <span className="button mr-2 is-white">🍚 Rice</span>
+      <span className="button mr-2 is-white">🧀 Cheese</span>
+      <span className="button mr-2 is-white">🌭 Hot dog</span>
+      <span className="button mr-2 is-white">🥓 Bacon</span>
+      <span className="button mr-2 is-white">🥪 Sandwich</span>
     </Flicking>
     <Flicking ref={flicking2}
       align="prev"
+      bound={true}
+      bounce={30}
       onMove={e => {
         const camera = e.currentTarget.camera;
         const progress = (camera.position - camera.range.min) / camera.rangeDiff;
@@ -80,17 +98,19 @@ export default () => {
       }}
       onMoveEnd={() => {
         flicking0.current.enableInput();
+        flicking0.current.control.updateInput();
         flicking1.current.enableInput();
-      }}
-      onChanged={e => {
-        void flicking0.current.moveTo(e.index, 0);
-        void flicking1.current.moveTo(e.index, 0);
+        flicking1.current.control.updateInput();
       }}>
-      <div className="flicking-panel has-background-danger has-text-white is-size-1" style={{ width: "400px" }}>1</div>
-      <div className="flicking-panel has-background-danger has-text-white is-size-1" style={{ width: "400px" }}>2</div>
-      <div className="flicking-panel has-background-danger has-text-white is-size-1" style={{ width: "400px" }}>3</div>
-      <div className="flicking-panel has-background-danger has-text-white is-size-1" style={{ width: "400px" }}>4</div>
-      <div className="flicking-panel has-background-danger has-text-white is-size-1" style={{ width: "400px" }}>5</div>
+      <span className="button mr-2 is-white">🥛 Milk</span>
+      <span className="button mr-2 is-white">☕ Coffee</span>
+      <span className="button mr-2 is-white">🍵 Green tea</span>
+      <span className="button mr-2 is-white">🍺 Beer</span>
+      <span className="button mr-2 is-white">🧃 Juice</span>
+      <span className="button mr-2 is-white">🍷 Wine</span>
+      <span className="button mr-2 is-white">🥃 Whisky</span>
+      <span className="button mr-2 is-white">🍸 Cocktail</span>
+      <span className="button mr-2 is-white">🍶 Sake</span>
     </Flicking>
-  </>;
+  </div>;
 };

@@ -7,15 +7,17 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #5ab552;
-  --ifm-color-primary-dark: #4fa647;
-  --ifm-color-primary-darker: #4a9d43;
-  --ifm-color-primary-darkest: #3d8137;
-  --ifm-color-primary-light: #6cbd64;
-  --ifm-color-primary-lighter: #74c16e;
-  --ifm-color-primary-lightest: #8fcd89;
-  --ifm-color-info: #68c2d3;
-  --ifm-color-warnb: #68c2d3;
+  --ifm-color-primary: #f2a65e;
+  --ifm-color-primary-dark: #ef953f;
+  --ifm-color-primary-darker: #ee8c2f;
+  --ifm-color-primary-darkest: #da7312;
+  --ifm-color-primary-light: #f5b77d;
+  --ifm-color-primary-lighter: #f6c08d;
+  --ifm-color-primary-lightest: #fadabb;
+  --ifm-color-info: #3e8ed0;
+  --ifm-color-warning: #ffe08a;
+  --ifm-color-danger: #f14668;
+  --ifm-color-success: #48c78e;
   --ifm-code-font-size: 95%;
 }
 html[data-theme='dark'] {
@@ -60,24 +62,38 @@ html[data-theme='dark'] {
   margin-bottom: 10px;
   align-items: flex-end;
   justify-content: start;
-  padding: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 30px;
+  padding-bottom: 30px;
   box-sizing: border-box;
   position: relative;
 }
-.flicking-panel::before {
+.flicking-index {
+  min-width: 60px;
+  text-align: center;
+  position: relative;
+}
+.flicking-index::before {
   content: "";
   position: absolute;
-  bottom: 1.8rem;
-  left: 0.5rem;
-  width: 54px;
+  left: 10%;
+  bottom: 0.5rem;
+  width: 80%;
   border-bottom: 2px solid white;
 }
-.flicking-panel::after {
+.flicking-panel.has-background-warning .flicking-index::before {
+  border-color: rgba(0,0,0,.7);
+}
+.flicking-index::after {
   content: "PANEL";
+  font-weight: bold;
   position: absolute;
-  bottom: 0;
-  left: 0.5rem;
-  font-size: 1.2rem;
+  left: 0;
+  bottom: -1.2rem;
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
 }
 
 .flicking-panel.high {

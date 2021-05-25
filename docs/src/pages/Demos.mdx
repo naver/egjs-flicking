@@ -3,6 +3,7 @@ title: Demos
 custom_edit_url: null
 ---
 import Flicking from "@egjs/react-flicking";
+import Panel from "@site/src/component/Panel";
 import AddRemove from "@site/src/demo/AddRemove";
 import SideScroll from "@site/src/demo/SideScroll";
 import Grid from "@site/src/demo/Grid";
@@ -16,11 +17,11 @@ import Sync from "@site/src/demo/Sync";
 ## Variable Size Panels
 Flicking uses panel element's real size, and doesn't modify them.
 <Flicking className="my-4" circular={true}>
-  <div className="flicking-panel has-text-white is-size-1 has-background-primary" style={{ width: "120px" }}>1</div>
-  <div className="flicking-panel has-text-white is-size-1 has-background-danger" style={{ width: "20%" }}>2</div>
-  <div className="flicking-panel has-text-white is-size-1 has-background-info" style={{ width: "500px" }}>3</div>
-  <div className="flicking-panel has-text-white is-size-1 has-background-warning" style={{ width: "300px" }}>4</div>
-  <div className="flicking-panel has-text-white is-size-1 has-background-success" style={{ width: "100%" }}>5</div>
+  <Panel color="primary" style={{ width: "120px" }} index={0} />
+  <Panel color="danger" style={{ width: "20%" }} index={1} />
+  <Panel color="info" style={{ width: "500px" }} index={2} />
+  <Panel color="warning" style={{ width: "300px" }} index={3} />
+  <Panel color="success" style={{ width: "100%" }} index={4} />
 </Flicking>
 
 ## Horizontal Scroller

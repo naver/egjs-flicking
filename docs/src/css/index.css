@@ -1,0 +1,18 @@
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.flicking-logo {
+  content: url("@site/static/img/flicking.svg");
+  animation-name: fadeIn;
+  animation-duration: 4s;
+}
+
+html[data-theme='dark'] .flicking-logo {
+  content: url("@site/static/img/flicking_white.svg");
+}

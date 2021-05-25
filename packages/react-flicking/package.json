@@ -15,7 +15,7 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "@egjs/flicking": "^4.0.0-beta.7",
+    "@egjs/flicking": "^4.0.0-beta.8",
     "@egjs/list-differ": "^1.0.0"
   },
   "devDependencies": {
