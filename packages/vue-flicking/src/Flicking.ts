@@ -1,34 +1,31 @@
-<template>
-  <component :is="this.viewportTag" :class="{'flicking-viewport': true, 'vertical': this.vertical}">
-    <component :is="this.cameraTag" class="flicking-camera">
-      <VNodes :vnodes="this._panels" />
-    </component>
-  </component>
-</template>
-<script lang="ts">
 /**
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { ComponentEvent } from "@egjs/component";
+import ListDiffer, { DiffResult } from "@egjs/list-differ";
+import { Component, Vue, Prop } from "vue-property-decorator";
+import { CreateElement, VNodeData, VNode } from "vue";
+
+import "@egjs/flicking/dist/flicking.css";
+
 import NativeFlicking, {
   EVENTS,
   FlickingOptions,
   withFlickingMethods,
   sync,
-  getRenderingPanels,
   Plugin,
-  Status
-} from "@egjs/flicking";
-import { ComponentEvent } from "@egjs/component";
-import ListDiffer, { DiffResult } from "@egjs/list-differ";
-import { Component, Vue, Prop } from "vue-property-decorator";
-import { VNode } from "vue";
+  Status,
+  getRenderingPanels
+} from "../../../src/index";
 
-import VNodes from "./VNodes";
+import VueRenderer from "./VueRenderer";
+import VuePanelComponent from "./VuePanelComponent";
 
 @Component({
   components: {
-    VNodes
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    Panel: VuePanelComponent
   }
 })
 class Flicking extends Vue {
@@ -38,35 +35,22 @@ class Flicking extends Vue {
   @Prop({ type: String, default: "div", required: false }) public cameraTag!: string;
   @Prop({ type: Object, default: () => ({}), required: false }) public options!: Partial<FlickingOptions>;
   @Prop({ type: Array, default: () => ([]), required: false }) public plugins!: Plugin[];
-  @Prop({ type: Object, required: false }) public status!: Partial<Status>;
-
-  public get vertical() {
-    const flicking = this._nativeFlicking;
-    const isHorizontal = flicking
-      ? flicking.horizontal
-      : this.options.horizontal ?? true;
-
-    return !isHorizontal;
-  }
-
-  private _panels: VNode[] = [];
+  @Prop({ type: Object, required: false }) public status!: Status;
 
   @withFlickingMethods private _nativeFlicking!: NativeFlicking;
-  private _pluginsDiffer!: ListDiffer<any>;
+  private _pluginsDiffer!: ListDiffer<Plugin>;
   private _slotDiffer!: ListDiffer<VNode>;
   private _diffResult: DiffResult<VNode> | null = null;
 
-  public created() {
-    this._fillKeys();
-
-    const slots = this._getSlots();
-    this._panels = [...slots];
-  }
-
   public mounted() {
-    const options = {...this.options, ...{ renderExternal: true }};
     const viewportEl = this.$el as HTMLElement;
-    const flicking = new NativeFlicking(viewportEl, options);
+    const flicking = new NativeFlicking(viewportEl, {
+      ...this.options,
+      ...{ renderExternal: {
+        renderer: VueRenderer,
+        rendererOptions: { vueFlicking: this }
+      }}
+    });
     this._nativeFlicking = flicking;
 
     if (flicking.initialized) {
@@ -82,25 +66,20 @@ class Flicking extends Vue {
     if (this.status) {
       flicking.setStatus(this.status);
     }
-
-    this.$forceUpdate();
   }
 
   public beforeDestroy() {
     this._nativeFlicking.destroy();
   }
 
+  public beforeMount() {
+    this._fillKeys();
+  }
+
   public beforeUpdate() {
     this._fillKeys();
 
-    const slots = this._getSlots();
-    const diffResult = this._slotDiffer.update(slots);
-    const flicking = this._nativeFlicking!;
-
-    this._diffResult = diffResult;
-    this._panels = flicking.initialized
-      ? getRenderingPanels(flicking, diffResult)
-      : slots;
+    this._diffResult = this._slotDiffer.update(this._getSlots());
   }
 
   public updated() {
@@ -109,7 +88,7 @@ class Flicking extends Vue {
 
     if (!diffResult) return;
 
-    sync(flicking, diffResult);
+    sync(flicking, diffResult, this.$children);
 
     this._checkPlugins();
 
@@ -120,9 +99,41 @@ class Flicking extends Vue {
     this._diffResult = null;
   }
 
+  public render(h: CreateElement) {
+    const flicking = this._nativeFlicking;
+    const isHorizontal = flicking
+      ? flicking.horizontal
+      : this.options.horizontal ?? true;
+
+    const viewportData: VNodeData = {
+      class: {
+        "flicking-viewport": true,
+        "vertical": !isHorizontal
+      }
+    };
+    const cameraData: VNodeData = {
+      class: {
+        "flicking-camera": true
+      }
+    };
+
+    const slots = this._diffResult
+      ? getRenderingPanels(this._nativeFlicking, this._diffResult)
+      : this._getSlots();
+    const panels = slots.map(slot => h("Panel", { key: slot.key }, [slot]));
+
+    this.$emit("render");
+
+    return h(this.viewportTag, viewportData,
+      [h(this.cameraTag, cameraData,
+        panels,
+      )],
+    );
+  }
+
   private _bindEvents() {
     const flicking = this._nativeFlicking;
-    const events = Object.keys(EVENTS).map((key: keyof typeof EVENTS) => EVENTS[key]);
+    const events = Object.keys(EVENTS).map(key => EVENTS[key]);
 
     events.forEach(eventName => {
       flicking.on(eventName, (e: any) => {
@@ -131,17 +142,6 @@ class Flicking extends Vue {
         this.$emit(eventName.replace(/([A-Z])/g, "-$1").toLowerCase(), e);
       });
     });
-
-    if (this.options.renderOnlyVisible) {
-      flicking.on(EVENTS.VISIBLE_CHANGE, e => {
-        this.$forceUpdate();
-      });
-    }
-    if (this.options.circular) {
-      flicking.renderer.elementManipulator.on("orderChanged", () => {
-        this.$forceUpdate();
-      });
-    }
   }
 
   private _checkPlugins() {
@@ -152,10 +152,7 @@ class Flicking extends Vue {
   }
 
   private _getSlots() {
-    // Only elements are allowed as panel
-    return this.$slots.default
-      ? this.$slots.default.filter(slot => slot.tag)
-      : [];
+    return this.$slots.default?.filter(slot => slot.tag) ?? [];
   }
 
   private _fillKeys() {
@@ -169,9 +166,6 @@ class Flicking extends Vue {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Flicking extends NativeFlicking {}
 export default Flicking;
-</script>
-<style>
-@import url("../node_modules/@egjs/flicking/dist/flicking.css");
-</style>

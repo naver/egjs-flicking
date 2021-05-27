@@ -19,15 +19,13 @@ import {
   BeforeResizeEvent,
   AfterResizeEvent,
   ReachEdgeEvent,
-  Plugin,
-  Status
+  Plugin
 } from "@egjs/flicking";
 
 export interface FlickingProps {
   viewportTag: keyof JSX.IntrinsicElements;
   cameraTag: keyof JSX.IntrinsicElements;
   plugins: Plugin[];
-  status?: Status;
   onReady: (e: ReadyEvent) => any;
   onBeforeResize: (e: BeforeResizeEvent) => any;
   onAfterResize: (e: AfterResizeEvent) => any;

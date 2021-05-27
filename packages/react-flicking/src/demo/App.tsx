@@ -22,18 +22,7 @@ export default class App extends Component<{}> {
   public render() {
     return (
       <div>
-        <Header/>
         <InfiniteFlicking/>
-        <FreeScroll/>
-        <VariableSize/>
-        <Align/>
-        <Snap/>
-        <Gap/>
-        <Progress/>
-        <Bound/>
-        <ParallaxDemo/>
-        <FadeDemo/>
-        <AutoPlayDemo/>
       </div>);
   }
   public componentDidMount() {

@@ -480,6 +480,8 @@ abstract class Camera {
     this._offset = unRenderedPanels
       .filter(panel => panel.position + panel.offset < position)
       .reduce((offset, panel) => offset + panel.sizeIncludingMargin, 0);
+
+    this._applyTransform();
   }
 
   /**

@@ -169,18 +169,16 @@ abstract class Control {
    * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
    * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
    * @chainable
-   * @return {this}
+   * @return {Promise<void>}
    */
-  public updatePosition(_progressInPanel: number): this {   // eslint-disable-line @typescript-eslint/no-unused-vars
+  public async updatePosition(_progressInPanel: number): Promise<void> {   // eslint-disable-line @typescript-eslint/no-unused-vars
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;
     const activePanel = this._activePanel;
 
     if (activePanel) {
-      camera.lookAt(camera.clampToReachablePosition(activePanel.position));
+      await camera.lookAt(camera.clampToReachablePosition(activePanel.position));
     }
-
-    return this;
   }
 
   /**
@@ -324,6 +322,7 @@ abstract class Control {
     newActivePanel: Panel;
     axesEvent?: OnRelease;
   }) {
+    const flicking = getFlickingAttached(this._flicking, "Control");
     const currentPanel = this._activePanel;
     const animate = () => this._controller.animateTo(position, duration, axesEvent);
     const isTrusted = axesEvent?.isTrusted || false;
@@ -333,7 +332,10 @@ abstract class Control {
       this._setActive(newActivePanel, currentPanel, isTrusted);
       return animation;
     } else {
-      return animate().then(() => this._setActive(newActivePanel, currentPanel, isTrusted));
+      return animate().then(async () => {
+        this._setActive(newActivePanel, currentPanel, isTrusted);
+        await flicking.renderer.render();
+      });
     }
   }
 

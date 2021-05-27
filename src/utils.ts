@@ -59,9 +59,6 @@ export const getFlickingAttached = (val: Flicking | null, nameToThrowOnError: st
 
 export const toArray = <T>(iterable: ArrayLike<T>): T[] => [].slice.call(iterable) as T[];
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-export const isArray = (arr: any): arr is any[] => Boolean(arr) && arr.constructor === Array;
-
 export const parseAlign = (align: LiteralUnion<ValueOf<typeof ALIGN>> | number, size: number): number => {
   let alignPoint: number | null;
   if (isString(align)) {
@@ -91,7 +88,7 @@ export const parseAlign = (align: LiteralUnion<ValueOf<typeof ALIGN>> | number, 
 export const parseBounce = (bounce: FlickingOptions["bounce"], size: number): number[] => {
   let parsedBounce: Array<number | null>;
 
-  if (isArray(bounce)) {
+  if (Array.isArray(bounce)) {
     parsedBounce = (bounce as string[]).map(val => parseArithmeticExpression(val, size));
   } else {
     const parsedVal = parseArithmeticExpression(bounce, size);
@@ -162,7 +159,7 @@ export const getDirection = (start: number, end: number): ValueOf<typeof DIRECTI
 };
 
 export const parseElement = (element: ElementLike | ElementLike[]): HTMLElement[] => {
-  if (!isArray(element)) {
+  if (!Array.isArray(element)) {
     element = [element];
   }
 

@@ -4,13 +4,16 @@
  */
 import Panel, { PanelOptions } from "./Panel";
 import ElementPanel, { ElementPanelOptions } from "./ElementPanel";
+import ExternalPanel, { ExternalPanelOptions } from "./ExternalPanel";
 
 export {
   Panel,
-  ElementPanel
+  ElementPanel,
+  ExternalPanel
 };
 
 export type {
   PanelOptions,
-  ElementPanelOptions
+  ElementPanelOptions,
+  ExternalPanelOptions
 };

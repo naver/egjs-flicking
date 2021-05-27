@@ -454,12 +454,15 @@ abstract class Panel {
 
   /**
    * @internal
+   * @return {boolean} toggled
    */
-  public toggle(prevPos: number, newPos: number): this {
+  public toggle(prevPos: number, newPos: number): boolean {
     const toggleDirection = this._toggleDirection;
     const togglePosition = this._togglePosition;
 
-    if (toggleDirection === DIRECTION.NONE || newPos === prevPos) return this;
+    if (toggleDirection === DIRECTION.NONE || newPos === prevPos) return false;
+
+    const prevToggled = this._toggled;
 
     if (newPos > prevPos) {
       if (togglePosition >= prevPos && togglePosition <= newPos) {
@@ -471,7 +474,7 @@ abstract class Panel {
       }
     }
 
-    return this;
+    return prevToggled !== this._toggled;
   }
 
   /**

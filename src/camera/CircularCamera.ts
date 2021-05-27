@@ -179,15 +179,19 @@ class CircularCamera extends Camera {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const prevPos = this._position;
 
-    if (pos === prevPos) return super.lookAt(pos);
+    if (pos === prevPos) return await super.lookAt(pos);
 
-    flicking.renderer.panels.forEach(panel => panel.toggle(prevPos, pos));
-    this._updateCircularOffset();
+    const panels = flicking.renderer.panels;
+    const toggled = panels.map(panel => panel.toggle(prevPos, pos));
+
     this._position = pos;
 
-    await flicking.renderer.render();
+    if (toggled.some(isToggled => isToggled)) {
+      this._updateCircularOffset();
+      await flicking.renderer.render();
+    }
 
-    return super.lookAt(pos);
+    return await super.lookAt(pos);
   }
 
   protected _applyTransform(): void {

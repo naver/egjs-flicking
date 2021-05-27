@@ -53,9 +53,9 @@ class FreeControl extends Control {
    * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
    * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
    * @chainable
-   * @return {this}
+   * @return {Promise<void>}
    */
-  public updatePosition(progressInPanel: number): this {
+  public async updatePosition(progressInPanel: number): Promise<void> {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;
     const activePanel = this._activePanel;
@@ -64,10 +64,8 @@ class FreeControl extends Control {
       const panelRange = activePanel.range;
       const newPosition = panelRange.min + (panelRange.max - panelRange.min) * progressInPanel;
 
-      camera.lookAt(camera.clampToReachablePosition(newPosition));
+      await camera.lookAt(camera.clampToReachablePosition(newPosition));
     }
-
-    return this;
   }
 
   /**

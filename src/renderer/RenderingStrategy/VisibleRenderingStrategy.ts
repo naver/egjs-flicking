@@ -11,16 +11,19 @@ class VisibleRenderingStrategy implements RenderingStrategy {
     const panels = flicking.renderer.panels;
     const camera = flicking.camera;
 
-    // During the input sequence,
-    // Do not remove panel elements as it won't trigger touchend event.
-    if (!flicking.holding) {
-      panels.forEach(panel => {
-        panel.markForHide();
-      });
-    }
+    const visibleIndexes = camera.visiblePanels.reduce((visibles, panel) => {
+      visibles[panel.index] = true;
+      return visibles;
+    }, {});
 
-    camera.visiblePanels.forEach(panel => {
-      panel.markForShow();
+    panels.forEach(panel => {
+      if (panel.index in visibleIndexes) {
+        panel.markForShow();
+      } else if (!flicking.holding) {
+        // During the input sequence,
+        // Do not remove panel elements as it won't trigger touchend event.
+        panel.markForHide();
+      }
     });
 
     camera.updateOffset();

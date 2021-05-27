@@ -6,13 +6,13 @@ import Component, { ComponentEvent } from "@egjs/component";
 
 import FlickingError from "./core/FlickingError";
 import Viewport from "./core/Viewport";
-import Panel from "./core/Panel/Panel";
+import { Panel } from "./core/Panel";
 import { Control, FreeControl, SnapControl } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
 import { Renderer, NativeRenderer, ExternalRenderer, RawRenderingStrategy, VisibleRenderingStrategy } from "./renderer";
 import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
 import * as ERROR from "./const/error";
-import { findIndex, getElement, includes } from "./utils";
+import { findIndex, getElement, includes, parseElement } from "./utils";
 import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, WillChangeEvent, WillRestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent, ChangedEvent, RestoredEvent } from "./type/event";
 import { LiteralUnion, ValueOf } from "./type/internal";
 import { ElementLike, Plugin, Status, MoveTypeOptions } from "./type/external";
@@ -70,7 +70,10 @@ export interface FlickingOptions {
   // OTHERS
   autoInit: boolean;
   autoResize: boolean;
-  renderExternal: boolean;
+  renderExternal: {
+    renderer: typeof ExternalRenderer;
+    rendererOptions: {[key: string]: any};
+  } | null;
   useOrderManipulator: boolean;
 }
 
@@ -597,7 +600,7 @@ class Flicking extends Component<FlickingEvents> {
     renderOnlyVisible = false,
     autoInit = true,
     autoResize = true,
-    renderExternal = false,
+    renderExternal = null,
     useOrderManipulator = false
   }: Partial<FlickingOptions> = {}) {
     super();
@@ -958,8 +961,8 @@ class Flicking extends Component<FlickingEvents> {
 
     // Can't add/remove panels on external rendering
     if (panels[0]?.html && !this._renderExternal) {
-      renderer.remove(0, this.panels.length);
-      renderer.insert(0, panels.map(panel => panel.html!));
+      renderer.batchRemove({ index: 0, deleteCount: this.panels.length });
+      renderer.batchInsert({ index: 0, elements: panels.map(panel => panel.html!) });
     }
 
     if (index) {
@@ -1057,7 +1060,7 @@ class Flicking extends Component<FlickingEvents> {
     if (control.animating) {
       // TODO:
     } else {
-      control.updatePosition(prevProgressInPanel);
+      await control.updatePosition(prevProgressInPanel);
       control.updateInput();
     }
 
@@ -1147,7 +1150,11 @@ class Flicking extends Component<FlickingEvents> {
    * ```
    */
   public insert(index: number, element: ElementLike | ElementLike[]): Panel[] {
-    return this._renderer.insert(index, element);
+    if (this._renderExternal) {
+      throw new FlickingError(ERROR.MESSAGE.NOT_ALLOWED_IN_FRAMEWORK, ERROR.CODE.NOT_ALLOWED_IN_FRAMEWORK);
+    }
+
+    return this._renderer.batchInsert({ index, elements: parseElement(element) });
   }
 
   /**
@@ -1160,7 +1167,11 @@ class Flicking extends Component<FlickingEvents> {
    * @return {Panel[]} An array of removed panels<ko>제거된 패널들의 배열</ko>
    */
   public remove(index: number, deleteCount: number = 1): Panel[] {
-    return this._renderer.remove(index, deleteCount);
+    if (this._renderExternal) {
+      throw new FlickingError(ERROR.MESSAGE.NOT_ALLOWED_IN_FRAMEWORK, ERROR.CODE.NOT_ALLOWED_IN_FRAMEWORK);
+    }
+
+    return this._renderer.batchRemove({ index, deleteCount });
   }
 
   private _createControl(): Control {
@@ -1213,8 +1224,10 @@ class Flicking extends Component<FlickingEvents> {
       strategy: renderingStrategy
     };
 
-    return this._renderExternal
-      ? new ExternalRenderer(rendererOptions)
+    const renderExternal = this._renderExternal;
+
+    return renderExternal
+      ? new (renderExternal.renderer as any)({ ...rendererOptions, ...renderExternal.rendererOptions })
       : new NativeRenderer(rendererOptions);
   }
 

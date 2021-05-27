@@ -2,17 +2,21 @@ import { DiffResult } from "@egjs/list-differ";
 
 import Flicking from "../Flicking";
 
-export default (flicking: Flicking, diffResult: DiffResult<any>) => {
+export default (flicking: Flicking, diffResult: DiffResult<any>, rendered: any[]) => {
   const renderer = flicking.renderer;
-  const cameraEl = flicking.camera.element;
-  const children = [].slice.call(cameraEl.children) as HTMLElement[];
-  const addedElements = children.slice(-diffResult.added.length);
+
+  if (diffResult.removed.length > 0) {
+    renderer.batchRemove(
+      ...diffResult.removed.map(index => ({ index, deleteCount: 1 }))
+    );
+  }
 
   diffResult.removed.forEach(idx => {
-    renderer.remove(idx, 1);
+    console.log("removed", idx);
   });
 
   diffResult.ordered.forEach(([prevIdx, newIdx]) => {
+    console.log("ordered", prevIdx, newIdx);
     const prevPanel = renderer.panels[prevIdx];
     const indexDiff = newIdx - prevIdx;
 
@@ -25,7 +29,14 @@ export default (flicking: Flicking, diffResult: DiffResult<any>) => {
     prevPanel.resize();
   });
 
+  if (diffResult.added.length > 0) {
+    const inserted = renderer.batchInsert(
+      ...diffResult.added.map((index, elIdx) => ({ index, elements: [rendered[elIdx + diffResult.prevList.length]] }))
+    );
+    console.log("inserted", inserted);
+  }
+
   diffResult.added.forEach((panelIdx, elIdx) => {
-    renderer.insert(panelIdx, addedElements[elIdx]);
+    console.log("added", panelIdx);
   });
 };

@@ -3,10 +3,9 @@
  * egjs projects are licensed under the MIT license
  */
 import Flicking, { FlickingOptions } from "../Flicking";
-import Panel from "../core/Panel/Panel";
+import Panel, { PanelOptions } from "../core/Panel/Panel";
 import { ALIGN } from "../const/external";
-import { getFlickingAttached } from "../utils";
-import { ElementLike } from "../type/external";
+import { getFlickingAttached, getMinusCompensatedIndex, includes } from "../utils";
 
 import RenderingStrategy from "./RenderingStrategy/RenderingStrategy";
 import RawRenderingStrategy from "./RenderingStrategy/RawRenderingStrategy";
@@ -90,10 +89,11 @@ abstract class Renderer {
    */
   public abstract render(): Promise<void>;
   public abstract forceRenderAllPanels(): Promise<void>;
-  public abstract insert(index: number, element: ElementLike | ElementLike[]): Panel[];
-  public abstract remove(index: number, deleteCount: number): Panel[];
 
-  protected abstract _collectPanels(): this;
+  protected abstract _collectPanels(): void;
+  protected abstract _createPanel(el: any, options: PanelOptions): Panel;
+  protected abstract _insertPanelElements(panels: Panel[], nextSibling: Panel | null): void;
+  protected abstract _removePanelElements(panels: Panel[]): void;
 
   /**
    * Initialize Renderer
@@ -140,6 +140,140 @@ abstract class Renderer {
     return this;
   }
 
+  /**
+   * Insert new panels at given index
+   * This will increase index of panels after by the number of panels added
+   * @ko 주어진 인덱스에 새로운 패널들을 추가합니다
+   * 해당 인덱스보다 같거나 큰 인덱스를 가진 기존 패널들은 추가한 패널의 개수만큼 인덱스가 증가합니다.
+   * @param {number} index Index to insert new panels at<ko>새로 패널들을 추가할 인덱스</ko>
+   * @param {any[]} elements An array of element or framework component with element in it<ko>엘리먼트의 배열 혹은 프레임워크에서 엘리먼트를 포함한 컴포넌트들의 배열</ko>
+   * @return {Panel[]} An array of prepended panels<ko>추가된 패널들의 배열</ko>
+   */
+  public batchInsert(...items: Array<{
+    index: number;
+    elements: any;
+  }>): Panel[] {
+    const panels = this._panels;
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+
+    const { control } = flicking;
+    const align = this._getPanelAlign();
+
+    const allPanelsInserted = items.reduce((addedPanels, item) => {
+      const insertingIdx = getMinusCompensatedIndex(item.index, panels.length);
+      const panelsPushed = panels.slice(insertingIdx);
+      const panelsInserted = item.elements.map(el => this._createPanel(el, { index: insertingIdx, align, flicking }));
+
+      panels.splice(insertingIdx, 0, ...panelsInserted);
+
+      // Resize the newly added panels
+      panelsInserted.forEach(panel => panel.resize());
+
+      const insertedSize = this._getPanelSizeSum(panelsInserted);
+
+      // Update panel indexes & positions
+      panelsPushed.forEach(panel => {
+        panel.increaseIndex(panelsInserted.length);
+        panel.increasePosition(insertedSize);
+      });
+
+      // Insert the actual elements as camera element's children
+      this._insertPanelElements(panelsInserted, panelsPushed[0] ?? null);
+
+      return [...addedPanels, ...panelsInserted];
+    }, []);
+
+    if (allPanelsInserted.length <= 0) return [];
+
+    // Update camera & control
+    this._updateCameraAndControl();
+
+    void this.render();
+
+    // Move to the first panel added if no panels existed
+    // FIXME: fix for animating case
+    if (allPanelsInserted.length > 0 && !control.animating) {
+      void control.moveToPanel(control.activePanel || allPanelsInserted[0], {
+        duration: 0
+      }).catch(() => void 0);
+    }
+
+    flicking.camera.updateOffset();
+
+    return allPanelsInserted;
+  }
+
+  /**
+   * Remove the panel at the given index
+   * This will decrease index of panels after by the number of panels removed
+   * @ko 주어진 인덱스의 패널을 제거합니다
+   * 해당 인덱스보다 큰 인덱스를 가진 기존 패널들은 제거한 패널의 개수만큼 인덱스가 감소합니다
+   * @param {number} index Index of panel to remove<ko>제거할 패널의 인덱스</ko>
+   * @param {number} [deleteCount=1] Number of panels to remove from index<ko>`index` 이후로 제거할 패널의 개수</ko>
+   * @return An array of removed panels<ko>제거된 패널들의 배열</ko>
+   */
+  public batchRemove(...items: Array<{ index: number; deleteCount: number }>): Panel[] {
+    const panels = this._panels;
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+
+    const { camera, control } = flicking;
+    const activePanel = control.activePanel;
+    const activeIndex = control.activeIndex;
+
+    const allPanelsRemoved = items.reduce((removed, item) => {
+      const { index, deleteCount } = item;
+      const removingIdx = getMinusCompensatedIndex(index, panels.length);
+
+      const panelsPulled = panels.slice(removingIdx + deleteCount);
+      const panelsRemoved = panels.splice(removingIdx, deleteCount);
+
+      if (panelsRemoved.length <= 0) return [];
+
+      // Update panel indexes & positions
+      const removedSize = this._getPanelSizeSum(panelsRemoved);
+      panelsPulled.forEach(panel => {
+        panel.decreaseIndex(panelsRemoved.length);
+        panel.decreasePosition(removedSize);
+      });
+
+      this._removePanelElements(panelsRemoved);
+
+      // Remove panel elements
+      panelsRemoved.forEach(panel => panel.destroy());
+
+      // Update camera & control
+      this._updateCameraAndControl();
+
+      if (includes(panelsRemoved, activePanel)) {
+        control.resetActive();
+      }
+
+      return [...removed, ...panelsRemoved];
+    }, []);
+
+    void this.render();
+
+    // FIXME: fix for animating case
+    if (allPanelsRemoved.length > 0 && !control.animating) {
+      const targetPanel = includes(allPanelsRemoved, activePanel)
+        ? (panels[activeIndex] || panels[panels.length - 1])
+        : activePanel;
+
+      if (targetPanel) {
+        void control.moveToPanel(targetPanel, {
+          duration: 0
+        }).catch(() => void 0);
+      } else {
+        // All panels removed
+        void camera.lookAt(0);
+      }
+    }
+
+    flicking.camera.updateOffset();
+
+    return allPanelsRemoved;
+  }
+
   protected _getPanelAlign() {
     const align = this._align;
 
@@ -155,14 +289,6 @@ abstract class Renderer {
     const marginDiff = lastPanel.margin.next - firstPanel.margin.prev;
 
     return (lastPanel.range.max - firstPanel.range.min) + marginDiff;
-  }
-
-  protected _getRenderingPanelsByOrder(): Panel[] {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
-    const panels = flicking.renderer.panels;
-
-    return panels.filter(panel => panel.rendered)
-      .sort((a, b) => (a.position + a.offset) - (b.position + b.offset));
   }
 
   protected _updateCameraAndControl() {

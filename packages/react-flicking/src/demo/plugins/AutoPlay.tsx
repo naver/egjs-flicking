@@ -19,7 +19,6 @@ export default class AutoPlayDemo extends React.Component<{}> {
         circular={true}
         gap={10}
         duration={500}
-        plugins={this.plugins}
       >
         <div className="panel">
           <img alt="img" src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
