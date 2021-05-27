@@ -3,16 +3,17 @@
  * egjs projects are licensed under the MIT license
  */
 import Flicking, { FlickingOptions } from "../Flicking";
-import Panel from "../core/Panel";
+import Panel from "../core/Panel/Panel";
 import { ALIGN } from "../const/external";
-import { getFlickingAttached, getMinusCompensatedIndex, includes, parseElement, toArray } from "../utils";
+import { getFlickingAttached } from "../utils";
 import { ElementLike } from "../type/external";
 
-import OffsetManipulator from "./OffsetManipulator/OffsetManipulator";
+import RenderingStrategy from "./RenderingStrategy/RenderingStrategy";
+import RawRenderingStrategy from "./RenderingStrategy/RawRenderingStrategy";
 
 export interface RendererOptions {
   align: FlickingOptions["align"];
-  elementManipulator: OffsetManipulator;
+  strategy: RenderingStrategy;
 }
 
 /**
@@ -22,8 +23,8 @@ export interface RendererOptions {
 abstract class Renderer {
   // Internal States
   protected _flicking: Flicking | null;
-  protected _elementManipulator: OffsetManipulator;
   protected _panels: Panel[];
+  protected _renderingStrategy: RenderingStrategy;
 
   // Options
   protected _align: RendererOptions["align"];
@@ -44,13 +45,6 @@ abstract class Renderer {
    * @readonly
    */
   public get panelCount() { return this._panels.length; }
-  /**
-   * An instance of the {@link OffsetManipulator} that Renderer's using
-   * @ko Renderer가 현재 사용중인 {@link OffsetManipulator}의 인스턴스
-   * @type {OffsetManipulator}
-   * @readonly
-   */
-  public get elementManipulator() { return this._elementManipulator; }
 
   // Options Getter
   /**
@@ -75,11 +69,11 @@ abstract class Renderer {
    */
   public constructor({
     align = ALIGN.CENTER,
-    elementManipulator = new OffsetManipulator()
+    strategy = new RawRenderingStrategy()
   }: Partial<RendererOptions> = {}) {
     this._align = align;
     this._flicking = null;
-    this._elementManipulator = elementManipulator;
+    this._renderingStrategy = strategy;
     this._panels = [];
   }
 
@@ -94,7 +88,12 @@ abstract class Renderer {
    * @chainable
    * @return {this}
    */
-  public abstract render(): this;
+  public abstract render(): Promise<void>;
+  public abstract forceRenderAllPanels(): Promise<void>;
+  public abstract insert(index: number, element: ElementLike | ElementLike[]): Panel[];
+  public abstract remove(index: number, deleteCount: number): Panel[];
+
+  protected abstract _collectPanels(): this;
 
   /**
    * Initialize Renderer
@@ -105,7 +104,6 @@ abstract class Renderer {
    */
   public init(flicking: Flicking): this {
     this._flicking = flicking;
-    this._elementManipulator.init(flicking);
     this._collectPanels();
 
     return this;
@@ -119,7 +117,6 @@ abstract class Renderer {
   public destroy(): void {
     this._flicking = null;
     this._panels = [];
-    this._elementManipulator.destroy();
   }
 
   /**
@@ -133,132 +130,6 @@ abstract class Renderer {
   }
 
   /**
-   * Insert new panels at given index
-   * This will increase index of panels after by the number of panels added
-   * @ko 주어진 인덱스에 새로운 패널들을 추가합니다
-   * 해당 인덱스보다 같거나 큰 인덱스를 가진 기존 패널들은 추가한 패널의 개수만큼 인덱스가 증가합니다.
-   * @param {number} index Index to insert new panels at<ko>새로 패널들을 추가할 인덱스</ko>
-   * @param {Flicking.ElementLike | Flicking.ElementLike[]} element A new HTMLElement, a outerHTML of element, or an array of both
-   * <ko>새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열</ko>
-   * @return {Panel[]} An array of prepended panels<ko>추가된 패널들의 배열</ko>
-   */
-  public insert(index: number, element: ElementLike | ElementLike[]): Panel[] {
-    const panels = this._panels;
-    const elementManipulator = this._elementManipulator;
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
-
-    const { control } = flicking;
-    const align = this._getPanelAlign();
-
-    const elements = parseElement(element);
-    const insertingIdx = getMinusCompensatedIndex(index, panels.length);
-
-    const panelsPushed = panels.slice(insertingIdx);
-    const newPanels = elements.map((el, elIdx) => new Panel({ el, index: insertingIdx + elIdx, align, flicking }));
-
-    if (newPanels.length <= 0) return [];
-
-    // Reset the order of the elements first
-    elementManipulator.resetPanelElementOrder(panels);
-
-    panels.splice(insertingIdx, 0, ...newPanels);
-
-    // Insert the actual elements as camera element's children
-    elementManipulator.insertPanelElements(newPanels, panelsPushed[0] || null);
-
-    // Resize the newly added panels
-    newPanels.forEach(panel => panel.resize());
-
-    const insertedSize = this._getPanelSizeSum(newPanels);
-
-    // Update panel indexes & positions
-    panelsPushed.forEach(panel => {
-      panel.increaseIndex(newPanels.length);
-      panel.increasePosition(insertedSize);
-    });
-
-    // Update camera & control
-    this._updateCameraAndControl();
-
-    this.render();
-
-    // Move to the first panel added if no panels existed
-    // FIXME: fix for animating case
-    if (newPanels.length > 0 && !control.animating) {
-      void control.moveToPanel(control.activePanel || newPanels[0], {
-        duration: 0
-      }).catch(() => void 0);
-    }
-
-    return newPanels;
-  }
-
-  /**
-   * Remove the panel at the given index
-   * This will decrease index of panels after by the number of panels removed
-   * @ko 주어진 인덱스의 패널을 제거합니다
-   * 해당 인덱스보다 큰 인덱스를 가진 기존 패널들은 제거한 패널의 개수만큼 인덱스가 감소합니다
-   * @param {number} index Index of panel to remove<ko>제거할 패널의 인덱스</ko>
-   * @param {number} [deleteCount=1] Number of panels to remove from index<ko>`index` 이후로 제거할 패널의 개수</ko>
-   * @return An array of removed panels<ko>제거된 패널들의 배열</ko>
-   */
-  public remove(index: number, deleteCount: number = 1): Panel[] {
-    const panels = this._panels;
-    const elementManipulator = this._elementManipulator;
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
-
-    const { camera, control } = flicking;
-    const activePanel = control.activePanel;
-    const removingIdx = getMinusCompensatedIndex(index, panels.length);
-
-    const panelsPulled = panels.slice(removingIdx + deleteCount);
-    const panelsRemoved = panels.splice(removingIdx, deleteCount);
-
-    if (panelsRemoved.length <= 0) return [];
-
-    // Reset the order of the elements first
-    elementManipulator.resetPanelElementOrder(panels);
-
-    // Update panel indexes & positions
-    const removedSize = this._getPanelSizeSum(panelsRemoved);
-    panelsPulled.forEach(panel => {
-      panel.decreaseIndex(panelsRemoved.length);
-      panel.decreasePosition(removedSize);
-    });
-
-    // Remove panel elements
-    elementManipulator.removePanelElements(panelsRemoved);
-    panelsRemoved.forEach(panel => panel.destroy());
-
-    // Update camera & control
-    this._updateCameraAndControl();
-
-    if (includes(panelsRemoved, activePanel)) {
-      control.resetActive();
-    }
-
-    this.render();
-
-    // FIXME: fix for animating case
-    if (panelsRemoved.length > 0 && !control.animating) {
-      const targetPanel = includes(panelsRemoved, activePanel)
-        ? (panelsPulled[0] || panels[panels.length - 1])
-        : activePanel;
-
-      if (targetPanel) {
-        void control.moveToPanel(targetPanel, {
-          duration: 0
-        }).catch(() => void 0);
-      } else {
-        // All panels removed
-        camera.lookAt(0);
-      }
-    }
-
-    return panelsRemoved;
-  }
-
-  /**
    * Update all panel sizes
    * @ko 모든 패널의 크기를 업데이트합니다
    * @chainable
@@ -266,23 +137,6 @@ abstract class Renderer {
    */
   public updatePanelSize(): this {
     this._panels.forEach(panel => panel.resize());
-    return this;
-  }
-
-  protected _collectPanels(): this {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
-
-    const cameraElement = flicking.camera.element;
-
-    // Remove all text nodes in the camera element
-    this._elementManipulator.removeAllTextNodes(cameraElement);
-
-    const align = this._getPanelAlign();
-    const cameraChilds = toArray(cameraElement.children);
-
-    this._panels = cameraChilds.map(
-      (el: HTMLElement, index: number) => new Panel({ flicking, el, index, align })
-    );
     return this;
   }
 
@@ -301,6 +155,14 @@ abstract class Renderer {
     const marginDiff = lastPanel.margin.next - firstPanel.margin.prev;
 
     return (lastPanel.range.max - firstPanel.range.min) + marginDiff;
+  }
+
+  protected _getRenderingPanelsByOrder(): Panel[] {
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const panels = flicking.renderer.panels;
+
+    return panels.filter(panel => panel.rendered)
+      .sort((a, b) => (a.position + a.offset) - (b.position + b.offset));
   }
 
   protected _updateCameraAndControl() {

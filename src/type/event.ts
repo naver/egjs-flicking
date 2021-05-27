@@ -7,7 +7,7 @@ import { OnChange, OnFinish, OnHold, OnRelease } from "@egjs/axes";
 import { ComponentEvent } from "@egjs/component";
 
 import Flicking from "../Flicking";
-import Panel from "../core/Panel";
+import Panel from "../core/Panel/Panel";
 import { EVENTS, DIRECTION } from "../const/external";
 import { ValueOf } from "../type/internal";
 

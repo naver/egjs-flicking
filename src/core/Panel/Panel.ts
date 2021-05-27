@@ -2,36 +2,33 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Flicking from "../Flicking";
-import { getProgress, getStyle, parseAlign } from "../utils";
-import { ALIGN } from "../const/external";
-import { LiteralUnion, ValueOf } from "../type/internal";
+import Flicking from "../../Flicking";
+import { getProgress, getStyle, parseAlign } from "../../utils";
+import { ALIGN, DIRECTION } from "../../const/external";
+import { LiteralUnion, ValueOf } from "../../type/internal";
 
 export interface PanelOptions {
   index: number;
   align: LiteralUnion<ValueOf<typeof ALIGN>> | number;
   flicking: Flicking;
-  el: HTMLElement;
 }
 
-/**
- * An slide data component that holds information of a single HTMLElement
- * @ko 슬라이드 데이터 컴포넌트로, 단일 HTMLElement의 정보를 갖고 있습니다
- */
-class Panel {
-  private _flicking: Flicking;
-  private _el: HTMLElement;
-  private _align: PanelOptions["align"];
-
+abstract class Panel {
   // Internal States
-  private _index: number;
-  private _pos: number;
-  private _size: number;
-  private _height: number;
-  private _margin: { prev: number; next: number };
-  private _alignPos: number; // Actual align pos
-  private _offset: number;
-  private _removed: boolean;
+  protected _flicking: Flicking;
+  protected _index: number;
+  protected _pos: number;
+  protected _size: number;
+  protected _height: number;
+  protected _margin: { prev: number; next: number };
+  protected _alignPos: number; // Actual align pos
+  protected _removed: boolean;
+  protected _toggleDirection: ValueOf<typeof DIRECTION>;
+  protected _toggled: boolean;
+  protected _togglePosition: number;
+
+  // Options
+  protected _align: PanelOptions["align"];
 
   // Internal States Getter
   /**
@@ -40,7 +37,7 @@ class Panel {
    * @type {HTMLElement}
    * @readonly
    */
-  public get element() { return this._el; }
+  abstract get element(): HTMLElement;
   /**
    * Index of the panel
    * @ko 패널의 인덱스
@@ -99,20 +96,19 @@ class Panel {
    */
   public get alignPosition() { return this._alignPos; }
   /**
-   * Panel's position offset which is changed after panel element's order changes if {@link Flicking#circular circular} is enabled
-   * @ko 현재 패널의 위치 오프셋 값. {@link Flicking#circular circular} 모드에서 패널의 엘리먼트의 순서가 변경될 때 이 값이 변경됩니다
-   * @type {number}
-   * @default 0
-   * @readonly
-   */
-  public get offset() { return this._offset; }
-  /**
    * A value indicating whether the panel's {@link Flicking#remove remove}d
    * @ko 패널이 {@link Flicking#remove remove}되었는지 여부를 나타내는 값
    * @type {boolean}
    * @readonly
    */
   public get removed() { return this._removed; }
+  /**
+   * A value indicating whether the panel's element is being rendered on the screen
+   * @ko 패널의 엘리먼트가 화면상에 렌더링되고있는지 여부를 나타내는 값
+   * @type {boolean}
+   * @readonly
+   */
+  public abstract get rendered();
   /**
    * Panel element's range of the bounding box
    * @ko 패널 엘리먼트의 Bounding box 범위
@@ -122,15 +118,57 @@ class Panel {
    * @readonly
    */
   public get range() { return { min: this._pos, max: this._pos + this._size }; }
+  /**
+   * A value indicating whether the panel's position is toggled by circular behavior
+   * @ko 패널의 위치가 circular 동작에 의해 토글되었는지 여부를 나타내는 값
+   * @type {boolean}
+   * @readonly
+   */
+  public get toggled() { return this._toggled; }
+  /**
+   * A direction where the panel's position is toggled
+   * @ko 패널의 위치가 circular 동작에 의해 토글되는 방향
+   * @type {DIRECTION}
+   * @readonly
+   */
+  public get toggleDirection() { return this._toggleDirection; }
+  /**
+   * Actual position offset determined by {@link Panel#order}
+   * @ko {@link Panel#order}에 의한 실제 위치 변경값
+   * @type {number}
+   * @readonly
+   */
+  public get offset() {
+    const toggleDirection = this._toggleDirection;
+    const cameraRangeDiff = this._flicking.camera.rangeDiff;
 
+    return toggleDirection === DIRECTION.NONE || !this._toggled
+      ? 0
+      : toggleDirection === DIRECTION.PREV
+        ? -cameraRangeDiff
+        : cameraRangeDiff;
+  }
+
+  /**
+   * Progress of movement between previous or next panel relative to current panel
+   * @ko 이 패널로부터 이전/다음 패널으로의 이동 진행률
+   * @type {number}
+   * @readonly
+   */
   public get progress() {
     const flicking = this._flicking;
 
     return this.index - flicking.camera.progress;
   }
 
+  /**
+   * Progress of movement between points that panel is completely invisible outside of viewport(prev direction: -1, selected point: 0, next direction: 1)
+   * @ko 현재 패널이 뷰포트 영역 밖으로 완전히 사라지는 지점을 기준으로 하는 진행도(prev방향: -1, 선택 지점: 0, next방향: 1)
+   * @type {number}
+   * @readonly
+   */
   public get outsetProgress() {
-    const position = this.position + this._offset;
+    const position = this.position + this.offset;
     const alignPosition = this._alignPos;
     const camera = this._flicking.camera;
     const camPos = camera.position;
@@ -150,10 +188,16 @@ class Panel {
     }
   }
 
+  /**
+   * Percentage of area where panel is visible in the viewport
+   * @ko 뷰포트 안에서 패널이 보이는 영역의 비율
+   * @type {number}
+   * @readonly
+   */
   public get visibleRatio() {
     const range = this.range;
     const size = this._size;
-    const offset = this._offset;
+    const offset = this.offset;
     const visibleRange = this._flicking.camera.visibleRange;
 
     const checkingRange = {
@@ -190,18 +234,15 @@ class Panel {
 
   /**
    * @param {object} options An options object<ko>옵션 오브젝트</ko>
-   * @param {HTMLElement} [options.el] A `HTMLElement` panel's referencing<ko>패널이 참조하는 `HTMLElement`</ko>
    * @param {number} [options.index] An initial index of the panel<ko>패널의 초기 인덱스</ko>
    * @param {Constants.ALIGN | string | number} [options.align] An initial {@link Flicking#align align} value of the panel<ko>패널의 초기 {@link Flicking#align align}값</ko>
    * @param {Flicking} [options.flicking] A Flicking instance panel's referencing<ko>패널이 참조하는 {@link Flicking} 인스턴스</ko>
    */
   public constructor({
-    el,
     index,
     align,
     flicking
   }: PanelOptions) {
-    this._el = el;
     this._index = index;
     this._flicking = flicking;
 
@@ -212,13 +253,25 @@ class Panel {
   }
 
   /**
+   * Mark panel element to be appended on the camera element
+   * @internal
+   */
+  public abstract markForShow();
+
+  /**
+   * Mark panel element to be removed from the camera element
+   * @internal
+   */
+  public abstract markForHide();
+
+  /**
    * Update size of the panel
    * @ko 패널의 크기를 갱신합니다
    * @chainable
    * @return {this}
    */
   public resize(): this {
-    const el = this._el;
+    const el = this.element;
     const elStyle = getStyle(el);
     const flicking = this._flicking;
     const horizontal = flicking.horizontal;
@@ -253,7 +306,7 @@ class Panel {
    * @return {boolean} A Boolean value indicating the element is inside of this panel {@link Panel#element element}<ko>패널의 {@link Panel#element element}내에 해당 엘리먼트 포함 여부</ko>
    */
   public contains(element: HTMLElement): boolean {
-    return this._el.contains(element);
+    return this.element.contains(element);
   }
 
   /**
@@ -400,40 +453,65 @@ class Panel {
   }
 
   /**
-   * Increase panel's offset by the given value
-   * @ko 패널의 오프셋을 주어진 값만큼 증가시킵니다
    * @internal
-   * @chainable
-   * @param val An integer greater than or equal to 0<ko>0보다 같거나 큰 정수</ko>
-   * @returns {this}
    */
-  public increaseOffset(val: number): this {
-    this._offset += Math.max(val, 0);
+  public toggle(prevPos: number, newPos: number): this {
+    const toggleDirection = this._toggleDirection;
+    const togglePosition = this._togglePosition;
+
+    if (toggleDirection === DIRECTION.NONE || newPos === prevPos) return this;
+
+    if (newPos > prevPos) {
+      if (togglePosition >= prevPos && togglePosition <= newPos) {
+        this._toggled = toggleDirection === DIRECTION.NEXT;
+      }
+    } else {
+      if (togglePosition <= prevPos && togglePosition >= newPos) {
+        this._toggled = toggleDirection !== DIRECTION.NEXT;
+      }
+    }
+
     return this;
   }
 
   /**
-   * Decrease panel's offset by the given value
-   * @ko 패널의 오프셋을 주어진 값만큼 감소시킵니다
    * @internal
-   * @chainable
-   * @param val An integer greater than or equal to 0<ko>0보다 같거나 큰 정수</ko>
-   * @returns {this}
    */
-  public decreaseOffset(val: number): this {
-    this._offset -= Math.max(val, 0);
-    return this;
-  }
+  public updateCircularToggleDirection(): this {
+    const flicking = this._flicking;
 
-  /**
-   * Reset panel's offset to 0
-   * @ko 패널의 오프셋을 0으로 초기화합니다
-   * @internal
-   * @chainable
-   * @returns {this}
-   */
-  public resetOffset(): this {
-    this._offset = 0;
+    if (!flicking.circularEnabled) {
+      this._toggleDirection = DIRECTION.NONE;
+      this._toggled = false;
+      return this;
+    }
+
+    const camera = flicking.camera;
+    const camRange = camera.range;
+    const camAlignPosition = camera.alignPosition;
+    const camVisibleRange = camera.visibleRange;
+    const camVisibleSize = camVisibleRange.max - camVisibleRange.min;
+
+    const minimumVisible = camRange.min - camAlignPosition;
+    const maximumVisible = camRange.max - camAlignPosition + camVisibleSize;
+
+    const shouldBeVisibleAtMin = this.includeRange(maximumVisible - camVisibleSize, maximumVisible, false);
+    const shouldBeVisibleAtMax = this.includeRange(minimumVisible, minimumVisible + camVisibleSize, false);
+
+    this._toggled = false;
+    if (shouldBeVisibleAtMin) {
+      this._toggleDirection = DIRECTION.PREV;
+      this._togglePosition = this.range.max + camRange.min - camRange.max + camAlignPosition;
+      this.toggle(Infinity, camera.position);
+    } else if (shouldBeVisibleAtMax) {
+      this._toggleDirection = DIRECTION.NEXT;
+      this._togglePosition = this.range.min + camRange.max - camVisibleSize + camAlignPosition;
+      this.toggle(-Infinity, camera.position);
+    } else {
+      this._toggleDirection = DIRECTION.NONE;
+      this._togglePosition = 0;
+    }
+
     return this;
   }
 
@@ -453,7 +531,9 @@ class Panel {
     this._margin = { prev: 0, next: 0 };
     this._height = 0;
     this._alignPos = 0;
-    this._offset = 0;
+    this._toggled = false;
+    this._togglePosition = 0;
+    this._toggleDirection = DIRECTION.NONE;
   }
 }
 

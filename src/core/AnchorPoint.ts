@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Panel from "./Panel";
+import Panel from "./Panel/Panel";
 
 /**
  * A data component that has actual position where the camera should be stopped at

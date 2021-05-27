@@ -6,13 +6,10 @@ import Component, { ComponentEvent } from "@egjs/component";
 
 import FlickingError from "./core/FlickingError";
 import Viewport from "./core/Viewport";
-import Panel from "./core/Panel";
+import Panel from "./core/Panel/Panel";
 import { Control, FreeControl, SnapControl } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
-import { RawRenderer, Renderer, RendererOptions, VisibleRenderer } from "./renderer";
-import OffsetManipulator from "./renderer/OffsetManipulator/OffsetManipulator";
-import ElementManipulator from "./renderer/OffsetManipulator/ElementManipulator";
-import OrderManipulator from "./renderer/OffsetManipulator/OrderManipulator";
+import { Renderer, NativeRenderer, ExternalRenderer, RawRenderingStrategy, VisibleRenderingStrategy } from "./renderer";
 import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
 import * as ERROR from "./const/error";
 import { findIndex, getElement, includes } from "./utils";
@@ -259,7 +256,7 @@ class Flicking extends Component<FlickingEvents> {
    * @type {Plugin[]}
    * @readonly
    */
-  public get plugins() { return this._plugins; }
+  public get activatedPlugins() { return this._plugins; }
 
   // Options Getter
   // UI / LAYOUT
@@ -641,7 +638,7 @@ class Flicking extends Component<FlickingEvents> {
     this._control = this._createControl();
 
     if (this._autoInit) {
-      this.init();
+      void this.init();
     }
   }
 
@@ -653,8 +650,8 @@ class Flicking extends Component<FlickingEvents> {
    * @fires Flicking#ready
    * @return {this}
    */
-  public init(): this {
-    if (this._initialized) return this;
+  public async init(): Promise<void> {
+    if (this._initialized) return;
 
     const camera = this._camera;
     const renderer = this._renderer;
@@ -665,7 +662,7 @@ class Flicking extends Component<FlickingEvents> {
     renderer.init(this);
     control.init(this);
 
-    this.resize();
+    await this.resize();
 
     // Look at initial panel
     this._moveToInitialPanel();
@@ -686,7 +683,7 @@ class Flicking extends Component<FlickingEvents> {
     this._initialized = true;
     this.trigger(new ComponentEvent(EVENTS.READY));
 
-    return this;
+    return;
   }
 
   /**
@@ -1030,7 +1027,7 @@ class Flicking extends Component<FlickingEvents> {
    * @fires Flicking#afterResize
    * @return {this}
    */
-  public resize = (): this => {
+  public resize = async (): Promise<void> => {
     const viewport = this._viewport;
     const renderer = this._renderer;
     const camera = this._camera;
@@ -1050,10 +1047,9 @@ class Flicking extends Component<FlickingEvents> {
     }));
 
     viewport.resize();
-    renderer.elementManipulator.insertPanelElements(renderer.panels, null);
+    await renderer.forceRenderAllPanels(); // Render all panel elements, to update sizes
     renderer.updatePanelSize();
-    renderer.elementManipulator.resetPanelElementOrder(renderer.panels);
-    renderer.render();
+    await renderer.render();
     camera.updateAlignPos();
     camera.updateRange();
     camera.updateAnchors();
@@ -1079,8 +1075,6 @@ class Flicking extends Component<FlickingEvents> {
       sizeChanged,
       element: viewport.element
     }));
-
-    return this;
   };
 
   /**
@@ -1153,10 +1147,6 @@ class Flicking extends Component<FlickingEvents> {
    * ```
    */
   public insert(index: number, element: ElementLike | ElementLike[]): Panel[] {
-    if (this._renderExternal) {
-      throw new FlickingError(ERROR.MESSAGE.NOT_ALLOWED_IN_FRAMEWORK, ERROR.CODE.NOT_ALLOWED_IN_FRAMEWORK);
-    }
-
     return this._renderer.insert(index, element);
   }
 
@@ -1170,10 +1160,6 @@ class Flicking extends Component<FlickingEvents> {
    * @return {Panel[]} An array of removed panels<ko>제거된 패널들의 배열</ko>
    */
   public remove(index: number, deleteCount: number = 1): Panel[] {
-    if (this._renderExternal) {
-      throw new FlickingError(ERROR.MESSAGE.NOT_ALLOWED_IN_FRAMEWORK, ERROR.CODE.NOT_ALLOWED_IN_FRAMEWORK);
-    }
-
     return this._renderer.remove(index, deleteCount);
   }
 
@@ -1181,15 +1167,23 @@ class Flicking extends Component<FlickingEvents> {
     const moveType = this._moveType;
     const moveTypes = Object.keys(MOVE_TYPE).map(key => MOVE_TYPE[key] as ValueOf<typeof MOVE_TYPE>);
 
-    if (!includes(moveTypes, moveType)) {
+    const moveTypeStr = Array.isArray(moveType)
+      ? moveType[0]
+      : moveType;
+
+    const moveTypeOptions = Array.isArray(moveType)
+      ? moveType[1] ?? {}
+      : {};
+
+    if (!includes(moveTypes, moveTypeStr)) {
       throw new FlickingError(ERROR.MESSAGE.WRONG_OPTION("moveType", JSON.stringify(moveType)), ERROR.CODE.WRONG_OPTION);
     }
 
-    switch (moveType) {
+    switch (moveTypeStr) {
       case MOVE_TYPE.SNAP:
         return new SnapControl();
       case MOVE_TYPE.FREE_SCROLL:
-        return new FreeControl();
+        return new FreeControl(moveTypeOptions);
     }
   }
 
@@ -1210,26 +1204,18 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   private _createRenderer(): Renderer {
-    const elementManipulator = this._useOrderManipulator
-      ? new OrderManipulator()
-      : this._renderExternal
-        ? new OffsetManipulator()
-        : new ElementManipulator();
+    const renderingStrategy = this._renderOnlyVisible
+      ? new VisibleRenderingStrategy()
+      : new RawRenderingStrategy();
 
     const rendererOptions = {
       align: this._align,
-      elementManipulator
+      strategy: renderingStrategy
     };
 
-    return this._createActualRenderer(rendererOptions);
-  }
-
-  private _createActualRenderer(rendererOptions: RendererOptions): Renderer {
-    if (this._renderOnlyVisible) {
-      return new VisibleRenderer(rendererOptions);
-    }else {
-      return new RawRenderer(rendererOptions);
-    }
+    return this._renderExternal
+      ? new ExternalRenderer(rendererOptions)
+      : new NativeRenderer(rendererOptions);
   }
 
   private _moveToInitialPanel(): void {

@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Panel from "../core/Panel";
+import Panel from "../core/Panel/Panel";
 import AnchorPoint from "../core/AnchorPoint";
 import { DIRECTION } from "../const/external";
 import { circulatePosition, getFlickingAttached } from "../utils";
@@ -31,9 +31,6 @@ export interface TogglePoint {
 class CircularCamera extends Camera {
   private _circularOffset: number = 0;
   private _circularEnabled: boolean = false;
-  private _panelTooglePoints: {
-    [pos: number]: TogglePoint;
-  } = {};
 
   public get controlParams() { return { range: this._range, position: this._position, circular: this._circularEnabled }; }
 
@@ -153,7 +150,6 @@ class CircularCamera extends Camera {
       return this;
     }
 
-    const position = this._position;
     const firstPanel = panels[0]!;
     const lastPanel = panels[panels.length - 1]!;
     const firstPanelPrev = firstPanel.range.min - firstPanel.margin.prev;
@@ -164,128 +160,32 @@ class CircularCamera extends Camera {
 
     const canSetCircularMode = panels
       .every(panel => panelSizeSum - panel.size >= visibleSize);
+    this._circularEnabled = canSetCircularMode;
 
     if (canSetCircularMode) {
       this._range = { min: firstPanelPrev, max: lastPanelNext };
 
-      const panelTooglePoints: CircularCamera["_panelTooglePoints"] = {};
-      const alignPos = this._alignPos;
-
-      const shouldBeToggledPrev: Panel[] = [];
-      const togglePointPrev: TogglePoint[] = [];
-
-      const shouldBeToggledNext: Panel[] = [];
-      const togglePointNext: TogglePoint[] = [];
-
-      const range = this._range;
-      const minimumVisible = range.min - alignPos;
-      const maximumVisible = range.max - alignPos + visibleSize;
-
-      panels.forEach(panel => {
-        const shouldBeVisibleAtMin = panel.includeRange(maximumVisible - visibleSize, maximumVisible, false);
-        const shouldBeVisibleAtMax = panel.includeRange(minimumVisible, minimumVisible + visibleSize, false);
-
-        if (shouldBeVisibleAtMin) {
-          const togglePos = panel.range.max + range.min - range.max + alignPos;
-          const shouldToggle = togglePos > position;
-          const togglePoint = {
-            panel,
-            direction: DIRECTION.PREV,
-            toggled: shouldToggle
-          };
-
-          panelTooglePoints[togglePos] = togglePoint;
-
-          if (shouldToggle) {
-            shouldBeToggledPrev.push(panel);
-            togglePointPrev.push(togglePoint);
-          }
-        }
-        if (shouldBeVisibleAtMax) {
-          const togglePos = panel.range.min + range.max - visibleSize + alignPos;
-          const shouldToggle = togglePos < position;
-          const togglePoint = {
-            panel,
-            direction: DIRECTION.NEXT,
-            toggled: false
-          };
-
-          panelTooglePoints[togglePos] = togglePoint;
-
-          if (shouldToggle) {
-            shouldBeToggledNext.push(panel);
-            togglePointNext.push(togglePoint);
-          }
-        }
-      });
-
-      renderer.elementManipulator.movePanelElementsToStart(shouldBeToggledPrev, togglePointPrev);
-      renderer.elementManipulator.movePanelElementsToEnd(shouldBeToggledNext, togglePointNext);
-
-      this._circularOffset = this._calcPanelAreaSum(shouldBeToggledPrev) - this._calcPanelAreaSum(shouldBeToggledNext);
-      this._panelTooglePoints = panelTooglePoints;
+      panels.forEach(panel => panel.updateCircularToggleDirection());
     } else {
       this._range = { min: firstPanel.position, max: lastPanel.position };
-      this._circularOffset = 0;
-      this._panelTooglePoints = {};
     }
 
-    this._circularEnabled = canSetCircularMode;
+    this._updateCircularOffset();
 
     return this;
   }
 
-  public lookAt(pos: number) {
+  public async lookAt(pos: number) {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const prevPos = this._position;
-    const panelTooglePoints = this._panelTooglePoints;
-    const elementManipulator = flicking.renderer.elementManipulator;
-    const togglePoints = Object.keys(panelTooglePoints)
-      .map(pointString => parseFloat(pointString))
-      .sort((a, b) => a - b);
 
     if (pos === prevPos) return super.lookAt(pos);
 
-    if (pos > prevPos) {
-      const togglePointInfos: TogglePoint[] = [];
-      const passedPanels = togglePoints.reduce((passed: Panel[], togglePoint: number) => {
-        const togglePointInfo = panelTooglePoints[togglePoint];
-        const passedPoint = togglePoint >= prevPos && togglePoint <= pos;
-        const shouldToggle = (togglePointInfo.direction === DIRECTION.NEXT && !togglePointInfo.toggled)
-          || (togglePointInfo.direction === DIRECTION.PREV && togglePointInfo.toggled);
-
-        if (passedPoint && shouldToggle) {
-          togglePointInfo.toggled = !togglePointInfo.toggled;
-          passed.push(togglePointInfo.panel);
-          togglePointInfos.push(togglePointInfo);
-        }
-        return passed;
-      }, []);
-
-      elementManipulator.movePanelElementsToEnd(passedPanels, togglePointInfos);
-      this._circularOffset -= this._calcPanelAreaSum(passedPanels);
-    } else {
-      const togglePointInfos: TogglePoint[] = [];
-      const passedPanels = togglePoints.reduce((passed: Panel[], togglePoint: number) => {
-        const togglePointInfo = panelTooglePoints[togglePoint];
-        const passedPoint = togglePoint <= prevPos && togglePoint >= pos;
-        const shouldToggle = (togglePointInfo.direction === DIRECTION.NEXT && togglePointInfo.toggled)
-          || (togglePointInfo.direction === DIRECTION.PREV && !togglePointInfo.toggled);
-
-        if (passedPoint && shouldToggle) {
-          togglePointInfo.toggled = !togglePointInfo.toggled;
-          passed.push(togglePointInfo.panel);
-          togglePointInfos.push(togglePointInfo);
-        }
-        return passed;
-      }, []);
-
-      elementManipulator.movePanelElementsToStart(passedPanels, togglePointInfos);
-      this._circularOffset += this._calcPanelAreaSum(passedPanels);
-    }
-
+    flicking.renderer.panels.forEach(panel => panel.toggle(prevPos, pos));
+    this._updateCircularOffset();
     this._position = pos;
-    flicking.renderer.render();
+
+    await flicking.renderer.render();
 
     return super.lookAt(pos);
   }
@@ -305,11 +205,33 @@ class CircularCamera extends Camera {
     super._resetInternalValues();
     this._circularOffset = 0;
     this._circularEnabled = false;
-    this._panelTooglePoints = {};
   }
 
   private _calcPanelAreaSum(panels: Panel[]) {
     return panels.reduce((sum: number, panel: Panel) => sum + panel.sizeIncludingMargin, 0);
+  }
+
+  private _updateCircularOffset() {
+    if (!this._circularEnabled) {
+      this._circularOffset = 0;
+      return;
+    }
+
+    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const toggledPrev: Panel[] = [];
+    const toggledNext: Panel[] = [];
+
+    flicking.panels
+      .filter(panel => panel.toggled)
+      .forEach(panel => {
+        if (panel.toggleDirection === DIRECTION.PREV) {
+          toggledPrev.push(panel);
+        } else {
+          toggledNext.push(panel);
+        }
+      });
+
+    this._circularOffset = this._calcPanelAreaSum(toggledPrev) - this._calcPanelAreaSum(toggledNext);
   }
 }
 

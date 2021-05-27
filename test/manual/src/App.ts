@@ -8,16 +8,13 @@ class App {
       align: ALIGN.CENTER,
       bound: true,
       moveType: ["freeScroll"],
+      circular: true,
       renderOnlyVisible: true
     });
 
-    Object.values([EVENTS.WILL_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {
-      flicking.on(eventName, event => console.log(eventName, event));
-    });
-
-    flicking.on("move", e => {
-      (document.querySelector("#test") as HTMLElement).innerHTML = `${e.currentTarget.camera.position} ${e.currentTarget.camera.offset}`;
-    });
+    // Object.values([EVENTS.WILL_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {
+    //   flicking.on(eventName, event => console.log(eventName, event));
+    // });
 
     document.getElementById("prev")?.addEventListener("click", () => {
       flicking.prev().then(() => console.log("PREV FINISHED"));

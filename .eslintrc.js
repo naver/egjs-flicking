@@ -133,6 +133,7 @@ module.exports = {
         "@typescript-eslint/no-empty-interface": "warn",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-misused-new": "off",
+        "@typescript-eslint/no-misused-promises": "off",
         "@typescript-eslint/no-namespace": "error",
         "@typescript-eslint/no-parameter-properties": "off",
         "@typescript-eslint/no-unused-expressions": "error",

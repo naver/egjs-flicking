@@ -53,7 +53,7 @@ class AnimatingState extends State {
     const camera = flicking.camera;
     const prevPosition = camera.position;
 
-    camera.lookAt(axesEvent.pos.flick);
+    void camera.lookAt(axesEvent.pos.flick);
 
     const moveEvent = new ComponentEvent(EVENTS.MOVE, {
       isTrusted: axesEvent.isTrusted,
@@ -66,7 +66,7 @@ class AnimatingState extends State {
 
     if (moveEvent.isCanceled()) {
       // Return to previous position
-      flicking.camera.lookAt(prevPosition);
+      void flicking.camera.lookAt(prevPosition);
       transitTo(STATE_TYPE.DISABLED);
     }
   }

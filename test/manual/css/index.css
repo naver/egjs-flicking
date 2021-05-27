@@ -26,7 +26,6 @@ header {
 }
 
 #flicking {
-  background-color: #435253;
   box-sizing: border-box;
 }
 
@@ -36,10 +35,9 @@ header {
 
 .flicking-panel {
   width: 40%;
-  background-color: #369;
   margin-left: 5px;
   margin-right: 10px;
-  border: 10px solid #963;
+  border: 10px solid transparent;
   box-sizing: border-box;
   max-width: 100%;
   height: 200px;

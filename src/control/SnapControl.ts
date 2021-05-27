@@ -4,7 +4,7 @@
  */
 import { OnRelease } from "@egjs/axes";
 
-import Panel from "../core/Panel";
+import Panel from "../core/Panel/Panel";
 import FlickingError from "../core/FlickingError";
 import { getFlickingAttached } from "../utils";
 import * as ERROR from "../const/error";

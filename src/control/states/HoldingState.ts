@@ -5,7 +5,7 @@
 import { OnRelease } from "@egjs/axes";
 import { ComponentEvent } from "@egjs/component";
 
-import Panel from "../../core/Panel";
+import Panel from "../../core/Panel/Panel";
 import { EVENTS } from "../../const/external";
 import { getDirection } from "../../utils";
 

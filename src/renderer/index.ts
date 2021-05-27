@@ -3,17 +3,17 @@
  * egjs projects are licensed under the MIT license
  */
 import Renderer, { RendererOptions } from "./Renderer";
-import RawRenderer from "./RawRenderer";
-import VisibleRenderer from "./VisibleRenderer";
+import NativeRenderer from "./NativeRenderer";
+import ExternalRenderer from "./ExternalRenderer";
 
 
 export {
   Renderer,
-  RawRenderer,
-  VisibleRenderer
+  NativeRenderer,
+  ExternalRenderer
 };
 
-export * from "./OffsetManipulator";
+export * from "./RenderingStrategy";
 
 export type {
   RendererOptions

@@ -6,7 +6,7 @@ import { ComponentEvent } from "@egjs/component";
 
 import Flicking, { FlickingOptions } from "../Flicking";
 import FlickingError from "../core/FlickingError";
-import Panel from "../core/Panel";
+import Panel from "../core/Panel/Panel";
 import AnchorPoint from "../core/AnchorPoint";
 import * as ERROR from "../const/error";
 import { ALIGN, DIRECTION, EVENTS } from "../const/external";
@@ -63,6 +63,7 @@ abstract class Camera {
    * @ko Camera의 좌표 오프셋. {@link Flicking#renderOnlyVisible renderOnlyVisible} 옵션을 위해 사용됩니다.
    * @type {number}
    * @default 0
+   * @readonly
    */
   public get offset() { return this._offset; }
   /**
@@ -191,8 +192,6 @@ abstract class Camera {
     }
   }
 
-  public set offset(val: number) { this._offset = val; }
-
   // Options Getter
   /**
    * A value indicating where the {@link Camera#alignPosition alignPosition} should be located at inside the viewport element
@@ -275,16 +274,14 @@ abstract class Camera {
    * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
    * @return {this}
    */
-  public lookAt(pos: number): this {
+  public async lookAt(pos: number): Promise<void> {
     const prevPos = this._position;
 
     this._position = pos;
-    this._refreshVisiblePanels();
+    await this._refreshVisiblePanels();
     this._checkNeedPanel();
     this._checkReachEnd(prevPos, pos);
     this._applyTransform();
-
-    return this;
   }
 
   /**
@@ -475,6 +472,16 @@ abstract class Camera {
     });
   }
 
+  public updateOffset() {
+    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const unRenderedPanels = flicking.panels.filter(panel => !panel.rendered);
+    const position = this._position;
+
+    this._offset = unRenderedPanels
+      .filter(panel => panel.position + panel.offset < position)
+      .reduce((offset, panel) => offset + panel.sizeIncludingMargin, 0);
+  }
+
   /**
    * Reset the history of {@link Flicking#event:needPanel needPanel} events so it can be triggered again
    * @ko 발생한 {@link Flicking#event:needPanel needPanel} 이벤트들을 초기화하여 다시 발생할 수 있도록 합니다
@@ -496,7 +503,7 @@ abstract class Camera {
     this._needPanelTriggered = { prev: false, next: false };
   }
 
-  protected _refreshVisiblePanels() {
+  protected async _refreshVisiblePanels() {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const panels = flicking.renderer.panels;
 
@@ -508,7 +515,7 @@ abstract class Camera {
     const removed: Panel[] = prevVisiblePanels.filter(panel => !includes(newVisiblePanels, panel));
 
     if (added.length > 0 || removed.length > 0) {
-      flicking.renderer.render();
+      await flicking.renderer.render();
 
       flicking.trigger(new ComponentEvent(EVENTS.VISIBLE_CHANGE, {
         added,
