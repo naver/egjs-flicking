@@ -949,6 +949,18 @@ describe("Methods call", () => {
       expect(origCameraPos).not.equals(resizeCameraPos);
       expect(movedCameraPos).equals(resizeCameraPos);
     });
+
+    it("should not throw error when there're empty panels between", () => {
+      // Given
+      flickingInfo = createFlicking(horizontal.full);
+
+      // When
+      const flicking = flickingInfo.instance;
+      flicking.replace(10, "<div><p></p></div>");
+
+      // Then
+      expect(() => flicking.resize()).not.throws;
+    });
   });
 
   describe("getStatus()", () => {
