@@ -22,4 +22,10 @@ setTimeout(function() {
         gap: 50,
         autoResize: true
     });
+
+    f4 = createFlicking("#flick4", {
+      autoResize: true
+    });
+
+    f4.replace(10, createPanelElement(0));
 }, 500);

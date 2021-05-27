@@ -242,7 +242,6 @@ class PanelManager {
       // Temporarily insert null at index to use splice()
       (panels[index] as any) = null;
     }
-
     const replacedPanels = panels.splice(index, newPanels.length, ...newPanels);
     const wasNonEmptyCount = replacedPanels.filter(panel => Boolean(panel)).length;
 
