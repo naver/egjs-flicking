@@ -13,6 +13,7 @@ import Control from "./Control";
 /**
  * An options for the {@link FreeControl}
  * @ko {@link FreeControl} 생성시 사용되는 옵션
+ * @interface
  * @property {boolean} stopAtEdge Make scroll animation to stop at the start/end of the scroll area, not going out the bounce area
  * <ko>스크롤 애니메이션을 스크롤 영역의 시작과 끝부분에서 멈추도록 하여, 바운스 영역을 넘어가지 않도록 합니다</ko>
  */
@@ -37,6 +38,7 @@ class FreeControl extends Control {
 
   public set stopAtEdge(val: FreeControlOptions["stopAtEdge"]) { this._stopAtEdge = val; }
 
+  /** */
   public constructor({
     stopAtEdge = true
   }: Partial<FreeControlOptions> = {}) {

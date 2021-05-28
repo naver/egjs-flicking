@@ -8,7 +8,7 @@ import ElementPanel from "../core/Panel/ElementPanel";
 
 import Renderer from "./Renderer";
 
-class NativeRenderer extends Renderer {
+class VanillaRenderer extends Renderer {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async render() {
     const strategy = this._renderingStrategy;
@@ -121,4 +121,4 @@ class NativeRenderer extends Renderer {
   }
 }
 
-export default NativeRenderer;
+export default VanillaRenderer;

@@ -4,7 +4,7 @@
  */
 import * as React from "react";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
-import NativeFlicking, {
+import VanillaFlicking, {
   AfterResizeEvent,
   BeforeResizeEvent,
   FlickingOptions,
@@ -27,7 +27,7 @@ import NativeFlicking, {
   sync,
   getRenderingPanels,
   Plugin
-} from "@egjs/flicking";
+} from "../../../src/flicking";
 import { ComponentEvent } from "@egjs/component";
 import "@egjs/flicking/dist/flicking.css";
 
@@ -38,7 +38,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   public static defaultProps: FlickingProps = DEFAULT_PROPS;
 
   @withFlickingMethods
-  private _nativeFlicking: NativeFlicking;
+  private _vanillaFlicking: VanillaFlicking;
   private _panels: React.ReactElement[] = [];
   private _pluginsDiffer: ListDiffer<any>;
   private _jsxDiffer: ListDiffer<React.ReactElement>;
@@ -54,7 +54,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   public componentDidMount() {
     const props = this.props as Required<FlickingProps>;
 
-    const flicking = new NativeFlicking(
+    const flicking = new VanillaFlicking(
       this._viewportElement,
       {
         ...props,
@@ -94,7 +94,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       });
     }
 
-    this._nativeFlicking = flicking;
+    this._vanillaFlicking = flicking;
 
     const children = this._getChildren(this.props.children);
     this._jsxDiffer = new ListDiffer(children, panel => panel.key!);
@@ -106,13 +106,13 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   }
 
   public componentWillUnmount() {
-    this._nativeFlicking.destroy();
+    this._vanillaFlicking.destroy();
   }
 
   public shouldComponentUpdate(nextProps: this["props"]) {
     const children = this._getChildren(nextProps.children);
     const diffResult = this._jsxDiffer.update(children);
-    const flicking = this._nativeFlicking;
+    const flicking = this._vanillaFlicking;
 
     this._diffResult = diffResult;
     this._panels = flicking.initialized
@@ -123,7 +123,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   }
 
   public componentDidUpdate() {
-    const flicking = this._nativeFlicking;
+    const flicking = this._vanillaFlicking;
     const diffResult = this._diffResult;
 
     this._checkPlugins();
@@ -142,10 +142,10 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const Viewport = props.viewportTag as any;
     const Camera = props.cameraTag as any;
     const attributes: { [key: string]: any } = {};
-    const flicking = this._nativeFlicking;
+    const flicking = this._vanillaFlicking;
 
     for (const name in props) {
-      if (!(name in DEFAULT_PROPS) && !(name in NativeFlicking.prototype)) {
+      if (!(name in DEFAULT_PROPS) && !(name in VanillaFlicking.prototype)) {
         attributes[name] = props[name];
       }
     }
@@ -176,8 +176,8 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   private _checkPlugins() {
     const { list, added, removed, prevList } = this._pluginsDiffer.update(this.props.plugins!) as DiffResult<Plugin>;
 
-    this._nativeFlicking.addPlugins(...added.map(index => list[index]));
-    this._nativeFlicking.removePlugins(...removed.map(index => prevList[index]));
+    this._vanillaFlicking.addPlugins(...added.map(index => list[index]));
+    this._vanillaFlicking.removePlugins(...removed.map(index => prevList[index]));
   }
 
   private _getChildren(children?: React.ReactNode) {
@@ -191,5 +191,5 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   }
 }
 
-interface Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>, NativeFlicking { }
+interface Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>, VanillaFlicking { }
 export default Flicking;

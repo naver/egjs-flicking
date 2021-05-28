@@ -79,7 +79,7 @@ You can set different values each for the panel and camera.
 </Columns>
 
 ### defaultIndex
-Index of the panel to move when Flicking's [init](api/Flicking#init) is called.
+Index of the panel to move when Flicking's [init](docs/api/Flicking#init) is called.
 A zero-based integer.
 
 <Columns>
@@ -195,7 +195,7 @@ Enables circular(continuous loop) mode, which connects first/last panel for cont
 
 :::warning
 If the sum of the panel sizes is too small, circular will not be enabled.
-You can check this by **[circularEnabled](api/Flicking#circularEnabled)** property of Flicking.
+You can check this by **[circularEnabled](docs/api/Flicking#circularEnabled)** property of Flicking.
 
 To enable circular mode, all panels should pass the below condition
 **Sum of panel sizes - panel size >= viewport size**
@@ -299,7 +299,7 @@ You should add CSS `transition` property to `flicking-viewport` to animate heigh
 
 ## Event
 ### needPanelThreshold
-A Threshold from viewport edge before triggering **[needPanel](api/Flicking#event-needPanel)** event
+A Threshold from viewport edge before triggering **[needPanel](docs/api/Flicking#event-needPanel)** event
 
 <Columns>
   <ColumnItem is={6}>
@@ -490,15 +490,15 @@ Types of input devices to enable
 
 ### moveType
 Movement style by user input
-This will change instance type of **[Flicking#control](api/Flicking#control)**
-You can use the values of the constant **[MOVE_TYPE](api/MOVE_TYPE)**
+This will change instance type of **[Flicking#control](docs/api/Flicking#control)**
+You can use the values of the constant **[MOVE_TYPE](docs/api/MOVE_TYPE)**
 
-If an array is given, second value of the array will be used as the options object when creating **[Control](api/Control)**
+If an array is given, second value of the array will be used as the options object when creating **[Control](docs/api/Control)**
 
 |moveType|control|options|
 |---|---|---|
-|"snap" (MOVE_TYPE.SNAP)|**[SnapControl](api/SnapControl)**||
-|"freeScroll" (MOVE_TYPE.FREE_SCROLL)|**[FreeControl](api/FreeControl)**|**[FreeControlOptions](api/FreeControlOptions)**|
+|"snap" (MOVE_TYPE.SNAP)|**[SnapControl](docs/api/SnapControl)**||
+|"freeScroll" (MOVE_TYPE.FREE_SCROLL)|**[FreeControl](docs/api/FreeControl)**|**[FreeControlOptions](docs/api/FreeControlOptions)**|
 
 <Columns>
   <ColumnItem is={6}>
@@ -614,7 +614,7 @@ Set animation to be interruptable by click/touch.
 The size value of the bounce area. Only can be enabled when `circular=false`.
 You can set different bounce value for prev/next direction by using array.
 `number` for px value, and `string` for px, and % value relative to viewport size.
-You have to call **[Control#updateInput](api/Control#updateInput)** after changing this to take effect.
+You have to call **[Control#updateInput](docs/api/Control#updateInput)** after changing this to take effect.
 
 <Columns>
   <ColumnItem is={6}>
@@ -740,7 +740,7 @@ Hint: Drag a panel slightly and release it to see its effect
 </Columns>
 
 ### disableOnInit
-Automatically call **[disableInput()](api/Flicking#disableInput)** on initialization
+Automatically call **[disableInput()](docs/api/Flicking#disableInput)** on initialization
 
 <Columns>
   <ColumnItem is={6}>
@@ -773,8 +773,7 @@ Automatically call **[disableInput()](api/Flicking#disableInput)** on initializa
 
 ## Performance
 ### renderOnlyVisible
-Whether to render visible panels only. This can dramatically increase performance when there're many panels.
-This will set **[renderer](api/Flicking#renderer)**'s type to **[VisibleRenderer](api/VisibleRenderer)**.
+Whether to render visible panels only. This can dramatically increase performance when there're many panels
 
 :::info
 Hint: See panel elements in the developer console
@@ -819,7 +818,7 @@ Hint: See panel elements in the developer console
 
 ## Others
 ### autoInit
-Call **[init()](api/Flicking#init)** automatically when creating Flicking's instance.
+Call **[init()](docs/api/Flicking#init)** automatically when creating Flicking's instance.
 
 <Columns>
   <ColumnItem is={6}>
@@ -849,8 +848,8 @@ Call **[init()](api/Flicking#init)** automatically when creating Flicking's inst
 </Columns>
 
 ### autoResize
-Attach Flicking's **[resize](api/Flicking#resize)** method to window's resize event.
-Flicking will automatically call **[resize](api/Flicking#resize)** window size and orientation change.
+Attach Flicking's **[resize](docs/api/Flicking#resize)** method to window's resize event.
+Flicking will automatically call **[resize](docs/api/Flicking#resize)** window size and orientation change.
 
 Change window size or change orientation(on mobile) to see its effect.
 
@@ -887,7 +886,6 @@ Change window size or change orientation(on mobile) to see its effect.
 </Columns>
 
 ### useOrderManipulator
-Use **[OrderManipulator](api/OrderManipulator)** for the element order managing in **[Renderer](api/Renderer)**.
 Instead of inserting/removing element to change order, this will use CSS **[order](https://developer.mozilla.org/en-US/docs/Web/CSS/order)**.
 ⚠️ Enabling this option will decrease browser coverage to IE11+
 

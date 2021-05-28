@@ -2,26 +2,12 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-/**
- * List of constants that flicking exports
- * @ko Flicking이 export하는 상수들의 목록
- * @namespace Constants
- * @example
- * ```
- * // esm
- * import { ERROR_CODE } from "@egjs/flicking";
- *
- * // umd
- * Flicking.ERROR_CODE
- * ```
- */
 export { CODE as ERROR_CODE } from "./error";
 
 /**
  * Event type object with event name strings of {@link Flicking}
  * @ko {@link Flicking}의 이벤트 이름 문자열들을 담은 객체
  * @type {object}
- * @memberof Constants
  * @property {"holdStart"} HOLD_START holdStart event<ko>holdStart 이벤트</ko>
  * @property {"holdEnd"} HOLD_END holdEnd event<ko>holdEnd 이벤트</ko>
  * @property {"moveStart"} MOVE_START moveStart event<ko>moveStart 이벤트</ko>
@@ -61,7 +47,6 @@ export const EVENTS = {
 /**
  * An object with all possible predefined literal string for the {@link Flicking#align align} option
  * @ko {@link Flicking#align align} 옵션에 사용되는 미리 정의된 리터럴 상수들을 담고 있는 객체
- * @memberof Constants
  * @type {object}
  * @property {"prev"} PREV left/top align<ko>좌/상 정렬</ko>
  * @property {"center"} CENTER center align<ko>중앙 정렬</ko>
@@ -76,7 +61,6 @@ export const ALIGN = {
 /**
  * An object of directions
  * @ko 방향을 나타내는 값들을 담고 있는 객체
- * @memberof Constants
  * @type {object}
  * @property {"PREV"} PREV "left" when {@link Flicking#horizontal horizontal} is true, and "top" when {@link Flicking#horizontal horizontal} is false
  * <ko>{@link Flicking#horizontal horizontal}가 `true`일 경우 왼쪽, {@link Flicking#horizontal horizontal}가 `false`일 경우 위쪽을 의미합니다</ko>
@@ -93,7 +77,6 @@ export const DIRECTION = {
 /**
  * An object with all possible {@link Flicking#moveType moveType}s
  * @ko Flicking이 제공하는 {@link Flicking#moveType moveType}들을 담고 있는 객체
- * @memberof Constants
  * @type {object}
  * @property {"snap"} SNAP Flicking's {@link Flicking#moveType moveType} that enables {@link SnapControl} as a Flicking's {@link Flicking#control control}
  * <ko>Flicking의 {@link Flicking#control control}을 {@link SnapControl}로 설정하게 하는 {@link Flicking#moveType moveType}</ko>

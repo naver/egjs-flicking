@@ -1,4 +1,4 @@
-import { ExternalRenderer, PanelOptions, RendererOptions } from "../../../src";
+import { ExternalRenderer, PanelOptions, RendererOptions } from "@egjs/flicking";
 
 import VueFlicking from "./Flicking";
 import VuePanel from "./VuePanel";
@@ -29,7 +29,7 @@ class VueRenderer extends ExternalRenderer {
     this._vueFlicking.$forceUpdate();
 
     return new Promise<void>((resolve) => {
-      this._vueFlicking?.$once("render", resolve);
+      this._vueFlicking.$once("render", resolve);
     });
   }
 
@@ -38,7 +38,7 @@ class VueRenderer extends ExternalRenderer {
     this._vueFlicking.$forceUpdate();
 
     return new Promise<void>((resolve) => {
-      this._vueFlicking?.$once("render", resolve);
+      this._vueFlicking.$once("render", resolve);
     });
   }
 

@@ -9,7 +9,7 @@ import Viewport from "./core/Viewport";
 import { Panel } from "./core/Panel";
 import { Control, FreeControl, SnapControl } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
-import { Renderer, NativeRenderer, ExternalRenderer, RawRenderingStrategy, VisibleRenderingStrategy } from "./renderer";
+import { Renderer, VanillaRenderer, ExternalRenderer, RawRenderingStrategy, VisibleRenderingStrategy } from "./renderer";
 import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
 import * as ERROR from "./const/error";
 import { findIndex, getElement, includes, parseElement } from "./utils";
@@ -157,11 +157,11 @@ class Flicking extends Component<FlickingEvents> {
    * {@link Renderer} instance of the Flicking
    * @ko 현재 Flicking에 활성화된 {@link Renderer} 인스턴스
    * @type {Renderer}
-   * @default RawRenderer
+   * @default VanillaRenderer
    * @readonly
    * @see Renderer
-   * @see RawRenderer
-   * @see VisibleRenderer
+   * @see VanillaRenderer
+   * @see ExternalRenderer
    */
   public get renderer() { return this._renderer; }
   /**
@@ -374,7 +374,7 @@ class Flicking extends Component<FlickingEvents> {
    * You can use the values of the constant {@link MOVE_TYPE}
    * @ko 사용자 입력에 의한 이동 방식. 이 값에 따라 {@link Flicking#control}의 인스턴스 타입이 결정됩니다
    * 상수 {@link MOVE_TYPE}에 정의된 값들을 이용할 수 있습니다
-   * @type {string | [string] | [string, object]}
+   * @type {string | string[] | Pair<string, object>}
    * @default "snap"
    * @see {@link MOVE_TYPE}
    * @see {@link FreeControlOptions}
@@ -472,9 +472,7 @@ class Flicking extends Component<FlickingEvents> {
   // PERFORMANCE
   /**
    * Whether to render visible panels only. This can dramatically increase performance when there're many panels.
-   * This will set {@link Flicking#renderer renderer}'s type to {@link VisibleRenderer}
    * @ko 보이는 패널만 렌더링할지 여부를 설정합니다. 패널이 많을 경우에 퍼포먼스를 크게 향상시킬 수 있습니다.
-   * 이 옵션을 활성화할 경우 {@link Flicking#renderer renderer}의 타입을 {@link VisibleRenderer}로 설정합니다.
    * @type {boolean}
    * @default false
    */
@@ -507,10 +505,8 @@ class Flicking extends Component<FlickingEvents> {
    */
   public get renderExternal() { return this._renderExternal; }
   /**
-   * Use {@link OrderManipulator} for the element order managing in {@link Renderer}.
    * Instead of inserting/removing element to change order, this will use CSS {@link https://developer.mozilla.org/en-US/docs/Web/CSS/order order}.
    * ⚠️ Enabling this option will decrease browser coverage to IE11+
-   * @ko {@link Renderer}에서 엘리먼트 순서 관리를 위해 {@link OrderManipulator}를 사용합니다.
    * 엘리먼트를 직접적으로 추가/삭제하는 대신 CSS {@link https://developer.mozilla.org/ko/docs/Web/CSS/order order} 속성을 사용해서 순서를 관리합니다.
    * ⚠️ 이 옵션을 사용시 IE10 이하의 브라우저는 지원할 수 없습니다.
    * @type {boolean}
@@ -1228,7 +1224,7 @@ class Flicking extends Component<FlickingEvents> {
 
     return renderExternal
       ? new (renderExternal.renderer as any)({ ...rendererOptions, ...renderExternal.rendererOptions })
-      : new NativeRenderer(rendererOptions);
+      : new VanillaRenderer(rendererOptions);
   }
 
   private _moveToInitialPanel(): void {

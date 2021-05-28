@@ -3,13 +3,13 @@
  * egjs projects are licensed under the MIT license
  */
 import Renderer, { RendererOptions } from "./Renderer";
-import NativeRenderer from "./NativeRenderer";
+import VanillaRenderer from "./VanillaRenderer";
 import ExternalRenderer from "./ExternalRenderer";
 
 
 export {
   Renderer,
-  NativeRenderer,
+  VanillaRenderer,
   ExternalRenderer
 };
 

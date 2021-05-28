@@ -1,4 +1,4 @@
-import { ExternalPanel } from "../../../src";
+import { ExternalPanel } from "@egjs/flicking";
 
 import VuePanelComponent from "./VuePanelComponent";
 

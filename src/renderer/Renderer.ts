@@ -64,7 +64,6 @@ abstract class Renderer {
   /**
    * @param {object} options An options object<ko>옵션 오브젝트</ko>
    * @param {Constants.ALIGN | string | number} [options.align] An {@link Flicking#align align} value that will be applied to all panels<ko>전체 패널에 적용될 {@link Flicking#align align} 값</ko>
-   * @param {OffsetManipulator} [options.elementManipulator] An instance of {@link OffsetManipulator} that renderer will use<ko>Renderer가 사용할 {@link OffsetManipulator}의 인스턴스</ko>
    */
   public constructor({
     align = ALIGN.CENTER,

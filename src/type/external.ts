@@ -13,6 +13,7 @@ export type ElementLike = string | HTMLElement;
 /**
  * Flicking Plugin
  * @ko Flicking 플러그인
+ * @interface
  * @property - Initialize the plugin<ko>플러그인을 초기화합니다</ko>
  * @property - Destroy plugin and detach all events binded<ko>플러그인을 제거하고 부착된 모든 이벤트들을 제거합니다.</ko>
  * @property - Update plugin to match current Flicking's status<ko>현재 Flicking의 상태에 대응하도록 플러그인을 업데이트합니다.</ko>
@@ -27,6 +28,7 @@ export interface Plugin {
 /**
  * Flicking Status returned by {@link Flicking#getStatus}
  * @ko {@link Flicking#getStatus}에 의해 반환된 Flicking 상태 객체
+ * @interface
  * @property {number} index An index of the active panel<ko>활성화된 패널의 인덱스</ko>
  * @property {object} position A info to restore camera {@link Camera#position position}<ko>카메라 {@link Camera#position position}을 설정하기 위한 정보들</ko>
  * @property {number} [position.panel] An index of the panel camera is located at<ko>카메라가 위치한 패널의 인덱스</ko>

@@ -18,7 +18,7 @@ import {
   AfterViewChecked,
   DoCheck
 } from "@angular/core";
-import NativeFlicking, {
+import VanillaFlicking, {
   FlickingOptions,
   FlickingEvents,
   EVENTS,
@@ -100,7 +100,7 @@ export class NgxFlickingComponent extends FlickingInterface
 
     this._elRef = elRef;
     this._zone = zone;
-    this._nativeFlicking = null;
+    this._vanillaFlicking = null;
   }
 
   public ngAfterViewInit() {
@@ -113,8 +113,8 @@ export class NgxFlickingComponent extends FlickingInterface
 
     // This prevents mousemove to call ngDoCheck & noAfterContentChecked everytime
     this._zone.runOutsideAngular(() => {
-      this._nativeFlicking = new NativeFlicking(viewportEl, options);
-      this._isVertical = !this._nativeFlicking.horizontal;
+      this._vanillaFlicking = new VanillaFlicking(viewportEl, options);
+      this._isVertical = !this._vanillaFlicking.horizontal;
     });
     this._elementDiffer = new ListDiffer(this._getChildKeys());
     this._panelsDiffer = new ListDiffer(this.data);
@@ -122,7 +122,7 @@ export class NgxFlickingComponent extends FlickingInterface
     this._bindEvents();
     this._checkPlugins();
 
-    const flicking = this._nativeFlicking;
+    const flicking = this._vanillaFlicking;
 
     if (flicking.initialized) {
       this.ready.emit({ ...new ComponentEvent(EVENTS.READY), currentTarget: this });
@@ -138,13 +138,13 @@ export class NgxFlickingComponent extends FlickingInterface
   }
 
   public ngOnDestroy() {
-    if (!this._nativeFlicking) return;
+    if (!this._vanillaFlicking) return;
 
-    this._nativeFlicking.destroy();
+    this._vanillaFlicking.destroy();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    const flicking = this._nativeFlicking;
+    const flicking = this._vanillaFlicking;
     if (!flicking) return;
 
     if (changes.data && !changes.data.firstChange) {
@@ -171,7 +171,7 @@ export class NgxFlickingComponent extends FlickingInterface
   public ngAfterContentChecked() {
     if (!this._elementDiffer) return;
 
-    const flicking = this._nativeFlicking;
+    const flicking = this._vanillaFlicking;
     const options = this.options;
     const diffResult = this.options.renderOnlyVisible
       ? this._diffResult
@@ -195,7 +195,7 @@ export class NgxFlickingComponent extends FlickingInterface
   }
 
   private _bindEvents() {
-    const flicking = this._nativeFlicking;
+    const flicking = this._vanillaFlicking;
     const events = Object.keys(EVENTS).map((key: keyof typeof EVENTS) => EVENTS[key]);
 
     events.forEach(evtName => {
@@ -217,7 +217,7 @@ export class NgxFlickingComponent extends FlickingInterface
   }
 
   private _checkPlugins() {
-    const flicking = this._nativeFlicking;
+    const flicking = this._vanillaFlicking;
     if (!flicking) return;
 
     const { list, added, removed, prevList } = this._pluginsDiffer.update(this.plugins);
@@ -242,7 +242,7 @@ export class NgxFlickingComponent extends FlickingInterface
   }
 
   private _reRender = () => {
-    const flicking = this._nativeFlicking;
+    const flicking = this._vanillaFlicking;
     const visiblePanels = flicking.visiblePanels;
 
     const renderChangeEvent = {

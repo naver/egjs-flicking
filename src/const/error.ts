@@ -8,7 +8,6 @@
  * Error codes of {@link FlickingError}. Below are the conditions where each error code occurs.
  * @ko {@link FlickingError}의 에러 코드. 아래는 각각의 에러 코드가 발생하는 조건입니다.
  * @name ERROR_CODE
- * @memberof Constants
  * @constant
  * @type object
  * @property {number} WRONG_TYPE Parameter type is wrong<ko>패러미터의 타입이 잘못되었을 경우</ko>
