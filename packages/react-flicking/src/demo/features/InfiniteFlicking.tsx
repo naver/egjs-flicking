@@ -2,8 +2,6 @@
 import * as React from "react";
 import Flicking from "../../react-flicking/Flicking";
 import "../css/infinite.css";
-import PlaceHolderItem from "./PlaceHolderItem";
-import { insertCode } from "../utils";
 
 export default class InfiniteFlicking extends React.Component<{}, { list0: number[], list1: number[], list2: number[] }> {
   public container?: HTMLElement;
@@ -23,7 +21,7 @@ export default class InfiniteFlicking extends React.Component<{}, { list0: numbe
           <li>The panel's indexes are zero-based integer.</li>
           <li>Note: The number displayed above each panel is not panel's index.</li>
         </ul>
-        <Flicking className="flicking flicking0" renderOnlyVisible={true}>
+        <Flicking className="flicking flicking0" renderOnlyVisible={true} circular={true}>
           {this.state.list0.map(num => {
             return <div key={num} className={"infinite infinite" + Math.abs(num) % 5}>{num}</div>;
           })}

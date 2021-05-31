@@ -8,14 +8,14 @@
   "es2015": "dist/flicking.esm.js",
   "types": "declaration/index.d.ts",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-app-rewired start",
     "build": "rollup -c && npm run declaration",
     "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "@egjs/flicking": "^4.0.0-beta.8",
+    "@egjs/flicking": "^4.0.0-beta.9",
     "@egjs/list-differ": "^1.0.0"
   },
   "devDependencies": {
@@ -28,6 +28,8 @@
     "@types/react-dom": "16.8.4",
     "highlight.js": "^9.15.6",
     "react": "^16.8.6",
+    "react-app-rewire-alias": "^1.0.3",
+    "react-app-rewired": "^2.1.8",
     "react-dom": "^16.8.6",
     "react-scripts": "^4.0.3",
     "rollup": "^2.45.2",
