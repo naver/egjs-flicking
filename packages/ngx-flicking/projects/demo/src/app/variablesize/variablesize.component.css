@@ -1,15 +1,15 @@
-#variable-size .flicking .panel:nth-child(5n + 1) {
+#variable-size .flicking .panel0 {
   width: 100px;
 }
-#variable-size .flicking .panel:nth-child(5n + 2) {
+#variable-size .flicking .panel1 {
   width: 200px;
 }
-#variable-size .flicking .panel:nth-child(5n + 3) {
+#variable-size .flicking .panel2 {
   width: 80px;
 }
-#variable-size .flicking .panel:nth-child(5n + 4) {
+#variable-size .flicking .panel3 {
   width: 250px;
 }
-#variable-size .flicking .panel:nth-child(5n + 5) {
+#variable-size .flicking .panel4 {
   width: 150px;
 }

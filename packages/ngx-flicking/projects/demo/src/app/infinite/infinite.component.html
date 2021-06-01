@@ -7,7 +7,7 @@
     <li>Note: The number displayed above each panel is not panel's index.</li>
   </ul>
   <ngx-flicking class="flicking flicking0">
-    <div *ngFor="let num of list0" class='infinite infinite{{ math.abs(num) % 5 }}'>
+    <div flicking-panel *ngFor="let num of list0" class='infinite infinite{{ math.abs(num) % 5 }}'>
       {{ num }}
     </div>
   </ngx-flicking>
@@ -23,10 +23,8 @@
   <ngx-flicking
     class="flicking flicking1"
     [options]="{ needPanelThreshold: 50, renderOnlyVisible: true }"
-    [data]="list1"
-    (needPanel)="onNeedPanel1($event)"
-    (renderPanelChange)="onRenderPanelChange($event)">
-    <div *ngFor="let num of visible1" class='infinite infinite{{ math.abs(num) % 5 }}'>
+    (needPanel)="onNeedPanel1($event)">
+    <div flicking-panel *ngFor="let num of list1" class='infinite infinite{{ math.abs(num) % 5 }}'>
       {{ num }}
     </div>
   </ngx-flicking>
@@ -38,7 +36,7 @@
   <ngx-flicking
     class="flicking flicking2" [options]="{ gap: 10, infinite: true, moveType: 'freeScroll' }"
     (needPanel)="onNeedPanel2($event)">
-    <place-holder class="infinite" *ngFor="let num of list2" [num]="num" [attr.key]="num">
+    <place-holder flicking-panel class="infinite" *ngFor="let num of list2" [num]="num" [attr.key]="num">
       {{ num }}
     </place-holder>
   </ngx-flicking>

@@ -11,41 +11,34 @@ import {
   Output,
   EventEmitter,
   OnDestroy,
-  SimpleChanges,
   ViewEncapsulation,
-  ViewChild,
-  NgZone,
-  AfterViewChecked,
-  DoCheck
+  QueryList,
+  ContentChildren,
+  Renderer2
 } from "@angular/core";
 import VanillaFlicking, {
   FlickingOptions,
   FlickingEvents,
   EVENTS,
   sync,
-  getRenderingPanels,
   Plugin,
   Status
 } from "@egjs/flicking";
 import { ComponentEvent } from "@egjs/component";
-import ListDiffer, { DiffResult } from "@egjs/list-differ";
-import * as uuid from "uuid";
+import ListDiffer from "@egjs/list-differ";
 
 import FlickingInterface from "./FlickingInterface";
-
-export interface RenderPanelChangeEvent {
-  visibles: any[];
-}
+import { NgxFlickingPanel } from "./ngx-flicking-panel.directive";
+import NgxRenderer from "./NgxRenderer";
 
 @Component({
   selector: "ngx-flicking, [NgxFlicking]",
   template: `
-    <div class="flicking-camera" #camera>
+    <div class="flicking-camera">
       <ng-content></ng-content>
     </div>`,
   host: {
     class: "flicking-viewport",
-    "[class.vertical]": "_isVertical",
     style: "display: block;"
   },
   styleUrls: [
@@ -54,11 +47,10 @@ export interface RenderPanelChangeEvent {
   encapsulation: ViewEncapsulation.None
 })
 export class NgxFlickingComponent extends FlickingInterface
-  implements AfterViewInit, OnDestroy, OnChanges, AfterViewChecked, DoCheck {
+  implements AfterViewInit, OnDestroy, OnChanges {
   @Input() public options: Partial<FlickingOptions> = {};
   @Input() public plugins: Plugin[] = [];
-  @Input() public status: Partial<Status> = {};
-  @Input() public data: any[] = [];
+  @Input() public status: Status;
 
   @Output() public ready = new EventEmitter<FlickingEvents[typeof EVENTS.READY]>();
   @Output() public beforeResize = new EventEmitter<FlickingEvents[typeof EVENTS.BEFORE_RESIZE]>();
@@ -76,30 +68,20 @@ export class NgxFlickingComponent extends FlickingInterface
   @Output() public needPanel = new EventEmitter<FlickingEvents[typeof EVENTS.NEED_PANEL]>();
   @Output() public visibleChange = new EventEmitter<FlickingEvents[typeof EVENTS.VISIBLE_CHANGE]>();
   @Output() public reachEdge = new EventEmitter<FlickingEvents[typeof EVENTS.REACH_EDGE]>();
-  @Output() public renderPanelChange = new EventEmitter<RenderPanelChangeEvent>();
 
-  @ViewChild("camera") private _cameraElRef: ElementRef<HTMLElement>;
+  @ContentChildren(NgxFlickingPanel) private _ngxPanels: QueryList<NgxFlickingPanel>;
   private _elRef: ElementRef<HTMLElement>;
-  private _zone: NgZone;
+  private _ngxRenderer: Renderer2;
   private _pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
-  private _elementDiffer: ListDiffer<string | number> | null = null;
-  private _panelsDiffer: ListDiffer<any> | null = null;
-  private _diffResult: DiffResult<any> | null = null;
-  private _isVertical: boolean = false;
-  /**
-   * To prevent 'ExpressionChangedAfterItHasBeenCheckedError'
-   * It would trigger above error if you changed the value after DOM operation is started. It makes unstable DOM tree.
-   * So when it is in critical section(DOM updates), it should update the value asynchronously.
-   *
-   * Ref: https://indepth.dev/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error/
-   */
-  private _criticalSection = true;
+  private _elementDiffer: ListDiffer<NgxFlickingPanel> | null = null;
 
-  public constructor(elRef: ElementRef<HTMLElement>, zone: NgZone) {
+  public get ngxPanels() { return this._ngxPanels; }
+
+  public constructor(elRef: ElementRef<HTMLElement>, renderer: Renderer2) {
     super();
 
     this._elRef = elRef;
-    this._zone = zone;
+    this._ngxRenderer = renderer;
     this._vanillaFlicking = null;
   }
 
@@ -107,17 +89,22 @@ export class NgxFlickingComponent extends FlickingInterface
     const viewportEl = this._elRef.nativeElement;
     const options: Partial<FlickingOptions> = {
       ...this.options,
-      renderExternal: true,
-      useOffsetManipulator: true
+      renderExternal: {
+        renderer: NgxRenderer,
+        rendererOptions: { ngxFlicking: this, ngxRenderer: this._ngxRenderer }
+      },
+      useOrderManipulator: true
     };
 
     // This prevents mousemove to call ngDoCheck & noAfterContentChecked everytime
-    this._zone.runOutsideAngular(() => {
-      this._vanillaFlicking = new VanillaFlicking(viewportEl, options);
-      this._isVertical = !this._vanillaFlicking.horizontal;
-    });
-    this._elementDiffer = new ListDiffer(this._getChildKeys());
-    this._panelsDiffer = new ListDiffer(this.data);
+    this._vanillaFlicking = new VanillaFlicking(viewportEl, options);
+
+    if (!this._vanillaFlicking.horizontal) {
+      this._ngxRenderer.addClass(this._elRef.nativeElement, "vertical");
+    }
+
+    const elementDiffer = new ListDiffer(this._ngxPanels.toArray());
+    this._elementDiffer = elementDiffer;
 
     this._bindEvents();
     this._checkPlugins();
@@ -132,9 +119,13 @@ export class NgxFlickingComponent extends FlickingInterface
       flicking.setStatus(this.status);
     }
 
-    if (this.options.renderOnlyVisible) {
-      this._reRender();
-    }
+    this._ngxPanels.changes.subscribe(() => {
+      const panels = this._ngxPanels.toArray();
+      const diffResult = this._elementDiffer.update(panels);
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      sync(flicking, diffResult, [...diffResult.maintained.map(([_, idx]) => diffResult.list[idx]), ...diffResult.added.map(idx => diffResult.list[idx])]);
+    });
   }
 
   public ngOnDestroy() {
@@ -143,55 +134,12 @@ export class NgxFlickingComponent extends FlickingInterface
     this._vanillaFlicking.destroy();
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
+  public ngOnChanges() {
     const flicking = this._vanillaFlicking;
     if (!flicking) return;
 
-    if (changes.data && !changes.data.firstChange) {
-      const diffResult = this._panelsDiffer.update(this.data);
-
-      this.renderPanelChange.emit({
-        visibles: getRenderingPanels(flicking, diffResult)
-      });
-
-      this._diffResult = diffResult;
-    }
-
+    void this._vanillaFlicking.renderer.forceRenderAllPanels();
     this._checkPlugins();
-  }
-
-  public ngDoCheck() {
-    this._criticalSection = true;
-  }
-
-  public ngAfterViewChecked() {
-    this._criticalSection = false;
-  }
-
-  public ngAfterContentChecked() {
-    if (!this._elementDiffer) return;
-
-    const flicking = this._vanillaFlicking;
-    const options = this.options;
-    const diffResult = this.options.renderOnlyVisible
-      ? this._diffResult
-      : this._elementDiffer.update(this._getChildKeys());
-
-    if (!diffResult) return;
-
-    if (options.renderOnlyVisible) {
-      flicking.off(EVENTS.VISIBLE_CHANGE, this._reRender);
-    }
-
-    sync(flicking, diffResult);
-
-    if (options.renderOnlyVisible) {
-      this._reRender();
-      flicking.on(EVENTS.VISIBLE_CHANGE, this._reRender);
-    }
-
-    this._checkPlugins();
-    this._diffResult = null;
   }
 
   private _bindEvents() {
@@ -210,10 +158,6 @@ export class NgxFlickingComponent extends FlickingInterface
         }
       });
     });
-
-    if (this.options.renderOnlyVisible) {
-      flicking.on(EVENTS.VISIBLE_CHANGE, this._reRender);
-    }
   }
 
   private _checkPlugins() {
@@ -225,48 +169,4 @@ export class NgxFlickingComponent extends FlickingInterface
     flicking.addPlugins(...added.map(index => list[index]));
     flicking.removePlugins(...removed.map(index => prevList[index]));
   }
-
-  private _getChildKeys() {
-    // Fill keys if not exist
-    const children = ([].slice.apply(this._cameraElRef.nativeElement.children) as HTMLElement[])
-      .filter(node => node.nodeType === Node.ELEMENT_NODE);
-    /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
-    children.forEach(child => {
-      if (!(child as any).__NGX_FLICKING_KEY__) {
-        (child as any).__NGX_FLICKING_KEY__ =  uuid.v4();
-      }
-    });
-
-    return children.map(child => (child as any).__NGX_FLICKING_KEY__);
-    /* eslint-enable */
-  }
-
-  private _reRender = () => {
-    const flicking = this._vanillaFlicking;
-    const visiblePanels = flicking.visiblePanels;
-
-    const renderChangeEvent = {
-      visibles: visiblePanels
-        .sort((panel1, panel2) => (panel1.position + panel1.offset) - (panel2.position + panel2.offset))
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        .map(panel => this.data[panel.index])
-    };
-
-    if (Promise) {
-      void Promise.resolve().then(() => {
-        this.renderPanelChange.emit(renderChangeEvent);
-      });
-      return;
-    }
-
-    // If Promise is not supported (IE)
-    if (this._criticalSection) {
-      setTimeout(() => {
-        // This works OK but it may cause blink when panel is appended or added
-        this.renderPanelChange.emit(renderChangeEvent);
-      });
-    } else {
-      this.renderPanelChange.emit(renderChangeEvent);
-    }
-  };
 }

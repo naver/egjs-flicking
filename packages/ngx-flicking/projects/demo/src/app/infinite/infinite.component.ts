@@ -2,7 +2,6 @@
 
 import { Component, OnInit, Input, AfterViewInit, ElementRef, Renderer2, ChangeDetectorRef } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
-import { RenderPanelChangeEvent } from 'projects/ngx-flicking/src/public-api';
 
 import { EVENTS } from '~/index';
 
@@ -32,11 +31,6 @@ export class InfiniteComponent implements OnInit {
   onAppend() {
     const end = this.list0[this.list0.length - 1] || 0;
     this.list0 = [...this.list0, end + 1, end + 2];
-  }
-
-  onRenderPanelChange(event: RenderPanelChangeEvent) {
-    this.visible1 = [...event.visibles];
-    this.cdr.detectChanges();
   }
 
   onNeedPanel1(e) {
