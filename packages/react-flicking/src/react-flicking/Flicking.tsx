@@ -30,11 +30,14 @@ import VanillaFlicking, {
 } from "@egjs/flicking";
 import { ComponentEvent } from "@egjs/component";
 import "@egjs/flicking/dist/flicking.css";
+import { isFragment } from "react-is";
 
 import { DEFAULT_PROPS } from "./consts";
 import { FlickingProps } from "./types";
 import ReactRenderer from "./ReactRenderer";
 import ReactPanelComponent from "./ReactPanelComponent";
+import NonStrictPanelComponent from "./NonStrictPanelComponent";
+import StrictPanelComponent from "./StrictPanelComponent";
 
 class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = DEFAULT_PROPS;
@@ -45,15 +48,25 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   private _jsxDiffer: ListDiffer<React.ReactElement>;
   private _viewportElement: HTMLElement;
   private _diffResult: DiffResult<React.ReactElement> | null;
+  private _mounted: boolean;
   private _renderCallback: () => any;
 
+  public get mounted() { return this._mounted; }
   public get reactPanels() { return this._panels.map(panel => panel.current!); }
+
+  public constructor(props) {
+    super(props);
+
+    this._panels = this._getChildren().map(() => React.createRef());
+  }
 
   public setRenderCallback(callback: () => any) {
     this._renderCallback = callback;
   }
 
   public componentDidMount() {
+    this._mounted = true;
+
     const props = this.props as Required<FlickingProps>;
 
     const flicking = new VanillaFlicking(
@@ -98,6 +111,8 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   }
 
   public componentWillUnmount() {
+    this._mounted = false;
+
     this._vanillaFlicking.destroy();
   }
 
@@ -105,6 +120,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const children = this._getChildren(nextProps.children);
     const diffResult = this._jsxDiffer.update(children);
 
+    this._panels = children.map(() => React.createRef());
     this._diffResult = diffResult;
 
     return true;
@@ -115,6 +131,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const diffResult = this._diffResult;
 
     this._checkPlugins();
+    this._renderCallback && this._renderCallback();
 
     if (!diffResult || !flicking.initialized) return;
 
@@ -155,10 +172,11 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const children = this._diffResult
       ? getRenderingPanels(this._vanillaFlicking, this._diffResult)
       : this._getChildren();
-    this._panels = children.map(() => React.createRef());
-    const panels = children.map((child, idx) => <ReactPanelComponent key={child.key} ref={this._panels[idx]}>{child}</ReactPanelComponent>)
+    const panels = this.props.strict
+      ? children.map((child, idx) => <StrictPanelComponent key={child.key!} ref={this._panels[idx] as any}>{child}</StrictPanelComponent>)
+      : children.map((child, idx) => <NonStrictPanelComponent key={child.key!} ref={this._panels[idx]}>{child}</NonStrictPanelComponent>)
 
-    this._renderCallback && this._renderCallback();
+    console.log(panels.map(p => p.key))
 
     return (
       <Viewport {...attributes} className={viewportClasses.join(" ")} ref={(e?: HTMLElement) => {
@@ -179,7 +197,17 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   }
 
   private _getChildren(children: React.ReactNode = this.props.children) {
-    return React.Children.toArray(children).slice() as Array<React.ReactElement<any>>;
+    console.log(children);
+    return (React.Children.toArray(children) as Array<React.ReactElement<any>>).reduce((all, child) => {
+      return [...all, ...this._unpackFragment(child)];
+    }, []) as Array<React.ReactElement<any>>;
+  }
+
+  private _unpackFragment(child: React.ReactElement) {
+    return isFragment(child)
+      ? React.Children.toArray(child.props.children)
+        .reduce((allChilds, fragChild) => [...allChilds, ...this._unpackFragment(fragChild)], [])
+      : [child];
   }
 }
 

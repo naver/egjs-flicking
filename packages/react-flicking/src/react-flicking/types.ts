@@ -26,6 +26,7 @@ export interface FlickingProps {
   viewportTag: keyof JSX.IntrinsicElements;
   cameraTag: keyof JSX.IntrinsicElements;
   plugins: Plugin[];
+  strict: boolean;
   onReady: (e: ReadyEvent) => any;
   onBeforeResize: (e: BeforeResizeEvent) => any;
   onAfterResize: (e: AfterResizeEvent) => any;

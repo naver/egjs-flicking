@@ -26,8 +26,8 @@ import { FlickingProps } from "./types";
 export const DEFAULT_PROPS: FlickingProps = {
   viewportTag: "div",
   cameraTag: "div",
-  classPrefix: "eg-flick",
   plugins: [],
+  strict: false,
   onReady: (e: ReadyEvent) => {},
   onBeforeResize: (e: BeforeResizeEvent) => {},
   onAfterResize: (e: AfterResizeEvent) => {},

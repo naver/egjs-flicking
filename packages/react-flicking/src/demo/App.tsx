@@ -1,6 +1,5 @@
 
 import { Component } from "react";
-import * as React from "react";
 import "./css/common.css";
 import "./css/features.css";
 import "./css/highlight.css";
@@ -22,7 +21,18 @@ export default class App extends Component<{}> {
   public render() {
     return (
       <div>
+        <Header/>
         <InfiniteFlicking/>
+        <FreeScroll/>
+        <VariableSize/>
+        <Align/>
+        <Snap/>
+        <Gap/>
+        <Progress/>
+        <Bound/>
+        <ParallaxDemo/>
+        <FadeDemo/>
+        <AutoPlayDemo/>
       </div>);
   }
   public componentDidMount() {

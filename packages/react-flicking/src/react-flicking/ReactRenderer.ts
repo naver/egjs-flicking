@@ -2,7 +2,7 @@ import { ExternalRenderer, PanelOptions, RendererOptions } from "@egjs/flicking"
 
 import ReactFlicking from "./Flicking";
 import ReactPanel from "./ReactPanel";
-import ReactPanelComponent from "./ReactPanelComponent";
+import NonStrictPanelComponent from "./NonStrictPanelComponent";
 
 export interface ReactRendererOptions extends RendererOptions {
   reactFlicking: ReactFlicking;
@@ -22,23 +22,28 @@ class ReactRenderer extends ExternalRenderer {
   public async render() {
     const strategy = this._renderingStrategy;
     const flicking = this._flicking;
+    const reactFlicking = this._reactFlicking;
 
-    if (!flicking) return;
+    if (!flicking || !reactFlicking.mounted) return;
 
     strategy.updateRenderingPanels(flicking);
 
     return new Promise<void>(resolve => {
-      this._reactFlicking.setRenderCallback(resolve);
-      this._reactFlicking.setState({});
+      reactFlicking.setRenderCallback(resolve);
+      reactFlicking.setState({});
     });
   }
 
   public async forceRenderAllPanels() {
+    const reactFlicking = this._reactFlicking;
+
+    if (!reactFlicking.mounted) return;
+
     this._panels.forEach(panel => panel.markForShow());
 
     return new Promise<void>(resolve => {
-      this._reactFlicking.setRenderCallback(resolve);
-      this._reactFlicking.setState({});
+      reactFlicking.setRenderCallback(resolve);
+      reactFlicking.setState({});
     });
   }
 
@@ -54,7 +59,7 @@ class ReactRenderer extends ExternalRenderer {
     }));
   }
 
-  protected _createPanel(externalComponent: ReactPanelComponent, options: PanelOptions) {
+  protected _createPanel(externalComponent: NonStrictPanelComponent, options: PanelOptions) {
     return new ReactPanel({ externalComponent, ...options });
   }
 }

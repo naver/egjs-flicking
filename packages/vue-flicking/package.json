@@ -35,7 +35,7 @@
   "not op_mini all"
  ],
  "dependencies": {
-  "@egjs/flicking": "^4.0.0-beta.8",
+  "@egjs/flicking": "^4.0.0-beta.10",
   "@egjs/list-differ": "^1.0.0",
   "@egjs/vue-children-differ": "^1.0.0",
   "vue-property-decorator": "^8.1.0"
