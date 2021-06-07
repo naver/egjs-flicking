@@ -2,7 +2,7 @@
   position: relative;
   display: block;
   border-radius: 5px;
-  width: 100%;
+  width: 80%;
   margin-right: 10px;
   background: #f55;
   height: 200px;
@@ -29,6 +29,6 @@
   transform: translate(-50%);
 }
 .parallax .panel-image {
-  width: 200%;
-  max-width: 200%;
+  width: 150%;
+  max-width: 150%;
 }

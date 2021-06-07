@@ -8,7 +8,7 @@ import "@site/src/css/showcases/keywords.css";
 export default () => {
   const [age, setAge] = useState(10);
 
-  return <div className="keywords" data-age={age}>
+  return <div className="keywords mb-6" data-age={age}>
     <h2>
       <span className="keywords-title" data-age={age}>'s selected keywords</span>
       <span className="time">

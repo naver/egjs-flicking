@@ -74,7 +74,6 @@ export interface FlickingOptions {
     renderer: typeof ExternalRenderer;
     rendererOptions: {[key: string]: any};
   } | null;
-  useOrderManipulator: boolean;
 }
 
 /**
@@ -123,7 +122,6 @@ class Flicking extends Component<FlickingEvents> {
   private _autoResize: FlickingOptions["autoResize"];
   private _autoInit: FlickingOptions["autoInit"];
   private _renderExternal: FlickingOptions["renderExternal"];
-  private _useOrderManipulator: FlickingOptions["useOrderManipulator"];
 
   // Internal State
   private _initialized: boolean;
@@ -374,15 +372,13 @@ class Flicking extends Component<FlickingEvents> {
    * You can use the values of the constant {@link MOVE_TYPE}
    * @ko 사용자 입력에 의한 이동 방식. 이 값에 따라 {@link Flicking#control}의 인스턴스 타입이 결정됩니다
    * 상수 {@link MOVE_TYPE}에 정의된 값들을 이용할 수 있습니다
-   * @type {string | string[] | Pair<string, object>}
+   * @type {MOVE_TYPE | Pair<string, object>}
    * @default "snap"
-   * @see {@link MOVE_TYPE}
-   * @see {@link FreeControlOptions}
    * @example
-   * |moveType|control|
-   * |:---:|:---:|
-   * |"snap"|{@link SnapControl}|
-   * |"freeScroll"|{@link FreeControl}|
+   * |moveType|control|options|
+   * |:---:|:---:|:---:|
+   * |"snap"|{@link SnapControl}||
+   * |"freeScroll"|{@link FreeControl}|{@link FreeControlOptions}|
    *
    * ```ts
    * import Flicking, { MOVE_TYPE } from "@egjs/flicking";
@@ -504,15 +500,6 @@ class Flicking extends Component<FlickingEvents> {
    * @readonly
    */
   public get renderExternal() { return this._renderExternal; }
-  /**
-   * Instead of inserting/removing element to change order, this will use CSS {@link https://developer.mozilla.org/en-US/docs/Web/CSS/order order}.
-   * ⚠️ Enabling this option will decrease browser coverage to IE11+
-   * 엘리먼트를 직접적으로 추가/삭제하는 대신 CSS {@link https://developer.mozilla.org/ko/docs/Web/CSS/order order} 속성을 사용해서 순서를 관리합니다.
-   * ⚠️ 이 옵션을 사용시 IE10 이하의 브라우저는 지원할 수 없습니다.
-   * @type {boolean}
-   * @default false
-   */
-  public get useOrderManipulator() { return this._useOrderManipulator; }
 
   // Options Setter
   // UI / LAYOUT
@@ -544,7 +531,6 @@ class Flicking extends Component<FlickingEvents> {
   public set renderOnlyVisible(val: FlickingOptions["renderOnlyVisible"]) { this._renderOnlyVisible = val; }
   // OTHERS
   public set autoResize(val: FlickingOptions["autoResize"]) { this._autoResize = val; }
-  public set useOrderManipulator(val: FlickingOptions["useOrderManipulator"]) { this._useOrderManipulator = val; }
 
   /**
    * @param root A root HTMLElement to initialize Flicking on it. When it's a typeof `string`, it should be a css selector string
@@ -596,8 +582,7 @@ class Flicking extends Component<FlickingEvents> {
     renderOnlyVisible = false,
     autoInit = true,
     autoResize = true,
-    renderExternal = null,
-    useOrderManipulator = false
+    renderExternal = null
   }: Partial<FlickingOptions> = {}) {
     super();
 
@@ -628,7 +613,6 @@ class Flicking extends Component<FlickingEvents> {
     this._autoResize = autoResize;
     this._autoInit = autoInit;
     this._renderExternal = renderExternal;
-    this._useOrderManipulator = useOrderManipulator;
 
     // Create core components
     this._viewport = new Viewport(getElement(root));

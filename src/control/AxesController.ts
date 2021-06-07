@@ -216,9 +216,7 @@ class AxesController {
     if (startPos === position) {
       const flicking = getFlickingAttached(this._flicking, "Control");
 
-      flicking.camera.lookAt(position);
-
-      return Promise.resolve();
+      return flicking.camera.lookAt(position);
     }
 
     this._animatingContext = {

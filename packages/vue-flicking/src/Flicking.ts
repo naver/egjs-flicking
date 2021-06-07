@@ -2,7 +2,6 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { ComponentEvent } from "@egjs/component";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { CreateElement, VNodeData, VNode } from "vue";
@@ -51,9 +50,9 @@ class Flicking extends Vue {
     });
     this._vanillaFlicking = flicking;
 
-    if (flicking.initialized) {
-      this.$emit(EVENTS.READY, { ...new ComponentEvent(EVENTS.READY), currentTarget: this });
-    }
+    flicking.once(EVENTS.READY, () => {
+      this.$forceUpdate();
+    });
 
     const slots = this._getSlots();
     this._slotDiffer = new ListDiffer<VNode>(slots, vnode => vnode.key!);
@@ -115,8 +114,8 @@ class Flicking extends Vue {
       }
     };
 
-    const slots = this._diffResult
-      ? getRenderingPanels(this._vanillaFlicking, this._diffResult)
+    const slots = (this._diffResult && flicking && flicking.initialized)
+      ? getRenderingPanels(flicking, this._diffResult)
       : this._getSlots();
     const panels = slots.map(slot => h("Panel", { key: slot.key }, [slot]));
 

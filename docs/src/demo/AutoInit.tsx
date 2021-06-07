@@ -14,6 +14,7 @@ export default () => {
     <Panel index={4} />
   </Flicking>
   <button className="button is-fullwidth" onClick={() => {
+    console.log(flickingRef.current.props.children);
     flickingRef.current.init();
   }}>Call init()</button></>);
 };

@@ -10,7 +10,7 @@ module.exports = {
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   url: 'https://naver.github.io',
-  baseUrl: isDev ? '/' : '/egjs-flicking/',
+  baseUrl: isDev ? '/' : '/',
   projectName: 'naver.github.io',
   organizationName: 'naver',
   plugins: ['docusaurus-plugin-sass'],
@@ -18,10 +18,9 @@ module.exports = {
   themeConfig: {
     hideableSidebar: false,
     navbar: {
-      title: 'Flicking',
       logo: {
         alt: 'egjs',
-        src: 'img/logo.svg'
+        src: 'img/flicking_textonly.svg'
       },
       items: [
         {
@@ -87,6 +86,27 @@ module.exports = {
             {
               label: 'Getting Started',
               to: 'docs/'
+            },
+            {
+              label: 'API',
+              to: 'docs/api/Flicking'
+            },
+            {
+              label: 'Options',
+              to: 'Options/'
+            }
+          ]
+        },
+        {
+          title: 'Demo',
+          items: [
+            {
+              label: 'Demos',
+              to: 'Demos/'
+            },
+            {
+              label: 'Showcases',
+              to: 'Showcases/'
             }
           ]
         },
@@ -96,6 +116,14 @@ module.exports = {
             {
               label: 'GitHub',
               href: 'https://github.com/naver/egjs-flicking'
+            },
+            {
+              label: 'Issues',
+              href: 'https://github.com/naver/egjs-flicking/issues'
+            },
+            {
+              label: 'egjs',
+              href: 'https://naver.github.io/egjs/'
             }
           ]
         }
@@ -105,10 +133,14 @@ module.exports = {
         src: 'img/naver_opensource.svg',
         href: 'https://naver.github.io/'
       },
-      copyright: `Copyright © ${new Date().getFullYear()} NAVER, Inc. Built with Docusaurus.`
+      copyright: `Copyright © ${new Date().getFullYear()} NAVER, Inc. Built with Docusaurus & Bulma.`
     },
     prism: {
       theme: require('prism-react-renderer/themes/oceanicNext')
+    },
+    googleAnalytics: {
+      trackingID: 'UA-70842526-17',
+      anonymizeIP: true
     }
   },
   presets: [

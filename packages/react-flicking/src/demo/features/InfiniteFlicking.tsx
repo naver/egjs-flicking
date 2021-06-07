@@ -66,7 +66,6 @@ export default class InfiniteFlicking extends React.Component<{}, { list0: numbe
         </ul>
         <Flicking
           className="flicking flicking2" gap={10} moveType={"freeScroll"}
-          strict={true}
           onNeedPanel={e => {
             if (e.direction !== "NEXT") return;
 

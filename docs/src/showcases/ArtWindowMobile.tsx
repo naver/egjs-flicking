@@ -10,9 +10,9 @@ export default () => {
   const thumb = createRef<HTMLElement>();
   const [index, setIndex] = useState(0);
   const [category, setCategory] = useState("아트윈도 추천");
-  const [title, setTitle] = useState("해피 발렌타인<br/>연인과 함께");
+  const [title, setTitle] = useState("<span>해피 발렌타인</span><br/><span>연인과 함께</span>");
 
-  return <div className="artwindow-mobile-banner">
+  return <div className="artwindow-mobile-banner mb-6">
     <Flicking viewportTag="ul" circular={true} plugins={plugins}
       onChanged={e => {
         const panel = e.panel;
@@ -21,7 +21,7 @@ export default () => {
         panel.element.classList.add("checked");
 
         setCategory(panel.element.dataset.category);
-        setTitle(panel.element.dataset.title.replace(/\\n/, "<br/>"));
+        setTitle(panel.element.dataset.title.split("\\n").map(val => `<span>${val}</span>`).join("<br/>"));
 
         setIndex(e.index);
       }}>

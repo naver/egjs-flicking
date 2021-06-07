@@ -4,7 +4,7 @@ import { FrameGrid } from "@egjs/react-grid";
 import "@site/src/css/demo/grid.css";
 
 export default () => <>
-  <Flicking className="py-4 mb-4" circular={true}>
+  <Flicking className="py-4 mb-4" circular={true} useFindDOMNode={true}>
     <div className="grid-panel has-background-primary has-text-white">1</div>
     <FrameGrid className="grid-panel" gap={10} frame={[[1, 1, 2, 2], [3, 3, 2, 2], [4, 4, 4, 5]]}>
       <div className="has-background-warning has-text-dark">2</div>
@@ -14,7 +14,7 @@ export default () => <>
       <div className="has-background-grey has-text-white">6</div>
     </FrameGrid>
     <div className="grid-panel has-background-grey-darker has-text-white">7</div>
-    <FrameGrid className="grid-panel" gap={10} frame={[[1, 1, 1, 1], [3, 3, 2, 2], [4, 5, 5, 6]]}>
+    <FrameGrid className="grid-panel" gap={10} frame={[[1, 1, 1, 1], [2, 2, 3, 3], [4, 5, 5, 6]]}>
       <div className="has-background-light has-text-dark ">8</div>
       <div className="has-background-grey has-text-white">9</div>
       <div className="has-background-info has-text-white">10</div>

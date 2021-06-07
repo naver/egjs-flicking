@@ -2,6 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import Panel from "../core/Panel/Panel";
 import AnchorPoint from "../core/AnchorPoint";
 import { getFlickingAttached } from "../utils";
 
@@ -60,36 +61,82 @@ class BoundCamera extends Camera {
 
     const range = this._range;
     const reachablePanels = panels.filter(panel => this.canReach(panel));
-    const shouldPrependBoundAnchor = reachablePanels[0].position !== range.min;
-    const shouldAppendBoundAnchor = reachablePanels[reachablePanels.length - 1].position !== range.max;
 
-    const indexOffset = shouldPrependBoundAnchor ? 1 : 0;
+    if (reachablePanels.length > 0) {
+      const shouldPrependBoundAnchor = reachablePanels[0].position !== range.min;
+      const shouldAppendBoundAnchor = reachablePanels[reachablePanels.length - 1].position !== range.max;
+      const indexOffset = shouldPrependBoundAnchor ? 1 : 0;
 
-    const newAnchors = reachablePanels.map((panel, idx) => new AnchorPoint({
-      index: idx + indexOffset,
-      position: panel.position,
-      panel
-    }));
+      const newAnchors = reachablePanels.map((panel, idx) => new AnchorPoint({
+        index: idx + indexOffset,
+        position: panel.position,
+        panel
+      }));
 
-    if (shouldPrependBoundAnchor) {
-      newAnchors.splice(0, 0, new AnchorPoint({
+      if (shouldPrependBoundAnchor) {
+        newAnchors.splice(0, 0, new AnchorPoint({
+          index: 0,
+          position: range.min,
+          panel: panels[reachablePanels[0].index - 1]
+        }));
+      }
+
+      if (shouldAppendBoundAnchor) {
+        newAnchors.push(new AnchorPoint({
+          index: newAnchors.length,
+          position: range.max,
+          panel: panels[reachablePanels[reachablePanels.length - 1].index + 1]
+        }));
+      }
+
+      this._anchors = newAnchors;
+    } else if (range.min !== range.max) {
+      // There're more than 2 panels
+      const nearestPanelAtMin = this._findNearestPanel(range.min, panels);
+      const panelAtMin = nearestPanelAtMin.index === panels.length - 1
+        ? nearestPanelAtMin.prev()!
+        : nearestPanelAtMin;
+      const panelAtMax = panelAtMin.next()!;
+
+      this._anchors = [
+        new AnchorPoint({
+          index: 0,
+          position: range.min,
+          panel: panelAtMin
+        }),
+        new AnchorPoint({
+          index: 1,
+          position: range.max,
+          panel: panelAtMax
+        })
+      ];
+    } else {
+      this._anchors = [new AnchorPoint({
         index: 0,
         position: range.min,
-        panel: panels[reachablePanels[0].index - 1]
-      }));
+        panel: this._findNearestPanel(range.min, panels)
+      })];
     }
-
-    if (shouldAppendBoundAnchor) {
-      newAnchors.push(new AnchorPoint({
-        index: newAnchors.length,
-        position: range.max,
-        panel: panels[reachablePanels[reachablePanels.length - 1].index + 1]
-      }));
-    }
-
-    this._anchors = newAnchors;
 
     return this;
+  }
+
+  private _findNearestPanel(pos: number, panels: Panel[]): Panel {
+    let prevDist = Infinity;
+    for (let panelIdx = 0; panelIdx < panels.length; panelIdx++) {
+      const panel = panels[panelIdx];
+      const dist = Math.abs(panel.position - pos);
+
+      if (dist > prevDist) {
+        // Return previous anchor
+        return panels[panelIdx - 1];
+      }
+
+      prevDist = dist;
+    }
+
+    // Return last anchor
+    return panels[panels.length - 1];
   }
 }
 

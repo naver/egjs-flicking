@@ -6,7 +6,7 @@ export default () => {
   const [index, setIndex] = useState(0);
   const flicking = createRef<Flicking>();
 
-  return <div className="curation_area patron_reward section_patron">
+  return <div className="curation_area patron_reward section_patron mb-6">
     <div className="slide_area follow_area">
       <Flicking viewportTag="ul" ref={flicking} className="slide_list" id="collection_reward_list"
         align="prev" bound={true} renderOnlyVisible={true}

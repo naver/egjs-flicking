@@ -1,3 +1,6 @@
+.artwindow-wrapper {
+  position: relative;
+}
 .artwindow-banner {
   position: relative;
   width: 100%;

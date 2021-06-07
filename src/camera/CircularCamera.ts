@@ -32,6 +32,7 @@ class CircularCamera extends Camera {
   private _circularOffset: number = 0;
   private _circularEnabled: boolean = false;
 
+  public get offset() { return this._offset - this._circularOffset; }
   public get controlParams() { return { range: this._range, position: this._position, circular: this._circularEnabled }; }
 
   public getPrevAnchor(anchor: AnchorPoint): AnchorPoint | null {

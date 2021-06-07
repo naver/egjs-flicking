@@ -9,7 +9,7 @@ export default () => {
   const [category, setCategory] = useState("아트윈도 추천");
   const [title, setTitle] = useState("해피 발렌타인<br/>연인과 함께");
 
-  return <><Flicking ref={flicking} className="artwindow-banner" circular={true}
+  return <div className="artwindow-wrapper mb-6"><Flicking ref={flicking} className="artwindow-banner" circular={true}
     onChanged={e => {
       const panel = e.panel;
       panel.prev().element.classList.remove("checked");
@@ -71,5 +71,5 @@ export default () => {
   <button type="button" className="artwindow-btn next" onClick={() => {
     void flicking.current.next(500);
   }}><span className="artwindow-blind">다음</span></button>
-  </>;
+  </div>;
 };

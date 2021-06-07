@@ -16,7 +16,7 @@ export default () => {
     return classes;
   }, [index]);
 
-  return <div className="posts">
+  return <div className="posts mb-6">
     <div className="background"></div>
     <div className="header">
       <img src={require("@site/static/img/post-images/post.png").default} />

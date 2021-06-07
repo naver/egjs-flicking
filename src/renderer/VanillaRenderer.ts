@@ -8,6 +8,9 @@ import ElementPanel from "../core/Panel/ElementPanel";
 
 import Renderer from "./Renderer";
 
+/**
+ *
+ */
 class VanillaRenderer extends Renderer {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async render() {

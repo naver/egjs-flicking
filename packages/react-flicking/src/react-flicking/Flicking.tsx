@@ -28,7 +28,6 @@ import VanillaFlicking, {
   getRenderingPanels,
   Plugin
 } from "@egjs/flicking";
-import { ComponentEvent } from "@egjs/component";
 import "@egjs/flicking/dist/flicking.css";
 import { isFragment } from "react-is";
 
@@ -97,9 +96,9 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       [EVENTS.REACH_EDGE]: (e: ReachEdgeEvent) => props.onReachEdge({ ...e, currentTarget: this as any }),
     });
 
-    if (flicking.initialized && props.onReady) {
-      props.onReady({ ...new ComponentEvent(EVENTS.READY), currentTarget: this as any })
-    }
+    flicking.once(EVENTS.READY, () => {
+      this.forceUpdate();
+    });
 
     this._vanillaFlicking = flicking;
 
@@ -169,14 +168,12 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       viewportClasses.push(attributes.className);
     }
 
-    const children = this._diffResult
-      ? getRenderingPanels(this._vanillaFlicking, this._diffResult)
+    const children = (this._diffResult && flicking && flicking.initialized)
+      ? getRenderingPanels(flicking, this._diffResult)
       : this._getChildren();
-    const panels = this.props.strict
-      ? children.map((child, idx) => <StrictPanelComponent key={child.key!} ref={this._panels[idx] as any}>{child}</StrictPanelComponent>)
-      : children.map((child, idx) => <NonStrictPanelComponent key={child.key!} ref={this._panels[idx]}>{child}</NonStrictPanelComponent>)
-
-    console.log(panels.map(p => p.key))
+    const panels = this.props.useFindDOMNode
+      ? children.map((child, idx) => <NonStrictPanelComponent key={child.key!} ref={this._panels[idx]}>{child}</NonStrictPanelComponent>)
+      : children.map((child, idx) => <StrictPanelComponent key={child.key!} ref={this._panels[idx] as any}>{child}</StrictPanelComponent>)
 
     return (
       <Viewport {...attributes} className={viewportClasses.join(" ")} ref={(e?: HTMLElement) => {
@@ -197,7 +194,6 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   }
 
   private _getChildren(children: React.ReactNode = this.props.children) {
-    console.log(children);
     return (React.Children.toArray(children) as Array<React.ReactElement<any>>).reduce((all, child) => {
       return [...all, ...this._unpackFragment(child)];
     }, []) as Array<React.ReactElement<any>>;

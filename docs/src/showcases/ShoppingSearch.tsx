@@ -162,7 +162,7 @@ export default () => {
   const flicking = createRef<Flicking>();
   const [index, setIndex] = useState(1);
 
-  return <section className="search-section">
+  return <section className="search-section mb-6">
     <div className="api_title_area">
       <div className="api_title has-text-weight-bold is-size-6">
         <i className="spnew api_ico_shoplogo"></i>
