@@ -43,8 +43,8 @@ describe("Camera", () => {
       expect(new CameraImpl().align).to.equal(ALIGN.CENTER);
     });
 
-    it("should return size same to viewport width when horizontal: true", () => {
-      const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { horizontal: true });
+    it("should return size same to viewport width when horizontal: true", async () => {
+      const flicking = await await createFlicking(El.DEFAULT_HORIZONTAL, { horizontal: true });
       const camera = new CameraImpl();
 
       camera.init(flicking);
@@ -54,8 +54,8 @@ describe("Camera", () => {
       expect(camera.size).not.to.equal(flicking.viewport.height);
     });
 
-    it("should return size same to viewport height when horizontal: false", () => {
-      const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { horizontal: false });
+    it("should return size same to viewport height when horizontal: false", async () => {
+      const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { horizontal: false });
       const camera = new CameraImpl();
 
       camera.init(flicking);
@@ -70,12 +70,12 @@ describe("Camera", () => {
         expect(new CameraImpl().controlParams.range).to.deep.equal(new CameraImpl().range);
       });
 
-      it("should return current position", () => {
+      it("should return current position", async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
-        camera.lookAt(800);
+        await camera.lookAt(800);
 
         expect(camera.controlParams.position).to.equal(800);
       });
@@ -86,13 +86,13 @@ describe("Camera", () => {
     });
 
     describe("visibleRange", () => {
-      it("should return visible range from current position", () => {
+      it("should return visible range from current position", async () => {
         const camera = new CameraImpl({ align: ALIGN.CENTER });
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.updateAlignPos();
-        camera.lookAt(500);
+        await camera.lookAt(500);
 
         expect(camera.visibleRange.min).to.equal(500 - flicking.viewport.width / 2);
         expect(camera.visibleRange.max).to.equal(500 + flicking.viewport.width / 2);
@@ -102,9 +102,9 @@ describe("Camera", () => {
 
   describe("Methods", () => {
     describe("init", () => {
-      it("should throw a FlickingError with code VAL_MUST_NOT_NULL when there's no camera element inside it", () => {
+      it("should throw a FlickingError with code VAL_MUST_NOT_NULL when there's no camera element inside it", async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         // Remove viewport's children
         while (flicking.element.firstChild) {
@@ -116,9 +116,9 @@ describe("Camera", () => {
           .with.property("code", ERROR.CODE.VAL_MUST_NOT_NULL);
       });
 
-      it("should set first child of the viewport element as its element", () => {
+      it("should set first child of the viewport element as its element", async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
 
@@ -127,133 +127,134 @@ describe("Camera", () => {
     });
 
     describe("lookAt", () => {
-      it("should throw a FlickingError with code NOT_ATTACHED_TO_FLICKING when it's not initialized yet", () => {
+      it("should throw a FlickingError with code NOT_ATTACHED_TO_FLICKING when it's not initialized yet", async () => {
         const camera = new CameraImpl();
 
-        expect(() => camera.lookAt(500))
-          .to.throw(FlickingError)
-          .with.property("code", ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
+        const err = await camera.lookAt(500).catch(e => e);
+
+        expect(err).to.be.instanceOf(FlickingError);
+        expect(err.code).to.equal(ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
       });
 
-      it("should set position to given value", () => {
+      it("should set position to given value", async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const prevPosition = camera.position;
 
         camera.init(flicking);
-        camera.lookAt(500);
+        await camera.lookAt(500);
 
         expect(camera.position).not.to.equal(prevPosition);
         expect(camera.position).to.equal(500);
       });
 
-      it("should apply transform to camera element", () => {
+      it("should apply transform to camera element", async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
-        camera.lookAt(500);
+        await camera.lookAt(500);
 
         expect(camera.element.style.transform).to.equal(`translate(${-(500 - camera.alignPosition)}px)`);
       });
 
-      it("should update visible panels", () => {
+      it("should update visible panels", async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
-        camera.lookAt(500);
+        await camera.lookAt(500);
 
         expect(camera.visiblePanels).not.to.be.empty;
       });
 
-      it(`should trigger flicking's ${EVENTS.VISIBLE_CHANGE} on visible panels update`, () => {
+      it(`should trigger flicking's ${EVENTS.VISIBLE_CHANGE} on visible panels update`, async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const visibleChangeSpy = sinon.spy();
 
         flicking.on(EVENTS.VISIBLE_CHANGE, visibleChangeSpy);
         camera.init(flicking);
-        camera.lookAt(500);
+        await camera.lookAt(500);
 
         expect(visibleChangeSpy.calledOnce).to.be.true;
       });
 
-      it(`should trigger flicking's ${EVENTS.NEED_PANEL} for both sides when there're no panels`, () => {
+      it(`should trigger flicking's ${EVENTS.NEED_PANEL} for both sides when there're no panels`, async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.viewport().add(El.camera()));
+        const flicking = await createFlicking(El.viewport().add(El.camera()));
         const needPanelSpy = sinon.spy();
 
         flicking.on(EVENTS.NEED_PANEL, needPanelSpy);
         camera.init(flicking);
-        camera.lookAt(500);
+        await camera.lookAt(500);
 
         expect(needPanelSpy.calledTwice).to.be.true;
         expect(needPanelSpy.calledWithMatch({ direction: DIRECTION.NEXT })).to.be.true;
         expect(needPanelSpy.calledWithMatch({ direction: DIRECTION.PREV })).to.be.true;
       });
 
-      it(`should trigger flicking's ${EVENTS.REACH_EDGE} when moving to range.min`, () => {
+      it(`should trigger flicking's ${EVENTS.REACH_EDGE} when moving to range.min`, async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.viewport().add(El.camera()));
+        const flicking = await createFlicking(El.viewport().add(El.camera()));
         const reachEdgeSpy = sinon.spy();
 
         camera.range = { min: -1000, max: 1000 };
         camera.init(flicking);
         flicking.on(EVENTS.REACH_EDGE, reachEdgeSpy);
-        camera.lookAt(-1000);
+        await camera.lookAt(-1000);
 
         expect(reachEdgeSpy.calledOnce).to.be.true;
         expect(reachEdgeSpy.calledWithMatch({ direction: DIRECTION.PREV })).to.be.true;
       });
 
-      it(`should trigger flicking's ${EVENTS.REACH_EDGE} when moving to range.max`, () => {
+      it(`should trigger flicking's ${EVENTS.REACH_EDGE} when moving to range.max`, async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.viewport().add(El.camera()));
+        const flicking = await createFlicking(El.viewport().add(El.camera()));
         const reachEdgeSpy = sinon.spy();
 
         camera.range = { min: -1000, max: 1000 };
         camera.init(flicking);
         flicking.on(EVENTS.REACH_EDGE, reachEdgeSpy);
-        camera.lookAt(1000);
+        await camera.lookAt(1000);
 
         expect(reachEdgeSpy.calledOnce).to.be.true;
         expect(reachEdgeSpy.calledWithMatch({ direction: DIRECTION.NEXT })).to.be.true;
       });
 
-      it(`should noot trigger flicking's ${EVENTS.REACH_EDGE} when moving from outside of range to range.min`, () => {
+      it(`should noot trigger flicking's ${EVENTS.REACH_EDGE} when moving from outside of range to range.min`, async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.viewport().add(El.camera()));
+        const flicking = await createFlicking(El.viewport().add(El.camera()));
         const reachEdgeSpy = sinon.spy();
 
         camera.range = { min: -1000, max: 1000 };
         camera.init(flicking);
-        camera.lookAt(-1001); // Move to outside
+        await camera.lookAt(-1001); // Move to outside
         flicking.on(EVENTS.REACH_EDGE, reachEdgeSpy);
-        camera.lookAt(-1000); // Move to outside
+        await camera.lookAt(-1000); // Move to outside
 
         expect(reachEdgeSpy.called).to.be.false;
       });
 
-      it(`should noot trigger flicking's ${EVENTS.REACH_EDGE} when moving from outside of range to range.max`, () => {
+      it(`should noot trigger flicking's ${EVENTS.REACH_EDGE} when moving from outside of range to range.max`, async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.viewport().add(El.camera()));
+        const flicking = await createFlicking(El.viewport().add(El.camera()));
         const reachEdgeSpy = sinon.spy();
 
         camera.range = { min: -1000, max: 1000 };
         camera.init(flicking);
-        camera.lookAt(1001); // Move to outside
+        await camera.lookAt(1001); // Move to outside
         flicking.on(EVENTS.REACH_EDGE, reachEdgeSpy);
-        camera.lookAt(1000); // Move to outside
+        await camera.lookAt(1000); // Move to outside
 
         expect(reachEdgeSpy.called).to.be.false;
       });
     });
 
     describe("findAnchorIncludePosition", () => {
-      it("should return panel at given position", () => {
+      it("should return panel at given position", async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const panels = flicking.panels;
 
         camera.init(flicking);
@@ -264,9 +265,9 @@ describe("Camera", () => {
         expect(camera.findAnchorIncludePosition(panels[2].position).panel).to.equal(panels[2]);
       });
 
-      it("should return null when no panel includes given position", () => {
+      it("should return null when no panel includes given position", async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const panels = flicking.panels;
 
         camera.init(flicking);
@@ -280,9 +281,9 @@ describe("Camera", () => {
     });
 
     describe("findNearestAnchor", () => {
-      it("should return null when there're no panels", () => {
+      it("should return null when there're no panels", async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.viewport().add(El.camera()));
+        const flicking = await createFlicking(El.viewport().add(El.camera()));
 
         camera.init(flicking);
         camera.updateAnchors();
@@ -290,13 +291,13 @@ describe("Camera", () => {
         expect(camera.findNearestAnchor(0)).to.be.null;
       });
 
-      it("should return correct panel underneath it", () => {
+      it("should return correct panel underneath it", async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.updateAnchors();
-        camera.lookAt(flicking.getPanel(1).position);
+        await camera.lookAt(flicking.getPanel(1).position);
 
         const nearestAnchor = camera.findNearestAnchor(camera.position);
         expect(nearestAnchor.panel).to.equal(flicking.getPanel(1));
@@ -320,9 +321,9 @@ describe("Camera", () => {
     });
 
     describe("canReach", () => {
-      it("should return false when panel's position is outside of camera range", () => {
+      it("should return false when panel's position is outside of camera range", async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const panel = flicking.getPanel(0);
 
         camera.init(flicking);
@@ -339,9 +340,9 @@ describe("Camera", () => {
         expect(camera.canReach(panel)).to.be.false;
       });
 
-      it("should return true when panel's position is inside of camera range", () => {
+      it("should return true when panel's position is inside of camera range", async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const panel = flicking.getPanel(0);
 
         camera.init(flicking);
@@ -360,9 +361,9 @@ describe("Camera", () => {
     });
 
     describe("canSee", () => {
-      it("should return true when panel is inside of camera's visible range", () => {
+      it("should return true when panel is inside of camera's visible range", async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const panel = flicking.getPanel(0);
 
         camera.init(flicking);
@@ -379,9 +380,9 @@ describe("Camera", () => {
         expect(camera.canSee(panel)).to.be.true;
       });
 
-      it("should return false when panel is outside of camera's visible range", () => {
+      it("should return false when panel is outside of camera's visible range", async () => {
         const camera = new CameraImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const panel = flicking.getPanel(0);
 
         camera.init(flicking);
@@ -400,9 +401,9 @@ describe("Camera", () => {
     });
 
     describe("updateAlignPos", () => {
-      it("should update alignPosition using current align value", () => {
+      it("should update alignPosition using current align value", async () => {
         const camera = new CameraImpl({ align: "80%" });
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const prevAlignPosition = camera.alignPosition;
 
         camera.init(flicking);
@@ -412,9 +413,9 @@ describe("Camera", () => {
         expect(camera.alignPosition).to.equal(flicking.viewport.width * 0.8);
       });
 
-      it("should use property 'camera' if align is given as an object", () => {
+      it("should use property 'camera' if align is given as an object", async () => {
         const camera = new CameraImpl({ align: { panel: "30%", camera: "70%" } });
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const prevAlignPosition = camera.alignPosition;
 
         camera.init(flicking);

@@ -12,4 +12,4 @@ export {
   AnchorPoint
 };
 
-export * from "./Panel";
+export * from "./panel";

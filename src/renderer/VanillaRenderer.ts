@@ -3,8 +3,8 @@
  * egjs projects are licensed under the MIT license
  */
 import { getFlickingAttached, toArray } from "../utils";
-import Panel, { PanelOptions } from "../core/Panel/Panel";
-import ElementPanel from "../core/Panel/ElementPanel";
+import Panel, { PanelOptions } from "../core/panel/Panel";
+import ElementPanel from "../core/panel/ElementPanel";
 
 import Renderer from "./Renderer";
 

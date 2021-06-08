@@ -8,7 +8,7 @@ import * as ERROR from "~/const/error";
 
 import { createFlicking, createPanel, simulate, tick } from "../helper/test-util";
 import El from "../helper/El";
-import Panel from "~/core/Panel";
+import Panel from "~/core/panel/Panel";
 import { ValueOf } from "~/type/internal";
 
 class ControlImpl extends Control {
@@ -67,9 +67,9 @@ describe("Control", () => {
 
   describe("Methods", () => {
     describe("init", () => {
-      it("should also call init of the controller", () => {
+      it("should also call init of the controller", async () => {
         const control = new ControlImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const initSpy = sinon.spy(control.controller, "init");
 
         control.init(flicking);
@@ -103,11 +103,11 @@ describe("Control", () => {
     });
 
     describe("updateInput", () => {
-      it("should call update of the controller", () => {
+      it("should call update of the controller", async () => {
         const control = new ControlImpl();
         const updateSpy = sinon.spy(control.controller, "update");
 
-        control.init(createFlicking(El.DEFAULT_HORIZONTAL));
+        control.init(await createFlicking(El.DEFAULT_HORIZONTAL));
         control.updateInput();
 
         expect(updateSpy.calledOnce).to.be.true;
@@ -126,7 +126,7 @@ describe("Control", () => {
       it("should be rejected returning FlickingError with code NOT_ATTACHED_TO_FLICKING if control is not initialized", async () => {
         const control = new ControlImpl();
 
-        const err = await control.moveToPanel(createPanel(El.panel()), { duration: 500 }).catch(e => e);
+        const err = await control.moveToPanel(await createPanel(El.panel()), { duration: 500 }).catch(e => e);
 
         expect(err)
           .to.be.instanceOf(FlickingError)
@@ -135,7 +135,7 @@ describe("Control", () => {
 
       it("should change activePanel to given panel after resolved if active panel was null", async () => {
         const control = new ControlImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const panel = flicking.getPanel(2);
 
         control.init(flicking);
@@ -151,7 +151,7 @@ describe("Control", () => {
 
       it(`should trigger ${EVENTS.WILL_CHANGE} if active panel was null`, async () => {
         const control = new ControlImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const changeSpy = sinon.spy();
         const restoreSpy = sinon.spy();
         flicking.on(EVENTS.WILL_CHANGE, changeSpy);
@@ -168,7 +168,7 @@ describe("Control", () => {
 
       it(`should trigger ${EVENTS.WILL_CHANGE} if given panel is not same to active panel`, async () => {
         const control = new ControlImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         control.init(flicking);
         control.updateInput();
@@ -187,7 +187,7 @@ describe("Control", () => {
 
       it(`should trigger ${EVENTS.WILL_RESTORE} if give panel is same to active panel`, async () => {
         const control = new ControlImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         control.init(flicking);
         control.updateInput();
@@ -206,7 +206,7 @@ describe("Control", () => {
 
       it(`should be rejected with FlickingError with STOP_CALLED_BY_USER as code when stop() is called from ${EVENTS.WILL_CHANGE} event`, async () => {
         const control = new ControlImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         flicking.on(EVENTS.WILL_CHANGE, e => e.stop());
 
         control.init(flicking);
@@ -221,7 +221,7 @@ describe("Control", () => {
 
       it(`should be rejected with FlickingError with STOP_CALLED_BY_USER as code when stop() is called from ${EVENTS.WILL_RESTORE} event`, async () => {
         const control = new ControlImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         control.init(flicking);
         control.updateInput();
@@ -237,7 +237,7 @@ describe("Control", () => {
 
       it("should be rejected when user interrupted while animating", async () => {
         const control = new ControlImpl();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         control.init(flicking);
         control.updateInput();

@@ -19,7 +19,7 @@ describe("SnapControl", () => {
       });
 
       it("should be rejected returning FlickingError with code POSITION_NOT_REACHABLE when there are no panels exist", async () => {
-        const flicking = createFlicking(El.viewport().add(El.camera()), { moveType: MOVE_TYPE.SNAP });
+        const flicking = await createFlicking(El.viewport().add(El.camera()), { moveType: MOVE_TYPE.SNAP });
         const control = flicking.control;
 
         expect(control).to.be.an.instanceOf(SnapControl);
@@ -35,7 +35,7 @@ describe("SnapControl", () => {
       });
 
       it("should return to current panel if position delta is smaller than threshold", async () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
           moveType: MOVE_TYPE.SNAP,
           threshold: 40
         });
@@ -49,7 +49,7 @@ describe("SnapControl", () => {
       });
 
       it("should move to adjacent panel if position delta is bigger than threshold", async () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
           moveType: MOVE_TYPE.SNAP,
           threshold: 40
         });
@@ -63,7 +63,7 @@ describe("SnapControl", () => {
       });
 
       it("should clamp to camera range even if it's further outside of camera range", async () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
           moveType: MOVE_TYPE.SNAP
         });
         const control = flicking.control;

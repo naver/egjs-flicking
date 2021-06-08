@@ -14,9 +14,9 @@ describe("CircularCamera", () => {
 
   describe("Methods", () => {
     describe("findAnchorIncludePosition", () => {
-      it("should return panel at toggled position if circular is enabled", () => {
+      it("should return panel at toggled position if circular is enabled", async () => {
         const camera = new CircularCamera();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const panels = flicking.panels;
 
         camera.init(flicking);
@@ -29,9 +29,9 @@ describe("CircularCamera", () => {
     });
 
     describe("clampToReachablePosition", () => {
-      it("should return position itself even it's over range when circular can be enabled", () => {
+      it("should return position itself even it's over range when circular can be enabled", async () => {
         const camera = new CircularCamera();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.updateRange();
@@ -43,9 +43,9 @@ describe("CircularCamera", () => {
           .to.equal(camera.range.min - 1);
       });
 
-      it("should return clamped position when circular cannot be enabled", () => {
+      it("should return clamped position when circular cannot be enabled", async () => {
         const camera = new CircularCamera();
-        const flicking = createFlicking(
+        const flicking = await createFlicking(
           El.viewport().setWidth(3000).add(
             El.camera()
               .add(El.panel("30%"))
@@ -66,9 +66,9 @@ describe("CircularCamera", () => {
     });
 
     describe("canReach", () => {
-      it("should always return true for any panel when circular is enabled", () => {
+      it("should always return true for any panel when circular is enabled", async () => {
         const camera = new CircularCamera();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { circular: true });
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { circular: true });
         const panel = flicking.getPanel(0);
 
         camera.init(flicking);
@@ -89,10 +89,10 @@ describe("CircularCamera", () => {
     });
 
     describe("canSee", () => {
-      it("should return true when panel is visible on looped position is included if circular is enabled", () => {
+      it("should return true when panel is visible on looped position is included if circular is enabled", async () => {
         const camera = new CircularCamera();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { circular: true });
-        const panel = createPanel(El.panel());
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { circular: true });
+        const panel = await createPanel(El.panel());
 
         camera.init(flicking);
         camera.updateAlignPos();
@@ -101,7 +101,7 @@ describe("CircularCamera", () => {
         const camRange = camera.range;
         expect(camera.controlParams.circular).to.be.true;
 
-        camera.lookAt(camRange.min);
+        await camera.lookAt(camRange.min);
         sinon.stub(panel, "range")
           .get(() => ({ min: camera.visibleRange.min + camera.rangeDiff, max: camera.visibleRange.min + camera.rangeDiff }));
 
@@ -112,7 +112,7 @@ describe("CircularCamera", () => {
 
         expect(camera.canSee(panel)).to.be.true;
 
-        camera.lookAt(camRange.max);
+        await camera.lookAt(camRange.max);
         sinon.stub(panel, "range")
           .get(() => ({ min: camera.visibleRange.min - camera.rangeDiff, max: camera.visibleRange.min - camera.rangeDiff }));
 
@@ -124,16 +124,16 @@ describe("CircularCamera", () => {
         expect(camera.canSee(panel)).to.be.true;
       });
 
-      it("should return false when visible on looped position is not included if circular is enabled", () => {
+      it("should return false when visible on looped position is not included if circular is enabled", async () => {
         const camera = new CircularCamera();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, { circular: true });
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { circular: true });
 
         camera.init(flicking);
         camera.updateRange();
 
         expect(camera.controlParams.circular).to.be.true;
 
-        const panel = createPanel(El.panel());
+        const panel = await createPanel(El.panel());
         sinon.stub(panel, "range")
           .get(() => ({ min: camera.visibleRange.min + camera.rangeDiff - 1, max: camera.visibleRange.min + camera.rangeDiff - 1 }));
 
@@ -157,9 +157,9 @@ describe("CircularCamera", () => {
     });
 
     describe("getControlParameters", () => {
-      it("should return circular: true when circular can be enabled", () => {
+      it("should return circular: true when circular can be enabled", async () => {
         const camera = new CircularCamera();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.updateRange();
@@ -168,9 +168,9 @@ describe("CircularCamera", () => {
         expect(camera.controlParams.circular).to.be.true;
       });
 
-      it("should return circular: false when circular cannot be enabled", () => {
+      it("should return circular: false when circular cannot be enabled", async () => {
         const camera = new CircularCamera();
-        const flicking = createFlicking(
+        const flicking = await createFlicking(
           El.viewport().setWidth(3000).add(
             El.camera()
               .add(El.panel("30%"))
@@ -195,9 +195,9 @@ describe("CircularCamera", () => {
           .with.property("code", ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
       });
 
-      it("should set range to min:0, max:0 when there're no panels", () => {
+      it("should set range to min:0, max:0 when there're no panels", async () => {
         const camera = new CircularCamera();
-        const flicking = createFlicking(El.viewport().add(El.camera()));
+        const flicking = await createFlicking(El.viewport().add(El.camera()));
 
         camera.init(flicking);
         camera.updateRange();
@@ -205,9 +205,9 @@ describe("CircularCamera", () => {
         expect(camera.range).to.deep.equal({ min: 0, max: 0 });
       });
 
-      it("should set range from first panel's position to last panel's position when circular cannot be enabled", () => {
+      it("should set range from first panel's position to last panel's position when circular cannot be enabled", async () => {
         const camera = new CircularCamera();
-        const flicking = createFlicking(
+        const flicking = await createFlicking(
           El.viewport().setWidth(900).add(
             El.camera()
               .add(El.panel("300px"))
@@ -227,9 +227,9 @@ describe("CircularCamera", () => {
         });
       });
 
-      it("should set range from first panel's left to last panel's right when circular is enabled", () => {
+      it("should set range from first panel's left to last panel's right when circular is enabled", async () => {
         const camera = new CircularCamera();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.updateAlignPos();

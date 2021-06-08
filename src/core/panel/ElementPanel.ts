@@ -37,6 +37,7 @@ class ElementPanel extends Panel {
     super(options);
 
     this._el = options.el;
+    this._rendered = true;
   }
 
   public markForShow() {

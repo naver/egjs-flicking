@@ -21,9 +21,11 @@ export default () => {
           });
         }}
       >
-        { [...new Array(12).keys()].map((_, idx) => <div key={idx} className="main-logo-box">
-          <p className="image is-1by1"></p>
-        </div>) }
+        <div className="main-logo-box"><p className="image is-1by1"></p></div>
+        <div className="main-logo-box"><p className="image is-1by1"></p></div>
+        <div className="main-logo-box"><p className="image is-1by1"></p></div>
+        <div className="main-logo-box"><p className="image is-1by1"></p></div>
+        <div className="main-logo-box"><p className="image is-1by1"></p></div>
       </Flicking>
     </div>
     <img className="flicking-logo" src="img/flicking.svg" />

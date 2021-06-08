@@ -33,9 +33,9 @@ describe("AxesController", () => {
 
   describe("Methods", () => {
     describe("init", () => {
-      it("should create axes instance on initialization", () => {
+      it("should create axes instance on initialization", async () => {
         const controller = new AxesController();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         controller.init(flicking);
 
@@ -45,9 +45,9 @@ describe("AxesController", () => {
     });
 
     describe("destroy", () => {
-      it("should also destroy axes instance", () => {
+      it("should also destroy axes instance", async () => {
         const controller = new AxesController();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         controller.init(flicking);
 
         const destroySpy = sinon.spy(controller.axes, "destroy");
@@ -68,12 +68,12 @@ describe("AxesController", () => {
           .with.property("code", ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
       });
 
-      it("should update position to a camera's position", () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+      it("should update position to a camera's position", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const controller = flicking.control.controller;
         const prevPos = controller.position;
 
-        flicking.camera.lookAt(1500);
+        await flicking.camera.lookAt(1500);
         controller.update();
 
         expect(controller.position).to.equal(1500);
@@ -94,7 +94,7 @@ describe("AxesController", () => {
 
       it("should call `setTo` of the axes instance", async () => {
         const controller = new AxesController();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         controller.init(flicking);
         const setToSpy = sinon.spy(controller.axes, "setTo");
 
@@ -107,7 +107,7 @@ describe("AxesController", () => {
 
       it("should call `setTo` of the axes onRelease event if given", async () => {
         const controller = new AxesController();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         controller.init(flicking);
         const onReleaseMock = { setTo: sinon.spy() };
 
@@ -120,7 +120,7 @@ describe("AxesController", () => {
 
       it("should be resolved immediately if duration is 0", async () => {
         const controller = new AxesController();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         controller.init(flicking);
 
         // No tick() is involved, so passing this test means that promise is resolved immediately
@@ -131,7 +131,7 @@ describe("AxesController", () => {
 
       it("should be resolved immediately if given position is same to current position", async () => {
         const controller = new AxesController();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         controller.init(flicking);
 
         const prevPos = controller.position;

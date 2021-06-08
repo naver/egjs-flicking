@@ -16,9 +16,9 @@ describe("BoundCamera", () => {
           .with.property("code", ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
       });
 
-      it("should set range to min:0, max:0 when there're no panels", () => {
+      it("should set range to min:0, max:0 when there're no panels", async () => {
         const camera = new BoundCamera();
-        const flicking = createFlicking(El.viewport().add(El.camera()));
+        const flicking = await createFlicking(El.viewport().add(El.camera()));
 
         camera.init(flicking);
         camera.updateRange();
@@ -26,9 +26,9 @@ describe("BoundCamera", () => {
         expect(camera.range).to.deep.equal({ min: 0, max: 0 });
       });
 
-      it("should set range from first panel's left + align to last panel's right - align", () => {
+      it("should set range from first panel's left + align to last panel's right - align", async () => {
         const camera = new BoundCamera();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.updateAlignPos();
@@ -40,9 +40,9 @@ describe("BoundCamera", () => {
         });
       });
 
-      it("should set range from first panel's position to last panel's position when sum of panel size is smaller than viewport size", () => {
+      it("should set range from first panel's position to last panel's position when sum of panel size is smaller than viewport size", async () => {
         const camera = new BoundCamera();
-        const flicking = createFlicking(
+        const flicking = await createFlicking(
           El.viewport().setWidth(900).add(
             El.camera()
               .add(El.panel("300px"))

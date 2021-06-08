@@ -5,7 +5,6 @@ import {
   merge,
   getFlickingAttached,
   toArray,
-  isArray,
   parseAlign,
   parseArithmeticExpression,
   parseBounce,
@@ -181,16 +180,21 @@ describe("Util Functions", () => {
   });
 
   describe("getFlickingAttached", () => {
-    it("should not throw when its internal field '_flicking' is not null", () => {
+    it("should not throw when its internal field '_flicking' is not null", async () => {
       class ClassThatHasFlickingInIt {
-        private _flicking: Flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        private _flicking: Flicking;
+
+        public async init(): Promise<this> {
+          this._flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+          return this;
+        }
 
         public test() {
           const flicking = getFlickingAttached(this._flicking, "TEST_CLASS");
         }
       }
 
-      expect(() => new ClassThatHasFlickingInIt().test()).not.to.throw();
+      expect(async () => (await (new ClassThatHasFlickingInIt()).init()).test()).not.to.throw();
     });
 
     it("should throw FlickingError with code 'NOT_ATTACHED_TO_FLICKING' when its internal field '_flicking' is null", () => {
@@ -229,33 +233,6 @@ describe("Util Functions", () => {
       expect(childElements.length).to.equal(10);
       expect(childElements).to.be.an.instanceOf(Array);
       expect(childElements[0]).to.be.an.instanceOf(HTMLElement);
-    });
-  });
-
-  describe("isArray", () => {
-    it("should return true when given value is an array", () => {
-      const correctVals = [
-        [],
-        [0, 1, 2],
-        [0, 1, "123", {}, []]
-      ];
-
-      expect(correctVals.every(val => isArray(val))).to.be.true;
-    });
-
-    it("should return false when given value is array-like objects", () => {
-      const wrongVals = [
-        document.createElement("div").children,
-        { 0: 0, 1: 1, 2: 2, length: 3 }
-      ];
-
-      expect(wrongVals.every(val => !isArray(val))).to.be.true;
-    });
-
-    it("should return false for other non-array values", () => {
-      const wrongVals = [0, 123, "", "asdf", {}, { a: 1 }, new NullClass(), () => {}, () => 0];
-
-      expect(wrongVals.every(val => !isArray(val))).to.be.true;
     });
   });
 

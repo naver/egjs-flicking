@@ -6,7 +6,7 @@ import Component, { ComponentEvent } from "@egjs/component";
 
 import FlickingError from "./core/FlickingError";
 import Viewport from "./core/Viewport";
-import { Panel } from "./core/Panel";
+import { Panel } from "./core/panel";
 import { Control, FreeControl, SnapControl } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
 import { Renderer, VanillaRenderer, ExternalRenderer, RawRenderingStrategy, VisibleRenderingStrategy } from "./renderer";
@@ -257,7 +257,7 @@ class Flicking extends Component<FlickingEvents> {
    * @type {Plugin[]}
    * @readonly
    */
-  public get activatedPlugins() { return this._plugins; }
+  public get activePlugins() { return this._plugins; }
 
   // Options Getter
   // UI / LAYOUT
@@ -942,7 +942,7 @@ class Flicking extends Component<FlickingEvents> {
     // Can't add/remove panels on external rendering
     if (panels[0]?.html && !this._renderExternal) {
       renderer.batchRemove({ index: 0, deleteCount: this.panels.length });
-      renderer.batchInsert({ index: 0, elements: panels.map(panel => panel.html!) });
+      renderer.batchInsert({ index: 0, elements: parseElement(panels.map(panel => panel.html!)) });
     }
 
     if (index) {

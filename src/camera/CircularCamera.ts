@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Panel from "../core/Panel/Panel";
+import Panel from "../core/panel/Panel";
 import AnchorPoint from "../core/AnchorPoint";
 import { DIRECTION } from "../const/external";
 import { circulatePosition, getFlickingAttached } from "../utils";

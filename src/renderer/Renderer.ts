@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 import Flicking, { FlickingOptions } from "../Flicking";
-import Panel, { PanelOptions } from "../core/Panel/Panel";
+import Panel, { PanelOptions } from "../core/panel/Panel";
 import { ALIGN } from "../const/external";
 import { getFlickingAttached, getMinusCompensatedIndex, includes } from "../utils";
 
@@ -150,7 +150,7 @@ abstract class Renderer {
    */
   public batchInsert(...items: Array<{
     index: number;
-    elements: any;
+    elements: any[];
   }>): Panel[] {
     const panels = this._panels;
     const flicking = getFlickingAttached(this._flicking, "Renderer");

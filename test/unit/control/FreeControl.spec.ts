@@ -19,7 +19,7 @@ describe("FreeControl", () => {
       });
 
       it("should be rejected returning FlickingError with code POSITION_NOT_REACHABLE when there are no panels exist", async () => {
-        const flicking = createFlicking(El.viewport().add(El.camera()), { moveType: MOVE_TYPE.FREE_SCROLL });
+        const flicking = await createFlicking(El.viewport().add(El.camera()), { moveType: MOVE_TYPE.FREE_SCROLL });
         const control = flicking.control;
 
         expect(control).to.be.an.instanceOf(FreeControl);
@@ -35,7 +35,7 @@ describe("FreeControl", () => {
       });
 
       it(`should not trigger either ${EVENTS.WILL_CHANGE} or ${EVENTS.WILL_RESTORE} if active panel is not changed`, async () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
           moveType: MOVE_TYPE.FREE_SCROLL,
           threshold: 100
         });
@@ -61,7 +61,7 @@ describe("FreeControl", () => {
       });
 
       it("should set target panel by clamping position to camera range even if it's further outside of camera range", async () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
           moveType: MOVE_TYPE.FREE_SCROLL
         });
         const control = flicking.control;
@@ -73,9 +73,9 @@ describe("FreeControl", () => {
         expect(control.activePanel).to.equal(flicking.getPanel(2));
       });
 
-      it("anyway moves to the given position even if it's further outside of camera range", () => {
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL, {
-          moveType: MOVE_TYPE.FREE_SCROLL
+      it("anyway moves to the given position even if it's further outside of camera range if stopAtEdge is false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: [MOVE_TYPE.FREE_SCROLL, { stopAtEdge: false }]
         });
         const control = flicking.control;
         const animateSpy = sinon.spy(control.controller, "animateTo");

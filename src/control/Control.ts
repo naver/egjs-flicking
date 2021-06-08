@@ -7,7 +7,7 @@ import { ComponentEvent } from "@egjs/component";
 
 import Flicking from "../Flicking";
 import FlickingError from "../core/FlickingError";
-import Panel from "../core/Panel/Panel";
+import Panel from "../core/panel/Panel";
 import AxesController from "../control/AxesController";
 import { DIRECTION, EVENTS } from "../const/external";
 import * as ERROR from "../const/error";

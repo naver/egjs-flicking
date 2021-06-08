@@ -16,9 +16,9 @@ describe("LinearCamera", () => {
           .with.property("code", ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
       });
 
-      it("should set range to min:0, max:0 when there're no panels", () => {
+      it("should set range to min:0, max:0 when there're no panels", async () => {
         const camera = new LinearCamera();
-        const flicking = createFlicking(El.viewport().add(El.camera()));
+        const flicking = await createFlicking(El.viewport().add(El.camera()));
 
         camera.init(flicking);
         camera.updateRange();
@@ -26,9 +26,9 @@ describe("LinearCamera", () => {
         expect(camera.range).to.deep.equal({ min: 0, max: 0 });
       });
 
-      it("should set range from first panel's position to last panel's position", () => {
+      it("should set range from first panel's position to last panel's position", async () => {
         const camera = new LinearCamera();
-        const flicking = createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
         camera.updateAlignPos();
