@@ -4,3 +4,15 @@ id: polyfills
 slug: /polyfills
 custom_edit_url: null
 ---
+
+Flicking is based on es5 and additionally needs es6 Promise to work properly.
+es5 is basically supported on IE9+ ([Source](http://kangax.github.io/compat-table/es5/))
+So, only es6 Promise is needed to run Flicking on the older browsers.
+
+```html
+<head>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/es6-promise/dist/es6-promise.auto.js"></script>
+</head>
+```
+
+Adding the above script will make Flicking run on the older browsers.

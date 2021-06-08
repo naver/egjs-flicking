@@ -47,7 +47,7 @@ class VanillaRenderer extends Renderer {
     const cameraElement = flicking.camera.element;
 
     // Remove all text nodes in the camera element
-    cameraElement.childNodes.forEach(node => {
+    toArray(cameraElement.childNodes).forEach(node => {
       if (node.nodeType === Node.TEXT_NODE) {
         cameraElement.removeChild(node);
       }

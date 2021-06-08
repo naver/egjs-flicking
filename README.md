@@ -74,6 +74,7 @@
 - Supports both Desktop & Mobile
 - Rich API
 - Supports IE9+ with the polyfill
+  - [es6-polyfill](https://cdn.jsdelivr.net/npm/es6-promise@latest/dist/es6-promise.auto.js)
 
 ## ⚙️ Installation
 #### npm
