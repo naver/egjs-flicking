@@ -266,9 +266,9 @@ class Flicking extends Component<FlickingEvents> {
   /**
    * Align position of the panels within viewport. You can set different values each for the panel and camera
    * @ko 뷰포트 내에서 패널 정렬방식을 설정하는 옵션. 카메라와 패널 개별로 옵션을 설정할 수도 있습니다
-   * @type {Constants.ALIGN | string | number | { panel: string | number, camera: string | number }}
-   * @property {Constants.ALIGN | string | number} panel The align value for each {@link Panel}s<ko>개개의 {@link Panel}에 적용할 값</ko>
-   * @property {Constants.ALIGN | string | number} camera The align value for {@link Camera}<ko>{@link Camera}에 적용할 값</ko>
+   * @type {ALIGN | string | number | { panel: string | number, camera: string | number }}
+   * @property {ALIGN | string | number} panel The align value for each {@link Panel}s<ko>개개의 {@link Panel}에 적용할 값</ko>
+   * @property {ALIGN | string | number} camera The align value for {@link Camera}<ko>{@link Camera}에 적용할 값</ko>
    * @default "center"
    * @example
    * ```ts
@@ -541,14 +541,14 @@ class Flicking extends Component<FlickingEvents> {
    * @throws {FlickingError}
    * |code|condition|
    * |---|---|
-   * |{@link Constants.ERROR_CODE WRONG_TYPE}|When the root is not either string or HTMLElement|
-   * |{@link Constants.ERROR_CODE ELEMENT_NOT_FOUND}|When the element with given CSS selector does not exist|
+   * |{@link ERROR_CODE WRONG_TYPE}|When the root is not either string or HTMLElement|
+   * |{@link ERROR_CODE ELEMENT_NOT_FOUND}|When the element with given CSS selector does not exist|
    * <ko>
    *
    * |code|조건|
    * |---|---|
-   * |{@link Constants.ERROR_CODE WRONG_TYPE}|루트 엘리먼트가 string이나 HTMLElement가 아닐 경우|
-   * |{@link Constants.ERROR_CODE ELEMENT_NOT_FOUND}|주어진 CSS selector로 엘리먼트를 찾지 못했을 경우|
+   * |{@link ERROR_CODE WRONG_TYPE}|루트 엘리먼트가 string이나 HTMLElement가 아닐 경우|
+   * |{@link ERROR_CODE ELEMENT_NOT_FOUND}|주어진 CSS selector로 엘리먼트를 찾지 못했을 경우|
    *
    * </ko>
    * @example
@@ -710,18 +710,18 @@ class Flicking extends Component<FlickingEvents> {
    * @throws {FlickingError}
    * |code|condition|
    * |---|---|
-   * |{@link Constants.ERROR_CODE INDEX_OUT_OF_RANGE}|When the previous panel does not exist|
-   * |{@link Constants.ERROR_CODE ANIMATION_ALREADY_PLAYING}|When the animation is already playing|
-   * |{@link Constants.ERROR_CODE ANIMATION_INTERRUPTED}|When the animation is interrupted by user input|
-   * |{@link Constants.ERROR_CODE STOP_CALLED_BY_USER}|When the any of the event's `stop()` is called|
+   * |{@link ERROR_CODE INDEX_OUT_OF_RANGE}|When the previous panel does not exist|
+   * |{@link ERROR_CODE ANIMATION_ALREADY_PLAYING}|When the animation is already playing|
+   * |{@link ERROR_CODE ANIMATION_INTERRUPTED}|When the animation is interrupted by user input|
+   * |{@link ERROR_CODE STOP_CALLED_BY_USER}|When the any of the event's `stop()` is called|
    * <ko>
    *
    * |code|condition|
    * |---|---|
-   * |{@link Constants.ERROR_CODE INDEX_OUT_OF_RANGE}|이전 패널이 존재하지 않을 경우|
-   * |{@link Constants.ERROR_CODE ANIMATION_ALREADY_PLAYING}|애니메이션이 이미 진행중인 경우|
-   * |{@link Constants.ERROR_CODE ANIMATION_INTERRUPTED}|사용자 입력에 의해 애니메이션이 중단된 경우|
-   * |{@link Constants.ERROR_CODE STOP_CALLED_BY_USER}|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|
+   * |{@link ERROR_CODE INDEX_OUT_OF_RANGE}|이전 패널이 존재하지 않을 경우|
+   * |{@link ERROR_CODE ANIMATION_ALREADY_PLAYING}|애니메이션이 이미 진행중인 경우|
+   * |{@link ERROR_CODE ANIMATION_INTERRUPTED}|사용자 입력에 의해 애니메이션이 중단된 경우|
+   * |{@link ERROR_CODE STOP_CALLED_BY_USER}|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|
    * </ko>
    * @return {Promise<void>} A Promise which will be resolved after reaching the previous panel<ko>이전 패널 도달시에 resolve되는 Promise</ko>
    */
@@ -747,18 +747,18 @@ class Flicking extends Component<FlickingEvents> {
    * @throws {FlickingError}
    * |code|condition|
    * |---|---|
-   * |{@link Constants.ERROR_CODE INDEX_OUT_OF_RANGE}|When the next panel does not exist|
-   * |{@link Constants.ERROR_CODE ANIMATION_ALREADY_PLAYING}|When the animation is already playing|
-   * |{@link Constants.ERROR_CODE ANIMATION_INTERRUPTED}|When the animation is interrupted by user input|
-   * |{@link Constants.ERROR_CODE STOP_CALLED_BY_USER}|When the any of the event's `stop()` is called|
+   * |{@link ERROR_CODE INDEX_OUT_OF_RANGE}|When the next panel does not exist|
+   * |{@link ERROR_CODE ANIMATION_ALREADY_PLAYING}|When the animation is already playing|
+   * |{@link ERROR_CODE ANIMATION_INTERRUPTED}|When the animation is interrupted by user input|
+   * |{@link ERROR_CODE STOP_CALLED_BY_USER}|When the any of the event's `stop()` is called|
    * <ko>
    *
    * |code|condition|
    * |---|---|
-   * |{@link Constants.ERROR_CODE INDEX_OUT_OF_RANGE}|다음 패널이 존재하지 않을 경우|
-   * |{@link Constants.ERROR_CODE ANIMATION_ALREADY_PLAYING}|애니메이션이 이미 진행중인 경우|
-   * |{@link Constants.ERROR_CODE ANIMATION_INTERRUPTED}|사용자 입력에 의해 애니메이션이 중단된 경우|
-   * |{@link Constants.ERROR_CODE STOP_CALLED_BY_USER}|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|
+   * |{@link ERROR_CODE INDEX_OUT_OF_RANGE}|다음 패널이 존재하지 않을 경우|
+   * |{@link ERROR_CODE ANIMATION_ALREADY_PLAYING}|애니메이션이 이미 진행중인 경우|
+   * |{@link ERROR_CODE ANIMATION_INTERRUPTED}|사용자 입력에 의해 애니메이션이 중단된 경우|
+   * |{@link ERROR_CODE STOP_CALLED_BY_USER}|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|
    *
    * </ko>
    * @return {Promise<void>} A Promise which will be resolved after reaching the next panel<ko>다음 패널 도달시에 resolve되는 Promise</ko>
@@ -772,7 +772,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 주어진 인덱스에 해당하는 패널로 이동합니다
    * @param {number} index The index of the panel to move<ko>이동할 패널의 인덱스</ko>
    * @param {number} [duration={@link Flicking#duration options.duration}] Duration of the animation (unit: ms)<ko>애니메이션 진행 시간 (단위: ms)</ko>
-   * @param {Constants.DIRECTION} [direction=DIRECTION.NONE] Direction to move, only available in the {@link Flicking#circular circular} mode<ko>이동할 방향. {@link Flicking#circular circular} 옵션 활성화시에만 사용 가능합니다</ko>
+   * @param {DIRECTION} [direction=DIRECTION.NONE] Direction to move, only available in the {@link Flicking#circular circular} mode<ko>이동할 방향. {@link Flicking#circular circular} 옵션 활성화시에만 사용 가능합니다</ko>
    * @async
    * @fires Flicking#moveStart
    * @fires Flicking#move
@@ -787,18 +787,18 @@ class Flicking extends Component<FlickingEvents> {
    * @throws {FlickingError}
    * |code|condition|
    * |---|---|
-   * |{@link Constants.ERROR_CODE INDEX_OUT_OF_RANGE}|When the root is not either string or HTMLElement|
-   * |{@link Constants.ERROR_CODE ANIMATION_ALREADY_PLAYING}|When the animation is already playing|
-   * |{@link Constants.ERROR_CODE ANIMATION_INTERRUPTED}|When the animation is interrupted by user input|
-   * |{@link Constants.ERROR_CODE STOP_CALLED_BY_USER}|When the any of the event's `stop()` is called|
+   * |{@link ERROR_CODE INDEX_OUT_OF_RANGE}|When the root is not either string or HTMLElement|
+   * |{@link ERROR_CODE ANIMATION_ALREADY_PLAYING}|When the animation is already playing|
+   * |{@link ERROR_CODE ANIMATION_INTERRUPTED}|When the animation is interrupted by user input|
+   * |{@link ERROR_CODE STOP_CALLED_BY_USER}|When the any of the event's `stop()` is called|
    * <ko>
    *
    * |code|condition|
    * |---|---|
-   * |{@link Constants.ERROR_CODE INDEX_OUT_OF_RANGE}|해당 인덱스를 가진 패널이 존재하지 않을 경우|
-   * |{@link Constants.ERROR_CODE ANIMATION_ALREADY_PLAYING}|애니메이션이 이미 진행중인 경우|
-   * |{@link Constants.ERROR_CODE ANIMATION_INTERRUPTED}|사용자 입력에 의해 애니메이션이 중단된 경우|
-   * |{@link Constants.ERROR_CODE STOP_CALLED_BY_USER}|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|
+   * |{@link ERROR_CODE INDEX_OUT_OF_RANGE}|해당 인덱스를 가진 패널이 존재하지 않을 경우|
+   * |{@link ERROR_CODE ANIMATION_ALREADY_PLAYING}|애니메이션이 이미 진행중인 경우|
+   * |{@link ERROR_CODE ANIMATION_INTERRUPTED}|사용자 입력에 의해 애니메이션이 중단된 경우|
+   * |{@link ERROR_CODE STOP_CALLED_BY_USER}|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|
    *
    * </ko>
    * @return {Promise<void>} A Promise which will be resolved after reaching the target panel<ko>해당 패널 도달시에 resolve되는 Promise</ko>
@@ -1070,7 +1070,7 @@ class Flicking extends Component<FlickingEvents> {
    * @return {Panel[]} An array of appended panels<ko>추가된 패널들의 배열</ko>
    * @see Panel
    * @see ElementLike
-   * @throws {FlickingError} {@link Constants.ERROR_CODE ERROR_CODE.NOT_ALLOWED_IN_FRAMEWORK} if called on frameworks (React, Angular, Vue...)
+   * @throws {FlickingError} {@link ERROR_CODE ERROR_CODE.NOT_ALLOWED_IN_FRAMEWORK} if called on frameworks (React, Angular, Vue...)
    * @example
    * ```ts
    * const flicking = new Flicking("#flick");
@@ -1096,7 +1096,7 @@ class Flicking extends Component<FlickingEvents> {
    * @return {Panel[]} An array of prepended panels<ko>추가된 패널들의 배열</ko>
    * @see Panel
    * @see ElementLike
-   * @throws {FlickingError} {@link Constants.ERROR_CODE ERROR_CODE.NOT_ALLOWED_IN_FRAMEWORK} if called on frameworks (React, Angular, Vue...)
+   * @throws {FlickingError} {@link ERROR_CODE ERROR_CODE.NOT_ALLOWED_IN_FRAMEWORK} if called on frameworks (React, Angular, Vue...)
    * @example
    * ```ts
    * const flicking = new eg.Flicking("#flick");
@@ -1120,7 +1120,7 @@ class Flicking extends Component<FlickingEvents> {
    * @param {ElementLike | ElementLike[]} element A new HTMLElement, a outerHTML of element, or an array of both
    * <ko>새로운 HTMLElement, 혹은 엘리먼트의 outerHTML, 혹은 그것들의 배열</ko>
    * @return {Panel[]} An array of prepended panels<ko>추가된 패널들의 배열</ko>
-   * @throws {FlickingError} {@link Constants.ERROR_CODE ERROR_CODE.NOT_ALLOWED_IN_FRAMEWORK} if called on frameworks (React, Angular, Vue...)
+   * @throws {FlickingError} {@link ERROR_CODE ERROR_CODE.NOT_ALLOWED_IN_FRAMEWORK} if called on frameworks (React, Angular, Vue...)
    * @example
    * ```ts
    * const flicking = new eg.Flicking("#flick");

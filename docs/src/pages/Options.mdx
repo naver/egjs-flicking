@@ -192,7 +192,8 @@ Enables circular(continuous loop) mode, which connects first/last panel for cont
 
 :::warning
 If the sum of the panel sizes is too small, circular will not be enabled.
-You can check this by **[circularEnabled](docs/api/Flicking#circularEnabled)** property of Flicking.
+This is because Flicking doesn't clone panel elements for the performance and to prevent other issues.
+You can check this with **[circularEnabled](docs/api/Flicking#circularEnabled)** property of Flicking.
 
 To enable circular mode, all panels should pass the below condition
 **Sum of panel sizes - panel size >= viewport size**

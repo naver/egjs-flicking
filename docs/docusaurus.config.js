@@ -10,7 +10,7 @@ module.exports = {
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   url: 'https://naver.github.io',
-  baseUrl: isDev ? '/' : '/',
+  baseUrl: isDev ? '/' : '/egjs-flicking/',
   projectName: 'naver.github.io',
   organizationName: 'naver',
   plugins: ['docusaurus-plugin-sass'],

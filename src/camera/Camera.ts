@@ -196,7 +196,7 @@ abstract class Camera {
   /**
    * A value indicating where the {@link Camera#alignPosition alignPosition} should be located at inside the viewport element
    * @ko {@link Camera#alignPosition alignPosition}이 뷰포트 엘리먼트 내의 어디에 위치해야 하는지를 나타내는 값
-   * @type {Constants.ALIGN | string | number}
+   * @type {ALIGN | string | number}
    */
   public get align() { return this._align; }
 
@@ -226,8 +226,8 @@ abstract class Camera {
    * @name updateRange
    * @chainable
    * @throws {FlickingError}
-   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
-   * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
+   * {@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
+   * <ko>{@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
    * @return {this}
    */
   public abstract updateRange(): this;
@@ -238,8 +238,8 @@ abstract class Camera {
    * @param {Flicking} flicking An instance of {@link Flicking}<ko>Flicking의 인스턴스</ko>
    * @chainable
    * @throws {FlickingError}
-   * {@link Constants.ERROR_CODE VAL_MUST_NOT_NULL} If the camera element(`.flicking-camera`) does not exist inside viewport element
-   * <ko>{@link Constants.ERROR_CODE VAL_MUST_NOT_NULL} 뷰포트 엘리먼트 내부에 카메라 엘리먼트(`.flicking-camera`)가 존재하지 않을 경우</ko>
+   * {@link ERROR_CODE VAL_MUST_NOT_NULL} If the camera element(`.flicking-camera`) does not exist inside viewport element
+   * <ko>{@link ERROR_CODE VAL_MUST_NOT_NULL} 뷰포트 엘리먼트 내부에 카메라 엘리먼트(`.flicking-camera`)가 존재하지 않을 경우</ko>
    * @return {this}
    */
   public init(flicking: Flicking): this {
@@ -270,8 +270,8 @@ abstract class Camera {
    * @ko 해당 좌표로 이동하고, CSS transform을 적용합니다
    * @param {number} pos A new position<ko>움직일 위치</ko>
    * @throws {FlickingError}
-   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
-   * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
+   * {@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
+   * <ko>{@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
    * @return {this}
    */
   public async lookAt(pos: number): Promise<void> {
@@ -434,8 +434,8 @@ abstract class Camera {
    * Update Camera's {@link Camera#anchorPoints anchorPoints}
    * @ko Camera의 {@link Camera#anchorPoints anchorPoints}를 업데이트합니다
    * @throws {FlickingError}
-   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
-   * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
+   * {@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
+   * <ko>{@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
    * @chainable
    * @return {this}
    */
@@ -456,8 +456,8 @@ abstract class Camera {
    * Update Viewport's height to active panel's height
    * @ko 현재 선택된 패널의 높이와 동일하도록 뷰포트의 높이를 업데이트합니다
    * @throws {FlickingError}
-   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
-   * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
+   * {@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
+   * <ko>{@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
    * @chainable
    * @return {this}
    */

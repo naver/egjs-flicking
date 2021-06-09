@@ -15,7 +15,7 @@ import Camera from "./Camera";
  * @ko 패널 엘리먼트 순서가 변경되는 좌표의 데이터
  * @interface
  * @property {Panel} panel Toggling panel<ko>순서를 변경할 패널</ko>
- * @property {Constants.DIRECTION} direction Toggling position<ko>순서를 변경할 방향</ko>
+ * @property {DIRECTION} direction Toggling position<ko>순서를 변경할 방향</ko>
  * @property {boolean} toggled Whether the panel has toggled its position to `direction`<ko>`direction` 방향으로 패널 위치를 변경했는지 여부를 나타내는 값</ko>
  */
 export interface TogglePoint {
@@ -137,8 +137,8 @@ class CircularCamera extends Camera {
    * @ko Camera의 {@link Camera#range range}를 업데이트합니다
    * @chainable
    * @throws {FlickingError}
-   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
-   * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
+   * {@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
+   * <ko>{@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
    * @return {this}
    */
   public updateRange() {
