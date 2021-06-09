@@ -4,12 +4,13 @@
  */
 import Axes, { PanInput, AxesEvents, OnRelease } from "@egjs/axes";
 
-import Flicking from "~/Flicking";
-import FlickingError from "~/core/FlickingError";
-import StateMachine from "~/control/StateMachine";
-import * as AXES from "~/const/axes";
-import * as ERROR from "~/const/error";
-import { getFlickingAttached, parseBounce } from "~/utils";
+import Flicking from "../Flicking";
+import FlickingError from "../core/FlickingError";
+import * as AXES from "../const/axes";
+import * as ERROR from "../const/error";
+import { getFlickingAttached, parseBounce } from "../utils";
+
+import StateMachine from "./StateMachine";
 
 /**
  * A controller that handles the {@link https://naver.github.io/egjs-axes/ @egjs/axes} events
@@ -215,9 +216,7 @@ class AxesController {
     if (startPos === position) {
       const flicking = getFlickingAttached(this._flicking, "Control");
 
-      flicking.camera.lookAt(position);
-
-      return Promise.resolve();
+      return flicking.camera.lookAt(position);
     }
 
     this._animatingContext = {

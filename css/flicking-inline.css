@@ -1,18 +1,11 @@
 .flicking-viewport {
-  margin-left: auto;
-  margin-right: auto;
   position: relative;
   overflow: hidden;
-  z-index: 1;
 }
 .flicking-viewport:not(.vertical) {
   width: 100%;
   height: 100%;
 }
-.flicking-viewport.overflow {
-  overflow: visible;
-}
-
 .flicking-camera {
   width: 100%;
   height: 100%;

@@ -6,10 +6,10 @@
 import { OnChange, OnFinish, OnHold, OnRelease } from "@egjs/axes";
 import { ComponentEvent } from "@egjs/component";
 
-import Panel from "~/core/Panel";
-import { EVENTS, DIRECTION } from "~/const/external";
-import { ValueOf } from "~/type/internal";
-import Flicking from "~/Flicking";
+import Flicking from "../Flicking";
+import Panel from "../core/panel/Panel";
+import { EVENTS, DIRECTION } from "../const/external";
+import { ValueOf } from "../type/internal";
 
 /**
  * Event that fires when Flicking's {@link Flicking#init init()} is called
@@ -267,7 +267,7 @@ export interface SelectEvent<T extends Flicking = Flicking> extends ComponentEve
  * `DIRECTION.PREV`의 경우 패널이 {@link Flicking#prepend prepend}되어야 함을 의미하고, `DIRECTION.NEXT`는 패널이 {@link Flicking#append append}되어야 함을 의미한다</ko>
  */
 export interface NeedPanelEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["NEED_PANEL"], T> {
-  direction: ValueOf<typeof DIRECTION>;
+  direction: Exclude<ValueOf<typeof DIRECTION>, null>;
 }
 
 /**

@@ -1,0 +1,152 @@
+---
+title: Plugins
+custom_edit_url: null
+---
+
+import Flicking from "@egjs/react-flicking";
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import AutoplayDemo from "@site/src/demo/plugins/Autoplay";
+import ParallaxDemo from "@site/src/demo/plugins/Parallax";
+import FadeDemo from "@site/src/demo/plugins/Fade";
+import "@site/src/css/demo/plugins.css";
+
+# Plugins
+
+All plugins are available by installing [@egjs/flicking-plugins](https://github.com/naver/egjs-flicking-plugins)
+
+```bash
+npm install @egjs/flicking-plguins
+```
+
+## How to use
+<Tabs
+  groupId="cfc"
+  defaultValue="js"
+  lazy={true}
+  values={[
+    { label: "JavaScript", value: "js" },
+    { label: "React", value: "react" },
+    { label: "Vue", value: "vue" },
+    { label: "Angular", value: "angular" },
+    { label: "Preact", value: "preact" }
+  ]}>
+  <TabItem value="js">
+
+```js
+import { AutoPlay } from "@egjs/flicking-plugins";
+
+flicking.addPlugins(new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: false }));
+```
+
+  </TabItem>
+  <TabItem value="react">
+
+```jsx
+import Flicking from "@egjs/react-flicking";
+import { AutoPlay } from "@egjs/flicking-plugins";
+
+export default () => {
+  const plugins = [new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: false })];
+
+  return (<Flicking plugins={plugins}>
+    { ... }
+  </Flicking>);
+};
+```
+
+  </TabItem>
+  <TabItem value="vue">
+
+```html title="template"
+<flicking :plugins="plugins">
+  {{ ... }}
+</flicking>
+```
+
+```js title="script"
+import { Component, Vue } from "vue-property-decorator";
+import { AutoPlay } from "@egjs/flicking-plugins";
+
+const plugins = [new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: false })];
+
+module.exports = {
+  data: function () {
+    return {
+      plugins
+    }
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="angular">
+
+```html title="autoplay.component.html"
+<ngx-flicking
+  [plugins]="plugins"
+>
+  { ... }
+</ngx-flicking>
+```
+
+```ts title="autoplay.component.ts"
+import { Component } from "@angular/core";
+import { Plugin } from "@egjs/ngx-flicking";
+import { AutoPlay } from "@egjs/flicking-plugins";
+
+@Component({
+  templateUrl: './autoplay.component.html'
+})
+export class AutoplayComponent {
+  plugins: Plugin[] = [new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: false })];
+}
+```
+
+  </TabItem>
+  <TabItem value="preact">
+
+```jsx
+import Flicking from "@egjs/preact-flicking";
+import { AutoPlay } from "@egjs/flicking-plugins";
+
+export default () => {
+  const plugins = [new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: false })];
+
+  return (<Flicking plugins={plugins}>
+    { ... }
+  </Flicking>);
+};
+```
+
+  </TabItem>
+</Tabs>
+
+## Autoplay
+<AutoplayDemo />
+
+### Options
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|options|object|✔️|{}|Options for the AutoPlay instance|
+|options.duration|number|✔️|2000|Time to wait before moving on to the next panel|
+|options.direction|"PREV" \| "NEXT"|✔️|"NEXT"|The direction in which the panel moves|
+|options.stopOnHover|boolean|✔️|false|Whether to stop when mouse hover upon the element|
+
+## Parallax
+<ParallaxDemo />
+
+### Options
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|selector|string|✔️|""|Selector of the element to apply parallax effect|
+|scale|number|✔️|1|Effect amplication scale|
+
+## Fade
+<FadeDemo />
+
+### Options
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|selector|string|✔️|""|The selector of the element to which the fade effect is to be applied. If the selector is blank, it applies to panel element|
+|scale|number|✔️|1|Effect amplication scale|

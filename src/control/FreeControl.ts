@@ -4,16 +4,72 @@
  */
 import { OnRelease } from "@egjs/axes";
 
-import FlickingError from "~/core/FlickingError";
-import Control from "~/control/Control";
-import * as ERROR from "~/const/error";
-import { getFlickingAttached } from "~/utils";
+import FlickingError from "../core/FlickingError";
+import * as ERROR from "../const/error";
+import { getFlickingAttached } from "../utils";
+
+import Control from "./Control";
+
+/**
+ * An options for the {@link FreeControl}
+ * @ko {@link FreeControl} 생성시 사용되는 옵션
+ * @interface
+ * @property {boolean} stopAtEdge Make scroll animation to stop at the start/end of the scroll area, not going out the bounce area
+ * <ko>스크롤 애니메이션을 스크롤 영역의 시작과 끝부분에서 멈추도록 하여, 바운스 영역을 넘어가지 않도록 합니다</ko>
+ */
+export interface FreeControlOptions {
+  stopAtEdge: boolean;
+}
 
 /**
  * A {@link Control} that can be scrolled freely without alignment
  * @ko 패널이 정해진 지점에 정렬되지 않고, 자유롭게 스크롤할 수 있는 이동 방식을 사용하는 {@link Control}
  */
 class FreeControl extends Control {
+  private _stopAtEdge: FreeControlOptions["stopAtEdge"];
+
+  /**
+   * Make scroll animation to stop at the start/end of the scroll area, not going out the bounce area
+   * @ko 스크롤 애니메이션을 스크롤 영역의 시작과 끝부분에서 멈추도록 하여, 바운스 영역을 넘어가지 않도록 합니다
+   * @type {boolean}
+   * @default true
+   */
+  public get stopAtEdge() { return this._stopAtEdge; }
+
+  public set stopAtEdge(val: FreeControlOptions["stopAtEdge"]) { this._stopAtEdge = val; }
+
+  /** */
+  public constructor({
+    stopAtEdge = true
+  }: Partial<FreeControlOptions> = {}) {
+    super();
+
+    this._stopAtEdge = stopAtEdge;
+  }
+
+  /**
+   * Update position after resizing
+   * @ko resize 이후에 position을 업데이트합니다
+   * @param {number} progressInPanel Previous camera's progress in active panel before resize<ko>Resize 이전 현재 선택된 패널 내에서의 카메라 progress 값</ko>
+   * @throws {FlickingError}
+   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
+   * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
+   * @chainable
+   * @return {Promise<void>}
+   */
+  public async updatePosition(progressInPanel: number): Promise<void> {
+    const flicking = getFlickingAttached(this._flicking, "Control");
+    const camera = flicking.camera;
+    const activePanel = this._activePanel;
+
+    if (activePanel) {
+      const panelRange = activePanel.range;
+      const newPosition = panelRange.min + (panelRange.max - panelRange.min) * progressInPanel;
+
+      await camera.lookAt(camera.clampToReachablePosition(newPosition));
+    }
+  }
+
   /**
    * Move {@link Camera} to the given position
    * @ko {@link Camera}를 주어진 좌표로 이동합니다
@@ -69,7 +125,7 @@ class FreeControl extends Control {
       this._triggerIndexChangeEvent(targetPanel, position, axesEvent);
     }
 
-    return this._animateToPosition({ position, duration, newActivePanel: targetPanel, axesEvent });
+    return this._animateToPosition({ position: this._stopAtEdge ? targetPos : position, duration, newActivePanel: targetPanel, axesEvent });
   }
 }
 

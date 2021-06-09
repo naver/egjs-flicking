@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { VueConstructor } from "vue";
+
 import Flicking from "./Flicking";
 
 declare global {

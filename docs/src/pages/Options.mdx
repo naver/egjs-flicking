@@ -1,9 +1,12 @@
 ---
+title: Options
 custom_edit_url: null
 ---
 
 import Flicking from "@egjs/react-flicking";
-
+import Panel from "@site/src/component/Panel";
+import Panels from "@site/src/component/Panels";
+import LinkedPanel from "@site/src/component/LinkedPanel";
 import CFCTabs from "@site/src/component/CFCTabs"
 import Columns from "@site/src/component/Columns";
 import ColumnItem from "@site/src/component/ColumnItem";
@@ -26,9 +29,7 @@ You can set different values each for the panel and camera.
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking align="prev">
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(3) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -43,9 +44,7 @@ You can set different values each for the panel and camera.
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking align="center">
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(3) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -60,9 +59,7 @@ You can set different values each for the panel and camera.
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking align="next">
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(3) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -77,15 +74,13 @@ You can set different values each for the panel and camera.
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking align={{ camera: "20%", panel: "40px" }}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(3) }
     </Flicking>
   </ColumnItem>
 </Columns>
 
 ### defaultIndex
-Index of the panel to move when Flicking's [init](api/Flicking#init) is called.
+Index of the panel to move when Flicking's [init](docs/api/Flicking#init) is called.
 A zero-based integer.
 
 <Columns>
@@ -98,9 +93,7 @@ A zero-based integer.
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking defaultIndex={0}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(3) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -114,15 +107,17 @@ A zero-based integer.
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking defaultIndex={1}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(3) }
     </Flicking>
   </ColumnItem>
 </Columns>
 
 ### horizontal
 Direction of panel movement (true: horizontal, false: vertical)
+
+:::info
+Additional CSS `height: 240px` was applied to the viewport(`.flicking-viewport`) element.
+:::
 
 <Columns>
   <ColumnItem is={6}>
@@ -134,9 +129,7 @@ Direction of panel movement (true: horizontal, false: vertical)
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking horizontal={true}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -159,10 +152,8 @@ Direction of panel movement (true: horizontal, false: vertical)
 
   </ColumnItem>
   <ColumnItem is={6} className="has-text-centered">
-    <Flicking className="flicking-viewport vertical" horizontal={false} style={{ height: "200px" }}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+    <Flicking className="flicking-viewport vertical" horizontal={false} style={{ height: "240px" }}>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -180,11 +171,7 @@ Enables circular(continuous loop) mode, which connects first/last panel for cont
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking circular={false}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(3) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -198,11 +185,30 @@ Enables circular(continuous loop) mode, which connects first/last panel for cont
   </ColumnItem>
   <ColumnItem is={6} className="has-text-centered">
     <Flicking circular={true}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(3) }
+    </Flicking>
+  </ColumnItem>
+</Columns>
+
+:::warning
+If the sum of the panel sizes is too small, circular will not be enabled.
+You can check this by **[circularEnabled](docs/api/Flicking#circularEnabled)** property of Flicking.
+
+To enable circular mode, all panels should pass the below condition
+**Sum of panel sizes - panel size >= viewport size**
+:::
+
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  circular: true
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6} className="has-text-centered">
+    <Flicking circular={true}>
+      { Panels(2) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -221,9 +227,7 @@ Only can be enabled when `circular=false`
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking bound={false}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -237,9 +241,7 @@ Only can be enabled when `circular=false`
   </ColumnItem>
   <ColumnItem is={6} className="has-text-centered">
     <Flicking bound={true}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -258,9 +260,9 @@ This can be only enabled when `horizontal=true`
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking adaptive={false}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel high has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel higher has-background-primary has-text-white is-size-1">3</div>
+      <Panel index={0} />
+      <Panel className="high" index={1} />
+      <Panel className="higher" index={2} />
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -280,9 +282,9 @@ This can be only enabled when `horizontal=true`
   </ColumnItem>
   <ColumnItem is={6} className="has-text-centered">
     <Flicking adaptive={true}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel high has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel higher has-background-primary has-text-white is-size-1">3</div>
+      <Panel index={0} />
+      <Panel className="high" index={1} />
+      <Panel className="higher" index={2} />
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -293,7 +295,7 @@ You should add CSS `transition` property to `flicking-viewport` to animate heigh
 
 ## Event
 ### needPanelThreshold
-A Threshold from viewport edge before triggering [needPanel](api/Flicking#event-needPanel) event
+A Threshold from viewport edge before triggering **[needPanel](docs/api/Flicking#event-needPanel)** event
 
 <Columns>
   <ColumnItem is={6}>
@@ -305,9 +307,7 @@ A Threshold from viewport edge before triggering [needPanel](api/Flicking#event-
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking adaptive={false}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(3) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -321,9 +321,7 @@ A Threshold from viewport edge before triggering [needPanel](api/Flicking#event-
   </ColumnItem>
   <ColumnItem is={6} className="has-text-centered">
     <Flicking adaptive={true}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(3) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -342,9 +340,7 @@ Deceleration value for panel movement animation which is triggered by user input
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking deceleration={0.0075}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -358,9 +354,7 @@ Deceleration value for panel movement animation which is triggered by user input
   </ColumnItem>
   <ColumnItem is={6} className="has-text-centered">
     <Flicking deceleration={0.0005}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -378,9 +372,7 @@ An easing function applied to the panel movement animation. Default value is `ea
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking easing={x => 1 - Math.pow(1 - x, 3)}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -394,9 +386,7 @@ An easing function applied to the panel movement animation. Default value is `ea
   </ColumnItem>
   <ColumnItem is={6} className="has-text-centered">
     <Flicking easing={x => x}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -415,9 +405,7 @@ Default duration of the animation (ms)
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking duration={500}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -431,9 +419,7 @@ Default duration of the animation (ms)
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking duration={100}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -447,9 +433,7 @@ Default duration of the animation (ms)
   </ColumnItem>
   <ColumnItem is={6} className="has-text-centered">
     <Flicking duration={1000}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -467,9 +451,7 @@ Types of input devices to enable
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking inputType={["touch", "mouse"]}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -483,9 +465,7 @@ Types of input devices to enable
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking inputType={["mouse"]}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -499,15 +479,22 @@ Types of input devices to enable
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking inputType={["pointer"]}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
 
 ### moveType
-Movement style by user input. This will change instance type of [Flicking#control](api/Flicking#control).
+Movement style by user input
+This will change instance type of **[Flicking#control](docs/api/Flicking#control)**
+You can use the values of the constant **[MOVE_TYPE](docs/api/MOVE_TYPE)**
+
+If an array is given, second value of the array will be used as the options object when creating **[Control](docs/api/Control)**
+
+|moveType|control|options|
+|---|---|---|
+|"snap" (MOVE_TYPE.SNAP)|**[SnapControl](docs/api/SnapControl)**||
+|"freeScroll" (MOVE_TYPE.FREE_SCROLL)|**[FreeControl](docs/api/FreeControl)**|**[FreeControlOptions](docs/api/FreeControlOptions)**|
 
 <Columns>
   <ColumnItem is={6}>
@@ -519,11 +506,7 @@ Movement style by user input. This will change instance type of [Flicking#contro
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking moveType="snap">
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -532,16 +515,14 @@ Movement style by user input. This will change instance type of [Flicking#contro
 
   ```js
   moveType: "freeScroll"
+  // Or..
+  moveType: ["freeScroll", { stopAtEdge: true }]
   ```
 
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking moveType="freeScroll">
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -560,11 +541,7 @@ It should be dragged above the threshold to change the current panel.
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking threshold={40}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -578,11 +555,7 @@ It should be dragged above the threshold to change the current panel.
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking threshold={0}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -596,11 +569,7 @@ It should be dragged above the threshold to change the current panel.
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking threshold={200}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -618,11 +587,7 @@ Set animation to be interruptable by click/touch.
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking interruptable={true}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -636,11 +601,7 @@ Set animation to be interruptable by click/touch.
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking interruptable={false}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -649,7 +610,7 @@ Set animation to be interruptable by click/touch.
 The size value of the bounce area. Only can be enabled when `circular=false`.
 You can set different bounce value for prev/next direction by using array.
 `number` for px value, and `string` for px, and % value relative to viewport size.
-You have to call [Control#updateInput](api/Control#updateInput) after changing this to take effect.
+You have to call **[Control#updateInput](docs/api/Control#updateInput)** after changing this to take effect.
 
 <Columns>
   <ColumnItem is={6}>
@@ -661,11 +622,7 @@ You have to call [Control#updateInput](api/Control#updateInput) after changing t
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking bounce="20%">
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -679,11 +636,7 @@ You have to call [Control#updateInput](api/Control#updateInput) after changing t
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking bounce={0}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -697,11 +650,7 @@ You have to call [Control#updateInput](api/Control#updateInput) after changing t
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking bounce="100%">
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -721,11 +670,7 @@ Size of the area from the right edge in iOS safari (in px) which enables swipe-b
 <Columns>
   <ColumnItem is={12}>
     <Flicking iOSEdgeSwipeThreshold={30}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -741,17 +686,17 @@ Size of the area from the right edge in iOS safari (in px) which enables swipe-b
 <Columns>
   <ColumnItem is={12}>
     <Flicking iOSEdgeSwipeThreshold={120}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
 
 ### preventClickOnDrag
 Automatically prevent `click` event if the user has dragged at least a single pixel on the viewport element.
+
+:::info
+Hint: Drag a panel slightly and release it to see its effect
+:::
 
 <Columns>
   <ColumnItem is={6}>
@@ -763,11 +708,11 @@ Automatically prevent `click` event if the user has dragged at least a single pi
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking preventClickOnDrag={true}>
-      <a href="https://naver.com"><div className="flicking-panel has-background-primary has-text-white is-size-1">1</div></a>
-      <a href="https://naver.com"><div className="flicking-panel has-background-primary has-text-white is-size-1">2</div></a>
-      <a href="https://naver.com"><div className="flicking-panel has-background-primary has-text-white is-size-1">3</div></a>
-      <a href="https://naver.com"><div className="flicking-panel has-background-primary has-text-white is-size-1">4</div></a>
-      <a href="https://naver.com"><div className="flicking-panel has-background-primary has-text-white is-size-1">5</div></a>
+      <LinkedPanel index={0} />
+      <LinkedPanel index={1} />
+      <LinkedPanel index={2} />
+      <LinkedPanel index={3} />
+      <LinkedPanel index={4} />
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -781,19 +726,54 @@ Automatically prevent `click` event if the user has dragged at least a single pi
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking preventClickOnDrag={false}>
-      <a href="https://naver.com"><div className="flicking-panel has-background-primary has-text-white is-size-1">1</div></a>
-      <a href="https://naver.com"><div className="flicking-panel has-background-primary has-text-white is-size-1">2</div></a>
-      <a href="https://naver.com"><div className="flicking-panel has-background-primary has-text-white is-size-1">3</div></a>
-      <a href="https://naver.com"><div className="flicking-panel has-background-primary has-text-white is-size-1">4</div></a>
-      <a href="https://naver.com"><div className="flicking-panel has-background-primary has-text-white is-size-1">5</div></a>
+      <LinkedPanel index={0} />
+      <LinkedPanel index={1} />
+      <LinkedPanel index={2} />
+      <LinkedPanel index={3} />
+      <LinkedPanel index={4} />
+    </Flicking>
+  </ColumnItem>
+</Columns>
+
+### disableOnInit
+Automatically call **[disableInput()](docs/api/Flicking#disableInput)** on initialization
+
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  disableOnInit: false
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking disableOnInit={false}>
+      { Panels(5) }
+    </Flicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  disableOnInit: true
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking disableOnInit={true}>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
 
 ## Performance
 ### renderOnlyVisible
-Whether to render visible panels only. This can dramatically increase performance when there're many panels.
-This will set [renderer](api/Flicking#renderer)'s type to [VisibleRenderer](api/VisibleRenderer).
+Whether to render visible panels only. This can dramatically increase performance when there're many panels
+
+:::info
+Hint: See panel elements in the developer console
+:::
 
 <Columns>
   <ColumnItem is={6}>
@@ -805,11 +785,7 @@ This will set [renderer](api/Flicking#renderer)'s type to [VisibleRenderer](api/
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking renderOnlyVisible={false}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -823,18 +799,14 @@ This will set [renderer](api/Flicking#renderer)'s type to [VisibleRenderer](api/
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking renderOnlyVisible={true}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
 
 ## Others
 ### autoInit
-Call [init()](api/Flicking#init) automatically when creating Flicking's instance.
+Call **[init()](docs/api/Flicking#init)** automatically when creating Flicking's instance.
 
 <Columns>
   <ColumnItem is={6}>
@@ -846,11 +818,7 @@ Call [init()](api/Flicking#init) automatically when creating Flicking's instance
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking autoInit={true}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -868,8 +836,8 @@ Call [init()](api/Flicking#init) automatically when creating Flicking's instance
 </Columns>
 
 ### autoResize
-Attach Flicking's [resize](api/Flicking#resize) method to window's resize event.
-Flicking will automatically call [resize](api/Flicking#resize) window size and orientation change.
+Attach Flicking's **[resize](docs/api/Flicking#resize)** method to window's resize event.
+Flicking will automatically call **[resize](docs/api/Flicking#resize)** window size and orientation change.
 
 Change window size or change orientation(on mobile) to see its effect.
 
@@ -885,9 +853,7 @@ Change window size or change orientation(on mobile) to see its effect.
 <Columns>
   <ColumnItem is={12}>
     <Flicking autoResize={true}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>
@@ -902,53 +868,7 @@ Change window size or change orientation(on mobile) to see its effect.
 <Columns>
   <ColumnItem is={12}>
     <Flicking autoResize={false}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-    </Flicking>
-  </ColumnItem>
-</Columns>
-
-### useOrderManipulator
-Use [OrderManipulator](api/OrderManipulator) for the element order managing in [Renderer](api/Renderer).
-Instead of inserting/removing element to change order, this will use CSS [order](https://developer.mozilla.org/en-US/docs/Web/CSS/order).
-⚠️ Enabling this option will decrease browser coverage to IE11+
-
-<Columns>
-  <ColumnItem is={6}>
-
-  ```js
-  useOrderManipulator: false
-  circular: true
-  ```
-
-  </ColumnItem>
-  <ColumnItem is={6}>
-    <Flicking useOrderManipulator={false} circular={true}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
-    </Flicking>
-  </ColumnItem>
-</Columns>
-<Columns>
-  <ColumnItem is={6}>
-
-  ```js
-  useOrderManipulator: true
-  circular: true
-  ```
-
-  </ColumnItem>
-  <ColumnItem is={6}>
-    <Flicking useOrderManipulator={true} circular={true}>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">1</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">2</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">3</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">4</div>
-      <div className="flicking-panel has-background-primary has-text-white is-size-1">5</div>
+      { Panels(5) }
     </Flicking>
   </ColumnItem>
 </Columns>

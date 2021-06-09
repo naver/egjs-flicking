@@ -1,5 +1,5 @@
 import "../../../css/flicking-inline.css";
-import Flicking, { ALIGN, EVENTS, MOVE_TYPE } from "~/index";
+import Flicking, { ALIGN, EVENTS } from "~/index";
 import { ValueOf } from "~/type/internal";
 
 class App {
@@ -7,12 +7,12 @@ class App {
     const flicking = new Flicking("#flicking", {
       align: ALIGN.CENTER,
       bound: true,
+      moveType: ["freeScroll"],
       circular: true,
-      renderOnlyVisible: true,
-      bounce: 1
+      renderOnlyVisible: true
     });
 
-    // Object.values([EVENTS.VISIBLE_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {
+    // Object.values([EVENTS.WILL_CHANGE]).forEach((eventName: ValueOf<typeof EVENTS>) => {
     //   flicking.on(eventName, event => console.log(eventName, event));
     // });
 

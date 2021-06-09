@@ -4,15 +4,15 @@
  */
 import { AxesEvents } from "@egjs/axes";
 
+import Flicking from "../Flicking";
+import * as AXES from "../const/axes";
+
 import IdleState from "./states/IdleState";
 import HoldingState from "./states/HoldingState";
 import DraggingState from "./states/DraggingState";
 import AnimatingState from "./states/AnimatingState";
 import DisabledState from "./states/DisabledState";
-
-import Flicking from "~/Flicking";
-import State, { STATE_TYPE } from "~/control/states/State";
-import * as AXES from "~/const/axes";
+import State, { STATE_TYPE } from "./states/State";
 
 /**
  * @internal

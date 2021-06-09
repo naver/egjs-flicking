@@ -1,6 +1,10 @@
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 import * as React from "react";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
-import NativeFlicking, {
+import VanillaFlicking, {
   AfterResizeEvent,
   BeforeResizeEvent,
   FlickingOptions,
@@ -21,114 +25,122 @@ import NativeFlicking, {
   EVENTS,
   withFlickingMethods,
   sync,
-  getRenderingPanels
+  getRenderingPanels,
+  Plugin
 } from "@egjs/flicking";
 import "@egjs/flicking/dist/flicking.css";
+import { isFragment } from "react-is";
 
 import { DEFAULT_PROPS } from "./consts";
 import { FlickingProps } from "./types";
+import ReactRenderer from "./ReactRenderer";
+import ReactPanelComponent from "./ReactPanelComponent";
+import NonStrictPanelComponent from "./NonStrictPanelComponent";
+import StrictPanelComponent from "./StrictPanelComponent";
 
 class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = DEFAULT_PROPS;
 
-  @withFlickingMethods
-  private _nativeFlicking: NativeFlicking;
-  private _panels: React.ReactElement[] = [];
+  @withFlickingMethods private _vanillaFlicking: VanillaFlicking;
+  private _panels: React.RefObject<ReactPanelComponent>[] = [];
   private _pluginsDiffer: ListDiffer<any>;
   private _jsxDiffer: ListDiffer<React.ReactElement>;
   private _viewportElement: HTMLElement;
-  private _diffResult: DiffResult<React.ReactElement>;
+  private _diffResult: DiffResult<React.ReactElement> | null;
+  private _mounted: boolean;
+  private _renderCallback: () => any;
 
-  public constructor(props: Partial<FlickingProps & FlickingOptions>) {
+  public get mounted() { return this._mounted; }
+  public get reactPanels() { return this._panels.map(panel => panel.current!); }
+
+  public constructor(props) {
     super(props);
 
-    this._panels = [...this._getChildren(this.props.children)];
+    this._panels = this._getChildren().map(() => React.createRef());
+  }
+
+  public setRenderCallback(callback: () => any) {
+    this._renderCallback = callback;
   }
 
   public componentDidMount() {
+    this._mounted = true;
+
     const props = this.props as Required<FlickingProps>;
 
-    const flicking = new NativeFlicking(
+    const flicking = new VanillaFlicking(
       this._viewportElement,
       {
         ...props,
-        renderExternal: true
+        ...{ renderExternal: {
+          renderer: ReactRenderer as any,
+          rendererOptions: { reactFlicking: this }
+        }}
       },
     ).on({
-      [EVENTS.READY]: (e: ReadyEvent) => props.onReady(e),
-      [EVENTS.BEFORE_RESIZE]: (e: BeforeResizeEvent) => props.onBeforeResize(e),
-      [EVENTS.AFTER_RESIZE]: (e: AfterResizeEvent) => props.onAfterResize(e),
-      [EVENTS.HOLD_START]: (e: HoldStartEvent) => props.onHoldStart(e),
-      [EVENTS.HOLD_END]: (e: HoldEndEvent) => props.onHoldEnd(e),
-      [EVENTS.MOVE_START]: (e: MoveStartEvent) => props.onMoveStart(e),
-      [EVENTS.MOVE]: (e: MoveEvent) => props.onMove(e),
-      [EVENTS.MOVE_END]: (e: MoveEndEvent) => props.onMoveEnd(e),
-      [EVENTS.WILL_CHANGE]: (e: WillChangeEvent) => props.onWillChange(e),
-      [EVENTS.CHANGED]: (e: ChangedEvent) => props.onChanged(e),
-      [EVENTS.WILL_RESTORE]: (e: WillRestoreEvent) => props.onWillRestore(e),
-      [EVENTS.RESTORED]: (e: RestoredEvent) => props.onRestored(e),
-      [EVENTS.SELECT]: (e: SelectEvent) => props.onSelect(e),
-      [EVENTS.NEED_PANEL]: (e: NeedPanelEvent) => props.onNeedPanel(e),
-      [EVENTS.VISIBLE_CHANGE]: (e: VisibleChangeEvent) => {
-        props.onVisibleChange!(e);
-        if (flicking.renderOnlyVisible) {
-          this.setState({});
-        }
-      },
-      [EVENTS.REACH_EDGE]: (e: ReachEdgeEvent) => props.onReachEdge(e),
+      [EVENTS.READY]: (e: ReadyEvent) => props.onReady({ ...e, currentTarget: this as any }),
+      [EVENTS.BEFORE_RESIZE]: (e: BeforeResizeEvent) => props.onBeforeResize({ ...e, currentTarget: this as any }),
+      [EVENTS.AFTER_RESIZE]: (e: AfterResizeEvent) => props.onAfterResize({ ...e, currentTarget: this as any }),
+      [EVENTS.HOLD_START]: (e: HoldStartEvent) => props.onHoldStart({ ...e, currentTarget: this as any }),
+      [EVENTS.HOLD_END]: (e: HoldEndEvent) => props.onHoldEnd({ ...e, currentTarget: this as any }),
+      [EVENTS.MOVE_START]: (e: MoveStartEvent) => props.onMoveStart({ ...e, currentTarget: this as any }),
+      [EVENTS.MOVE]: (e: MoveEvent) => props.onMove({ ...e, currentTarget: this as any }),
+      [EVENTS.MOVE_END]: (e: MoveEndEvent) => props.onMoveEnd({ ...e, currentTarget: this as any }),
+      [EVENTS.WILL_CHANGE]: (e: WillChangeEvent) => props.onWillChange({ ...e, currentTarget: this as any } as any),
+      [EVENTS.CHANGED]: (e: ChangedEvent) => props.onChanged({ ...e, currentTarget: this as any } as any),
+      [EVENTS.WILL_RESTORE]: (e: WillRestoreEvent) => props.onWillRestore({ ...e, currentTarget: this as any } as any),
+      [EVENTS.RESTORED]: (e: RestoredEvent) => props.onRestored({ ...e, currentTarget: this as any }),
+      [EVENTS.SELECT]: (e: SelectEvent) => props.onSelect({ ...e, currentTarget: this as any } as any),
+      [EVENTS.NEED_PANEL]: (e: NeedPanelEvent) => props.onNeedPanel({ ...e, currentTarget: this as any }),
+      [EVENTS.VISIBLE_CHANGE]: (e: VisibleChangeEvent) => props.onVisibleChange({ ...e, currentTarget: this as any } as any),
+      [EVENTS.REACH_EDGE]: (e: ReachEdgeEvent) => props.onReachEdge({ ...e, currentTarget: this as any }),
     });
 
-    if (props.circular) {
-      flicking.renderer.elementManipulator.on("orderChanged", () => {
-        this.setState({});
-      });
-    }
+    flicking.once(EVENTS.READY, () => {
+      this.forceUpdate();
+    });
 
-    if (this.props.status) {
-      this.setStatus(this.props.status);
-    }
+    this._vanillaFlicking = flicking;
 
-    this._nativeFlicking = flicking;
-
-    const children = this._getChildren(this.props.children);
+    const children = this._getChildren();
     this._jsxDiffer = new ListDiffer(children, panel => panel.key!);
     this._pluginsDiffer = new ListDiffer<any>();
 
     this._checkPlugins();
-
-    this.setState({});
   }
 
   public componentWillUnmount() {
-    this._nativeFlicking.destroy();
+    this._mounted = false;
+
+    this._vanillaFlicking.destroy();
   }
 
   public shouldComponentUpdate(nextProps: this["props"]) {
     const children = this._getChildren(nextProps.children);
     const diffResult = this._jsxDiffer.update(children);
-    const flicking = this._nativeFlicking;
 
+    this._panels = children.map(() => React.createRef());
     this._diffResult = diffResult;
-    this._panels = flicking.initialized
-      ? getRenderingPanels(flicking, diffResult)
-      : children;
 
     return true;
   }
 
   public componentDidUpdate() {
-    const flicking = this._nativeFlicking;
+    const flicking = this._vanillaFlicking;
     const diffResult = this._diffResult;
 
     this._checkPlugins();
+    this._renderCallback && this._renderCallback();
 
     if (!diffResult || !flicking.initialized) return;
 
-    sync(flicking, diffResult);
+    sync(flicking, diffResult, this.reactPanels);
 
     if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
       this.setState({});
     }
+
+    this._diffResult = null;
   }
 
   public render() {
@@ -136,10 +148,10 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const Viewport = props.viewportTag as any;
     const Camera = props.cameraTag as any;
     const attributes: { [key: string]: any } = {};
-    const flicking = this._nativeFlicking;
+    const flicking = this._vanillaFlicking;
 
     for (const name in props) {
-      if (!(name in DEFAULT_PROPS) && !(name in NativeFlicking.prototype)) {
+      if (!(name in DEFAULT_PROPS) && !(name in VanillaFlicking.prototype)) {
         attributes[name] = props[name];
       }
     }
@@ -156,34 +168,44 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       viewportClasses.push(attributes.className);
     }
 
+    const children = (this._diffResult && flicking && flicking.initialized)
+      ? getRenderingPanels(flicking, this._diffResult)
+      : this._getChildren();
+    const panels = this.props.useFindDOMNode
+      ? children.map((child, idx) => <NonStrictPanelComponent key={child.key!} ref={this._panels[idx]}>{child}</NonStrictPanelComponent>)
+      : children.map((child, idx) => <StrictPanelComponent key={child.key!} ref={this._panels[idx] as any}>{child}</StrictPanelComponent>)
+
     return (
       <Viewport {...attributes} className={viewportClasses.join(" ")} ref={(e?: HTMLElement) => {
         e && (this._viewportElement = e);
       }}>
         <Camera className="flicking-camera">
-          { this._panels }
+          { panels }
         </Camera>
       </Viewport>
     );
   }
 
   private _checkPlugins() {
-    const { list, added, removed, prevList } = this._pluginsDiffer.update(this.props.plugins!);
+    const { list, added, removed, prevList } = this._pluginsDiffer.update(this.props.plugins!) as DiffResult<Plugin>;
 
-    this._nativeFlicking.addPlugins(added.map(index => list[index]));
-    this._nativeFlicking.removePlugins(removed.map(index => prevList[index]));
+    this._vanillaFlicking.addPlugins(...added.map(index => list[index]));
+    this._vanillaFlicking.removePlugins(...removed.map(index => prevList[index]));
   }
 
-  private _getChildren(children?: React.ReactNode) {
-    const childs = React.Children.toArray(children) as Array<React.ReactElement<any>>;
+  private _getChildren(children: React.ReactNode = this.props.children) {
+    return (React.Children.toArray(children) as Array<React.ReactElement<any>>).reduce((all, child) => {
+      return [...all, ...this._unpackFragment(child)];
+    }, []) as Array<React.ReactElement<any>>;
+  }
 
-    return childs.map(child => {
-      return React.cloneElement(child, {
-        key: child.key!
-      });
-    });
+  private _unpackFragment(child: React.ReactElement) {
+    return isFragment(child)
+      ? React.Children.toArray(child.props.children)
+        .reduce((allChilds, fragChild) => [...allChilds, ...this._unpackFragment(fragChild)], [])
+      : [child];
   }
 }
 
-interface Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>, NativeFlicking { }
+interface Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>, VanillaFlicking { }
 export default Flicking;

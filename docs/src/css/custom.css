@@ -7,16 +7,73 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: rgb(33, 175, 144);
-  --ifm-color-primary-darker: rgb(31, 165, 136);
-  --ifm-color-primary-darkest: rgb(26, 136, 112);
-  --ifm-color-primary-light: rgb(70, 203, 174);
-  --ifm-color-primary-lighter: rgb(102, 212, 189);
-  --ifm-color-primary-lightest: rgb(146, 224, 208);
-  --ifm-color-info: #3298dc;
-  --ifm-color-warnb: #3298dc;
+  --ifm-color-primary: #f2a65e;
+  --ifm-color-primary-dark: #ef953f;
+  --ifm-color-primary-darker: #ee8c2f;
+  --ifm-color-primary-darkest: #da7312;
+  --ifm-color-primary-light: #f5b77d;
+  --ifm-color-primary-lighter: #f6c08d;
+  --ifm-color-primary-lightest: #fadabb;
+  --ifm-color-info: #3e8ed0;
+  --ifm-color-warning: #ffe08a;
+  --ifm-color-danger: #f14668;
+  --ifm-color-success: #48c78e;
   --ifm-code-font-size: 95%;
+}
+html[data-theme='dark'] {
+  --ifm-background-color: #242526 !important;
+}
+
+.title {
+  color: var(--ifm-font-color-base) !important;
+}
+.subtitle {
+  color: var(--ifm-font-color-base) !important;
+}
+
+.navbar__brand,
+.navbar__logo {
+  margin-right: 0 !important;
+}
+.navbar__brand {
+  padding: var(--ifm-navbar-item-padding-vertical) 1rem;
+}
+html[data-theme='dark'] .navbar__logo {
+  content: url("@site/static/img/flicking_textonly_white.svg");
+}
+
+.footer--dark {
+  background-color: #45444f !important;
+}
+
+.alert {
+  color: #fff;
+  --ra-admonition-icon-color: #fff;
+}
+
+.alert a {
+  color: #fff;
+}
+
+.alert--warning {
+  color: rgba(0, 0, 0, .7);
+  --ra-admonition-icon-color: rgba(0, 0, 0, .7);
+}
+.alert--warning a {
+  color: #3e8ed0;
+}
+.alert--warning blockquote {
+  color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(0, 0, 0, 0.7);
+  border-left: 6px solid #3e8ed0;
+}
+
+.admonition h5 {
+  font-weight: bold;
+}
+
+article a {
+  font-weight: bold;
 }
 
 .docusaurus-highlight-code-line {
@@ -36,14 +93,55 @@
 
 .flicking-viewport {
   transition: height 500ms;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.flicking-viewport.vertical > .flicking-camera {
+  align-items: center;
 }
 
 .flicking-panel {
-  width: 200px;
+  width: 50%;
   height: 200px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: 5px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  align-items: flex-end;
+  justify-content: start;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  box-sizing: border-box;
+  position: relative;
+}
+.flicking-index {
+  min-width: 60px;
+  text-align: center;
+  position: relative;
+}
+.flicking-index::before {
+  content: "";
+  position: absolute;
+  left: 10%;
+  bottom: 0.5rem;
+  width: 80%;
+  border-bottom: 2px solid white;
+}
+.flicking-panel.has-background-warning .flicking-index::before {
+  border-color: rgba(0,0,0,.7);
+}
+.flicking-index::after {
+  content: "PANEL";
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  bottom: -1.2rem;
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
 }
 
 .flicking-panel.high {
@@ -51,4 +149,16 @@
 }
 .flicking-panel.higher {
   height: 400px;
+}
+
+.panel-with-link {
+  width: 100%;
+  margin-right: 10px;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.panel-with-link .flicking-panel {
+  width: 100%;
+  margin: 0;
 }

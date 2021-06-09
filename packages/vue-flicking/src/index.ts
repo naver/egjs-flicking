@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { VueConstructor } from "vue";
 
-import Flicking from "./Flicking.vue";
+import Flicking from "./Flicking";
 
 declare global {
   interface Window {
@@ -25,3 +25,4 @@ export {
   Flicking,
   install
 };
+export * from "@egjs/flicking/src/exports";

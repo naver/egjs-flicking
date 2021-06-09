@@ -9,26 +9,8 @@
 <button (click)="appendItem()">Append</button>
 <button (click)="prependItem()">Prepend</button>
 <button (click)="addCloneCount()">Add Panel Count</button>
-<!--div id="axes-target">
-  <div class="wrapper" [ngChildrenDiffer]="list" (update)="onUpdate($event)">
-    <div class="panel" *ngFor="let val of list">{{val}}</div>
-  </div>
-</div-->
 
-<ngx-flicking class="flicking" [options]="{circular:true, moveType: 'freeScroll'}">
-  <ng-template>
-    <div class="panel" *ngFor="let val of list">hello {{val.num}}</div>
-  </ng-template>
+<ngx-flicking class="flicking" [options]="{ horizontal: false, circular:true, moveType: 'freeScroll'}">
+  <div flicking-panel class="panel" *ngFor="let val of list">hello {{val.num}}</div>
 </ngx-flicking>
 
-<!-- <ngx-flicking class="flicking" [panels]="list" [options]="{circular:true}" [testCloneCount]="testCloneCount"> -->
-    <!-- <lib-test-panel #test class="panel"></lib-test-panel> -->
-    <!-- <div #test>Hello1</div>
-    <div #test>Hello2</div> -->
-    <!-- <div egNgxFlickingPanel class="panel" *ngFor="let val of list">hello {{val.num}}</div> -->
-    <!-- <div egNgxFlickingPanel class="panel">hello</div> -->
-
-    <!-- <div class="panel">hello 0</div>
-    <div class="panel">hello 1</div>
-    <div class="panel">hello 3</div> -->
-  <!-- </ngx-flicking> -->

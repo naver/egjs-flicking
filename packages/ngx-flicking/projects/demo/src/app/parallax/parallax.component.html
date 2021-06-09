@@ -9,17 +9,15 @@
     [options]="{ gap: 10, circular: true }"
     [plugins]="plugins"
   >
-    <ng-template>
-      <div class="panel">
-        <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
-      </div>
-      <div class="panel">
-        <img src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
-      </div>
-      <div class="panel">
-        <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
-      </div>
-    </ng-template>
+    <div flicking-panel class="panel">
+      <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
+    </div>
+    <div flicking-panel class="panel">
+      <img src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
+    </div>
+    <div flicking-panel class="panel">
+      <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
+    </div>
   </ngx-flicking>
   <div class="pagination"></div>
   <pre><code class="hljs html" data-script="flicking0">{{ code0 }}</code></pre>

@@ -8,12 +8,14 @@ const defaultOptions = {
 export default buildHelper([
   {
     ...defaultOptions,
-    format: "es",
+    format: "esm",
     output: "./dist/flicking.esm.js",
+    exports: "named"
   },
   {
     ...defaultOptions,
     format: "cjs",
     output: "./dist/flicking.cjs.js",
+    exports: "named"
   },
 ]);

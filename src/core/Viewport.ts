@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { parseCSSSizeValue } from "~/utils";
+import { getStyle, isString } from "../utils";
 
 /**
  * A component that manages viewport size
@@ -12,6 +12,13 @@ class Viewport {
   private _el: HTMLElement;
   private _width: number;
   private _height: number;
+  private _isBorderBoxSizing: boolean;
+  private _padding: {
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+  };
 
   /**
    * A viewport(root) element
@@ -22,19 +29,30 @@ class Viewport {
   public get element() { return this._el; }
 
   /**
-   * Viewport width
+   * Viewport width, without paddings
    * @ko 뷰포트 너비
    * @type {number}
    * @readonly
    */
-  public get width() { return this._width; }
+  public get width() { return this._width - this._padding.left - this._padding.right; }
   /**
-   * Viewport height
+   * Viewport height, without paddings
    * @ko 뷰포트 높이
    * @type {number}
    * @readonly
    */
-  public get height() { return this._height; }
+  public get height() { return this._height - this._padding.top - this._padding.bottom; }
+  /**
+   * Viewport paddings
+   * @ko 뷰포트 CSS padding 값
+   * @type {object}
+   * @property {number} left CSS `padding-left`
+   * @property {number} right CSS `padding-right`
+   * @property {number} top CSS `padding-top`
+   * @property {number} bottom CSS `padding-bottom`
+   * @readonly
+   */
+  public get padding() { return this._padding; }
 
   /**
    * @param el A viewport element<ko>뷰포트 엘리먼트</ko>
@@ -43,6 +61,13 @@ class Viewport {
     this._el = el;
     this._width = 0;
     this._height = 0;
+    this._padding = {
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0
+    };
+    this._isBorderBoxSizing = false;
   }
 
   /**
@@ -62,11 +87,28 @@ class Viewport {
     height: number | string;
   }>) {
     const el = this._el;
+    const padding = this._padding;
+    const isBorderBoxSizing = this._isBorderBoxSizing;
+
     if (width != null) {
-      el.style.width = parseCSSSizeValue(width);
+      if (isString(width)) {
+        el.style.width = width;
+      } else {
+        const newWidth = isBorderBoxSizing
+          ? width + padding.left + padding.right
+          : width;
+        el.style.width = `${newWidth}px`;
+      }
     }
     if (height != null) {
-      el.style.height = parseCSSSizeValue(height);
+      if (isString(height)) {
+        el.style.height = height;
+      } else {
+        const newHeight = isBorderBoxSizing
+          ? height + padding.top + padding.bottom
+          : height;
+        el.style.height = `${newHeight}px`;
+      }
     }
     this.resize();
   }
@@ -77,9 +119,17 @@ class Viewport {
    */
   public resize() {
     const el = this._el;
+    const elStyle = getStyle(el);
 
     this._width = el.offsetWidth;
     this._height = el.offsetHeight;
+    this._padding = {
+      left: parseFloat(elStyle.paddingLeft),
+      right: parseFloat(elStyle.paddingRight),
+      top: parseFloat(elStyle.paddingTop),
+      bottom: parseFloat(elStyle.paddingBottom)
+    };
+    this._isBorderBoxSizing = elStyle.boxSizing === "border-box";
   }
 }
 

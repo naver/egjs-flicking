@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 import {
   SelectEvent,
   NeedPanelEvent,
@@ -22,8 +26,8 @@ import { FlickingProps } from "./types";
 export const DEFAULT_PROPS: FlickingProps = {
   viewportTag: "div",
   cameraTag: "div",
-  classPrefix: "eg-flick",
   plugins: [],
+  useFindDOMNode: false,
   onReady: (e: ReadyEvent) => {},
   onBeforeResize: (e: BeforeResizeEvent) => {},
   onAfterResize: (e: AfterResizeEvent) => {},

@@ -215,6 +215,8 @@ docs/versioned_sidebars/
 docs/sidebars-api.js
 
 ### Custom ###
+TODO.md
+CHANGES.md
 doc/
 report/
 temp/

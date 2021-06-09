@@ -1,6 +1,5 @@
 
 import { Component } from "react";
-import * as React from "react";
 import "./css/common.css";
 import "./css/features.css";
 import "./css/highlight.css";

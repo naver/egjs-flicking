@@ -39,47 +39,16 @@ npm install --save @egjs/preact-flicking
 
 ## 🏃 Quick Start
 ```tsx
-import { FlickingEvent, SelectEvent, ChangeEvent, NeedPanelEvent } from "@egjs/flicking";
-import Flicking from "@egjs/preact-flicking";
-import { Parallax, Fade, AutoPlay } from "@egjs/flicking-plugins";
+import Flicking, { MoveEvent, WillChangeEvent } from "@egjs/preact-flicking";
 
 <Flicking
-  tag = "div"
   viewportTag = "div"
   cameraTag = "div"
-  onNeedPanel = {(e: NeedPanelEvent) => {}}
-  onMoveStart = {(e: FlickingEvent) => {}}
-  onMove = {(e: FlickingEvent) => {}}
-  onMoveEnd = {(e: FlickingEvent) => {}}
-  onHoldStart = {(e: FlickingEvent) => {}}
-  onHoldEnd = {(e: FlickingEvent) => {}}
-  onRestore = {(e: FlickingEvent) => {}}
-  onSelect = {(e: SelectEvent) => {}}
-  onChange = {(e: ChangeEvent) => {}}
-  classPrefix = "eg-flick"
-  deceleration = {0.0075}
+  align = "center"
+  onMove = {(e: MoveEvent) => {}}
+  onWillChange = {(e: WillChangeEvent) => {}}
   horizontal = {true}
-  circular = {false}
-  infinite = {false}
-  infiniteThreshold = {0}
-  lastIndex = {Infinity}
-  threshold = {40}
-  duration = {100}
-  panelEffect = {x => 1 - Math.pow(1 - x, 3)}
-  defaultIndex = {0}
-  inputType = {["touch", "mouse"]}
-  thresholdAngle = {45}
-  bounce = {10}
-  autoResize = {false}
-  adaptive = {false}
-  zIndex = {2000}
-  bound = {false}
-  overflow = {false}
-  hanger = {"50%"}
-  anchor = {"50%"}
-  gap = {0}
-  moveType = {{type: "snap", count: 1}}
-  collectStatistics = {true}
+  circular = {true}
 >
   <div>panel 0</div>
   <div>panel 1</div>
@@ -87,22 +56,13 @@ import { Parallax, Fade, AutoPlay } from "@egjs/flicking-plugins";
 </Flicking>
 ```
 
-## Collect statistics
-
-Flicking applies Google Analytics (GA) to collect which features are useful to users. For example, the use of the `freeScroll` option, or the value of the `gap` option, and so on. Statistics also DO NOT contain any information that can identify an individual. Statistics on the usage will serve as basis for making better products. To disable GA, set the `collectStatistics` option to `false` as follows:
-
-```jsx
-<Flicking collectStatistics = {false}/>
-```
-
-
 ## 📦 Packages
 You can use all plugins just like native @egjs/flicking.
 
 Check [**@egjs/flicking-plugins**](https://github.com/naver/egjs-flicking-plugins) for readymade effects we're providing.
 
-## 📖 More Examples
-See our code sandbox [examples](https://codesandbox.io/s/preact-flicking-demo-s1cg4).
+## 📖 More Options & Examples
+[Options](https://naver.github.io/egjs-flicking/Options) / [Demos](https://naver.github.io/egjs-flicking/Demos)
 
 ## 🙌 Contributing
 See [CONTRIBUTING.md](https://github.com/naver/egjs-flicking/blob/master/CONTRIBUTING.md).

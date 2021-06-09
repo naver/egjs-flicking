@@ -4,9 +4,10 @@
  */
 import { ComponentEvent } from "@egjs/component";
 
-import State, { STATE_TYPE } from "~/control/states/State";
-import { EVENTS } from "~/const/external";
-import { getDirection } from "~/utils";
+import { EVENTS } from "../../const/external";
+import { getDirection } from "../../utils";
+
+import State, { STATE_TYPE } from "./State";
 
 /**
  * A default state when there's no user input and no animation's playing

@@ -10,16 +10,17 @@ module.exports = {
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   url: 'https://naver.github.io',
-  baseUrl: isDev ? '/' : '/egjs-flicking/',
+  baseUrl: isDev ? '/' : '/egjs-flicking',
   projectName: 'naver.github.io',
   organizationName: 'naver',
+  plugins: ['docusaurus-plugin-sass'],
   themes: ['@docusaurus/theme-live-codeblock'],
   themeConfig: {
+    hideableSidebar: false,
     navbar: {
-      title: 'Flicking',
       logo: {
         alt: 'egjs',
-        src: 'img/logo.svg'
+        src: 'img/flicking_textonly.svg'
       },
       items: [
         {
@@ -29,14 +30,29 @@ module.exports = {
           position: 'left'
         },
         {
+          type: "doc",
+          docId: "api/Flicking",
+          label: "API",
+          position: "left"
+        },
+        {
           to: "Options",
           label: "Options",
           position: "left"
         },
         {
-          type: "doc",
-          docId: "api/Flicking",
-          label: "API",
+          to: "Plugins",
+          label: "Plugins",
+          position: "left"
+        },
+        {
+          to: "Demos",
+          label: "Demos",
+          position: "left"
+        },
+        {
+          to: "Showcases",
+          label: "Showcases",
           position: "left"
         },
         {
@@ -70,6 +86,27 @@ module.exports = {
             {
               label: 'Getting Started',
               to: 'docs/'
+            },
+            {
+              label: 'API',
+              to: 'docs/api/Flicking'
+            },
+            {
+              label: 'Options',
+              to: 'Options/'
+            }
+          ]
+        },
+        {
+          title: 'Demo',
+          items: [
+            {
+              label: 'Demos',
+              to: 'Demos/'
+            },
+            {
+              label: 'Showcases',
+              to: 'Showcases/'
             }
           ]
         },
@@ -79,6 +116,14 @@ module.exports = {
             {
               label: 'GitHub',
               href: 'https://github.com/naver/egjs-flicking'
+            },
+            {
+              label: 'Issues',
+              href: 'https://github.com/naver/egjs-flicking/issues'
+            },
+            {
+              label: 'egjs',
+              href: 'https://naver.github.io/egjs/'
             }
           ]
         }
@@ -88,10 +133,14 @@ module.exports = {
         src: 'img/naver_opensource.svg',
         href: 'https://naver.github.io/'
       },
-      copyright: `Copyright © ${new Date().getFullYear()} NAVER, Inc. Built with Docusaurus.`
+      copyright: `Copyright © ${new Date().getFullYear()} NAVER, Inc. Built with Docusaurus & Bulma.`
     },
     prism: {
       theme: require('prism-react-renderer/themes/oceanicNext')
+    },
+    googleAnalytics: {
+      trackingID: 'UA-70842526-17',
+      anonymizeIP: true
     }
   },
   presets: [
@@ -122,8 +171,8 @@ module.exports = {
         theme: {
           customCss: [
             require.resolve('./src/css/custom.css'),
-            require.resolve('./src/css/bulma.css'),
-            require.resolve('./src/css/flicking.css')
+            require.resolve('./node_modules/@egjs/flicking/dist/flicking.css'),
+            require.resolve('./src/css/bulma-override.sass')
           ]
         }
       }

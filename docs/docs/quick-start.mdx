@@ -86,6 +86,74 @@ export default () => (
 )
 ```
 
+<h3>Using the components as a panel</h3>
+
+If you're using the React Component as a panel, it should use a [ref forwarding](https://reactjs.org/docs/forwarding-refs.html)
+
+```jsx
+<Flicking>
+  <Panel index={1} />
+  <Panel index={2} />
+  <Panel index={3} />
+</Flicking>
+```
+
+```jsx title="Panel.jsx"
+// If you're using a functional component
+export default React.forwardRef(({ index }, ref) => (<div ref={ref}>{ index + 1 }</div>));
+
+// Or... if you're using a class-based React component
+class Panel extends React.Component {
+  public render() {
+    return <div ref={this.props.elRef}>{ index + 1 }</div>;
+  }
+}
+
+export default React.forwardRef((props, ref) => <Panel elRef={ref} {...props} />);
+```
+
+:::warning
+You can't use a React component that renders multiple elements
+```jsx
+<Flicking>
+  <Panels /> // This won't work
+</Flicking>
+
+const Panels = () => <>
+  <div key={0}>0</div>
+  <div key={1}>1</div>
+  <div key={2}>2</div>
+</>;
+```
+:::
+
+<h3>Bypassing ref forwarding</h3>
+
+If you don't like this behavior, there's a few ways to avoid it.
+The easiest way is wrapping each `Panel` component with another element tag.
+```jsx
+<Flicking>
+  <div><Panel index={1} /></div>
+  <div><Panel index={2} /></div>
+  <div><Panel index={3} /></div>
+</Flicking>
+```
+
+Or, you can use the `useFindDOMNode` option of Flicking.
+```jsx
+<Flicking useFindDOMNode={true}>
+  <Panel index={1} />
+  <Panel index={2} />
+  <Panel index={3} />
+</Flicking>
+```
+:::caution
+Flicking will use [findDOMNode](https://reactjs.org/docs/react-dom.html#finddomnode) instead of using refs when the `useFindDOMNode` option is enabled.
+So, if you're using the [Strict Mode](https://reactjs.org/docs/strict-mode.html), Flicking can show [warning about deprecated findDOMNode usage](https://reactjs.org/docs/strict-mode.html#warning-about-deprecated-finddomnode-usage) at the developer console.
+And also, be aware that the component should always return a single DOM that never changes.
+> Therefore findDOMNode only worked if components always return a single DOM node that never changes.
+:::
+
   </TabItem>
   <TabItem value="vue">
 
@@ -142,7 +210,8 @@ import { NgModule } from '@angular/core';
 export class AppModule { } /* Your app */
 ```
 
-Now you can use `ngx-flicking` in your templates.
+Now you can use the component `ngx-flicking` and the directive `flicking-panel` in your templates.
+You should add directive `flicking-panel` to the panel elements you use
 
 ```html
 <ngx-flicking
@@ -151,17 +220,15 @@ Now you can use `ngx-flicking` in your templates.
   (needPanel)="onNeedPanel($event)"
   (moveEnd)="onMoveEnd($event)"
 >
-  <ng-template>
-    <div class="panel">
-      <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
-    </div>
-    <div class="panel">
-      <img src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
-    </div>
-    <div class="panel">
-      <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
-    </div>
-  </ng-template>
+  <div flicking-panel class="panel">
+    <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
+  </div>
+  <div flicking-panel class="panel">
+    <img src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
+  </div>
+  <div flicking-panel class="panel">
+    <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
+  </div>
 </ngx-flicking>
 ```
 
@@ -171,7 +238,7 @@ Now you can use `ngx-flicking` in your templates.
 You can import & use Flicking as a Preact Component.
 
 ```jsx title="SomeComponent.jsx"
-import Flicking from "@egjs/react-flicking";
+import Flicking from "@egjs/preact-flicking";
 
 export default () => (
   <Flicking
@@ -186,6 +253,74 @@ export default () => (
   </Flicking>
 )
 ```
+
+<h3>Using the components as a panel</h3>
+
+If you're using the React Component as a panel, it should use a [ref forwarding](https://reactjs.org/docs/forwarding-refs.html)
+
+```jsx
+<Flicking>
+  <Panel index={1} />
+  <Panel index={2} />
+  <Panel index={3} />
+</Flicking>
+```
+
+```jsx title="Panel.jsx"
+// If you're using a functional component
+export default React.forwardRef(({ index }, ref) => (<div ref={ref}>{ index + 1 }</div>));
+
+// Or... if you're using a class-based React component
+class Panel extends React.Component {
+  public render() {
+    return <div ref={this.props.elRef}>{ index + 1 }</div>;
+  }
+}
+
+export default React.forwardRef((props, ref) => <Panel elRef={ref} {...props} />);
+```
+
+:::warning
+You can't use a React component that renders multiple elements
+```jsx
+<Flicking>
+  <Panels /> // This won't work
+</Flicking>
+
+const Panels = () => <>
+  <div key={0}>0</div>
+  <div key={1}>1</div>
+  <div key={2}>2</div>
+</>;
+```
+:::
+
+<h3>Bypassing ref forwarding</h3>
+
+If you don't like this behavior, there's a few ways to avoid it.
+The easiest way is wrapping each `Panel` component with another element tag.
+```jsx
+<Flicking>
+  <div><Panel index={1} /></div>
+  <div><Panel index={2} /></div>
+  <div><Panel index={3} /></div>
+</Flicking>
+```
+
+Or, you can use the `useFindDOMNode` option of Flicking.
+```jsx
+<Flicking useFindDOMNode={true}>
+  <Panel index={1} />
+  <Panel index={2} />
+  <Panel index={3} />
+</Flicking>
+```
+:::caution
+Flicking will use [findDOMNode](https://reactjs.org/docs/react-dom.html#finddomnode) instead of using refs when the `useFindDOMNode` option is enabled.
+So, if you're using the [Strict Mode](https://reactjs.org/docs/strict-mode.html), Flicking can show [warning about deprecated findDOMNode usage](https://reactjs.org/docs/strict-mode.html#warning-about-deprecated-finddomnode-usage) at the developer console.
+And also, be aware that the component should always return a single DOM that never changes.
+> Therefore findDOMNode only worked if components always return a single DOM node that never changes.
+:::
 
   </TabItem>
 </Tabs>

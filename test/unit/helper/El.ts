@@ -1,4 +1,3 @@
-import { ValueOf } from "~/type/internal";
 import { parseCSSSizeValue } from "~/utils";
 
 export const EL_CLASS = {
@@ -13,7 +12,6 @@ export const EL_CLASS = {
 class El {
   /**
    * Very basic structure of the horizontal Flicking
-   *
    * @example
    * - Viewport (width: 1000px, height: 100%)
    *   - Camera
@@ -33,7 +31,6 @@ class El {
 
   /**
    * Very basic structure of the vertical Flicking
-   *
    * @example
    * - Viewport (width: 1000px, height: 1000px)
    *   - Camera

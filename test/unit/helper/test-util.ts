@@ -1,6 +1,7 @@
-import Panel, { PanelOptions } from "~/core/Panel";
 import Flicking, { FlickingOptions } from "~/Flicking";
-import { ALIGN } from "~/const/external";
+import Panel, { PanelOptions } from "~/core/panel/Panel";
+import ElementPanel from "~/core/panel/ElementPanel";
+import { ALIGN, EVENTS } from "~/const/external";
 
 import El from "./El";
 import { merge } from "~/utils";
@@ -26,7 +27,7 @@ export const cleanup = () => {
   });
 };
 
-export const createFlicking = (el: El | any, option: ConstructorParameters<typeof Flicking>[1] = {}): Flicking => {
+export const createFlicking = async (el: El | any, option: ConstructorParameters<typeof Flicking>[1] = {}): Promise<Flicking> => {
   const sandbox = createSandbox(`flicking-${Date.now()}`);
   const element = el instanceof El ? el.el : el;
 
@@ -35,18 +36,21 @@ export const createFlicking = (el: El | any, option: ConstructorParameters<typeo
   }
 
   const flicking = new Flicking(element, option);
-
   (window as any).flickings.push(flicking);
 
-  return flicking;
+  if (!flicking.autoInit) return Promise.resolve(flicking);
+
+  return new Promise(resolve => {
+    flicking.once(EVENTS.READY, () => resolve(flicking));
+  });
 };
 
-export const createPanel = (el: El, panelOption: Partial<PanelOptions> = {}, flickingOption: Partial<FlickingOptions> = {}): Panel => {
-  const flicking = createFlicking(El.viewport().add(El.camera()), flickingOption);
+export const createPanel = async (el: El, panelOption: Partial<PanelOptions> = {}, flickingOption: Partial<FlickingOptions> = {}): Promise<Panel> => {
+  const flicking = await createFlicking(El.viewport().add(El.camera()), flickingOption);
 
   flicking.camera.element.appendChild(el.el);
 
-  return new Panel({ el: el.el, align: ALIGN.CENTER, index: 0, flicking, ...panelOption });
+  return new ElementPanel({ el: el.el, align: ALIGN.CENTER, index: 0, flicking, ...panelOption });
 };
 
 export const tick = (time) => {

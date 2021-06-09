@@ -6,20 +6,16 @@ import Component, { ComponentEvent } from "@egjs/component";
 
 import FlickingError from "./core/FlickingError";
 import Viewport from "./core/Viewport";
-import Panel from "./core/Panel";
+import { Panel } from "./core/panel";
 import { Control, FreeControl, SnapControl } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
-import { RawRenderer, Renderer, RendererOptions, VisibleRenderer } from "./renderer";
-import OffsetManipulator from "./renderer/OffsetManipulator";
-import ElementManipulator from "./renderer/ElementManipulator";
-import OrderManipulator from "./renderer/OrderManipulator";
-
-import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "~/const/external";
-import * as ERROR from "~/const/error";
-import { findIndex, getElement, includes } from "~/utils";
-import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, WillChangeEvent, WillRestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent, ChangedEvent, RestoredEvent } from "~/type/event";
-import { LiteralUnion, ValueOf } from "~/type/internal";
-import { ElementLike, Plugin, Status } from "~/type/external";
+import { Renderer, VanillaRenderer, ExternalRenderer, RawRenderingStrategy, VisibleRenderingStrategy } from "./renderer";
+import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
+import * as ERROR from "./const/error";
+import { findIndex, getElement, includes, parseElement } from "./utils";
+import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, WillChangeEvent, WillRestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent, ChangedEvent, RestoredEvent } from "./type/event";
+import { LiteralUnion, ValueOf } from "./type/internal";
+import { ElementLike, Plugin, Status, MoveTypeOptions } from "./type/external";
 
 /**
  * @interface
@@ -62,19 +58,22 @@ export interface FlickingOptions {
   easing: (x: number) => number;
   // INPUT
   inputType: string[];
-  moveType: ValueOf<typeof MOVE_TYPE>;
+  moveType: ValueOf<typeof MOVE_TYPE> | MoveTypeOptions<ValueOf<typeof MOVE_TYPE>>;
   threshold: number;
   interruptable: boolean;
   bounce: number | string | [number | string, number | string];
   iOSEdgeSwipeThreshold: number;
   preventClickOnDrag: boolean;
+  disableOnInit: boolean;
   // PERFORMANCE
   renderOnlyVisible: boolean;
   // OTHERS
   autoInit: boolean;
   autoResize: boolean;
-  renderExternal: boolean;
-  useOrderManipulator: boolean;
+  renderExternal: {
+    renderer: typeof ExternalRenderer;
+    rendererOptions: {[key: string]: any};
+  } | null;
 }
 
 /**
@@ -118,11 +117,11 @@ class Flicking extends Component<FlickingEvents> {
   private _bounce: FlickingOptions["bounce"];
   private _iOSEdgeSwipeThreshold: FlickingOptions["iOSEdgeSwipeThreshold"];
   private _preventClickOnDrag: FlickingOptions["preventClickOnDrag"];
+  private _disableOnInit: FlickingOptions["disableOnInit"];
   private _renderOnlyVisible: FlickingOptions["renderOnlyVisible"];
   private _autoResize: FlickingOptions["autoResize"];
   private _autoInit: FlickingOptions["autoInit"];
   private _renderExternal: FlickingOptions["renderExternal"];
-  private _useOrderManipulator: FlickingOptions["useOrderManipulator"];
 
   // Internal State
   private _initialized: boolean;
@@ -156,11 +155,11 @@ class Flicking extends Component<FlickingEvents> {
    * {@link Renderer} instance of the Flicking
    * @ko 현재 Flicking에 활성화된 {@link Renderer} 인스턴스
    * @type {Renderer}
-   * @default RawRenderer
+   * @default VanillaRenderer
    * @readonly
    * @see Renderer
-   * @see RawRenderer
-   * @see VisibleRenderer
+   * @see VanillaRenderer
+   * @see ExternalRenderer
    */
   public get renderer() { return this._renderer; }
   /**
@@ -258,7 +257,7 @@ class Flicking extends Component<FlickingEvents> {
    * @type {Plugin[]}
    * @readonly
    */
-  public get plugins() { return this._plugins; }
+  public get activePlugins() { return this._plugins; }
 
   // Options Getter
   // UI / LAYOUT
@@ -354,15 +353,15 @@ class Flicking extends Component<FlickingEvents> {
   /**
    * Default duration of the animation (ms)
    * @ko 디폴트 애니메이션 재생 시간 (ms)
+   * @type {number}
    * @default 500
-   * @type number
    */
   public get duration() { return this._duration; }
   // INPUT
   /**
    * Types of input devices to enable
    * @ko 활성화할 입력 장치 종류
-   * @type string[]
+   * @type {string[]}
    * @default ["touch", "mouse"]
    * @see {@link https://naver.github.io/egjs-axes/release/latest/doc/global.html#PanInputOption Possible values (PanInputOption#inputType)}
    * <ko>{@link https://naver.github.io/egjs-axes/release/latest/doc/global.html#PanInputOption 가능한 값들 (PanInputOption#inputType)}</ko>
@@ -370,16 +369,31 @@ class Flicking extends Component<FlickingEvents> {
   public get inputType() { return this._inputType; }
   /**
    * Movement style by user input. This will change instance type of {@link Flicking#control}
+   * You can use the values of the constant {@link MOVE_TYPE}
    * @ko 사용자 입력에 의한 이동 방식. 이 값에 따라 {@link Flicking#control}의 인스턴스 타입이 결정됩니다
-   * @type string
+   * 상수 {@link MOVE_TYPE}에 정의된 값들을 이용할 수 있습니다
+   * @type {MOVE_TYPE | Pair<string, object>}
    * @default "snap"
-   * @see {@link Constants.MOVE_TYPE}
    * @example
+   * |moveType|control|options|
+   * |:---:|:---:|:---:|
+   * |"snap"|{@link SnapControl}||
+   * |"freeScroll"|{@link FreeControl}|{@link FreeControlOptions}|
+   *
    * ```ts
    * import Flicking, { MOVE_TYPE } from "@egjs/flicking";
    *
    * const flicking = new Flicking({
-   *   moveType: MOVE_TYPE.FREE_SCROLL
+   *   moveType: MOVE_TYPE.SNAP
+   * });
+   * ```
+   *
+   * ```ts
+   * const flicking = new Flicking({
+   *   // If you want more specific settings for the moveType
+   *   // [moveType, options for that moveType]
+   *   // In this case, it's ["freeScroll", FreeControlOptions]
+   *   moveType: [MOVE_TYPE.FREE_SCROLL, { stopAtEdge: true }]
    * });
    * ```
    */
@@ -444,12 +458,17 @@ class Flicking extends Component<FlickingEvents> {
    * @default true
    */
   public get preventClickOnDrag() { return this._preventClickOnDrag; }
+  /**
+   * Automatically call {@link Flicking#disableInput disableInput()} on initialization
+   * @ko Flicking init시에 {@link Flicking#disableInput disableInput()}을 바로 호출합니다
+   * @type {boolean}
+   * @default false
+   */
+  public get disableOnInit() { return this._disableOnInit; }
   // PERFORMANCE
   /**
    * Whether to render visible panels only. This can dramatically increase performance when there're many panels.
-   * This will set {@link Flicking#renderer renderer}'s type to {@link VisibleRenderer}
    * @ko 보이는 패널만 렌더링할지 여부를 설정합니다. 패널이 많을 경우에 퍼포먼스를 크게 향상시킬 수 있습니다.
-   * 이 옵션을 활성화할 경우 {@link Flicking#renderer renderer}의 타입을 {@link VisibleRenderer}로 설정합니다.
    * @type {boolean}
    * @default false
    */
@@ -481,17 +500,6 @@ class Flicking extends Component<FlickingEvents> {
    * @readonly
    */
   public get renderExternal() { return this._renderExternal; }
-  /**
-   * Use {@link OrderManipulator} for the element order managing in {@link Renderer}.
-   * Instead of inserting/removing element to change order, this will use CSS {@link https://developer.mozilla.org/en-US/docs/Web/CSS/order order}.
-   * ⚠️ Enabling this option will decrease browser coverage to IE11+
-   * @ko {@link Renderer}에서 엘리먼트 순서 관리를 위해 {@link OrderManipulator}를 사용합니다.
-   * 엘리먼트를 직접적으로 추가/삭제하는 대신 CSS {@link https://developer.mozilla.org/ko/docs/Web/CSS/order order} 속성을 사용해서 순서를 관리합니다.
-   * ⚠️ 이 옵션을 사용시 IE10 이하의 브라우저는 지원할 수 없습니다.
-   * @type {boolean}
-   * @default false
-   */
-  public get useOrderManipulator() { return this._useOrderManipulator; }
 
   // Options Setter
   // UI / LAYOUT
@@ -518,11 +526,11 @@ class Flicking extends Component<FlickingEvents> {
   public set bounce(val: FlickingOptions["bounce"]) { this._bounce = val; }
   public set iOSEdgeSwipeThreshold(val: FlickingOptions["iOSEdgeSwipeThreshold"]) { this._iOSEdgeSwipeThreshold = val; }
   public set preventClickOnDrag(val: FlickingOptions["preventClickOnDrag"]) { this._preventClickOnDrag = val; }
+  public set disableOnInit(val: FlickingOptions["disableOnInit"]) { this._disableOnInit = val; }
   // PERFORMANCE
   public set renderOnlyVisible(val: FlickingOptions["renderOnlyVisible"]) { this._renderOnlyVisible = val; }
   // OTHERS
   public set autoResize(val: FlickingOptions["autoResize"]) { this._autoResize = val; }
-  public set useOrderManipulator(val: FlickingOptions["useOrderManipulator"]) { this._useOrderManipulator = val; }
 
   /**
    * @param root A root HTMLElement to initialize Flicking on it. When it's a typeof `string`, it should be a css selector string
@@ -570,11 +578,11 @@ class Flicking extends Component<FlickingEvents> {
     bounce = "20%",
     iOSEdgeSwipeThreshold = 30,
     preventClickOnDrag = true,
+    disableOnInit = false,
     renderOnlyVisible = false,
     autoInit = true,
     autoResize = true,
-    renderExternal = false,
-    useOrderManipulator = false
+    renderExternal = null
   }: Partial<FlickingOptions> = {}) {
     super();
 
@@ -600,11 +608,11 @@ class Flicking extends Component<FlickingEvents> {
     this._bounce = bounce;
     this._iOSEdgeSwipeThreshold = iOSEdgeSwipeThreshold;
     this._preventClickOnDrag = preventClickOnDrag;
+    this._disableOnInit = disableOnInit;
     this._renderOnlyVisible = renderOnlyVisible;
     this._autoResize = autoResize;
     this._autoInit = autoInit;
     this._renderExternal = renderExternal;
-    this._useOrderManipulator = useOrderManipulator;
 
     // Create core components
     this._viewport = new Viewport(getElement(root));
@@ -613,7 +621,7 @@ class Flicking extends Component<FlickingEvents> {
     this._control = this._createControl();
 
     if (this._autoInit) {
-      this.init();
+      void this.init();
     }
   }
 
@@ -625,8 +633,8 @@ class Flicking extends Component<FlickingEvents> {
    * @fires Flicking#ready
    * @return {this}
    */
-  public init(): this {
-    if (this._initialized) return this;
+  public async init(): Promise<void> {
+    if (this._initialized) return;
 
     const camera = this._camera;
     const renderer = this._renderer;
@@ -637,7 +645,7 @@ class Flicking extends Component<FlickingEvents> {
     renderer.init(this);
     control.init(this);
 
-    this.resize();
+    await this.resize();
 
     // Look at initial panel
     this._moveToInitialPanel();
@@ -648,6 +656,9 @@ class Flicking extends Component<FlickingEvents> {
     if (this._preventClickOnDrag) {
       viewport.element.addEventListener("click", this._preventClickWhenDragged);
     }
+    if (this._disableOnInit) {
+      this.disableInput();
+    }
 
     this._plugins.forEach(plugin => plugin.init(this));
 
@@ -655,7 +666,7 @@ class Flicking extends Component<FlickingEvents> {
     this._initialized = true;
     this.trigger(new ComponentEvent(EVENTS.READY));
 
-    return this;
+    return;
   }
 
   /**
@@ -868,6 +879,7 @@ class Flicking extends Component<FlickingEvents> {
     includePanelHTML: boolean;
     visiblePanelsOnly: boolean;
   }> = {}): Status {
+    const camera = this._camera;
     const panels = visiblePanelsOnly ? this.visiblePanels : this.panels;
 
     const status: Status = {
@@ -886,18 +898,21 @@ class Flicking extends Component<FlickingEvents> {
       status.index = this.index;
     }
     if (position) {
-      status.position = this._camera.position;
+      const nearestAnchor = camera.findNearestAnchor(camera.position);
+
+      if (nearestAnchor) {
+        status.position = {
+          panel: nearestAnchor.panel.index,
+          progressInPanel: camera.getProgressInPanel(nearestAnchor.panel)
+        };
+      }
+
     }
 
     if (visiblePanelsOnly) {
       const visiblePanels = this.visiblePanels;
 
-      status.visibleOffset = {
-        index: visiblePanels[0]?.index ?? 0,
-        position: visiblePanels[0]
-          ? (visiblePanels[0].range.min - visiblePanels[0].margin.prev)
-          : 0
-      };
+      status.visibleOffset = visiblePanels[0]?.index ?? 0;
     }
 
     return status;
@@ -926,24 +941,27 @@ class Flicking extends Component<FlickingEvents> {
 
     // Can't add/remove panels on external rendering
     if (panels[0]?.html && !this._renderExternal) {
-      renderer.remove(0, this.panels.length);
-      renderer.insert(0, panels.map(panel => panel.html!));
+      renderer.batchRemove({ index: 0, deleteCount: this.panels.length });
+      renderer.batchInsert({ index: 0, elements: parseElement(panels.map(panel => panel.html!)) });
     }
 
     if (index) {
       const panelIndex = visibleOffset
-        ? index - visibleOffset.index
+        ? index - visibleOffset
         : index;
 
       void this.moveTo(panelIndex, 0).catch(() => void 0);
     }
 
     if (position && this._moveType === MOVE_TYPE.FREE_SCROLL) {
-      const cameraPosition = visibleOffset
-        ? position - visibleOffset.position
-        : position;
+      const { panel, progressInPanel } = position;
+      const panelIndex = visibleOffset
+        ? panel - visibleOffset
+        : panel;
+      const panelRange = renderer.panels[panelIndex].range;
+      const newCameraPos = panelRange.min + (panelRange.max - panelRange.min) * progressInPanel;
 
-      void control.moveToPosition(cameraPosition, 0).catch(() => void 0);
+      void control.moveToPosition(newCameraPos, 0).catch(() => void 0);
     }
   }
 
@@ -992,14 +1010,18 @@ class Flicking extends Component<FlickingEvents> {
    * @fires Flicking#afterResize
    * @return {this}
    */
-  public resize = (): this => {
+  public resize = async (): Promise<void> => {
     const viewport = this._viewport;
     const renderer = this._renderer;
     const camera = this._camera;
     const control = this._control;
 
+    const activePanel = control.activePanel;
     const prevWidth = viewport.width;
     const prevHeight = viewport.height;
+    const prevProgressInPanel = activePanel
+      ? camera.getProgressInPanel(activePanel)
+      : 0;
 
     this.trigger(new ComponentEvent(EVENTS.BEFORE_RESIZE, {
       width: prevWidth,
@@ -1008,13 +1030,19 @@ class Flicking extends Component<FlickingEvents> {
     }));
 
     viewport.resize();
+    await renderer.forceRenderAllPanels(); // Render all panel elements, to update sizes
     renderer.updatePanelSize();
-    renderer.elementManipulator.resetPanelElementOrder(renderer.panels);
+    await renderer.render();
     camera.updateAlignPos();
     camera.updateRange();
     camera.updateAnchors();
-    control.updateInput();
-    camera.updatePosition();
+
+    if (control.animating) {
+      // TODO:
+    } else {
+      await control.updatePosition(prevProgressInPanel);
+      control.updateInput();
+    }
 
     const newWidth = viewport.width;
     const newHeight = viewport.height;
@@ -1030,8 +1058,6 @@ class Flicking extends Component<FlickingEvents> {
       sizeChanged,
       element: viewport.element
     }));
-
-    return this;
   };
 
   /**
@@ -1108,7 +1134,7 @@ class Flicking extends Component<FlickingEvents> {
       throw new FlickingError(ERROR.MESSAGE.NOT_ALLOWED_IN_FRAMEWORK, ERROR.CODE.NOT_ALLOWED_IN_FRAMEWORK);
     }
 
-    return this._renderer.insert(index, element);
+    return this._renderer.batchInsert({ index, elements: parseElement(element) });
   }
 
   /**
@@ -1125,22 +1151,30 @@ class Flicking extends Component<FlickingEvents> {
       throw new FlickingError(ERROR.MESSAGE.NOT_ALLOWED_IN_FRAMEWORK, ERROR.CODE.NOT_ALLOWED_IN_FRAMEWORK);
     }
 
-    return this._renderer.remove(index, deleteCount);
+    return this._renderer.batchRemove({ index, deleteCount });
   }
 
   private _createControl(): Control {
     const moveType = this._moveType;
     const moveTypes = Object.keys(MOVE_TYPE).map(key => MOVE_TYPE[key] as ValueOf<typeof MOVE_TYPE>);
 
-    if (!includes(moveTypes, moveType)) {
+    const moveTypeStr = Array.isArray(moveType)
+      ? moveType[0]
+      : moveType;
+
+    const moveTypeOptions = Array.isArray(moveType)
+      ? moveType[1] ?? {}
+      : {};
+
+    if (!includes(moveTypes, moveTypeStr)) {
       throw new FlickingError(ERROR.MESSAGE.WRONG_OPTION("moveType", JSON.stringify(moveType)), ERROR.CODE.WRONG_OPTION);
     }
 
-    switch (moveType) {
+    switch (moveTypeStr) {
       case MOVE_TYPE.SNAP:
         return new SnapControl();
       case MOVE_TYPE.FREE_SCROLL:
-        return new FreeControl();
+        return new FreeControl(moveTypeOptions);
     }
   }
 
@@ -1161,26 +1195,20 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   private _createRenderer(): Renderer {
-    const elementManipulator = this._useOrderManipulator
-      ? new OrderManipulator()
-      : this._renderExternal
-        ? new OffsetManipulator()
-        : new ElementManipulator();
+    const renderingStrategy = this._renderOnlyVisible
+      ? new VisibleRenderingStrategy()
+      : new RawRenderingStrategy();
 
     const rendererOptions = {
       align: this._align,
-      elementManipulator
+      strategy: renderingStrategy
     };
 
-    return this._createActualRenderer(rendererOptions);
-  }
+    const renderExternal = this._renderExternal;
 
-  private _createActualRenderer(rendererOptions: RendererOptions): Renderer {
-    if (this._renderOnlyVisible) {
-      return new VisibleRenderer(rendererOptions);
-    }else {
-      return new RawRenderer(rendererOptions);
-    }
+    return renderExternal
+      ? new (renderExternal.renderer as any)({ ...rendererOptions, ...renderExternal.rendererOptions })
+      : new VanillaRenderer(rendererOptions);
   }
 
   private _moveToInitialPanel(): void {

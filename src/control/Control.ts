@@ -5,14 +5,14 @@
 import { OnRelease } from "@egjs/axes";
 import { ComponentEvent } from "@egjs/component";
 
-import Flicking from "~/Flicking";
-import FlickingError from "~/core/FlickingError";
-import Panel from "~/core/Panel";
-import AxesController from "~/control/AxesController";
-import { DIRECTION, EVENTS } from "~/const/external";
-import * as ERROR from "~/const/error";
-import { getDirection, getFlickingAttached } from "~/utils";
-import { ValueOf } from "~/type/internal";
+import Flicking from "../Flicking";
+import FlickingError from "../core/FlickingError";
+import Panel from "../core/panel/Panel";
+import AxesController from "../control/AxesController";
+import { DIRECTION, EVENTS } from "../const/external";
+import * as ERROR from "../const/error";
+import { getDirection, getFlickingAttached } from "../utils";
+import { ValueOf } from "../type/internal";
 
 /**
  * A component that manages inputs and animation of Flicking
@@ -40,11 +40,10 @@ abstract class Control {
    */
   public get activeIndex() { return this._activePanel?.index ?? -1; }
   /**
-   * Currently active panel
+   * An active panel
    * @ko 현재 선택된 패널
-   * @type {Panel}
+   * @type {Panel | null}
    * @readonly
-   * @see Panel
    */
   public get activePanel() { return this._activePanel; }
   /**
@@ -163,6 +162,26 @@ abstract class Control {
   }
 
   /**
+   * Update position after resizing
+   * @ko resize 이후에 position을 업데이트합니다
+   * @param {number} progressInPanel Previous camera's progress in active panel before resize<ko>Resize 이전 현재 선택된 패널 내에서의 카메라 progress 값</ko>
+   * @throws {FlickingError}
+   * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
+   * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
+   * @chainable
+   * @return {Promise<void>}
+   */
+  public async updatePosition(_progressInPanel: number): Promise<void> {   // eslint-disable-line @typescript-eslint/no-unused-vars
+    const flicking = getFlickingAttached(this._flicking, "Control");
+    const camera = flicking.camera;
+    const activePanel = this._activePanel;
+
+    if (activePanel) {
+      await camera.lookAt(camera.clampToReachablePosition(activePanel.position));
+    }
+  }
+
+  /**
    * Update {@link Control#controller controller}'s state
    * @ko {@link Control#controller controller}의 내부 상태를 갱신합니다
    * @chainable
@@ -175,12 +194,12 @@ abstract class Control {
   }
 
   /**
-   * Reset {@link Control#activePanel activePanel} to `null`
-   * @ko {@link Control#activePanel activePanel}을 `null`로 초기화합니다
+   * Reset {@link Control#activePanel activePanel} and {@link Control#activeAnchor activeAnchor} to `null`
+   * @ko {@link Control#activePanel activePanel}와 {@link Control#activeAnchor activeAnchor}를 `null`로 초기화합니다
    * @chainable
    * @return {this}
    */
-  public resetActivePanel(): this {
+  public resetActive(): this {
     this._activePanel = null;
 
     return this;
@@ -237,18 +256,16 @@ abstract class Control {
     const camera = flicking.camera;
 
     let position = panel.position;
+    const nearestAnchor = camera.findNearestAnchor(position);
 
+    if (panel.removed || !nearestAnchor) {
+      return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(panel.position), ERROR.CODE.POSITION_NOT_REACHABLE));
+    }
     if (!camera.canReach(panel)) {
-      const nearestAnchor = camera.findNearestAnchor(position);
-
-      if (panel.removed || !nearestAnchor) {
-        return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(panel.position), ERROR.CODE.POSITION_NOT_REACHABLE));
-      }
-
       // Override position & panel if that panel is not reachable
       position = nearestAnchor.position;
       panel = nearestAnchor.panel;
-    } else if (camera.controlParams.circular) {
+    } else if (flicking.circularEnabled) {
       // Circular mode is enabled, find nearest distance to panel
       const camPos = this._controller.position; // Actual position of the Axes
       const camRangeDiff = camera.rangeDiff;
@@ -305,23 +322,29 @@ abstract class Control {
     newActivePanel: Panel;
     axesEvent?: OnRelease;
   }) {
+    const flicking = getFlickingAttached(this._flicking, "Control");
     const currentPanel = this._activePanel;
     const animate = () => this._controller.animateTo(position, duration, axesEvent);
     const isTrusted = axesEvent?.isTrusted || false;
 
-    if (duration === 0) {
+    if (duration <= 0) {
       const animation = animate();
-      this._setActivePanel(newActivePanel, currentPanel, isTrusted);
+      this._setActive(newActivePanel, currentPanel, isTrusted);
       return animation;
     } else {
-      return animate().then(() => this._setActivePanel(newActivePanel, currentPanel, isTrusted));
+      return animate().then(async () => {
+        this._setActive(newActivePanel, currentPanel, isTrusted);
+        await flicking.renderer.render();
+      });
     }
   }
 
-  protected _setActivePanel = (newActivePanel: Panel, prevActivePanel: Panel | null, isTrusted: boolean) => {
+  protected _setActive = (newActivePanel: Panel, prevActivePanel: Panel | null, isTrusted: boolean) => {
     const flicking = getFlickingAttached(this._flicking, "Control");
 
     this._activePanel = newActivePanel;
+
+    flicking.camera.updateAdaptiveHeight();
 
     if (newActivePanel !== prevActivePanel) {
       flicking.trigger(new ComponentEvent(EVENTS.CHANGED, {

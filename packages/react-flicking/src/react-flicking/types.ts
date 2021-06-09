@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 import {
   SelectEvent,
   NeedPanelEvent,
@@ -15,15 +19,14 @@ import {
   BeforeResizeEvent,
   AfterResizeEvent,
   ReachEdgeEvent,
-  Plugin,
-  Status
+  Plugin
 } from "@egjs/flicking";
 
 export interface FlickingProps {
   viewportTag: keyof JSX.IntrinsicElements;
   cameraTag: keyof JSX.IntrinsicElements;
   plugins: Plugin[];
-  status: Partial<Status>;
+  useFindDOMNode: boolean;
   onReady: (e: ReadyEvent) => any;
   onBeforeResize: (e: BeforeResizeEvent) => any;
   onAfterResize: (e: AfterResizeEvent) => any;

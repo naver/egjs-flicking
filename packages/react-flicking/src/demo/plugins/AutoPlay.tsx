@@ -5,7 +5,7 @@ import { Fade, AutoPlay } from "@egjs/flicking-plugins";
 import "../css/plugins.css";
 
 export default class AutoPlayDemo extends React.Component<{}> {
-  private plugins = [new Fade(), new AutoPlay(2000, "NEXT")];
+  private plugins = [new Fade(), new AutoPlay({ duration: 2000, direction: "NEXT" })];
   public render() {
     return (
       <div id="autoplay" className="plugins container">
@@ -19,7 +19,6 @@ export default class AutoPlayDemo extends React.Component<{}> {
         circular={true}
         gap={10}
         duration={500}
-        plugins={this.plugins}
       >
         <div className="panel">
           <img alt="img" src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />

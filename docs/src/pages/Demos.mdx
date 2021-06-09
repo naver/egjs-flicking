@@ -1,0 +1,40 @@
+---
+title: Demos
+custom_edit_url: null
+---
+import Flicking from "@egjs/react-flicking";
+import Panel from "@site/src/component/Panel";
+import AddRemove from "@site/src/demo/AddRemove";
+import SideScroll from "@site/src/demo/SideScroll";
+import Grid from "@site/src/demo/Grid";
+import WeatherDisplay from "@site/src/demo/WeatherDisplay";
+import Sync from "@site/src/demo/Sync";
+
+# Demos
+## Panel add / remove
+<AddRemove />
+
+## Variable Size Panels
+Flicking uses panel element's real size, and doesn't modify them.
+<Flicking className="my-4" circular={true}>
+  <Panel color="primary" style={{ width: "120px" }} index={0} />
+  <Panel color="danger" style={{ width: "20%" }} index={1} />
+  <Panel color="info" style={{ width: "500px" }} index={2} />
+  <Panel color="warning" style={{ width: "300px" }} index={3} />
+  <Panel color="success" style={{ width: "100%" }} index={4} />
+</Flicking>
+
+## Horizontal Scroller
+You can easily create [iScroll](https://github.com/cubiq/iscroll)-like horizontal scroller with Flicking
+<SideScroll />
+
+## Grid
+Made with [@egjs/grid](https://github.com/naver/egjs-grid)
+<Grid />
+
+## Vertical Display
+<WeatherDisplay />
+
+## Sync between Flickings
+You can create Clubhouse Topics/Interests-like UI with Flicking
+<Sync />

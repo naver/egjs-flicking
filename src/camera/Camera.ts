@@ -4,13 +4,13 @@
  */
 import { ComponentEvent } from "@egjs/component";
 
-import Flicking, { FlickingOptions } from "~/Flicking";
-import FlickingError from "~/core/FlickingError";
-import Panel from "~/core/Panel";
-import AnchorPoint from "~/core/AnchorPoint";
-import * as ERROR from "~/const/error";
-import { ALIGN, DIRECTION, EVENTS } from "~/const/external";
-import { checkExistence, clamp, getFlickingAttached, getProgress, includes, parseAlign } from "~/utils";
+import Flicking, { FlickingOptions } from "../Flicking";
+import FlickingError from "../core/FlickingError";
+import Panel from "../core/panel/Panel";
+import AnchorPoint from "../core/AnchorPoint";
+import * as ERROR from "../const/error";
+import { ALIGN, DIRECTION, EVENTS } from "../const/external";
+import { checkExistence, clamp, getFlickingAttached, getProgress, includes, parseAlign } from "../utils";
 
 export interface CameraOptions {
   align: FlickingOptions["align"];
@@ -63,6 +63,7 @@ abstract class Camera {
    * @ko Camera의 좌표 오프셋. {@link Flicking#renderOnlyVisible renderOnlyVisible} 옵션을 위해 사용됩니다.
    * @type {number}
    * @default 0
+   * @readonly
    */
   public get offset() { return this._offset; }
   /**
@@ -136,6 +137,14 @@ abstract class Camera {
       : 0;
   }
 
+  /**
+   * Return the camera's position progress from the first panel to last panel
+   * Range is from 0 to last panel's index
+   * @ko 첫번째 패널로부터 마지막 패널까지의 카메라 위치의 진행도를 반환합니다
+   * 범위는 0부터 마지막 패널의 인덱스까지입니다
+   * @type {number}
+   * @readonly
+   */
   public get progress() {
     const flicking = this._flicking;
     const position = this._position + this._offset;
@@ -182,8 +191,6 @@ abstract class Camera {
       return nearestPanel.index + getProgress(position, panelPos, nextPosition);
     }
   }
-
-  public set offset(val: number) { this._offset = val; }
 
   // Options Getter
   /**
@@ -267,16 +274,14 @@ abstract class Camera {
    * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
    * @return {this}
    */
-  public lookAt(pos: number): this {
+  public async lookAt(pos: number): Promise<void> {
     const prevPos = this._position;
 
     this._position = pos;
-    this._refreshVisiblePanels();
+    await this._refreshVisiblePanels();
     this._checkNeedPanel();
     this._checkReachEnd(prevPos, pos);
     this._applyTransform();
-
-    return this;
   }
 
   /**
@@ -304,6 +309,20 @@ abstract class Camera {
   }
 
   /**
+   * Return the camera's position progress in the panel below
+   * Value is from 0 to 1 when the camera's inside panel
+   * Value can be lower than 0 or bigger than 1 when it's in the margin area
+   * @ko 현재 카메라 아래 패널에서의 위치 진행도를 반환합니다
+   * 반환값은 카메라가 패널 내부에 있을 경우 0부터 1까지의 값을 갖습니다
+   * 패널의 margin 영역에 있을 경우 0보다 작거나 1보다 큰 값을 반환할 수 있습니다
+   */
+  public getProgressInPanel(panel: Panel) {
+    const panelRange = panel.range;
+
+    return (this._position - panelRange.min) / (panelRange.max - panelRange.min);
+  }
+
+  /**
    * Return {@link AnchorPoint} that includes given position
    * If there's no {@link AnchorPoint} that includes the given position, return `null` instead
    * @ko 주어진 좌표를 포함하는 {@link AnchorPoint}를 반환합니다
@@ -313,14 +332,15 @@ abstract class Camera {
    */
   public findAnchorIncludePosition(position: number): AnchorPoint | null {
     const anchors = this._anchors;
+    const anchorsIncludingPosition = anchors.filter(anchor => anchor.panel.includePosition(position, true));
 
-    for (const anchor of anchors) {
-      if (anchor.panel.includePosition(position, true)) {
-        return anchor;
-      }
-    }
+    return anchorsIncludingPosition.reduce((nearest: AnchorPoint | null, anchor) => {
+      if (!nearest) return anchor;
 
-    return null;
+      return Math.abs(nearest.position - position) < Math.abs(anchor.position - position)
+        ? nearest
+        : anchor;
+    }, null);
   }
 
   /**
@@ -433,23 +453,35 @@ abstract class Camera {
   }
 
   /**
-   * Update position after resizing
-   * @ko resize 이후에 position을 업데이트합니다
+   * Update Viewport's height to active panel's height
+   * @ko 현재 선택된 패널의 높이와 동일하도록 뷰포트의 높이를 업데이트합니다
    * @throws {FlickingError}
    * {@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
    * <ko>{@link Constants.ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
    * @chainable
    * @return {this}
    */
-  public updatePosition(): this {
+  public updateAdaptiveHeight() {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const activePanel = flicking.control.activePanel;
 
-    if (activePanel) {
-      this.lookAt(activePanel.position);
-    }
+    if (!flicking.horizontal || !flicking.adaptive || !activePanel) return;
 
-    return this;
+    flicking.viewport.setSize({
+      height: activePanel.height
+    });
+  }
+
+  public updateOffset() {
+    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const unRenderedPanels = flicking.panels.filter(panel => !panel.rendered);
+    const position = this._position;
+
+    this._offset = unRenderedPanels
+      .filter(panel => panel.position + panel.offset < position)
+      .reduce((offset, panel) => offset + panel.sizeIncludingMargin, 0);
+
+    this._applyTransform();
   }
 
   /**
@@ -473,7 +505,7 @@ abstract class Camera {
     this._needPanelTriggered = { prev: false, next: false };
   }
 
-  protected _refreshVisiblePanels() {
+  protected async _refreshVisiblePanels() {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const panels = flicking.renderer.panels;
 
@@ -485,7 +517,7 @@ abstract class Camera {
     const removed: Panel[] = prevVisiblePanels.filter(panel => !includes(newVisiblePanels, panel));
 
     if (added.length > 0 || removed.length > 0) {
-      flicking.renderer.render();
+      await flicking.renderer.render();
 
       flicking.trigger(new ComponentEvent(EVENTS.VISIBLE_CHANGE, {
         added,

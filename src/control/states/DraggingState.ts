@@ -4,10 +4,11 @@
  */
 import { ComponentEvent } from "@egjs/component";
 
-import State, { STATE_TYPE } from "~/control/states/State";
-import { EVENTS } from "~/const/external";
-import * as AXES from "~/const/axes";
-import { getDirection } from "~/utils";
+import { EVENTS } from "../../const/external";
+import * as AXES from "../../const/axes";
+import { getDirection } from "../../utils";
+
+import State, { STATE_TYPE } from "./State";
 
 /**
  * A state that activates when user's dragging the Flicking area
@@ -40,7 +41,7 @@ class DraggingState extends State {
     const camera = flicking.camera;
     const prevPosition = camera.position;
 
-    camera.lookAt(axesEvent.pos[AXES.POSITION_KEY]);
+    void camera.lookAt(axesEvent.pos[AXES.POSITION_KEY]);
 
     const moveEvent = new ComponentEvent(EVENTS.MOVE, {
       isTrusted: axesEvent.isTrusted,
@@ -52,7 +53,7 @@ class DraggingState extends State {
 
     if (moveEvent.isCanceled()) {
       // Return to previous position
-      camera.lookAt(prevPosition);
+      void camera.lookAt(prevPosition);
       transitTo(STATE_TYPE.DISABLED);
     }
   }

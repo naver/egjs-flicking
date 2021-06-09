@@ -1,11 +1,10 @@
 /* eslint-disable max-classes-per-file */
-import { Component, OnInit, Input, AfterViewInit, ElementRef, Renderer2, ChangeDetectorRef } from '@angular/core';
-import { RenderPanelChangeEvent } from 'projects/ngx-flicking/src/lib/ngx-flicking.component';
+import { Component, OnInit, Input, AfterViewInit, ElementRef, Renderer2, ChangeDetectorRef } from "@angular/core";
 
 @Component({
-  selector: 'demo-visiblepanels',
-  templateUrl: './visiblepanels.component.html',
-  styleUrls: ['../app.component.css', './visiblepanels.component.css']
+  selector: "demo-visiblepanels",
+  templateUrl: "./visiblepanels.component.html",
+  styleUrls: ["../app.component.css", "./visiblepanels.component.css"]
 })
 export class VisiblePanelsComponent implements OnInit {
   list0 = [0, 1, 2, 3, 4];
@@ -20,17 +19,13 @@ export class VisiblePanelsComponent implements OnInit {
 
   onPrepend() {
     const start = this.list0[0] || 0;
-    this.list0 = [start - 2, start - 1, ...this.list0]
+    this.list0 = [start - 2, start - 1, ...this.list0];
   }
 
   onAppend() {
     const end = this.list0[this.list0.length - 1] || 0;
-    this.list0 = [...this.list0, end + 1, end + 2];
-  }
-
-  onRenderPanelChange(event: RenderPanelChangeEvent) {
-    this.visiblePanels = [...event.visibles];
-    this.cdr.detectChanges();
+    const array = new Array(1000).fill(0);
+    this.list0 = [...this.list0, ...array.map((val, idx) => idx + end + 1)];
   }
 
   // TODO: We can use trackByFn for the performance.
@@ -43,9 +38,9 @@ export class VisiblePanelsComponent implements OnInit {
 }
 
 @Component({
-  selector: 'place-holder',
-  template: `<ng-content></ng-content>`,
-  styleUrls: ['../app.component.css', './visiblepanels.component.css']
+  selector: "place-holder",
+  template: "<ng-content></ng-content>",
+  styleUrls: ["../app.component.css", "./visiblepanels.component.css"]
 })
 export class PlaceHolderItemComponent implements OnInit, AfterViewInit {
   @Input() num: number;
@@ -54,12 +49,12 @@ export class PlaceHolderItemComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.renderer.addClass(this.elRef.nativeElement, `infinite${this.num % 5}`);
-    this.renderer.addClass(this.elRef.nativeElement, 'placeholder');
+    this.renderer.addClass(this.elRef.nativeElement, "placeholder");
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.renderer.removeClass(this.elRef.nativeElement, 'placeholder');
+      this.renderer.removeClass(this.elRef.nativeElement, "placeholder");
     }, 1500);
   }
 }

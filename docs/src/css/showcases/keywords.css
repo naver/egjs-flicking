@@ -1,0 +1,79 @@
+.keywords {
+  width: 400px;
+  color: #fff;
+  transition: background-color ease 0.2s;
+  margin: 0px auto;
+}
+
+.keywords,
+.keywords[data-age="10"] {
+  background: #4798CF;
+}
+
+.keywords[data-age="20"] {
+  background: #2EBD5E;
+}
+
+.keywords[data-age="30"] {
+  background: #2EB3BE;
+}
+
+.keywords h2 {
+  padding: 0;
+  margin: 0;
+  padding: 20px;
+  font-size: 18px;
+  font-weight: 500;
+  display: flex;
+}
+
+.keywords h2 span.keywords-title:before {
+  content: attr(data-age);
+}
+
+.keywords h2 span.time {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+}
+
+.keywords h2 span.time:before {
+  content: "";
+  position: relative;
+  display: block;
+  flex: 1;
+  background: #fff;
+  opacity: 0.5;
+  height: 1px;
+  margin: 0px 10px;
+}
+
+.keywords h2 span.time span {
+  vertical-align: middle;
+}
+
+.keywords h2 span.time span.hour:after,
+.keywords h2 span.time span.minute:after {
+  content: ":";
+  color: #fff;
+  opacity: 0.5;
+  font-size: 90%;
+  padding: 0px 5px;
+}
+
+.keywords-flicking .item {
+  font-size: 38px;
+  font-weight: 300;
+  display: inline-block;
+  padding: 5px 10px 5px 20px;
+  white-space: nowrap;
+  opacity: 0.5;
+  transition: opacity ease 0.2s;
+  cursor: pointer;
+}
+
+.keywords-flicking .item.checked {
+  opacity: 1;
+}

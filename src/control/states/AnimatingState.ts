@@ -4,9 +4,10 @@
  */
 import { ComponentEvent } from "@egjs/component";
 
-import State, { STATE_TYPE } from "~/control/states/State";
-import { EVENTS } from "~/const/external";
-import { getDirection } from "~/utils";
+import { EVENTS } from "../../const/external";
+import { getDirection } from "../../utils";
+
+import State, { STATE_TYPE } from "./State";
 
 /**
  * A state that activates when Flicking's animating by user input or method call
@@ -52,7 +53,7 @@ class AnimatingState extends State {
     const camera = flicking.camera;
     const prevPosition = camera.position;
 
-    camera.lookAt(axesEvent.pos.flick);
+    void camera.lookAt(axesEvent.pos.flick);
 
     const moveEvent = new ComponentEvent(EVENTS.MOVE, {
       isTrusted: axesEvent.isTrusted,
@@ -65,25 +66,13 @@ class AnimatingState extends State {
 
     if (moveEvent.isCanceled()) {
       // Return to previous position
-      flicking.camera.lookAt(prevPosition);
+      void flicking.camera.lookAt(prevPosition);
       transitTo(STATE_TYPE.DISABLED);
     }
   }
 
   public onFinish(ctx: Parameters<State["onFinish"]>[0]) {
     const { flicking, axesEvent, transitTo } = ctx;
-
-    // if (viewport.options.bound) {
-    //   viewport.setCurrentPanel(this.targetPanel as Panel);
-    // } else {
-    //   viewport.setCurrentPanel(viewport.getNearestPanel() as Panel);
-    // }
-
-    const camera = flicking.camera;
-    const anchorBelow = camera.findAnchorIncludePosition(camera.position);
-    if (flicking.horizontal && flicking.adaptive && anchorBelow) {
-      flicking.viewport.setSize({ height: anchorBelow.panel.height });
-    }
 
     transitTo(STATE_TYPE.IDLE);
 

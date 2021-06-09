@@ -18,7 +18,6 @@ export default class FadeDemo extends React.Component<{}> {
         className="flicking"
         circular={true}
         gap={10}
-        plugins={this.plugins}
       >
         <div className="panel">
           <img alt="img" src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />

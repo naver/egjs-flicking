@@ -4,11 +4,12 @@
  */
 import { OnRelease } from "@egjs/axes";
 
-import Control from "~/control/Control";
-import FlickingError from "~/core/FlickingError";
-import { getFlickingAttached } from "~/utils";
-import * as ERROR from "~/const/error";
-import { Panel } from "~/core";
+import Panel from "../core/panel/Panel";
+import FlickingError from "../core/FlickingError";
+import { getFlickingAttached } from "../utils";
+import * as ERROR from "../const/error";
+
+import Control from "./Control";
 
 /**
  * A {@link Control} that uses a release momentum to choose destination panel
@@ -83,7 +84,7 @@ class SnapControl extends Control {
       targetPos = adjacentAnchor.position;
     } else {
       // Restore to active panel
-      targetPos = activePanel.position;
+      targetPos = camera.clampToReachablePosition(activePanel.position);
       targetPanel = activePanel;
     }
 
