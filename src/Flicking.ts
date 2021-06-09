@@ -89,7 +89,9 @@ class Flicking extends Component<FlickingEvents> {
    * @type {string}
    * @readonly
    * @example
+   * ```ts
    * Flicking.VERSION;  // ex) 4.0.0
+   * ```
    */
   public static VERSION = "#__VERSION__#";
 

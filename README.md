@@ -52,9 +52,6 @@
     <tr>
       <td colspan="2"><a href="https://codepen.io/egjs/pen/vqYjrr" target="_blank"><img width="480" src="https://user-images.githubusercontent.com/26213435/59832835-cf538e00-937f-11e9-99a5-10f24da4c242.gif" alt="Parallax demo" style="max-width: 100%;" /></a></td>
     </tr>
-    <tr>
-      <td colspan="3"><a href="https://codepen.io/woodneck/pen/agoWOj" target="_blank"><img width="960" src="https://user-images.githubusercontent.com/26213435/59832832-cebaf780-937f-11e9-883c-06ba3890ec16.gif" alt="Cabinet demo" style="max-width: 100%;" /></a></td>
-    </tr>
   </tbody>
 </table>
 <h6 align="center">
