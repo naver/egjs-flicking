@@ -11,6 +11,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "esModuleInterop": false,
+    "skipLibCheck": true,
     "baseUrl": "."
   },
   "include": [

@@ -9,6 +9,7 @@
     "module": "commonjs",
     "strictNullChecks": true,
     "types": ["codeceptjs"],
+    "skipLibCheck": true,
     "jsx": "react",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
