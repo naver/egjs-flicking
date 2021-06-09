@@ -28,7 +28,6 @@ import VanillaFlicking, {
   getRenderingPanels,
   Plugin
 } from "@egjs/flicking";
-import "@egjs/flicking/dist/flicking.css";
 import { isFragment } from "react-is";
 
 import { DEFAULT_PROPS } from "./consts";

@@ -14,7 +14,6 @@ import VanillaFlicking, {
   Status,
   getRenderingPanels
 } from "@egjs/flicking";
-import "@egjs/flicking/dist/flicking.css";
 
 import VueRenderer from "./VueRenderer";
 import VuePanelComponent from "./VuePanelComponent";

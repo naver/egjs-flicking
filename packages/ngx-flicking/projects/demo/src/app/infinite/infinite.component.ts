@@ -3,7 +3,7 @@
 import { Component, OnInit, Input, AfterViewInit, ElementRef, Renderer2, ChangeDetectorRef } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 
-import { EVENTS } from '~/index';
+import { EVENTS } from '@egjs/flicking';
 
 @Component({
   selector: 'demo-infinite',

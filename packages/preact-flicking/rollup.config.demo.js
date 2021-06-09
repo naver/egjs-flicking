@@ -5,8 +5,6 @@ import commonjs from 'rollup-plugin-commonjs';
 const preact = require("rollup-plugin-preact");
 
 
-
-
 export default builder({
     input: "./src/demo/index.tsx",
     tsconfig: "./tsconfig.build.json",
@@ -18,8 +16,8 @@ export default builder({
     plugins: [
         commonjs({
           namedExports: {
-            'highlight.js': ['initHighlighting'],
-          },
+            'highlight.js': ['initHighlighting']
+          }
         }),
         css({ output: "./demo/dist/index.css" }),
         preact({
@@ -27,7 +25,7 @@ export default builder({
             noEnv: true,
             noReactIs: true,
             resolvePreactCompat: true,
-            usePreactX: true,
-        }),
-    ],
+            usePreactX: true
+        })
+    ]
 });

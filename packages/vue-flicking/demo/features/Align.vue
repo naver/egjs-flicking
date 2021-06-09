@@ -48,13 +48,8 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Panels from "./component/Panels";
 
-@Component({
-  components: {
-    Panels
-  }
-})
+@Component({})
 export default class Align extends Vue {
   public a = true;
 

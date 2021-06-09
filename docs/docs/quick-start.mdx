@@ -71,6 +71,9 @@ You can import & use Flicking as a React Component.
 
 ```jsx title="SomeComponent.jsx"
 import Flicking from "@egjs/react-flicking";
+import "@egjs/react-flicking/dist/flicking.css";
+// Or, if you have to support IE9
+import "@egjs/react-flicking/dist/flicking-inline.css";
 
 export default () => (
   <Flicking
@@ -159,7 +162,7 @@ And also, be aware that the component should always return a single DOM that nev
 
 You can register Flicking either locally...
 
-```js title="SomeComponent.vue"
+```js title="SomeComponent.vue - <script>"
 import Flicking from "@egjs/vue-flicking";
 
 export default {
@@ -168,11 +171,19 @@ export default {
   }
 }
 ```
+```css title="SomeComponent.vue - <style>"
+@import url("node_modules/@egjs/flicking/dist/flicking.css");
+// Or, if you have to support IE9
+@import url("node_modules/@egjs/flicking/dist/flicking-inline.css");
+```
 
 or globally.
 
-```js
+```js title="main.js"
 import Flicking from "@egjs/vue-flicking";
+import "@egjs/vue-flicking/dist/flicking.css";
+// Or, if you have to support IE9
+import "@egjs/vue-flicking/dist/flicking-inline.css";
 
 Vue.use(Flicking);
 ```
@@ -239,6 +250,9 @@ You can import & use Flicking as a Preact Component.
 
 ```jsx title="SomeComponent.jsx"
 import Flicking from "@egjs/preact-flicking";
+import "@egjs/preact-flicking/dist/flicking.css";
+// Or, if you have to support IE9
+import "@egjs/preact-flicking/dist/flicking-inline.css";
 
 export default () => (
   <Flicking

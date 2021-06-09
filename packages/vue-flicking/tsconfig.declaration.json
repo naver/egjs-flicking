@@ -1,14 +1,17 @@
 {
   "extends": "./tsconfig",
   "compilerOptions": {
+    "skipLibCheck": true,
     "removeComments": true,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "declarationDir": "declaration"
+    "declarationDir": "declaration",
+    "strict": false
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue"
+    "./src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

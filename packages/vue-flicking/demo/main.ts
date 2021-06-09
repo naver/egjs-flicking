@@ -1,8 +1,12 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+
 import VueFlicking from "../src/index";
+
 import App from "./Demo.vue";
 import routerOption from "./router";
+
+import "@egjs/flicking/dist/flicking.css";
 
 Vue.use(VueRouter);
 Vue.use(VueFlicking);

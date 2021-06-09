@@ -1,15 +1,20 @@
 {
-    "extends": "./tsconfig",
-    "compilerOptions": {
-        "allowJs": false,
-        "noEmit": false,
-        "isolatedModules": false,
-        "removeComments": true,
-        "declaration": true,
-        "emitDeclarationOnly": true,
-        "declarationDir": "declaration"
-    },
-    "include": [
-        "./src/preact-flicking/**/*"
-    ]
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "allowJs": false,
+    "noEmit": false,
+    "isolatedModules": false,
+    "removeComments": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "declaration",
+    "strict": false
+  },
+  "include": [
+    "./src/preact-flicking/**/*"
+  ],
+  "exclude": [
+    "**/node_modules/**/*"
+  ]
 }

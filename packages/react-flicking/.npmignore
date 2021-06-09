@@ -1,0 +1,13 @@
+node_modules/
+public/
+src/demo/
+
+src/index.tsx
+src/react-app-env.d.ts
+.eslintcache
+.env
+config-overrides.js
+rollup.config.js
+tsconfig.paths.json
+tsconfig.declaration.json
+tsconfig.build.json

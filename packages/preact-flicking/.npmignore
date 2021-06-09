@@ -1,0 +1,11 @@
+node_modules/
+demo/
+src/demo/
+
+.eslintcache
+.env
+config-overrides.js
+rollup.config.js
+rollup.config.demo.js
+tsconfig.build.json
+tsconfig.declaration.json

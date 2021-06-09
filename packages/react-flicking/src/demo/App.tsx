@@ -3,6 +3,7 @@ import { Component } from "react";
 import "./css/common.css";
 import "./css/features.css";
 import "./css/highlight.css";
+import "@egjs/flicking/dist/flicking.css";
 import hljs from "highlight.js";
 import InfiniteFlicking from "./features/InfiniteFlicking";
 import FreeScroll from "./features/FreeScroll";

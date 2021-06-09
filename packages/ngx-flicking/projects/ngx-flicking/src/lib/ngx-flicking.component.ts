@@ -92,8 +92,7 @@ export class NgxFlickingComponent extends FlickingInterface
       renderExternal: {
         renderer: NgxRenderer,
         rendererOptions: { ngxFlicking: this, ngxRenderer: this._ngxRenderer }
-      },
-      useOrderManipulator: true
+      }
     };
 
     // This prevents mousemove to call ngDoCheck & noAfterContentChecked everytime

@@ -1,6 +1,6 @@
 {
  "name": "@egjs/vue-flicking",
- "version": "3.5.2",
+ "version": "4.0.1",
  "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
  "main": "dist/flicking.cjs.js",
  "module": "dist/flicking.esm.js",
@@ -9,6 +9,7 @@
  "scripts": {
   "start": "vue-cli-service demo",
   "build": "rm -rf dist && rollup -c && npm run declaration",
+  "postbuild": "cpx 'node_modules/@egjs/flicking/dist/*.css' dist/",
   "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
   "test": "vue-cli-service test:unit",
   "lint": "vue-cli-service lint --no-fix",
@@ -35,9 +36,8 @@
   "not op_mini all"
  ],
  "dependencies": {
-  "@egjs/flicking": "^4.0.0-beta.10",
+  "@egjs/flicking": "^4.0.0",
   "@egjs/list-differ": "^1.0.0",
-  "@egjs/vue-children-differ": "^1.0.0",
   "vue-property-decorator": "^8.1.0"
  },
  "devDependencies": {
@@ -51,9 +51,10 @@
   "@vue/cli-service": "^3.7.0",
   "@vue/test-utils": "1.0.0-beta.29",
   "chai": "^4.1.2",
+  "cpx": "^1.5.0",
   "rollup-plugin-vue": "^5.0.0",
-  "tslib": "^2.2.0",
-  "typescript": "^4.1.5",
+  "tslib": "^2.1.0",
+  "typescript": "^4.2.3",
   "vue": "^2.6.10",
   "vue-class-component": "^7.0.2",
   "vue-cli-plugin-p11n": "^0.3.0",

@@ -1,41 +1,42 @@
 import builder from "@egjs/build-helper";
-const preact = require("rollup-plugin-preact");
 
+const preact = require("rollup-plugin-preact");
 
 const defaultOptions = {
     sourcemap: false,
     tsconfig: "tsconfig.build.json",
     external: {
-        "preact": "preact",
-        "preact/compat": "preact/compat",
-        "@egjs/flicking": "@egjs/flicking",
-        "@egjs/list-differ": "@egjs/list-differ",
-        "@egjs/children-differ": "@egjs/children-differ",
+      "preact": "preact",
+      "preact/compat": "preact/compat"
     },
-    exports: "named",
     plugins: [
-        preact({
-            noPropTypes: false,
-            noEnv: false,
-            noReactIs: false,
-            usePreactX: true,
-        }),
-    ],
+      preact({
+        extensions: ["js", "jsx", "ts", "tsx"],
+        noPropTypes: false,
+        noEnv: false,
+        noReactIs: false,
+        resolvePreactCompat: true,
+        usePreactX: true,
+        aliasModules: {
+          'react-dom': 'preact/compat',
+          'react-is': 'preact/compat'
+        }
+      })
+    ]
 };
 
 export default builder([
     {
         ...defaultOptions,
-        input: "src/preact-flicking/index.umd.ts",
+        input: "src/preact-flicking/index.ts",
         output: "./dist/flicking.esm.js",
-        format: "es",
-        exports: "default",
+        format: "esm",
+        exports: "named"
     },
     {
         ...defaultOptions,
         input: "src/preact-flicking/index.umd.ts",
         output: "./dist/flicking.cjs.js",
-        format: "cjs",
-        exports: "default",
-    },
+        format: "cjs"
+    }
 ]);

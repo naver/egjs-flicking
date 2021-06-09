@@ -6,11 +6,7 @@
     "emitDeclarationOnly": true,
     "declarationDir": "declaration",
     "skipLibCheck": true,
-    "strictNullChecks": false,
-    "plugins": [
-      { "transform": "typescript-transform-paths" },
-      { "transform": "typescript-transform-paths", "afterDeclarations": true }
-    ]
+    "strictNullChecks": false
   },
   "include": [
     "./src/**/*.ts",
