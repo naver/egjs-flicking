@@ -15,7 +15,6 @@ export default buildHelper([
   {
     ...defaultOptions,
     format: "cjs",
-    output: "./dist/flicking.cjs.js",
-    exports: "named"
+    output: "./dist/flicking.cjs.js"
   },
 ]);

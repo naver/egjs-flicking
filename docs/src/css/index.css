@@ -1,6 +1,6 @@
 .flicking-logo {
   content: url("@site/static/img/flicking.svg");
-  z-index: 999;
+  z-index: 1;
   position: relative;
   pointer-events: none;
   user-select: none;
