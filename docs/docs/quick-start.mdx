@@ -11,11 +11,11 @@ import TabItem from '@theme/TabItem';
 <Tabs
   groupId="cfc"
   defaultValue="js"
-  lazy={true}
   values={[
     { label: "JavaScript", value: "js" },
     { label: "React", value: "react" },
-    { label: "Vue", value: "vue" },
+    { label: "Vue@2", value: "vue" },
+    { label: "Vue@3", value: "vue3" },
     { label: "Angular", value: "angular" },
     { label: "Preact", value: "preact" }
   ]}>
@@ -172,9 +172,9 @@ export default {
 }
 ```
 ```css title="SomeComponent.vue - <style>"
-@import url("node_modules/@egjs/flicking/dist/flicking.css");
+@import url("node_modules/@egjs/vue-flicking/dist/flicking.css");
 // Or, if you have to support IE9
-@import url("node_modules/@egjs/flicking/dist/flicking-inline.css");
+@import url("node_modules/@egjs/vue-flicking/dist/flicking-inline.css");
 ```
 
 or globally.
@@ -188,7 +188,7 @@ import "@egjs/vue-flicking/dist/flicking-inline.css";
 Vue.use(Flicking);
 ```
 
-Then use Flickinhg like the other Vue components.
+Then use Flicking like the other Vue components.
 ```html
 <Flicking :options="{ align: 'prev', circular: true }" @move-end="onMoveEnd">
   <div class="panel">1</div>
@@ -196,6 +196,68 @@ Then use Flickinhg like the other Vue components.
   <div class="panel">3</div>
 </Flicking>
 ```
+
+  </TabItem>
+  <TabItem value="vue3">
+
+You can register Flicking either locally...
+
+```js title="SomeComponent.vue - <script>"
+import Flicking from "@egjs/vue3-flicking";
+
+export default {
+  components: {
+    Flicking: Flicking
+  }
+}
+```
+```css title="SomeComponent.vue - <style>"
+@import url("node_modules/@egjs/vue-flicking/dist/flicking.css");
+// Or, if you have to support IE9
+@import url("node_modules/@egjs/vue-flicking/dist/flicking-inline.css");
+```
+
+or globally.
+
+```js title="main.js"
+import { createApp } from "vue"
+import App from "./App.vue"
+import Flicking from "../dist/flicking.esm";
+import "@egjs/vue3-flicking/dist/flicking.css";
+// Or, if you have to support IE9
+import "@egjs/vue3-flicking/dist/flicking-inline.css";
+
+const app = createApp(App);
+
+app.component("Flicking", Flicking);
+app.mount("#app");
+```
+
+Then use Flicking like the other Vue components.
+```html
+<Flicking :options="{ align: 'prev', circular: true }" @move-end="onMoveEnd">
+  <div class="panel">1</div>
+  <div class="panel">2</div>
+  <div class="panel">3</div>
+</Flicking>
+```
+
+:::warning
+You can't use a Vue component that uses fragments(a.k.a. multi-root node components) as a panel
+```jsx
+<Flicking>
+  <Panels /> // This won't work
+</Flicking>
+```
+
+```html title="Panels.vue"
+<template>
+  <div :key="0">0</div>
+  <div :key="1">1</div>
+  <div :key="2">2</div>
+</template>
+```
+:::
 
   </TabItem>
   <TabItem value="angular">

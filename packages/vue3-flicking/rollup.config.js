@@ -3,13 +3,19 @@ const commonjs = require("rollup-plugin-commonjs");
 const resolve = require("rollup-plugin-node-resolve");
 const vue = require("rollup-plugin-vue");
 
+const external = {
+  "vue": "Vue",
+  "@egjs/axes": "eg.Axes",
+  "@egjs/component": "eg.Component"
+};
+
 const defaultOptions = {
   sourcemap: true,
   plugins: [
     commonjs(),
-    resolve(),
     vue()
-  ]
+  ],
+  external
 };
 export default buildHelper([
   {

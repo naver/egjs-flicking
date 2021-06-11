@@ -94,7 +94,7 @@ export default {
 </script>
 
 <style>
-@import url(../node_modules/@egjs/flicking/dist/flicking.css);
+
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
