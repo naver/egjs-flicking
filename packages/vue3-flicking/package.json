@@ -1,19 +1,45 @@
 {
-  "name": "vue3-flicking",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@egjs/vue3-flicking",
+  "version": "4.0.0",
+  "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
+  "main": "dist/flicking.cjs.js",
+  "module": "dist/flicking.esm.js",
+  "types": "declaration/index.d.ts",
+  "sideEffects": false,
   "scripts": {
     "serve": "vue-cli-service serve ./demo/main.ts",
-    "build": "vue-cli-service build"
+    "build": "rm -rf dist && rollup -c && npm run declaration",
+    "postbuild": "cpx 'node_modules/@egjs/flicking/dist/*.{css,css.map}' dist/",
+    "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/naver/egjs-flicking/tree/master/packages/vue3-flicking"
+  },
+  "author": {
+    "name": "NAVER Corp."
+  },
+  "homepage": "https://naver.github.io/egjs-flicking",
+  "bugs": {
+    "url": "https://github.com/naver/egjs-flicking/issues"
+  },
+  "license": "MIT",
+  "browserslist": [
+    "last 2 version",
+    "ie 9-11",
+    "not op_mini all"
+  ],
   "dependencies": {
     "@egjs/flicking": "^4.0.0",
     "vue": "^3.0.0"
   },
   "devDependencies": {
+    "@egjs/build-helper": "^0.1.2",
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
+    "cpx": "^1.5.0",
+    "rollup-plugin-vue": "^6.0.0-beta.10",
     "tslib": "^2.2.0",
     "typescript": "~4.1.5",
     "vue-class-component": "^8.0.0-rc.1"

@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "start": "open ./demo/index.html && rollup -c rollup.config.demo.js -w",
-    "build": "rm -rf dist && rollup -c && cpx 'node_modules/@egjs/react-flicking/dist/*.css' dist/ && npm run declaration",
+    "build": "rm -rf dist && rollup -c && cpx 'node_modules/@egjs/react-flicking/dist/*.{css,css.map}' dist/ && npm run declaration",
     "postbuild": "print-sizes ./dist",
     "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json && cp ./src/preact-flicking/Flicking.d.ts ./declaration/Flicking.d.ts"
   },

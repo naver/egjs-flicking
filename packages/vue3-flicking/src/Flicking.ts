@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 /**
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
 /* eslint-disable max-classes-per-file */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Vue, Options, prop, VueConstructor } from "vue-class-component";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
-// import { Prop } from "vue-property-decorator";
 import { h, VNode, resolveComponent, Fragment } from "vue";
 import VanillaFlicking, {
   EVENTS,
@@ -32,7 +31,6 @@ class FlickingProps {
 
 @Options({
   components: {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     Panel: VuePanelComponent
   }
 })
