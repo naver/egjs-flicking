@@ -1,15 +1,15 @@
 {
   "private": true,
   "scripts": {
-    "dev": "nuxt",
+    "dev": "NUXT_HOST=0.0.0.0 nuxt",
     "build": "nuxt build",
-    "start": "nuxt start",
+    "start": "NUXT_HOST=0.0.0.0 nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint"
   },
   "dependencies": {
-    "@egjs/vue-flicking": "^3.1.1",
+    "@egjs/vue-flicking": "^4.0.1",
     "nuxt": "^2.0.0",
     "vue-hljs": "^1.1.2"
   },

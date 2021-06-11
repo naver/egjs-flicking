@@ -261,10 +261,8 @@ export interface SelectEvent<T extends Flicking = Flicking> extends ComponentEve
  * @type {object}
  * @property {Flicking} currentTarget An Flicking instance that triggered this event<ko>이 이벤트를 트리거한 Flicking의 인스턴스</ko>
  * @property {string} eventType Name of the event<ko>이벤트명</ko>
- * @property {DIRECTION} direction Direction where new panel is needed.
- * `DIRECTION.PREV` means panels should be {@link Flicking#prepend prepend}ed and `DIRECTION.NEXT` means panels should be {@link Flicking#append append}ed
- * <ko>패널이 필요한 방향.
- * `DIRECTION.PREV`의 경우 패널이 {@link Flicking#prepend prepend}되어야 함을 의미하고, `DIRECTION.NEXT`는 패널이 {@link Flicking#append append}되어야 함을 의미한다</ko>
+ * @property {DIRECTION} direction Direction where new panel is needed. `DIRECTION.PREV` means panels should be {@link Flicking#prepend prepend}ed and `DIRECTION.NEXT` means panels should be {@link Flicking#append append}ed
+ * <ko>패널이 필요한 방향. `DIRECTION.PREV`의 경우 패널이 {@link Flicking#prepend prepend}되어야 함을 의미하고, `DIRECTION.NEXT`는 패널이 {@link Flicking#append append}되어야 함을 의미한다</ko>
  */
 export interface NeedPanelEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["NEED_PANEL"], T> {
   direction: Exclude<ValueOf<typeof DIRECTION>, null>;

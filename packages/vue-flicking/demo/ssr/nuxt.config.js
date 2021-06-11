@@ -33,7 +33,8 @@ module.exports = {
     { src: '~/plugins/install' }
   ],
   css: [
-    '~assets/common.css'
+    '~assets/common.css',
+    "./node_modules/@egjs/vue-flicking/dist/flicking.css"
   ]
 }
 
