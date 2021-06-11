@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@egjs/build-helper": "^0.1.2",
+    "@rollup/plugin-commonjs": "^19.0.0",
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
