@@ -1,6 +1,5 @@
 const buildHelper = require("@egjs/build-helper");
 const commonjs = require("rollup-plugin-commonjs");
-const resolve = require("rollup-plugin-node-resolve");
 const vue = require("rollup-plugin-vue");
 
 const external = {

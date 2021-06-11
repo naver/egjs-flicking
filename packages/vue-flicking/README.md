@@ -47,6 +47,10 @@ npm install --save @egjs/vue-flicking
 ### Global registration
 ```js
 import VueFlicking from "@egjs/vue-flicking";
+import "@egjs/vue-flicking/dist/flicking.css";
+// Or, if you have to support IE9
+import "@egjs/vue-flicking/dist/flicking-inline.css";
+
 Vue.use(VueFlicking);
 ```
 
@@ -59,6 +63,13 @@ export default {
     Flicking: Flicking,
   }
 }
+```
+
+And in the \<style\> tag
+```css
+@import url("node_modules/@egjs/vue-flicking/dist/flicking.css");
+// Or, if you have to support IE9
+@import url("node_modules/@egjs/vue-flicking/dist/flicking-inline.css");
 ```
 
 ### Usage
