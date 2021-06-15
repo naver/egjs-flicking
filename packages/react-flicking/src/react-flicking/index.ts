@@ -4,7 +4,7 @@
  */
 import Flicking from "./Flicking";
 
-export * from "@egjs/flicking/src/exports";
+export * from "@egjs/flicking";
 export * from "./types";
 
 export default Flicking;
