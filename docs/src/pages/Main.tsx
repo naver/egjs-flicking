@@ -23,7 +23,7 @@ export default () => <>
             🚀 Get Started
         </Link>
         <Link
-          className="button pl-5"
+          className="button pl-5 mr-2"
           to="https://github.com/naver/egjs-flicking">
           <span className="icon is-small mr-2">
             <img src="img/icons/github.svg" />
