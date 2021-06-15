@@ -32,6 +32,10 @@
   <a href="https://naver.github.io/egjs-flicking/">Demo</a> / <a href="https://naver.github.io/egjs-flicking/docs/api/Flicking">Documentation</a> / <a href="https://naver.github.io/egjs/">Other components</a>
 </p>
 
+<p align=center>
+  ⚠️ If you're looking for Flicking for Vue 2, check out <a href="https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md">@egjs/vue-flicking</a>
+</p>
+
 ## ⚙️ Installation
 ```sh
 npm install --save @egjs/vue3-flicking
