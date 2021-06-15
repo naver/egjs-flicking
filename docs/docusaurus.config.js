@@ -136,7 +136,8 @@ module.exports = {
       copyright: `Copyright © ${new Date().getFullYear()} NAVER, Inc. Built with Docusaurus & Bulma.`
     },
     prism: {
-      theme: require('prism-react-renderer/themes/oceanicNext')
+      theme: require('prism-react-renderer/themes/oceanicNext'),
+      darkTheme: require("prism-react-renderer/themes/palenight")
     },
     googleAnalytics: {
       trackingID: 'UA-70842526-17',

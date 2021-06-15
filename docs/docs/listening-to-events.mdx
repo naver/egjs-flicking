@@ -88,13 +88,10 @@ All event names are renamed to `kebab-case`, following the [Vue event naming con
   <TabItem value="angular">
 
 You can listen events of the `ngx-flicking` using Angular's [event binding](https://angular.io/guide/event-binding).
-In addition, we're providing one additional event to Angular.
-`renderPanelChange` event is an Angular-exclusive event that can be used for [renderOnlyVisible](api/Flicking#renderOnlyVisible) event.
 ```html
 <ngx-flicking
   [options]="{ needPanelThreshold: 50, renderOnlyVisible: true }"
-  (needPanel)="onNeedPanel($event)"
-  (renderPanelChange)="onRenderPanelChange($event)">
+  (needPanel)="onNeedPanel($event)">
   {{ ... }}
 </ngx-flicking>
 ```
