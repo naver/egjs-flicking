@@ -10,7 +10,7 @@ import Panel from "../component/Panel";
 
 export default () => {
   const [panels, setPanels] = useState([0, 1, 2, 3, 4]);
-  const reactSourceCode = `export default (): React.FC => {
+  const reactSourceCode = `export default () => {
   const [panels, setPanels] = useState([0, 1, 2, 3, 4]);
 
   return <>

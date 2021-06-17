@@ -84,7 +84,7 @@ export default ({ options, panels, js, react, vue, vue3, angular, preact }) => {
     <TabItem value="preact">
       {preact ? preact : <CodeBlock className="jsx">
 {`<Flicking${options ? ` ${Object.keys(options).map(key => `${key}=${typeof options[key] === "string" ? `"${options[key]}"` : `{${options[key]}}`}`).join(" ")}` : ""}>
-  ${panels.map(panel => `<${panel.tag}${getClass(panel, "className")}${getStyle(panel, true)}>${panel.content}</${panel.tag}>`).join("\n  ")}
+  ${panels.map(panel => `<${panel.tag}${getClass(panel, "className")}${getStyle(panel, true)}>${panel.content.replace(/class/g, "className")}</${panel.tag}>`).join("\n  ")}
 </Flicking>`}
       </CodeBlock>}
     </TabItem>

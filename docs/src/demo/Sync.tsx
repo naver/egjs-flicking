@@ -17,10 +17,10 @@ export default () => {
     flicking.camera.lookAt(flicking.camera.range.min + flicking.camera.rangeDiff * progress);
   };
 
-  const reactSourceCode = `export default (): React.FC => {
-  const flicking0 = useRef<Flicking>();
-  const flicking1 = useRef<Flicking>();
-  const flicking2 = useRef<Flicking>();
+  const reactSourceCode = `export default () => {
+  const flicking0 = useRef();
+  const flicking1 = useRef();
+  const flicking2 = useRef();
 
   return <Flicking ref={flicking0}
     className="mb-4"
