@@ -1,0 +1,34 @@
+#configs
+config
+bower.json
+
+#tests
+test
+karma.conf.js
+
+#build tools
+webpack.*.js
+.travis.yml
+.codeclimate.yml
+rollup.config.js
+tsconfig.declaration.json
+tsconfig.json
+
+#linters
+.eslintrc*
+tslint*
+
+#docs
+demo/
+jsdoc.json
+
+#editor settings
+.idea
+.editorconfig
+
+coverage/
+node_modules/
+.github
+.babelrc
+mocha.opts
+.nuxt
