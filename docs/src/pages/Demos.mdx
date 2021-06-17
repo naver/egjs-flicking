@@ -3,6 +3,7 @@ title: Demos
 custom_edit_url: null
 ---
 import Flicking from "@egjs/react-flicking";
+import SourceCode from "@site/src/component/SourceCode";
 import Panel from "@site/src/component/Panel";
 import AddRemove from "@site/src/demo/AddRemove";
 import SideScroll from "@site/src/demo/SideScroll";
@@ -23,6 +24,13 @@ Flicking uses panel element's real size, and doesn't modify them.
   <Panel color="warning" style={{ width: "300px" }} index={3} />
   <Panel color="success" style={{ width: "100%" }} index={4} />
 </Flicking>
+<SourceCode options={{ circular: true }} panels={[
+  { tag: "div", style: { width: "120px" }, content: "1" },
+  { tag: "div", style: { width: "20%" }, content: "2" },
+  { tag: "div", style: { width: "500px" }, content: "3" },
+  { tag: "div", style: { width: "300px" }, content: "4" },
+  { tag: "div", style: { width: "100%" }, content: "5" }
+]} />
 
 ## Horizontal Scroller
 You can easily create [iScroll](https://github.com/cubiq/iscroll)-like horizontal scroller with Flicking
