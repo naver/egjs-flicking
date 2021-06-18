@@ -5,17 +5,17 @@
 </h1>
 
 <p align=center>
-  <a href="https://www.npmjs.com/package/@egjs/vue-flicking" target="_blank">
-    <img src="https://img.shields.io/npm/v/@egjs/vue-flicking.svg?style=flat-square&color=42b883&label=version&logo=NPM">
+  <a href="https://www.npmjs.com/package/@egjs/vue3-flicking" target="_blank">
+    <img src="https://img.shields.io/npm/v/@egjs/vue3-flicking.svg?style=flat-square&color=42b883&label=version&logo=NPM">
   </a>
-  <a href="https://www.npmjs.com/package/@egjs/vue-flicking" target="_blank">
-    <img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@egjs/vue-flicking.svg?style=flat-square&label=%F0%9F%92%BE%20gzipped&color=007acc">
+  <a href="https://www.npmjs.com/package/@egjs/vue3-flicking" target="_blank">
+    <img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@egjs/vue3-flicking.svg?style=flat-square&label=%F0%9F%92%BE%20gzipped&color=007acc">
   </a>
   <a href="https://github.com/naver/egjs-flicking/graphs/commit-activity">
     <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/naver/egjs-flicking.svg?style=flat-square&label=%E2%AC%86%20commits&color=08CE5D">
   </a>
-  <a href="https://www.npmjs.com/package/@egjs/vue-flicking" target="_blank">
-    <img src="https://img.shields.io/npm/dm/@egjs/vue-flicking.svg?style=flat-square&label=%E2%AC%87%20downloads&color=08CE5D" alt="npm downloads per month">
+  <a href="https://www.npmjs.com/package/@egjs/vue3-flicking" target="_blank">
+    <img src="https://img.shields.io/npm/dm/@egjs/vue3-flicking.svg?style=flat-square&label=%E2%AC%87%20downloads&color=08CE5D" alt="npm downloads per month">
   </a>
   <a href="https://github.com/naver/egjs-flicking/graphs/contributors" target="_blank">
     <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/naver/egjs-flicking.svg?label=%F0%9F%91%A5%20contributors&style=flat-square&color=08CE5D"></a>
@@ -112,7 +112,7 @@ Check [**@egjs/flicking-plugins**](https://github.com/naver/egjs-flicking-plugin
 [Options](https://naver.github.io/egjs-flicking/Options) / [Demos](https://naver.github.io/egjs-flicking/Demos)
 
 ## 🙌 Contributing
-See [CONTRIBUTING.md]((https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/CONTRIBUTING.md))
+See [CONTRIBUTING.md](https://github.com/naver/egjs-flicking/blob/master/CONTRIBUTING.md)
 
 ## 📝 Feedback
 Please file an [Issue](https://github.com/naver/egjs-flicking/issues) with label "Vue".
