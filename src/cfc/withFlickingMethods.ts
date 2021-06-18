@@ -1,3 +1,5 @@
+import Component from "@egjs/component";
+
 import Flicking from "../Flicking";
 
 /**
@@ -16,36 +18,35 @@ import Flicking from "../Flicking";
  * ```
  */
 const withFlickingMethods = (prototype: any, flickingName: string) => {
-  Object.getOwnPropertyNames(Flicking.prototype)
-    .filter(name => !prototype[name] && !name.startsWith("_") && name !== "constructor")
-    .forEach((name: keyof Flicking) => {
-      const descriptor = Object.getOwnPropertyDescriptor(Flicking.prototype, name)!;
+  [Component.prototype, Flicking.prototype].forEach(proto => {
+    Object.getOwnPropertyNames(proto).filter(name => !prototype[name] && !name.startsWith("_") && name !== "constructor")
+      .forEach((name: string) => {
+        const descriptor = Object.getOwnPropertyDescriptor(proto, name)!;
 
-      if (descriptor.value) {
-        // Public Function
-        Object.defineProperty(prototype, name, {
-          value: function(...args) {
-            return descriptor.value.call(this[flickingName], ...args);
+        if (descriptor.value) {
+          // Public Function
+          Object.defineProperty(prototype, name, {
+            value: function(...args) {
+              return descriptor.value.call(this[flickingName], ...args);
+            }
+          });
+        } else {
+          const getterDescriptor: { get?: () => any; set?: (val: any) => void } = {};
+          if (descriptor.get) {
+            getterDescriptor.get = function() {
+              return descriptor.get?.call(this[flickingName]);
+            };
           }
-        });
-      } else {
-        const getterDescriptor: { get?: () => any; set?: (val: any) => void } = {};
-        if (descriptor.get) {
-          getterDescriptor.get = function() {
-            return descriptor.get?.call(this[flickingName]);
-          };
-        }
-        if (descriptor.set) {
-          getterDescriptor.set = function(...args) {
-            return descriptor.set?.call(this[flickingName], ...args);
-          };
-        }
+          if (descriptor.set) {
+            getterDescriptor.set = function(...args) {
+              return descriptor.set?.call(this[flickingName], ...args);
+            };
+          }
 
-        Object.defineProperty(prototype, name, getterDescriptor);
-      }
-    });
+          Object.defineProperty(prototype, name, getterDescriptor);
+        }
+      });
+  });
 };
 
 export default withFlickingMethods;
-/* eslint-enable @typescript-eslint/no-unsafe-member-access */
-/* eslint-enable @typescript-eslint/no-unsafe-assignment */

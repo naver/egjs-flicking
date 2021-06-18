@@ -622,6 +622,8 @@ class Flicking extends Component<FlickingEvents> {
     this._camera = this._createCamera();
     this._control = this._createControl();
 
+    this.resize = this.resize.bind(this);
+
     if (this._autoInit) {
       void this.init();
     }
@@ -1012,7 +1014,7 @@ class Flicking extends Component<FlickingEvents> {
    * @fires Flicking#afterResize
    * @return {this}
    */
-  public resize = async (): Promise<void> => {
+  public async resize(): Promise<void> {
     const viewport = this._viewport;
     const renderer = this._renderer;
     const camera = this._camera;
@@ -1060,7 +1062,7 @@ class Flicking extends Component<FlickingEvents> {
       sizeChanged,
       element: viewport.element
     }));
-  };
+  }
 
   /**
    * Add new panels after the last panel
