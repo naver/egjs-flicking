@@ -122,16 +122,16 @@ module.exports = {
               href: 'https://github.com/naver/egjs-flicking/issues'
             },
             {
-              label: 'egjs',
-              href: 'https://naver.github.io/egjs/'
+              label: 'Naver Open Source',
+              href: 'https://naver.github.io/'
             }
           ]
         }
       ],
       logo: {
-        alt: 'Naver Open Source Logo',
-        src: 'img/naver_opensource.svg',
-        href: 'https://naver.github.io/'
+        alt: 'egjs',
+        src: 'img/egjs_white.svg',
+        href: 'https://naver.github.io/egjs/'
       },
       copyright: `Copyright © ${new Date().getFullYear()} NAVER, Inc. Built with Docusaurus & Bulma.`
     },
