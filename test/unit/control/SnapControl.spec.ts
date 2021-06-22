@@ -4,7 +4,7 @@ import * as ERROR from "~/const/error";
 import { MOVE_TYPE } from "~/const/external";
 
 import El from "../helper/El";
-import { createFlicking, tick } from "../helper/test-util";
+import { createFlicking, simulate, tick } from "../helper/test-util";
 
 describe("SnapControl", () => {
   describe("Methods", () => {
@@ -73,6 +73,25 @@ describe("SnapControl", () => {
         await promise;
 
         expect(control.activePanel).to.equal(flicking.getPanel(2));
+      });
+
+      it("should not be rejected when user interrupted while animating with user input", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: MOVE_TYPE.SNAP
+        });
+
+        const control = flicking.control;
+        const changedSpy = sinon.spy();
+        const moveToSpy = sinon.spy(control, "moveToPosition");
+        flicking.on("changed", changedSpy);
+
+        await simulate(flicking.element, { deltaX: -300, duration: 100 }, 150);
+        await simulate(flicking.element, { deltaX: -300, duration: 100 });
+
+        const err = await (moveToSpy.firstCall.returnValue.catch(error => error));
+
+        expect(err).to.be.undefined;
+        expect(changedSpy.calledOnce).to.be.true;
       });
     });
   });
