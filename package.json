@@ -8,7 +8,7 @@
 	"es2015": "dist/flicking.esm.js",
 	"types": "declaration/index.d.ts",
 	"scripts": {
-		"dev": "rollup -w --config ./rollup.config.dev.js",
+		"start": "concurrently \"rollup -w --config ./rollup.config.dev.js\" \"http-serve\"",
 		"build": "rm -rf ./dist ./declaration && rollup -c && npm run declaration && npm run css && npm run printsizes",
 		"declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
 		"css": "postcss css/*.css --use autoprefixer postcss-clean -d dist/ -m",

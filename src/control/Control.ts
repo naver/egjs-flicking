@@ -335,6 +335,9 @@ abstract class Control {
       return animate().then(async () => {
         this._setActive(newActivePanel, currentPanel, isTrusted);
         await flicking.renderer.render();
+      }).catch(err => {
+        if (axesEvent && err instanceof FlickingError && err.code === ERROR.CODE.ANIMATION_INTERRUPTED) return;
+        throw err;
       });
     }
   }

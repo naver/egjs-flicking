@@ -257,10 +257,7 @@ class AxesController {
         };
 
         axes.once(AXES.EVENT.FINISH, animationFinishHandler);
-
-        if (!axesEvent) {
-          axes.once(AXES.EVENT.HOLD, interruptionHandler);
-        }
+        axes.once(AXES.EVENT.HOLD, interruptionHandler);
 
         animate();
       });
