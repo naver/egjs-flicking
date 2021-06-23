@@ -13,7 +13,7 @@ import { Renderer, VanillaRenderer, ExternalRenderer, RawRenderingStrategy, Visi
 import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
 import * as ERROR from "./const/error";
 import { findIndex, getElement, includes, parseElement } from "./utils";
-import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, WillChangeEvent, WillRestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent, ChangedEvent, RestoredEvent } from "./type/event";
+import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, WillChangeEvent, WillRestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent, ChangedEvent, RestoredEvent, PanelChangeEvent } from "./type/event";
 import { LiteralUnion, ValueOf } from "./type/internal";
 import { ElementLike, Plugin, Status, MoveTypeOptions } from "./type/external";
 
@@ -37,6 +37,7 @@ export interface FlickingEvents {
   [EVENTS.NEED_PANEL]: NeedPanelEvent;
   [EVENTS.VISIBLE_CHANGE]: VisibleChangeEvent;
   [EVENTS.REACH_EDGE]: ReachEdgeEvent;
+  [EVENTS.PANEL_CHANGE]: PanelChangeEvent;
 }
 
 /**

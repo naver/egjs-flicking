@@ -2,6 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import ReactFlicking from "./Flicking";
 import {
   SelectEvent,
   NeedPanelEvent,
@@ -19,6 +20,7 @@ import {
   BeforeResizeEvent,
   AfterResizeEvent,
   ReachEdgeEvent,
+  PanelChangeEvent,
   Plugin
 } from "@egjs/flicking";
 
@@ -27,21 +29,22 @@ export interface FlickingProps {
   cameraTag: keyof JSX.IntrinsicElements;
   plugins: Plugin[];
   useFindDOMNode: boolean;
-  onReady: (e: ReadyEvent) => any;
-  onBeforeResize: (e: BeforeResizeEvent) => any;
-  onAfterResize: (e: AfterResizeEvent) => any;
-  onHoldStart: (e: HoldStartEvent) => any;
-  onHoldEnd: (e: HoldEndEvent) => any;
-  onMoveStart: (e: MoveStartEvent) => any;
-  onMove: (e: MoveEvent) => any;
-  onMoveEnd: (e: MoveEndEvent) => any;
-  onWillChange: (e: WillChangeEvent) => any;
-  onChanged: (e: ChangedEvent) => any;
-  onWillRestore: (e: WillRestoreEvent) => any;
-  onRestored: (e: RestoredEvent) => any;
-  onSelect: (e: SelectEvent) => any;
-  onNeedPanel: (e: NeedPanelEvent) => any;
-  onVisibleChange: (e: VisibleChangeEvent) => any;
-  onReachEdge: (e: ReachEdgeEvent) => any;
+  onReady: (e: ReadyEvent<ReactFlicking>) => any;
+  onBeforeResize: (e: BeforeResizeEvent<ReactFlicking>) => any;
+  onAfterResize: (e: AfterResizeEvent<ReactFlicking>) => any;
+  onHoldStart: (e: HoldStartEvent<ReactFlicking>) => any;
+  onHoldEnd: (e: HoldEndEvent<ReactFlicking>) => any;
+  onMoveStart: (e: MoveStartEvent<ReactFlicking>) => any;
+  onMove: (e: MoveEvent<ReactFlicking>) => any;
+  onMoveEnd: (e: MoveEndEvent<ReactFlicking>) => any;
+  onWillChange: (e: WillChangeEvent<ReactFlicking>) => any;
+  onChanged: (e: ChangedEvent<ReactFlicking>) => any;
+  onWillRestore: (e: WillRestoreEvent<ReactFlicking>) => any;
+  onRestored: (e: RestoredEvent<ReactFlicking>) => any;
+  onSelect: (e: SelectEvent<ReactFlicking>) => any;
+  onNeedPanel: (e: NeedPanelEvent<ReactFlicking>) => any;
+  onVisibleChange: (e: VisibleChangeEvent<ReactFlicking>) => any;
+  onReachEdge: (e: ReachEdgeEvent<ReactFlicking>) => any;
+  onPanelChange: (e: PanelChangeEvent<ReactFlicking>) => any;
   [key: string]: any;
 }
