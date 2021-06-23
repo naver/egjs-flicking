@@ -22,7 +22,24 @@ import VanillaFlicking, {
   EVENTS,
   sync,
   Plugin,
-  Status
+  Status,
+  SelectEvent,
+  NeedPanelEvent,
+  VisibleChangeEvent,
+  HoldStartEvent,
+  HoldEndEvent,
+  MoveStartEvent,
+  MoveEvent,
+  MoveEndEvent,
+  WillChangeEvent,
+  ChangedEvent,
+  WillRestoreEvent,
+  RestoredEvent,
+  ReadyEvent,
+  BeforeResizeEvent,
+  AfterResizeEvent,
+  ReachEdgeEvent,
+  PanelChangeEvent,
 } from "@egjs/flicking";
 import { ComponentEvent } from "@egjs/component";
 import ListDiffer from "@egjs/list-differ";
@@ -52,22 +69,23 @@ export class NgxFlickingComponent extends FlickingInterface
   @Input() public plugins: Plugin[] = [];
   @Input() public status: Status;
 
-  @Output() public ready = new EventEmitter<FlickingEvents[typeof EVENTS.READY]>();
-  @Output() public beforeResize = new EventEmitter<FlickingEvents[typeof EVENTS.BEFORE_RESIZE]>();
-  @Output() public afterResize = new EventEmitter<FlickingEvents[typeof EVENTS.AFTER_RESIZE]>();
-  @Output() public holdStart = new EventEmitter<FlickingEvents[typeof EVENTS.HOLD_START]>();
-  @Output() public holdEnd = new EventEmitter<FlickingEvents[typeof EVENTS.HOLD_END]>();
-  @Output() public moveStart = new EventEmitter<FlickingEvents[typeof EVENTS.MOVE_START]>();
-  @Output() public move = new EventEmitter<FlickingEvents[typeof EVENTS.MOVE]>();
-  @Output() public moveEnd = new EventEmitter<FlickingEvents[typeof EVENTS.MOVE_END]>();
-  @Output() public willChange = new EventEmitter<FlickingEvents[typeof EVENTS.WILL_CHANGE]>();
-  @Output() public changed = new EventEmitter<FlickingEvents[typeof EVENTS.CHANGED]>();
-  @Output() public willRestore = new EventEmitter<FlickingEvents[typeof EVENTS.WILL_RESTORE]>();
-  @Output() public restored = new EventEmitter<FlickingEvents[typeof EVENTS.RESTORED]>();
-  @Output() public select = new EventEmitter<FlickingEvents[typeof EVENTS.SELECT]>();
-  @Output() public needPanel = new EventEmitter<FlickingEvents[typeof EVENTS.NEED_PANEL]>();
-  @Output() public visibleChange = new EventEmitter<FlickingEvents[typeof EVENTS.VISIBLE_CHANGE]>();
-  @Output() public reachEdge = new EventEmitter<FlickingEvents[typeof EVENTS.REACH_EDGE]>();
+  @Output() public ready = new EventEmitter<ReadyEvent<NgxFlickingComponent>>();
+  @Output() public beforeResize = new EventEmitter<BeforeResizeEvent<NgxFlickingComponent>>();
+  @Output() public afterResize = new EventEmitter<AfterResizeEvent<NgxFlickingComponent>>();
+  @Output() public holdStart = new EventEmitter<HoldStartEvent<NgxFlickingComponent>>();
+  @Output() public holdEnd = new EventEmitter<HoldEndEvent<NgxFlickingComponent>>();
+  @Output() public moveStart = new EventEmitter<MoveStartEvent<NgxFlickingComponent>>();
+  @Output() public move = new EventEmitter<MoveEvent<NgxFlickingComponent>>();
+  @Output() public moveEnd = new EventEmitter<MoveEndEvent<NgxFlickingComponent>>();
+  @Output() public willChange = new EventEmitter<WillChangeEvent<NgxFlickingComponent>>();
+  @Output() public changed = new EventEmitter<ChangedEvent<NgxFlickingComponent>>();
+  @Output() public willRestore = new EventEmitter<WillRestoreEvent<NgxFlickingComponent>>();
+  @Output() public restored = new EventEmitter<RestoredEvent<NgxFlickingComponent>>();
+  @Output() public select = new EventEmitter<SelectEvent<NgxFlickingComponent>>();
+  @Output() public needPanel = new EventEmitter<NeedPanelEvent<NgxFlickingComponent>>();
+  @Output() public visibleChange = new EventEmitter<VisibleChangeEvent<NgxFlickingComponent>>();
+  @Output() public reachEdge = new EventEmitter<ReachEdgeEvent<NgxFlickingComponent>>();
+  @Output() public panelChange = new EventEmitter<PanelChangeEvent<NgxFlickingComponent>>();
 
   @ContentChildren(NgxFlickingPanel) private _ngxPanels: QueryList<NgxFlickingPanel>;
   private _elRef: ElementRef<HTMLElement>;

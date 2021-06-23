@@ -18,7 +18,8 @@ import {
   ReadyEvent,
   BeforeResizeEvent,
   AfterResizeEvent,
-  ReachEdgeEvent
+  ReachEdgeEvent,
+  PanelChangeEvent
 } from "@egjs/flicking";
 
 import { FlickingProps } from "./types";
@@ -43,5 +44,6 @@ export const DEFAULT_PROPS: FlickingProps = {
   onSelect: (e: SelectEvent) => {},
   onNeedPanel: (e: NeedPanelEvent) => {},
   onVisibleChange: (e: VisibleChangeEvent) => {},
-  onReachEdge: (e: ReachEdgeEvent) => {}
+  onReachEdge: (e: ReachEdgeEvent) => {},
+  onPanelChange: (e: PanelChangeEvent) => {}
 };
