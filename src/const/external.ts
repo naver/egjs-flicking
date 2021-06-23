@@ -19,6 +19,7 @@ export { CODE as ERROR_CODE } from "./error";
  * @property {"restored"} RESTORED restored event<ko>restored 이벤트</ko>
  * @property {"select"} SELECT select event<ko>select 이벤트</ko>
  * @property {"needPanel"} NEED_PANEL needPanel event<ko>needPanel 이벤트</ko>
+ * @property {"panelChange"} PANEL_CHANGE panelChange event<ko>panelChange 이벤트</ko>
  * @example
  * ```ts
  * import { EVENTS } from "@egjs/flicking";
@@ -41,7 +42,8 @@ export const EVENTS = {
   SELECT: "select",
   NEED_PANEL: "needPanel",
   VISIBLE_CHANGE: "visibleChange",
-  REACH_EDGE: "reachEdge"
+  REACH_EDGE: "reachEdge",
+  PANEL_CHANGE: "panelChange"
 } as const;
 
 /**

@@ -298,3 +298,18 @@ export interface VisibleChangeEvent<T extends Flicking = Flicking> extends Compo
 export interface ReachEdgeEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["REACH_EDGE"], T> {
   direction: ValueOf<typeof DIRECTION>;
 }
+
+/**
+ * Event that fires when a panel is added or removed
+ * @ko 패널 추가/제거시에 발생하는 이벤트
+ * @event Flicking#panelChange
+ * @type {object}
+ * @property {Flicking} currentTarget An Flicking instance that triggered this event<ko>이 이벤트를 트리거한 Flicking의 인스턴스</ko>
+ * @property {string} eventType Name of the event<ko>이벤트명</ko>
+ * @property {Panel[]} added An array of new panels added<ko>새로 추가된 패널의 배열</ko>
+ * @property {Panel[]} removed An array of panels removed<ko>제거된 패널의 배열</ko>
+ */
+export interface PanelChangeEvent<T extends Flicking = Flicking> extends ComponentEvent<{}, typeof EVENTS["PANEL_CHANGE"], T> {
+  added: Panel[];
+  removed: Panel[];
+}

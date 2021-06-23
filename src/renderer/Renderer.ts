@@ -2,9 +2,11 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { ComponentEvent } from "@egjs/component";
+
 import Flicking, { FlickingOptions } from "../Flicking";
 import Panel, { PanelOptions } from "../core/panel/Panel";
-import { ALIGN } from "../const/external";
+import { ALIGN, EVENTS } from "../const/external";
 import { getFlickingAttached, getMinusCompensatedIndex, includes } from "../utils";
 
 import RenderingStrategy from "./RenderingStrategy/RenderingStrategy";
@@ -199,6 +201,11 @@ abstract class Renderer {
 
     flicking.camera.updateOffset();
 
+    flicking.trigger(new ComponentEvent(EVENTS.PANEL_CHANGE, {
+      added: allPanelsInserted,
+      removed: []
+    }));
+
     return allPanelsInserted;
   }
 
@@ -269,6 +276,11 @@ abstract class Renderer {
     }
 
     flicking.camera.updateOffset();
+
+    flicking.trigger(new ComponentEvent(EVENTS.PANEL_CHANGE, {
+      added: [],
+      removed: allPanelsRemoved
+    }));
 
     return allPanelsRemoved;
   }
