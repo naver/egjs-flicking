@@ -221,8 +221,8 @@ doc/
 report/
 temp/
 demo/release
-packages/*/dist/
+packages/**/*/dist/
 demo/_data/version.yml
-dist/
+
 outjs/
 declaration/
