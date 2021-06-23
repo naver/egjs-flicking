@@ -1,4 +1,4 @@
-import { ALIGN } from "~/const/external";
+import { ALIGN, EVENTS } from "~/const/external";
 import Panel, { PanelOptions } from "~/core/panel/Panel";
 import ElementPanel from "~/core/panel/ElementPanel";
 import Renderer from "~/renderer/Renderer";
@@ -128,6 +128,73 @@ describe("Renderer", () => {
         expect(shouldPushed.every((panel, idx) => panel.index === prevIndexes[idx] + 1)).to.be.true;
         // Panel 0 is not pushed
         expect(notPushed.index).to.equal(0);
+      });
+
+      it("should trigger panelChange event with the panels added", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const renderer = new RendererImpl().init(flicking);
+        const element = El.panel().el;
+        const panelChangeSpy = sinon.spy();
+
+        flicking.on(EVENTS.PANEL_CHANGE, panelChangeSpy);
+        renderer.batchInsert({ index: 1, elements: [element] });
+
+        expect(panelChangeSpy.calledOnce).to.be.true;
+        expect(panelChangeSpy.firstCall.args[0].added.length).to.equal(1);
+        expect(panelChangeSpy.firstCall.args[0].added[0].element).to.equal(element);
+        expect(panelChangeSpy.firstCall.args[0].removed.length).to.equal(0);
+      });
+    });
+
+    describe("batchRemove", () => {
+      it("should remove panels at the given index", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const renderer = new RendererImpl().init(flicking);
+        const prevPanels = [...renderer.panels];
+        const prevPanelCount = renderer.panelCount;
+
+        renderer.batchRemove({ index: 1, deleteCount: 2 });
+
+        expect(renderer.panels.length).to.equal(prevPanelCount - 2);
+        expect(renderer.panels[0]).to.equal(prevPanels[0]);
+      });
+
+      it("should return removed panels as array", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const renderer = new RendererImpl().init(flicking);
+        const prevPanels = [...renderer.panels];
+
+        const returnVal = renderer.batchRemove({ index: 2, deleteCount: 1 });
+
+        expect(returnVal.length).to.equal(1);
+        expect(returnVal[0]).to.deep.equal(prevPanels[2]);
+      });
+
+      it("should decrease pulled panel's indexes", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const renderer = new RendererImpl().init(flicking);
+        const shouldPulled = renderer.panels[2];
+        const prevIndex = shouldPulled.index;
+
+        renderer.batchRemove({ index: 0, deleteCount: 2 });
+
+        expect(prevIndex).to.equal(2);
+        expect(shouldPulled.index).to.equal(0);
+      });
+
+      it("should trigger panelChange event with the panels removed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const renderer = new RendererImpl().init(flicking);
+        const prevPanels = [...renderer.panels];
+        const panelChangeSpy = sinon.spy();
+
+        flicking.on(EVENTS.PANEL_CHANGE, panelChangeSpy);
+        renderer.batchRemove({ index: 1, deleteCount: 1 });
+
+        expect(panelChangeSpy.calledOnce).to.be.true;
+        expect(panelChangeSpy.firstCall.args[0].added.length).to.equal(0);
+        expect(panelChangeSpy.firstCall.args[0].removed.length).to.equal(1);
+        expect(panelChangeSpy.firstCall.args[0].removed[0]).to.deep.equal(prevPanels[1]);
       });
     });
   });
