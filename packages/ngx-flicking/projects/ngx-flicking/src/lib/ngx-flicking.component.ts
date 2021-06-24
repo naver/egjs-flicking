@@ -39,9 +39,8 @@ import VanillaFlicking, {
   BeforeResizeEvent,
   AfterResizeEvent,
   ReachEdgeEvent,
-  PanelChangeEvent,
+  PanelChangeEvent
 } from "@egjs/flicking";
-import { ComponentEvent } from "@egjs/component";
 import ListDiffer from "@egjs/list-differ";
 
 import FlickingInterface from "./FlickingInterface";
@@ -114,9 +113,10 @@ export class NgxFlickingComponent extends FlickingInterface
     };
 
     // This prevents mousemove to call ngDoCheck & noAfterContentChecked everytime
-    this._vanillaFlicking = new VanillaFlicking(viewportEl, options);
+    const flicking = new VanillaFlicking(viewportEl, options);
+    this._vanillaFlicking = flicking;
 
-    if (!this._vanillaFlicking.horizontal) {
+    if (!flicking.horizontal) {
       this._ngxRenderer.addClass(this._elRef.nativeElement, "vertical");
     }
 
@@ -125,12 +125,6 @@ export class NgxFlickingComponent extends FlickingInterface
 
     this._bindEvents();
     this._checkPlugins();
-
-    const flicking = this._vanillaFlicking;
-
-    if (flicking.initialized) {
-      this.ready.emit({ ...new ComponentEvent(EVENTS.READY), currentTarget: this });
-    }
 
     if (this.status) {
       flicking.setStatus(this.status);
