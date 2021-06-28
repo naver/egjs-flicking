@@ -5,24 +5,7 @@
 import * as React from "react";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import VanillaFlicking, {
-  AfterResizeEvent,
-  BeforeResizeEvent,
   FlickingOptions,
-  HoldEndEvent,
-  HoldStartEvent,
-  MoveEndEvent,
-  MoveEvent,
-  MoveStartEvent,
-  NeedPanelEvent,
-  ReadyEvent,
-  VisibleChangeEvent,
-  WillChangeEvent,
-  ChangedEvent,
-  WillRestoreEvent,
-  RestoredEvent,
-  SelectEvent,
-  ReachEdgeEvent,
-  PanelChangeEvent,
   EVENTS,
   withFlickingMethods,
   sync,
@@ -77,31 +60,10 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
           rendererOptions: { reactFlicking: this }
         }}
       },
-    ).on({
-      [EVENTS.READY]: (e: ReadyEvent) => props.onReady({ ...e, currentTarget: this }),
-      [EVENTS.BEFORE_RESIZE]: (e: BeforeResizeEvent) => props.onBeforeResize({ ...e, currentTarget: this }),
-      [EVENTS.AFTER_RESIZE]: (e: AfterResizeEvent) => props.onAfterResize({ ...e, currentTarget: this }),
-      [EVENTS.HOLD_START]: (e: HoldStartEvent) => props.onHoldStart({ ...e, currentTarget: this }),
-      [EVENTS.HOLD_END]: (e: HoldEndEvent) => props.onHoldEnd({ ...e, currentTarget: this }),
-      [EVENTS.MOVE_START]: (e: MoveStartEvent) => props.onMoveStart({ ...e, currentTarget: this }),
-      [EVENTS.MOVE]: (e: MoveEvent) => props.onMove({ ...e, currentTarget: this }),
-      [EVENTS.MOVE_END]: (e: MoveEndEvent) => props.onMoveEnd({ ...e, currentTarget: this }),
-      [EVENTS.WILL_CHANGE]: (e: WillChangeEvent) => props.onWillChange({ ...e, currentTarget: this }),
-      [EVENTS.CHANGED]: (e: ChangedEvent) => props.onChanged({ ...e, currentTarget: this }),
-      [EVENTS.WILL_RESTORE]: (e: WillRestoreEvent) => props.onWillRestore({ ...e, currentTarget: this }),
-      [EVENTS.RESTORED]: (e: RestoredEvent) => props.onRestored({ ...e, currentTarget: this }),
-      [EVENTS.SELECT]: (e: SelectEvent) => props.onSelect({ ...e, currentTarget: this }),
-      [EVENTS.NEED_PANEL]: (e: NeedPanelEvent) => props.onNeedPanel({ ...e, currentTarget: this }),
-      [EVENTS.VISIBLE_CHANGE]: (e: VisibleChangeEvent) => props.onVisibleChange({ ...e, currentTarget: this }),
-      [EVENTS.REACH_EDGE]: (e: ReachEdgeEvent) => props.onReachEdge({ ...e, currentTarget: this }),
-      [EVENTS.PANEL_CHANGE]: (e: PanelChangeEvent) => props.onPanelChange({ ...e, currentTarget: this }),
-    });
-
-    flicking.once(EVENTS.READY, () => {
-      this.forceUpdate();
-    });
+    );
 
     this._vanillaFlicking = flicking;
+    this._bindEvents();
 
     const children = this._getChildren();
     this._jsxDiffer = new ListDiffer(children, panel => panel.key!);
@@ -185,6 +147,26 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
         </Camera>
       </Viewport>
     );
+  }
+
+  private _bindEvents() {
+    const flicking = this._vanillaFlicking!;
+    const props = this.props as Required<FlickingProps>;
+
+    Object.keys(EVENTS).forEach((eventKey: keyof typeof EVENTS) => {
+      const eventName = EVENTS[eventKey];
+      const propName = `on${eventName.charAt(0).toUpperCase() + eventName.slice(1)}`;
+
+      flicking.on(eventName, e => {
+        e.currentTarget = this;
+
+        props[propName](e);
+      });
+    });
+
+    flicking.once(EVENTS.READY, () => {
+      this.forceUpdate();
+    });
   }
 
   private _checkPlugins() {
