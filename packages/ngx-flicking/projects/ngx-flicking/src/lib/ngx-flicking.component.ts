@@ -52,7 +52,8 @@ import NgxRenderer from "./NgxRenderer";
   template: `
     <div class="flicking-camera">
       <ng-content></ng-content>
-    </div>`,
+    </div>
+    <ng-content select="[in-viewport]"></ng-content>`,
   host: {
     class: "flicking-viewport",
     style: "display: block;"

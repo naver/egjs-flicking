@@ -131,8 +131,12 @@ class Flicking extends Vue.with(FlickingProps) {
       return panels;
     };
 
+    const viewportSlots = this.$slots.viewport
+      ? this.$slots.viewport()
+      : [];
+
     return h(this.viewportTag, viewportData,
-      [h(this.cameraTag, cameraData, { default: getPanels })],
+      [h(this.cameraTag, cameraData, { default: getPanels }), ...viewportSlots]
     );
   }
 

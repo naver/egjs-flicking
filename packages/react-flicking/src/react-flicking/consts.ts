@@ -47,3 +47,5 @@ export const DEFAULT_PROPS: FlickingProps = {
   onReachEdge: (e: ReachEdgeEvent) => {},
   onPanelChange: (e: PanelChangeEvent) => {}
 };
+
+export const SLOT_VIEWPORT = "viewport";

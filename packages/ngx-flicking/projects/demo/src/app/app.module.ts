@@ -18,6 +18,7 @@ import { FadeComponent } from './fade/fade.component';
 import { ParallaxComponent } from './parallax/parallax.component';
 import { VisiblePanelsComponent } from './visiblepanels/visiblepanels.component';
 import { PanelComponent } from './panel/panel.component';
+import { ArrowComponent } from './arrow/arrow.component';
 
 const appRoutes: Routes = [
   { path: 'align', component: AlignComponent },
@@ -33,6 +34,7 @@ const appRoutes: Routes = [
   { path: 'parallax', component: ParallaxComponent },
   { path: 'custom', component: CustomComponent },
   { path: 'visiblepanels', component: VisiblePanelsComponent },
+  { path: 'arrow', component: ArrowComponent }
   // { path: '**', component: PageNotFoundComponent }
 ];
 
@@ -54,6 +56,7 @@ const appRoutes: Routes = [
     TestPanelComponent,
     PlaceHolderItemComponent,
     VisiblePanelsComponent,
+    ArrowComponent,
     PanelComponent,
   ],
   imports: [

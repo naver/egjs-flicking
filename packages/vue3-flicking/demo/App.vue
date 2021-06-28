@@ -54,6 +54,17 @@
           next();
         }">Next</span>
       </div>
+      <Flicking :plugins="arrow">
+        <div class="panel">0</div>
+        <div class="panel">1</div>
+        <div class="panel">2</div>
+        <div class="panel">3</div>
+        <div class="panel">4</div>
+        <template #viewport>
+          <span class="flicking-arrow-prev"></span>
+          <span class="flicking-arrow-next"></span>
+        </template>
+      </Flicking>
     </div>
   </article>
 </template>
@@ -62,6 +73,7 @@
 import Flicking from "../src/Flicking";
 import Test from "./components/Test.vue";
 import Test2 from "./components/Test2.vue";
+import { Arrow } from "@egjs/flicking-plugins";
 
 export default {
   components: {
@@ -72,7 +84,8 @@ export default {
   data() {
     return {
       panels: [0, 1, 2, 3, 4, 5, 6],
-      list0: [0, 1, 2]
+      list0: [0, 1, 2],
+      arrow: [new Arrow()]
     }
   },
   methods: {

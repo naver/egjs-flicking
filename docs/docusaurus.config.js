@@ -173,6 +173,7 @@ module.exports = {
           customCss: [
             require.resolve('./src/css/custom.css'),
             require.resolve('./node_modules/@egjs/react-flicking/dist/flicking.css'),
+            require.resolve('./node_modules/@egjs/flicking-plugins/dist/flicking-plugins.css'),
             require.resolve('./src/css/bulma-override.sass')
           ]
         }

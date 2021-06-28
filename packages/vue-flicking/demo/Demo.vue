@@ -17,6 +17,7 @@
         <router-link to="/autoplay">AutoPlay</router-link>
         <router-link to="/fade">Fade</router-link>
         <router-link to="/parallax">Parallax</router-link>
+        <router-link to="/arrow">Arrow</router-link>
       </div>
     </header>
     <transition name="component-fade" mode="out-in">
