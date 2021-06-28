@@ -10,6 +10,7 @@ import Infinite from "./features/Infinite.vue";
 import AutoPlay from "./plugins/Autoplay.vue";
 import Fade from "./plugins/Fade.vue";
 import Parallax from "./plugins/Parallax.vue";
+import Arrow from "./plugins/Arrow.vue";
 
 export default {
   routes: [
@@ -67,6 +68,11 @@ export default {
       path: "/parallax",
       name: "Parallax",
       component: Parallax,
+    },
+    {
+      path: "/arrow",
+      name: "Arrow",
+      component: Arrow,
     },
   ],
 };

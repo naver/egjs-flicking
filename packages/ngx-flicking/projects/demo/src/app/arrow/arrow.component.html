@@ -1,0 +1,15 @@
+<div id="arrow" class="container">
+  <ngx-flicking
+    class="flicking"
+    [options]="{ circular: true, gap: 10, duration: 500 }"
+    [plugins]="plugins"
+  >
+    <div flicking-panel class="panel panel0"></div>
+    <div flicking-panel class="panel panel1"></div>
+    <div flicking-panel class="panel panel2"></div>
+    <div flicking-panel class="panel panel3"></div>
+    <div flicking-panel class="panel panel4"></div>
+    <span in-viewport class="flicking-arrow-prev"></span>
+    <span in-viewport class="flicking-arrow-next"></span>
+  </ngx-flicking>
+</div>

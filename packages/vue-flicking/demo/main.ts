@@ -7,6 +7,7 @@ import App from "./Demo.vue";
 import routerOption from "./router";
 
 import "@egjs/flicking/dist/flicking.css";
+import "@egjs/flicking-plugins/dist/flicking-plugins.css";
 
 Vue.use(VueRouter);
 Vue.use(VueFlicking);

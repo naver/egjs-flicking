@@ -123,7 +123,7 @@ class Flicking extends Vue {
     return h(this.viewportTag, viewportData,
       [h(this.cameraTag, cameraData,
         panels,
-      )],
+      ), this.$slots.viewport],
     );
   }
 

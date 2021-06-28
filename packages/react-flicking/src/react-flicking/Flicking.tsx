@@ -14,7 +14,7 @@ import VanillaFlicking, {
 } from "@egjs/flicking";
 import { isFragment } from "react-is";
 
-import { DEFAULT_PROPS } from "./consts";
+import { DEFAULT_PROPS, SLOT_VIEWPORT } from "./consts";
 import { FlickingProps } from "./types";
 import ReactRenderer from "./ReactRenderer";
 import ReactPanelComponent from "./ReactPanelComponent";
@@ -145,6 +145,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
         <Camera className="flicking-camera">
           { panels }
         </Camera>
+        { this._getViewportSlots() }
       </Viewport>
     );
   }
@@ -177,9 +178,20 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   }
 
   private _getChildren(children: React.ReactNode = this.props.children) {
-    return (React.Children.toArray(children) as Array<React.ReactElement<any>>).reduce((all, child) => {
-      return [...all, ...this._unpackFragment(child)];
-    }, []) as Array<React.ReactElement<any>>;
+    return (React.Children.toArray(children) as Array<React.ReactElement<any>>)
+      .filter(child => {
+        return child.props.slot !== SLOT_VIEWPORT;
+      })
+      .reduce((all, child) => {
+        return [...all, ...this._unpackFragment(child)];
+      }, []) as Array<React.ReactElement<any>>;
+  }
+
+  private _getViewportSlots() {
+    return (React.Children.toArray(this.props.children) as Array<React.ReactElement<any>>)
+      .filter(child => {
+        return child.props.slot === SLOT_VIEWPORT;
+      })
   }
 
   private _unpackFragment(child: React.ReactElement) {

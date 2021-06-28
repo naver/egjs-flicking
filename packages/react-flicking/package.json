@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@egjs/build-helper": "0.0.5",
-    "@egjs/flicking-plugins": "^4.0.0-beta.1",
+    "@egjs/flicking-plugins": "^4.1.0-beta.1",
     "@types/highlight.js": "^9.12.3",
     "@types/jest": "24.0.12",
     "@types/node": "12.0.0",
@@ -35,6 +35,7 @@
     "react-app-rewire-alias": "^1.0.3",
     "react-app-rewired": "^2.1.8",
     "react-dom": "^16.8.6",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
     "rollup": "^2.45.2",
     "tslib": "^2.2.0",

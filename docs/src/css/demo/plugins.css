@@ -32,3 +32,12 @@
   width: 150%;
   max-width: 150%;
 }
+.relative-container {
+  position: relative;
+}
+.card-panel {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+}
