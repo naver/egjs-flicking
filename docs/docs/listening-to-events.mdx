@@ -5,6 +5,8 @@ slug: /listening-to-events
 custom_edit_url: null
 ---
 
+import Link from "@docusaurus/Link";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
@@ -118,4 +120,4 @@ import Flicking, { MoveEvent, NeedPanelEvent } from "@egjs/preact-flicking";
   </TabItem>
 </Tabs>
 
-See all available events at [Flicking#events](api/Flicking#events).
+See all available events at <Link to={useBaseUrl("docs/api/Flicking#events")}>Flicking#events</Link>.
