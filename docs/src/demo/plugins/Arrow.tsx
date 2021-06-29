@@ -1,3 +1,4 @@
+/* eslint-disable prefer-arrow/prefer-arrow-functions */
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { useState, useEffect } from "react";
@@ -19,7 +20,7 @@ export default () => {
   }, []);
 
   return (<div className="container">
-    <div id="arrow-1" className="arrow-container">
+    <div id="arrow-1" className="relative-container">
       <Flicking className="mb-6" plugins={plugins1} circular={true}>
         <Panel index={0} color="white" className="card m-2 card-panel" />
         <Panel index={1} color="white" className="card m-2 card-panel" />
@@ -32,10 +33,12 @@ export default () => {
     <SourceCode options={{ circular: true }} panels={[
       { tag: "div", class: "card-panel", content: "1" },
       { tag: "div", class: "card-panel", content: "2" },
-      { tag: "div", class: "card-panel", content: "3" }
+      { tag: "div", class: "card-panel", content: "3" },
+      { tag: "span", class: "flicking-arrow-prev", content: "", isSlot: true },
+      { tag: "span", class: "flicking-arrow-next", content: "", isSlot: true }
     ]} plugins={[["Arrow"]]} />
 
-    <div id="arrow-2" className="arrow-container">
+    <div id="arrow-2" className="relative-container">
       <Flicking className="mb-6" plugins={plugins2} circular={true}>
         <Panel index={0} color="white" className="card m-2 card-panel" />
         <Panel index={1} color="white" className="card m-2 card-panel" />
@@ -48,10 +51,12 @@ export default () => {
     <SourceCode options={{ circular: true }} panels={[
       { tag: "div", class: "card-panel", content: "1" },
       { tag: "div", class: "card-panel", content: "2" },
-      { tag: "div", class: "card-panel", content: "3" }
+      { tag: "div", class: "card-panel", content: "3" },
+      { tag: "span", class: "flicking-arrow-prev is-circle", content: "", isSlot: true },
+      { tag: "span", class: "flicking-arrow-next is-circle", content: "", isSlot: true }
     ]} plugins={[["Arrow"]]} />
 
-    <div id="arrow-3" className="arrow-container">
+    <div id="arrow-3" className="relative-container">
       <Flicking className="mb-6" plugins={plugins3} circular={true}>
         <Panel index={0} color="white" className="card m-2 card-panel" />
         <Panel index={1} color="white" className="card m-2 card-panel" />
@@ -65,6 +70,9 @@ export default () => {
       { tag: "div", class: "card-panel", content: "1" },
       { tag: "div", class: "card-panel", content: "2" },
       { tag: "div", class: "card-panel", content: "3" }
-    ]} plugins={[["Arrow"]]} />
+    ]} siblings={[
+      { tag: "span", class: "flicking-arrow-prev is-outside", content: "" },
+      { tag: "span", class: "flicking-arrow-next is-outside", content: "" }
+    ]} plugins={[["Arrow", { parentEl: { toString() { return "document.body"; } } }]]} />
   </div>);
 };

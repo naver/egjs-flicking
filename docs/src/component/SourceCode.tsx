@@ -8,14 +8,14 @@ import JavaScriptCode from "./code/JavaScriptCode";
 import ReactCode from "./code/ReactCode";
 import VueCode from "./code/VueCode";
 import AngularCode from "./code/AngularCode";
+import Vue3Code from "./code/Vue3Code";
+import { SourceContext } from "./code/type";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export default ({
-  options,
-  panels,
-  plugins,
-  js, react, vue, vue3, angular, preact
-}) => <Tabs
+  js, react, vue, vue3, angular, preact,
+  ...otherProps
+}: SourceContext) => <Tabs
     groupId="cfc"
     defaultValue="js"
     values={[
@@ -27,21 +27,21 @@ export default ({
       { label: "Preact", value: "preact" }
     ]}>
     <TabItem value="js">
-      { js ? js : <JavaScriptCode options={options} panels={panels} /> }
+      { js ? js : <JavaScriptCode {...otherProps} /> }
     </TabItem>
     <TabItem value="react">
-      { react ? react : <ReactCode options={options} panels={panels} /> }
+      { react ? react : <ReactCode {...otherProps} /> }
     </TabItem>
     <TabItem value="vue">
-      { vue ? vue : <VueCode options={options} panels={panels} /> }
+      { vue ? vue : <VueCode {...otherProps} /> }
     </TabItem>
     <TabItem value="vue3">
-      { vue3 ? vue3 : <VueCode options={options} panels={panels} /> }
+      { vue3 ? vue3 : <Vue3Code {...otherProps} /> }
     </TabItem>
     <TabItem value="angular">
-      {angular ? angular : <AngularCode options={options} panels={panels} /> }
+      {angular ? angular : <AngularCode {...otherProps} /> }
     </TabItem>
     <TabItem value="preact">
-      {preact ? preact : <ReactCode options={options} panels={panels} /> }
+      {preact ? preact : <ReactCode {...otherProps} /> }
     </TabItem>
   </Tabs>;

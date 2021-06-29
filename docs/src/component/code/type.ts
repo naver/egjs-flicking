@@ -1,13 +1,20 @@
 export interface SourceContext {
   options: { [key: string]: any };
-  panels: Panel[];
+  panels: InnerElement[];
+  siblings?: InnerElement[];
   plugins?: Plugin[];
-  js?: JSX.Element;
+  js?: React.ReactElement;
+  react?: React.ReactElement;
+  vue?: React.ReactElement;
+  vue3?: React.ReactElement;
+  angular?: React.ReactElement;
+  preact?: React.ReactElement;
 }
 
-export interface Panel {
+export interface InnerElement {
   tag: string;
   content: string;
+  isSlot?: boolean;
   style?: { [key: string]: string };
   class?: string;
 }
