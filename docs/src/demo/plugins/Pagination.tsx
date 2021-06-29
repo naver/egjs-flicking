@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { useEffect, useState } from "react";
 import Flicking from "@egjs/react-flicking";
+import SourceCode from "@site/src/component/SourceCode";
 import { Fade, Pagination } from "@egjs/flicking-plugins";
 
 import Panel from "../../component/Panel";
@@ -32,6 +33,19 @@ export default () => {
       </Flicking>
       <div className="flicking-pagination" />
     </div>
+
+    <SourceCode options={{ circular: true }} panels={[
+      { tag: "div", class: "card-panel", content: "1" },
+      { tag: "div", class: "card-panel", content: "2" },
+      { tag: "div", class: "card-panel", content: "3" },
+      { tag: "div", class: "card-panel", content: "4" },
+      { tag: "div", class: "card-panel", content: "5" },
+      { tag: "div", class: "card-panel", content: "6" },
+      { tag: "div", class: "card-panel", content: "7" },
+      { tag: "div", class: "card-panel", content: "8" },
+      { tag: "div", class: "flicking-pagination", content: "", isSlot: true }
+    ]} plugins={[["Pagination", { type: "bullet" }]]} />
+
     <div id="pagination-2" className="relative-container pb-1 mb-2">
       <Flicking className="mb-6" plugins={plugins2} circular={true}>
         <Panel index={0} color="white" className="card m-2 card-panel" />
@@ -46,6 +60,19 @@ export default () => {
       </Flicking>
       <div className="flicking-pagination" />
     </div>
+
+    <SourceCode options={{ circular: true }} panels={[
+      { tag: "div", class: "card-panel", content: "1" },
+      { tag: "div", class: "card-panel", content: "2" },
+      { tag: "div", class: "card-panel", content: "3" },
+      { tag: "div", class: "card-panel", content: "4" },
+      { tag: "div", class: "card-panel", content: "5" },
+      { tag: "div", class: "card-panel", content: "6" },
+      { tag: "div", class: "card-panel", content: "7" },
+      { tag: "div", class: "card-panel", content: "8" },
+      { tag: "div", class: "flicking-pagination", content: "", isSlot: true }
+    ]} plugins={[["Pagination", { type: "fraction" }]]} />
+
     <div id="pagination-3" className="relative-container pb-1 mb-2">
       <Flicking className="mb-6" plugins={plugins3} circular={true}>
         <Panel index={0} color="white" className="card m-2 card-panel" />
@@ -60,5 +87,17 @@ export default () => {
       </Flicking>
       <div className="flicking-pagination" />
     </div>
+
+    <SourceCode options={{ circular: true }} panels={[
+      { tag: "div", class: "card-panel", content: "1" },
+      { tag: "div", class: "card-panel", content: "2" },
+      { tag: "div", class: "card-panel", content: "3" },
+      { tag: "div", class: "card-panel", content: "4" },
+      { tag: "div", class: "card-panel", content: "5" },
+      { tag: "div", class: "card-panel", content: "6" },
+      { tag: "div", class: "card-panel", content: "7" },
+      { tag: "div", class: "card-panel", content: "8" },
+      { tag: "div", class: "flicking-pagination", content: "", isSlot: true }
+    ]} plugins={[["Pagination", { type: "scroll" }]]} />
   </div>);
 };

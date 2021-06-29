@@ -29,7 +29,8 @@ npm install @egjs/flicking-plguins
   values={[
     { label: "JavaScript", value: "js" },
     { label: "React", value: "react" },
-    { label: "Vue", value: "vue" },
+    { label: "Vue@2", value: "vue" },
+    { label: "Vue@3", value: "vue3" },
     { label: "Angular", value: "angular" },
     { label: "Preact", value: "preact" }
   ]}>
@@ -59,6 +60,29 @@ export default () => {
 
   </TabItem>
   <TabItem value="vue">
+
+```html title="template"
+<flicking :plugins="plugins">
+  {{ ... }}
+</flicking>
+```
+
+```js title="script"
+import { AutoPlay } from "@egjs/flicking-plugins";
+
+const plugins = [new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: false })];
+
+module.exports = {
+  data: function () {
+    return {
+      plugins
+    }
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="vue3">
 
 ```html title="template"
 <flicking :plugins="plugins">
@@ -156,9 +180,28 @@ export default () => {
 <ArrowDemo />
 
 ### Options
-
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|parentEl|HTMLElement \| null|✔️|null|The parent element to query `prevElSelector` and `nextElSelector`. If `null` is given, it will search the element inside wrapper element(`.flicking-viewport`) of Flicking.|
+|prevElSelector|string|✔️|".flicking-arrow-prev"|CSS selector to find query the prev arrow element|
+|nextElSelector|string|✔️|".flicking-arrow-next"|CSS selector to find query the next arrow element|
+|disabledClass|string|✔️|"flicking-arrow-disabled"|A class to apply when Flicking reachs edge|
+|moveCount|number|✔️|1|A number of skipping panels with one click|
+|moveByViewportSize|boolean|✔️|false|Effective for "freeScroll" moveType, enabling this will scroll camera by the size of viewport per click|
 
 ## Pagination
 <PaginationDemo />
 
 ### Options
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|parentEl|HTMLElement \| null|✔️|null|The parent element to query `selector`. If `null` is given, it will search the element inside wrapper element(`.flicking-viewport`) of Flicking.|
+|selector|string|✔️|".flicking-pagination"|CSS selector to find query the pagination element|
+|type|"bullet" \| "fraction" \| "scroll"|✔️|"bullet"|A style of pagination to apply|
+|classPrefix|string|✔️|"flicking-pagination"|A class prefix for automatically generated elements|
+|bulletCount|number|✔️|5|A number of visual bullets when "scroll" type is chosen|
+|renderBullet|function|✔️|(className: string) => \`&lt;span class="${className}">&lt;/span>\`|A render function for bullets, effective for "bullet" and "scroll" type|
+|renderFraction|function|✔️|(currentClass: string, totalClass: string) => \`&lt;span class="${currentClass}">&lt;/span>/&lt;span class="${totalClass}">&lt;/span>\`|A render function for fraction, effective for "fration" type|
+|fractionCurrentFormat|function|✔️|(index: number) => index.toString()|A format to display a current index inside `fraction-current` class|
+|fractionTotalFormat|function|✔️|(index: number) => index.toString()|A format to display a total panels count inside `fraction-total` class|
+|scrollOnChange|function|✔️|(index: number, ctx: ScrollContext) => ctx.moveTo(index)|A callback function triggered when the active bullet changes|
