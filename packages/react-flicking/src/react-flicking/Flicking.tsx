@@ -14,12 +14,13 @@ import VanillaFlicking, {
 } from "@egjs/flicking";
 import { isFragment } from "react-is";
 
-import { DEFAULT_PROPS, SLOT_VIEWPORT } from "./consts";
+import { DEFAULT_PROPS } from "./consts";
 import { FlickingProps } from "./types";
 import ReactRenderer from "./ReactRenderer";
 import ReactPanelComponent from "./ReactPanelComponent";
 import NonStrictPanelComponent from "./NonStrictPanelComponent";
 import StrictPanelComponent from "./StrictPanelComponent";
+import ViewportSlot from "./ViewportSlot";
 
 class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = DEFAULT_PROPS;
@@ -145,7 +146,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
         <Camera className="flicking-camera">
           { panels }
         </Camera>
-        { this._getViewportSlots() }
+        { this._getViewportSlot() }
       </Viewport>
     );
   }
@@ -179,19 +180,15 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
 
   private _getChildren(children: React.ReactNode = this.props.children) {
     return (React.Children.toArray(children) as Array<React.ReactElement<any>>)
-      .filter(child => {
-        return child.props.slot !== SLOT_VIEWPORT;
-      })
+      .filter(child => child.type !== ViewportSlot)
       .reduce((all, child) => {
         return [...all, ...this._unpackFragment(child)];
       }, []) as Array<React.ReactElement<any>>;
   }
 
-  private _getViewportSlots() {
+  private _getViewportSlot() {
     return (React.Children.toArray(this.props.children) as Array<React.ReactElement<any>>)
-      .filter(child => {
-        return child.props.slot === SLOT_VIEWPORT;
-      })
+      .filter(child => child.type === ViewportSlot);
   }
 
   private _unpackFragment(child: React.ReactElement) {

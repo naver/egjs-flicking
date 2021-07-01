@@ -1,5 +1,6 @@
 import * as React from "react";
 import Flicking from "../../react-flicking/Flicking";
+import ViewportSlot from "../../react-flicking/ViewportSlot";
 import { Arrow } from "@egjs/flicking-plugins";
 import "../css/plugins.css";
 
@@ -20,8 +21,10 @@ export default class ArrowDemo extends React.Component<{}> {
         <div className="panel panel2"></div>
         <div className="panel panel3"></div>
         <div className="panel panel4"></div>
-        <span slot="viewport" className="flicking-arrow-prev"></span>
-        <span slot="viewport" className="flicking-arrow-next"></span>
+        <ViewportSlot>
+          <span slot="viewport" className="flicking-arrow-prev"></span>
+          <span slot="viewport" className="flicking-arrow-next"></span>
+        </ViewportSlot>
       </Flicking>
   </div>);
   }
