@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { useEffect, useState } from "react";
-import Flicking from "@egjs/react-flicking";
+import Flicking, { ViewportSlot } from "@egjs/react-flicking";
 import SourceCode from "@site/src/component/SourceCode";
 import { Fade, Pagination } from "@egjs/flicking-plugins";
 
@@ -20,7 +20,7 @@ export default () => {
 
   return (<div className="container">
     <div id="pagination-1" className="relative-container pb-1 mb-2">
-      <Flicking className="mb-6" plugins={plugins1} circular={true}>
+      <Flicking className="pb-6" plugins={plugins1} circular={true}>
         <Panel index={0} color="white" className="card m-2 card-panel" />
         <Panel index={1} color="white" className="card m-2 card-panel" />
         <Panel index={2} color="white" className="card m-2 card-panel" />
@@ -30,8 +30,10 @@ export default () => {
         <Panel index={6} color="white" className="card m-2 card-panel" />
         <Panel index={7} color="white" className="card m-2 card-panel" />
         <Panel index={8} color="white" className="card m-2 card-panel" />
+        <ViewportSlot>
+          <div className="flicking-pagination" />
+        </ViewportSlot>
       </Flicking>
-      <div className="flicking-pagination" />
     </div>
 
     <SourceCode options={{ circular: true }} panels={[
@@ -47,7 +49,7 @@ export default () => {
     ]} plugins={[["Pagination", { type: "bullet" }]]} />
 
     <div id="pagination-2" className="relative-container pb-1 mb-2">
-      <Flicking className="mb-6" plugins={plugins2} circular={true}>
+      <Flicking className="pb-6" plugins={plugins2} circular={true}>
         <Panel index={0} color="white" className="card m-2 card-panel" />
         <Panel index={1} color="white" className="card m-2 card-panel" />
         <Panel index={2} color="white" className="card m-2 card-panel" />
@@ -57,8 +59,10 @@ export default () => {
         <Panel index={6} color="white" className="card m-2 card-panel" />
         <Panel index={7} color="white" className="card m-2 card-panel" />
         <Panel index={8} color="white" className="card m-2 card-panel" />
+        <ViewportSlot>
+          <div className="flicking-pagination" />
+        </ViewportSlot>
       </Flicking>
-      <div className="flicking-pagination" />
     </div>
 
     <SourceCode options={{ circular: true }} panels={[
@@ -74,7 +78,7 @@ export default () => {
     ]} plugins={[["Pagination", { type: "fraction" }]]} />
 
     <div id="pagination-3" className="relative-container pb-1 mb-2">
-      <Flicking className="mb-6" plugins={plugins3} circular={true}>
+      <Flicking className="pb-6" plugins={plugins3} circular={true}>
         <Panel index={0} color="white" className="card m-2 card-panel" />
         <Panel index={1} color="white" className="card m-2 card-panel" />
         <Panel index={2} color="white" className="card m-2 card-panel" />
@@ -84,8 +88,10 @@ export default () => {
         <Panel index={6} color="white" className="card m-2 card-panel" />
         <Panel index={7} color="white" className="card m-2 card-panel" />
         <Panel index={8} color="white" className="card m-2 card-panel" />
+        <ViewportSlot>
+          <div className="flicking-pagination" />
+        </ViewportSlot>
       </Flicking>
-      <div className="flicking-pagination" />
     </div>
 
     <SourceCode options={{ circular: true }} panels={[

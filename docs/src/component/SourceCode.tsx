@@ -9,6 +9,7 @@ import ReactCode from "./code/ReactCode";
 import VueCode from "./code/VueCode";
 import AngularCode from "./code/AngularCode";
 import Vue3Code from "./code/Vue3Code";
+import PreactCode from "./code/PreactCode";
 import { SourceContext } from "./code/type";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -42,6 +43,6 @@ export default ({
       {angular ? angular : <AngularCode {...otherProps} /> }
     </TabItem>
     <TabItem value="preact">
-      {preact ? preact : <ReactCode {...otherProps} /> }
+      {preact ? preact : <PreactCode {...otherProps} /> }
     </TabItem>
   </Tabs>;

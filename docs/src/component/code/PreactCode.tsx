@@ -9,8 +9,8 @@ export default ({ options, panels, plugins, siblings }: SourceContext) => {
   const slots = panels.filter(panel => panel.isSlot);
 
   const imports = [
-    ["{ Component }", "react"],
-    [slots.length ? "Flicking, { ViewportSlot }" : "Flicking", "@egjs/react-flicking"]
+    ["{ Component }", "preact"],
+    [slots.length ? "Flicking, { ViewportSlot }" : "Flicking", "@egjs/preact-flicking"]
   ];
 
   if (plugins) {

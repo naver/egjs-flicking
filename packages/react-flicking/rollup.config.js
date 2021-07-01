@@ -1,4 +1,4 @@
-const buildHelper = require("../../config/build-helper");
+const buildHelper = require("@egjs/build-helper");
 
 const defaultOptions = {
   tsconfig: "tsconfig.build.json",
