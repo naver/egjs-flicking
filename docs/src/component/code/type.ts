@@ -3,6 +3,7 @@ export interface SourceContext {
   panels: InnerElement[];
   siblings?: InnerElement[];
   plugins?: Plugin[];
+  imports?: Array<string | string[]>;
   js?: React.ReactElement;
   react?: React.ReactElement;
   vue?: React.ReactElement;

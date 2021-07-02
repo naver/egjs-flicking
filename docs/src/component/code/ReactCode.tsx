@@ -2,22 +2,22 @@ import React from "react";
 import CodeBlock from "@theme/CodeBlock";
 
 import { SourceContext } from "./type";
-import { getClass, getPlugins, getStyle } from "./utils";
+import { getClass, getImports, getPlugins, getStyle } from "./utils";
 
-export default ({ options, panels, plugins, siblings }: SourceContext) => {
+export default ({ options, panels, plugins, siblings, imports = [] }: SourceContext) => {
   const declarePlugins = plugins ? `\n  private _plugins = [${getPlugins(plugins)}];\n` : "";
   const slots = panels.filter(panel => panel.isSlot);
 
-  const imports = [
+  const defaultImports: Array<string | string[]> = [
     ["{ Component }", "react"],
     [slots.length ? "Flicking, { ViewportSlot }" : "Flicking", "@egjs/react-flicking"]
   ];
 
   if (plugins) {
-    imports.push([`{ ${plugins.map(plugin => plugin[0])} }`, "@egjs/flicking-plugins"]);
+    defaultImports.push([`{ ${plugins.map(plugin => plugin[0])} }`, "@egjs/flicking-plugins"]);
   }
 
-  const importStatement = `${imports.map(imp => `import ${imp[0]} from "${imp[1]}";`).join("\n")}`;
+  defaultImports.push(...imports);
 
   const slotsTemplate = slots.length
     ? `
@@ -27,7 +27,7 @@ export default ({ options, panels, plugins, siblings }: SourceContext) => {
     : "";
 
   return <CodeBlock className="jsx" title="DemoComponent.jsx">
-    {`${importStatement}
+    {`${getImports(defaultImports, { includeFlicking: false })}
 
 export default class DemoComponent extends Component {${declarePlugins}
   public render() {
