@@ -427,5 +427,36 @@ describe("Panel", () => {
         expect((await createPanel(El.panel(), { index: 10 })).decreaseIndex(-99).index).to.equal(10);
       });
     });
+
+    describe("contains", () => {
+      it("should return true if element is a child of given panel's element", async () => {
+        const panel = await createPanel(El.panel(), { index: 0 });
+        const childEl = new El("test");
+
+        panel.element.appendChild(childEl.el);
+
+        expect(panel.contains(childEl.el)).to.be.true;
+      });
+
+      it("should return false if element is not a child of given panel's element", async () => {
+        const panel = await createPanel(El.panel(), { index: 0 });
+        const childEl = new El("test");
+
+        panel.element.parentElement.appendChild(childEl.el);
+
+        expect(panel.contains(childEl.el)).to.be.false;
+      });
+
+      it("should return false if element is null", async () => {
+        const panel = await createPanel(El.panel(), { index: 0 });
+        const childEl = new El("test");
+
+        panel.element.appendChild(childEl.el);
+        (panel as any)._el = null;
+
+        expect(panel.element).equals(null);
+        expect(panel.contains(childEl.el)).to.be.false;
+      });
+    });
   });
 });
