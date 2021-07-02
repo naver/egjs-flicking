@@ -528,7 +528,22 @@ class Flicking extends Component<FlickingEvents> {
   public set interruptable(val: FlickingOptions["interruptable"]) { this._interruptable = val; }
   public set bounce(val: FlickingOptions["bounce"]) { this._bounce = val; }
   public set iOSEdgeSwipeThreshold(val: FlickingOptions["iOSEdgeSwipeThreshold"]) { this._iOSEdgeSwipeThreshold = val; }
-  public set preventClickOnDrag(val: FlickingOptions["preventClickOnDrag"]) { this._preventClickOnDrag = val; }
+  public set preventClickOnDrag(val: FlickingOptions["preventClickOnDrag"]) {
+    const prevVal = this._preventClickOnDrag;
+
+    if (val === prevVal) return;
+
+    const controller = this._control.controller;
+
+    if (val) {
+      controller.addPreventClickHandler();
+    } else {
+      controller.removePreventClickHandler();
+    }
+
+    this._preventClickOnDrag = val;
+  }
+
   public set disableOnInit(val: FlickingOptions["disableOnInit"]) { this._disableOnInit = val; }
   // PERFORMANCE
   public set renderOnlyVisible(val: FlickingOptions["renderOnlyVisible"]) { this._renderOnlyVisible = val; }
@@ -644,7 +659,6 @@ class Flicking extends Component<FlickingEvents> {
     const camera = this._camera;
     const renderer = this._renderer;
     const control = this._control;
-    const viewport = this._viewport;
 
     camera.init(this);
     renderer.init(this);
@@ -659,7 +673,7 @@ class Flicking extends Component<FlickingEvents> {
       window.addEventListener("resize", this.resize);
     }
     if (this._preventClickOnDrag) {
-      viewport.element.addEventListener("click", this._preventClickWhenDragged);
+      control.controller.addPreventClickHandler();
     }
     if (this._disableOnInit) {
       this.disableInput();
@@ -684,7 +698,6 @@ class Flicking extends Component<FlickingEvents> {
 
     this.off();
     window.removeEventListener("resize", this.resize);
-    this._viewport.element.removeEventListener("click", this._preventClickWhenDragged);
 
     this._control.destroy();
     this._camera.destroy();
@@ -1227,12 +1240,6 @@ class Flicking extends Component<FlickingEvents> {
       duration: 0
     });
   }
-
-  private _preventClickWhenDragged = (e: MouseEvent) => {
-    if (this._control.animating) {
-      e.preventDefault();
-    }
-  };
 }
 
 export default Flicking;
