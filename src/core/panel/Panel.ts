@@ -306,7 +306,7 @@ abstract class Panel {
    * @return {boolean} A Boolean value indicating the element is inside of this panel {@link Panel#element element}<ko>패널의 {@link Panel#element element}내에 해당 엘리먼트 포함 여부</ko>
    */
   public contains(element: HTMLElement): boolean {
-    return this.element.contains(element);
+    return !!this.element?.contains(element);
   }
 
   /**
