@@ -46,7 +46,8 @@ export default () => {
       { tag: "div", class: "card-panel", content: "7" },
       { tag: "div", class: "card-panel", content: "8" },
       { tag: "div", class: "flicking-pagination", content: "", isSlot: true }
-    ]} plugins={[["Pagination", { type: "bullet" }]]} />
+    ]} plugins={[["Pagination", { type: "bullet" }]]}
+    imports={["@egjs/flicking-plugins/dist/pagination.css"]} />
 
     <div id="pagination-2" className="relative-container pb-1 mb-2">
       <Flicking className="pb-6" plugins={plugins2} circular={true}>
@@ -75,7 +76,8 @@ export default () => {
       { tag: "div", class: "card-panel", content: "7" },
       { tag: "div", class: "card-panel", content: "8" },
       { tag: "div", class: "flicking-pagination", content: "", isSlot: true }
-    ]} plugins={[["Pagination", { type: "fraction" }]]} />
+    ]} plugins={[["Pagination", { type: "fraction" }]]}
+    imports={["@egjs/flicking-plugins/dist/pagination.css"]} />
 
     <div id="pagination-3" className="relative-container pb-1 mb-2">
       <Flicking className="pb-6" plugins={plugins3} circular={true}>
@@ -104,6 +106,7 @@ export default () => {
       { tag: "div", class: "card-panel", content: "7" },
       { tag: "div", class: "card-panel", content: "8" },
       { tag: "div", class: "flicking-pagination", content: "", isSlot: true }
-    ]} plugins={[["Pagination", { type: "scroll" }]]} />
+    ]} plugins={[["Pagination", { type: "scroll" }]]}
+    imports={["@egjs/flicking-plugins/dist/pagination.css"]} />
   </div>);
 };

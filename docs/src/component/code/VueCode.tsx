@@ -4,7 +4,7 @@ import CodeBlock from "@theme/CodeBlock";
 import { SourceContext } from "./type";
 import { getClass, getImports, getOptionsObject, getPlugins, getStyle } from "./utils";
 
-export default ({ options, panels, plugins, siblings }: SourceContext) => {
+export default ({ options, panels, plugins, siblings, imports = [] }: SourceContext) => {
   const optionsObject = getOptionsObject(options);
   const declarePlugins = plugins ? `,
   data() {
@@ -12,6 +12,7 @@ export default ({ options, panels, plugins, siblings }: SourceContext) => {
       plugins: [${getPlugins(plugins)}]
     }
   }` : "";
+  const allImports = [...plugins.map(plugin => [`{ ${plugin[0]} }`, "@egjs/flicking-plugins"]), ...imports];
 
   return <><CodeBlock className="html" title="template">
     {`<Flicking${options ? ` :options="{ ${optionsObject} }"` : ""}${plugins ? " :plugins=\"plugins\"" : ""}>
@@ -19,7 +20,7 @@ export default ({ options, panels, plugins, siblings }: SourceContext) => {
 </Flicking>${siblings ? `\n${siblings.map(el => `<${el.tag}${getClass(el)}${getStyle(el)}>${el.content}</${el.tag}>`).join("\n")}` : ""}`}
   </CodeBlock>
   <CodeBlock className="js" title="script">
-    {`${getImports(plugins, "vue")}
+    {`${getImports(allImports, { prefix: "vue" })}
 
 export default {
   components: {

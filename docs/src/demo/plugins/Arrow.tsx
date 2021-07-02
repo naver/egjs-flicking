@@ -38,7 +38,7 @@ export default () => {
       { tag: "div", class: "card-panel", content: "3" },
       { tag: "span", class: "flicking-arrow-prev", content: "", isSlot: true },
       { tag: "span", class: "flicking-arrow-next", content: "", isSlot: true }
-    ]} plugins={[["Arrow"]]} />
+    ]} plugins={[["Arrow"]]} imports={["@egjs/flicking-plugins/dist/arrow.css"]} />
 
     <div id="arrow-2" className="relative-container">
       <Flicking className="mb-6" plugins={plugins2} circular={true}>
@@ -58,7 +58,7 @@ export default () => {
       { tag: "div", class: "card-panel", content: "3" },
       { tag: "span", class: "flicking-arrow-prev is-circle", content: "", isSlot: true },
       { tag: "span", class: "flicking-arrow-next is-circle", content: "", isSlot: true }
-    ]} plugins={[["Arrow"]]} />
+    ]} plugins={[["Arrow"]]} imports={["@egjs/flicking-plugins/dist/arrow.css"]} />
 
     <div id="arrow-3" className="relative-container">
       <Flicking className="mb-6" plugins={plugins3} circular={true}>
@@ -77,6 +77,7 @@ export default () => {
     ]} siblings={[
       { tag: "span", class: "flicking-arrow-prev is-outside", content: "" },
       { tag: "span", class: "flicking-arrow-next is-outside", content: "" }
-    ]} plugins={[["Arrow", { parentEl: { toString() { return "document.body"; } } }]]} />
+    ]} plugins={[["Arrow", { parentEl: { toString() { return "document.body"; } } }]]}
+    imports={["@egjs/flicking-plugins/dist/arrow.css"]} />
   </div>);
 };

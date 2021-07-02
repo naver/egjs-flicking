@@ -147,6 +147,26 @@ export default () => {
   </TabItem>
 </Tabs>
 
+:::info
+Some plugins require additional CSS for display buttons.
+You can import them from your `node_modules` folder,
+```js
+import "@egjs/flicking-plugins/dist/flicking-plugins.css";
+```
+Or, you can download them from CDN like
+```html
+<link rel="stylesheet" href="https://naver.github.io/egjs-flicking-plugins/release/latest/dist/flicking-plugins.css">
+```
+
+These are the available CSS files:
+- flicking-plugins.css (bundled)
+- flicking-plugins.min.css
+- arrow.css
+- arrow.min.css
+- pagination.css
+- pagination.min.css
+:::
+
 ## Autoplay
 <AutoplayDemo />
 
