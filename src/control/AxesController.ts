@@ -24,6 +24,7 @@ class AxesController {
   private _stateMachine: StateMachine;
 
   private _animatingContext: { start: number; end: number; offset: number };
+  private _dragged: boolean;
 
   /**
    * An {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html Axes} instance
@@ -128,6 +129,8 @@ class AxesController {
    * @return {void}
    */
   public destroy(): void {
+    this.removePreventClickHandler();
+
     this._axes?.destroy();
     this._panInput?.destroy();
 
@@ -181,6 +184,26 @@ class AxesController {
     axes.axm.set({ [AXES.POSITION_KEY]: controlParams.position });
 
     return this;
+  }
+
+  public addPreventClickHandler() {
+    const flicking = getFlickingAttached(this._flicking, "Control");
+    const axes = this._axes!;
+    const viewportEl = flicking.element;
+
+    axes.on(AXES.EVENT.HOLD, this._onAxesHold);
+    axes.on(AXES.EVENT.CHANGE, this._onAxesChange);
+    viewportEl.addEventListener("click", this._preventClickWhenDragged, true);
+  }
+
+  public removePreventClickHandler() {
+    const flicking = getFlickingAttached(this._flicking, "Control");
+    const axes = this._axes!;
+    const viewportEl = flicking.element;
+
+    axes.off(AXES.EVENT.HOLD, this._onAxesHold);
+    axes.off(AXES.EVENT.CHANGE, this._onAxesChange);
+    viewportEl.removeEventListener("click", this._preventClickWhenDragged, true);
   }
 
   /**
@@ -264,12 +287,30 @@ class AxesController {
     }
   }
 
-  protected _resetInternalValues() {
+  private _resetInternalValues() {
     this._flicking = null;
     this._axes = null;
     this._panInput = null;
     this._animatingContext = { start: 0, end: 0, offset: 0 };
+    this._dragged = false;
   }
+
+  private _onAxesHold = () => {
+    this._dragged = false;
+  };
+
+  private _onAxesChange = () => {
+    this._dragged = true;
+  };
+
+  private _preventClickWhenDragged = (e: MouseEvent) => {
+    if (this._dragged) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    this._dragged = false;
+  };
 }
 
 export default AxesController;
