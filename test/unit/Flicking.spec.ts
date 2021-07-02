@@ -407,6 +407,34 @@ describe("Flicking", () => {
         expect(resizeSpy.calledOnce).to.be.true;
       });
     });
+
+    describe("preventClickOnDrag", () => {
+      it("should trigger click event when Flicking's not dragged at all", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventClickOnDrag: true });
+        const clickSpy = sinon.spy();
+        const testPanel = flicking.panels[0];
+
+        testPanel.element.addEventListener("click", clickSpy);
+
+        await simulate(flicking.element, { deltaX: 0, deltaY: 0 });
+        testPanel.element.click();
+
+        expect(clickSpy.calledOnce).to.be.true;
+      });
+
+      it("shouldn't trigger click event when Flicking's dragged a little", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventClickOnDrag: true });
+        const clickSpy = sinon.spy();
+        const testPanel = flicking.panels[0];
+
+        testPanel.element.addEventListener("click", clickSpy);
+
+        await simulate(flicking.element, { deltaX: -50, deltaY: 0 });
+        testPanel.element.click();
+
+        expect(clickSpy.called).to.be.false;
+      });
+    });
   });
 
   describe("Flicking Events", () => {
