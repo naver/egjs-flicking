@@ -19,7 +19,6 @@ import {
 import VanillaFlicking, {
   FlickingOptions,
   FlickingEvents,
-  EVENTS,
   sync,
   Plugin,
   Status,
