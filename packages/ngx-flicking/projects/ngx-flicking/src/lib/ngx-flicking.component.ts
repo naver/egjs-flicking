@@ -42,6 +42,7 @@ import VanillaFlicking, {
   PanelChangeEvent
 } from "@egjs/flicking";
 import ListDiffer from "@egjs/list-differ";
+import { EVENT_NAMES } from "./consts";
 
 import FlickingInterface from "./FlickingInterface";
 import { NgxFlickingPanel } from "./ngx-flicking-panel.directive";
@@ -68,24 +69,23 @@ export class NgxFlickingComponent extends FlickingInterface
   @Input() public options: Partial<FlickingOptions> = {};
   @Input() public plugins: Plugin[] = [];
   @Input() public status: Status;
-
-  @Output() public ready = new EventEmitter<ReadyEvent<NgxFlickingComponent>>();
-  @Output() public beforeResize = new EventEmitter<BeforeResizeEvent<NgxFlickingComponent>>();
-  @Output() public afterResize = new EventEmitter<AfterResizeEvent<NgxFlickingComponent>>();
-  @Output() public holdStart = new EventEmitter<HoldStartEvent<NgxFlickingComponent>>();
-  @Output() public holdEnd = new EventEmitter<HoldEndEvent<NgxFlickingComponent>>();
-  @Output() public moveStart = new EventEmitter<MoveStartEvent<NgxFlickingComponent>>();
-  @Output() public move = new EventEmitter<MoveEvent<NgxFlickingComponent>>();
-  @Output() public moveEnd = new EventEmitter<MoveEndEvent<NgxFlickingComponent>>();
-  @Output() public willChange = new EventEmitter<WillChangeEvent<NgxFlickingComponent>>();
-  @Output() public changed = new EventEmitter<ChangedEvent<NgxFlickingComponent>>();
-  @Output() public willRestore = new EventEmitter<WillRestoreEvent<NgxFlickingComponent>>();
-  @Output() public restored = new EventEmitter<RestoredEvent<NgxFlickingComponent>>();
-  @Output() public select = new EventEmitter<SelectEvent<NgxFlickingComponent>>();
-  @Output() public needPanel = new EventEmitter<NeedPanelEvent<NgxFlickingComponent>>();
-  @Output() public visibleChange = new EventEmitter<VisibleChangeEvent<NgxFlickingComponent>>();
-  @Output() public reachEdge = new EventEmitter<ReachEdgeEvent<NgxFlickingComponent>>();
-  @Output() public panelChange = new EventEmitter<PanelChangeEvent<NgxFlickingComponent>>();
+  @Output() public ready: EventEmitter<ReadyEvent<NgxFlickingComponent>>;
+  @Output() public beforeResize: EventEmitter<BeforeResizeEvent<NgxFlickingComponent>>;
+  @Output() public afterResize: EventEmitter<AfterResizeEvent<NgxFlickingComponent>>;
+  @Output() public holdStart: EventEmitter<HoldStartEvent<NgxFlickingComponent>>;
+  @Output() public holdEnd: EventEmitter<HoldEndEvent<NgxFlickingComponent>>;
+  @Output() public moveStart: EventEmitter<MoveStartEvent<NgxFlickingComponent>>;
+  @Output() public move: EventEmitter<MoveEvent<NgxFlickingComponent>>;
+  @Output() public moveEnd: EventEmitter<MoveEndEvent<NgxFlickingComponent>>;
+  @Output() public willChange: EventEmitter<WillChangeEvent<NgxFlickingComponent>>;
+  @Output() public changed: EventEmitter<ChangedEvent<NgxFlickingComponent>>;
+  @Output() public willRestore: EventEmitter<WillRestoreEvent<NgxFlickingComponent>>;
+  @Output() public restored: EventEmitter<RestoredEvent<NgxFlickingComponent>>;
+  @Output() public select: EventEmitter<SelectEvent<NgxFlickingComponent>>;
+  @Output() public needPanel: EventEmitter<NeedPanelEvent<NgxFlickingComponent>>;
+  @Output() public visibleChange: EventEmitter<VisibleChangeEvent<NgxFlickingComponent>>;
+  @Output() public reachEdge: EventEmitter<ReachEdgeEvent<NgxFlickingComponent>>;
+  @Output() public panelChange: EventEmitter<PanelChangeEvent<NgxFlickingComponent>>;
 
   @ContentChildren(NgxFlickingPanel) private _ngxPanels: QueryList<NgxFlickingPanel>;
   private _elRef: ElementRef<HTMLElement>;
@@ -101,6 +101,10 @@ export class NgxFlickingComponent extends FlickingInterface
     this._elRef = elRef;
     this._ngxRenderer = renderer;
     this._vanillaFlicking = null;
+
+    EVENT_NAMES.forEach(evtName => {
+      this[evtName] = new EventEmitter();
+    });
   }
 
   public ngAfterViewInit() {
@@ -156,9 +160,7 @@ export class NgxFlickingComponent extends FlickingInterface
 
   private _bindEvents() {
     const flicking = this._vanillaFlicking;
-    const events = Object.keys(EVENTS).map((key: keyof typeof EVENTS) => EVENTS[key]);
-
-    events.forEach(evtName => {
+    EVENT_NAMES.forEach(evtName => {
       flicking.on(evtName, e => {
         // Style guide: Event - https://angular.io/guide/styleguide#dont-prefix-output-properties
         const emitter = this[evtName] as EventEmitter<FlickingEvents[typeof evtName]>;
