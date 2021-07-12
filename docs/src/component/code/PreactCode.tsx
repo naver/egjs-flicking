@@ -4,7 +4,7 @@ import CodeBlock from "@theme/CodeBlock";
 import { SourceContext } from "./type";
 import { getClass, getImports, getPlugins, getStyle } from "./utils";
 
-export default ({ options, panels, plugins, siblings, imports = [] }: SourceContext) => {
+export default ({ options, panels, plugins = [], siblings = [], imports = [] }: SourceContext) => {
   const declarePlugins = plugins ? `\n  private _plugins = [${getPlugins(plugins)}];\n` : "";
   const slots = panels.filter(panel => panel.isSlot);
 

@@ -4,7 +4,7 @@ import CodeBlock from "@theme/CodeBlock";
 import { SourceContext } from "./type";
 import { getClass, getImports, getOptionsObject, getPlugins, getStyle } from "./utils";
 
-export default ({ options, panels, plugins, siblings, imports = [] }: SourceContext) => {
+export default ({ options, panels, plugins = [], siblings = [], imports = [] }: SourceContext) => {
   const optionsObject = getOptionsObject(options);
   const declarePlugins = plugins ? `,
   data() {

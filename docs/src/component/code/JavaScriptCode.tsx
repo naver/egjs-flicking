@@ -4,7 +4,7 @@ import CodeBlock from "@theme/CodeBlock";
 import { SourceContext } from "./type";
 import { getClass, getImports, getStyle, withQuoteIfString } from "./utils";
 
-export default ({ options, panels, plugins, siblings, imports = [] }: SourceContext) => {
+export default ({ options, panels, plugins = [], siblings = [], imports = [] }: SourceContext) => {
   const getOptions = (opts: { [key: string]: any }) => `${Object.keys(opts).map(key => `${key}: ${withQuoteIfString(opts[key])}`).join(",\n  ")}`;
 
   const createVanillaFlicking = options
