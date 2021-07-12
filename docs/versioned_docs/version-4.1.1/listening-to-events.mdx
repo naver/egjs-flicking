@@ -1,0 +1,123 @@
+---
+title: Listening to Events
+id: listening-to-events
+slug: /listening-to-events
+custom_edit_url: null
+---
+
+import Link from "@docusaurus/Link";
+import useBaseUrl from "@docusaurus/useBaseUrl";
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs
+  groupId="cfc"
+  defaultValue="js"
+  values={[
+    { label: "JavaScript", value: "js" },
+    { label: "React", value: "react" },
+    { label: "Vue@2", value: "vue" },
+    { label: "Vue@3", value: "vue3" },
+    { label: "Angular", value: "angular" },
+    { label: "Preact", value: "preact" }
+  ]}>
+  <TabItem value="js">
+
+You can listen to Flicking's events with [Flicking#on](api/Flicking#on)
+
+```js
+// If you're using a package manager
+import { EVENTS } from "@egjs/flicking";
+// Or, if you're using a CDN
+const EVENTS = Flicking.EVENTS;
+
+flicking.on(EVENTS.MOVE, evt => {
+  console.log(evt);
+})
+```
+
+  </TabItem>
+  <TabItem value="react">
+
+All events are prefixed with `on-`, and `camelCase`d.
+
+```tsx
+import Flicking, { MoveEvent, NeedPanelEvent } from "@egjs/react-flicking";
+
+<Flicking
+  onMove={(e: MoveEvent) => {
+    console.log(e);
+  }}
+  onNeedPanel={(e: NeedPanelEvent) => {
+    console.log(e);
+  }}
+>
+  {...}
+</Flicking>
+```
+
+  </TabItem>
+  <TabItem value="vue">
+
+All event names are renamed to `kebab-case`, following the [Vue event naming convention](https://vuejs.org/v2/guide/components-custom-events.html#Event-Names).
+
+```html
+<Flicking
+  @ready="e => { ... }"
+  @move-end="e => { ... }"
+  v-on:need-panel="e => { ... }"
+>
+   {{ ... }}
+</Flicking>
+```
+
+  </TabItem>
+  <TabItem value="vue3">
+
+All event names are renamed to `kebab-case`, following the [Vue event naming convention](https://vuejs.org/v2/guide/components-custom-events.html#Event-Names).
+
+```html
+<Flicking
+  @ready="e => { ... }"
+  @move-end="e => { ... }"
+  v-on:need-panel="e => { ... }"
+>
+   {{ ... }}
+</Flicking>
+```
+
+  </TabItem>
+  <TabItem value="angular">
+
+You can listen events of the `ngx-flicking` using Angular's [event binding](https://angular.io/guide/event-binding).
+```html
+<ngx-flicking
+  [options]="{ needPanelThreshold: 50, renderOnlyVisible: true }"
+  (needPanel)="onNeedPanel($event)">
+  {{ ... }}
+</ngx-flicking>
+```
+
+  </TabItem>
+  <TabItem value="preact">
+
+All events are prefixed with `on-`, and `camelCase`d.
+```tsx
+import Flicking, { MoveEvent, NeedPanelEvent } from "@egjs/preact-flicking";
+
+<Flicking
+  onMove={(e: MoveEvent) => {
+    console.log(e);
+  }}
+  onNeedPanel={(e: NeedPanelEvent) => {
+    console.log(e);
+  }}
+>
+  {...}
+</Flicking>
+```
+
+  </TabItem>
+</Tabs>
+
+See all available events at <Link to={useBaseUrl("docs/api/Flicking#events")}>Flicking#events</Link>.
