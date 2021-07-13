@@ -194,8 +194,8 @@ abstract class Control {
   }
 
   /**
-   * Reset {@link Control#activePanel activePanel} and {@link Control#activeAnchor activeAnchor} to `null`
-   * @ko {@link Control#activePanel activePanel}와 {@link Control#activeAnchor activeAnchor}를 `null`로 초기화합니다
+   * Reset {@link Control#activePanel activePanel} to `null`
+   * @ko {@link Control#activePanel activePanel}을 `null`로 초기화합니다
    * @chainable
    * @return {this}
    */
