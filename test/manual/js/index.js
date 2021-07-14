@@ -1,11 +1,7 @@
 const flicking = new Flicking("#flicking", { moveType: "freeScroll" });
 
-flicking.on(Flicking.EVENTS.WILL_RESTORE, e => {
-  console.log(e);
-});
-
-flicking.on(Flicking.EVENTS.RESTORED, e => {
-  console.log(e);
+Object.values(Flicking.EVENTS).forEach(evt => {
+  flicking.on(evt, console.log);
 });
 
 document.querySelector("#prev").addEventListener("click", () => flicking.prev().catch(() => void 0));
