@@ -21,15 +21,18 @@
   vertical-align: top;
 }
 .flicking-viewport.vertical,
-.flicking-viewport.vertical>.flicking-camera {
+.flicking-viewport.vertical > .flicking-camera {
   display: inline-block;
 }
-.flicking-viewport.vertical.middle>.flicking-camera>* {
+.flicking-viewport.vertical.middle > .flicking-camera > * {
   vertical-align: middle;
 }
-.flicking-viewport.vertical.bottom>.flicking-camera>* {
+.flicking-viewport.vertical.bottom > .flicking-camera > * {
   vertical-align: bottom;
 }
-.flicking-viewport.vertical>.flicking-camera>* {
+.flicking-viewport.vertical > .flicking-camera > * {
   display: block;
+}
+.flicking-viewport.flicking-hidden > .flicking-camera > * {
+  visibility: hidden;
 }

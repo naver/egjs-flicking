@@ -29,6 +29,8 @@ export const DEFAULT_PROPS: FlickingProps = {
   cameraTag: "div",
   plugins: [],
   useFindDOMNode: false,
+  hideBeforeInit: false,
+  firstPanelSize: undefined,
   onReady: (e: ReadyEvent) => {},
   onBeforeResize: (e: BeforeResizeEvent) => {},
   onAfterResize: (e: AfterResizeEvent) => {},

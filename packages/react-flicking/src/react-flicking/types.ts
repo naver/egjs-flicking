@@ -29,6 +29,8 @@ export interface FlickingProps {
   cameraTag: keyof JSX.IntrinsicElements;
   plugins: Plugin[];
   useFindDOMNode: boolean;
+  hideBeforeInit: boolean;
+  firstPanelSize?: string;
   onReady: (e: ReadyEvent<ReactFlicking>) => any;
   onBeforeResize: (e: BeforeResizeEvent<ReactFlicking>) => any;
   onAfterResize: (e: AfterResizeEvent<ReactFlicking>) => any;
