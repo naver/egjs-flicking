@@ -117,7 +117,7 @@ class Flicking extends Vue {
         "flicking-camera": true
       },
       style: !initialized && this.firstPanelSize
-        ? { transform: getDefaultCameraTransform(this.options.align, this.firstPanelSize) }
+        ? { transform: getDefaultCameraTransform(this.options.align, this.options.horizontal, this.firstPanelSize) }
         : {}
     };
 

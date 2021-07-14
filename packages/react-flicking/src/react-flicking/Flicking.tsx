@@ -139,7 +139,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
 
     const cameraProps = !initialized && props.firstPanelSize
       ? { style: {
-        transform: getDefaultCameraTransform(this.props.align, this.props.firstPanelSize)
+        transform: getDefaultCameraTransform(this.props.align, this.props.horizontal, this.props.firstPanelSize)
       }}
       : {};
 

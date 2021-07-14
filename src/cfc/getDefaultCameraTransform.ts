@@ -2,16 +2,20 @@ import { FlickingOptions } from "../Flicking";
 import { ALIGN } from "../const/external";
 import { parseArithmeticExpression } from "../utils";
 
-export default (align?: FlickingOptions["align"], firstPanelSize?: string) => {
+export default (align: FlickingOptions["align"] = ALIGN.CENTER, horizontal: boolean = true, firstPanelSize?: string) => {
   const cameraAlign = getCameraAlign(align);
   const panelAlign = getPanelAlign(align);
 
-  return panelAlign == null
-    ? ""
-    : `translate(calc(${cameraAlign} - (${firstPanelSize || "0px"} * ${panelAlign.percentage}) - ${panelAlign.absolute}px))`;
+  if (panelAlign == null) return "";
+
+  const camPosition = `calc(${cameraAlign} - (${firstPanelSize || "0px"} * ${panelAlign.percentage}) - ${panelAlign.absolute}px)`;
+
+  return horizontal
+    ? `translate(${camPosition})`
+    : `translate(0, ${camPosition})`;
 };
 
-const getCameraAlign = (align: FlickingOptions["align"] = ALIGN.CENTER) => {
+const getCameraAlign = (align: FlickingOptions["align"]) => {
   const alignVal = typeof align === "object"
     ? (align as { camera: string | number }).camera
     : align;
@@ -19,7 +23,7 @@ const getCameraAlign = (align: FlickingOptions["align"] = ALIGN.CENTER) => {
   return parseAlign(alignVal);
 };
 
-const getPanelAlign = (align: FlickingOptions["align"] = ALIGN.CENTER) => {
+const getPanelAlign = (align: FlickingOptions["align"]) => {
   const alignVal = typeof align === "object"
     ? (align as { panel: string | number }).panel
     : align;

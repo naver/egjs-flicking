@@ -102,7 +102,7 @@ export class NgxFlickingComponent extends FlickingInterface
   private get _cameraStyleBeforeInit() {
     const initialized = this._vanillaFlicking && this._vanillaFlicking.initialized;
     return !initialized && this.firstPanelSize
-      ? { transform: getDefaultCameraTransform(this.options.align, this.firstPanelSize) }
+      ? { transform: getDefaultCameraTransform(this.options.align, this.options.horizontal, this.firstPanelSize) }
       : {};
   }
 
