@@ -73,7 +73,7 @@ export const parseAlign = (align: LiteralUnion<ValueOf<typeof ALIGN>> | number, 
         alignPoint = size;
         break;
       default:
-        alignPoint = parseCSSSize(align, size);
+        alignPoint = parseArithmeticSize(align, size);
         if (alignPoint == null) {
           throw new FlickingError(ERROR.MESSAGE.WRONG_OPTION("align", align), ERROR.CODE.WRONG_OPTION);
         }
@@ -89,9 +89,9 @@ export const parseBounce = (bounce: FlickingOptions["bounce"], size: number): nu
   let parsedBounce: Array<number | null>;
 
   if (Array.isArray(bounce)) {
-    parsedBounce = (bounce as string[]).map(val => parseCSSSize(val, size));
+    parsedBounce = (bounce as string[]).map(val => parseArithmeticSize(val, size));
   } else {
-    const parsedVal = parseCSSSize(bounce, size);
+    const parsedVal = parseArithmeticSize(bounce, size);
 
     parsedBounce = [parsedVal, parsedVal];
   }
@@ -104,7 +104,7 @@ export const parseBounce = (bounce: FlickingOptions["bounce"], size: number): nu
   });
 };
 
-export const parseCSSSize = (cssValue: number | string, base: number): number | null => {
+export const parseArithmeticSize = (cssValue: number | string, base: number): number | null => {
   const parsed = parseArithmeticExpression(cssValue);
 
   if (parsed == null) return null;
