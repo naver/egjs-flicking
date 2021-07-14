@@ -1,0 +1,107 @@
+---
+title: Server Side Rendering (SSR)
+id: ssr
+slug: /ssr
+custom_edit_url: null
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import CodeBlock from "@theme/CodeBlock";
+import useBaseUrl from "@docusaurus/useBaseUrl";
+
+As Flicking does not know the size of the panel element until it is rendered, it is hard to place the panels at the correct positions on Server-Side Rendering (SSR) unless you're using the `"prev"` align or using the `bound` option.
+
+To solve this problem, Flicking offers 2 options for the frameworks, `firstPanelSize` and `hideBeforeInit`.
+
+### firstPanelSize
+If you know the exact size of the first panel element, like `"200px"` or `"50%"`, you can use that value to correctly place the panel elements before Flicking's mounted.
+
+<img src={useBaseUrl("/img/firstPanelSize.png")} />
+
+But if the panel's size is responsive for the screen size or you're using a `circular` option, this won't work well as Flicking doesn't know about other panel sizes.
+In that case, please use `hideBeforeInit` instead.
+
+<img src={useBaseUrl("/img/firstPanelSize-circular.gif")} />
+
+### hideBeforeInit
+Enabling this option will hide panel elements until it's mounted.
+This will show empty screen before it's mounted, so use this option only when you're okay with that.
+
+<img src={useBaseUrl("/img/hideBeforeInit.gif")} />
+
+### How to use
+<Tabs
+  groupId="cfc"
+  defaultValue="js"
+  values={[
+    { label: "JavaScript", value: "js" },
+    { label: "React", value: "react" },
+    { label: "Vue@2", value: "vue" },
+    { label: "Vue@3", value: "vue3" },
+    { label: "Angular", value: "angular" },
+    { label: "Preact", value: "preact" }
+  ]}>
+  <TabItem value="js">
+    In native JS, you can attach class `flicking-hidden` to the viewport element and remove that on `ready` event to mimic the behavior of `hideBeforeInit`.
+    <CodeBlock className="html" title="html">
+{`<div id="flicking" class="flicking-viewport flicking-hidden">
+  <div class="flicking-camera">
+    ...
+  </div>
+</div>`}
+    </CodeBlock>
+    <CodeBlock className="js" title="js">
+{`import Flicking, { EVENTS } from "@egjs/flicking";\n
+const flicking = new Flicking("#flicking");
+flicking.once(EVENTS.READY, () => {
+  flicking.element.classList.remove("flicking-hidden");
+}`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="react">
+
+```jsx
+<Flicking hideBeforeInit={true} firstPanelSize="200px">
+  {...}
+</Flicking>
+```
+
+  </TabItem>
+  <TabItem value="vue">
+
+```html
+<Flicking :hideBeforeInit="true" :firstPanelSize="'200px'">
+   {{ ... }}
+</Flicking>
+```
+
+  </TabItem>
+  <TabItem value="vue3">
+
+```html
+<Flicking :hideBeforeInit="true" :firstPanelSize="'200px'">
+   {{ ... }}
+</Flicking>
+```
+
+  </TabItem>
+  <TabItem value="angular">
+
+```html
+<ngx-flicking [hideBeforeInit]="true" [firstPanelSize]="'200px'">
+  {{ ... }}
+</ngx-flicking>
+```
+
+  </TabItem>
+  <TabItem value="preact">
+
+```jsx
+<Flicking hideBeforeInit={true} firstPanelSize="200px">
+  {...}
+</Flicking>
+```
+
+  </TabItem>
+</Tabs>

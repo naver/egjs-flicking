@@ -22,3 +22,7 @@
   display: inline-flex;
   flex-direction: column;
 }
+
+.flicking-viewport.flicking-hidden .flicking-camera > * {
+  visibility: hidden;
+}

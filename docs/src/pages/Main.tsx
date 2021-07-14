@@ -24,6 +24,7 @@ export default () => <>
         </Link>
         <Link
           className="button pl-5"
+          style={{ borderRadius: "4px 0 0 4px" }}
           to="https://github.com/naver/egjs-flicking">
           <span className="icon is-small mr-2">
             <img src="img/icons/github.svg" />
@@ -32,6 +33,7 @@ export default () => <>
         </Link>
         <Link
           className="button"
+          style={{ borderRadius: "0 4px 4px 0", borderLeft: "0" }}
           to="https://github.com/naver/egjs-flicking/stargazers">
           <img src="img/icons/star.svg" />
           <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/naver/egjs-flicking?color=%23ffffff&label=%20&style=for-the-badge" />

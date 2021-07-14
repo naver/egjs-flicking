@@ -12,7 +12,8 @@ import VanillaFlicking, {
   sync,
   Plugin,
   Status,
-  getRenderingPanels
+  getRenderingPanels,
+  getDefaultCameraTransform
 } from "@egjs/flicking";
 
 import VueRenderer from "./VueRenderer";
@@ -29,6 +30,8 @@ class Flicking extends Vue {
   @Prop({ type: String, default: "div", required: false }) public viewportTag!: string;
   // Tag of the camera element
   @Prop({ type: String, default: "div", required: false }) public cameraTag!: string;
+  @Prop({ type: Boolean, default: false, required: false }) public hideBeforeInit!: string;
+  @Prop({ type: String, required: false }) public firstPanelSize?: string;
   @Prop({ type: Object, default: () => ({}), required: false }) public options!: Partial<FlickingOptions>;
   @Prop({ type: Array, default: () => ([]), required: false }) public plugins!: Plugin[];
   @Prop({ type: Object, required: false }) public status!: Status;
@@ -97,6 +100,7 @@ class Flicking extends Vue {
 
   public render(h: CreateElement) {
     const flicking = this._vanillaFlicking;
+    const initialized = this._diffResult && flicking && flicking.initialized;
     const isHorizontal = flicking
       ? flicking.horizontal
       : this.options.horizontal ?? true;
@@ -104,17 +108,21 @@ class Flicking extends Vue {
     const viewportData: VNodeData = {
       class: {
         "flicking-viewport": true,
-        "vertical": !isHorizontal
+        "vertical": !isHorizontal,
+        "flicking-hidden": this.hideBeforeInit && !initialized
       }
     };
     const cameraData: VNodeData = {
       class: {
         "flicking-camera": true
-      }
+      },
+      style: !initialized && this.firstPanelSize
+        ? { transform: getDefaultCameraTransform(this.options.align, this.options.horizontal, this.firstPanelSize) }
+        : {}
     };
 
-    const slots = (this._diffResult && flicking && flicking.initialized)
-      ? getRenderingPanels(flicking, this._diffResult)
+    const slots = initialized
+      ? getRenderingPanels(flicking, this._diffResult!)
       : this._getSlots();
     const panels = slots.map(slot => h("Panel", { key: slot.key }, [slot]));
 

@@ -6,13 +6,13 @@ import {
   getFlickingAttached,
   toArray,
   parseAlign,
-  parseArithmeticExpression,
   parseBounce,
   parseCSSSizeValue,
   getDirection,
   parseElement,
   getMinusCompensatedIndex,
-  includes
+  includes,
+  parseArithmeticSize
 } from "~/utils";
 import Flicking from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
@@ -286,25 +286,25 @@ describe("Util Functions", () => {
     });
   });
 
-  describe("parseArithmeticExpression", () => {
+  describe("parseArithmeticSize", () => {
     it("can handle single number string", () => {
-      expect(parseArithmeticExpression("14", 100)).to.equal(14);
+      expect(parseArithmeticSize("14", 100)).to.equal(14);
     });
 
     it("can handle single number-px", () => {
-      expect(parseArithmeticExpression("80px", 100)).to.equal(80);
+      expect(parseArithmeticSize("80px", 100)).to.equal(80);
     });
 
     it("can handle single number-%", () => {
-      expect(parseArithmeticExpression("50%", 50)).to.equal(25);
+      expect(parseArithmeticSize("50%", 50)).to.equal(25);
     });
 
     it("can handle multiple number strings", () => {
-      expect(parseArithmeticExpression("14 + 32 - 20", 100)).to.equal(26);
+      expect(parseArithmeticSize("14 + 32 - 20", 100)).to.equal(26);
     });
 
     it("can handle multiple numbers, combined in each format", () => {
-      expect(parseArithmeticExpression("40% - 12px+73", 100)).to.equal(101);
+      expect(parseArithmeticSize("40% - 12px+73", 100)).to.equal(101);
     });
   });
 
