@@ -5,7 +5,9 @@ import sveltePreprocess from "svelte-preprocess";
 
 const defaultOptions = {
 	external: {
-		svelte: "svelte"
+		svelte: "svelte",
+    "@egjs/flicking": "Flicking",
+    "@egjs/list-differ": "ListDiffer"
 	},
 	plugins: [
 		svelte({ preprocess: sveltePreprocess() })

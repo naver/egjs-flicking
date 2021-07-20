@@ -1,7 +1,8 @@
 <script lang="ts">
   import { Arrow } from "@egjs/flicking-plugins";
-  import Flicking from "../src/flicking.svelte";
-  import "@egjs/flicking/css/flicking.css";
+  import Flicking from "../src/Flicking";
+  import "@egjs/flicking/dist/flicking.css";
+  import "@egjs/flicking-plugins/dist/flicking-plugins.css";
   import FlickingPanel from "../src/flicking-panel.svelte";
   import Test from "./Test.svelte";
   import Test2 from "./Test2.svelte";
@@ -31,7 +32,7 @@
 
 <div class="container">
   <h1>Default Rendering</h1>
-  <Flicking>
+  <Flicking hideBeforeInit={true}>
     <FlickingPanel><div class="panel">0</div></FlickingPanel>
     <FlickingPanel><div class="panel">1</div></FlickingPanel>
     <FlickingPanel><div class="panel">2</div></FlickingPanel>
@@ -47,7 +48,7 @@
     <FlickingPanel><div class="panel">6</div></FlickingPanel>
   </Flicking>
   <h1>FreeScroll</h1>
-  <Flicking options={{ moveType: "freeScroll" }}>
+  <Flicking options={{ moveType: "freeScroll", align: "center" }} firstPanelSize={"200px"}>
     <FlickingPanel><div class="panel">0</div></FlickingPanel>
     <FlickingPanel><div class="panel">1</div></FlickingPanel>
     <FlickingPanel><div class="panel">2</div></FlickingPanel>

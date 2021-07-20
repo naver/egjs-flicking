@@ -1,16 +1,14 @@
 <script lang="ts">
   import {
-    getContext,
     onMount,
     onDestroy,
     beforeUpdate,
     afterUpdate,
     createEventDispatcher,
-setContext
+    setContext
   } from "svelte";
   import VanillaFlicking, {
     EVENTS,
-    withFlickingMethods,
     sync,
     getDefaultCameraTransform
   } from "@egjs/flicking";
@@ -20,6 +18,7 @@ setContext
     Status
   } from "@egjs/flicking";
   import ListDiffer from "@egjs/list-differ";
+  import type { DiffResult } from "@egjs/list-differ";
   import * as uuid from "uuid";
 
   import SvelteRenderer from "./SvelteRenderer";
@@ -32,18 +31,21 @@ setContext
   export let options: Partial<FlickingOptions> = {};
   export let plugins: Plugin[] = [];
   export let status: Status | undefined = undefined;
+  export let vanillaFlicking: VanillaFlicking | null = null;
 
   const flickingID = uuid.v4();
   const dispatch = createEventDispatcher();
   const sveltePanels: SveltePanelComponent[] = [];
   const pendingPanels: SveltePanelComponent[] = [];
-  let isHorizontal: boolean;
-  let isHiddenBeforeInit: boolean;
-  let viewportEl: HTMLElement;
-  let cameraEl: HTMLElement;
-  let vanillaFlicking: VanillaFlicking | null = null;
   const pluginsDiffer: ListDiffer<Plugin> = new ListDiffer([]);
   const slotDiffer: ListDiffer<HTMLElement> = new ListDiffer<HTMLElement>([], el => el.dataset.key!);
+
+  let viewportEl: HTMLElement;
+  let cameraEl: HTMLElement;
+
+  let isHorizontal: boolean;
+  let isHiddenBeforeInit: boolean;
+  let cameraTransform: string | undefined;
 
   setContext("flickingID", flickingID);
   setContext(`${flickingID}-panels`, sveltePanels);
@@ -52,6 +54,9 @@ setContext
   $: {
     isHorizontal = options.horizontal ?? true;
     isHiddenBeforeInit = hideBeforeInit && !(vanillaFlicking && vanillaFlicking.initialized);
+    cameraTransform = !(vanillaFlicking && vanillaFlicking.initialized) && firstPanelSize
+      ? `transform: ${getDefaultCameraTransform(options.align, options.horizontal, firstPanelSize)};`
+      : undefined;
   }
 
   onDestroy(() => {
@@ -85,6 +90,17 @@ setContext
         (panel as SveltePanel).render();
       });
     });
+
+    flicking.once(EVENTS.READY, () => {
+      // Update reference to update computed properties
+      vanillaFlicking = flicking;
+    });
+
+    checkPlugins();
+
+    if (status) {
+      flicking.setStatus(status);
+    }
   });
 
   beforeUpdate(() => {
@@ -130,10 +146,20 @@ setContext
 
     return [].slice.apply(cameraEl.children) as HTMLElement[];
   }
+
+  function checkPlugins() {
+    if (!vanillaFlicking) return;
+
+    const { list, added, removed, prevList } = pluginsDiffer.update(plugins) as DiffResult<Plugin>;
+
+    vanillaFlicking.addPlugins(...added.map(index => list[index]));
+    vanillaFlicking.removePlugins(...removed.map(index => prevList[index]));
+  }
 </script>
 
+<svelte:options accessors={true} />
 <div class="flicking-viewport" bind:this={viewportEl} class:vertical={!isHorizontal} class:flicking-hidden={isHiddenBeforeInit}>
-  <div class="flicking-camera" bind:this={cameraEl}>
+  <div class="flicking-camera" bind:this={cameraEl} style={cameraTransform}>
     <slot />
   </div>
   <slot name="viewport" />
