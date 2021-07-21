@@ -6,6 +6,7 @@ module.exports = {
     "listening-to-events",
     "error-handling",
     "polyfills",
+    "ssr",
     "migration-from-v3"
   ],
   ...require("./sidebars-api.js")

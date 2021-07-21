@@ -10,6 +10,7 @@ import VanillaFlicking, {
   withFlickingMethods,
   sync,
   getRenderingPanels,
+  getDefaultCameraTransform,
   Plugin
 } from "@egjs/flicking";
 import { isFragment } from "react-is";
@@ -113,6 +114,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const Camera = props.cameraTag as any;
     const attributes: { [key: string]: any } = {};
     const flicking = this._vanillaFlicking;
+    const initialized = this._diffResult && flicking && flicking.initialized;
 
     for (const name in props) {
       if (!(name in DEFAULT_PROPS) && !(name in VanillaFlicking.prototype)) {
@@ -126,14 +128,23 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       : props.horizontal ?? true;
 
     if (!isHorizontal) {
-      viewportClasses.push("vertical")
+      viewportClasses.push("vertical");
+    }
+    if (props.hideBeforeInit && !initialized) {
+      viewportClasses.push("flicking-hidden");
     }
     if (attributes.className) {
       viewportClasses.push(attributes.className);
     }
 
-    const children = (this._diffResult && flicking && flicking.initialized)
-      ? getRenderingPanels(flicking, this._diffResult)
+    const cameraProps = !initialized && props.firstPanelSize
+      ? { style: {
+        transform: getDefaultCameraTransform(this.props.align, this.props.horizontal, this.props.firstPanelSize)
+      }}
+      : {};
+
+    const children = initialized
+      ? getRenderingPanels(flicking, this._diffResult!)
       : this._getChildren();
     const panels = this.props.useFindDOMNode
       ? children.map((child, idx) => <NonStrictPanelComponent key={child.key!} ref={this._panels[idx]}>{child}</NonStrictPanelComponent>)
@@ -143,7 +154,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       <Viewport {...attributes} className={viewportClasses.join(" ")} ref={(e?: HTMLElement) => {
         e && (this._viewportElement = e);
       }}>
-        <Camera className="flicking-camera">
+        <Camera className="flicking-camera" {...cameraProps}>
           { panels }
         </Camera>
         { this._getViewportSlot() }

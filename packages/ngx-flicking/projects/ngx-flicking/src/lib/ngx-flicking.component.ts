@@ -14,12 +14,14 @@ import {
   ViewEncapsulation,
   QueryList,
   ContentChildren,
-  Renderer2
+  Renderer2,
+  HostBinding
 } from "@angular/core";
 import VanillaFlicking, {
   FlickingOptions,
   FlickingEvents,
   sync,
+  getDefaultCameraTransform,
   Plugin,
   Status,
   SelectEvent,
@@ -41,8 +43,8 @@ import VanillaFlicking, {
   PanelChangeEvent
 } from "@egjs/flicking";
 import ListDiffer from "@egjs/list-differ";
-import { EVENT_NAMES } from "./consts";
 
+import { EVENT_NAMES } from "./consts";
 import FlickingInterface from "./FlickingInterface";
 import { NgxFlickingPanel } from "./ngx-flicking-panel.directive";
 import NgxRenderer from "./NgxRenderer";
@@ -50,7 +52,7 @@ import NgxRenderer from "./NgxRenderer";
 @Component({
   selector: "ngx-flicking, [NgxFlicking]",
   template: `
-    <div class="flicking-camera">
+    <div class="flicking-camera" [ngStyle]="_cameraStyleBeforeInit">
       <ng-content></ng-content>
     </div>
     <ng-content select="[in-viewport]"></ng-content>`,
@@ -68,6 +70,8 @@ export class NgxFlickingComponent extends FlickingInterface
   @Input() public options: Partial<FlickingOptions> = {};
   @Input() public plugins: Plugin[] = [];
   @Input() public status: Status;
+  @Input() public hideBeforeInit: boolean = false;
+  @Input() public firstPanelSize: string;
   @Output() public ready: EventEmitter<ReadyEvent<NgxFlickingComponent>>;
   @Output() public beforeResize: EventEmitter<BeforeResizeEvent<NgxFlickingComponent>>;
   @Output() public afterResize: EventEmitter<AfterResizeEvent<NgxFlickingComponent>>;
@@ -85,6 +89,22 @@ export class NgxFlickingComponent extends FlickingInterface
   @Output() public visibleChange: EventEmitter<VisibleChangeEvent<NgxFlickingComponent>>;
   @Output() public reachEdge: EventEmitter<ReachEdgeEvent<NgxFlickingComponent>>;
   @Output() public panelChange: EventEmitter<PanelChangeEvent<NgxFlickingComponent>>;
+
+  @HostBinding("class.vertical") private get _isVertical() {
+    return this.options.horizontal === false;
+  }
+
+  @HostBinding("class.flicking-hidden") private get _isHiddenBeforeInit() {
+    const initialized = this._vanillaFlicking && this._vanillaFlicking.initialized;
+    return this.hideBeforeInit && !initialized;
+  }
+
+  private get _cameraStyleBeforeInit() {
+    const initialized = this._vanillaFlicking && this._vanillaFlicking.initialized;
+    return !initialized && this.firstPanelSize
+      ? { transform: getDefaultCameraTransform(this.options.align, this.options.horizontal, this.firstPanelSize) }
+      : {};
+  }
 
   @ContentChildren(NgxFlickingPanel) private _ngxPanels: QueryList<NgxFlickingPanel>;
   private _elRef: ElementRef<HTMLElement>;
@@ -119,10 +139,6 @@ export class NgxFlickingComponent extends FlickingInterface
     // This prevents mousemove to call ngDoCheck & noAfterContentChecked everytime
     const flicking = new VanillaFlicking(viewportEl, options);
     this._vanillaFlicking = flicking;
-
-    if (!flicking.horizontal) {
-      this._ngxRenderer.addClass(this._elRef.nativeElement, "vertical");
-    }
 
     const elementDiffer = new ListDiffer(this._ngxPanels.toArray());
     this._elementDiffer = elementDiffer;

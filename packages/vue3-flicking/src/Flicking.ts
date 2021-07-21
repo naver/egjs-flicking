@@ -15,7 +15,8 @@ import VanillaFlicking, {
   sync,
   Plugin,
   Status,
-  getRenderingPanels
+  getRenderingPanels,
+  getDefaultCameraTransform
 } from "@egjs/flicking";
 
 import VueRenderer from "./VueRenderer";
@@ -24,6 +25,8 @@ import VuePanelComponent from "./VuePanelComponent";
 class FlickingProps {
   viewportTag = prop<string>({ required: false, default: "div" });
   cameraTag = prop<string>({ required: false, default: "div" });
+  hideBeforeInit = prop<boolean>({ required: false, default: false });
+  firstPanelSize = prop<string>({ required: false });
   options = prop<Partial<FlickingOptions>>({ required: false, default: {} });
   plugins = prop<Plugin[]>({ required: false, default: [] });
   status = prop<Status>({ required: false });
@@ -97,6 +100,7 @@ class Flicking extends Vue.with(FlickingProps) {
 
   public render() {
     const flicking = this.vanillaFlicking;
+    const initialized = flicking && flicking.initialized;
     const isHorizontal = flicking
       ? flicking.horizontal
       : this.options.horizontal ?? true;
@@ -104,18 +108,22 @@ class Flicking extends Vue.with(FlickingProps) {
     const viewportData = {
       class: {
         "flicking-viewport": true,
-        "vertical": !isHorizontal
+        "vertical": !isHorizontal,
+        "flicking-hidden": this.hideBeforeInit && !initialized
       }
     };
     const cameraData = {
       class: {
         "flicking-camera": true
-      }
+      },
+      style: !initialized && this.firstPanelSize
+        ? { transform: getDefaultCameraTransform(this.options.align, this.options.horizontal, this.firstPanelSize) }
+        : {}
     };
 
     const getPanels = () => {
       const defaultSlots = this.getSlots();
-      this.diffResult = flicking && flicking.initialized
+      this.diffResult = initialized
         ? this.slotDiffer.update(defaultSlots)
         : null;
 
@@ -195,4 +203,3 @@ class Flicking extends Vue.with(FlickingProps) {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Flicking extends VanillaFlicking, VueConstructor<Vue & FlickingProps> {}
 export default Flicking;
-

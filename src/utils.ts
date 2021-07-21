@@ -73,7 +73,7 @@ export const parseAlign = (align: LiteralUnion<ValueOf<typeof ALIGN>> | number, 
         alignPoint = size;
         break;
       default:
-        alignPoint = parseArithmeticExpression(align, size);
+        alignPoint = parseArithmeticSize(align, size);
         if (alignPoint == null) {
           throw new FlickingError(ERROR.MESSAGE.WRONG_OPTION("align", align), ERROR.CODE.WRONG_OPTION);
         }
@@ -89,9 +89,9 @@ export const parseBounce = (bounce: FlickingOptions["bounce"], size: number): nu
   let parsedBounce: Array<number | null>;
 
   if (Array.isArray(bounce)) {
-    parsedBounce = (bounce as string[]).map(val => parseArithmeticExpression(val, size));
+    parsedBounce = (bounce as string[]).map(val => parseArithmeticSize(val, size));
   } else {
-    const parsedVal = parseArithmeticExpression(bounce, size);
+    const parsedVal = parseArithmeticSize(bounce, size);
 
     parsedBounce = [parsedVal, parsedVal];
   }
@@ -104,22 +104,32 @@ export const parseBounce = (bounce: FlickingOptions["bounce"], size: number): nu
   });
 };
 
-export const parseArithmeticExpression = (cssValue: number | string, base: number): number | null => {
+export const parseArithmeticSize = (cssValue: number | string, base: number): number | null => {
+  const parsed = parseArithmeticExpression(cssValue);
+
+  if (parsed == null) return null;
+
+  return parsed.percentage * base + parsed.absolute;
+};
+
+export const parseArithmeticExpression = (cssValue: number | string): { percentage: number; absolute: number } | null => {
   const cssRegex = /(?:(\+|\-)\s*)?(\d+(?:\.\d+)?(%|px)?)/g;
 
   if (typeof cssValue === "number") {
-    return cssValue;
+    return { percentage: 0, absolute: cssValue };
   }
 
+  const parsed = {
+    percentage: 0,
+    absolute: 0
+  };
   let idx = 0;
-  let calculatedValue = 0;
   let matchResult = cssRegex.exec(cssValue);
   while (matchResult != null) {
     let sign = matchResult[1];
     const value = matchResult[2];
     const unit = matchResult[3];
-
-    let parsedValue = parseFloat(value);
+    const parsedValue = parseFloat(value);
 
     if (idx <= 0) {
       sign = sign || "+";
@@ -130,13 +140,13 @@ export const parseArithmeticExpression = (cssValue: number | string, base: numbe
       return null;
     }
 
-    if (unit === "%") {
-      parsedValue = (parsedValue / 100) * base;
-    }
+    const signMultiplier = sign === "+" ? 1 : -1;
 
-    calculatedValue += sign === "+"
-      ? parsedValue
-      : -parsedValue;
+    if (unit === "%") {
+      parsed.percentage += signMultiplier * (parsedValue / 100);
+    } else {
+      parsed.absolute += signMultiplier * parsedValue;
+    }
 
     // Match next occurrence
     ++idx;
@@ -148,7 +158,7 @@ export const parseArithmeticExpression = (cssValue: number | string, base: numbe
     return null;
   }
 
-  return calculatedValue;
+  return parsed;
 };
 
 export const parseCSSSizeValue = (val: string | number): string => isString(val) ? val : `${val}px`;
