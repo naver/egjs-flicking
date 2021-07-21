@@ -143,6 +143,35 @@ export class DemoFlickingComponent {
       { reactSourceCode }
     </CodeBlock>
   }
+  svelte={
+    <CodeBlock className="jsx">
+    {`<script>
+  import Flicking, { FlickingPanel } from "@egjs/svelte-flicking";
+  import "@egjs/svelte-flicking/dist/flicking.css";
+
+  let list = [0, 1, 2, 3, 4];
+
+  function prepend() {
+    list = [list[0] - 1, ...list];
+  }
+
+  function append() {
+    list = [...list, list[list.length - 1] + 1];
+  }
+</script>
+
+<Flicking bind:this={flicking}>
+  {#each list as idx (idx)}
+    <FlickingPanel class="flicking-panel">{ idx }</FlickingPanel>
+  {/each}
+</Flicking>
+<div class="block is-flex is-justify-content-center">
+  <span class="button mr-2 is-info is-outlined" on:click={prepend}>Prepend</span>
+  <span class="button mr-2 is-info is-outlined" on:click={append}>Append</span>
+</div>
+`}
+    </CodeBlock>
+  }
 />
   </>;
 };

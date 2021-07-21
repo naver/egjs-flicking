@@ -10,6 +10,7 @@ export interface SourceContext {
   vue3?: React.ReactElement;
   angular?: React.ReactElement;
   preact?: React.ReactElement;
+  svelte?: React.ReactElement;
 }
 
 export interface InnerElement {

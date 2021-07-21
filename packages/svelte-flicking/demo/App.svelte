@@ -66,9 +66,7 @@
     {/each}
   </Flicking>
   <div>
-    <span class="button" on:click={() => {
-      prepend();
-    }}>Prepend</span>
+    <span class="button" on:click={prepend}>Prepend</span>
     <span class="button" on:click={() => {
       append();
     }}>Append</span>

@@ -22,6 +22,10 @@ export default () => {
   const flicking1 = useRef();
   const flicking2 = useRef();
 
+  const update = (flicking: Flicking, progress: number) => {
+    flicking.camera.lookAt(flicking.camera.range.min + flicking.camera.rangeDiff * progress);
+  };
+
   return <Flicking ref={flicking0}
     className="mb-4"
     align="prev"
@@ -181,6 +185,86 @@ export default {
 }
 </script>`;
 
+  const svelteSourceCode = `<script>
+  import Flicking, { FlickingPanel } from "@egjs/svelte-flicking";
+  import "@egjs/svelte-flicking/dist/flicking.css";
+
+  let flicking0;
+  let flicking1;
+  let flicking2;
+
+  function update(flicking, progress) {
+    flicking.camera.lookAt(flicking.camera.range.min + flicking.camera.rangeDiff * progress);
+  };
+</script>
+
+<Flicking bind:this={flicking0} class="mb-4"
+  options={{ align: "prev", bound: true, bounce: 30 }}
+  on:move={e => {
+    const camera = e.currentTarget.camera;
+    const progress = (camera.position - camera.range.min) / camera.rangeDiff;
+    update(flicking1, progress);
+    update(flicking2, progress);
+  }}
+  on:moveStart={() => {
+    flicking1.disableInput();
+    flicking2.disableInput();
+  }}
+  on:moveEnd={() => {
+    flicking1.enableInput();
+    flicking1.control.updateInput();
+    flicking2.enableInput();
+    flicking2.control.updateInput();
+  }}>
+  <FlickingPanel class="button mr-2 is-white">🍎 Apple</FlickingPanel>
+  <FlickingPanel class="button mr-2 is-white">🍉 Watermelon</FlickingPanel>
+  <FlickingPanel class="button mr-2 is-white">🥝 Kiwi</FlickingPanel>
+</Flicking>
+<Flicking bind:this={flicking1} class="mb-4"
+  options={{ align: "prev", bound: true, bounce: 30 }}
+  on:move={e => {
+    const camera = e.currentTarget.camera;
+    const progress = (camera.position - camera.range.min) / camera.rangeDiff;
+    update(flicking0, progress);
+    update(flicking2, progress);
+  }}
+  on:moveStart={() => {
+    flicking0.disableInput();
+    flicking2.disableInput();
+  }}
+  on:moveEnd={() => {
+    flicking0.enableInput();
+    flicking0.control.updateInput();
+    flicking2.enableInput();
+    flicking2.control.updateInput();
+  }}>
+  <FlickingPanel class="button mr-2 is-white">🍔 Hamburger</FlickingPanel>
+  <FlickingPanel class="button mr-2 is-white">🍕 Pizza</FlickingPanel>
+  <FlickingPanel class="button mr-2 is-white">🍞 Bread</FlickingPanel>
+</Flicking>
+<Flicking bind:this={flicking2} class="mb-4"
+  options={{ align: "prev", bound: true, bounce: 30 }}
+  on:move={e => {
+    const camera = e.currentTarget.camera;
+    const progress = (camera.position - camera.range.min) / camera.rangeDiff;
+    update(flicking0, progress);
+    update(flicking1, progress);
+  }}
+  on:moveStart={() => {
+    flicking0.disableInput();
+    flicking1.disableInput();
+  }}
+  on:moveEnd={() => {
+    flicking0.enableInput();
+    flicking0.control.updateInput();
+    flicking1.enableInput();
+    flicking1.control.updateInput();
+  }}>
+  <FlickingPanel class="button mr-2 is-white">🥛 Milk</FlickingPanel>
+  <FlickingPanel class="button mr-2 is-white">☕ Coffee</FlickingPanel>
+  <FlickingPanel class="button mr-2 is-white">🍵 Green tea</FlickingPanel>
+</Flicking>`;
+
   return <><div className="has-background-grey-lighter p-4 mb-4">
     <Flicking ref={flicking0}
       className="mb-4"
@@ -289,26 +373,26 @@ export default {
           <CodeBlock className="html" title="html">
             {`<div id="flick0" class="flicking-viewport">
   <div class="flicking-camera">
-    <span className="button mr-2 is-white">🍎 Apple</span>
-    <span className="button mr-2 is-white">🍉 Watermelon</span>
-    <span className="button mr-2 is-white">🥝 Kiwi</span>
-    <span className="button mr-2 is-white">...</span>
+    <span class="button mr-2 is-white">🍎 Apple</span>
+    <span class="button mr-2 is-white">🍉 Watermelon</span>
+    <span class="button mr-2 is-white">🥝 Kiwi</span>
+    <span class="button mr-2 is-white">...</span>
   </div>
 </div>
 <div id="flick1" class="flicking-viewport">
   <div class="flicking-camera">
-    <span className="button mr-2 is-white">🍔 Hamburger</span>
-    <span className="button mr-2 is-white">🍕 Pizza</span>
-    <span className="button mr-2 is-white">🍞 Bread</span>
-    <span className="button mr-2 is-white">...</span>
+    <span class="button mr-2 is-white">🍔 Hamburger</span>
+    <span class="button mr-2 is-white">🍕 Pizza</span>
+    <span class="button mr-2 is-white">🍞 Bread</span>
+    <span class="button mr-2 is-white">...</span>
   </div>
 </div>
 <div id="flick2" class="flicking-viewport">
   <div class="flicking-camera">
-    <span className="button mr-2 is-white">🥛 Milk</span>
-    <span className="button mr-2 is-white">☕ Coffee</span>
-    <span className="button mr-2 is-white">🍵 Green tea</span>
-    <span className="button mr-2 is-white">...</span>
+    <span class="button mr-2 is-white">🥛 Milk</span>
+    <span class="button mr-2 is-white">☕ Coffee</span>
+    <span class="button mr-2 is-white">🍵 Green tea</span>
+    <span class="button mr-2 is-white">...</span>
   </div>
 </div>`}
           </CodeBlock>
@@ -386,24 +470,24 @@ flickings.forEach((flicking, idx) => {
       <><CodeBlock className="html" title="app.component.html">
         { `<ngx-flicking #flicking0 [options]="{ bound: true, bounce: 30, align: 'prev' }"
   (move)="onMove($event, 0)" (moveStart)="onMoveStart($event, 0)" (moveEnd)="onMoveEnd($event, 0)">
-  <span flicking-panel className="button mr-2 is-white">🍎 Apple</span>
-  <span flicking-panel className="button mr-2 is-white">🍉 Watermelon</span>
-  <span flicking-panel className="button mr-2 is-white">🥝 Kiwi</span>
-  <span flicking-panel className="button mr-2 is-white">...</span>
+  <span flicking-panel class="button mr-2 is-white">🍎 Apple</span>
+  <span flicking-panel class="button mr-2 is-white">🍉 Watermelon</span>
+  <span flicking-panel class="button mr-2 is-white">🥝 Kiwi</span>
+  <span flicking-panel class="button mr-2 is-white">...</span>
 </ngx-flicking>
 <ngx-flicking #flicking1 [options]="{ bound: true, bounce: 30, align: 'prev' }"
   (move)="onMove($event, 1)" (moveStart)="onMoveStart($event, 1)" (moveEnd)="onMoveEnd($event, 1)">
-  <span flicking-panel className="button mr-2 is-white">🍔 Hamburger</span>
-  <span flicking-panel className="button mr-2 is-white">🍕 Pizza</span>
-  <span flicking-panel className="button mr-2 is-white">🍞 Bread</span>
-  <span flicking-panel className="button mr-2 is-white">...</span>
+  <span flicking-panel class="button mr-2 is-white">🍔 Hamburger</span>
+  <span flicking-panel class="button mr-2 is-white">🍕 Pizza</span>
+  <span flicking-panel class="button mr-2 is-white">🍞 Bread</span>
+  <span flicking-panel class="button mr-2 is-white">...</span>
 </ngx-flicking>
 <ngx-flicking #flicking2 [options]="{ bound: true, bounce: 30, align: 'prev' }"
   (move)="onMove($event, 2)" (moveStart)="onMoveStart($event, 2)" (moveEnd)="onMoveEnd($event, 2)">
-  <span flicking-panel className="button mr-2 is-white">🥛 Milk</span>
-  <span flicking-panel className="button mr-2 is-white">☕ Coffee</span>
-  <span flicking-panel className="button mr-2 is-white">🍵 Green tea</span>
-  <span flicking-panel className="button mr-2 is-white">...</span>
+  <span flicking-panel class="button mr-2 is-white">🥛 Milk</span>
+  <span flicking-panel class="button mr-2 is-white">☕ Coffee</span>
+  <span flicking-panel class="button mr-2 is-white">🍵 Green tea</span>
+  <span flicking-panel class="button mr-2 is-white">...</span>
 </ngx-flicking>` }
       </CodeBlock>
       <CodeBlock className="js" title="app.component.ts">
@@ -449,6 +533,11 @@ export class DemoFlickingComponent {
     preact={
       <CodeBlock className="jsx">
         { reactSourceCode }
+      </CodeBlock>
+    }
+    svelte={
+      <CodeBlock className="jsx">
+        { svelteSourceCode }
       </CodeBlock>
     }
   />

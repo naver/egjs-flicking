@@ -4,7 +4,7 @@ import CodeBlock from "@theme/CodeBlock";
 import { SourceContext } from "./type";
 import { getClass, getImports, getOptionsObject, getPlugins, getStyle } from "./utils";
 
-export default ({ options, panels, plugins = [], siblings = [], imports = [] }: SourceContext) => {
+export default ({ options, panels, plugins, siblings = [], imports = [] }: SourceContext) => {
   const optionsObject = getOptionsObject(options);
   const slots = panels.filter(panel => panel.isSlot);
   const declarePlugins = plugins ? `,
@@ -20,7 +20,7 @@ export default ({ options, panels, plugins = [], siblings = [], imports = [] }: 
     ${slots.map(slot => `<${slot.tag}${getClass(slot)}${getStyle(slot)}>${slot.content}</${slot.tag}>`).join("\n    ")}
   </template>`
     : "";
-  const allImports = [...plugins.map(plugin => [`{ ${plugin[0]} }`, "@egjs/flicking-plugins"]), ...imports];
+  const allImports = [...(plugins ?? []).map(plugin => [`{ ${plugin[0]} }`, "@egjs/flicking-plugins"]), ...imports];
 
   return <><CodeBlock className="html" title="template">
     {`<Flicking${options ? ` :options="{ ${optionsObject} }"` : ""}${plugins ? " :plugins=\"plugins\"" : ""}>

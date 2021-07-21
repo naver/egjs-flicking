@@ -60,64 +60,10 @@ module.exports = {
         <span className="has-text-weight-bold">21/05/19</span> <Rainy /><span>Rainy</span><span className="has-text-info">11.0°</span><span>/</span><span className="has-text-danger">19.0°</span>
       </div>
     </Flicking>
-    <SourceCode options={{ circular: true, horizontal: false }} plugins={["AutoPlay"]} panels={[
+    <SourceCode options={{ circular: true, horizontal: false }} plugins={[["AutoPlay"]]} panels={[
       { tag: "div", class: "weather-panel", content: "..." },
       { tag: "div", class: "weather-panel", content: "..." },
       { tag: "div", class: "weather-panel", content: "..." }
-    ]}
-    react={<CodeBlock className="jsx">{reactSourceCode}</CodeBlock>}
-    preact={<CodeBlock className="jsx">{reactSourceCode}</CodeBlock>}
-    vue={<CodeBlock className="html">{vueSourceCode}</CodeBlock>}
-    vue3={<CodeBlock className="html">{vueSourceCode}</CodeBlock>}
-    js={<Columns>
-      <ColumnItem is={6}>
-        <CodeBlock className="html" title="html">
-          {`<div id="flick" class="flicking-viewport vertical">
-  <div class="flicking-camera">
-    <div class="weather-panel">...</div>
-    <div class="weather-panel">...</div>
-    <div class="weather-panel">...</div>
-  </div>
-</div>`}
-        </CodeBlock>
-      </ColumnItem>
-      <ColumnItem is={6}>
-        <CodeBlock className="js" title="js">
-          {`
-import Flicking from "@egjs/flicking";
-import { AutoPlay } from "@egjs/flicking";
-
-const flicking = new Flicking("#flick", {
-  circular: true,
-  horizontal: false
-});
-
-flicking.addPlugins(new AutoPlay());
-`}
-        </CodeBlock>
-      </ColumnItem>
-    </Columns>}
-    angular={
-    <><CodeBlock className="html" title="app.component.html">
-{`<ngx-flicking [plugins]="plugins" [options]="{ circular: true, horizontal: false }">
-  <div class="weather-panel">...</div>
-  <div class="weather-panel">...</div>
-  <div class="weather-panel">...</div>
-</ngx-flicking>`}
-      </CodeBlock>
-      <CodeBlock className="js" title="app.component.ts">
-{`import { Component } from "@angular/core";
-import { Plugin } from "@egjs/ngx-flicking";
-import { AutoPlay } from "@egjs/flicking-plugins";
-
-@Component({
-  templateUrl: './app.component.html'
-})
-export class DemoFlickingComponent {
-  plugins: Plugin[] = [new AutoPlay()];
-}`}
-      </CodeBlock></>
-    }
-    />
+    ]} />
   </>;
 };

@@ -19,7 +19,8 @@ import TabItem from '@theme/TabItem';
     { label: "Vue@2", value: "vue" },
     { label: "Vue@3", value: "vue3" },
     { label: "Angular", value: "angular" },
-    { label: "Preact", value: "preact" }
+    { label: "Preact", value: "preact" },
+    { label: "Svelte", value: "svelte" }
   ]}>
   <TabItem value="js">
 
@@ -127,6 +128,28 @@ flicking.next();
 ```
 
 See [React Refs and the DOM](https://reactjs.org/docs/refs-and-the-dom.html) for more info.
+
+  </TabItem>
+  <TabItem value="svelte">
+
+You can use [bind:this](https://svelte.dev/tutorial/bind-this) syntax of svelte to get the reference of Flicking.
+
+```jsx
+<script lang="ts">
+  import Flicking, { FlickingPanel } from "@egjs/svelte-flicking";
+  import "@egjs/svelte-flicking/dist/flicking.css";
+
+  let flicking: Flicking;
+</script>
+
+<Flicking bind:this={flicking}>
+  <!-- Those will render "div" element -->
+  <FlickingPanel>0</FlickingPanel>
+  <FlickingPanel>1</FlickingPanel>
+  <FlickingPanel>2</FlickingPanel>
+</Flicking>
+<button on:click{() => { flicking.next(); }} />
+```
 
   </TabItem>
 </Tabs>
