@@ -187,15 +187,15 @@ describe("Flicking", () => {
       });
     });
 
-    describe("noEventsBeforeInit", () => {
+    describe("preventEventsBeforeInit", () => {
       it("is true by default", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
-        expect(flicking.noEventsBeforeInit).to.be.true;
+        expect(flicking.preventEventsBeforeInit).to.be.true;
       });
 
       it("should prevent events before ready", async () => {
-        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false, noEventsBeforeInit: true });
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false, preventEventsBeforeInit: true });
         const eventsTriggered = [];
 
         Object.values(EVENTS).forEach(evt => flicking.on(evt, e => eventsTriggered.push(e)));
@@ -207,7 +207,7 @@ describe("Flicking", () => {
       });
 
       it("should not prevent events before ready if false", async () => {
-        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false, noEventsBeforeInit: false });
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false, preventEventsBeforeInit: false });
         const eventsTriggered = [];
 
         Object.values(EVENTS).forEach(evt => flicking.on(evt, e => eventsTriggered.push(e)));
@@ -509,10 +509,10 @@ describe("Flicking", () => {
     });
 
     describe(EVENTS.BEFORE_RESIZE, () => {
-      it("should be emitted on initialization when resize if noEventsBeforeInit is false", async () => {
+      it("should be emitted on initialization when resize if preventEventsBeforeInit is false", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
           autoInit: false,
-          noEventsBeforeInit: false
+          preventEventsBeforeInit: false
         });
         const resizeSpy = sinon.spy();
         flicking.on(EVENTS.BEFORE_RESIZE, resizeSpy);
@@ -566,10 +566,10 @@ describe("Flicking", () => {
     });
 
     describe(EVENTS.AFTER_RESIZE, () => {
-      it("should be emitted on initialization when resize if noEventsBeforeInit is false", async () => {
+      it("should be emitted on initialization when resize if preventEventsBeforeInit is false", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
           autoInit: false,
-          noEventsBeforeInit: false
+          preventEventsBeforeInit: false
         });
         const resizeSpy = sinon.spy();
         flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
@@ -628,7 +628,7 @@ describe("Flicking", () => {
       });
 
       it("should have size 0 on initialization", async () => {
-        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false, noEventsBeforeInit: false });
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false, preventEventsBeforeInit: false });
         const resizeSpy = sinon.spy();
 
         flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);

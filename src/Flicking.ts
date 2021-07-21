@@ -53,7 +53,7 @@ export interface FlickingOptions {
   adaptive: boolean;
   // EVENT
   needPanelThreshold: number;
-  noEventsBeforeInit: boolean;
+  preventEventsBeforeInit: boolean;
   // ANIMATION
   deceleration: number;
   duration: number;
@@ -111,7 +111,7 @@ class Flicking extends Component<FlickingEvents> {
   private _bound: FlickingOptions["bound"];
   private _adaptive: FlickingOptions["adaptive"];
   private _needPanelThreshold: FlickingOptions["needPanelThreshold"];
-  private _noEventsBeforeInit: FlickingOptions["noEventsBeforeInit"];
+  private _preventEventsBeforeInit: FlickingOptions["preventEventsBeforeInit"];
   private _deceleration: FlickingOptions["deceleration"];
   private _duration: FlickingOptions["duration"];
   private _easing: FlickingOptions["easing"];
@@ -345,7 +345,7 @@ class Flicking extends Component<FlickingEvents> {
    * @type {boolean}
    * @default true
    */
-  public get noEventsBeforeInit() { return this._noEventsBeforeInit; }
+  public get preventEventsBeforeInit() { return this._preventEventsBeforeInit; }
   // ANIMATION
   /**
    * Deceleration value for panel movement animation which is triggered by user input. A higher value means a shorter animation time
@@ -528,7 +528,7 @@ class Flicking extends Component<FlickingEvents> {
   public set adaptive(val: FlickingOptions["adaptive"]) { this._adaptive = val; }
   // EVENTS
   public set needPanelThreshold(val: FlickingOptions["needPanelThreshold"]) { this._needPanelThreshold = val; }
-  public set noEventsBeforeInit(val: FlickingOptions["noEventsBeforeInit"]) { this._noEventsBeforeInit = val; }
+  public set preventEventsBeforeInit(val: FlickingOptions["preventEventsBeforeInit"]) { this._preventEventsBeforeInit = val; }
   // ANIMATION
   public set deceleration(val: FlickingOptions["deceleration"]) { this._deceleration = val; }
   public set easing(val: FlickingOptions["easing"]) { this._easing = val; }
@@ -598,7 +598,7 @@ class Flicking extends Component<FlickingEvents> {
     bound = false,
     adaptive = false,
     needPanelThreshold = 0,
-    noEventsBeforeInit = true,
+    preventEventsBeforeInit = true,
     deceleration = 0.0075,
     duration = 500,
     easing = x => 1 - Math.pow(1 - x, 3),
@@ -629,7 +629,7 @@ class Flicking extends Component<FlickingEvents> {
     this._bound = bound;
     this._adaptive = adaptive;
     this._needPanelThreshold = needPanelThreshold;
-    this._noEventsBeforeInit = noEventsBeforeInit;
+    this._preventEventsBeforeInit = preventEventsBeforeInit;
     this._deceleration = deceleration;
     this._duration = duration;
     this._easing = easing;
@@ -674,13 +674,13 @@ class Flicking extends Component<FlickingEvents> {
     const renderer = this._renderer;
     const control = this._control;
     const originalTrigger = this.trigger;
-    const noEventsBeforeInit = this._noEventsBeforeInit;
+    const preventEventsBeforeInit = this._preventEventsBeforeInit;
 
     camera.init(this);
     renderer.init(this);
     control.init(this);
 
-    if (noEventsBeforeInit) {
+    if (preventEventsBeforeInit) {
       this.trigger = () => this;
     }
 
@@ -703,7 +703,7 @@ class Flicking extends Component<FlickingEvents> {
 
     // Done initializing & emit ready event
     this._initialized = true;
-    if (noEventsBeforeInit) {
+    if (preventEventsBeforeInit) {
       this.trigger = originalTrigger;
     }
     this.trigger(new ComponentEvent(EVENTS.READY));
