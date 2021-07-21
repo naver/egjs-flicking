@@ -474,6 +474,21 @@ describe("Flicking", () => {
 
         expect(clickSpy.called).to.be.false;
       });
+
+      it("shouldn't bother click event on outside of camera element", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventClickOnDrag: true });
+        const clickSpy = sinon.spy();
+        const testEl = document.createElement("div");
+
+        flicking.element.appendChild(testEl);
+
+        testEl.addEventListener("click", clickSpy);
+
+        await simulate(flicking.element, { deltaX: -50, deltaY: 0 });
+        testEl.click();
+
+        expect(clickSpy.called).to.be.true;
+      });
     });
   });
 
