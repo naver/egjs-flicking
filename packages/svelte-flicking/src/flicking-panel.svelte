@@ -1,11 +1,10 @@
-<script lang="ts">
+<script>
   import {
     getContext,
     onDestroy
   } from "svelte";
-  import * as uuid from "uuid";
+  import * as uuid from "uuid-browser";
 
-  import type SveltePanelComponent from "./SveltePanelComponent";
   import { findIndex } from "./utils";
 
   const id = uuid.v4();
@@ -13,8 +12,8 @@
   let element;
 
   const flickingID = getContext("flickingID");
-  const sveltePanels = getContext(`${flickingID}-panels`) as SveltePanelComponent[];
-  const pending = getContext(`${flickingID}-pending`) as SveltePanelComponent[];
+  const sveltePanels = getContext(`${flickingID}-panels`);
+  const pending = getContext(`${flickingID}-pending`);
 
   pending.push({
     show,
@@ -46,7 +45,7 @@
 </script>
 
 {#if !hidden}
-  <div bind:this={element} data-key={id} class="flicking-panel">
+  <div bind:this={element} data-key={id} class="flicking-panel" {...$$restProps}>
     <slot />
   </div>
 {/if}

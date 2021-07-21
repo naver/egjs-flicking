@@ -1,13 +1,11 @@
 import { DIRECTION, ExternalPanel } from "@egjs/flicking";
 
-import SveltePanelComponent from "./SveltePanelComponent";
+class SveltePanel extends ExternalPanel {
+  get element() { return this._externalComponent.element(); }
 
-class SveltePanel extends ExternalPanel<SveltePanelComponent> {
-  public get element() { return this._externalComponent.element(); }
+  get rendered() { return !this._externalComponent.hidden(); }
 
-  public get rendered() { return !this._externalComponent.hidden(); }
-
-  public render() {
+  render() {
     if (!this._flicking.circularEnabled) return;
 
     const toggleDirection = this._toggleDirection;
@@ -22,11 +20,11 @@ class SveltePanel extends ExternalPanel<SveltePanelComponent> {
         : "-1";
   }
 
-  public markForShow() {
+  markForShow() {
     this._externalComponent.show();
   }
 
-  public markForHide() {
+  markForHide() {
     this._externalComponent.hide();
   }
 }

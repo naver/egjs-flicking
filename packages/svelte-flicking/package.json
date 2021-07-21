@@ -1,12 +1,13 @@
 {
   "name": "@egjs/svelte-flicking",
-  "version": "4.1.0",
+  "version": "4.1.0-beta.8",
   "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
   "main": "dist/flicking.cjs.js",
   "module": "dist/flicking.esm.js",
   "sideEffects": false,
   "es2015": "dist/flicking.esm.js",
-  "types": "declaration/index.d.ts",
+  "types": "types/index.d.ts",
+  "svelte": "src/index.js",
   "scripts": {
     "build": "rollup -c ./rollup.config.build.js",
     "dev": "rollup -c -w",
@@ -27,8 +28,7 @@
   "license": "MIT",
   "dependencies": {
     "@egjs/flicking": "^4.1.1",
-    "sirv-cli": "^1.0.0",
-    "uuid": "^8.3.2"
+    "uuid-browser": "^3.1.0"
   },
   "devDependencies": {
     "@egjs/build-helper": "^0.1.2",
@@ -43,6 +43,7 @@
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-terser": "^7.0.0",
+    "sirv-cli": "^1.0.0",
     "svelte": "^3.0.0",
     "svelte-check": "^2.0.0",
     "svelte-preprocess": "^4.7.4",
