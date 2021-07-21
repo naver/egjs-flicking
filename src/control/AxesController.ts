@@ -189,21 +189,21 @@ class AxesController {
   public addPreventClickHandler() {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const axes = this._axes!;
-    const viewportEl = flicking.element;
+    const cameraEl = flicking.camera.element;
 
     axes.on(AXES.EVENT.HOLD, this._onAxesHold);
     axes.on(AXES.EVENT.CHANGE, this._onAxesChange);
-    viewportEl.addEventListener("click", this._preventClickWhenDragged, true);
+    cameraEl.addEventListener("click", this._preventClickWhenDragged, true);
   }
 
   public removePreventClickHandler() {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const axes = this._axes!;
-    const viewportEl = flicking.element;
+    const cameraEl = flicking.camera.element;
 
     axes.off(AXES.EVENT.HOLD, this._onAxesHold);
     axes.off(AXES.EVENT.CHANGE, this._onAxesChange);
-    viewportEl.removeEventListener("click", this._preventClickWhenDragged, true);
+    cameraEl.removeEventListener("click", this._preventClickWhenDragged, true);
   }
 
   /**
