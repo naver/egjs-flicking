@@ -4,6 +4,7 @@ custom_edit_url: null
 ---
 
 import Flicking from "@egjs/react-flicking";
+import EventFlicking from "@site/src/component/EventFlicking";
 import Panel from "@site/src/component/Panel";
 import Panels from "@site/src/component/Panels";
 import LinkedPanel from "@site/src/component/LinkedPanel";
@@ -326,6 +327,37 @@ A Threshold from viewport edge before triggering **[needPanel](docs/api/Flicking
     <Flicking adaptive={true}>
       { Panels(3) }
     </Flicking>
+  </ColumnItem>
+</Columns>
+
+### preventEventsBeforeInit
+When enabled, events are not triggered before `ready` when initializing
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  preventEventsBeforeInit: true
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <EventFlicking>
+      { Panels(3) }
+    </EventFlicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  preventEventsBeforeInit: false
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <EventFlicking preventEventsBeforeInit={false}>
+      { Panels(3) }
+    </EventFlicking>
   </ColumnItem>
 </Columns>
 
