@@ -201,7 +201,7 @@ export default {
 <Flicking bind:this={flicking0} class="mb-4"
   options={{ align: "prev", bound: true, bounce: 30 }}
   on:move={e => {
-    const camera = e.currentTarget.camera;
+    const camera = e.detail.currentTarget.camera;
     const progress = (camera.position - camera.range.min) / camera.rangeDiff;
     update(flicking1, progress);
     update(flicking2, progress);
@@ -223,7 +223,7 @@ export default {
 <Flicking bind:this={flicking1} class="mb-4"
   options={{ align: "prev", bound: true, bounce: 30 }}
   on:move={e => {
-    const camera = e.currentTarget.camera;
+    const camera = e.detail.currentTarget.camera;
     const progress = (camera.position - camera.range.min) / camera.rangeDiff;
     update(flicking0, progress);
     update(flicking2, progress);
@@ -245,7 +245,7 @@ export default {
 <Flicking bind:this={flicking2} class="mb-4"
   options={{ align: "prev", bound: true, bounce: 30 }}
   on:move={e => {
-    const camera = e.currentTarget.camera;
+    const camera = e.detail.currentTarget.camera;
     const progress = (camera.position - camera.range.min) / camera.rangeDiff;
     update(flicking0, progress);
     update(flicking1, progress);

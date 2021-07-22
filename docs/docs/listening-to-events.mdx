@@ -121,14 +121,21 @@ import Flicking, { MoveEvent, NeedPanelEvent } from "@egjs/preact-flicking";
   </TabItem>
   <TabItem value="svelte">
 
-You can use `on:eventName` syntax to listen Flicking events
+You can use `on:eventName` syntax to listen Flicking events.
+All event properties are available in the event's `detail` property.
+
 ```jsx
 <script lang="ts">
   import Flicking, { FlickingPanel } from "@egjs/svelte-flicking";
   import "@egjs/svelte-flicking/dist/flicking.css";
 </script>
 
-<Flicking on:ready={e => { console.log("READY!"); }}>
+<Flicking on:ready={e => {
+  console.log("READY!");
+}} on:move={e => {
+  // Event properties are placed in "detail"
+  console.log(e.detail);
+}}>
   <!-- Those will render "div" element -->
   <FlickingPanel>0</FlickingPanel>
   <FlickingPanel>1</FlickingPanel>
