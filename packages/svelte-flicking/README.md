@@ -1,21 +1,21 @@
 <h1 align=center>
   <img width="800" alt="Flicking Logo" src="https://naver.github.io/egjs-flicking/images/flicking.svg"><br/>
-  <img alt="Vue" src="https://naver.github.io/egjs-flicking/images/vue.svg" width="36" valign="middle">
+  <img alt="Svelte" src="https://naver.github.io/egjs-flicking/img/icons/svelte.svg" width="36" valign="middle">
   @egjs/svelte-flicking
 </h1>
 
 <p align=center>
-  <a href="https://www.npmjs.com/package/@egjs/vue3-flicking" target="_blank">
-    <img src="https://img.shields.io/npm/v/@egjs/vue3-flicking.svg?style=flat-square&color=42b883&label=version&logo=NPM">
+  <a href="https://www.npmjs.com/package/@egjs/svelte-flicking" target="_blank">
+    <img src="https://img.shields.io/npm/v/@egjs/svelte-flicking.svg?style=flat-square&color=42b883&label=version&logo=NPM">
   </a>
-  <a href="https://www.npmjs.com/package/@egjs/vue3-flicking" target="_blank">
-    <img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@egjs/vue3-flicking.svg?style=flat-square&label=%F0%9F%92%BE%20gzipped&color=007acc">
+  <a href="https://www.npmjs.com/package/@egjs/svelte-flicking" target="_blank">
+    <img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@egjs/svelte-flicking.svg?style=flat-square&label=%F0%9F%92%BE%20gzipped&color=007acc">
   </a>
   <a href="https://github.com/naver/egjs-flicking/graphs/commit-activity">
     <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/naver/egjs-flicking.svg?style=flat-square&label=%E2%AC%86%20commits&color=08CE5D">
   </a>
-  <a href="https://www.npmjs.com/package/@egjs/vue3-flicking" target="_blank">
-    <img src="https://img.shields.io/npm/dm/@egjs/vue3-flicking.svg?style=flat-square&label=%E2%AC%87%20downloads&color=08CE5D" alt="npm downloads per month">
+  <a href="https://www.npmjs.com/package/@egjs/svelte-flicking" target="_blank">
+    <img src="https://img.shields.io/npm/dm/@egjs/svelte-flicking.svg?style=flat-square&label=%E2%AC%87%20downloads&color=08CE5D" alt="npm downloads per month">
   </a>
   <a href="https://github.com/naver/egjs-flicking/graphs/contributors" target="_blank">
     <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/naver/egjs-flicking.svg?label=%F0%9F%91%A5%20contributors&style=flat-square&color=08CE5D"></a>
@@ -25,7 +25,7 @@
 </p>
 
 <p align=center>
-  <img width="15" src="https://naver.github.io/egjs-flicking/images/vue.svg" alt="Vue.js" /> <a href="https://svelte.dev/">Svelte</a> wrapper of <a href="https://github.com/naver/egjs-flicking">@egjs/flicking</a>
+  <img width="15" src="https://naver.github.io/egjs-flicking/img/icons/svelte.svg" alt="Svelte" /> <a href="https://svelte.dev/">Svelte</a> wrapper of <a href="https://github.com/naver/egjs-flicking">@egjs/flicking</a>
 </p>
 
 <p align=center>
