@@ -17,7 +17,8 @@ import TabItem from '@theme/TabItem';
     { label: "Vue@2", value: "vue" },
     { label: "Vue@3", value: "vue3" },
     { label: "Angular", value: "angular" },
-    { label: "Preact", value: "preact" }
+    { label: "Preact", value: "preact" },
+    { label: "Svelte", value: "svelte" }
   ]}>
   <TabItem value="js">
 
@@ -397,6 +398,27 @@ So, if you're using the [Strict Mode](https://reactjs.org/docs/strict-mode.html)
 And also, be aware that the component should always return a single DOM that never changes.
 > Therefore findDOMNode only worked if components always return a single DOM node that never changes.
 :::
+
+  </TabItem>
+  <TabItem value="svelte">
+
+You can import `Flicking` and `FlickingPanel` from the "@egjs/svelte-flicking" package.
+
+```jsx title="App.svelte"
+<script lang="ts">
+  import Flicking, { FlickingPanel } from "@egjs/svelte-flicking";
+  import "@egjs/svelte-flicking/dist/flicking.css";
+  // Or, if you have to support IE9
+  import "@egjs/svelte-flicking/dist/flicking-inline.css";
+</script>
+
+<Flicking options={{ align: "center", circular: true }}>
+  <!-- Those will render "div" element -->
+  <FlickingPanel>0</FlickingPanel>
+  <FlickingPanel>1</FlickingPanel>
+  <FlickingPanel>2</FlickingPanel>
+</Flicking>
+```
 
   </TabItem>
 </Tabs>

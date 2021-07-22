@@ -40,7 +40,8 @@ This will show empty screen before it's mounted, so use this option only when yo
     { label: "Vue@2", value: "vue" },
     { label: "Vue@3", value: "vue3" },
     { label: "Angular", value: "angular" },
-    { label: "Preact", value: "preact" }
+    { label: "Preact", value: "preact" },
+    { label: "Svelte", value: "svelte" }
   ]}>
   <TabItem value="js">
     In native JS, you can attach class `flicking-hidden` to the viewport element and remove that on `ready` event to mimic the behavior of `hideBeforeInit`.
@@ -96,6 +97,15 @@ flicking.once(EVENTS.READY, () => {
 
   </TabItem>
   <TabItem value="preact">
+
+```jsx
+<Flicking hideBeforeInit={true} firstPanelSize="200px">
+  {...}
+</Flicking>
+```
+
+  </TabItem>
+  <TabItem value="svelte">
 
 ```jsx
 <Flicking hideBeforeInit={true} firstPanelSize="200px">

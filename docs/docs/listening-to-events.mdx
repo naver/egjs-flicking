@@ -19,7 +19,8 @@ import TabItem from '@theme/TabItem';
     { label: "Vue@2", value: "vue" },
     { label: "Vue@3", value: "vue3" },
     { label: "Angular", value: "angular" },
-    { label: "Preact", value: "preact" }
+    { label: "Preact", value: "preact" },
+    { label: "Svelte", value: "svelte" }
   ]}>
   <TabItem value="js">
 
@@ -114,6 +115,31 @@ import Flicking, { MoveEvent, NeedPanelEvent } from "@egjs/preact-flicking";
   }}
 >
   {...}
+</Flicking>
+```
+
+  </TabItem>
+  <TabItem value="svelte">
+
+You can use `on:eventName` syntax to listen Flicking events.
+All event properties are available in the event's `detail` property.
+
+```jsx
+<script lang="ts">
+  import Flicking, { FlickingPanel } from "@egjs/svelte-flicking";
+  import "@egjs/svelte-flicking/dist/flicking.css";
+</script>
+
+<Flicking on:ready={e => {
+  console.log("READY!");
+}} on:move={e => {
+  // Event properties are placed in "detail"
+  console.log(e.detail);
+}}>
+  <!-- Those will render "div" element -->
+  <FlickingPanel>0</FlickingPanel>
+  <FlickingPanel>1</FlickingPanel>
+  <FlickingPanel>2</FlickingPanel>
 </Flicking>
 ```
 

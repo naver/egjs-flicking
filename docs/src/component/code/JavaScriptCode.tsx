@@ -10,11 +10,11 @@ export default ({ options, panels, plugins = [], siblings = [], imports = [] }: 
   const createVanillaFlicking = options
     ? `const flicking = new Flicking("#flick", {
   ${getOptions(options)}
-}`
+});`
     : "const flicking = new Flicking(\"#flick\")";
 
   const addPlugins = plugins
-    ? `\n\nflicking.addPlugins(${plugins.map(plugin => `new ${plugin[0]}(${plugin[1] ? `{\n  ${getOptions(plugin[1])}\n}` : ""})`)})` : "";
+    ? `\n\nflicking.addPlugins(${plugins.map(plugin => `new ${plugin[0]}(${plugin[1] ? `{\n  ${getOptions(plugin[1])}\n}` : ""})`)});` : "";
   const allImports = [...plugins.map(plugin => [`{ ${plugin[0]} }`, "@egjs/flicking-plugins"]), ...imports];
 
   const slots = panels.filter(panel => panel.isSlot);

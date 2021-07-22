@@ -10,11 +10,12 @@ import VueCode from "./code/VueCode";
 import AngularCode from "./code/AngularCode";
 import Vue3Code from "./code/Vue3Code";
 import PreactCode from "./code/PreactCode";
+import SvelteCode from "./code/SvelteCode";
 import { SourceContext } from "./code/type";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export default ({
-  js, react, vue, vue3, angular, preact,
+  js, react, vue, vue3, angular, preact, svelte,
   ...otherProps
 }: SourceContext) => <Tabs
     groupId="cfc"
@@ -25,7 +26,8 @@ export default ({
       { label: "Vue@2", value: "vue" },
       { label: "Vue@3", value: "vue3" },
       { label: "Angular", value: "angular" },
-      { label: "Preact", value: "preact" }
+      { label: "Preact", value: "preact" },
+      { label: "Svelte", value: "svelte" }
     ]}>
     <TabItem value="js">
       { js ? js : <JavaScriptCode {...otherProps} /> }
@@ -44,5 +46,8 @@ export default ({
     </TabItem>
     <TabItem value="preact">
       {preact ? preact : <PreactCode {...otherProps} /> }
+    </TabItem>
+    <TabItem value="svelte">
+      {svelte ? svelte : <SvelteCode {...otherProps} /> }
     </TabItem>
   </Tabs>;

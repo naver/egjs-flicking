@@ -32,7 +32,8 @@ npm install @egjs/flicking-plugins
     { label: "Vue@2", value: "vue" },
     { label: "Vue@3", value: "vue3" },
     { label: "Angular", value: "angular" },
-    { label: "Preact", value: "preact" }
+    { label: "Preact", value: "preact" },
+    { label: "Svelte", value: "svelte" }
   ]}>
   <TabItem value="js">
 
@@ -142,6 +143,22 @@ export default () => {
     { ... }
   </Flicking>);
 };
+```
+
+  </TabItem>
+  <TabItem value="svelte">
+
+```jsx
+<script lang="ts">
+  import Flicking, { FlickingPanel } from "@egjs/svelte-flicking";
+  import "@egjs/svelte-flicking/dist/flicking.css";
+
+  const plugins = [new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: false })];
+</script>
+
+<Flicking plugins={plugins}>
+  { ... }
+</Flicking>
 ```
 
   </TabItem>
