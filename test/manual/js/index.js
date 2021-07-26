@@ -1,6 +1,6 @@
 const flicking = new Flicking("#flicking", {
   moveType: "strict",
-  bound: true
+  circular: true
 });
 
 // Object.values(Flicking.EVENTS).forEach(evt => {

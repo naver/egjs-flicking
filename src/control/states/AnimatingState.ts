@@ -5,7 +5,8 @@
 import { ComponentEvent } from "@egjs/component";
 
 import { EVENTS } from "../../const/external";
-import { getDirection } from "../../utils";
+import * as AXES from "../../const/axes";
+import { circulatePosition, getDirection } from "../../utils";
 
 import State, { STATE_TYPE } from "./State";
 
@@ -53,8 +54,12 @@ class AnimatingState extends State {
 
     const camera = flicking.camera;
     const prevPosition = camera.position;
+    const position = axesEvent.pos[AXES.POSITION_KEY];
+    const newPosition = flicking.circularEnabled
+      ? circulatePosition(position, camera.range.min, camera.range.max)
+      : position;
 
-    void camera.lookAt(axesEvent.pos.flick);
+    void camera.lookAt(newPosition);
 
     const moveEvent = new ComponentEvent(EVENTS.MOVE, {
       isTrusted: axesEvent.isTrusted,

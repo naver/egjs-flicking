@@ -44,6 +44,12 @@ class StrictControl extends Control {
     this._resetIndexRange();
   }
 
+  /**
+   * Update {@link Control#controller controller}'s state
+   * @ko {@link Control#controller controller}의 내부 상태를 갱신합니다
+   * @chainable
+   * @return {this}
+   */
   public updateInput(): this {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;

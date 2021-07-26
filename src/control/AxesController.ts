@@ -52,6 +52,31 @@ class AxesController {
    */
   public get animatingContext() { return this._animatingContext; }
   /**
+   * A current control parameters of the Axes instance
+   * @ko 활성화된 현재 Axes 패러미터들
+   * @type {ControlParams}
+   */
+  public get controlParams(): ControlParams {
+    const axes = this._axes;
+
+    if (!axes) {
+      return {
+        range: { min: 0, max: 0 },
+        position: 0,
+        circular: false
+      };
+    }
+
+    const axis = axes.axis[AXES.POSITION_KEY];
+
+    return {
+      range: { min: axis.range![0], max: axis.range![1] },
+      circular: (axis.circular as boolean[])[0],
+      position: this.position
+    };
+  }
+
+  /**
    * A Boolean indicating whether the user input is enabled
    * @ko 현재 사용자 입력이 활성화되었는지를 나타내는 값
    * @type {boolean}
