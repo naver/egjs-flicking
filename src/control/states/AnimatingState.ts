@@ -33,6 +33,7 @@ class AnimatingState extends State {
   public onHold(ctx: Parameters<State["onHold"]>[0]): void {
     const { flicking, axesEvent, transitTo } = ctx;
 
+    flicking.control.updateInput();
     const holdStartEvent = new ComponentEvent(EVENTS.HOLD_START, { axesEvent });
     flicking.trigger(holdStartEvent);
 

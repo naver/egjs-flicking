@@ -188,7 +188,10 @@ abstract class Control {
    * @return {this}
    */
   public updateInput(): this {
-    this._controller.update();
+    const flicking = getFlickingAttached(this._flicking, "Control");
+    const camera = flicking.camera;
+
+    this._controller.update(camera.controlParams);
 
     return this;
   }
@@ -342,7 +345,7 @@ abstract class Control {
     }
   }
 
-  protected _setActive = (newActivePanel: Panel, prevActivePanel: Panel | null, isTrusted: boolean) => {
+  protected _setActive(newActivePanel: Panel, prevActivePanel: Panel | null, isTrusted: boolean) {
     const flicking = getFlickingAttached(this._flicking, "Control");
 
     this._activePanel = newActivePanel;
@@ -363,7 +366,7 @@ abstract class Control {
         isTrusted
       }));
     }
-  };
+  }
 }
 
 export default Control;

@@ -5,6 +5,7 @@
 import Control from "./Control";
 import SnapControl from "./SnapControl";
 import FreeControl from "./FreeControl";
+import StrictControl from "./StrictControl";
 import AxesController from "./AxesController";
 import State from "./states/State";
 import IdleState from "./states/IdleState";
@@ -18,6 +19,7 @@ export {
   Control,
   SnapControl,
   FreeControl,
+  StrictControl,
   AxesController,
   State,
   IdleState,
