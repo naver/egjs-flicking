@@ -121,8 +121,8 @@ class Viewport {
     const el = this._el;
     const elStyle = getStyle(el);
 
-    this._width = el.offsetWidth;
-    this._height = el.offsetHeight;
+    this._width = el.clientWidth;
+    this._height = el.clientHeight;
     this._padding = {
       left: parseFloat(elStyle.paddingLeft),
       right: parseFloat(elStyle.paddingRight),
