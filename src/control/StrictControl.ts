@@ -38,6 +38,11 @@ class StrictControl extends Control {
     this._resetIndexRange();
   }
 
+  /**
+   * Destroy Control and return to initial state
+   * @ko Control을 초기 상태로 되돌립니다
+   * @return {void}
+   */
   public destroy() {
     super.destroy();
 
@@ -77,10 +82,14 @@ class StrictControl extends Control {
     let nextPanelIndex = currentIndex + count;
 
     if (prevPanelIndex < 0) {
-      prevPanelIndex = getMinusCompensatedIndex((prevPanelIndex + 1) % panelCount - 1, panelCount);
+      prevPanelIndex = flicking.circularEnabled
+        ? getMinusCompensatedIndex((prevPanelIndex + 1) % panelCount - 1, panelCount)
+        : clamp(prevPanelIndex, 0, panelCount - 1);
     }
     if (nextPanelIndex >= panelCount) {
-      nextPanelIndex %= panelCount;
+      nextPanelIndex = flicking.circularEnabled
+        ? nextPanelIndex % panelCount
+        : clamp(nextPanelIndex, 0, panelCount - 1);
     }
 
     const prevPanel = renderer.panels[prevPanelIndex];

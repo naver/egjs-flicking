@@ -1,5 +1,5 @@
 import Flicking from "../Flicking";
-import { FreeControlOptions } from "../control/FreeControl";
+import { FreeControlOptions, StrictControlOptions } from "../control";
 import { MOVE_TYPE } from "../const/external";
 import { ValueOf } from "../type/internal";
 
@@ -55,6 +55,7 @@ export interface Status {
 /* eslint-disable @typescript-eslint/indent */
 export type MoveTypeOptions<T extends ValueOf<typeof MOVE_TYPE>> =
   T extends typeof MOVE_TYPE.FREE_SCROLL ? [T] | [T, Partial<FreeControlOptions>] :
+  T extends typeof MOVE_TYPE.STRICT ? [T] | [T, Partial<StrictControlOptions>] :
   [T];
 /* eslint-enable */
 

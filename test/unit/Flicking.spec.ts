@@ -8,6 +8,7 @@ import { AfterResizeEvent, BeforeResizeEvent } from "~/type/event";
 import El from "./helper/El";
 import { cleanup, createFlicking, range, simulate, tick } from "./helper/test-util";
 import { Plugin } from "~/type/external";
+import { SnapControl, FreeControl, StrictControl } from "~/control";
 
 describe("Flicking", () => {
   afterEach(() => {
@@ -260,6 +261,24 @@ describe("Flicking", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         expect(flicking.moveType).to.equal("snap");
+      });
+
+      it("should change control to SnapControl when 'snap' is given", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.SNAP });
+
+        expect(flicking.control).to.be.instanceOf(SnapControl);
+      });
+
+      it("should change control to FreeControl when 'freeScroll' is given", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.FREE_SCROLL });
+
+        expect(flicking.control).to.be.instanceOf(FreeControl);
+      });
+
+      it("should change control to StrictControl when 'strict' is given", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.STRICT });
+
+        expect(flicking.control).to.be.instanceOf(StrictControl);
       });
     });
 

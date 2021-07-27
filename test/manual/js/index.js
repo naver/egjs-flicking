@@ -1,5 +1,5 @@
 const flicking = new Flicking("#flicking", {
-  moveType: "strict",
+  moveType: "freeScroll",
   circular: true
 });
 
