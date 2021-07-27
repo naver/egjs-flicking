@@ -8,6 +8,7 @@ import * as Camera from "./camera";
 import * as Control from "./control";
 import * as Renderer from "./renderer";
 import * as Constants from "./const/external";
+import * as CFC from "./cfc";
 import { merge } from "./utils";
 
 merge(Flicking, Core);
@@ -15,5 +16,6 @@ merge(Flicking, Camera);
 merge(Flicking, Control);
 merge(Flicking, Renderer);
 merge(Flicking, Constants);
+merge(Flicking, CFC);
 
 export default Flicking;
