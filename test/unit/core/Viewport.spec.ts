@@ -77,4 +77,33 @@ describe("Viewport", () => {
       expect(viewport.height).deep.equals(expected.height);
     });
   });
+
+  describe("Methods", () => {
+    let container: HTMLElement;
+
+    beforeEach(() => {
+      container = createSandbox("viewport-test");
+    });
+
+    afterEach(() => {
+      cleanup();
+    });
+
+    describe("resize", () => {
+      it("should set width/height to viewport element's widht/height without CSS border", async () => {
+        const viewportEl = El.viewport()
+          .setWidth("1000px")
+          .setHeight("500px")
+          .appendTo(container)
+          .el;
+        const viewport = new Viewport(viewportEl);
+
+        viewportEl.style.border = "100px solid black";
+        viewport.resize();
+
+        expect(viewport.width).to.equal(1000);
+        expect(viewport.height).to.equal(500);
+      });
+    });
+  });
 });
