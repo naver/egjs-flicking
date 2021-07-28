@@ -28,6 +28,16 @@ class StrictControl extends Control {
   private _count: number;
   private _indexRange: { min: number; max: number };
 
+  /**
+   * Maximum number of panels that can be moved at a time
+   * @ko 최대로 움직일 수 있는 패널의 개수
+   * @type {number}
+   * @default 1
+   */
+  public get count() { return this._count; }
+
+  public set count(val: StrictControlOptions["count"]) { this._count = val; }
+
   /** */
   public constructor({
     count = 1
