@@ -1,7 +1,4 @@
-const flicking = new Flicking("#flicking", {
-  moveType: "freeScroll",
-  circular: true
-});
+const flicking = new Flicking("#flicking", { circular: true, moveType: ["snap", { count: Infinity }] });
 
 // Object.values(Flicking.EVENTS).forEach(evt => {
 //   flicking.on(evt, console.log);

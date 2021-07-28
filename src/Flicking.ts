@@ -7,7 +7,7 @@ import Component, { ComponentEvent } from "@egjs/component";
 import FlickingError from "./core/FlickingError";
 import Viewport from "./core/Viewport";
 import { Panel } from "./core/panel";
-import { Control, SnapControl, FreeControl, StrictControl, FreeControlOptions, StrictControlOptions } from "./control";
+import { Control, SnapControl, SnapControlOptions, FreeControl, StrictControl, FreeControlOptions, StrictControlOptions } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
 import { Renderer, VanillaRenderer, ExternalRenderer, RawRenderingStrategy, VisibleRenderingStrategy } from "./renderer";
 import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
@@ -1213,7 +1213,7 @@ class Flicking extends Component<FlickingEvents> {
 
     switch (moveTypeStr) {
       case MOVE_TYPE.SNAP:
-        return new SnapControl();
+        return new SnapControl(moveTypeOptions as SnapControlOptions);
       case MOVE_TYPE.FREE_SCROLL:
         return new FreeControl(moveTypeOptions as FreeControlOptions);
       case MOVE_TYPE.STRICT:

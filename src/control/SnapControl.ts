@@ -4,18 +4,49 @@
  */
 import { OnRelease } from "@egjs/axes";
 
-import Panel from "../core/panel/Panel";
 import FlickingError from "../core/FlickingError";
-import { getFlickingAttached } from "../utils";
+import AnchorPoint from "../core/AnchorPoint";
+import { circulateIndex, clamp, getFlickingAttached } from "../utils";
 import * as ERROR from "../const/error";
 
 import Control from "./Control";
+
+/**
+ * An options for the {@link SnapControl}
+ * @ko {@link SnapControl} 생성시 사용되는 옵션
+ * @interface
+ * @property {number} count Maximum number of panels can go after release<ko>입력 중단 이후 통과하여 이동할 수 있는 패널의 최대 갯수</ko>
+ */
+export interface SnapControlOptions {
+  count: number;
+}
 
 /**
  * A {@link Control} that uses a release momentum to choose destination panel
  * @ko 입력을 중단한 시점의 가속도에 영향받아 도달할 패널을 계산하는 이동 방식을 사용하는 {@link Control}
  */
 class SnapControl extends Control {
+  private _count: SnapControlOptions["count"];
+
+  /**
+   * Maximum number of panels can go after release
+   * @ko 입력 중단 이후 통과하여 이동할 수 있는 패널의 최대 갯수
+   * @type {number}
+   * @default Infinity
+   */
+  public get count() { return this._count; }
+
+  public set count(val: SnapControlOptions["count"]) { this._count = val; }
+
+  /** */
+  public constructor({
+    count = Infinity
+  }: Partial<SnapControlOptions> = {}) {
+    super();
+
+    this._count = count;
+  }
+
   /**
    * Move {@link Camera} to the given position
    * @ko {@link Camera}를 주어진 좌표로 이동합니다
@@ -55,47 +86,111 @@ class SnapControl extends Control {
   public async moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;
-    const activePanel = this._activePanel;
+    const activeAnchor = camera.findActiveAnchor();
 
-    const clampedPosition = camera.clampToReachablePosition(position);
-    const anchorAtPosition = camera.findNearestAnchor(clampedPosition);
-
-    if (!anchorAtPosition || !activePanel) {
+    if (!activeAnchor) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE));
     }
 
-    const prevPos = activePanel.position;
+    const snapThreshold = this._calcSnapThreshold(position, activeAnchor);
 
-    const isOverThreshold = Math.abs(position - prevPos) >= flicking.threshold;
-    const adjacentAnchor = (position > prevPos)
-      ? camera.getNextAnchor(anchorAtPosition)
-      : camera.getPrevAnchor(anchorAtPosition);
+    const prevPos = activeAnchor.position;
+    const isOverThreshold = position !== activeAnchor.position
+      && Math.abs(position - prevPos) >= Math.max(snapThreshold, flicking.threshold);
+    let targetAnchor: AnchorPoint;
 
-    let targetPos: number;
-    let targetPanel: Panel;
-
-    if (isOverThreshold && anchorAtPosition.position !== activePanel.position) {
+    if (isOverThreshold) {
       // Move to anchor at position
-      targetPanel = anchorAtPosition.panel;
-      targetPos = anchorAtPosition.position;
-    } else if (isOverThreshold && adjacentAnchor) {
-      // Move to adjacent anchor
-      targetPanel = adjacentAnchor.panel;
-      targetPos = adjacentAnchor.position;
+      targetAnchor = this._findSnappedPanel(position, snapThreshold);
     } else {
       // Restore to active panel
-      targetPos = camera.clampToReachablePosition(activePanel.position);
-      targetPanel = activePanel;
+      targetAnchor = activeAnchor;
     }
 
-    this._triggerIndexChangeEvent(targetPanel, position, axesEvent);
+    this._triggerIndexChangeEvent(targetAnchor.panel, position, axesEvent);
 
     return this._animateToPosition({
-      position: targetPos,
+      position: camera.clampToReachablePosition(targetAnchor.position),
       duration,
-      newActivePanel: targetPanel,
+      newActivePanel: targetAnchor.panel,
       axesEvent
     });
+  }
+
+  private _findSnappedPanel(position: number, snapThreshold: number): AnchorPoint {
+    const flicking = getFlickingAttached(this._flicking, "Control");
+    const camera = flicking.camera;
+    const count = this._count;
+
+    const currentPos = camera.position;
+    const posDiff = Math.abs(position - currentPos);
+
+    const clampedPosition = camera.clampToReachablePosition(position);
+    const anchorAtCamera = camera.findNearestAnchor(camera.position);
+    const anchorAtPosition = camera.findAnchorIncludePosition(clampedPosition);
+
+    if (!anchorAtCamera || !anchorAtPosition) {
+      throw new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE);
+    }
+
+    const adjacentAnchor = ((position > currentPos) ? camera.getNextAnchor(anchorAtCamera) : camera.getPrevAnchor(anchorAtCamera)) ?? anchorAtCamera;
+
+    if (!isFinite(count)) {
+      return posDiff >= snapThreshold ? anchorAtPosition : adjacentAnchor;
+    }
+
+    const panelCount = flicking.panelCount;
+    const anchors = camera.anchorPoints;
+
+    const loopCount = Math.sign(position - currentPos) * Math.floor(Math.abs(position - currentPos) / camera.rangeDiff);
+    let circularIndexOffset = loopCount * panelCount;
+    if (position > currentPos && anchorAtPosition.index < anchorAtCamera.index) {
+      circularIndexOffset += panelCount;
+    } else if (position < currentPos && anchorAtPosition.index > anchorAtCamera.index) {
+      circularIndexOffset -= panelCount;
+    }
+
+    const anchorAtPositionIndex = anchorAtPosition.index + circularIndexOffset;
+
+    if (Math.abs(anchorAtPositionIndex - anchorAtCamera.index) <= count) {
+      return anchorAtPosition;
+    }
+
+    if (flicking.circularEnabled) {
+      const targetAnchor = anchors[circulateIndex(anchorAtCamera.index + Math.sign(position - currentPos) * count, panelCount)];
+      let loop = Math.floor(count / panelCount);
+
+      if (position > currentPos && targetAnchor.index < anchorAtCamera.index) {
+        loop += 1;
+      } else if (position < currentPos && targetAnchor.index > anchorAtCamera.index) {
+        loop -= 1;
+      }
+
+      return new AnchorPoint({
+        index: targetAnchor.index,
+        position: targetAnchor.position + loop * camera.rangeDiff,
+        panel: targetAnchor.panel
+      });
+    } else {
+      return anchors[clamp(anchorAtCamera.index + Math.sign(position - currentPos) * count, 0, anchors.length - 1)];
+    }
+  }
+
+  private _calcSnapThreshold(position: number, activeAnchor: AnchorPoint): number {
+    const isNextDirection = position > activeAnchor.position;
+    const panel = activeAnchor.panel;
+    const panelSize = panel.size;
+    const alignPos = panel.alignPosition;
+
+    // Minimum distance needed to decide prev/next panel as nearest
+    /*
+     * |  Prev  |     Next     |
+     * |<------>|<------------>|
+     * [        |<-Anchor      ]
+     */
+    return isNextDirection
+      ? panelSize - alignPos + panel.margin.next
+      : alignPos + panel.margin.prev;
   }
 }
 
