@@ -87,8 +87,9 @@ class SnapControl extends Control {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;
     const activeAnchor = camera.findActiveAnchor();
+    const anchorAtCamera = camera.findNearestAnchor(camera.position);
 
-    if (!activeAnchor) {
+    if (!activeAnchor || !anchorAtCamera) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE));
     }
 
@@ -101,10 +102,10 @@ class SnapControl extends Control {
 
     if (isOverThreshold) {
       // Move to anchor at position
-      targetAnchor = this._findSnappedPanel(position, snapThreshold);
+      targetAnchor = this._findSnappedPanel(position, snapThreshold, anchorAtCamera);
     } else {
       // Restore to active panel
-      targetAnchor = activeAnchor;
+      targetAnchor = anchorAtCamera;
     }
 
     this._triggerIndexChangeEvent(targetAnchor.panel, position, axesEvent);
@@ -117,7 +118,7 @@ class SnapControl extends Control {
     });
   }
 
-  private _findSnappedPanel(position: number, snapThreshold: number): AnchorPoint {
+  private _findSnappedPanel(position: number, snapThreshold: number, anchorAtCamera: AnchorPoint): AnchorPoint {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;
     const count = this._count;
@@ -126,7 +127,6 @@ class SnapControl extends Control {
     const posDiff = Math.abs(position - currentPos);
 
     const clampedPosition = camera.clampToReachablePosition(position);
-    const anchorAtCamera = camera.findNearestAnchor(camera.position);
     const anchorAtPosition = camera.findAnchorIncludePosition(clampedPosition);
 
     if (!anchorAtCamera || !anchorAtPosition) {
@@ -142,18 +142,26 @@ class SnapControl extends Control {
     const panelCount = flicking.panelCount;
     const anchors = camera.anchorPoints;
 
-    const loopCount = Math.sign(position - currentPos) * Math.floor(Math.abs(position - currentPos) / camera.rangeDiff);
+    let loopCount = Math.sign(position - currentPos) * Math.floor(Math.abs(position - currentPos) / camera.rangeDiff);
     let circularIndexOffset = loopCount * panelCount;
     if (position > currentPos && anchorAtPosition.index < anchorAtCamera.index) {
       circularIndexOffset += panelCount;
+      loopCount += 1;
     } else if (position < currentPos && anchorAtPosition.index > anchorAtCamera.index) {
       circularIndexOffset -= panelCount;
+      loopCount -= 1;
     }
 
     const anchorAtPositionIndex = anchorAtPosition.index + circularIndexOffset;
 
     if (Math.abs(anchorAtPositionIndex - anchorAtCamera.index) <= count) {
-      return anchorAtPosition;
+      const anchor = anchors[anchorAtPosition.index];
+
+      return new AnchorPoint({
+        index: anchor.index,
+        position: anchor.position + loopCount * camera.rangeDiff,
+        panel: anchor.panel
+      });
     }
 
     if (flicking.circularEnabled) {
