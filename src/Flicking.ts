@@ -687,7 +687,7 @@ class Flicking extends Component<FlickingEvents> {
     await this.resize();
 
     // Look at initial panel
-    this._moveToInitialPanel();
+    await this._moveToInitialPanel();
 
     if (this._autoResize) {
       window.addEventListener("resize", this.resize);
@@ -1254,14 +1254,14 @@ class Flicking extends Component<FlickingEvents> {
       : new VanillaRenderer(rendererOptions);
   }
 
-  private _moveToInitialPanel(): void {
+  private async _moveToInitialPanel(): Promise<void> {
     const renderer = this._renderer;
     const control = this._control;
     const initialPanel = renderer.getPanel(this._defaultIndex) || renderer.getPanel(0);
 
     if (!initialPanel) return;
 
-    void control.moveToPanel(initialPanel, {
+    return control.moveToPanel(initialPanel, {
       duration: 0
     });
   }

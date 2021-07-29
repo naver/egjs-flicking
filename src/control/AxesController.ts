@@ -8,7 +8,7 @@ import Flicking from "../Flicking";
 import FlickingError from "../core/FlickingError";
 import * as AXES from "../const/axes";
 import * as ERROR from "../const/error";
-import { getFlickingAttached, parseBounce } from "../utils";
+import { circulatePosition, getFlickingAttached, parseBounce } from "../utils";
 import { ControlParams } from "../type/external";
 
 import StateMachine from "./StateMachine";
@@ -296,8 +296,16 @@ class AxesController {
     };
 
     if (duration === 0) {
+      const flicking = getFlickingAttached(this._flicking, "Control");
+      const camera = flicking.camera;
+
       animate();
-      axes.axm.set({ [AXES.POSITION_KEY]: position });
+
+      const newPos = flicking.circularEnabled
+        ? circulatePosition(position, camera.range.min, camera.range.max)
+        : position;
+
+      axes.axm.set({ [AXES.POSITION_KEY]: newPos });
 
       return Promise.resolve();
     } else {

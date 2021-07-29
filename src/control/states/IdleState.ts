@@ -30,6 +30,10 @@ class IdleState extends State {
    */
   public readonly animating = false;
 
+  public onEnter() {
+    this._delta = 0;
+  }
+
   public onHold(ctx: Parameters<State["onHold"]>[0]): void {
     // Shouldn't do any action until any panels on flicking area
     const { flicking, axesEvent, transitTo } = ctx;
