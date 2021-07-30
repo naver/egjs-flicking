@@ -1,5 +1,5 @@
 import Flicking from "../Flicking";
-import { FreeControlOptions } from "../control/FreeControl";
+import { FreeControlOptions, StrictControlOptions } from "../control";
 import { MOVE_TYPE } from "../const/external";
 import { ValueOf } from "../type/internal";
 
@@ -55,5 +55,24 @@ export interface Status {
 /* eslint-disable @typescript-eslint/indent */
 export type MoveTypeOptions<T extends ValueOf<typeof MOVE_TYPE>> =
   T extends typeof MOVE_TYPE.FREE_SCROLL ? [T] | [T, Partial<FreeControlOptions>] :
+  T extends typeof MOVE_TYPE.STRICT ? [T] | [T, Partial<StrictControlOptions>] :
   [T];
 /* eslint-enable */
+
+/**
+ * A current parameters of the Camera for updating {@link AxesController}
+ * @ko {@link AxesController}를 업데이트하기 위한 현재 Camera 패러미터들
+ * @type {object}
+ * @property {object} range A moveable range for Camera<ko>Camera가 이동 가능한 범위</ko>
+ * @property {number} position Current camera position<ko>현재 카메라 좌표</ko>
+ * @property {boolean} circular A Boolean indicating whether the {@link Flicking#circular circular} option is enabled<ko>{@link Flicking#circular circular}옵션 활성화 여부</ko>
+ * @readonly
+ */
+export interface ControlParams {
+  range: {
+    min: number;
+    max: number;
+  };
+  position: number;
+  circular: boolean;
+}

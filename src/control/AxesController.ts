@@ -9,6 +9,7 @@ import FlickingError from "../core/FlickingError";
 import * as AXES from "../const/axes";
 import * as ERROR from "../const/error";
 import { getFlickingAttached, parseBounce } from "../utils";
+import { ControlParams } from "../type/external";
 
 import StateMachine from "./StateMachine";
 
@@ -51,6 +52,31 @@ class AxesController {
    */
   public get animatingContext() { return this._animatingContext; }
   /**
+   * A current control parameters of the Axes instance
+   * @ko 활성화된 현재 Axes 패러미터들
+   * @type {ControlParams}
+   */
+  public get controlParams(): ControlParams {
+    const axes = this._axes;
+
+    if (!axes) {
+      return {
+        range: { min: 0, max: 0 },
+        position: 0,
+        circular: false
+      };
+    }
+
+    const axis = axes.axis[AXES.POSITION_KEY];
+
+    return {
+      range: { min: axis.range![0], max: axis.range![1] },
+      circular: (axis.circular as boolean[])[0],
+      position: this.position
+    };
+  }
+
+  /**
    * A Boolean indicating whether the user input is enabled
    * @ko 현재 사용자 입력이 활성화되었는지를 나타내는 값
    * @type {boolean}
@@ -64,6 +90,13 @@ class AxesController {
    * @readonly
    */
   public get position() { return this._axes?.get([AXES.POSITION_KEY])[AXES.POSITION_KEY] ?? 0; }
+  /**
+   * Current range value in {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html Axes} instance
+   * @ko {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html Axes} 인스턴스 내부의 현재 이동 범위 값
+   * @type {number[]}
+   * @readonly
+   */
+  public get range() { return this._axes?.axis[AXES.POSITION_KEY].range ?? [0, 0]; }
   /**
    * Actual bounce size(px)
    * @ko 적용된 bounce 크기(px 단위)
@@ -171,11 +204,10 @@ class AxesController {
    * <ko>{@link AxesController#init init}이 이전에 호출되지 않은 경우</ko>
    * @return {this}
    */
-  public update(): this {
+  public update(controlParams: ControlParams): this {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;
     const axes = this._axes!;
-    const controlParams = camera.controlParams;
     const axis = axes.axis[AXES.POSITION_KEY];
 
     axis.circular = [controlParams.circular, controlParams.circular];

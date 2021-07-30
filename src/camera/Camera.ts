@@ -108,10 +108,7 @@ abstract class Camera {
   /**
    * A current parameters of the Camera for updating {@link AxesController}
    * @ko {@link AxesController}를 업데이트하기 위한 현재 Camera 패러미터들
-   * @type {object}
-   * @property {object} range Camera {@link Camera#range range}<ko>Camera가 도달 가능한 범위({@link Camera#range range})</ko>
-   * @property {number} position Current position<ko>현재 좌표</ko>
-   * @property {boolean} circular A Boolean indicating whether the {@link Flicking#circular circular} option is enabled<ko>{@link Flicking#circular circular}옵션 활성화 여부</ko>
+   * @type {ControlParams}
    * @readonly
    */
   public get controlParams() { return { range: this._range, position: this._position, circular: false }; }

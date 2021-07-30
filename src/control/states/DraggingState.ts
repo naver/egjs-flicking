@@ -6,7 +6,6 @@ import { ComponentEvent } from "@egjs/component";
 
 import { EVENTS } from "../../const/external";
 import * as AXES from "../../const/axes";
-import { getDirection } from "../../utils";
 
 import State, { STATE_TYPE } from "./State";
 
@@ -32,30 +31,7 @@ class DraggingState extends State {
   public readonly animating = true;
 
   public onChange(ctx: Parameters<State["onChange"]>[0]): void {
-    const { flicking, axesEvent, transitTo } = ctx;
-
-    if (!axesEvent.delta[AXES.POSITION_KEY]) {
-      return;
-    }
-
-    const camera = flicking.camera;
-    const prevPosition = camera.position;
-
-    void camera.lookAt(axesEvent.pos[AXES.POSITION_KEY]);
-
-    const moveEvent = new ComponentEvent(EVENTS.MOVE, {
-      isTrusted: axesEvent.isTrusted,
-      holding: this.holding,
-      direction: getDirection(0, axesEvent.delta[AXES.POSITION_KEY]),
-      axesEvent
-    });
-    flicking.trigger(moveEvent);
-
-    if (moveEvent.isCanceled()) {
-      // Return to previous position
-      void camera.lookAt(prevPosition);
-      transitTo(STATE_TYPE.DISABLED);
-    }
+    this._moveToChangedPosition(ctx);
   }
 
   public onRelease(ctx: Parameters<State["onRelease"]>[0]): void {

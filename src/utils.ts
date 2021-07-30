@@ -253,3 +253,5 @@ export const getProgress = (pos: number, prev: number, next: number) => (pos - p
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 export const getStyle = (el: HTMLElement): CSSStyleDeclaration => window.getComputedStyle(el) || (el as any).currentStyle as CSSStyleDeclaration;
+
+export const isBetween = (val: number, min: number, max: number) => val >= min && val <= max;

@@ -33,6 +33,7 @@ class AnimatingState extends State {
   public onHold(ctx: Parameters<State["onHold"]>[0]): void {
     const { flicking, axesEvent, transitTo } = ctx;
 
+    flicking.control.updateInput();
     const holdStartEvent = new ComponentEvent(EVENTS.HOLD_START, { axesEvent });
     flicking.trigger(holdStartEvent);
 
@@ -44,31 +45,7 @@ class AnimatingState extends State {
   }
 
   public onChange(ctx: Parameters<State["onChange"]>[0]): void {
-    const { flicking, axesEvent, transitTo } = ctx;
-
-    if (!axesEvent.delta.flick) {
-      return;
-    }
-
-    const camera = flicking.camera;
-    const prevPosition = camera.position;
-
-    void camera.lookAt(axesEvent.pos.flick);
-
-    const moveEvent = new ComponentEvent(EVENTS.MOVE, {
-      isTrusted: axesEvent.isTrusted,
-      holding: this.holding,
-      direction: getDirection(0, axesEvent.delta.flick),
-      axesEvent
-    });
-
-    flicking.trigger(moveEvent);
-
-    if (moveEvent.isCanceled()) {
-      // Return to previous position
-      void flicking.camera.lookAt(prevPosition);
-      transitTo(STATE_TYPE.DISABLED);
-    }
+    this._moveToChangedPosition(ctx);
   }
 
   public onFinish(ctx: Parameters<State["onFinish"]>[0]) {
