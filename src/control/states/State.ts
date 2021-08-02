@@ -40,6 +40,26 @@ abstract class State {
    */
   public abstract readonly animating: boolean;
 
+  protected _delta: number = 0;
+
+  /**
+   * A sum of delta values of change events from the last hold event of Axes
+   * @ko 이전 hold이벤트부터 change에 의해 발생한 이동 delta값의 합산
+   * @type {number}
+   * @readonly
+   */
+  public get delta() { return this._delta; }
+
+  /**
+   * An callback which is called when state has changed to this state
+   * @ko 현재 상태로 돌입했을때 호출되는 콜백 함수
+   * @param {State} prevState An previous state<ko>이전 상태값</ko>
+   * @return {void}
+   */
+  public onEnter(prevState: State): void {
+    this._delta = prevState._delta;
+  }
+
   /**
    * An event handler for Axes's {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:hold hold} event
    * @ko Axes의 {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:hold hold} 이벤트 핸들러
@@ -131,10 +151,13 @@ abstract class State {
 
   protected _moveToChangedPosition(ctx: Parameters<State["onChange"]>[0]): void {
     const { flicking, axesEvent, transitTo } = ctx;
+    const delta = axesEvent.delta[AXES.POSITION_KEY];
 
-    if (!axesEvent.delta[AXES.POSITION_KEY]) {
+    if (!delta) {
       return;
     }
+
+    this._delta += delta;
 
     const camera = flicking.camera;
     const prevPosition = camera.position;

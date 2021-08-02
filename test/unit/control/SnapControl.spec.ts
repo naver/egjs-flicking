@@ -93,6 +93,135 @@ describe("SnapControl", () => {
         expect(err).to.be.undefined;
         expect(changedSpy.calledOnce).to.be.true;
       });
+
+      it("should move to the below panel when dragged with no acceleration", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: MOVE_TYPE.SNAP
+        });
+
+        const control = flicking.control;
+
+        // Drag with enough duration to prevent acceleration
+        await simulate(flicking.element, { deltaX: -2000, duration: 9999 }, 15000);
+
+        expect(control.activePanel.index).to.equal(flicking.getPanel(2).index);
+      });
+
+      it("should move to the below panel when dragged with no acceleration, when count is applied", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: [MOVE_TYPE.SNAP, { count: 1 }]
+        });
+
+        const control = flicking.control;
+
+        // Drag with enough duration to prevent acceleration
+        await simulate(flicking.element, { deltaX: -2000, duration: 9999 }, 15000);
+
+        expect(control.activePanel.index).to.equal(flicking.getPanel(2).index);
+      });
+
+      it("should move to the correct adjacent panel", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: MOVE_TYPE.SNAP,
+          threshold: 40
+        });
+
+        const control = flicking.control;
+
+        // Drag with enough duration to prevent acceleration
+        await simulate(flicking.element, { deltaX: -40, duration: 9999 }, 15000);
+
+        expect(control.activePanel.index).to.equal(flicking.getPanel(1).index);
+      });
+
+      it("should move to the correct adjacent panel, when circular is applied", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: MOVE_TYPE.SNAP,
+          circular: true,
+          threshold: 40
+        });
+
+        const control = flicking.control;
+
+        // Drag with enough duration to prevent acceleration
+        await simulate(flicking.element, { deltaX: -40, duration: 9999 }, 15000);
+
+        expect(control.activePanel.index).to.equal(flicking.getPanel(1).index);
+      });
+
+      it("should move to the correct adjacent panel, when circular is applied and moving from index 0 to last", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: MOVE_TYPE.SNAP,
+          circular: true,
+          threshold: 40
+        });
+
+        const control = flicking.control;
+
+        // Drag with enough duration to prevent acceleration
+        await simulate(flicking.element, { deltaX: 40, duration: 9999 }, 15000);
+
+        expect(control.activePanel.index).to.equal(flicking.getPanel(2).index);
+      });
+
+      it("should move to the correct adjacent panel, when circular is applied and moving from last index to 0", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: MOVE_TYPE.SNAP,
+          circular: true,
+          defaultIndex: 2,
+          threshold: 40
+        });
+
+        const control = flicking.control;
+
+        // Drag with enough duration to prevent acceleration
+        await simulate(flicking.element, { deltaX: -40, duration: 9999 }, 15000);
+
+        expect(control.activePanel.index).to.equal(flicking.getPanel(0).index);
+      });
+
+      it("should move to the panel with index diff by the given count", async () => {
+        const flicking = await createFlicking(
+          El.viewport("1000px", "300px").add(
+            El.camera().add(
+              El.panel("100%", "100%"),
+              El.panel("100%", "100%"),
+              El.panel("100%", "100%"),
+              El.panel("100%", "100%"),
+              El.panel("100%", "100%")
+            )
+          ),
+          { moveType: [MOVE_TYPE.SNAP, { count: 1 }] }
+        );
+
+        // Start from the index 1
+        void simulate(flicking.element, { deltaX: -1000, duration: 9999 });
+        tick(9000);
+
+        await simulate(flicking.element, { deltaX: -400, duration: 50 });
+
+        expect(flicking.index).to.equal(2);
+      });
+
+      it("should move to the panel with index diff by the given count, in circular case", async () => {
+        const flicking = await createFlicking(
+          El.viewport("1000px", "300px").add(
+            El.camera().add(
+              El.panel("100%", "100%"),
+              El.panel("100%", "100%"),
+              El.panel("100%", "100%"),
+              El.panel("100%", "100%"),
+              El.panel("100%", "100%")
+            )
+          ),
+          { moveType: [MOVE_TYPE.SNAP, { count: 1 }], circular: true }
+        );
+
+        // Start from the index 0
+        await simulate(flicking.element, { deltaX: 400, duration: 50 });
+
+        expect(flicking.index).to.equal(4);
+      });
     });
   });
 });

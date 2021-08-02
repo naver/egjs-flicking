@@ -255,3 +255,13 @@ export const getProgress = (pos: number, prev: number, next: number) => (pos - p
 export const getStyle = (el: HTMLElement): CSSStyleDeclaration => window.getComputedStyle(el) || (el as any).currentStyle as CSSStyleDeclaration;
 
 export const isBetween = (val: number, min: number, max: number) => val >= min && val <= max;
+
+export const circulateIndex = (index: number, max: number): number => {
+  if (index >= max) {
+    return index % max;
+  } else if (index < 0) {
+    return getMinusCompensatedIndex((index + 1) % max - 1, max);
+  } else {
+    return index;
+  }
+};

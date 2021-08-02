@@ -10,7 +10,7 @@ import Panel from "../core/panel/Panel";
 import AnchorPoint from "../core/AnchorPoint";
 import * as ERROR from "../const/error";
 import { ALIGN, DIRECTION, EVENTS } from "../const/external";
-import { checkExistence, clamp, getFlickingAttached, getProgress, includes, parseAlign } from "../utils";
+import { checkExistence, clamp, find, getFlickingAttached, getProgress, includes, parseAlign } from "../utils";
 
 export interface CameraOptions {
   align: FlickingOptions["align"];
@@ -368,6 +368,18 @@ abstract class Camera {
 
     // Return last anchor
     return anchors[anchors.length - 1];
+  }
+
+  /**
+   * Return {@link AnchorPoint} that matches {@link Flicking#currentPanel}
+   * @ko 현재 {@link Flicking#currentPanel}에 해당하는 {@link AnchorPoint}를 반환합니다
+   * @return {AnchorPoint | null}
+   */
+  public findActiveAnchor(): AnchorPoint | null {
+    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const activeIndex = flicking.control.activeIndex;
+
+    return find(this._anchors, anchor => anchor.panel.index === activeIndex);
   }
 
   /**

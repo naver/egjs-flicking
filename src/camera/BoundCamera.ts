@@ -121,6 +121,21 @@ class BoundCamera extends Camera {
     return this;
   }
 
+  public findAnchorIncludePosition(position: number): AnchorPoint | null {
+    const range = this._range;
+    const anchors = this._anchors;
+
+    if (anchors.length <= 0) return null;
+
+    if (position <= range.min) {
+      return anchors[0];
+    } else if (position >= range.max) {
+      return anchors[anchors.length - 1];
+    } else {
+      return super.findAnchorIncludePosition(position);
+    }
+  }
+
   private _findNearestPanel(pos: number, panels: Panel[]): Panel {
     let prevDist = Infinity;
     for (let panelIdx = 0; panelIdx < panels.length; panelIdx++) {

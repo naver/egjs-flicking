@@ -73,6 +73,8 @@ class StateMachine {
         break;
     }
 
+    nextState.onEnter(this._state);
+
     this._state = nextState;
 
     return this._state;

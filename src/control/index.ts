@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 import Control from "./Control";
-import SnapControl from "./SnapControl";
+import SnapControl, { SnapControlOptions } from "./SnapControl";
 import FreeControl, { FreeControlOptions } from "./FreeControl";
 import StrictControl, { StrictControlOptions } from "./StrictControl";
 import AxesController from "./AxesController";
@@ -31,6 +31,7 @@ export {
 };
 
 export type {
+  SnapControlOptions,
   FreeControlOptions,
   StrictControlOptions
 };

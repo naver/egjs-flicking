@@ -7,7 +7,7 @@ import Component, { ComponentEvent } from "@egjs/component";
 import FlickingError from "./core/FlickingError";
 import Viewport from "./core/Viewport";
 import { Panel } from "./core/panel";
-import { Control, SnapControl, FreeControl, StrictControl, FreeControlOptions, StrictControlOptions } from "./control";
+import { Control, SnapControl, SnapControlOptions, FreeControl, StrictControl, FreeControlOptions, StrictControlOptions } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
 import { Renderer, VanillaRenderer, ExternalRenderer, RawRenderingStrategy, VisibleRenderingStrategy } from "./renderer";
 import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
@@ -687,7 +687,7 @@ class Flicking extends Component<FlickingEvents> {
     await this.resize();
 
     // Look at initial panel
-    this._moveToInitialPanel();
+    await this._moveToInitialPanel();
 
     if (this._autoResize) {
       window.addEventListener("resize", this.resize);
@@ -1213,7 +1213,7 @@ class Flicking extends Component<FlickingEvents> {
 
     switch (moveTypeStr) {
       case MOVE_TYPE.SNAP:
-        return new SnapControl();
+        return new SnapControl(moveTypeOptions as SnapControlOptions);
       case MOVE_TYPE.FREE_SCROLL:
         return new FreeControl(moveTypeOptions as FreeControlOptions);
       case MOVE_TYPE.STRICT:
@@ -1254,14 +1254,14 @@ class Flicking extends Component<FlickingEvents> {
       : new VanillaRenderer(rendererOptions);
   }
 
-  private _moveToInitialPanel(): void {
+  private async _moveToInitialPanel(): Promise<void> {
     const renderer = this._renderer;
     const control = this._control;
     const initialPanel = renderer.getPanel(this._defaultIndex) || renderer.getPanel(0);
 
     if (!initialPanel) return;
 
-    void control.moveToPanel(initialPanel, {
+    return control.moveToPanel(initialPanel, {
       duration: 0
     });
   }
