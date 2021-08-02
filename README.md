@@ -136,7 +136,7 @@ var flicking = new Flicking("#my-flicking", { circular: true });
 ## 🌐 Supported Browsers
 |<img width="20" src="https://simpleicons.org/icons/internetexplorer.svg" alt="IE" />|<img width="20" src="https://simpleicons.org/icons/googlechrome.svg" alt="Chrome" />|<img width="20" src="https://simpleicons.org/icons/firefoxbrowser.svg" alt="Firefox" />|<img width="20" src="https://simpleicons.org/icons/safari.svg" alt="Safari" />|<img width="20" src="https://simpleicons.org/icons/apple.svg" alt="iOS" />|<img width="20" src="https://simpleicons.org/icons/android.svg" alt="Android" />|
 |:---:|:---:|:---:|:---:|:---:|:---:|
-|9+(With polyfill), 11+ for Angular|Latest|Latest|Latest|7+|4+|
+|9+(With polyfill), 11+ for Angular & Svelte|Latest|Latest|Latest|7+|4+|
 
 ## 📼 Demos
 Check our [Demos](https://naver.github.io/egjs-flicking/).

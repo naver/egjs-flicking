@@ -219,7 +219,12 @@ class AxesController {
     return this;
   }
 
-  public addPreventClickHandler() {
+  /**
+   * Attach a handler to the camera element to prevent click events during animation
+   * @ko 카메라 엘리먼트에 애니메이션 도중에 클릭 이벤트를 방지하는 핸들러를 부착합니다
+   * @return {this}
+   */
+  public addPreventClickHandler(): this {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const axes = this._axes!;
     const cameraEl = flicking.camera.element;
@@ -227,9 +232,16 @@ class AxesController {
     axes.on(AXES.EVENT.HOLD, this._onAxesHold);
     axes.on(AXES.EVENT.CHANGE, this._onAxesChange);
     cameraEl.addEventListener("click", this._preventClickWhenDragged, true);
+
+    return this;
   }
 
-  public removePreventClickHandler() {
+  /**
+   * Detach a handler to the camera element to prevent click events during animation
+   * @ko 카메라 엘리먼트에 애니메이션 도중에 클릭 이벤트를 방지하는 핸들러를 탈착합니다
+   * @return {this}
+   */
+  public removePreventClickHandler(): this {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const axes = this._axes!;
     const cameraEl = flicking.camera.element;
@@ -237,6 +249,8 @@ class AxesController {
     axes.off(AXES.EVENT.HOLD, this._onAxesHold);
     axes.off(AXES.EVENT.CHANGE, this._onAxesChange);
     cameraEl.removeEventListener("click", this._preventClickWhenDragged, true);
+
+    return this;
   }
 
   /**
