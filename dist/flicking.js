@@ -4,7 +4,7 @@ name: @egjs/flicking
 license: MIT
 author: NAVER Corp.
 repository: https://github.com/naver/egjs-flicking
-version: 4.2.0
+version: 4.2.1
 */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('@egjs/component'), require('@egjs/axes')) :
@@ -705,6 +705,31 @@ version: 4.2.0
 
       return pos;
     };
+    var find = function (array, checker) {
+      var e_2, _a;
+
+      try {
+        for (var array_2 = __values(array), array_2_1 = array_2.next(); !array_2_1.done; array_2_1 = array_2.next()) {
+          var val = array_2_1.value;
+
+          if (checker(val)) {
+            return val;
+          }
+        }
+      } catch (e_2_1) {
+        e_2 = {
+          error: e_2_1
+        };
+      } finally {
+        try {
+          if (array_2_1 && !array_2_1.done && (_a = array_2.return)) _a.call(array_2);
+        } finally {
+          if (e_2) throw e_2.error;
+        }
+      }
+
+      return null;
+    };
     var findIndex = function (array, checker) {
       for (var idx = 0; idx < array.length; idx++) {
         if (checker(array[idx])) {
@@ -723,6 +748,15 @@ version: 4.2.0
     };
     var isBetween = function (val, min, max) {
       return val >= min && val <= max;
+    };
+    var circulateIndex = function (index, max) {
+      if (index >= max) {
+        return index % max;
+      } else if (index < 0) {
+        return getMinusCompensatedIndex((index + 1) % max - 1, max);
+      } else {
+        return index;
+      }
     };
 
     /*
@@ -907,7 +941,34 @@ version: 4.2.0
     var State =
     /*#__PURE__*/
     function () {
-      function State() {}
+      function State() {
+        this._delta = 0;
+      }
+
+      var __proto = State.prototype;
+      Object.defineProperty(__proto, "delta", {
+        /**
+         * A sum of delta values of change events from the last hold event of Axes
+         * @ko 이전 hold이벤트부터 change에 의해 발생한 이동 delta값의 합산
+         * @type {number}
+         * @readonly
+         */
+        get: function () {
+          return this._delta;
+        },
+        enumerable: false,
+        configurable: true
+      });
+      /**
+       * An callback which is called when state has changed to this state
+       * @ko 현재 상태로 돌입했을때 호출되는 콜백 함수
+       * @param {State} prevState An previous state<ko>이전 상태값</ko>
+       * @return {void}
+       */
+
+      __proto.onEnter = function (prevState) {
+        this._delta = prevState._delta;
+      };
       /**
        * An event handler for Axes's {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:hold hold} event
        * @ko Axes의 {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:hold hold} 이벤트 핸들러
@@ -919,8 +980,6 @@ version: 4.2.0
        * @return {void}
        */
 
-
-      var __proto = State.prototype;
 
       __proto.onHold = function (ctx) {// DO NOTHING
       };
@@ -984,11 +1043,13 @@ version: 4.2.0
         var flicking = ctx.flicking,
             axesEvent = ctx.axesEvent,
             transitTo = ctx.transitTo;
+        var delta = axesEvent.delta[POSITION_KEY];
 
-        if (!axesEvent.delta[POSITION_KEY]) {
+        if (!delta) {
           return;
         }
 
+        this._delta += delta;
         var camera = flicking.camera;
         var prevPosition = camera.position;
         var position = axesEvent.pos[POSITION_KEY];
@@ -1046,6 +1107,10 @@ version: 4.2.0
       }
 
       var __proto = IdleState.prototype;
+
+      __proto.onEnter = function () {
+        this._delta = 0;
+      };
 
       __proto.onHold = function (ctx) {
         // Shouldn't do any action until any panels on flicking area
@@ -1355,6 +1420,7 @@ version: 4.2.0
         var flicking = ctx.flicking,
             axesEvent = ctx.axesEvent,
             transitTo = ctx.transitTo;
+        this._delta = 0;
         flicking.control.updateInput();
         var holdStartEvent = new Component.ComponentEvent(EVENTS.HOLD_START, {
           axesEvent: axesEvent
@@ -1484,6 +1550,7 @@ version: 4.2.0
               break;
           }
 
+          nextState.onEnter(_this._state);
           _this._state = nextState;
           return _this._state;
         };
@@ -1824,6 +1891,12 @@ version: 4.2.0
         axes.axm.set((_a = {}, _a[POSITION_KEY] = controlParams.position, _a));
         return this;
       };
+      /**
+       * Attach a handler to the camera element to prevent click events during animation
+       * @ko 카메라 엘리먼트에 애니메이션 도중에 클릭 이벤트를 방지하는 핸들러를 부착합니다
+       * @return {this}
+       */
+
 
       __proto.addPreventClickHandler = function () {
         var flicking = getFlickingAttached(this._flicking, "Control");
@@ -1832,7 +1905,14 @@ version: 4.2.0
         axes.on(EVENT.HOLD, this._onAxesHold);
         axes.on(EVENT.CHANGE, this._onAxesChange);
         cameraEl.addEventListener("click", this._preventClickWhenDragged, true);
+        return this;
       };
+      /**
+       * Detach a handler to the camera element to prevent click events during animation
+       * @ko 카메라 엘리먼트에 애니메이션 도중에 클릭 이벤트를 방지하는 핸들러를 탈착합니다
+       * @return {this}
+       */
+
 
       __proto.removePreventClickHandler = function () {
         var flicking = getFlickingAttached(this._flicking, "Control");
@@ -1841,6 +1921,7 @@ version: 4.2.0
         axes.off(EVENT.HOLD, this._onAxesHold);
         axes.off(EVENT.CHANGE, this._onAxesChange);
         cameraEl.removeEventListener("click", this._preventClickWhenDragged, true);
+        return this;
       };
       /**
        * Run Axes's {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#setTo setTo} using the given position
@@ -1910,8 +1991,11 @@ version: 4.2.0
         };
 
         if (duration === 0) {
+          var flicking = getFlickingAttached(this._flicking, "Control");
+          var camera = flicking.camera;
           animate();
-          axes.axm.set((_a = {}, _a[POSITION_KEY] = position, _a));
+          var newPos = flicking.circularEnabled ? circulatePosition(position, camera.range.min, camera.range.max) : position;
+          axes.axm.set((_a = {}, _a[POSITION_KEY] = newPos, _a));
           return Promise.resolve();
         } else {
           return new Promise(function (resolve, reject) {
@@ -2354,6 +2438,71 @@ version: 4.2.0
     }();
 
     /**
+     * A data component that has actual position where the camera should be stopped at
+     * @ko 카메라가 정지해야하는 실제 위치를 담고 있는 데이터 컴포넌트
+     */
+    var AnchorPoint =
+    /*#__PURE__*/
+    function () {
+      /**
+       * @param {object} options An options object<ko>옵션 객체</ko>
+       * @param {number} [options.index] Index of AnchorPoint<ko>AnchorPoint의 인덱스</ko>
+       * @param {number} [options.position] Position of AnchorPoint<ko>AnchorPoint의 좌표</ko>
+       * @param {Panel} [options.panel] A {@link Panel} instance AnchorPoint is referencing to<ko>AnchorPoint가 참조하고 있는 {@link Panel}</ko>
+       */
+      function AnchorPoint(_a) {
+        var index = _a.index,
+            position = _a.position,
+            panel = _a.panel;
+        this._index = index;
+        this._pos = position;
+        this._panel = panel;
+      }
+
+      var __proto = AnchorPoint.prototype;
+      Object.defineProperty(__proto, "index", {
+        /**
+         * Index of AnchorPoint
+         * @ko AnchorPoint의 인덱스
+         * @type {number}
+         * @readonly
+         */
+        get: function () {
+          return this._index;
+        },
+        enumerable: false,
+        configurable: true
+      });
+      Object.defineProperty(__proto, "position", {
+        /**
+         * Position of AnchorPoint
+         * @ko AnchorPoint의 좌표
+         * @type {number}
+         * @readonly
+         */
+        get: function () {
+          return this._pos;
+        },
+        enumerable: false,
+        configurable: true
+      });
+      Object.defineProperty(__proto, "panel", {
+        /**
+         * A {@link Panel} instance AnchorPoint is referencing to
+         * @ko AnchorPoint가 참조하고 있는 {@link Panel}
+         * @type {Panel}
+         * @readonly
+         */
+        get: function () {
+          return this._panel;
+        },
+        enumerable: false,
+        configurable: true
+      });
+      return AnchorPoint;
+    }();
+
+    /**
      * A {@link Control} that uses a release momentum to choose destination panel
      * @ko 입력을 중단한 시점의 가속도에 영향받아 도달할 패널을 계산하는 이동 방식을 사용하는 {@link Control}
      */
@@ -2362,10 +2511,37 @@ version: 4.2.0
     /*#__PURE__*/
     function (_super) {
       __extends(SnapControl, _super);
+      /** */
 
-      function SnapControl() {
-        return _super !== null && _super.apply(this, arguments) || this;
+
+      function SnapControl(_a) {
+        var _b = _a === void 0 ? {} : _a,
+            _c = _b.count,
+            count = _c === void 0 ? Infinity : _c;
+
+        var _this = _super.call(this) || this;
+
+        _this._count = count;
+        return _this;
       }
+
+      var __proto = SnapControl.prototype;
+      Object.defineProperty(__proto, "count", {
+        /**
+         * Maximum number of panels can go after release
+         * @ko 입력 중단 이후 통과하여 이동할 수 있는 패널의 최대 갯수
+         * @type {number}
+         * @default Infinity
+         */
+        get: function () {
+          return this._count;
+        },
+        set: function (val) {
+          this._count = val;
+        },
+        enumerable: false,
+        configurable: true
+      });
       /**
        * Move {@link Camera} to the given position
        * @ko {@link Camera}를 주어진 좌표로 이동합니다
@@ -2403,55 +2579,132 @@ version: 4.2.0
        * @return {Promise<void>} A Promise which will be resolved after reaching the target position<ko>해당 좌표 도달시에 resolve되는 Promise</ko>
        */
 
-
-      var __proto = SnapControl.prototype;
-
       __proto.moveToPosition = function (position, duration, axesEvent) {
         return __awaiter(this, void 0, void 0, function () {
-          var flicking, camera, activePanel, clampedPosition, anchorAtPosition, prevPos, isOverThreshold, adjacentAnchor, targetPos, targetPanel;
+          var flicking, camera, activeAnchor, anchorAtCamera, state, snapThreshold, posDelta, absPosDelta, snapDelta, targetAnchor;
           return __generator(this, function (_a) {
             flicking = getFlickingAttached(this._flicking, "Control");
             camera = flicking.camera;
-            activePanel = this._activePanel;
-            clampedPosition = camera.clampToReachablePosition(position);
-            anchorAtPosition = camera.findNearestAnchor(clampedPosition);
+            activeAnchor = camera.findActiveAnchor();
+            anchorAtCamera = camera.findNearestAnchor(camera.position);
+            state = flicking.control.controller.state;
 
-            if (!anchorAtPosition || !activePanel) {
+            if (!activeAnchor || !anchorAtCamera) {
               return [2
               /*return*/
               , Promise.reject(new FlickingError(MESSAGE.POSITION_NOT_REACHABLE(position), CODE.POSITION_NOT_REACHABLE))];
             }
 
-            prevPos = activePanel.position;
-            isOverThreshold = Math.abs(position - prevPos) >= flicking.threshold;
-            adjacentAnchor = position > prevPos ? camera.getNextAnchor(anchorAtPosition) : camera.getPrevAnchor(anchorAtPosition);
+            snapThreshold = this._calcSnapThreshold(position, activeAnchor);
+            posDelta = flicking.animating ? state.delta : position - camera.position;
+            absPosDelta = Math.abs(posDelta);
+            snapDelta = axesEvent && axesEvent.delta[POSITION_KEY] !== 0 ? Math.abs(axesEvent.delta[POSITION_KEY]) : absPosDelta;
 
-            if (isOverThreshold && anchorAtPosition.position !== activePanel.position) {
+            if (snapDelta >= snapThreshold && snapDelta > 0) {
               // Move to anchor at position
-              targetPanel = anchorAtPosition.panel;
-              targetPos = anchorAtPosition.position;
-            } else if (isOverThreshold && adjacentAnchor) {
-              // Move to adjacent anchor
-              targetPanel = adjacentAnchor.panel;
-              targetPos = adjacentAnchor.position;
+              targetAnchor = this._findSnappedAnchor(position, anchorAtCamera);
+            } else if (absPosDelta >= flicking.threshold && absPosDelta > 0) {
+              // Move to the adjacent panel
+              targetAnchor = this._findAdjacentAnchor(posDelta, anchorAtCamera);
             } else {
               // Restore to active panel
-              targetPos = camera.clampToReachablePosition(activePanel.position);
-              targetPanel = activePanel;
+              targetAnchor = anchorAtCamera;
             }
 
-            this._triggerIndexChangeEvent(targetPanel, position, axesEvent);
+            this._triggerIndexChangeEvent(targetAnchor.panel, position, axesEvent);
 
             return [2
             /*return*/
             , this._animateToPosition({
-              position: targetPos,
+              position: camera.clampToReachablePosition(targetAnchor.position),
               duration: duration,
-              newActivePanel: targetPanel,
+              newActivePanel: targetAnchor.panel,
               axesEvent: axesEvent
             })];
           });
         });
+      };
+
+      __proto._findSnappedAnchor = function (position, anchorAtCamera) {
+        var flicking = getFlickingAttached(this._flicking, "Control");
+        var camera = flicking.camera;
+        var count = this._count;
+        var currentPos = camera.position;
+        var clampedPosition = camera.clampToReachablePosition(position);
+        var anchorAtPosition = camera.findAnchorIncludePosition(clampedPosition);
+
+        if (!anchorAtCamera || !anchorAtPosition) {
+          throw new FlickingError(MESSAGE.POSITION_NOT_REACHABLE(position), CODE.POSITION_NOT_REACHABLE);
+        }
+
+        if (!isFinite(count)) {
+          return anchorAtPosition;
+        }
+
+        var panelCount = flicking.panelCount;
+        var anchors = camera.anchorPoints;
+        var loopCount = Math.sign(position - currentPos) * Math.floor(Math.abs(position - currentPos) / camera.rangeDiff);
+
+        if (position > currentPos && anchorAtPosition.index < anchorAtCamera.index || anchorAtPosition.position > anchorAtCamera.position && anchorAtPosition.index === anchorAtCamera.index) {
+          loopCount += 1;
+        } else if (position < currentPos && anchorAtPosition.index > anchorAtCamera.index || anchorAtPosition.position < anchorAtCamera.position && anchorAtPosition.index === anchorAtCamera.index) {
+          loopCount -= 1;
+        }
+
+        var circularIndexOffset = loopCount * panelCount;
+        var anchorAtPositionIndex = anchorAtPosition.index + circularIndexOffset;
+
+        if (Math.abs(anchorAtPositionIndex - anchorAtCamera.index) <= count) {
+          var anchor = anchors[anchorAtPosition.index];
+          return new AnchorPoint({
+            index: anchor.index,
+            position: anchor.position + loopCount * camera.rangeDiff,
+            panel: anchor.panel
+          });
+        }
+
+        if (flicking.circularEnabled) {
+          var targetAnchor = anchors[circulateIndex(anchorAtCamera.index + Math.sign(position - currentPos) * count, panelCount)];
+          var loop = Math.floor(count / panelCount);
+
+          if (position > currentPos && targetAnchor.index < anchorAtCamera.index) {
+            loop += 1;
+          } else if (position < currentPos && targetAnchor.index > anchorAtCamera.index) {
+            loop -= 1;
+          }
+
+          return new AnchorPoint({
+            index: targetAnchor.index,
+            position: targetAnchor.position + loop * camera.rangeDiff,
+            panel: targetAnchor.panel
+          });
+        } else {
+          return anchors[clamp(anchorAtCamera.index + Math.sign(position - currentPos) * count, 0, anchors.length - 1)];
+        }
+      };
+
+      __proto._findAdjacentAnchor = function (posDelta, anchorAtCamera) {
+        var _a;
+
+        var flicking = getFlickingAttached(this._flicking, "Control");
+        var camera = flicking.camera;
+        var adjacentAnchor = (_a = posDelta > 0 ? camera.getNextAnchor(anchorAtCamera) : camera.getPrevAnchor(anchorAtCamera)) !== null && _a !== void 0 ? _a : anchorAtCamera;
+        return adjacentAnchor;
+      };
+
+      __proto._calcSnapThreshold = function (position, activeAnchor) {
+        var isNextDirection = position > activeAnchor.position;
+        var panel = activeAnchor.panel;
+        var panelSize = panel.size;
+        var alignPos = panel.alignPosition; // Minimum distance needed to decide prev/next panel as nearest
+
+        /*
+         * |  Prev  |     Next     |
+         * |<------>|<------------>|
+         * [        |<-Anchor      ]
+         */
+
+        return isNextDirection ? panelSize - alignPos + panel.margin.next : alignPos + panel.margin.prev;
       };
 
       return SnapControl;
@@ -2877,71 +3130,6 @@ version: 4.2.0
         DisabledState: DisabledState,
         StateMachine: StateMachine
     };
-
-    /**
-     * A data component that has actual position where the camera should be stopped at
-     * @ko 카메라가 정지해야하는 실제 위치를 담고 있는 데이터 컴포넌트
-     */
-    var AnchorPoint =
-    /*#__PURE__*/
-    function () {
-      /**
-       * @param {object} options An options object<ko>옵션 객체</ko>
-       * @param {number} [options.index] Index of AnchorPoint<ko>AnchorPoint의 인덱스</ko>
-       * @param {number} [options.position] Position of AnchorPoint<ko>AnchorPoint의 좌표</ko>
-       * @param {Panel} [options.panel] A {@link Panel} instance AnchorPoint is referencing to<ko>AnchorPoint가 참조하고 있는 {@link Panel}</ko>
-       */
-      function AnchorPoint(_a) {
-        var index = _a.index,
-            position = _a.position,
-            panel = _a.panel;
-        this._index = index;
-        this._pos = position;
-        this._panel = panel;
-      }
-
-      var __proto = AnchorPoint.prototype;
-      Object.defineProperty(__proto, "index", {
-        /**
-         * Index of AnchorPoint
-         * @ko AnchorPoint의 인덱스
-         * @type {number}
-         * @readonly
-         */
-        get: function () {
-          return this._index;
-        },
-        enumerable: false,
-        configurable: true
-      });
-      Object.defineProperty(__proto, "position", {
-        /**
-         * Position of AnchorPoint
-         * @ko AnchorPoint의 좌표
-         * @type {number}
-         * @readonly
-         */
-        get: function () {
-          return this._pos;
-        },
-        enumerable: false,
-        configurable: true
-      });
-      Object.defineProperty(__proto, "panel", {
-        /**
-         * A {@link Panel} instance AnchorPoint is referencing to
-         * @ko AnchorPoint가 참조하고 있는 {@link Panel}
-         * @type {Panel}
-         * @readonly
-         */
-        get: function () {
-          return this._panel;
-        },
-        enumerable: false,
-        configurable: true
-      });
-      return AnchorPoint;
-    }();
 
     /**
      * A component that manages actual movement inside the viewport
@@ -3407,6 +3595,20 @@ version: 4.2.0
 
 
         return anchors[anchors.length - 1];
+      };
+      /**
+       * Return {@link AnchorPoint} that matches {@link Flicking#currentPanel}
+       * @ko 현재 {@link Flicking#currentPanel}에 해당하는 {@link AnchorPoint}를 반환합니다
+       * @return {AnchorPoint | null}
+       */
+
+
+      __proto.findActiveAnchor = function () {
+        var flicking = getFlickingAttached(this._flicking, "Camera");
+        var activeIndex = flicking.control.activeIndex;
+        return find(this._anchors, function (anchor) {
+          return anchor.panel.index === activeIndex;
+        });
       };
       /**
        * Clamp the given position between camera's range
@@ -4126,6 +4328,20 @@ version: 4.2.0
         }
 
         return this;
+      };
+
+      __proto.findAnchorIncludePosition = function (position) {
+        var range = this._range;
+        var anchors = this._anchors;
+        if (anchors.length <= 0) return null;
+
+        if (position <= range.min) {
+          return anchors[0];
+        } else if (position >= range.max) {
+          return anchors[anchors.length - 1];
+        } else {
+          return _super.prototype.findAnchorIncludePosition.call(this, position);
+        }
       };
 
       __proto._findNearestPanel = function (pos, panels) {
@@ -6236,7 +6452,13 @@ version: 4.2.0
                 _a.sent(); // Look at initial panel
 
 
-                this._moveToInitialPanel();
+                return [4
+                /*yield*/
+                , this._moveToInitialPanel()];
+
+              case 2:
+                // Look at initial panel
+                _a.sent();
 
                 if (this._autoResize) {
                   window.addEventListener("resize", this.resize);
@@ -6878,7 +7100,7 @@ version: 4.2.0
 
         switch (moveTypeStr) {
           case MOVE_TYPE.SNAP:
-            return new SnapControl();
+            return new SnapControl(moveTypeOptions);
 
           case MOVE_TYPE.FREE_SCROLL:
             return new FreeControl(moveTypeOptions);
@@ -6918,12 +7140,21 @@ version: 4.2.0
       };
 
       __proto._moveToInitialPanel = function () {
-        var renderer = this._renderer;
-        var control = this._control;
-        var initialPanel = renderer.getPanel(this._defaultIndex) || renderer.getPanel(0);
-        if (!initialPanel) return;
-        void control.moveToPanel(initialPanel, {
-          duration: 0
+        return __awaiter(this, void 0, void 0, function () {
+          var renderer, control, initialPanel;
+          return __generator(this, function (_a) {
+            renderer = this._renderer;
+            control = this._control;
+            initialPanel = renderer.getPanel(this._defaultIndex) || renderer.getPanel(0);
+            if (!initialPanel) return [2
+            /*return*/
+            ];
+            return [2
+            /*return*/
+            , control.moveToPanel(initialPanel, {
+              duration: 0
+            })];
+          });
         });
       };
       /**
@@ -6938,7 +7169,7 @@ version: 4.2.0
        */
 
 
-      Flicking.VERSION = "4.2.0";
+      Flicking.VERSION = "4.2.1";
       return Flicking;
     }(Component);
 
