@@ -52,7 +52,7 @@ import NgxRenderer from "./NgxRenderer";
 @Component({
   selector: "ngx-flicking, [NgxFlicking]",
   template: `
-    <div class="flicking-camera" [ngStyle]="_cameraStyleBeforeInit">
+    <div class="flicking-camera" [ngStyle]="cameraStyleBeforeInit">
       <ng-content></ng-content>
     </div>
     <ng-content select="[in-viewport]"></ng-content>`,
@@ -90,16 +90,16 @@ export class NgxFlickingComponent extends FlickingInterface
   @Output() public reachEdge: EventEmitter<ReachEdgeEvent<NgxFlickingComponent>>;
   @Output() public panelChange: EventEmitter<PanelChangeEvent<NgxFlickingComponent>>;
 
-  @HostBinding("class.vertical") private get _isVertical() {
+  @HostBinding("class.vertical") public get isVertical() {
     return this.options.horizontal === false;
   }
 
-  @HostBinding("class.flicking-hidden") private get _isHiddenBeforeInit() {
+  @HostBinding("class.flicking-hidden") public get isHiddenBeforeInit() {
     const initialized = this._vanillaFlicking && this._vanillaFlicking.initialized;
     return this.hideBeforeInit && !initialized;
   }
 
-  private get _cameraStyleBeforeInit() {
+  public get cameraStyleBeforeInit() {
     const initialized = this._vanillaFlicking && this._vanillaFlicking.initialized;
     return !initialized && this.firstPanelSize
       ? { transform: getDefaultCameraTransform(this.options.align, this.options.horizontal, this.firstPanelSize) }

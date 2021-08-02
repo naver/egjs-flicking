@@ -1,0 +1,9 @@
+node_modules/
+demo/
+public/
+
+.eslintcache
+.env
+rollup.config.js
+rollup.config.build.js
+tsconfig.json
