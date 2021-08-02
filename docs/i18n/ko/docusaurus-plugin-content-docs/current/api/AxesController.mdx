@@ -11,7 +11,7 @@ class AxesController
 
 <div className="container">
   <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
-  <div className="row"><div className="col col--6"><a href="#axes">axes</a><br/><a href="#state">state</a><br/><a href="#animatingContext">animatingContext</a><br/><a href="#enabled">enabled</a><br/><a href="#position">position</a><br/><a href="#bounce">bounce</a></div><div className="col col--6"><a href="#init">init</a><br/><a href="#destroy">destroy</a><br/><a href="#enable">enable</a><br/><a href="#disable">disable</a><br/><a href="#update">update</a><br/><a href="#animateTo">animateTo</a></div></div>
+  <div className="row"><div className="col col--6"><a href="#axes">axes</a><br/><a href="#state">state</a><br/><a href="#animatingContext">animatingContext</a><br/><a href="#controlParams">controlParams</a><br/><a href="#enabled">enabled</a><br/><a href="#position">position</a><br/><a href="#range">range</a><br/><a href="#bounce">bounce</a></div><div className="col col--6"><a href="#init">init</a><br/><a href="#destroy">destroy</a><br/><a href="#enable">enable</a><br/><a href="#disable">disable</a><br/><a href="#update">update</a><br/><a href="#animateTo">animateTo</a></div></div>
 </div>
 
 ## Properties
@@ -55,6 +55,18 @@ class AxesController
 |end|number|애니메이션 끝 지점|
 |offset|number|카메라 오프셋|
 
+### controlParams {#controlParams}
+
+<div className="bulma-tags">
+
+</div>
+
+활성화된 현재 Axes 패러미터들
+
+**Type**: [ControlParams](ControlParams)
+
+**Returns**: [ControlParams](ControlParams)
+
 ### enabled {#enabled}
 
 <div className="bulma-tags">
@@ -74,6 +86,16 @@ class AxesController
 [Axes](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html) 인스턴스 내부의 현재 좌표 값
 
 **Type**: number
+
+### range {#range}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+</div>
+
+[Axes](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html) 인스턴스 내부의 현재 이동 범위 값
+
+**Type**: Array&lt;number&gt;
 
 ### bounce {#bounce}
 
@@ -140,6 +162,10 @@ AxesController를 초기 상태로 되돌립니다
 [@egjs/axes](https://naver#github#io/egjs-axes/)의 상태를 갱신합니다
 
 **Returns**: this
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|controlParams|[ControlParams](ControlParams)|no|||
 
 **Throws**: [FlickingError](FlickingError)
 
