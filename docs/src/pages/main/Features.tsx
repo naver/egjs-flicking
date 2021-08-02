@@ -70,6 +70,7 @@ export default () => <div className="columns">
       </div>
       <div>
         <p>With the Promise polyfill and flicking-inline CSS, Flicking can support Internet Explorer 9+</p>
+        <p>⚠️ IE 11+ for Angular & Svelte</p>
       </div>
     </div>
     <div className="box">
