@@ -1,0 +1,424 @@
+---
+custom_edit_url: null
+---
+
+```ts
+class ElementPanel extends Panel
+```
+An slide data component that holds information of a single HTMLElement
+
+<div className="container">
+  <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
+  <div className="row"><div className="col col--6"><a href="#element">element</a><br/><a href="#index">index</a><br/><a href="#position">position</a><br/><a href="#size">size</a><br/><a href="#sizeIncludingMargin">sizeIncludingMargin</a><br/><a href="#height">height</a><br/><a href="#margin">margin</a><br/><a href="#alignPosition">alignPosition</a><br/><a href="#removed">removed</a><br/><a href="#range">range</a><br/><a href="#toggled">toggled</a><br/><a href="#toggleDirection">toggleDirection</a><br/><a href="#offset">offset</a><br/><a href="#progress">progress</a><br/><a href="#outsetProgress">outsetProgress</a><br/><a href="#visibleRatio">visibleRatio</a><br/><a href="#align">align</a></div><div className="col col--6"><a href="#resize">resize</a><br/><a href="#contains">contains</a><br/><a href="#destroy">destroy</a><br/><a href="#includePosition">includePosition</a><br/><a href="#includeRange">includeRange</a><br/><a href="#focus">focus</a><br/><a href="#prev">prev</a><br/><a href="#next">next</a><br/><a href="#increaseIndex">increaseIndex</a><br/><a href="#decreaseIndex">decreaseIndex</a><br/><a href="#increasePosition">increasePosition</a><br/><a href="#decreasePosition">decreasePosition</a><br/><a href="#toggle">toggle</a><br/><a href="#updateCircularToggleDirection">updateCircularToggleDirection</a></div></div>
+</div>
+
+## Constructor
+```ts
+new ElementPanel(options, options.el, options.index, options.align, options.flicking)
+```
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|options|object|no||An options object|
+|options.el|HTMLElement|yes||A `HTMLElement` panel's referencing|
+|options.index|number|yes||An initial index of the panel|
+|options.align|Constants.ALIGN \| string \| number|yes||An initial [align](Flicking#align) value of the panel|
+|options.flicking|[Flicking](Flicking)|yes||A Flicking instance panel's referencing|
+
+## Properties
+
+### element {#element}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+</div>
+
+`HTMLElement` that panel's referencing
+
+**Type**: HTMLElement
+
+### index {#index}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Index of the panel
+
+**Type**: number
+
+### position {#position}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Position of the panel, including [alignPosition](Panel#alignPosition)
+
+**Type**: number
+
+### size {#size}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Cached size of the panel element
+This is equal to [element](Panel#element)'s `offsetWidth` if [horizontal](Flicking#horizontal) is `true`, and `offsetHeight` else
+
+**Type**: number
+
+### sizeIncludingMargin {#sizeIncludingMargin}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Panel's size including CSS `margin`
+This value includes [element](Panel#element)'s margin left/right if [horizontal](Flicking#horizontal) is `true`, and margin top/bottom else
+
+**Type**: number
+
+### height {#height}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Height of the panel element
+
+**Type**: number
+
+### margin {#margin}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Cached CSS `margin` value of the panel element
+
+**Type**: object
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|prev|number|CSS `margin-left` when the [horizontal](Flicking#horizontal) is `true`, and `margin-top` else|
+|next|number|CSS `margin-right` when the [horizontal](Flicking#horizontal) is `true`, and `margin-bottom` else|
+
+### alignPosition {#alignPosition}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Align position inside the panel where [Camera](Camera)'s [alignPosition](Camera#alignPosition) inside viewport should be located at
+
+**Type**: number
+
+### removed {#removed}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+A value indicating whether the panel's [remove](Flicking#remove)d
+
+**Type**: boolean
+
+### range {#range}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Panel element's range of the bounding box
+
+**Type**: object
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|min|number|Bounding box's left([horizontal](Flicking#horizontal): true) / top([horizontal](Flicking#horizontal): false)|
+|max|number|Bounding box's right([horizontal](Flicking#horizontal): true) / bottom([horizontal](Flicking#horizontal): false)|
+
+### toggled {#toggled}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+A value indicating whether the panel's position is toggled by circular behavior
+
+**Type**: boolean
+
+### toggleDirection {#toggleDirection}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+A direction where the panel's position is toggled
+
+**Type**: [DIRECTION](DIRECTION)
+
+### offset {#offset}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Actual position offset determined by [Panel#order](Panel#order)
+
+**Type**: number
+
+### progress {#progress}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Progress of movement between previous or next panel relative to current panel
+
+**Type**: number
+
+### outsetProgress {#outsetProgress}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Progress of movement between points that panel is completely invisible outside of viewport(prev direction: -1, selected point: 0, next direction: 1)
+
+**Type**: number
+
+### visibleRatio {#visibleRatio}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Percentage of area where panel is visible in the viewport
+
+**Type**: number
+
+### align {#align}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+A value indicating where the [alignPosition](Panel#alignPosition) should be located at inside the panel element
+
+**Type**: Constants.ALIGN \| string \| number
+
+## Methods
+
+### resize {#resize}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Update size of the panel
+
+**Returns**: this
+
+### contains {#contains}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Check whether the given element is inside of this panel's [element](Panel#element)
+
+**Returns**: boolean
+- A Boolean value indicating the element is inside of this panel [element](Panel#element)
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|element|HTMLElement|no||The HTMLElement to check|
+
+### destroy {#destroy}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Reset internal state and set [removed](Panel#removed) to `true`
+
+**Returns**: void
+
+### includePosition {#includePosition}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Check whether the given position is inside of this panel's [range](Panel#range)
+
+**Returns**: boolean
+- A Boolean value indicating whether the given position is included in the panel range
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|pos|number|no||A position to check|
+|includeMargin|boolean|yes|false|Include [margin](Panel#margin) to the range|
+
+### includeRange {#includeRange}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Check whether the given range is fully included in this panel's area
+
+**Returns**: boolean
+- A Boolean value indicating whether the given range is fully included in the panel range
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|min|number|no||Minimum value of the range to check|
+|max|number|no||Maximum value of the range to check|
+|includeMargin|boolean|yes|false|Include [margin](Panel#margin) to the range|
+
+### focus {#focus}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Move [Camera](Camera) to this panel
+
+**Returns**: Promise&lt;void&gt;
+- A Promise which will be resolved after reaching the panel
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|duration|number|yes||Duration of the animation (unit: ms)|
+
+### prev {#prev}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Get previous(`index - 1`) panel. When the previous panel does not exist, this will return `null` instead
+If the [circular](Flicking#circularEnabled) is enabled, this will return the last panel if called from the first panel
+
+**Returns**: [Panel](Panel) \| null
+- The previous panel
+
+### next {#next}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Get next(`index + 1`) panel. When the next panel does not exist, this will return `null` instead
+If the [circular](Flicking#circularEnabled) is enabled, this will return the first panel if called from the last panel
+
+**Returns**: [Panel](Panel) \| null
+- The previous panel
+
+### increaseIndex {#increaseIndex}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Increase panel's index by the given value
+
+**Returns**: this
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|val|number|no||An integer greater than or equal to 0|
+
+<div className="notification is-warning my-2">⚠️ This function is for <strong>internal</strong> use only.</div>
+
+### decreaseIndex {#decreaseIndex}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Decrease panel's index by the given value
+
+**Returns**: this
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|val|number|no||An integer greater than or equal to 0|
+
+<div className="notification is-warning my-2">⚠️ This function is for <strong>internal</strong> use only.</div>
+
+### increasePosition {#increasePosition}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Increase panel's position by the given value
+
+**Returns**: this
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|val|number|no||An integer greater than or equal to 0|
+
+<div className="notification is-warning my-2">⚠️ This function is for <strong>internal</strong> use only.</div>
+
+### decreasePosition {#decreasePosition}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Decrease panel's position by the given value
+
+**Returns**: this
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|val|number|no||An integer greater than or equal to 0|
+
+<div className="notification is-warning my-2">⚠️ This function is for <strong>internal</strong> use only.</div>
+
+### toggle {#toggle}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+**Returns**: boolean
+- toggled
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|prevPos|number|no|||
+|newPos|number|no|||
+
+<div className="notification is-warning my-2">⚠️ This function is for <strong>internal</strong> use only.</div>
+
+### updateCircularToggleDirection {#updateCircularToggleDirection}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+**Returns**: this
+
+<div className="notification is-warning my-2">⚠️ This function is for <strong>internal</strong> use only.</div>
+

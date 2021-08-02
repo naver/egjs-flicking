@@ -1,0 +1,27 @@
+---
+custom_edit_url: null
+---
+
+```ts
+interface Status
+```
+
+### Status {#Status}
+
+<div className="bulma-tags">
+
+</div>
+
+[Flicking#getStatus](Flicking#getStatus)에 의해 반환된 Flicking 상태 객체
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|index|number|활성화된 패널의 인덱스|
+|position|object|카메라 [position](Camera#position)을 설정하기 위한 정보들|
+|position.panel|number|카메라가 위치한 패널의 인덱스|
+|position.progressInPanel|number|패널 내에서의 카메라 위치의 진행도|
+|visibleOffset|number|현재 보이는 패널들을 저장했을 때, 원래의 인덱스 대비 offset. `visiblePanelsOnly` 옵션을 사용했을 때만 사용 가능합니다|
+|panels|Array&lt;object&gt;|패널의 정보를 담은 배열|
+|panels.index|index|패널의 인덱스|
+|panels.html|string \| undefined|패널 엘리먼트의 `outerHTML`|
+
