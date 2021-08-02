@@ -17,7 +17,6 @@ export type ElementLike = string | HTMLElement;
  * @property - Initialize the plugin<ko>플러그인을 초기화합니다</ko>
  * @property - Destroy plugin and detach all events binded<ko>플러그인을 제거하고 부착된 모든 이벤트들을 제거합니다.</ko>
  * @property - Update plugin to match current Flicking's status<ko>현재 Flicking의 상태에 대응하도록 플러그인을 업데이트합니다.</ko>
- * @typedef
  */
 export interface Plugin {
   init(flicking: Flicking): void;
@@ -62,7 +61,7 @@ export type MoveTypeOptions<T extends ValueOf<typeof MOVE_TYPE>> =
 /**
  * A current parameters of the Camera for updating {@link AxesController}
  * @ko {@link AxesController}를 업데이트하기 위한 현재 Camera 패러미터들
- * @type {object}
+ * @interface
  * @property {object} range A moveable range for Camera<ko>Camera가 이동 가능한 범위</ko>
  * @property {number} position Current camera position<ko>현재 카메라 좌표</ko>
  * @property {boolean} circular A Boolean indicating whether the {@link Flicking#circular circular} option is enabled<ko>{@link Flicking#circular circular}옵션 활성화 여부</ko>
