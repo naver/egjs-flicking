@@ -120,12 +120,14 @@ class StrictControl extends Control {
       max: nextPos
     };
 
-    if (controlParams.position < prevPos) {
-      controlParams.position += camera.rangeDiff;
-    }
+    if (controlParams.circular) {
+      if (controlParams.position < prevPos) {
+        controlParams.position += camera.rangeDiff;
+      }
 
-    if (controlParams.position > nextPos) {
-      controlParams.position -= camera.rangeDiff;
+      if (controlParams.position > nextPos) {
+        controlParams.position -= camera.rangeDiff;
+      }
     }
 
     controlParams.circular = false;
