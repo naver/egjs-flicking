@@ -1,4 +1,8 @@
-const flicking = new Flicking("#flicking", { bound: true, bounce: 0, moveType: ["snap", { count: 1 }] });
+const flicking = new Flicking("#flicking", {
+  align: "center",
+  panelsPerView: 2,
+  bound: true
+});
 
 // Object.values(Flicking.EVENTS).forEach(evt => {
 //   flicking.on(evt, console.log);

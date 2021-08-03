@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 import Flicking from "../../Flicking";
-import { getProgress, getStyle, parseAlign } from "../../utils";
+import { getProgress, getStyle, isString, parseAlign } from "../../utils";
 import { ALIGN, DIRECTION } from "../../const/external";
 import { LiteralUnion, ValueOf } from "../../type/internal";
 
@@ -267,34 +267,79 @@ abstract class Panel {
   /**
    * Update size of the panel
    * @ko 패널의 크기를 갱신합니다
+   * @param {object} cached Predefined cached size of the panel<ko>사전에 캐시된 패널의 크기 정보</ko>
    * @chainable
    * @return {this}
    */
-  public resize(): this {
+  public resize(cached?: {
+    size: number;
+    height: number;
+    margin: { prev: number; next: number };
+  }): this {
     const el = this.element;
     const elStyle = getStyle(el);
     const flicking = this._flicking;
     const horizontal = flicking.horizontal;
     const prevPanel = flicking.renderer.panels[this._index - 1];
 
-    this._size = horizontal ? el.offsetWidth : el.offsetHeight;
-
-    this._margin = horizontal
-      ? {
-        prev: parseFloat(elStyle.marginLeft || "0"),
-        next: parseFloat(elStyle.marginRight || "0")
-      } : {
-        prev: parseFloat(elStyle.marginTop || "0"),
-        next: parseFloat(elStyle.marginBottom || "0")
-      };
+    if (cached) {
+      this._size = cached.size;
+      this._margin = { ...cached.margin };
+      this._height = cached.height;
+    } else {
+      this._size = horizontal ? el.offsetWidth : el.offsetHeight;
+      this._margin = horizontal
+        ? {
+          prev: parseFloat(elStyle.marginLeft || "0"),
+          next: parseFloat(elStyle.marginRight || "0")
+        } : {
+          prev: parseFloat(elStyle.marginTop || "0"),
+          next: parseFloat(elStyle.marginBottom || "0")
+        };
+      this._height = horizontal ? el.offsetHeight : this._size;
+    }
 
     this._pos = prevPanel
       ? prevPanel.range.max + prevPanel.margin.next + this._margin.prev
       : this._margin.prev;
 
-    this._height = horizontal ? el.offsetHeight : this._size;
-
     this._updateAlignPos();
+
+    return this;
+  }
+
+  /**
+   * Change panel's size. This will change the actual size of the panel element by changing its CSS width/height property
+   * @ko 패널 크기를 변경합니다. 패널 엘리먼트에 해당 크기의 CSS width/height를 적용합니다
+   * @param {object} [size] New panel size<ko>새 패널 크기</ko>
+   * @param {number|string} [size.width] CSS string or number(in px)<ko>CSS 문자열 또는 숫자(px)</ko>
+   * @param {number|string} [size.height] CSS string or number(in px)<ko>CSS 문자열 또는 숫자(px)</ko>
+   * @chainable
+   * @return {this}
+   */
+  public setSize({
+    width,
+    height
+  }: Partial<{
+    width: number | string;
+    height: number | string;
+  }>): this {
+    const el = this.element;
+
+    if (width != null) {
+      if (isString(width)) {
+        el.style.width = width;
+      } else {
+        el.style.width = `${width}px`;
+      }
+    }
+    if (height != null) {
+      if (isString(height)) {
+        el.style.height = height;
+      } else {
+        el.style.height = `${height}px`;
+      }
+    }
 
     return this;
   }
