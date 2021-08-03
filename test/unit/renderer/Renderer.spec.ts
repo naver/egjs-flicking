@@ -81,14 +81,17 @@ describe("Renderer", () => {
       it("should update panel sizes", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const renderer = new RendererImpl().init(flicking);
-        const prevSizes = renderer.panels.map(panel => panel.size);
+        const prevSizes = flicking.panels.map(panel => panel.size);
 
+        flicking.panels.forEach(panel => {
+          panel.setSize({ width: 9999 });
+        });
         renderer.updatePanelSize();
 
-        const newSizes = renderer.panels.map(panel => panel.size);
+        const newSizes = flicking.panels.map(panel => panel.size);
 
-        expect(prevSizes.every(size => size === 0)).to.be.true;
-        expect(newSizes.every(size => size !== 0)).to.be.true;
+        expect(prevSizes.every(size => size !== 9999)).to.be.true;
+        expect(newSizes.every(size => size === 9999)).to.be.true;
       });
     });
 
