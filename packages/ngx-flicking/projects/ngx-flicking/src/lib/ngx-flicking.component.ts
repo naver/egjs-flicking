@@ -152,7 +152,7 @@ export class NgxFlickingComponent extends FlickingInterface
 
     this._ngxPanels.changes.subscribe(() => {
       const panels = this._ngxPanels.toArray();
-      const diffResult = this._elementDiffer.update(panels);
+      const diffResult = elementDiffer.update(panels);
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       sync(flicking, diffResult, [...diffResult.maintained.map(([_, idx]) => diffResult.list[idx]), ...diffResult.added.map(idx => diffResult.list[idx])]);
@@ -169,12 +169,13 @@ export class NgxFlickingComponent extends FlickingInterface
     const flicking = this._vanillaFlicking;
     if (!flicking) return;
 
-    void this._vanillaFlicking.renderer.forceRenderAllPanels();
+    void flicking.renderer.forceRenderAllPanels();
     this._checkPlugins();
   }
 
   private _bindEvents() {
-    const flicking = this._vanillaFlicking;
+    const flicking = this._vanillaFlicking!;
+
     EVENT_NAMES.forEach(evtName => {
       flicking.on(evtName, e => {
         // Style guide: Event - https://angular.io/guide/styleguide#dont-prefix-output-properties

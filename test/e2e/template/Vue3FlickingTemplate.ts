@@ -1,5 +1,5 @@
 import { FlickingOptions } from "../../../src";
-import { Flicking } from "../../../packages/vue-flicking/src/index";
+import Flicking from "../../../packages/vue3-flicking/src/index";
 import "../../../css/flicking.css";
 
 export default (options: Partial<FlickingOptions>, panels: string[], styles: string[]) => {

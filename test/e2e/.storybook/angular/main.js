@@ -1,11 +1,11 @@
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 module.exports = {
-  "stories": [
-    "../../test/e2e/**/*.ngx.stories.mdx",
-    "../../test/e2e/**/ngx.stories.@(js|jsx|ts|tsx)"
+  stories: [
+    "../../**/*.ngx.stories.mdx",
+    "../../**/ngx.stories.@(js|jsx|ts|tsx)"
   ],
-  "addons": [
+  addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials"
   ],
@@ -16,7 +16,7 @@ module.exports = {
   webpackFinal: async (config) => {
     config.resolve.plugins.push(new TsconfigPathsPlugin({
       silent: true,
-      configFile: "./test/e2e/tsconfig.json"
+      configFile: "./tsconfig.json"
     }));
 
     function checkUse(use) {
