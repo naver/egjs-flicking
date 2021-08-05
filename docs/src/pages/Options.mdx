@@ -297,6 +297,85 @@ This can be only enabled when `horizontal=true`
 You should add CSS `transition` property to `flicking-viewport` to animate height.
 :::
 
+### panelsPerView
+A visible number of panels on viewport. Enabling this option will automatically resize panel size
+
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  panelsPerView: -1
+  align: "prev"
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking align="prev">
+      <Panel style={{ width: "200px" }} index={0} />
+      <Panel style={{ width: "100px" }} index={1} />
+      <Panel style={{ width: "400px" }} index={2} />
+    </Flicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  panelsPerView: 3
+  align: "prev"
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6} className="has-text-centered">
+    <Flicking align="prev" panelsPerView={3}>
+      <Panel style={{ width: "200px" }} index={0} />
+      <Panel style={{ width: "100px" }} index={1} />
+      <Panel style={{ width: "400px" }} index={2} />
+    </Flicking>
+  </ColumnItem>
+</Columns>
+
+### noPanelStyleOverride
+Enabling this option will not change `width/height` style of the panels if [Flicking#panelsPerView](docs/api/Flicking#panelsPerView) is enabled.
+This behavior can be useful in terms of performance when you're manually managing all panel sizes.
+
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  panelsPerView: 3
+  align: "prev"
+  noPanelStyleOverride: false
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking align="prev" panelsPerView={3} noPanelStyleOverride={false}>
+      <Panel style={{ width: "200px" }} index={0} />
+      <Panel style={{ width: "100px" }} index={1} />
+      <Panel style={{ width: "400px" }} index={2} />
+    </Flicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  panelsPerView: 3
+  align: "prev"
+  noPanelStyleOverride: true
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6} className="has-text-centered">
+    <Flicking align="prev" panelsPerView={3} noPanelStyleOverride={true}>
+      <Panel style={{ width: "200px" }} index={0} />
+      <Panel style={{ width: "100px" }} index={1} />
+      <Panel style={{ width: "400px" }} index={2} />
+    </Flicking>
+  </ColumnItem>
+</Columns>
+
 ## Event
 ### needPanelThreshold
 A Threshold from viewport edge before triggering **[needPanel](docs/api/Flicking#event-needPanel)** event
