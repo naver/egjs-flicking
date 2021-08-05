@@ -1,22 +1,12 @@
 <script>
-import {
-  onMount
-} from "svelte";
-import Flicking from "../../../packages/svelte-flicking/src/flicking.svelte";
-import FlickingPanel from "../../../packages/svelte-flicking/src/flicking-panel.svelte";
+import Flicking, { FlickingPanel } from "@egjs/svelte-flicking";
 
 export let options = {};
 export let panels = [];
-
-onMount(() => {
-  console.log("mounted");
-});
 </script>
 
 <Flicking options={options}>
   {#each panels as panel}
-    <FlickingPanel>
-      {@html panel}
-    </FlickingPanel>
+    <FlickingPanel class={panel.class}>{panel.text}</FlickingPanel>
   {/each}
 </Flicking>

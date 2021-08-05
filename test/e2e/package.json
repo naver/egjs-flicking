@@ -12,7 +12,7 @@
     "lint": "eslint 'src/**/*.ts'",
     "storybook": "npm run storybook:all & npm run storybook:main",
     "storybook:main": "node_modules/@storybook/react/bin/index.js -p 6006",
-    "storybook:all": "concurrently -r npm:storybook:html npm:storybook:react npm:storybook:vue npm:storybook:angular",
+    "storybook:all": "concurrently -r npm:storybook:html npm:storybook:react npm:storybook:vue npm:storybook:vue3 npm:storybook:angular npm:storybook:svelte",
     "storybook:html": "node_modules/@storybook/html/bin/index.js -p 9005 -c .storybook/html -s ./public --quiet",
     "storybook:react": "node_modules/@storybook/react/bin/index.js -p 9006 -c .storybook/react -s ./public --quiet",
     "storybook:vue": "node_modules/@storybook/vue/bin/index.js -p 9007 -c .storybook/vue -s ./public --quiet",
@@ -67,5 +67,8 @@
     "last 2 version",
     "ie 9-11",
     "not op_mini all"
-  ]
+  ],
+  "dependencies": {
+    "@egjs/svelte-flicking": "^4.2.2"
+  }
 }

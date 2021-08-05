@@ -1,14 +1,15 @@
-import { FlickingOptions } from "../../../src";
 import "../../../css/flicking.css";
-import Flicking, { FlickingPanel } from "../../../packages/svelte-flicking/src";
 import SvelteFlicking from "./SvelteFlicking.svelte";
+import { Fixture } from "../types";
 
-export default (options: Partial<FlickingOptions>, panels: string[], styles: string[]) => {
+export default (fixture: Fixture) => {
+  const { options, panels, styles } = fixture;
+
   styles.forEach(style => require(`../public/${style}`));
 
   return {
     Component: SvelteFlicking,
-    data: {
+    props: {
       options,
       panels
     }

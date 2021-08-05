@@ -5,6 +5,6 @@ import NativeFlickingTemplate from "../template/NativeFlickingTemplate";
 const stories = storiesOf("HTML", module);
 
 Object.keys(testCases).forEach(testCaseName => {
-  const { options, panels, styles } = testCases[testCaseName];
-  stories.add(testCaseName, () => NativeFlickingTemplate(options, panels, styles));
+  const fixture = testCases[testCaseName];
+  stories.add(testCaseName, () => NativeFlickingTemplate(fixture));
 });

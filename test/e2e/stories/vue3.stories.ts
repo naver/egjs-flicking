@@ -5,6 +5,6 @@ import Vue3FlickingTemplate from "../template/Vue3FlickingTemplate";
 const stories = storiesOf("Vue3", module);
 
 Object.keys(testCases).forEach(testCaseName => {
-  const { options, panels, styles } = testCases[testCaseName];
-  stories.add(testCaseName, () => Vue3FlickingTemplate(options, panels, styles), options);
+  const fixture = testCases[testCaseName];
+  stories.add(testCaseName, () => Vue3FlickingTemplate(fixture), fixture.options);
 });

@@ -2,7 +2,8 @@ import { Fixture } from "../../types";
 
 const fixture: Fixture = {
   options: {
-
+    panelsPerView: 3,
+    align: "prev"
   },
   panels: [
     { tag: "div", class: "flicking-panel", text: "" },
@@ -10,7 +11,7 @@ const fixture: Fixture = {
     { tag: "div", class: "flicking-panel", text: "" }
   ],
   styles: [
-    "css/no-options.css"
+    "css/grid.css"
   ]
 };
 
