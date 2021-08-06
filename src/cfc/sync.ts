@@ -10,23 +10,23 @@ export default (flicking: Flicking, diffResult: DiffResult<any>, rendered: any[]
     let startIdx = -1;
     let prevIdx = -1;
 
-    diffResult.removed.forEach((removedIdx, idx) => {
+    [...diffResult.removed].reverse().forEach(removedIdx => {
       if (startIdx < 0) {
-        startIdx = idx;
+        startIdx = removedIdx;
       }
 
       if (prevIdx >= 0 && removedIdx !== prevIdx + 1) {
-        batchRemove(renderer, diffResult, startIdx, idx + 1);
+        batchRemove(renderer, startIdx, prevIdx + 1);
 
-        startIdx = -1;
-        prevIdx = -1;
+        startIdx = removedIdx;
+        prevIdx = removedIdx;
       } else {
         prevIdx = removedIdx;
       }
     });
 
     if (startIdx >= 0) {
-      batchRemove(renderer, diffResult, startIdx);
+      batchRemove(renderer, startIdx, prevIdx + 1);
     }
   }
 
@@ -74,8 +74,8 @@ const batchInsert = (renderer: Renderer, diffResult: DiffResult<any>, rendered: 
   );
 };
 
-const batchRemove = (renderer: Renderer, diffResult: DiffResult<any>, startIdx: number, endIdx?: number) => {
-  const removed = diffResult.removed.slice(startIdx, endIdx);
+const batchRemove = (renderer: Renderer, startIdx: number, endIdx?: number) => {
+  const removed = renderer.panels.slice(startIdx, endIdx);
 
   renderer.batchRemove({ index: startIdx, deleteCount: removed.length });
 };
