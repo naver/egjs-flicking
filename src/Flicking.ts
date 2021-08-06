@@ -769,7 +769,10 @@ class Flicking extends Component<{
     }
     panelManager.replacePanels(newPanels, newClones);
 
-    if (!currentPanel && newPanels.length > 0) {
+    const currentPanelIndex = currentPanel?.getIndex() ?? -1;
+    const currentPanelIsRemoved = findIndex(removed, index => index === currentPanelIndex) >= 0;
+
+    if ((!currentPanel || currentPanelIsRemoved) && newPanels.length > 0) {
       viewport.setCurrentPanel(newPanels[0]);
     } else if (newPanels.length <= 0) {
       viewport.setCurrentPanel(undefined);

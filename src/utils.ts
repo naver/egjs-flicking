@@ -169,7 +169,7 @@ export function getProgress(pos: number, range: number[]) {
 export function findIndex<T>(iterable: T[], callback: (el: T) => boolean): number {
   for (let i = 0; i < iterable.length; i += 1) {
     const element = iterable[i];
-    if (element && callback(element)) {
+    if (element != null && callback(element)) {
       return i;
     }
   }
