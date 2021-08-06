@@ -1,0 +1,14 @@
+{
+  "name": "e2e",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "storybook": "node_modules/@storybook/vue/bin/index.js -p 9007 -c .storybook -s ../../public --quiet"
+  },
+  "devDependencies": {
+    "@storybook/vue": "^6.3.6",
+    "vue": "^2.0.0",
+    "vue-loader": "^15.9.8",
+    "vue-template-compiler": "^2.6.14"
+  }
+}

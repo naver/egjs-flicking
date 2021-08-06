@@ -2,8 +2,8 @@ const TsconfigPathsPlugin  = require("tsconfig-paths-webpack-plugin");
 
 module.exports = {
   stories: [
-    "../../**/*.vue.stories.mdx",
-    "../../**/vue.stories.@(js|jsx|ts|tsx)"
+    "../../../stories/*.vue3.stories.mdx",
+    "../../../stories/vue3.stories.@(js|jsx|ts|tsx)"
   ],
   addons: [
     "@storybook/addon-links",
@@ -16,7 +16,7 @@ module.exports = {
   webpackFinal: async (config) => {
     config.resolve.plugins.push(new TsconfigPathsPlugin({
       silent: true,
-      configFile: "./tsconfig.json"
+      configFile: "../../tsconfig.json"
     }));
     return config;
   }

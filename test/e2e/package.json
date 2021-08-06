@@ -15,8 +15,8 @@
     "storybook:all": "concurrently -r npm:storybook:html npm:storybook:react npm:storybook:vue npm:storybook:vue3 npm:storybook:angular npm:storybook:svelte",
     "storybook:html": "node_modules/@storybook/html/bin/index.js -p 9005 -c .storybook/html -s ./public --quiet",
     "storybook:react": "node_modules/@storybook/react/bin/index.js -p 9006 -c .storybook/react -s ./public --quiet",
-    "storybook:vue": "node_modules/@storybook/vue/bin/index.js -p 9007 -c .storybook/vue -s ./public --quiet",
-    "storybook:vue3": "node_modules/@storybook/vue3/bin/index.js -p 9008 -c .storybook/vue3 -s ./public --quiet",
+    "storybook:vue": "npm --prefix ./run/vue run storybook",
+    "storybook:vue3": "npm --prefix ./run/vue3 run storybook",
     "storybook:angular": "node_modules/@storybook/angular/bin/index.js -p 9009 -c .storybook/angular -s ./public --quiet",
     "storybook:svelte": "node_modules/@storybook/svelte/bin/index.js -p 9010 -c .storybook/svelte -s ./public --quiet"
   },
@@ -45,7 +45,7 @@
     "@storybook/html": "^6.1.21",
     "@storybook/react": "^6.1.21",
     "@storybook/svelte": "^6.3.6",
-    "@storybook/vue": "^6.1.21",
+    "@storybook/vue": "^6.3.6",
     "@storybook/vue3": "^6.3.6",
     "babel-loader": "^8.2.2",
     "chai": "^4.3.4",
@@ -60,9 +60,6 @@
     "svelte-loader": "^3.1.2",
     "svelte-preprocess": "^4.7.4",
     "ts-node": "^9.1.1",
-    "vue": "^3.1.5",
-    "vue-loader": "^15.9.6",
-    "vue-template-compiler": "^2.6.12",
     "zone.js": "^0.11.4"
   },
   "browserslist": [
