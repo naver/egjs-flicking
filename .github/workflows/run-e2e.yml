@@ -14,6 +14,12 @@ jobs:
       - name: install-e2e
         working-directory: ./test/e2e
         run: npm install
+      - name: install-e2e-vue
+        working-directory: ./test/e2e/run/vue
+        run: npm install
+      - name: install-e2e-vue3
+        working-directory: ./test/e2e/run/vue3
+        run: npm install
       - name: install react
         working-directory: ./packages/react-flicking
         run: npm install
