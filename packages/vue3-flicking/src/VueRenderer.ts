@@ -20,12 +20,11 @@ class VueRenderer extends ExternalRenderer {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   public async render() {
-    const strategy = this._renderingStrategy;
     const flicking = this._flicking;
 
     if (!flicking) return;
 
-    strategy.updateRenderingPanels(flicking);
+    this._updateRenderingPanels();
     this._vueFlicking.$forceUpdate();
   }
 

@@ -24,12 +24,11 @@ class NgxRenderer extends ExternalRenderer {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   public async render() {
-    const strategy = this._renderingStrategy;
     const flicking = this._flicking!;
     const cameraEl = flicking.camera.element;
     const wasRenderedPanels = this._panels.filter(panel => panel.element.parentElement === cameraEl);
 
-    strategy.updateRenderingPanels(flicking);
+    this._updateRenderingPanels();
     const renderingPanels = this._getRenderingPanelsByOrder();
 
     this._unrenderPanelElements(wasRenderedPanels.filter(panel => !panel.rendered));

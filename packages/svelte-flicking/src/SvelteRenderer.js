@@ -10,13 +10,12 @@ class SvelteRenderer extends ExternalRenderer {
   }
 
   async render() {
-    const strategy = this._renderingStrategy;
     const flicking = this._flicking;
     const panels = this._panels;
 
     if (!flicking) return;
 
-    strategy.updateRenderingPanels(flicking);
+    this._updateRenderingPanels();
     panels.forEach(panel => panel.render());
 
     return new Promise((resolve) => {

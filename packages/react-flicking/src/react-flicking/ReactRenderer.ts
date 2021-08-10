@@ -20,13 +20,12 @@ class ReactRenderer extends ExternalRenderer {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   public async render() {
-    const strategy = this._renderingStrategy;
     const flicking = this._flicking;
     const reactFlicking = this._reactFlicking;
 
     if (!flicking || !reactFlicking.mounted) return;
 
-    strategy.updateRenderingPanels(flicking);
+    this._updateRenderingPanels();
 
     return new Promise<void>(resolve => {
       reactFlicking.setRenderCallback(resolve);

@@ -11,6 +11,10 @@ class RendererImpl extends Renderer {
   public async render() { return; }
   public async forceRenderAllPanels() { return; }
 
+  public updateRenderingPanels() {
+    this._updateRenderingPanels();
+  }
+
   protected _collectPanels(): void {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
 
@@ -199,6 +203,119 @@ describe("Renderer", () => {
         expect(panelChangeSpy.firstCall.args[0].removed.length).to.equal(1);
         expect(panelChangeSpy.firstCall.args[0].removed[0]).to.deep.equal(prevPanels[1]);
       });
+    });
+
+    describe("updatePanelSize", () => {
+      it("should call resize of every panels with no argument", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { panelsPerView: -1 });
+        const renderer = new RendererImpl().init(flicking);
+        const resizeSpies = renderer.panels.map(panel => sinon.spy(panel, "resize"));
+
+        renderer.updatePanelSize();
+
+        expect(resizeSpies.every(spy => spy.calledOnceWith(undefined)));
+      });
+
+      it("should update panel sizes to match the panel sizes to match viewport size when panelsPerView is 1", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { panelsPerView: 1 });
+        const renderer = new RendererImpl().init(flicking);
+        const panels = flicking.panels;
+        const viewportSize = flicking.camera.size;
+
+        panels.forEach(panel => panel.element.style.width = "100px");
+        renderer.updatePanelSize();
+
+        expect(viewportSize).not.equal(100);
+        expect(panels.every(panel => panel.size === viewportSize)).to.be.true;
+        expect(panels.every(panel => panel.element.style.width === `${viewportSize}px`)).to.be.true;
+      });
+
+      it("should set panel sizes to match the panel sizes to match viewport size when panelsPerView is 1 and margin is applied to the panels", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { panelsPerView: 1 });
+        const renderer = new RendererImpl().init(flicking);
+        const panels = flicking.panels;
+        const viewportSize = flicking.camera.size;
+
+        panels.forEach(panel => panel.element.style.width = "100px");
+        panels.forEach(panel => panel.element.style.marginLeft = "15px");
+        panels.forEach(panel => panel.element.style.marginRight = "15px");
+        renderer.updatePanelSize();
+
+        expect(viewportSize).not.equal(100);
+        expect(panels.every(panel => panel.size === viewportSize)).to.be.true;
+        expect(panels.every(panel => panel.element.style.width === `${viewportSize}px`)).to.be.true;
+      });
+
+      it("should update panel sizes to match the panel sizes to match 'viewport size / panelsPerView'", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { panelsPerView: 4 });
+        const renderer = new RendererImpl().init(flicking);
+        const panels = flicking.panels;
+        const expectedSize = flicking.camera.size / 4;
+
+        panels.forEach(panel => panel.element.style.width = "100px");
+        renderer.updatePanelSize();
+
+        expect(expectedSize).not.equal(100);
+        expect(panels.every(panel => panel.size === expectedSize)).to.be.true;
+        expect(panels.every(panel => panel.element.style.width === `${expectedSize}px`)).to.be.true;
+      });
+
+      it("should update panel sizes to match the panel sizes to match '(viewport size - first panel's margin sum * (panelsPerSize - 1)) / panelsPerView'", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { panelsPerView: 4 });
+        const renderer = new RendererImpl().init(flicking);
+        const panels = flicking.panels;
+        const firstPanel = panels[0];
+        // (viewport size - first panel's margin sum * (panelsPerSize - 1)) / panelsPerView
+        const expectedSize = (flicking.camera.size - 20 * 3) / 4;
+
+        panels.forEach(panel => panel.element.style.width = "100px");
+        firstPanel.element.style.marginLeft = "15px";
+        firstPanel.element.style.marginRight = "5px";
+        renderer.updatePanelSize();
+
+        expect(expectedSize).not.equal(100);
+        expect(panels.every(panel => panel.size === expectedSize)).to.be.true;
+        expect(panels.every(panel => panel.element.style.width === `${expectedSize}px`)).to.be.true;
+      });
+
+      it("should not update panel CSS if noPanelStyleOverride is true", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { panelsPerView: 1, noPanelStyleOverride: true });
+        const renderer = new RendererImpl().init(flicking);
+        const panels = flicking.panels;
+        const viewportSize = flicking.camera.size;
+
+        panels.forEach(panel => panel.element.style.width = "100px");
+        renderer.updatePanelSize();
+
+        expect(viewportSize).not.equal(100);
+        expect(panels.every(panel => panel.size === viewportSize)).to.be.true;
+        expect(panels.every(panel => panel.element.style.width === "100px")).to.be.true;
+      });
+    });
+  });
+
+  describe("updateRenderingPanels", () => {
+    it("should always make all panels visible if renderOnlyVisible is false", async () => {
+      const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { renderOnlyVisible: false });
+      const renderer = new RendererImpl().init(flicking);
+
+      flicking.panels.forEach(panel => panel.markForHide());
+      renderer.updateRenderingPanels();
+
+      expect(flicking.panels.every(panel => panel.rendered)).to.be.true;
+    });
+
+    it("should make only visible panels to be visible if renderOnlyVisible is true", async () => {
+      const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { renderOnlyVisible: true });
+      const renderer = new RendererImpl().init(flicking);
+
+      flicking.panels.forEach(panel => panel.markForHide());
+      renderer.updateRenderingPanels();
+
+      const nonVisible = flicking.panels.filter(panel => !flicking.visiblePanels.includes(panel));
+      expect(nonVisible.length).to.be.greaterThan(0);
+      expect(flicking.visiblePanels.every(panel => panel.rendered)).to.be.true;
+      expect(nonVisible.every(panel => !panel.rendered)).to.be.true;
     });
   });
 });
