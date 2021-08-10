@@ -14,12 +14,11 @@ import Renderer from "./Renderer";
 class VanillaRenderer extends Renderer {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async render() {
-    const strategy = this._renderingStrategy;
     const flicking = getFlickingAttached(this._flicking, "Renderer");
     const cameraEl = flicking.camera.element;
     const wasRenderedPanels = this._panels.filter(panel => panel.element.parentElement === cameraEl);
 
-    strategy.updateRenderingPanels(flicking);
+    this._updateRenderingPanels();
     const renderingPanels = this._getRenderingPanelsByOrder();
 
     this._removePanelElements(wasRenderedPanels.filter(panel => !panel.rendered));

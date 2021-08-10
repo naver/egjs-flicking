@@ -9,7 +9,7 @@ import Viewport from "./core/Viewport";
 import { Panel } from "./core/panel";
 import { Control, SnapControl, SnapControlOptions, FreeControl, StrictControl, FreeControlOptions, StrictControlOptions } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
-import { Renderer, VanillaRenderer, ExternalRenderer, RawRenderingStrategy, VisibleRenderingStrategy, GridRenderingStrategy } from "./renderer";
+import { Renderer, VanillaRenderer, ExternalRenderer } from "./renderer";
 import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
 import * as ERROR from "./const/error";
 import { findIndex, getElement, includes, parseElement } from "./utils";
@@ -1269,16 +1269,8 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   private _createRenderer(): Renderer {
-    const panelsPerView = this._panelsPerView;
-    const renderingStrategy = this._renderOnlyVisible
-      ? new VisibleRenderingStrategy()
-      : panelsPerView <= 0
-        ? new RawRenderingStrategy()
-        : new GridRenderingStrategy();
-
     const rendererOptions = {
-      align: this._align,
-      strategy: renderingStrategy
+      align: this._align
     };
 
     const renderExternal = this._renderExternal;

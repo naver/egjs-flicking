@@ -6,15 +6,13 @@ import { ComponentEvent } from "@egjs/component";
 
 import Flicking, { FlickingOptions } from "../Flicking";
 import Panel, { PanelOptions } from "../core/panel/Panel";
+import FlickingError from "../core/FlickingError";
 import { ALIGN, EVENTS } from "../const/external";
+import * as ERROR from "../const/error";
 import { getFlickingAttached, getMinusCompensatedIndex, includes } from "../utils";
-
-import RenderingStrategy from "./RenderingStrategy/RenderingStrategy";
-import RawRenderingStrategy from "./RenderingStrategy/RawRenderingStrategy";
 
 export interface RendererOptions {
   align: FlickingOptions["align"];
-  strategy: RenderingStrategy;
 }
 
 /**
@@ -25,7 +23,6 @@ abstract class Renderer {
   // Internal States
   protected _flicking: Flicking | null;
   protected _panels: Panel[];
-  protected _renderingStrategy: RenderingStrategy;
 
   // Options
   protected _align: RendererOptions["align"];
@@ -68,13 +65,13 @@ abstract class Renderer {
    * @param {Constants.ALIGN | string | number} [options.align] An {@link Flicking#align align} value that will be applied to all panels<ko>전체 패널에 적용될 {@link Flicking#align align} 값</ko>
    */
   public constructor({
-    align = ALIGN.CENTER,
-    strategy = new RawRenderingStrategy()
+    align = ALIGN.CENTER
   }: Partial<RendererOptions> = {}) {
-    this._align = align;
     this._flicking = null;
-    this._renderingStrategy = strategy;
     this._panels = [];
+
+    // Bind options
+    this._align = align;
   }
 
   /**
@@ -139,7 +136,11 @@ abstract class Renderer {
   public updatePanelSize(): this {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
 
-    this._renderingStrategy.updatePanelSizes(flicking);
+    if (flicking.panelsPerView > 0) {
+      this._updatePanelSizeByGrid(flicking);
+    } else {
+      flicking.panels.forEach(panel => panel.resize());
+    }
 
     return this;
   }
@@ -313,6 +314,71 @@ abstract class Renderer {
     camera.updateAnchors();
     camera.resetNeedPanelHistory();
     control.updateInput();
+  }
+
+  protected _updateRenderingPanels(): void {
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+
+    if (flicking.renderOnlyVisible) {
+      this._showOnlyVisiblePanels(flicking);
+    } else {
+      flicking.panels.forEach(panel => panel.markForShow());
+    }
+  }
+
+  protected _showOnlyVisiblePanels(flicking: Flicking) {
+    const panels = flicking.renderer.panels;
+    const camera = flicking.camera;
+
+    const visibleIndexes = camera.visiblePanels.reduce((visibles, panel) => {
+      visibles[panel.index] = true;
+      return visibles;
+    }, {});
+
+    panels.forEach(panel => {
+      if (panel.index in visibleIndexes) {
+        panel.markForShow();
+      } else if (!flicking.holding) {
+        // During the input sequence,
+        // Do not remove panel elements as it won't trigger touchend event.
+        panel.markForHide();
+      }
+    });
+
+    camera.updateOffset();
+  }
+
+  protected _updatePanelSizeByGrid(flicking: Flicking) {
+    const panels = flicking.panels;
+    const panelsPerView = flicking.panelsPerView;
+
+    if (panelsPerView <= 0) {
+      throw new FlickingError(ERROR.MESSAGE.WRONG_OPTION("panelsPerView", panelsPerView), ERROR.CODE.WRONG_OPTION);
+    }
+    if (panels.length <= 0) return;
+
+    // resize only the first panel
+    const firstPanel = panels[0];
+    firstPanel.resize();
+
+    const viewportSize = flicking.camera.size;
+    const gap = firstPanel.margin.prev + firstPanel.margin.next;
+
+    const panelSize = (viewportSize - gap * (panelsPerView - 1)) / panelsPerView;
+    const panelSizeObj = flicking.horizontal
+      ? { width: panelSize }
+      : { height: panelSize };
+    const firstPanelSizeObj = {
+      size: panelSize,
+      height: firstPanel.height,
+      margin: firstPanel.margin
+    };
+
+    if (!flicking.noPanelStyleOverride) {
+      flicking.panels.forEach(panel => panel.setSize(panelSizeObj));
+    }
+
+    flicking.panels.forEach(panel => panel.resize(firstPanelSizeObj));
   }
 }
 
