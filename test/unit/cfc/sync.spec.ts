@@ -72,7 +72,7 @@ describe("sync", () => {
       prevList: flicking.panels.map(panel => panel.element),
       list: [flicking.panels[1].element],
       added: [],
-      removed: [0, 2],
+      removed: [2, 0],
       changed: [],
       ordered: [],
       pureChanged: [],
@@ -83,5 +83,27 @@ describe("sync", () => {
 
     expect(flicking.panels.length).to.equal(1);
     expect(flicking.panels).to.deep.equal([prevPanels[1]]);
+  });
+
+  it("can remove consecutive & non-consecutive mixed panels", async () => {
+    const flicking = await createFlicking(El.DEFAULT_HORIZONTAL_WITH_PANELS(10));
+    const prevPanels = [...flicking.panels];
+    const nonRemovedPanels = [prevPanels[1], prevPanels[4], prevPanels[5], prevPanels[9]];
+
+    const diffResult: DiffResult<HTMLElement> = {
+      prevList: prevPanels.map(panel => panel.element),
+      list: nonRemovedPanels.map(panel => panel.element),
+      added: [],
+      removed: [8, 7, 6, 3, 2, 0],
+      changed: [],
+      ordered: [],
+      pureChanged: [],
+      maintained: []
+    };
+
+    sync(flicking, diffResult, []);
+
+    expect(flicking.panels.length).to.equal(nonRemovedPanels.length);
+    expect(flicking.panels).to.deep.equal(nonRemovedPanels);
   });
 });

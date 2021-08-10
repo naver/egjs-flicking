@@ -7,27 +7,25 @@ export default (flicking: Flicking, diffResult: DiffResult<any>, rendered: any[]
   const renderer = flicking.renderer;
 
   if (diffResult.removed.length > 0) {
-    let startIdx = -1;
+    let endIdx = -1;
     let prevIdx = -1;
 
-    [...diffResult.removed].reverse().forEach(removedIdx => {
-      if (startIdx < 0) {
-        startIdx = removedIdx;
+    diffResult.removed.forEach(removedIdx => {
+      if (endIdx < 0) {
+        endIdx = removedIdx;
       }
 
-      if (prevIdx >= 0 && removedIdx !== prevIdx + 1) {
-        batchRemove(renderer, startIdx, prevIdx + 1);
+      if (prevIdx >= 0 && removedIdx !== prevIdx - 1) {
+        batchRemove(renderer, prevIdx, endIdx + 1);
 
-        startIdx = removedIdx;
+        endIdx = removedIdx;
         prevIdx = removedIdx;
       } else {
         prevIdx = removedIdx;
       }
     });
 
-    if (startIdx >= 0) {
-      batchRemove(renderer, startIdx, prevIdx + 1);
-    }
+    batchRemove(renderer, prevIdx, endIdx + 1);
   }
 
   diffResult.ordered.forEach(([prevIdx, newIdx]) => {
