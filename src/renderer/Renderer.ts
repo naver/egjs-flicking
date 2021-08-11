@@ -137,7 +137,10 @@ abstract class Renderer {
    * @return {this}
    */
   public updatePanelSize(): this {
-    this._panels.forEach(panel => panel.resize());
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+
+    this._renderingStrategy.updatePanelSizes(flicking);
+
     return this;
   }
 

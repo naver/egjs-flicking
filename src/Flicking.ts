@@ -9,7 +9,7 @@ import Viewport from "./core/Viewport";
 import { Panel } from "./core/panel";
 import { Control, SnapControl, SnapControlOptions, FreeControl, StrictControl, FreeControlOptions, StrictControlOptions } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
-import { Renderer, VanillaRenderer, ExternalRenderer, RawRenderingStrategy, VisibleRenderingStrategy } from "./renderer";
+import { Renderer, VanillaRenderer, ExternalRenderer, RawRenderingStrategy, VisibleRenderingStrategy, GridRenderingStrategy } from "./renderer";
 import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
 import * as ERROR from "./const/error";
 import { findIndex, getElement, includes, parseElement } from "./utils";
@@ -51,6 +51,8 @@ export interface FlickingOptions {
   circular: boolean;
   bound: boolean;
   adaptive: boolean;
+  panelsPerView: number;
+  noPanelStyleOverride: boolean;
   // EVENT
   needPanelThreshold: number;
   preventEventsBeforeInit: boolean;
@@ -110,11 +112,16 @@ class Flicking extends Component<FlickingEvents> {
   private _circular: FlickingOptions["circular"];
   private _bound: FlickingOptions["bound"];
   private _adaptive: FlickingOptions["adaptive"];
+  private _panelsPerView: FlickingOptions["panelsPerView"];
+  private _noPanelStyleOverride: FlickingOptions["noPanelStyleOverride"];
+
   private _needPanelThreshold: FlickingOptions["needPanelThreshold"];
   private _preventEventsBeforeInit: FlickingOptions["preventEventsBeforeInit"];
+
   private _deceleration: FlickingOptions["deceleration"];
   private _duration: FlickingOptions["duration"];
   private _easing: FlickingOptions["easing"];
+
   private _inputType: FlickingOptions["inputType"];
   private _moveType: FlickingOptions["moveType"];
   private _threshold: FlickingOptions["threshold"];
@@ -123,7 +130,9 @@ class Flicking extends Component<FlickingEvents> {
   private _iOSEdgeSwipeThreshold: FlickingOptions["iOSEdgeSwipeThreshold"];
   private _preventClickOnDrag: FlickingOptions["preventClickOnDrag"];
   private _disableOnInit: FlickingOptions["disableOnInit"];
+
   private _renderOnlyVisible: FlickingOptions["renderOnlyVisible"];
+
   private _autoResize: FlickingOptions["autoResize"];
   private _autoInit: FlickingOptions["autoInit"];
   private _renderExternal: FlickingOptions["renderExternal"];
@@ -331,6 +340,22 @@ class Flicking extends Component<FlickingEvents> {
    * @default false
    */
   public get adaptive() { return this._adaptive; }
+  /**
+   * A visible number of panels on viewport. Enabling this option will automatically resize panel size
+   * @ko 한 화면에 보이는 패널의 개수. 이 옵션을 활성화할 경우 패널의 크기를 강제로 재조정합니다
+   * @type {number}
+   * @default -1
+   */
+  public get panelsPerView() { return this._panelsPerView; }
+  /**
+   * Enabling this option will not change `width/height` style of the panels if {@link Flicking#panelsPerView} is enabled.
+   * This behavior can be useful in terms of performance when you're manually managing all panel sizes
+   * @ko 이 옵션을 활성화할 경우, {@link Flicking#panelsPerView} 옵션이 활성화되었을 때 패널의 `width/height` 스타일을 변경하지 않도록 설정합니다.
+   * 모든 패널들의 크기를 직접 관리하고 있을 경우, 이 옵션을 활성화하면 성능면에서 유리할 수 있습니다
+   * @type {boolean}
+   * @default false
+   */
+  public get noPanelStyleOverride() { return this._noPanelStyleOverride; }
   // EVENTS
   /**
    * A Threshold from viewport edge before triggering `needPanel` event
@@ -526,6 +551,8 @@ class Flicking extends Component<FlickingEvents> {
   public set circular(val: FlickingOptions["circular"]) { this._circular = val; }
   public set bound(val: FlickingOptions["bound"]) { this._bound = val; }
   public set adaptive(val: FlickingOptions["adaptive"]) { this._adaptive = val; }
+  public set panelsPerView(val: FlickingOptions["panelsPerView"]) { this._panelsPerView = val; }
+  public set noPanelStyleOverride(val: FlickingOptions["noPanelStyleOverride"]) { this._noPanelStyleOverride = val; }
   // EVENTS
   public set needPanelThreshold(val: FlickingOptions["needPanelThreshold"]) { this._needPanelThreshold = val; }
   public set preventEventsBeforeInit(val: FlickingOptions["preventEventsBeforeInit"]) { this._preventEventsBeforeInit = val; }
@@ -597,6 +624,8 @@ class Flicking extends Component<FlickingEvents> {
     circular = false,
     bound = false,
     adaptive = false,
+    panelsPerView = -1,
+    noPanelStyleOverride = false,
     needPanelThreshold = 0,
     preventEventsBeforeInit = true,
     deceleration = 0.0075,
@@ -628,6 +657,8 @@ class Flicking extends Component<FlickingEvents> {
     this._circular = circular;
     this._bound = bound;
     this._adaptive = adaptive;
+    this._panelsPerView = panelsPerView;
+    this._noPanelStyleOverride = noPanelStyleOverride;
     this._needPanelThreshold = needPanelThreshold;
     this._preventEventsBeforeInit = preventEventsBeforeInit;
     this._deceleration = deceleration;
@@ -1238,9 +1269,12 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   private _createRenderer(): Renderer {
+    const panelsPerView = this._panelsPerView;
     const renderingStrategy = this._renderOnlyVisible
       ? new VisibleRenderingStrategy()
-      : new RawRenderingStrategy();
+      : panelsPerView <= 0
+        ? new RawRenderingStrategy()
+        : new GridRenderingStrategy();
 
     const rendererOptions = {
       align: this._align,

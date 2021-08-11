@@ -5,19 +5,19 @@
   "projects": {
     "egjs-flicking": {
       "root": "",
-      "sourceRoot": "packages/ngx-flicking/projects/ngx-flicking/src",
+      "sourceRoot": "../../packages/ngx-flicking/projects/ngx-flicking/src",
       "projectType": "application",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "./test/e2e/dist/ngx-storybook",
+            "outputPath": "./dist/ngx-storybook",
             "tsConfig": ".storybook/tsconfig.json"
           }
         }
       }
     }
   },
-  "defaultProject": "ngx-flicking"
+  "defaultProject": "egjs-flicking"
 }

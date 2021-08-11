@@ -8,7 +8,7 @@
     "esModuleInterop": true,
     "module": "commonjs",
     "strictNullChecks": true,
-    "types": ["codeceptjs"],
+    "types": ["codeceptjs", "svelte"],
     "skipLibCheck": true,
     "jsx": "react",
     "experimentalDecorators": true,

@@ -6,7 +6,7 @@ import Flicking from "../../Flicking";
 
 import RenderingStrategy from "./RenderingStrategy";
 
-class RawRenderingStrategy implements RenderingStrategy {
+class RawRenderingStrategy extends RenderingStrategy {
   public updateRenderingPanels(flicking: Flicking) {
     // RawRenderingStrategy always renders all panel elements
     flicking.panels.forEach(panel => panel.markForShow());

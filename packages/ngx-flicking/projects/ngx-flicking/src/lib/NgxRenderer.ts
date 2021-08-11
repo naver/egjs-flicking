@@ -25,7 +25,7 @@ class NgxRenderer extends ExternalRenderer {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async render() {
     const strategy = this._renderingStrategy;
-    const flicking = this._flicking;
+    const flicking = this._flicking!;
     const cameraEl = flicking.camera.element;
     const wasRenderedPanels = this._panels.filter(panel => panel.element.parentElement === cameraEl);
 
@@ -39,7 +39,7 @@ class NgxRenderer extends ExternalRenderer {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   public async forceRenderAllPanels() {
-    const flicking = this._flicking;
+    const flicking = this._flicking!;
     const renderer = this._ngxRenderer;
     const camera = flicking.camera;
     const cameraElement = camera.element;
@@ -67,7 +67,7 @@ class NgxRenderer extends ExternalRenderer {
   }
 
   private _renderPanelElements(panels: Panel[], nextSibling: Panel | null) {
-    const flicking = this._flicking;
+    const flicking = this._flicking!;
     const renderer = this._ngxRenderer;
     const camera = flicking.camera;
     const cameraElement = camera.element;
@@ -81,7 +81,7 @@ class NgxRenderer extends ExternalRenderer {
   }
 
   private _unrenderPanelElements(panels: Panel[]): this {
-    const flicking = this._flicking;
+    const flicking = this._flicking!;
     const renderer = this._ngxRenderer;
     const cameraElement = flicking.camera.element;
 
@@ -95,7 +95,7 @@ class NgxRenderer extends ExternalRenderer {
   }
 
   private _resetPanelElementOrder(panels: Panel[]) {
-    const flicking = this._flicking;
+    const flicking = this._flicking!;
     const renderer = this._ngxRenderer;
     const cameraEl = flicking.camera.element;
 
@@ -112,7 +112,7 @@ class NgxRenderer extends ExternalRenderer {
   }
 
   private _getRenderingPanelsByOrder(): Panel[] {
-    const flicking = this._flicking;
+    const flicking = this._flicking!;
     const panels = flicking.renderer.panels;
 
     return panels.filter(panel => panel.rendered)

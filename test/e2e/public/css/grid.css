@@ -1,0 +1,18 @@
+.flicking-panel {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  background-color: blue;
+}
+.flicking-panel:first-child {
+  background-color: red;
+  width: 100px;
+}
+.flicking-panel:last-child {
+  background-color: green;
+  width: 50px;
+}

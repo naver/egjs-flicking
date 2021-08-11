@@ -163,6 +163,21 @@ describe("Panel", () => {
 
         expect(panel.position).to.equal(panel.element.offsetLeft + 150); // pos + align
       });
+
+      it("should use cached sizes instead if given", async () => {
+        const panel = await createPanel(
+          El.panel()
+            .setWidth(300).setHeight(300)
+            .setMargin({ left: 10, right: 10 }), {}, { horizontal: true }
+        );
+
+        panel.resize({ size: 500, height: 400, margin: { prev: 20, next: 25 }});
+
+        expect(panel.size).to.equal(500);
+        expect(panel.height).to.equal(400);
+        expect(panel.margin.prev).to.equal(20);
+        expect(panel.margin.next).to.equal(25);
+      });
     });
 
     describe("includePosition", () => {
@@ -456,6 +471,20 @@ describe("Panel", () => {
 
         expect(panel.element).equals(null);
         expect(panel.contains(childEl.el)).to.be.false;
+      });
+    });
+
+    describe("setSize", () => {
+      it("should set CSS width/height style", async () => {
+        const panel = await createPanel(
+          El.panel()
+            .setWidth(300).setHeight(300), {}, { horizontal: true }
+        );
+
+        panel.setSize({ width: 500, height: 400 });
+
+        expect(panel.element.style.width).to.equal("500px");
+        expect(panel.element.style.height).to.equal("400px");
       });
     });
   });

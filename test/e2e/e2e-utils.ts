@@ -53,8 +53,16 @@ const callAllScenarios = (title: string, page: string, callback: CodeceptJS.Hook
     I.amOnPage(`http://localhost:9007/iframe.html?id=vue--${pageName}`);
     return callback({ I });
   });
+  ScenarioMethod(`${title}-vue3`, async ({ I }) => {
+    I.amOnPage(`http://localhost:9008/iframe.html?id=vue3--${pageName}`);
+    return callback({ I });
+  });
   ScenarioMethod(`${title}-angular`, async ({ I }) => {
-    I.amOnPage(`http://localhost:9008/iframe.html?id=angular--${pageName}`);
+    I.amOnPage(`http://localhost:9009/iframe.html?id=angular--${pageName}`);
+    return callback({ I });
+  });
+  ScenarioMethod(`${title}-svelte`, async ({ I }) => {
+    I.amOnPage(`http://localhost:9010/iframe.html?id=svelte--${pageName}`);
     return callback({ I });
   });
 };

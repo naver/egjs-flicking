@@ -44,7 +44,7 @@
   setContext(`${flickingID}-pending`, pendingPanels);
 
   $: {
-    isHorizontal = options.horizontal ?? true;
+    isHorizontal = options.horizontal != null ? options.horizontal : true;
     isHiddenBeforeInit = hideBeforeInit && !(vanillaFlicking && vanillaFlicking.initialized);
     cameraTransform = !(vanillaFlicking && vanillaFlicking.initialized) && firstPanelSize
       ? `transform: ${getDefaultCameraTransform(options.align, options.horizontal, firstPanelSize)};`
@@ -52,7 +52,7 @@
   }
 
   onDestroy(() => {
-    vanillaFlicking?.destroy();
+    vanillaFlicking && vanillaFlicking.destroy();
   });
 
   onMount(() => {

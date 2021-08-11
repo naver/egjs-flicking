@@ -1,13 +1,17 @@
-export default {
+import { Fixture } from "../../types";
+
+const fixture: Fixture = {
   options: {
 
   },
   panels: [
-    "<div class=\"flicking-panel\"></div>",
-    "<div class=\"flicking-panel\"></div>",
-    "<div class=\"flicking-panel\"></div>"
+    { tag: "div", class: "flicking-panel", text: "" },
+    { tag: "div", class: "flicking-panel", text: "" },
+    { tag: "div", class: "flicking-panel", text: "" }
   ],
   styles: [
     "css/no-options.css"
   ]
 };
+
+export default fixture;

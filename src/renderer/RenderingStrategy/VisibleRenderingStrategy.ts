@@ -6,7 +6,7 @@ import Flicking from "../../Flicking";
 
 import RenderingStrategy from "./RenderingStrategy";
 
-class VisibleRenderingStrategy implements RenderingStrategy {
+class VisibleRenderingStrategy extends RenderingStrategy {
   public updateRenderingPanels(flicking: Flicking) {
     const panels = flicking.renderer.panels;
     const camera = flicking.camera;

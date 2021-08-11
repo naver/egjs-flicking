@@ -1,15 +1,21 @@
-import { Parser } from "html-to-react";
-
-import { FlickingOptions } from "../../../src";
 import Flicking from "../../../packages/react-flicking/src/react-flicking/Flicking";
 import "../../../css/flicking.css";
+import { Fixture } from "../types";
 
-export default (options: Partial<FlickingOptions>, panels: string[], styles: string[]) => {
-  const HTMLParser = Parser();
+export default (fixture: Fixture) => {
+  const { styles, panels, options } = fixture;
+
+  console.log(options);
 
   styles.forEach(style => require(`../public/${style}`));
 
   return <Flicking {...options}>
-    { HTMLParser.parse(panels.join("")) }
+    {
+      panels.map(panel => {
+        const Tag = panel.tag as any;
+
+        return <Tag className={panel.class}>{panel.text}</Tag>;
+      })
+    }
   </Flicking>;
 };
