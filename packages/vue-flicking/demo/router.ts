@@ -11,6 +11,7 @@ import AutoPlay from "./plugins/Autoplay.vue";
 import Fade from "./plugins/Fade.vue";
 import Parallax from "./plugins/Parallax.vue";
 import Arrow from "./plugins/Arrow.vue";
+import Sync from "./plugins/Sync.vue";
 
 export default {
   routes: [
@@ -73,6 +74,11 @@ export default {
       path: "/arrow",
       name: "Arrow",
       component: Arrow,
+    },
+    {
+      path: "/sync",
+      name: "Sync",
+      component: Sync,
     },
   ],
 };

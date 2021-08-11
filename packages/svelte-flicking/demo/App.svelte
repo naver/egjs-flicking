@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Arrow } from "@egjs/flicking-plugins";
+  import { onMount } from "svelte";
+  import { Arrow, Sync } from "@egjs/flicking-plugins";
   import Flicking from "../src";
   import "@egjs/flicking/dist/flicking.css";
   import "@egjs/flicking-plugins/dist/flicking-plugins.css";
@@ -8,9 +9,13 @@
   import Test2 from "./Test2.svelte";
 
   let flick: Flicking;
+  let sync0: Flicking;
+  let sync1: Flicking;
+  let sync2: Flicking;
   let panels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   let list0 = [0, 1, 2];
   const plugins = [new Arrow()];
+  let plugins2: any[] = [];
 
   function prepend() {
     panels = [panels[0] - 2, panels[0] - 1, ...panels];
@@ -28,6 +33,26 @@
   function next() {
     flick.next();
   }
+
+  onMount(() => {
+    plugins2 = [new Sync({
+      type: "camera",
+      synchronizedFlickingOptions: [
+        {
+          flicking: sync0.vanillaFlicking,
+          isClickable: false
+        },
+        {
+          flicking: sync1.vanillaFlicking,
+          isClickable: false
+        },
+        {
+          flicking: sync2.vanillaFlicking,
+          isClickable: false
+        }
+      ]
+    })];
+  });
 </script>
 
 <div class="container">
@@ -95,6 +120,27 @@
       <span class="flicking-arrow-prev"></span>
       <span class="flicking-arrow-next"></span>
     </svelte:fragment>
+  </Flicking>
+  <Flicking plugins={plugins2} bind:this={sync0}>
+    <FlickingPanel><div class="panel">0</div></FlickingPanel>
+    <FlickingPanel><div class="panel">1</div></FlickingPanel>
+    <FlickingPanel><div class="panel">2</div></FlickingPanel>
+    <FlickingPanel><div class="panel">3</div></FlickingPanel>
+    <FlickingPanel><div class="panel">4</div></FlickingPanel>
+  </Flicking>
+  <Flicking bind:this={sync1}>
+    <FlickingPanel><div class="panel">0</div></FlickingPanel>
+    <FlickingPanel><div class="panel">1</div></FlickingPanel>
+    <FlickingPanel><div class="panel">2</div></FlickingPanel>
+    <FlickingPanel><div class="panel">3</div></FlickingPanel>
+    <FlickingPanel><div class="panel">4</div></FlickingPanel>
+  </Flicking>
+  <Flicking bind:this={sync2}>
+    <FlickingPanel><div class="panel">0</div></FlickingPanel>
+    <FlickingPanel><div class="panel">1</div></FlickingPanel>
+    <FlickingPanel><div class="panel">2</div></FlickingPanel>
+    <FlickingPanel><div class="panel">3</div></FlickingPanel>
+    <FlickingPanel><div class="panel">4</div></FlickingPanel>
   </Flicking>
 </div>
 
