@@ -1838,6 +1838,30 @@ describe("Methods call", () => {
           expect(panel.getPosition()).is.greaterThan(prevPanel.getPosition());
         });
       });
+
+      it("should replace current panel when it's removed", () => {
+        // Given
+        flickingInfo = createFlicking(horizontal.full, {
+          renderExternal: true,
+        });
+        const flicking = flickingInfo.instance;
+
+        // When
+        const prevCurrentPanel = flicking.getCurrentPanel();
+        const newElements = renderOriginalElement(1, "panel-horizontal-100px");
+        flicking.sync({
+          list: [...newElements],
+          maintained: [],
+          added: [0],
+          changed: [],
+          removed: [0, 1, 2]
+        });
+
+        // Then
+        expect(prevCurrentPanel).not.to.be.null;
+        expect(prevCurrentPanel.getElement()).not.to.equal(flicking.getCurrentPanel().getElement());
+        expect(flicking.getCurrentPanel().getElement()).to.equal(newElements[0]);
+      });
     });
 
     describe("sync() in circular mode", () => {
