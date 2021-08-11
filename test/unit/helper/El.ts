@@ -1,4 +1,5 @@
 import { parseCSSSizeValue } from "~/utils";
+import { range } from "./test-util";
 
 export const EL_CLASS = {
   VIEWPORT: "flicking-viewport",
@@ -25,6 +26,21 @@ class El {
         El.panel().setWidth("100%").setHeight(300),
         El.panel().setWidth("100%").setHeight(300),
         El.panel().setWidth("100%").setHeight(300),
+      ),
+    );
+  }
+
+  /**
+   * Very basic structure of the horizontal Flicking with n panels
+   * @example
+   * - Viewport (width: 1000px, height: 100%)
+   *   - Camera
+   *     - Panel (width: 100%, height: 300px) * n
+   */
+  public static DEFAULT_HORIZONTAL_WITH_PANELS(n: number) {
+    return El.viewport("1000px", "100%").add(
+      El.camera().add(
+        ...range(n).map(() => El.panel().setWidth("100%").setHeight(300))
       ),
     );
   }
