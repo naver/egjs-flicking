@@ -34,7 +34,7 @@ export default <Columns>
   </ColumnItem>
   <ColumnItem is={6}>
     <CodeBlock className="js" title="js">
-      {`import Flicking, { ALIGN, EVENTS } from "@egjs/flicking";
+      {`import Flicking, { ALIGN } from "@egjs/flicking";
 import { Sync } from "@egjs/flicking-plugins";
 
 const flicking0 = new Flicking("#flick0", {

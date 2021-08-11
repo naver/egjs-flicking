@@ -5,21 +5,28 @@ import Flicking from "@egjs/react-flicking";
 import SourceCode from "@site/src/component/SourceCode";
 import { Sync } from "@egjs/flicking-plugins";
 
-import JSCode from "./Sync-code/js";
-import ReactCode from "./Sync-code/react";
-import VueCode from "./Sync-code/vue";
-import AngularCode from "./Sync-code/angular";
-import SvelteCode from "./Sync-code/svelte";
-import "../../css/demo/sync.css";
+import JSCode from "./Sync-code/camera/js";
+import ReactCode from "./Sync-code/camera/react";
+import VueCode from "./Sync-code/camera/vue";
+import AngularCode from "./Sync-code/camera/angular";
+import SvelteCode from "./Sync-code/camera/svelte";
+
+import JSCode_Index from "./Sync-code/index/js";
+import ReactCode_Index from "./Sync-code/index/react";
+import VueCode_Index from "./Sync-code/index/vue";
+import AngularCode_Index from "./Sync-code/index/angular";
+import SvelteCode_Index from "./Sync-code/index/svelte";
 
 export default () => {
   const flicking0 = useRef<Flicking>();
   const flicking1 = useRef<Flicking>();
   const flicking2 = useRef<Flicking>();
 
-  const [plugins, setPlugins] = useState([]);
+  const flicking3 = useRef<Flicking>();
+  const flicking4 = useRef<Flicking>();
 
-  const svelteSourceCode = ``;
+  const [plugins, setPlugins] = useState([]);
+  const [plugins2, setPlugins2] = useState([]);
 
   useEffect(() => {
     setPlugins([new Sync({
@@ -36,6 +43,21 @@ export default () => {
         {
           flicking: flicking2.current,
           isClickable: false
+        }
+      ]
+    })]);
+
+    setPlugins2([new Sync({
+      type: "index",
+      synchronizedFlickingOptions: [
+        {
+          flicking: flicking3.current,
+          isSlidable: true
+        },
+        {
+          flicking: flicking4.current,
+          isClickable: true,
+          activeClass: "active"
         }
       ]
     })]);
@@ -104,6 +126,66 @@ export default () => {
     angular={AngularCode}
     preact={ReactCode}
     svelte={SvelteCode}
+  />
+
+  <div className="p-4 mb-4">
+    <Flicking ref={flicking3}
+      className="mb-4"
+      bounce={30}
+      plugins={plugins2} >
+      <div className="flicking-panel full has-background-primary">
+        <img className="panel-image" src={require("@site/static/img/demo/bg01.jpg").default} />
+      </div>
+      <div className="flicking-panel full has-background-primary">
+        <img className="panel-image" src={require("@site/static/img/demo/bg02.jpg").default} />
+      </div>
+      <div className="flicking-panel full has-background-primary">
+        <img className="panel-image" src={require("@site/static/img/demo/bg03.jpg").default} />
+      </div>
+      <div className="flicking-panel full has-background-primary">
+        <img className="panel-image" src={require("@site/static/img/demo/bg04.jpg").default} />
+      </div>
+      <div className="flicking-panel full has-background-primary">
+        <img className="panel-image" src={require("@site/static/img/demo/bg05.jpg").default} />
+      </div>
+      <div className="flicking-panel full has-background-primary">
+        <img className="panel-image" src={require("@site/static/img/demo/bg06.jpg").default} />
+      </div>
+    </Flicking>
+    <Flicking ref={flicking4}
+      bound={true}
+      moveType="freeScroll"
+      bounce={30}>
+      <div className="flicking-panel thumb has-background-primary">
+        <img className="thumb-image" src={require("@site/static/img/demo/bg01.jpg").default} />
+      </div>
+      <div className="flicking-panel thumb has-background-primary">
+        <img className="thumb-image" src={require("@site/static/img/demo/bg02.jpg").default} />
+      </div>
+      <div className="flicking-panel thumb has-background-primary">
+        <img className="thumb-image" src={require("@site/static/img/demo/bg03.jpg").default} />
+      </div>
+      <div className="flicking-panel thumb has-background-primary">
+        <img className="thumb-image" src={require("@site/static/img/demo/bg04.jpg").default} />
+      </div>
+      <div className="flicking-panel thumb has-background-primary">
+        <img className="thumb-image" src={require("@site/static/img/demo/bg05.jpg").default} />
+      </div>
+      <div className="flicking-panel thumb has-background-primary">
+        <img className="thumb-image" src={require("@site/static/img/demo/bg06.jpg").default} />
+      </div>
+    </Flicking>
+  </div>
+
+  <SourceCode
+    options={{ bound: true, bounce: 30, align: "prev" }} panels={[]}
+    js={JSCode_Index}
+    react={ReactCode_Index}
+    vue={VueCode_Index}
+    vue3={VueCode_Index}
+    angular={AngularCode_Index}
+    preact={ReactCode_Index}
+    svelte={SvelteCode_Index}
   />
 
   </>;

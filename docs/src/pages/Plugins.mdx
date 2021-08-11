@@ -246,3 +246,13 @@ These are the available CSS files:
 
 ## Sync
 <SyncDemo />
+
+### Options
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|type|"camera" \| "index"|✔️|"camera"|Types of methods to synchronize between Flickings. `"camera"` will sync by camera position, and `"index"` will sync by panel index|
+|synchronizedFlickingOptions|Array<{flicking: Flicking, isClickable: boolean, isSlidable: boolean, activeClass: string}>|✔️|[]|Detailed options for syncing Flickings|
+|synchronizedFlickingOptions[].flicking|[Flicking](docs/api/Flicking)|||An instance of Flicking to sync|
+|synchronizedFlickingOptions[].isClickable|boolean|✔️|false|By enabling this option, clicking the given Flicking's panel will change the given & other Flicking's index|
+|synchronizedFlickingOptions[].isSlidable|boolean|✔️|false|By enabling this option, the given Flicking's scroll with mouse/touch input will change other Flicking's index. Only available for the `index` type|
+|synchronizedFlickingOptions[].activeClass|string|✔️||An extra class for the panels when selected|
