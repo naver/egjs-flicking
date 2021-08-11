@@ -205,11 +205,12 @@ GitHub.sublime-settings
 
 ### Custom ###
 doc/
+docs/
 report/
 temp/
 demo/release
 packages/*/dist/
 demo/_data/version.yml
-dist/
+
 outjs/
 declaration/
