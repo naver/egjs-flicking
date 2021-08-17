@@ -9,7 +9,6 @@ import El from "./helper/El";
 import { cleanup, createFlicking, range, simulate, tick } from "./helper/test-util";
 import { Plugin } from "~/type/external";
 import { SnapControl, FreeControl, StrictControl } from "~/control";
-import { GridRenderingStrategy } from "~/renderer";
 
 describe("Flicking", () => {
   afterEach(() => {
@@ -186,20 +185,6 @@ describe("Flicking", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         expect(flicking.panelsPerView).to.equal(-1);
-      });
-
-      it("should not enable GridRenderingStrategy if 0 is given", async () => {
-        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { panelsPerView: 0 });
-
-        expect((flicking.renderer as any)._renderingStrategy).not.to.be.instanceOf(GridRenderingStrategy);
-      });
-
-      it("should enable GridRenderingStrategy if 1 or higher value is given", async () => {
-        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { panelsPerView: 1 });
-        const flicking2 = await createFlicking(El.DEFAULT_HORIZONTAL, { panelsPerView: 50 });
-
-        expect((flicking.renderer as any)._renderingStrategy).to.be.instanceOf(GridRenderingStrategy);
-        expect((flicking2.renderer as any)._renderingStrategy).to.be.instanceOf(GridRenderingStrategy);
       });
     });
 

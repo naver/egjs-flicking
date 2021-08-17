@@ -6,14 +6,11 @@ import Renderer, { RendererOptions } from "./Renderer";
 import VanillaRenderer from "./VanillaRenderer";
 import ExternalRenderer from "./ExternalRenderer";
 
-
 export {
   Renderer,
   VanillaRenderer,
   ExternalRenderer
 };
-
-export * from "./RenderingStrategy";
 
 export type {
   RendererOptions
