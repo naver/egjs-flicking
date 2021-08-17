@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@egjs/build-helper": "^0.1.2",
-    "@egjs/flicking-plugins": "^4.1.0",
+    "@egjs/flicking-plugins": "^4.2.0",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
     "@rollup/plugin-typescript": "^8.0.0",

@@ -19,6 +19,7 @@ import { ParallaxComponent } from './parallax/parallax.component';
 import { VisiblePanelsComponent } from './visiblepanels/visiblepanels.component';
 import { PanelComponent } from './panel/panel.component';
 import { ArrowComponent } from './arrow/arrow.component';
+import { SyncComponent } from './sync/sync.component';
 
 const appRoutes: Routes = [
   { path: 'align', component: AlignComponent },
@@ -34,7 +35,8 @@ const appRoutes: Routes = [
   { path: 'parallax', component: ParallaxComponent },
   { path: 'custom', component: CustomComponent },
   { path: 'visiblepanels', component: VisiblePanelsComponent },
-  { path: 'arrow', component: ArrowComponent }
+  { path: 'arrow', component: ArrowComponent },
+  { path: 'sync', component: SyncComponent }
   // { path: '**', component: PageNotFoundComponent }
 ];
 
@@ -58,6 +60,7 @@ const appRoutes: Routes = [
     VisiblePanelsComponent,
     ArrowComponent,
     PanelComponent,
+    SyncComponent
   ],
   imports: [
     BrowserModule,

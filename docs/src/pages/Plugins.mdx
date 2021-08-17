@@ -11,6 +11,7 @@ import ParallaxDemo from "@site/src/demo/plugins/Parallax";
 import FadeDemo from "@site/src/demo/plugins/Fade";
 import ArrowDemo from "@site/src/demo/plugins/Arrow";
 import PaginationDemo from "@site/src/demo/plugins/Pagination";
+import SyncDemo from "@site/src/demo/plugins/Sync";
 import "@site/src/css/demo/plugins.css";
 
 # Plugins
@@ -242,3 +243,16 @@ These are the available CSS files:
 |fractionCurrentFormat|function|✔️|(index: number) => index.toString()|A format to display a current index inside `fraction-current` class|
 |fractionTotalFormat|function|✔️|(index: number) => index.toString()|A format to display a total panels count inside `fraction-total` class|
 |scrollOnChange|function|✔️|(index: number, ctx: ScrollContext) => ctx.moveTo(index)|A callback function triggered when the active bullet changes|
+
+## Sync
+<SyncDemo />
+
+### Options
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|type|"camera" \| "index"|✔️|"camera"|Types of methods to synchronize between Flickings. `"camera"` will sync by camera position, and `"index"` will sync by panel index|
+|synchronizedFlickingOptions|Array<{flicking: Flicking, isClickable: boolean, isSlidable: boolean, activeClass: string}>|✔️|[]|Detailed options for syncing Flickings|
+|synchronizedFlickingOptions[].flicking|[Flicking](docs/api/Flicking)|||An instance of Flicking to sync|
+|synchronizedFlickingOptions[].isClickable|boolean|✔️|false|By enabling this option, clicking the given Flicking's panel will change the given & other Flicking's index|
+|synchronizedFlickingOptions[].isSlidable|boolean|✔️|false|By enabling this option, the given Flicking's scroll with mouse/touch input will change other Flicking's index. Only available for the `index` type|
+|synchronizedFlickingOptions[].activeClass|string|✔️||An extra class for the panels when selected|

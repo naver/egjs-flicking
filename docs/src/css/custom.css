@@ -150,6 +150,29 @@ article a {
 .flicking-panel.higher {
   height: 400px;
 }
+.flicking-panel.full {
+  width: 100%;
+}
+.flicking-panel.thumb {
+  padding: 0;
+  width: 20%;
+  height: 100px;
+  margin-bottom: 0;
+}
+.flicking-panel.thumb.active {
+  border: 5px solid #48c78e;
+}
+.flicking-panel .thumb-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+.flicking-panel img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
 
 .panel-with-link {
   width: 100%;
