@@ -1,6 +1,5 @@
 const flicking = new Flicking("#flicking", {
-  align: "center",
-  panelsPerView: 2,
+  align: "10%",
   bound: true
 });
 

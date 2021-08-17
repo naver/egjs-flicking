@@ -4,7 +4,7 @@
  */
 import Panel from "../core/panel/Panel";
 import AnchorPoint from "../core/AnchorPoint";
-import { getFlickingAttached } from "../utils";
+import { getFlickingAttached, parseAlign } from "../utils";
 
 import Camera from "./Camera";
 
@@ -39,12 +39,22 @@ class BoundCamera extends Camera {
     const firstPanelPrev = firstPanel.range.min;
     const lastPanelNext = lastPanel.range.max;
     const panelAreaSize = lastPanelNext - firstPanelPrev;
-    const canSetBoundMode = viewportSize < panelAreaSize;
+    const isBiggerThanViewport = viewportSize < panelAreaSize;
 
-    if (canSetBoundMode) {
-      this._range = { min: firstPanelPrev + alignPos, max: lastPanelNext - viewportSize + alignPos };
+    const firstPos = firstPanelPrev + alignPos;
+    const lastPos = lastPanelNext - viewportSize + alignPos;
+
+    if (isBiggerThanViewport) {
+      this._range = { min: firstPos, max: lastPos };
     } else {
-      this._range = { min: firstPanel.position, max: lastPanel.position };
+      const align = this._align;
+      const alignVal = typeof align === "object"
+        ? (align as { camera: string | number }).camera
+        : align;
+
+      const pos = firstPos + parseAlign(alignVal, lastPos - firstPos);
+
+      this._range = { min: pos, max: pos };
     }
 
     return this;
