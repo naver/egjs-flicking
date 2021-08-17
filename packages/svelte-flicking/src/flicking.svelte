@@ -131,6 +131,8 @@
 
     // Flush pending panels
     pendingPanels.splice(0, pendingPanels.length);
+
+    checkPlugins();
   });
 
   function getChildren() {
