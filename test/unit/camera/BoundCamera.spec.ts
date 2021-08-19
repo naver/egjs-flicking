@@ -40,7 +40,7 @@ describe("BoundCamera", () => {
         });
       });
 
-      it("should set range from first panel's position to last panel's position when sum of panel size is smaller than viewport size", async () => {
+      it("should set range by align value when sum of panel size is same or smaller than viewport size", async () => {
         const camera = new BoundCamera();
         const flicking = await createFlicking(
           El.viewport().setWidth(900).add(
@@ -48,7 +48,8 @@ describe("BoundCamera", () => {
               .add(El.panel("300px"))
               .add(El.panel("300px"))
               .add(El.panel("300px"))
-          )
+          ),
+          { align: "center" }
         );
 
         camera.init(flicking);
@@ -56,12 +57,26 @@ describe("BoundCamera", () => {
         camera.updateRange();
 
         expect(camera.range).to.deep.equal({
-          min: flicking.getPanel(0).position,
-          max: flicking.getPanel(2).position
+          min: 450,
+          max: 450
         });
-        expect(camera.range).not.to.deep.equal({
-          min: flicking.getPanel(0).range.min + camera.alignPosition,
-          max: flicking.getPanel(2).range.max - camera.alignPosition
+
+        camera.align = "prev";
+
+        camera.updateAlignPos();
+        camera.updateRange();
+        expect(camera.range).to.deep.equal({
+          min: 0,
+          max: 0
+        });
+
+        camera.align = "next";
+
+        camera.updateAlignPos();
+        camera.updateRange();
+        expect(camera.range).to.deep.equal({
+          min: 900,
+          max: 900
         });
       });
     });
