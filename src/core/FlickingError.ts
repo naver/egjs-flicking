@@ -3,6 +3,8 @@
  * egjs projects are licensed under the MIT license
  */
 
+import { setPrototypeOf } from "../utils";
+
 /**
  * Special type of known error that {@link Flicking} throws.
  * @ko Flicking 내부에서 알려진 오류 발생시 throw되는 에러
@@ -30,7 +32,8 @@ class FlickingError extends Error {
     public message: string,
     public code: number) {
     super(message);
-    Object.setPrototypeOf(this, FlickingError.prototype);
+
+    setPrototypeOf(this, FlickingError.prototype);
     this.name = "FlickingError";
   }
 }

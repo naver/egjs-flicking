@@ -265,3 +265,8 @@ export const circulateIndex = (index: number, max: number): number => {
     return index;
   }
 };
+
+export const setPrototypeOf = Object.setPrototypeOf || ((obj, proto) => {
+  obj.__proto__ = proto;
+  return obj;
+});
