@@ -1104,10 +1104,10 @@ class Flicking extends Component<FlickingEvents> {
     viewport.resize();
     await renderer.forceRenderAllPanels(); // Render all panel elements, to update sizes
     renderer.updatePanelSize();
-    await renderer.render();
     camera.updateAlignPos();
     camera.updateRange();
     camera.updateAnchors();
+    await renderer.render();
 
     if (control.animating) {
       // TODO:
