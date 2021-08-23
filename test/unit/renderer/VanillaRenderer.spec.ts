@@ -1,6 +1,6 @@
 import VanillaRenderer from "~/renderer/VanillaRenderer";
 import El from "helper/El";
-import { createFlicking } from "helper/test-util";
+import { createFlicking, range } from "../helper/test-util";
 
 describe("NativeRenderer", () => {
   describe("Methods", () => {
@@ -48,6 +48,16 @@ describe("NativeRenderer", () => {
 
         expect(element.previousElementSibling).to.equal(shouldBePrev.element);
         expect(element.nextElementSibling).to.equal(shouldBeNext.element);
+      });
+
+      it("should resize the new panels added", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const renderer = flicking.renderer;
+        const elements = range(5).map(() => El.panel("100%").el);
+
+        const returnVal = renderer.batchInsert({ index: 2, elements });
+
+        expect(returnVal.every(panel => panel.size !== 0)).to.be.true;
       });
     });
   });

@@ -527,7 +527,7 @@ describe("Flicking", () => {
     });
   });
 
-  describe("Flicking Events", () => {
+  describe("Events", () => {
     describe(EVENTS.READY, () => {
       it("should be emitted when Flicking is initialized", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
@@ -741,6 +741,40 @@ describe("Flicking", () => {
         const event = resizeSpy.firstCall.args[0] as AfterResizeEvent;
         expect(resizeSpy.calledOnce).to.be.true;
         expect(event.element).to.deep.equal(viewport.el);
+      });
+    });
+
+    describe(EVENTS.NEED_PANEL, () => {
+      it("should be in animating state when it's triggered", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const needPanelSpy = sinon.spy();
+        const wasAnimating: boolean[] = [];
+
+        flicking.on(EVENTS.NEED_PANEL, () => {
+          wasAnimating.push(flicking.animating);
+          needPanelSpy();
+        });
+
+        await simulate(flicking.element, { deltaX: -5000 });
+
+        expect(needPanelSpy.called).to.be.true;
+        expect(wasAnimating.every(animating => animating)).to.be.true;
+      });
+
+      it("should not trigger another needPanel event when panel is appended by it", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const needPanelSpy = sinon.spy();
+
+        flicking.on(EVENTS.NEED_PANEL, needPanelSpy);
+        flicking.on(EVENTS.NEED_PANEL, e => {
+          if (e.direction === DIRECTION.PREV) return;
+
+          flicking.append(El.panel("100%").el);
+        });
+
+        await simulate(flicking.element, { deltaX: -5000 });
+
+        expect(needPanelSpy.calledOnce).to.be.true;
       });
     });
 
