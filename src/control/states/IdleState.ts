@@ -32,6 +32,7 @@ class IdleState extends State {
 
   public onEnter() {
     this._delta = 0;
+    this._targetPanel = null;
   }
 
   public onHold(ctx: Parameters<State["onHold"]>[0]): void {

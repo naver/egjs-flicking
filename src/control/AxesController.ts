@@ -36,6 +36,10 @@ class AxesController {
    */
   public get axes() { return this._axes; }
   /**
+   * @internal
+   */
+  public get stateMachine() { return this._stateMachine; }
+  /**
    * A activated {@link State} that shows the current status of the user input or the animation
    * @ko 현재 활성화된 {@link State} 인스턴스로 사용자 입력 또는 애니메이션 상태를 나타냅니다
    * @type {State}

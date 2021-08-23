@@ -7,6 +7,7 @@ import { OnAnimationEnd, OnChange, OnFinish, OnHold, OnRelease } from "@egjs/axe
 import { ComponentEvent } from "@egjs/component";
 
 import Flicking from "../../Flicking";
+import Panel from "../../core/panel/Panel";
 import { EVENTS } from "../../const/external";
 import * as AXES from "../../const/axes";
 import { circulatePosition, getDirection } from "../../utils";
@@ -41,6 +42,7 @@ abstract class State {
   public abstract readonly animating: boolean;
 
   protected _delta: number = 0;
+  protected _targetPanel: Panel | null = null;
 
   /**
    * A sum of delta values of change events from the last hold event of Axes
@@ -51,6 +53,14 @@ abstract class State {
   public get delta() { return this._delta; }
 
   /**
+   * A panel to set as {@link Control#activePanel} after the animation is finished
+   * @ko 애니메이션 종료시 {@link Control#activePanel}로 설정할 패널
+   * @type {number}
+   * @readonly
+   */
+  public get targetPanel() { return this._targetPanel; }
+
+  /**
    * An callback which is called when state has changed to this state
    * @ko 현재 상태로 돌입했을때 호출되는 콜백 함수
    * @param {State} prevState An previous state<ko>이전 상태값</ko>
@@ -58,6 +68,7 @@ abstract class State {
    */
   public onEnter(prevState: State): void {
     this._delta = prevState._delta;
+    this._targetPanel = prevState._targetPanel;
   }
 
   /**

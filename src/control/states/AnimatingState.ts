@@ -51,9 +51,7 @@ class AnimatingState extends State {
   }
 
   public onFinish(ctx: Parameters<State["onFinish"]>[0]) {
-    const { flicking, axesEvent, transitTo } = ctx;
-
-    transitTo(STATE_TYPE.IDLE);
+    const { flicking, axesEvent } = ctx;
 
     const controller = flicking.control.controller;
     const animatingContext = controller.animatingContext;
@@ -63,6 +61,8 @@ class AnimatingState extends State {
       direction: getDirection(animatingContext.start, animatingContext.end),
       axesEvent
     }));
+
+    // transitTo is controlled by class Control because of order
   }
 }
 

@@ -171,6 +171,9 @@ abstract class Renderer {
 
       panels.splice(insertingIdx, 0, ...panelsInserted);
 
+      // Insert the actual elements as camera element's children
+      this._insertPanelElements(panelsInserted, panelsPushed[0] ?? null);
+
       // Resize the newly added panels
       panelsInserted.forEach(panel => panel.resize());
 
@@ -181,9 +184,6 @@ abstract class Renderer {
         panel.increaseIndex(panelsInserted.length);
         panel.increasePosition(insertedSize);
       });
-
-      // Insert the actual elements as camera element's children
-      this._insertPanelElements(panelsInserted, panelsPushed[0] ?? null);
 
       return [...addedPanels, ...panelsInserted];
     }, []);
