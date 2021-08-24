@@ -1,0 +1,47 @@
+.date-demo-wrapper {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+.date-flicking {
+  overflow: visible;
+  box-sizing: content-box;
+  height: 240px;
+  perspective: 300px;
+  transform-style: preserve-3d;
+}
+.date-flicking > .flicking-camera {
+  transform-style: preserve-3d;
+}
+.date-panel {
+  align-items: center;
+  height: 40px;
+  margin-bottom: 10px;
+  backface-visibility: hidden;
+}
+.date-panel-border {
+  width: calc(100% - 40px);
+  height: 60px;
+  position: absolute;
+  top: 90px;
+  left: 20px;
+  border-top: 4px solid #ddd;
+  border-bottom: 4px solid #ddd;
+}
+.shadow-top {
+  width: 100%;
+  height: 90px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.shadow-bottom {
+  width: 100%;
+  height: 90px;
+  position: absolute;
+  top: 150px;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+

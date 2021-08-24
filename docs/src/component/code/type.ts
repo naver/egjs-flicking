@@ -1,6 +1,8 @@
 export interface SourceContext {
   options: { [key: string]: any };
   panels: InnerElement[];
+  events?: { [key: string]: any };
+  methods?: { [key: string]: any };
   siblings?: InnerElement[];
   plugins?: Plugin[];
   imports?: Array<string | string[]>;
