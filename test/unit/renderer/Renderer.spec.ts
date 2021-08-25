@@ -151,6 +151,16 @@ describe("Renderer", () => {
         expect(panelChangeSpy.firstCall.args[0].added[0].element).to.equal(element);
         expect(panelChangeSpy.firstCall.args[0].removed.length).to.equal(0);
       });
+
+      it("should put proper indexes to added panels", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const renderer = new RendererImpl().init(flicking);
+        const elements = range(5).map(() => El.panel().el);
+
+        const newPanels = renderer.batchInsert({ index: 1, elements: elements });
+
+        expect(newPanels.every((panel, idx) => panel.index === 1 + idx)).to.be.true;
+      });
     });
 
     describe("batchRemove", () => {
