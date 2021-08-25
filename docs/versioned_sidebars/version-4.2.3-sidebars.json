@@ -1,0 +1,238 @@
+{
+  "version-4.2.3/docs": [
+    {
+      "type": "doc",
+      "id": "version-4.2.3/installation"
+    },
+    {
+      "type": "doc",
+      "id": "version-4.2.3/quick-start"
+    },
+    {
+      "type": "doc",
+      "id": "version-4.2.3/using-the-methods"
+    },
+    {
+      "type": "doc",
+      "id": "version-4.2.3/listening-to-events"
+    },
+    {
+      "type": "doc",
+      "id": "version-4.2.3/error-handling"
+    },
+    {
+      "type": "doc",
+      "id": "version-4.2.3/polyfills"
+    },
+    {
+      "type": "doc",
+      "id": "version-4.2.3/ssr"
+    },
+    {
+      "type": "doc",
+      "id": "version-4.2.3/migration-from-v3"
+    }
+  ],
+  "version-4.2.3/api": [
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Class",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/Flicking"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/BoundCamera"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/Camera"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/CircularCamera"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/LinearCamera"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/AxesController"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/Control"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/FreeControl"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/SnapControl"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/StrictControl"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/AnimatingState"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/DisabledState"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/DraggingState"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/HoldingState"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/IdleState"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/State"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/AnchorPoint"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/FlickingError"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/Viewport"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/ElementPanel"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/ExternalPanel"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/Panel"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/ExternalRenderer"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/Renderer"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/VanillaRenderer"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/Component"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Interface",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/FlickingEvents"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/FlickingOptions"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/TogglePoint"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/FreeControlOptions"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/SnapControlOptions"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/StrictControlOptions"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/Plugin"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/Status"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/ControlParams"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Constant",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/EVENT"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/POSITION_KEY"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/ERROR_CODE"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/EVENTS"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/ALIGN"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/DIRECTION"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/MOVE_TYPE"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Typedef",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-4.2.3/api/ElementLike"
+        }
+      ]
+    }
+  ]
+}

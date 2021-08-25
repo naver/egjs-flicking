@@ -18,7 +18,7 @@ new Camera()
 ```
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-||Partial&lt;CameraOptions&gt;|yes|{}||
+||Partial&lt;CameraOptions&gt;|✔️|{}||
 
 ## Properties
 
@@ -203,7 +203,7 @@ Camera를 초기화합니다
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|flicking|[Flicking](Flicking)|no||Flicking의 인스턴스|
+|flicking|[Flicking](Flicking)|||Flicking의 인스턴스|
 
 **Throws**: [FlickingError](FlickingError)
 
@@ -231,7 +231,7 @@ Camera를 초기 상태로 되돌립니다
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|pos|number|no||움직일 위치|
+|pos|number|||움직일 위치|
 
 **Throws**: [FlickingError](FlickingError)
 
@@ -251,7 +251,7 @@ Camera를 초기 상태로 되돌립니다
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|anchor|[AnchorPoint](AnchorPoint)|no||기준 [AnchorPoint](AnchorPoint)|
+|anchor|[AnchorPoint](AnchorPoint)|||기준 [AnchorPoint](AnchorPoint)|
 
 ### getNextAnchor {#getNextAnchor}
 
@@ -267,7 +267,7 @@ Camera를 초기 상태로 되돌립니다
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|anchor|[AnchorPoint](AnchorPoint)|no||기준 [AnchorPoint](AnchorPoint)|
+|anchor|[AnchorPoint](AnchorPoint)|||기준 [AnchorPoint](AnchorPoint)|
 
 ### getProgressInPanel {#getProgressInPanel}
 
@@ -281,7 +281,7 @@ Camera를 초기 상태로 되돌립니다
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|panel|[Panel](Panel)|no|||
+|panel|[Panel](Panel)||||
 
 ### findAnchorIncludePosition {#findAnchorIncludePosition}
 
@@ -297,7 +297,7 @@ Camera를 초기 상태로 되돌립니다
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|position|number|no||확인할 좌표|
+|position|number|||확인할 좌표|
 
 ### findNearestAnchor {#findNearestAnchor}
 
@@ -313,7 +313,7 @@ Camera를 초기 상태로 되돌립니다
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|position|number|no||확인할 좌표|
+|position|number|||확인할 좌표|
 
 ### findActiveAnchor {#findActiveAnchor}
 
@@ -338,7 +338,7 @@ Camera를 초기 상태로 되돌립니다
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|position|number|no||범위를 제한할 좌표|
+|position|number|||범위를 제한할 좌표|
 
 ### canReach {#canReach}
 
@@ -353,7 +353,7 @@ Camera를 초기 상태로 되돌립니다
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|panel|[Panel](Panel)|no||확인할 [Panel](Panel)의 인스턴스|
+|panel|[Panel](Panel)|||확인할 [Panel](Panel)의 인스턴스|
 
 ### canSee {#canSee}
 
@@ -368,7 +368,7 @@ Camera를 초기 상태로 되돌립니다
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|panel|[Panel](Panel)|no||확인할 [Panel](Panel)의 인스턴스|
+|panel|[Panel](Panel)|||확인할 [Panel](Panel)의 인스턴스|
 
 ### updateAlignPos {#updateAlignPos}
 
