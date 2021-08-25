@@ -167,7 +167,7 @@ abstract class Renderer {
     const allPanelsInserted = items.reduce((addedPanels, item) => {
       const insertingIdx = getMinusCompensatedIndex(item.index, panels.length);
       const panelsPushed = panels.slice(insertingIdx);
-      const panelsInserted = item.elements.map(el => this._createPanel(el, { index: insertingIdx, align, flicking }));
+      const panelsInserted = item.elements.map((el, idx) => this._createPanel(el, { index: insertingIdx + idx, align, flicking }));
 
       panels.splice(insertingIdx, 0, ...panelsInserted);
 
