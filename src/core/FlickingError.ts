@@ -24,17 +24,18 @@ import { setPrototypeOf } from "../utils";
  * ```
  */
 class FlickingError extends Error {
+  public code: number;
+
   /**
    * @param message Error message<ko>에러 메시지</ko>
    * @param code Error code<ko>에러 코드</ko>
    */
-  public constructor(
-    public message: string,
-    public code: number) {
+  public constructor(message: string, code: number) {
     super(message);
 
     setPrototypeOf(this, FlickingError.prototype);
     this.name = "FlickingError";
+    this.code = code;
   }
 }
 

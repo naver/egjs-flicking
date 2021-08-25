@@ -1,0 +1,150 @@
+---
+custom_edit_url: null
+---
+
+<div className="notification is-warning my-2">⚠️ This class is for <strong>internal</strong> use only.</div>
+
+```ts
+class IdleState extends State
+```
+A default state when there's no user input and no animation's playing
+
+<div className="container">
+  <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
+  <div className="row"><div className="col col--6"><a href="#holding">holding</a><br/><a href="#animating">animating</a><br/><a href="#delta">delta</a></div><div className="col col--6"><a href="#onEnter">onEnter</a><br/><a href="#onHold">onHold</a><br/><a href="#onChange">onChange</a><br/><a href="#onRelease">onRelease</a><br/><a href="#onAnimationEnd">onAnimationEnd</a><br/><a href="#onFinish">onFinish</a></div></div>
+</div>
+
+## Properties
+
+### holding {#holding}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+</div>
+
+Whether user is clicking or touching
+
+**Type**: false
+
+### animating {#animating}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+</div>
+
+Whether Flicking's animating
+
+**Type**: false
+
+### delta {#delta}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+A sum of delta values of change events from the last hold event of Axes
+
+**Type**: number
+
+## Methods
+
+### onEnter {#onEnter}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+An callback which is called when state has changed to this state
+
+**Returns**: void
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|prevState|[State](State)|||An previous state|
+
+### onHold {#onHold}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+An event handler for Axes's [hold](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-hold) event
+
+**Returns**: void
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|ctx|object|✔️||Event context|
+|ctx.flicking|[Flicking](Flicking)|✔️||An instance of Flicking|
+|ctx.axesEvent|object|✔️||A [hold](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-hold) event of Axes|
+|ctx.transitTo|function|✔️||A function for changing current state to other state|
+
+### onChange {#onChange}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+An event handler for Axes's [change](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-change) event
+
+**Returns**: void
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|ctx|object|✔️||Event context|
+|ctx.flicking|[Flicking](Flicking)|✔️||An instance of Flicking|
+|ctx.axesEvent|object|✔️||A [change](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-change) event of Axes|
+|ctx.transitTo|function|✔️||A function for changing current state to other state|
+
+### onRelease {#onRelease}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+An event handler for Axes's [release](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-release) event
+
+**Returns**: void
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|ctx|object|✔️||Event context|
+|ctx.flicking|[Flicking](Flicking)|✔️||An instance of Flicking|
+|ctx.axesEvent|object|✔️||A [release](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-release) event of Axes|
+|ctx.transitTo|function|✔️||A function for changing current state to other state|
+
+### onAnimationEnd {#onAnimationEnd}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+An event handler for Axes's [animationEnd](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-animationEnd) event
+
+**Returns**: void
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|ctx|object|✔️||Event context|
+|ctx.flicking|[Flicking](Flicking)|✔️||An instance of Flicking|
+|ctx.axesEvent|object|✔️||A [animationEnd](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-animationEnd) event of Axes|
+|ctx.transitTo|function|✔️||A function for changing current state to other state|
+
+### onFinish {#onFinish}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+An event handler for Axes's [finish](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-finish) event
+
+**Returns**: void
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|ctx|object|✔️||Event context|
+|ctx.flicking|[Flicking](Flicking)|✔️||An instance of Flicking|
+|ctx.axesEvent|object|✔️||A [finish](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-finish) event of Axes|
+|ctx.transitTo|function|✔️||A function for changing current state to other state|
+
