@@ -31,8 +31,10 @@
   ],
   "dependencies": {
     "@egjs/flicking": "^4.2.3",
-    "vue": "^3.2.6",
     "vue-class-component": "^8.0.0-rc.1"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
   },
   "devDependencies": {
     "@egjs/build-helper": "^0.1.2",
@@ -44,6 +46,7 @@
     "cpx": "^1.5.0",
     "rollup-plugin-vue": "^6.0.0",
     "tslib": "^2.3.1",
-    "typescript": "^4.1.6"
+    "typescript": "^4.1.6",
+    "vue": "^3.2.6"
   }
 }
