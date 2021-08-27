@@ -5,17 +5,11 @@ const flicking = new Flicking("#flicking", {
 //   flicking.on(evt, console.log);
 // });
 
-flicking.on(Flicking.EVENTS.NEED_PANEL, e => {
-  if (e.direction === "PREV") return;
+// document.querySelector("#prev").addEventListener("click", () => flicking.prev().catch(() => void 0));
+// document.querySelector("#next").addEventListener("click", () => flicking.next().catch(() => void 0));
 
-  flicking.append(`<div class="flicking-panel has-text-white has-background-primary">${flicking.panelCount + 1}</div>`);
-});
-
-document.querySelector("#prev").addEventListener("click", () => flicking.prev().catch(() => void 0));
-document.querySelector("#next").addEventListener("click", () => flicking.next().catch(() => void 0));
-
-flicking.panels.forEach(panel => {
-  panel.element.addEventListener("click", e => {
-    console.error("clicked");
-  });
-});
+// flicking.panels.forEach(panel => {
+//   panel.element.addEventListener("click", e => {
+//     console.error("clicked");
+//   });
+// });
