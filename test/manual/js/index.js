@@ -1,6 +1,4 @@
-var flicking = new Flicking("#flicking", {
-  align: "10%",
-  bound: true
+const flicking = new Flicking("#flicking", {
 });
 
 // Object.values(Flicking.EVENTS).forEach(evt => {

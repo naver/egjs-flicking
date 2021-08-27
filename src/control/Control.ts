@@ -14,6 +14,8 @@ import * as ERROR from "../const/error";
 import { getDirection, getFlickingAttached } from "../utils";
 import { ValueOf } from "../type/internal";
 
+import { STATE_TYPE } from "./states/State";
+
 /**
  * A component that manages inputs and animation of Flicking
  * @ko Flicking의 입력 장치 & 애니메이션을 담당하는 컴포넌트
@@ -351,6 +353,7 @@ abstract class Control {
     this._activePanel = newActivePanel;
 
     flicking.camera.updateAdaptiveHeight();
+    this._controller.stateMachine.transitTo(STATE_TYPE.IDLE);
 
     if (newActivePanel !== prevActivePanel) {
       flicking.trigger(new ComponentEvent(EVENTS.CHANGED, {
