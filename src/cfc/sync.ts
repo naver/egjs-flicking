@@ -5,6 +5,7 @@ import Renderer from "../renderer/Renderer";
 
 export default (flicking: Flicking, diffResult: DiffResult<any>, rendered: any[]) => {
   const renderer = flicking.renderer;
+  const panels = renderer.panels;
 
   if (diffResult.removed.length > 0) {
     let endIdx = -1;
@@ -29,17 +30,27 @@ export default (flicking: Flicking, diffResult: DiffResult<any>, rendered: any[]
   }
 
   diffResult.ordered.forEach(([prevIdx, newIdx]) => {
-    const prevPanel = renderer.panels[prevIdx];
+    const prevPanel = panels[prevIdx];
     const indexDiff = newIdx - prevIdx;
 
     if (indexDiff > 0) {
+      const middlePanels = panels.slice(prevIdx + 1, newIdx + 1);
+
       prevPanel.increaseIndex(indexDiff);
+      middlePanels.forEach(panel => panel.decreaseIndex(1));
     } else {
+      const middlePanels = panels.slice(newIdx, prevIdx);
+
       prevPanel.decreaseIndex(-indexDiff);
+      middlePanels.forEach(panel => panel.increaseIndex(1));
     }
     // Update position
     prevPanel.resize();
   });
+
+  if (diffResult.ordered.length > 0) {
+    panels.sort((panel1, panel2) => panel1.index - panel2.index);
+  }
 
   if (diffResult.added.length > 0) {
     let startIdx = -1;
