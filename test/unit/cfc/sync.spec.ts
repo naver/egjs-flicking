@@ -106,4 +106,46 @@ describe("sync", () => {
     expect(flicking.panels.length).to.equal(nonRemovedPanels.length);
     expect(flicking.panels).to.deep.equal(nonRemovedPanels);
   });
+
+  it("should decrease the indexes of the middle panels if one of the panels move to last", async () => {
+    const flicking = await createFlicking(El.DEFAULT_HORIZONTAL_WITH_PANELS(5));
+    const prevPanels = [...flicking.panels];
+    const newPanels = [...flicking.panels.slice(1), flicking.panels[0]];
+
+    const diffResult: DiffResult<HTMLElement> = {
+      prevList: prevPanels.map(panel => panel.element),
+      list: newPanels.map(panel => panel.element),
+      added: [],
+      removed: [],
+      changed: [],
+      ordered: [[0, 4]],
+      pureChanged: [],
+      maintained: []
+    };
+
+    sync(flicking, diffResult, []);
+
+    expect(flicking.panels.every((panel, idx) => panel.index === idx)).to.be.true;
+  });
+
+  it("should increase the indexes of the middle panels if one of the panels move to last", async () => {
+    const flicking = await createFlicking(El.DEFAULT_HORIZONTAL_WITH_PANELS(5));
+    const prevPanels = [...flicking.panels];
+    const newPanels = [flicking.panels[4], ...flicking.panels.slice(0, 4)];
+
+    const diffResult: DiffResult<HTMLElement> = {
+      prevList: prevPanels.map(panel => panel.element),
+      list: newPanels.map(panel => panel.element),
+      added: [],
+      removed: [],
+      changed: [],
+      ordered: [[4, 0]],
+      pureChanged: [],
+      maintained: []
+    };
+
+    sync(flicking, diffResult, []);
+
+    expect(flicking.panels.every((panel, idx) => panel.index === idx)).to.be.true;
+  });
 });
