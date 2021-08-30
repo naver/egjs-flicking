@@ -4,9 +4,9 @@
   "newProjectRoot": "projects",
   "projects": {
     "ngx-flicking": {
+      "projectType": "library",
       "root": "projects/ngx-flicking",
       "sourceRoot": "projects/ngx-flicking/src",
-      "projectType": "library",
       "prefix": "lib",
       "architect": {
         "build": {
@@ -14,6 +14,11 @@
           "options": {
             "tsConfig": "projects/ngx-flicking/tsconfig.lib.json",
             "project": "projects/ngx-flicking/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngx-flicking/tsconfig.lib.prod.json"
+            }
           }
         },
         "test": {
