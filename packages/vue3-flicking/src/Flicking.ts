@@ -41,7 +41,7 @@ class Flicking extends Vue.with(FlickingProps) {
   @withFlickingMethods private vanillaFlicking: VanillaFlicking | null = null;
   private pluginsDiffer!: ListDiffer<Plugin>;
   private slotDiffer!: ListDiffer<VNode>;
-  private diffResult: DiffResult<VNode> | null = null;
+  private diffResult?: DiffResult<VNode> = undefined;
 
   public mounted() {
     const viewportEl = this.$el as HTMLElement;
@@ -59,7 +59,7 @@ class Flicking extends Vue.with(FlickingProps) {
     });
 
     const slots = this.getSlots();
-    this.slotDiffer = new ListDiffer<VNode>(slots, vnode => vnode.key!);
+    this.slotDiffer = new ListDiffer<VNode>(slots, vnode => vnode.key! as string | number);
     this.pluginsDiffer = new ListDiffer<Plugin>();
 
     this._bindEvents();
@@ -125,7 +125,7 @@ class Flicking extends Vue.with(FlickingProps) {
       const defaultSlots = this.getSlots();
       this.diffResult = initialized
         ? this.slotDiffer.update(defaultSlots)
-        : null;
+        : undefined;
 
       const slots = this.diffResult
         ? getRenderingPanels(flicking!, this.diffResult)
