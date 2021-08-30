@@ -3,8 +3,8 @@
   "version": "4.2.3",
   "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
   "peerDependencies": {
-    "@angular/common": ">=11.0.0",
-    "@angular/core": ">=11.0.0"
+    "@angular/common": ">=10.0.0",
+    "@angular/core": ">=10.0.0"
   },
   "dependencies": {
     "@egjs/flicking": "^4.2.3",

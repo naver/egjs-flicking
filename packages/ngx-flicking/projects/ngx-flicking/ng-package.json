@@ -9,7 +9,7 @@
       "@egjs/list-differ": "eg.ListDiffer"
     }
   },
-  "allowedNonPeerDependencies": [
+  "whitelistedNonPeerDependencies": [
     "@egjs/flicking",
     "@egjs/list-differ"
   ]
