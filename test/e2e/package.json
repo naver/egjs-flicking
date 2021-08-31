@@ -68,6 +68,6 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "@egjs/svelte-flicking": "^4.2.2"
+    "@egjs/svelte-flicking": "^4.2.5"
   }
 }
