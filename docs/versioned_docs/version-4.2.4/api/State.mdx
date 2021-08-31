@@ -5,13 +5,13 @@ custom_edit_url: null
 <div className="notification is-warning my-2">⚠️ This class is for <strong>internal</strong> use only.</div>
 
 ```ts
-class DisabledState extends State
+class State
 ```
-A state that activates when Flicking is stopped by event's `stop` method
+A component that shows the current status of the user input or the animation
 
 <div className="container">
   <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
-  <div className="row"><div className="col col--6"><a href="#holding">holding</a><br/><a href="#animating">animating</a><br/><a href="#delta">delta</a></div><div className="col col--6"><a href="#onEnter">onEnter</a><br/><a href="#onHold">onHold</a><br/><a href="#onChange">onChange</a><br/><a href="#onRelease">onRelease</a><br/><a href="#onAnimationEnd">onAnimationEnd</a><br/><a href="#onFinish">onFinish</a></div></div>
+  <div className="row"><div className="col col--6"><a href="#holding">holding</a><br/><a href="#animating">animating</a><br/><a href="#delta">delta</a><br/><a href="#targetPanel">targetPanel</a></div><div className="col col--6"><a href="#onEnter">onEnter</a><br/><a href="#onHold">onHold</a><br/><a href="#onChange">onChange</a><br/><a href="#onRelease">onRelease</a><br/><a href="#onAnimationEnd">onAnimationEnd</a><br/><a href="#onFinish">onFinish</a></div></div>
 </div>
 
 ## Properties
@@ -24,7 +24,7 @@ A state that activates when Flicking is stopped by event's `stop` method
 
 Whether user is clicking or touching
 
-**Type**: false
+**Type**: boolean
 
 ### animating {#animating}
 
@@ -34,16 +34,25 @@ Whether user is clicking or touching
 
 Whether Flicking's animating
 
-**Type**: true
+**Type**: boolean
 
 ### delta {#delta}
 
 <div className="bulma-tags">
   <span className="bulma-tag is-warning">readonly</span>
-  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 A sum of delta values of change events from the last hold event of Axes
+
+**Type**: number
+
+### targetPanel {#targetPanel}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+</div>
+
+A panel to set as [Control#activePanel](Control#activePanel) after the animation is finished
 
 **Type**: number
 
@@ -52,7 +61,7 @@ A sum of delta values of change events from the last hold event of Axes
 ### onEnter {#onEnter}
 
 <div className="bulma-tags">
-  <span className="bulma-tag is-danger">inherited</span>
+
 </div>
 
 An callback which is called when state has changed to this state
@@ -66,7 +75,7 @@ An callback which is called when state has changed to this state
 ### onHold {#onHold}
 
 <div className="bulma-tags">
-  <span className="bulma-tag is-danger">inherited</span>
+
 </div>
 
 An event handler for Axes's [hold](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-hold) event
@@ -83,7 +92,7 @@ An event handler for Axes's [hold](https://naver#github#io/egjs-axes/release/lat
 ### onChange {#onChange}
 
 <div className="bulma-tags">
-  <span className="bulma-tag is-danger">inherited</span>
+
 </div>
 
 An event handler for Axes's [change](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-change) event
@@ -100,7 +109,7 @@ An event handler for Axes's [change](https://naver#github#io/egjs-axes/release/l
 ### onRelease {#onRelease}
 
 <div className="bulma-tags">
-  <span className="bulma-tag is-danger">inherited</span>
+
 </div>
 
 An event handler for Axes's [release](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-release) event
@@ -117,7 +126,7 @@ An event handler for Axes's [release](https://naver#github#io/egjs-axes/release/
 ### onAnimationEnd {#onAnimationEnd}
 
 <div className="bulma-tags">
-  <span className="bulma-tag is-danger">inherited</span>
+
 </div>
 
 An event handler for Axes's [animationEnd](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-animationEnd) event
@@ -134,7 +143,7 @@ An event handler for Axes's [animationEnd](https://naver#github#io/egjs-axes/rel
 ### onFinish {#onFinish}
 
 <div className="bulma-tags">
-  <span className="bulma-tag is-danger">inherited</span>
+
 </div>
 
 An event handler for Axes's [finish](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-finish) event

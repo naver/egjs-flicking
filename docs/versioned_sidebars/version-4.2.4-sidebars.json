@@ -1,39 +1,39 @@
 {
-  "version-4.2.3/docs": [
+  "version-4.2.4/docs": [
     {
       "type": "doc",
-      "id": "version-4.2.3/installation"
+      "id": "version-4.2.4/installation"
     },
     {
       "type": "doc",
-      "id": "version-4.2.3/quick-start"
+      "id": "version-4.2.4/quick-start"
     },
     {
       "type": "doc",
-      "id": "version-4.2.3/using-the-methods"
+      "id": "version-4.2.4/using-the-methods"
     },
     {
       "type": "doc",
-      "id": "version-4.2.3/listening-to-events"
+      "id": "version-4.2.4/listening-to-events"
     },
     {
       "type": "doc",
-      "id": "version-4.2.3/error-handling"
+      "id": "version-4.2.4/error-handling"
     },
     {
       "type": "doc",
-      "id": "version-4.2.3/polyfills"
+      "id": "version-4.2.4/polyfills"
     },
     {
       "type": "doc",
-      "id": "version-4.2.3/ssr"
+      "id": "version-4.2.4/ssr"
     },
     {
       "type": "doc",
-      "id": "version-4.2.3/migration-from-v3"
+      "id": "version-4.2.4/migration-from-v3"
     }
   ],
-  "version-4.2.3/api": [
+  "version-4.2.4/api": [
     {
       "collapsed": true,
       "type": "category",
@@ -41,107 +41,107 @@
       "items": [
         {
           "type": "doc",
-          "id": "version-4.2.3/api/Flicking"
+          "id": "version-4.2.4/api/Flicking"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/BoundCamera"
+          "id": "version-4.2.4/api/BoundCamera"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/Camera"
+          "id": "version-4.2.4/api/Camera"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/CircularCamera"
+          "id": "version-4.2.4/api/CircularCamera"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/LinearCamera"
+          "id": "version-4.2.4/api/LinearCamera"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/AxesController"
+          "id": "version-4.2.4/api/AxesController"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/Control"
+          "id": "version-4.2.4/api/Control"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/FreeControl"
+          "id": "version-4.2.4/api/FreeControl"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/SnapControl"
+          "id": "version-4.2.4/api/SnapControl"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/StrictControl"
+          "id": "version-4.2.4/api/StrictControl"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/AnimatingState"
+          "id": "version-4.2.4/api/AnimatingState"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/DisabledState"
+          "id": "version-4.2.4/api/DisabledState"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/DraggingState"
+          "id": "version-4.2.4/api/DraggingState"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/HoldingState"
+          "id": "version-4.2.4/api/HoldingState"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/IdleState"
+          "id": "version-4.2.4/api/IdleState"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/State"
+          "id": "version-4.2.4/api/State"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/AnchorPoint"
+          "id": "version-4.2.4/api/AnchorPoint"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/FlickingError"
+          "id": "version-4.2.4/api/FlickingError"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/Viewport"
+          "id": "version-4.2.4/api/Viewport"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/ElementPanel"
+          "id": "version-4.2.4/api/ElementPanel"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/ExternalPanel"
+          "id": "version-4.2.4/api/ExternalPanel"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/Panel"
+          "id": "version-4.2.4/api/Panel"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/ExternalRenderer"
+          "id": "version-4.2.4/api/ExternalRenderer"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/Renderer"
+          "id": "version-4.2.4/api/Renderer"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/VanillaRenderer"
+          "id": "version-4.2.4/api/VanillaRenderer"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/Component"
+          "id": "version-4.2.4/api/Component"
         }
       ]
     },
@@ -152,39 +152,39 @@
       "items": [
         {
           "type": "doc",
-          "id": "version-4.2.3/api/FlickingEvents"
+          "id": "version-4.2.4/api/FlickingEvents"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/FlickingOptions"
+          "id": "version-4.2.4/api/FlickingOptions"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/TogglePoint"
+          "id": "version-4.2.4/api/TogglePoint"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/FreeControlOptions"
+          "id": "version-4.2.4/api/FreeControlOptions"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/SnapControlOptions"
+          "id": "version-4.2.4/api/SnapControlOptions"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/StrictControlOptions"
+          "id": "version-4.2.4/api/StrictControlOptions"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/Plugin"
+          "id": "version-4.2.4/api/Plugin"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/Status"
+          "id": "version-4.2.4/api/Status"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/ControlParams"
+          "id": "version-4.2.4/api/ControlParams"
         }
       ]
     },
@@ -195,31 +195,31 @@
       "items": [
         {
           "type": "doc",
-          "id": "version-4.2.3/api/EVENT"
+          "id": "version-4.2.4/api/EVENT"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/POSITION_KEY"
+          "id": "version-4.2.4/api/POSITION_KEY"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/ERROR_CODE"
+          "id": "version-4.2.4/api/ERROR_CODE"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/EVENTS"
+          "id": "version-4.2.4/api/EVENTS"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/ALIGN"
+          "id": "version-4.2.4/api/ALIGN"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/DIRECTION"
+          "id": "version-4.2.4/api/DIRECTION"
         },
         {
           "type": "doc",
-          "id": "version-4.2.3/api/MOVE_TYPE"
+          "id": "version-4.2.4/api/MOVE_TYPE"
         }
       ]
     },
@@ -230,7 +230,7 @@
       "items": [
         {
           "type": "doc",
-          "id": "version-4.2.3/api/ElementLike"
+          "id": "version-4.2.4/api/ElementLike"
         }
       ]
     }

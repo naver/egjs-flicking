@@ -1,6 +1,6 @@
 {
   "name": "@egjs/svelte-flicking",
-  "version": "4.2.4",
+  "version": "4.2.5",
   "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
   "main": "dist/flicking.cjs.js",
   "module": "dist/flicking.esm.js",
@@ -28,7 +28,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@egjs/flicking": "^4.2.3",
+    "@egjs/flicking": "^4.2.4",
     "uuid-browser": "^3.1.0"
   },
   "devDependencies": {

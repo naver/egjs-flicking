@@ -5,13 +5,13 @@ custom_edit_url: null
 <div className="notification is-warning my-2">⚠️ This class is for <strong>internal</strong> use only.</div>
 
 ```ts
-class AnimatingState extends State
+class DraggingState extends State
 ```
-A state that activates when Flicking's animating by user input or method call
+A state that activates when user's dragging the Flicking area
 
 <div className="container">
   <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
-  <div className="row"><div className="col col--6"><a href="#holding">holding</a><br/><a href="#animating">animating</a><br/><a href="#delta">delta</a></div><div className="col col--6"><a href="#onEnter">onEnter</a><br/><a href="#onHold">onHold</a><br/><a href="#onChange">onChange</a><br/><a href="#onRelease">onRelease</a><br/><a href="#onAnimationEnd">onAnimationEnd</a><br/><a href="#onFinish">onFinish</a></div></div>
+  <div className="row"><div className="col col--6"><a href="#holding">holding</a><br/><a href="#animating">animating</a><br/><a href="#delta">delta</a><br/><a href="#targetPanel">targetPanel</a></div><div className="col col--6"><a href="#onEnter">onEnter</a><br/><a href="#onHold">onHold</a><br/><a href="#onChange">onChange</a><br/><a href="#onRelease">onRelease</a><br/><a href="#onAnimationEnd">onAnimationEnd</a><br/><a href="#onFinish">onFinish</a></div></div>
 </div>
 
 ## Properties
@@ -24,7 +24,7 @@ A state that activates when Flicking's animating by user input or method call
 
 Whether user is clicking or touching
 
-**Type**: false
+**Type**: true
 
 ### animating {#animating}
 
@@ -44,6 +44,17 @@ Whether Flicking's animating
 </div>
 
 A sum of delta values of change events from the last hold event of Axes
+
+**Type**: number
+
+### targetPanel {#targetPanel}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+A panel to set as [Control#activePanel](Control#activePanel) after the animation is finished
 
 **Type**: number
 

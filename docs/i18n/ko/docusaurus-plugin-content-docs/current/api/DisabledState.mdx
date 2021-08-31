@@ -11,7 +11,7 @@ class DisabledState extends State
 
 <div className="container">
   <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
-  <div className="row"><div className="col col--6"><a href="#holding">holding</a><br/><a href="#animating">animating</a><br/><a href="#delta">delta</a></div><div className="col col--6"><a href="#onEnter">onEnter</a><br/><a href="#onHold">onHold</a><br/><a href="#onChange">onChange</a><br/><a href="#onRelease">onRelease</a><br/><a href="#onAnimationEnd">onAnimationEnd</a><br/><a href="#onFinish">onFinish</a></div></div>
+  <div className="row"><div className="col col--6"><a href="#holding">holding</a><br/><a href="#animating">animating</a><br/><a href="#delta">delta</a><br/><a href="#targetPanel">targetPanel</a></div><div className="col col--6"><a href="#onEnter">onEnter</a><br/><a href="#onHold">onHold</a><br/><a href="#onChange">onChange</a><br/><a href="#onRelease">onRelease</a><br/><a href="#onAnimationEnd">onAnimationEnd</a><br/><a href="#onFinish">onFinish</a></div></div>
 </div>
 
 ## Properties
@@ -44,6 +44,17 @@ class DisabledState extends State
 </div>
 
 이전 hold이벤트부터 change에 의해 발생한 이동 delta값의 합산
+
+**Type**: number
+
+### targetPanel {#targetPanel}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+애니메이션 종료시 [Control#activePanel](Control#activePanel)로 설정할 패널
 
 **Type**: number
 

@@ -11,7 +11,7 @@ A state that activates when user's holding the Flicking area, but not moved a si
 
 <div className="container">
   <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
-  <div className="row"><div className="col col--6"><a href="#holding">holding</a><br/><a href="#animating">animating</a><br/><a href="#delta">delta</a></div><div className="col col--6"><a href="#onEnter">onEnter</a><br/><a href="#onHold">onHold</a><br/><a href="#onChange">onChange</a><br/><a href="#onRelease">onRelease</a><br/><a href="#onAnimationEnd">onAnimationEnd</a><br/><a href="#onFinish">onFinish</a></div></div>
+  <div className="row"><div className="col col--6"><a href="#holding">holding</a><br/><a href="#animating">animating</a><br/><a href="#delta">delta</a><br/><a href="#targetPanel">targetPanel</a></div><div className="col col--6"><a href="#onEnter">onEnter</a><br/><a href="#onHold">onHold</a><br/><a href="#onChange">onChange</a><br/><a href="#onRelease">onRelease</a><br/><a href="#onAnimationEnd">onAnimationEnd</a><br/><a href="#onFinish">onFinish</a></div></div>
 </div>
 
 ## Properties
@@ -44,6 +44,17 @@ Whether Flicking's animating
 </div>
 
 A sum of delta values of change events from the last hold event of Axes
+
+**Type**: number
+
+### targetPanel {#targetPanel}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+A panel to set as [Control#activePanel](Control#activePanel) after the animation is finished
 
 **Type**: number
 
