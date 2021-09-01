@@ -60,6 +60,8 @@ abstract class State {
    */
   public get targetPanel() { return this._targetPanel; }
 
+  public set targetPanel(val: Panel | null) { this._targetPanel = val; }
+
   /**
    * An callback which is called when state has changed to this state
    * @ko 현재 상태로 돌입했을때 호출되는 콜백 함수
@@ -177,7 +179,7 @@ abstract class State {
       ? circulatePosition(position, camera.range.min, camera.range.max)
       : position;
 
-    void camera.lookAt(newPosition);
+    camera.lookAt(newPosition);
 
     const moveEvent = new ComponentEvent(EVENTS.MOVE, {
       isTrusted: axesEvent.isTrusted,
@@ -190,7 +192,7 @@ abstract class State {
 
     if (moveEvent.isCanceled()) {
       // Return to previous position
-      void camera.lookAt(prevPosition);
+      camera.lookAt(prevPosition);
       transitTo(STATE_TYPE.DISABLED);
     }
   }

@@ -51,10 +51,13 @@ class AnimatingState extends State {
   }
 
   public onFinish(ctx: Parameters<State["onFinish"]>[0]) {
-    const { flicking, axesEvent } = ctx;
+    const { flicking, axesEvent, transitTo } = ctx;
 
-    const controller = flicking.control.controller;
+    const control = flicking.control;
+    const controller = control.controller;
     const animatingContext = controller.animatingContext;
+
+    transitTo(STATE_TYPE.IDLE);
 
     flicking.trigger(new ComponentEvent(EVENTS.MOVE_END, {
       isTrusted: axesEvent.isTrusted,
@@ -62,7 +65,7 @@ class AnimatingState extends State {
       axesEvent
     }));
 
-    // transitTo is controlled by class Control because of order
+    control.setActive(this._targetPanel!, control.activePanel, axesEvent.isTrusted);
   }
 }
 

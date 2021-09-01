@@ -271,11 +271,11 @@ abstract class Camera {
    * <ko>{@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
    * @return {this}
    */
-  public async lookAt(pos: number): Promise<void> {
+  public lookAt(pos: number): void {
     const prevPos = this._position;
 
     this._position = pos;
-    await this._refreshVisiblePanels();
+    this._refreshVisiblePanels();
     this._checkNeedPanel();
     this._checkReachEnd(prevPos, pos);
     this._applyTransform();
@@ -514,7 +514,7 @@ abstract class Camera {
     this._needPanelTriggered = { prev: false, next: false };
   }
 
-  protected async _refreshVisiblePanels() {
+  protected _refreshVisiblePanels() {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const panels = flicking.renderer.panels;
 
@@ -526,13 +526,13 @@ abstract class Camera {
     const removed: Panel[] = prevVisiblePanels.filter(panel => !includes(newVisiblePanels, panel));
 
     if (added.length > 0 || removed.length > 0) {
-      await flicking.renderer.render();
-
-      flicking.trigger(new ComponentEvent(EVENTS.VISIBLE_CHANGE, {
-        added,
-        removed,
-        visiblePanels: newVisiblePanels
-      }));
+      void flicking.renderer.render().then(() => {
+        flicking.trigger(new ComponentEvent(EVENTS.VISIBLE_CHANGE, {
+          added,
+          removed,
+          visiblePanels: newVisiblePanels
+        }));
+      });
     }
   }
 

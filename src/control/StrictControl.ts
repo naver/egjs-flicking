@@ -239,8 +239,8 @@ class StrictControl extends Control {
     });
   }
 
-  protected _setActive = (newActivePanel: Panel, prevActivePanel: Panel | null, isTrusted: boolean) => {
-    super._setActive(newActivePanel, prevActivePanel, isTrusted);
+  public setActive = (newActivePanel: Panel, prevActivePanel: Panel | null, isTrusted: boolean) => {
+    super.setActive(newActivePanel, prevActivePanel, isTrusted);
     this.updateInput();
   };
 

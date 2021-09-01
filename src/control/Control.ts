@@ -14,8 +14,6 @@ import * as ERROR from "../const/error";
 import { getDirection, getFlickingAttached } from "../utils";
 import { ValueOf } from "../type/internal";
 
-import { STATE_TYPE } from "./states/State";
-
 /**
  * A component that manages inputs and animation of Flicking
  * @ko Flicking의 입력 장치 & 애니메이션을 담당하는 컴포넌트
@@ -173,13 +171,13 @@ abstract class Control {
    * @chainable
    * @return {Promise<void>}
    */
-  public async updatePosition(_progressInPanel: number): Promise<void> {   // eslint-disable-line @typescript-eslint/no-unused-vars
+  public updatePosition(_progressInPanel: number): void {   // eslint-disable-line @typescript-eslint/no-unused-vars
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;
     const activePanel = this._activePanel;
 
     if (activePanel) {
-      await camera.lookAt(camera.clampToReachablePosition(activePanel.position));
+      camera.lookAt(camera.clampToReachablePosition(activePanel.position));
     }
   }
 
@@ -297,6 +295,32 @@ abstract class Control {
     return this._animateToPosition({ position, duration, newActivePanel: panel, axesEvent });
   }
 
+  /**
+   * @internal
+   */
+  public setActive(newActivePanel: Panel, prevActivePanel: Panel | null, isTrusted: boolean) {
+    const flicking = getFlickingAttached(this._flicking, "Control");
+
+    this._activePanel = newActivePanel;
+
+    flicking.camera.updateAdaptiveHeight();
+
+    if (newActivePanel !== prevActivePanel) {
+      flicking.trigger(new ComponentEvent(EVENTS.CHANGED, {
+        index: newActivePanel.index,
+        panel: newActivePanel,
+        prevIndex: prevActivePanel?.index ?? -1,
+        prevPanel: prevActivePanel,
+        isTrusted,
+        direction: prevActivePanel ? getDirection(prevActivePanel.position, newActivePanel.position) : DIRECTION.NONE
+      }));
+    } else {
+      flicking.trigger(new ComponentEvent(EVENTS.RESTORED, {
+        isTrusted
+      }));
+    }
+  }
+
   protected _triggerIndexChangeEvent(panel: Panel, position: number, axesEvent?: OnRelease): void {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const triggeringEvent = panel !== this._activePanel ? EVENTS.WILL_CHANGE : EVENTS.WILL_RESTORE;
@@ -328,46 +352,20 @@ abstract class Control {
     axesEvent?: OnRelease;
   }) {
     const flicking = getFlickingAttached(this._flicking, "Control");
-    const currentPanel = this._activePanel;
     const animate = () => this._controller.animateTo(position, duration, axesEvent);
-    const isTrusted = axesEvent?.isTrusted || false;
+    const state = this._controller.state;
+
+    state.targetPanel = newActivePanel;
 
     if (duration <= 0) {
-      const animation = animate();
-      this._setActive(newActivePanel, currentPanel, isTrusted);
-      return animation;
+      return animate();
     } else {
       return animate().then(async () => {
-        this._setActive(newActivePanel, currentPanel, isTrusted);
         await flicking.renderer.render();
       }).catch(err => {
         if (axesEvent && err instanceof FlickingError && err.code === ERROR.CODE.ANIMATION_INTERRUPTED) return;
         throw err;
       });
-    }
-  }
-
-  protected _setActive(newActivePanel: Panel, prevActivePanel: Panel | null, isTrusted: boolean) {
-    const flicking = getFlickingAttached(this._flicking, "Control");
-
-    this._activePanel = newActivePanel;
-
-    flicking.camera.updateAdaptiveHeight();
-    this._controller.stateMachine.transitTo(STATE_TYPE.IDLE);
-
-    if (newActivePanel !== prevActivePanel) {
-      flicking.trigger(new ComponentEvent(EVENTS.CHANGED, {
-        index: newActivePanel.index,
-        panel: newActivePanel,
-        prevIndex: prevActivePanel?.index ?? -1,
-        prevPanel: prevActivePanel,
-        isTrusted,
-        direction: prevActivePanel ? getDirection(prevActivePanel.position, newActivePanel.position) : DIRECTION.NONE
-      }));
-    } else {
-      flicking.trigger(new ComponentEvent(EVENTS.RESTORED, {
-        isTrusted
-      }));
     }
   }
 }

@@ -57,7 +57,7 @@ class FreeControl extends Control {
    * @chainable
    * @return {Promise<void>}
    */
-  public async updatePosition(progressInPanel: number): Promise<void> {
+  public updatePosition(progressInPanel: number): void {
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;
     const activePanel = this._activePanel;
@@ -66,7 +66,7 @@ class FreeControl extends Control {
       const panelRange = activePanel.range;
       const newPosition = panelRange.min + (panelRange.max - panelRange.min) * progressInPanel;
 
-      await camera.lookAt(camera.clampToReachablePosition(newPosition));
+      camera.lookAt(camera.clampToReachablePosition(newPosition));
     }
   }
 
