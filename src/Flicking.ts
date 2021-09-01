@@ -1112,7 +1112,7 @@ class Flicking extends Component<FlickingEvents> {
     if (control.animating) {
       // TODO:
     } else {
-      await control.updatePosition(prevProgressInPanel);
+      control.updatePosition(prevProgressInPanel);
       control.updateInput();
     }
 

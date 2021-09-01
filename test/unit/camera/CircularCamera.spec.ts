@@ -101,7 +101,7 @@ describe("CircularCamera", () => {
         const camRange = camera.range;
         expect(camera.controlParams.circular).to.be.true;
 
-        await camera.lookAt(camRange.min);
+        camera.lookAt(camRange.min);
         sinon.stub(panel, "range")
           .get(() => ({ min: camera.visibleRange.min + camera.rangeDiff, max: camera.visibleRange.min + camera.rangeDiff }));
 
@@ -112,7 +112,7 @@ describe("CircularCamera", () => {
 
         expect(camera.canSee(panel)).to.be.true;
 
-        await camera.lookAt(camRange.max);
+        camera.lookAt(camRange.max);
         sinon.stub(panel, "range")
           .get(() => ({ min: camera.visibleRange.min - camera.rangeDiff, max: camera.visibleRange.min - camera.rangeDiff }));
 
