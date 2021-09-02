@@ -296,10 +296,12 @@ abstract class Renderer {
     const resizeOnContentsReady = getFlickingAttached(this._flicking, "Renderer").resizeOnContentsReady;
     const panels = this._panels;
 
+    if (!resizeOnContentsReady) return;
+
     const hasContents = (panel: Panel) => !!panel.element.querySelector("img, video");
     checkingPanels = checkingPanels.filter(panel => hasContents(panel));
 
-    if (!resizeOnContentsReady || checkingPanels.length <= 0) return;
+    if (checkingPanels.length <= 0) return;
 
     const contentsReadyChecker = new ImReady();
 

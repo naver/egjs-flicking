@@ -1,6 +1,7 @@
 const flicking = new Flicking("#flicking", {
-  resizeOnContentsReady: true,
-  renderOnlyVisible: true
+  resizeOnContentsReady: true
+}).on("ready", () => {
+  console.log(flicking.currentPanel)
 });
 
 // Object.values(Flicking.EVENTS).forEach(evt => {

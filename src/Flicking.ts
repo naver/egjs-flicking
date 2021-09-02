@@ -11,6 +11,7 @@ import { Control, SnapControl, SnapControlOptions, FreeControl, StrictControl, F
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
 import { Renderer, VanillaRenderer, ExternalRenderer } from "./renderer";
 import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
+import * as AXES from "./const/axes";
 import * as ERROR from "./const/error";
 import { findIndex, getElement, includes, parseElement } from "./utils";
 import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, WillChangeEvent, WillRestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent, ChangedEvent, RestoredEvent, PanelChangeEvent } from "./type/event";
@@ -1299,6 +1300,8 @@ class Flicking extends Component<FlickingEvents> {
     const initialPanel = renderer.getPanel(this._defaultIndex) || renderer.getPanel(0);
 
     if (!initialPanel) return;
+
+    control.setActive(initialPanel, null, false);
 
     return control.moveToPanel(initialPanel, {
       duration: 0
