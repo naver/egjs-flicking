@@ -73,7 +73,7 @@ describe("AxesController", () => {
         const controller = flicking.control.controller;
         const prevPos = controller.position;
 
-        await flicking.camera.lookAt(1500);
+        flicking.camera.lookAt(1500);
         controller.update(flicking.camera.controlParams);
 
         expect(controller.position).to.equal(1500);

@@ -275,7 +275,7 @@ abstract class Renderer {
         }).catch(() => void 0);
       } else {
         // All panels removed
-        void camera.lookAt(0);
+        camera.lookAt(0);
       }
     }
 

@@ -772,9 +772,27 @@ describe("Flicking", () => {
           flicking.append(El.panel("100%").el);
         });
 
-        await simulate(flicking.element, { deltaX: -5000 });
+        await simulate(flicking.element, { deltaX: -2000 });
 
         expect(needPanelSpy.calledOnce).to.be.true;
+      });
+    });
+
+    describe(EVENTS.MOVE_END, () => {
+      it("should set Flicking not to be animating", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const moveEndSpy = sinon.spy();
+        const wasAnimating: boolean[] = [];
+
+        flicking.on(EVENTS.MOVE_END, moveEndSpy);
+        flicking.on(EVENTS.MOVE_END, () => {
+          wasAnimating.push(flicking.animating);
+        });
+
+        await simulate(flicking.element, { deltaX: -500 });
+
+        expect(moveEndSpy.called).to.be.true;
+        expect(wasAnimating.every(animating => !animating)).to.be.true;
       });
     });
 

@@ -3,7 +3,7 @@ import Camera from "~/camera/Camera";
 import FlickingError from "~/core/FlickingError";
 import * as ERROR from "~/const/error";
 
-import { createFlicking } from "../helper/test-util";
+import { createFlicking, tick } from "../helper/test-util";
 import El from "../helper/El";
 
 class CameraImpl extends Camera {
@@ -75,7 +75,7 @@ describe("Camera", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
-        await camera.lookAt(800);
+        camera.lookAt(800);
 
         expect(camera.controlParams.position).to.equal(800);
       });
@@ -92,7 +92,7 @@ describe("Camera", () => {
 
         camera.init(flicking);
         camera.updateAlignPos();
-        await camera.lookAt(500);
+        camera.lookAt(500);
 
         expect(camera.visibleRange.min).to.equal(500 - flicking.viewport.width / 2);
         expect(camera.visibleRange.max).to.equal(500 + flicking.viewport.width / 2);
@@ -130,10 +130,9 @@ describe("Camera", () => {
       it("should throw a FlickingError with code NOT_ATTACHED_TO_FLICKING when it's not initialized yet", async () => {
         const camera = new CameraImpl();
 
-        const err = await camera.lookAt(500).catch(e => e);
-
-        expect(err).to.be.instanceOf(FlickingError);
-        expect(err.code).to.equal(ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
+        expect(() => camera.lookAt(500))
+          .to.throw(FlickingError)
+          .with.property("code", ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
       });
 
       it("should set position to given value", async () => {
@@ -142,7 +141,7 @@ describe("Camera", () => {
         const prevPosition = camera.position;
 
         camera.init(flicking);
-        await camera.lookAt(500);
+        camera.lookAt(500);
 
         expect(camera.position).not.to.equal(prevPosition);
         expect(camera.position).to.equal(500);
@@ -153,7 +152,7 @@ describe("Camera", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
-        await camera.lookAt(500);
+        camera.lookAt(500);
 
         expect(camera.element.style.transform).to.equal(`translate(${-(500 - camera.alignPosition)}px)`);
       });
@@ -163,7 +162,7 @@ describe("Camera", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         camera.init(flicking);
-        await camera.lookAt(500);
+        camera.lookAt(500);
 
         expect(camera.visiblePanels).not.to.be.empty;
       });
@@ -175,7 +174,9 @@ describe("Camera", () => {
 
         flicking.on(EVENTS.VISIBLE_CHANGE, visibleChangeSpy);
         camera.init(flicking);
-        await camera.lookAt(500);
+        camera.lookAt(500);
+
+        await (async () => void 0)();
 
         expect(visibleChangeSpy.calledOnce).to.be.true;
       });
@@ -187,7 +188,7 @@ describe("Camera", () => {
 
         flicking.on(EVENTS.NEED_PANEL, needPanelSpy);
         camera.init(flicking);
-        await camera.lookAt(500);
+        camera.lookAt(500);
 
         expect(needPanelSpy.calledTwice).to.be.true;
         expect(needPanelSpy.calledWithMatch({ direction: DIRECTION.NEXT })).to.be.true;
@@ -202,7 +203,7 @@ describe("Camera", () => {
         camera.range = { min: -1000, max: 1000 };
         camera.init(flicking);
         flicking.on(EVENTS.REACH_EDGE, reachEdgeSpy);
-        await camera.lookAt(-1000);
+        camera.lookAt(-1000);
 
         expect(reachEdgeSpy.calledOnce).to.be.true;
         expect(reachEdgeSpy.calledWithMatch({ direction: DIRECTION.PREV })).to.be.true;
@@ -216,7 +217,7 @@ describe("Camera", () => {
         camera.range = { min: -1000, max: 1000 };
         camera.init(flicking);
         flicking.on(EVENTS.REACH_EDGE, reachEdgeSpy);
-        await camera.lookAt(1000);
+        camera.lookAt(1000);
 
         expect(reachEdgeSpy.calledOnce).to.be.true;
         expect(reachEdgeSpy.calledWithMatch({ direction: DIRECTION.NEXT })).to.be.true;
@@ -229,9 +230,9 @@ describe("Camera", () => {
 
         camera.range = { min: -1000, max: 1000 };
         camera.init(flicking);
-        await camera.lookAt(-1001); // Move to outside
+        camera.lookAt(-1001); // Move to outside
         flicking.on(EVENTS.REACH_EDGE, reachEdgeSpy);
-        await camera.lookAt(-1000); // Move to outside
+        camera.lookAt(-1000); // Move to outside
 
         expect(reachEdgeSpy.called).to.be.false;
       });
@@ -243,9 +244,9 @@ describe("Camera", () => {
 
         camera.range = { min: -1000, max: 1000 };
         camera.init(flicking);
-        await camera.lookAt(1001); // Move to outside
+        camera.lookAt(1001); // Move to outside
         flicking.on(EVENTS.REACH_EDGE, reachEdgeSpy);
-        await camera.lookAt(1000); // Move to outside
+        camera.lookAt(1000); // Move to outside
 
         expect(reachEdgeSpy.called).to.be.false;
       });
@@ -297,7 +298,7 @@ describe("Camera", () => {
 
         camera.init(flicking);
         camera.updateAnchors();
-        await camera.lookAt(flicking.getPanel(1).position);
+        camera.lookAt(flicking.getPanel(1).position);
 
         const nearestAnchor = camera.findNearestAnchor(camera.position);
         expect(nearestAnchor.panel).to.equal(flicking.getPanel(1));

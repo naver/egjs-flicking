@@ -176,11 +176,11 @@ class CircularCamera extends Camera {
     return this;
   }
 
-  public async lookAt(pos: number) {
+  public lookAt(pos: number) {
     const flicking = getFlickingAttached(this._flicking, "Camera");
     const prevPos = this._position;
 
-    if (pos === prevPos) return await super.lookAt(pos);
+    if (pos === prevPos) return super.lookAt(pos);
 
     const panels = flicking.renderer.panels;
     const toggled = panels.map(panel => panel.toggle(prevPos, pos));
@@ -189,10 +189,10 @@ class CircularCamera extends Camera {
 
     if (toggled.some(isToggled => isToggled)) {
       this._updateCircularOffset();
-      await flicking.renderer.render();
+      void flicking.renderer.render();
     }
 
-    return await super.lookAt(pos);
+    return super.lookAt(pos);
   }
 
   protected _applyTransform(): void {

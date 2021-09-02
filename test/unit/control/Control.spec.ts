@@ -133,19 +133,17 @@ describe("Control", () => {
           .with.property("code", ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
       });
 
-      it("should change activePanel to given panel after resolved if active panel was null", async () => {
-        const control = new ControlImpl();
+      it("should change activePanel to given panel after resolved", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const control = flicking.control;
         const panel = flicking.getPanel(2);
-
-        control.init(flicking);
-        control.updateInput();
-
         const activePanelBefore = control.activePanel;
-        await control.moveToPanel(panel, { duration: 500 });
+
+        void control.moveToPanel(panel, { duration: 500 });
+        tick(1500);
         const activePanelAfter = control.activePanel;
 
-        expect(activePanelBefore).to.be.null;
+        expect(activePanelBefore).to.equal(flicking.getPanel(0));
         expect(activePanelAfter).to.equal(panel);
       });
 
@@ -186,18 +184,13 @@ describe("Control", () => {
       });
 
       it(`should trigger ${EVENTS.WILL_RESTORE} if give panel is same to active panel`, async () => {
-        const control = new ControlImpl();
-        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
-
-        control.init(flicking);
-        control.updateInput();
-        await control.moveToPanel(flicking.getPanel(1), { duration: 0 });
-
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+        const control = flicking.control;
         const changeSpy = sinon.spy();
         const restoreSpy = sinon.spy();
+
         flicking.on(EVENTS.WILL_CHANGE, changeSpy);
         flicking.on(EVENTS.WILL_RESTORE, restoreSpy);
-
         await control.moveToPanel(flicking.getPanel(1), { duration: 500 });
 
         expect(changeSpy.calledOnce).to.be.false;
@@ -220,12 +213,9 @@ describe("Control", () => {
       });
 
       it(`should be rejected with FlickingError with STOP_CALLED_BY_USER as code when stop() is called from ${EVENTS.WILL_RESTORE} event`, async () => {
-        const control = new ControlImpl();
-        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+        const control = flicking.control;
 
-        control.init(flicking);
-        control.updateInput();
-        await control.moveToPanel(flicking.getPanel(1), { duration: 0 });
         flicking.on(EVENTS.WILL_RESTORE, e => e.stop());
 
         const err = await control.moveToPanel(flicking.getPanel(1), { duration: 500 }).catch(e => e);
