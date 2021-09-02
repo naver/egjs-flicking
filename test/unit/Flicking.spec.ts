@@ -58,6 +58,20 @@ describe("Flicking", () => {
 
       expect(err).to.equal(null);
     });
+
+    it("should set current panel even if all panel's size is 0", async () => {
+      const flicking = await createFlicking(
+        El.viewport().add(
+          El.camera()
+            .add(El.panel("0px"))
+            .add(El.panel("0px"))
+            .add(El.panel("0px"))
+        ),
+      );
+
+      expect(flicking.currentPanel).not.to.be.null;
+      expect(flicking.currentPanel).to.equal(flicking.getPanel(0));
+    });
   });
 
   describe("Properties", () => {
