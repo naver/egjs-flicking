@@ -167,9 +167,11 @@ class AxesController {
    * @return {void}
    */
   public destroy(): void {
-    this.removePreventClickHandler();
+    if (this._axes) {
+      this.removePreventClickHandler();
+      this._axes.destroy();
+    }
 
-    this._axes?.destroy();
     this._panInput?.destroy();
 
     this._resetInternalValues();

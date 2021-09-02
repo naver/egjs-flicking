@@ -1,4 +1,6 @@
 const flicking = new Flicking("#flicking", {
+  resizeOnContentsReady: true,
+  renderOnlyVisible: true
 });
 
 // Object.values(Flicking.EVENTS).forEach(evt => {

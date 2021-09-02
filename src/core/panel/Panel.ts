@@ -23,6 +23,7 @@ abstract class Panel {
   protected _margin: { prev: number; next: number };
   protected _alignPos: number; // Actual align pos
   protected _removed: boolean;
+  protected _loading: boolean;
   protected _toggleDirection: ValueOf<typeof DIRECTION>;
   protected _toggled: boolean;
   protected _togglePosition: number;
@@ -102,6 +103,13 @@ abstract class Panel {
    * @readonly
    */
   public get removed() { return this._removed; }
+  /**
+   * A value indicating whether the panel's image/video is not loaded and waiting for resize
+   * @ko 패널 내부의 이미지/비디오가 아직 로드되지 않아 {@link Panel#resize resize}될 것인지를 나타내는 값
+   * @type {boolean}
+   * @readonly
+   */
+  public get loading() { return this._loading; }
   /**
    * A value indicating whether the panel's element is being rendered on the screen
    * @ko 패널의 엘리먼트가 화면상에 렌더링되고있는지 여부를 나타내는 값
@@ -221,6 +229,8 @@ abstract class Panel {
     return visibleSize / size;
   }
 
+  public set loading(val: boolean) { this._loading = val; }
+
   // Options Getter
   /**
    * A value indicating where the {@link Panel#alignPosition alignPosition} should be located at inside the panel element
@@ -229,7 +239,7 @@ abstract class Panel {
    */
   public get align() { return this._align; }
 
-  // Options Getter
+  // Options Setter
   public set align(val: PanelOptions["align"]) { this._align = val; }
 
   /**
@@ -249,6 +259,7 @@ abstract class Panel {
     this._align = align;
 
     this._removed = false;
+    this._loading = false;
     this._resetInternalStates();
   }
 
@@ -280,7 +291,6 @@ abstract class Panel {
     const elStyle = getStyle(el);
     const flicking = this._flicking;
     const horizontal = flicking.horizontal;
-    const prevPanel = flicking.renderer.panels[this._index - 1];
 
     if (cached) {
       this._size = cached.size;
@@ -299,10 +309,7 @@ abstract class Panel {
       this._height = horizontal ? el.offsetHeight : this._size;
     }
 
-    this._pos = prevPanel
-      ? prevPanel.range.max + prevPanel.margin.next + this._margin.prev
-      : this._margin.prev;
-
+    this.updatePosition();
     this._updateAlignPos();
 
     return this;
@@ -472,28 +479,15 @@ abstract class Panel {
   }
 
   /**
-   * Increase panel's position by the given value
-   * @ko 패널의 위치를 주어진 값만큼 증가시킵니다
    * @internal
-   * @chainable
-   * @param val An integer greater than or equal to 0<ko>0보다 같거나 큰 정수</ko>
-   * @returns {this}
    */
-  public increasePosition(val: number): this {
-    this._moveBy(Math.max(val, 0));
-    return this;
-  }
+  public updatePosition(): this {
+    const prevPanel = this._flicking.renderer.panels[this._index - 1];
 
-  /**
-   * Decrease panel's position by the given value
-   * @ko 패널의위치를 주어진 값만큼 감소시킵니다
-   * @internal
-   * @chainable
-   * @param val An integer greater than or equal to 0<ko>0보다 같거나 큰 정수</ko>
-   * @returns {this}
-   */
-  public decreasePosition(val: number): this {
-    this._moveBy(-Math.max(val, 0));
+    this._pos = prevPanel
+      ? prevPanel.range.max + prevPanel.margin.next + this._margin.prev
+      : this._margin.prev;
+
     return this;
   }
 
@@ -559,12 +553,6 @@ abstract class Panel {
       this._toggleDirection = DIRECTION.NONE;
       this._togglePosition = 0;
     }
-
-    return this;
-  }
-
-  private _moveBy(val: number): this {
-    this._pos += val;
 
     return this;
   }
