@@ -9,7 +9,7 @@ Flicking의 입력 장치 & 애니메이션을 담당하는 컴포넌트
 
 <div className="container">
   <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
-  <div className="row"><div className="col col--6"><a href="#controller">controller</a><br/><a href="#activeIndex">activeIndex</a><br/><a href="#activePanel">activePanel</a><br/><a href="#animating">animating</a><br/><a href="#holding">holding</a></div><div className="col col--6"><a href="#moveToPosition">moveToPosition</a><br/><a href="#init">init</a><br/><a href="#destroy">destroy</a><br/><a href="#enable">enable</a><br/><a href="#disable">disable</a><br/><a href="#updatePosition">updatePosition</a><br/><a href="#updateInput">updateInput</a><br/><a href="#resetActive">resetActive</a><br/><a href="#moveToPanel">moveToPanel</a></div></div>
+  <div className="row"><div className="col col--6"><a href="#controller">controller</a><br/><a href="#activeIndex">activeIndex</a><br/><a href="#activePanel">activePanel</a><br/><a href="#animating">animating</a><br/><a href="#holding">holding</a></div><div className="col col--6"><a href="#moveToPosition">moveToPosition</a><br/><a href="#init">init</a><br/><a href="#destroy">destroy</a><br/><a href="#enable">enable</a><br/><a href="#disable">disable</a><br/><a href="#updatePosition">updatePosition</a><br/><a href="#updateInput">updateInput</a><br/><a href="#resetActive">resetActive</a><br/><a href="#moveToPanel">moveToPanel</a><br/><a href="#setActive">setActive</a></div></div>
 </div>
 
 ## Properties
@@ -143,7 +143,7 @@ Control을 초기 상태로 되돌립니다
 ### updatePosition {#updatePosition}
 
 <div className="bulma-tags">
-  <span className="bulma-tag is-success">async</span>
+
 </div>
 
 resize 이후에 position을 업데이트합니다
@@ -207,4 +207,18 @@ resize 이후에 position을 업데이트합니다
 |[NOT_ATTACHED_TO_FLICKING](ERROR_CODE)|[init](Control#init)이 이전에 호출되지 않은 경우|
 |[ANIMATION_INTERRUPTED](ERROR_CODE)|사용자 입력에 의해 애니메이션이 중단된 경우|
 |[STOP_CALLED_BY_USER](ERROR_CODE)|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|
+
+### setActive {#setActive}
+
+<div className="bulma-tags">
+
+</div>
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|newActivePanel|[Panel](Panel)||||
+|prevActivePanel|[Panel](Panel) \| null||||
+|isTrusted|boolean||||
+
+<div className="notification is-warning my-2">⚠️ This function is for <strong>internal</strong> use only.</div>
 

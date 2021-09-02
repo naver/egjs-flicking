@@ -3,9 +3,9 @@ custom_edit_url: null
 ---
 
 ```ts
-class BoundCamera extends Camera
+class LinearCamera extends Camera
 ```
-첫번째와 마지막 패널 밖으로 넘어가지 못하도록 범위를 설정하여, 첫번째/마지막 패널 전/후의 빈 공간을 보이지 않도록 하는 종류의 [Camera](Camera)
+첫번째 패널의 좌표로부터 마지막 패널의 좌표로까지 이동할 수 있는 종류의 [Camera](Camera)
 
 <div className="container">
   <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
@@ -228,7 +228,6 @@ Camera를 초기 상태로 되돌립니다
 
 <div className="bulma-tags">
   <span className="bulma-tag is-danger">inherited</span>
-  <span className="bulma-tag is-success">async</span>
 </div>
 
 해당 좌표로 이동하고, CSS transform을 적용합니다

@@ -3,22 +3,14 @@ custom_edit_url: null
 ---
 
 ```ts
-class Camera
+class BoundCamera extends Camera
 ```
-뷰포트 내에서의 실제 움직임을 담당하는 컴포넌트
+첫번째와 마지막 패널 밖으로 넘어가지 못하도록 범위를 설정하여, 첫번째/마지막 패널 전/후의 빈 공간을 보이지 않도록 하는 종류의 [Camera](Camera)
 
 <div className="container">
   <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
   <div className="row"><div className="col col--6"><a href="#element">element</a><br/><a href="#position">position</a><br/><a href="#alignPosition">alignPosition</a><br/><a href="#offset">offset</a><br/><a href="#range">range</a><br/><a href="#rangeDiff">rangeDiff</a><br/><a href="#visiblePanels">visiblePanels</a><br/><a href="#visibleRange">visibleRange</a><br/><a href="#anchorPoints">anchorPoints</a><br/><a href="#controlParams">controlParams</a><br/><a href="#atEdge">atEdge</a><br/><a href="#size">size</a><br/><a href="#progress">progress</a><br/><a href="#align">align</a></div><div className="col col--6"><a href="#updateRange">updateRange</a><br/><a href="#init">init</a><br/><a href="#destroy">destroy</a><br/><a href="#lookAt">lookAt</a><br/><a href="#getPrevAnchor">getPrevAnchor</a><br/><a href="#getNextAnchor">getNextAnchor</a><br/><a href="#getProgressInPanel">getProgressInPanel</a><br/><a href="#findAnchorIncludePosition">findAnchorIncludePosition</a><br/><a href="#findNearestAnchor">findNearestAnchor</a><br/><a href="#findActiveAnchor">findActiveAnchor</a><br/><a href="#clampToReachablePosition">clampToReachablePosition</a><br/><a href="#canReach">canReach</a><br/><a href="#canSee">canSee</a><br/><a href="#updateAlignPos">updateAlignPos</a><br/><a href="#updateAnchors">updateAnchors</a><br/><a href="#updateAdaptiveHeight">updateAdaptiveHeight</a><br/><a href="#resetNeedPanelHistory">resetNeedPanelHistory</a></div></div>
 </div>
-
-## Constructor
-```ts
-new Camera()
-```
-|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
-|:---:|:---:|:---:|:---:|:---:|
-||Partial&lt;CameraOptions&gt;|✔️|{}||
 
 ## Properties
 
@@ -26,6 +18,7 @@ new Camera()
 
 <div className="bulma-tags">
   <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 카메라(`.flicking-camera`) 엘리먼트
@@ -36,6 +29,7 @@ new Camera()
 
 <div className="bulma-tags">
   <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 Camera의 현재 좌표
@@ -46,6 +40,7 @@ Camera의 현재 좌표
 
 <div className="bulma-tags">
   <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 패널의 정렬 기준 위치. 뷰포트 내에서 [Panel](Panel)의 [alignPosition](Panel#alignPosition)이 위치해야 하는 곳입니다
@@ -56,6 +51,7 @@ Camera의 현재 좌표
 
 <div className="bulma-tags">
   <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 Camera의 좌표 오프셋. [renderOnlyVisible](Flicking#renderOnlyVisible) 옵션을 위해 사용됩니다.
@@ -68,6 +64,7 @@ Camera의 좌표 오프셋. [renderOnlyVisible](Flicking#renderOnlyVisible) 옵�
 
 <div className="bulma-tags">
   <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 Camera의 [position](Camera#position)이 도달 가능한 범위
@@ -83,6 +80,7 @@ Camera의 [position](Camera#position)이 도달 가능한 범위
 
 <div className="bulma-tags">
   <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 Camera가 도달 가능한 최소/최대 좌표의 차이
@@ -93,6 +91,7 @@ Camera가 도달 가능한 최소/최대 좌표의 차이
 
 <div className="bulma-tags">
   <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 현재 보이는 패널들의 배열
@@ -103,6 +102,7 @@ Camera가 도달 가능한 최소/최대 좌표의 차이
 
 <div className="bulma-tags">
   <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 현재 위치에서 보이는 범위
@@ -118,6 +118,7 @@ Camera가 도달 가능한 최소/최대 좌표의 차이
 
 <div className="bulma-tags">
   <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 카메라가 도달 가능한 [AnchorPoint](AnchorPoint)의 목록
@@ -128,6 +129,7 @@ Camera가 도달 가능한 최소/최대 좌표의 차이
 
 <div className="bulma-tags">
   <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 [AxesController](AxesController)를 업데이트하기 위한 현재 Camera 패러미터들
@@ -138,6 +140,7 @@ Camera가 도달 가능한 최소/최대 좌표의 차이
 
 <div className="bulma-tags">
   <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 현재 카메라가 도달 가능한 범위의 최소 혹은 최대점을 넘어섰는지를 나타냅니다
@@ -148,6 +151,7 @@ Camera가 도달 가능한 최소/최대 좌표의 차이
 
 <div className="bulma-tags">
   <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 뷰포트 크기를 반환합니다
@@ -158,6 +162,7 @@ Camera가 도달 가능한 최소/최대 좌표의 차이
 
 <div className="bulma-tags">
   <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 첫번째 패널로부터 마지막 패널까지의 카메라 위치의 진행도를 반환합니다
@@ -168,7 +173,7 @@ Camera가 도달 가능한 최소/최대 좌표의 차이
 ### align {#align}
 
 <div className="bulma-tags">
-
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 [alignPosition](Camera#alignPosition)이 뷰포트 엘리먼트 내의 어디에 위치해야 하는지를 나타내는 값
@@ -194,7 +199,7 @@ Camera의 [range](Camera#range)를 업데이트합니다
 ### init {#init}
 
 <div className="bulma-tags">
-
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 Camera를 초기화합니다
@@ -212,7 +217,7 @@ Camera를 초기화합니다
 ### destroy {#destroy}
 
 <div className="bulma-tags">
-
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 Camera를 초기 상태로 되돌립니다
@@ -222,7 +227,7 @@ Camera를 초기 상태로 되돌립니다
 ### lookAt {#lookAt}
 
 <div className="bulma-tags">
-  <span className="bulma-tag is-success">async</span>
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 해당 좌표로 이동하고, CSS transform을 적용합니다
@@ -240,7 +245,7 @@ Camera를 초기 상태로 되돌립니다
 ### getPrevAnchor {#getPrevAnchor}
 
 <div className="bulma-tags">
-
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 주어진 [AnchorPoint](AnchorPoint)의 이전 [AnchorPoint](AnchorPoint)를 반환합니다
@@ -256,7 +261,7 @@ Camera를 초기 상태로 되돌립니다
 ### getNextAnchor {#getNextAnchor}
 
 <div className="bulma-tags">
-
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 주어진 [AnchorPoint](AnchorPoint)의 다음 [AnchorPoint](AnchorPoint)를 반환합니다
@@ -272,7 +277,7 @@ Camera를 초기 상태로 되돌립니다
 ### getProgressInPanel {#getProgressInPanel}
 
 <div className="bulma-tags">
-
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 현재 카메라 아래 패널에서의 위치 진행도를 반환합니다
@@ -286,7 +291,7 @@ Camera를 초기 상태로 되돌립니다
 ### findAnchorIncludePosition {#findAnchorIncludePosition}
 
 <div className="bulma-tags">
-
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 주어진 좌표를 포함하는 [AnchorPoint](AnchorPoint)를 반환합니다
@@ -302,7 +307,7 @@ Camera를 초기 상태로 되돌립니다
 ### findNearestAnchor {#findNearestAnchor}
 
 <div className="bulma-tags">
-
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 해당 좌표에서 가장 가까운 [AnchorPoint](AnchorPoint)를 반환합니다
@@ -318,7 +323,7 @@ Camera를 초기 상태로 되돌립니다
 ### findActiveAnchor {#findActiveAnchor}
 
 <div className="bulma-tags">
-
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 현재 [Flicking#currentPanel](Flicking#currentPanel)에 해당하는 [AnchorPoint](AnchorPoint)를 반환합니다
@@ -328,7 +333,7 @@ Camera를 초기 상태로 되돌립니다
 ### clampToReachablePosition {#clampToReachablePosition}
 
 <div className="bulma-tags">
-
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 주어진 좌표를 Camera가 도달 가능한 범위 사이의 값으로 만듭니다
@@ -343,7 +348,7 @@ Camera를 초기 상태로 되돌립니다
 ### canReach {#canReach}
 
 <div className="bulma-tags">
-
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 해당 [Panel](Panel)이 Camera가 도달 가능한 범위 내에 있는지를 반환합니다
@@ -358,7 +363,7 @@ Camera를 초기 상태로 되돌립니다
 ### canSee {#canSee}
 
 <div className="bulma-tags">
-
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 현재 좌표에서 해당 패널 엘리먼트를 볼 수 있는지 여부를 반환합니다
@@ -373,7 +378,7 @@ Camera를 초기 상태로 되돌립니다
 ### updateAlignPos {#updateAlignPos}
 
 <div className="bulma-tags">
-
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 Camera의 [alignPosition](Camera#alignPosition)을 업데이트합니다
@@ -383,7 +388,7 @@ Camera의 [alignPosition](Camera#alignPosition)을 업데이트합니다
 ### updateAnchors {#updateAnchors}
 
 <div className="bulma-tags">
-
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 Camera의 [anchorPoints](Camera#anchorPoints)를 업데이트합니다
@@ -397,7 +402,7 @@ Camera의 [anchorPoints](Camera#anchorPoints)를 업데이트합니다
 ### updateAdaptiveHeight {#updateAdaptiveHeight}
 
 <div className="bulma-tags">
-
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 현재 선택된 패널의 높이와 동일하도록 뷰포트의 높이를 업데이트합니다
@@ -411,7 +416,7 @@ Camera의 [anchorPoints](Camera#anchorPoints)를 업데이트합니다
 ### resetNeedPanelHistory {#resetNeedPanelHistory}
 
 <div className="bulma-tags">
-
+  <span className="bulma-tag is-danger">inherited</span>
 </div>
 
 발생한 [needPanel](Flicking#event-needPanel) 이벤트들을 초기화하여 다시 발생할 수 있도록 합니다
