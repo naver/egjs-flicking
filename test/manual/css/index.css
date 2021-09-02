@@ -31,11 +31,9 @@ header {
 
 .flicking-viewport {
   transition: height 500ms;
-  width: 200px;
 }
 
 .flicking-panel {
-  min-width: 200px;
   border: 10px solid transparent;
   box-sizing: border-box;
   max-width: 100%;

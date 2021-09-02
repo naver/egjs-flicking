@@ -15,10 +15,6 @@ class RendererImpl extends Renderer {
     this._updateRenderingPanels();
   }
 
-  public checkPanelContentsReady(panels: Panel[]) {
-    this._checkPanelContentsReady(panels);
-  }
-
   protected _collectPanels(): void {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
 
@@ -164,6 +160,17 @@ describe("Renderer", () => {
         const newPanels = renderer.batchInsert({ index: 1, elements: elements });
 
         expect(newPanels.every((panel, idx) => panel.index === 1 + idx)).to.be.true;
+      });
+
+      it("should check panel contents for added panels", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const renderer = flicking.renderer;
+        const elements = range(5).map(() => El.imgPanel().el);
+        const checkPanelContentsReadySpy = sinon.spy(renderer, "checkPanelContentsReady");
+
+        const newPanels = renderer.batchInsert({ index: 1, elements: elements });
+
+        expect(checkPanelContentsReadySpy.calledOnceWith(newPanels));
       });
     });
 
