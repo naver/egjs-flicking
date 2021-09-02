@@ -7,46 +7,10 @@ import Sunny from "@site/static/img/demo/sunny.svg";
 import Cloudy from "@site/static/img/demo/cloudy.svg";
 import Rainy from "@site/static/img/demo/rainy.svg";
 import SourceCode from "@site/src/component/SourceCode";
-import CodeBlock from "@theme/CodeBlock";
-import Columns from "@site/src/component/Columns";
-import ColumnItem from "@site/src/component/ColumnItem";
 import "../css/demo/weather-display.css";
 
 export default () => {
   const plugins = [new AutoPlay()];
-
-  const reactSourceCode = `import Flicking from "@egjs/react-flicking";
-import { AutoPlay } from "@egjs/flicking-plugins";
-
-export default () => {
-  const plugins = [new AutoPlay()];
-
-  return <Flicking circular={true} horizontal={false}>
-    <div className="weather-panel">...</div>
-    <div className="weather-panel">...</div>
-    <div className="weather-panel">...</div>
-  </Flicking>;
-};`;
-
-const vueSourceCode = `<template>
-  <Flicking :options="{ circular: true, horizontal: false }">
-    <div class="weather-panel">...</div>
-    <div class="weather-panel">...</div>
-    <div class="weather-panel">...</div>
-  </Flicking>
-</template>
-<script>
-import { AutoPlay } from "@egjs/flicking-plugins";
-
-const plugins = [new AutoPlay()];
-
-module.exports = {
-  data: function () {
-    return {
-      plugins
-    }
-  }
-</script>`;
 
   return <>
     <Flicking className="weather-display my-6" circular={true} horizontal={false} plugins={plugins}>
