@@ -743,6 +743,7 @@ class Flicking extends Component<FlickingEvents> {
     if (this._disableOnInit) {
       this.disableInput();
     }
+    renderer.checkPanelContentsReady(renderer.panels);
 
     this._plugins.forEach(plugin => plugin.init(this));
 
