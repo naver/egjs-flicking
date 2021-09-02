@@ -196,6 +196,26 @@ describe("Flicking", () => {
       });
     });
 
+    describe("resizeOnContentsReady", () => {
+      it("is false by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.resizeOnContentsReady).to.be.false;
+      });
+
+      it("should set all initial panels with images to be loading at init if it's set to true", async () => {
+        const flicking = await createFlicking(El.viewport("200px", "200px").add(
+          El.camera().add(
+            El.imgPanel("100%", "100%"),
+            El.imgPanel("100%", "100%"),
+            El.imgPanel("100%", "100%")
+          )
+        ), { resizeOnContentsReady: true });
+
+        expect(flicking.panels.every(panel => panel.loading)).to.be.true;
+      });
+    });
+
     describe("needPanelThreshold", () => {
       it("is 0 by default", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);

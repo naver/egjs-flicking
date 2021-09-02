@@ -85,4 +85,16 @@ export const simulate = (el: HTMLElement, option: Partial<{
   })
 );
 
+export const waitEvent = (emitter: any, eventName: string) => {
+  if (emitter.once) {
+    return new Promise(res => {
+      emitter.once(eventName, res);
+    });
+  } else {
+    return new Promise(res => {
+      emitter.addEventListener(eventName, res, { once: true });
+    });
+  }
+};
+
 export class NullClass {}

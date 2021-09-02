@@ -5,7 +5,7 @@ import Renderer from "~/renderer/Renderer";
 import { getFlickingAttached, toArray } from "~/utils";
 
 import El from "../helper/El";
-import { createFlicking, range } from "../helper/test-util";
+import { createFlicking, range, waitEvent } from "../helper/test-util";
 
 class RendererImpl extends Renderer {
   public async render() { return; }
@@ -13,6 +13,10 @@ class RendererImpl extends Renderer {
 
   public updateRenderingPanels() {
     this._updateRenderingPanels();
+  }
+
+  public checkPanelContentsReady(panels: Panel[]) {
+    this._checkPanelContentsReady(panels);
   }
 
   protected _collectPanels(): void {
@@ -326,6 +330,102 @@ describe("Renderer", () => {
       expect(nonVisible.length).to.be.greaterThan(0);
       expect(flicking.visiblePanels.every(panel => panel.rendered)).to.be.true;
       expect(nonVisible.every(panel => !panel.rendered)).to.be.true;
+    });
+
+    it("should not remove panels that are currently loading its contents", async () => {
+      const flicking = await createFlicking(
+        El.viewport("200px", "200px").add(
+          El.camera().add(
+            El.imgPanel("100%", "100%"),
+            El.imgPanel("100%", "100%"),
+            El.imgPanel("100%", "100%")
+          )
+        ), { renderOnlyVisible: true, resizeOnContentsReady: true }
+      );
+      const renderer = new RendererImpl().init(flicking);
+
+      flicking.panels.forEach(panel => panel.markForHide());
+      renderer.updateRenderingPanels();
+
+      const nonVisibleButLoading = flicking.panels.filter(panel => !flicking.visiblePanels.includes(panel));
+      expect(nonVisibleButLoading.length).to.be.greaterThan(0);
+      expect(flicking.visiblePanels.every(panel => panel.rendered)).to.be.true;
+      expect(nonVisibleButLoading.every(panel => panel.loading)).to.be.true;
+      expect(nonVisibleButLoading.every(panel => panel.rendered)).to.be.true;
+    });
+  });
+
+  describe("checkPanelContentsReady", () => {
+    let renderer: RendererImpl | null = null;
+
+    afterEach(() => {
+      renderer?.destroy();
+      renderer = null;
+    });
+
+    it("should set all panels with image as loading if resizeOnContentsReady is true", async () => {
+      const flicking = await createFlicking(El.viewport("200px", "200px").add(
+        El.camera().add(
+          El.imgPanel("100%", "100%"),
+          El.imgPanel("100%", "100%"),
+          El.imgPanel("100%", "100%")
+        )
+      ), { resizeOnContentsReady: true });
+      renderer = new RendererImpl().init(flicking);
+      const panels = renderer.panels;
+
+      panels.forEach(panel => panel.loading = false);
+      expect(panels.every(panel => !panel.loading)).to.be.true;
+
+      renderer.checkPanelContentsReady(panels);
+      expect(panels.every(panel => panel.loading)).to.be.true;
+    });
+
+    it("should not set all panels with image as loading if resizeOnContentsReady is false", async () => {
+      const flicking = await createFlicking(El.viewport("200px", "200px").add(
+        El.camera().add(
+          El.imgPanel("100%", "100%"),
+          El.imgPanel("100%", "100%"),
+          El.imgPanel("100%", "100%")
+        )
+      ), { resizeOnContentsReady: false });
+      renderer = new RendererImpl().init(flicking);
+      const panels = renderer.panels;
+
+      panels.forEach(panel => panel.loading = false);
+      expect(panels.every(panel => !panel.loading)).to.be.true;
+
+      renderer.checkPanelContentsReady(panels);
+      expect(panels.every(panel => !panel.loading)).to.be.true;
+    });
+
+    it("should resize the panel with image when it's loaded", async () => {
+      const flicking = await createFlicking(El.viewport("200px", "200px").add(
+        El.camera().add(
+          El.imgPanel("100%", "100%")
+        )
+      ), { resizeOnContentsReady: true });
+      const panel = flicking.panels[0];
+      const image = panel.element.querySelector("img");
+      const resizeSpy = sinon.spy(panel, "resize");
+
+      await waitEvent(image, "load");
+
+      expect(resizeSpy.calledOnce).to.be.true;
+    });
+
+    it("should update the camera range after the image's loaded", async () => {
+      const flicking = await createFlicking(El.viewport("200px", "200px").add(
+        El.camera().add(
+          El.imgPanel("100%", "100%")
+        )
+      ), { resizeOnContentsReady: true });
+      const image = flicking.panels[0].element.querySelector("img");
+      const resizeSpy = sinon.spy(flicking.camera, "updateRange");
+
+      await waitEvent(image, "load");
+
+      expect(resizeSpy.calledOnce).to.be.true;
     });
   });
 });

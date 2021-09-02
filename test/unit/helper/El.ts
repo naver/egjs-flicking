@@ -55,7 +55,7 @@ class El {
    *     - Panel (width: 100%, height: 100%)
    */
   public static get DEFAULT_VERTICAL() {
-    return El.viewport().setHeight(1000).addClass(EL_CLASS.VERTICAL).add(
+    return El.viewport("1000px", "1000px").addClass(EL_CLASS.VERTICAL).add(
       El.camera().add(
         El.panel("100%", "100%"),
         El.panel("100%", "100%"),
@@ -94,6 +94,27 @@ class El {
     if (height) {
       el.setHeight(height);
     }
+    return el;
+  }
+
+  public static imgPanel(width?: string, height?: string) {
+    const el = new El(EL_CLASS.PANEL);
+    if (width) {
+      el.setWidth(width);
+    }
+    if (height) {
+      el.setHeight(height);
+    }
+
+    const img = document.createElement("img");
+
+    img.style.width = "100%";
+    img.style.height = "100%";
+    // use random placeholder
+    img.src = `https://picsum.photos/200/200?hash=${Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)}`;
+
+    el._el.appendChild(img);
+
     return el;
   }
 

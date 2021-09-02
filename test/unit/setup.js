@@ -21,11 +21,11 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  cleanup();
   window.flickings.forEach(flicking => {
     flicking.destroy();
   });
   window.flickings = [];
+  cleanup();
 });
 
 const cleanup = () => {
