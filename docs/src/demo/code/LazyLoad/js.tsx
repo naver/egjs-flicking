@@ -15,7 +15,7 @@ export default <><Columns>
 <Columns>
   <ColumnItem is={12}>
     <CodeBlock className="js" title="js">
-      {`import Flicking, { ALIGN, EVENT } from "@egjs/flicking";
+      {`import Flicking, { ALIGN, EVENTS } from "@egjs/flicking";
 
 // Add panel elements
 const cameraEl = document.querySelector("#flick .flicking-camera");
@@ -25,6 +25,7 @@ for (let i = 0; i <= 500; i++) {
   const panel = document.createElement("div");
   panel.innerHTML = "<span>" + i + "</span>"
   panel.__LOADED__ = false;
+  fragment.appendChild(panel);
 }
 
 cameraEl.appendChild(fragment);
@@ -44,7 +45,7 @@ const updateVisibility(indexes: number[]) {
       const image = document.createElement("img");
       image.src = "https://cataas.com/cat?idx=" + panel.index
       panel.element.appendChild(image);
-      apnel.element.__LOADED__ = true;
+      panel.element.__LOADED__ = true;
     });
 }
 
