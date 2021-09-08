@@ -9,7 +9,7 @@ import Viewport from "./core/Viewport";
 import { Panel } from "./core/panel";
 import { Control, SnapControl, SnapControlOptions, FreeControl, StrictControl, FreeControlOptions, StrictControlOptions } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
-import { Renderer, VanillaRenderer, ExternalRenderer } from "./renderer";
+import { Renderer, VanillaRenderer, ExternalRenderer, VirtualRenderer } from "./renderer";
 import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
 import * as ERROR from "./const/error";
 import { findIndex, getElement, includes, parseElement } from "./utils";
@@ -54,6 +54,10 @@ export interface FlickingOptions {
   panelsPerView: number;
   noPanelStyleOverride: boolean;
   resizeOnContentsReady: boolean;
+  virtual: {
+    renderPanel: (index: number) => string;
+    initialPanelCount: number;
+  } | null;
   // EVENT
   needPanelThreshold: number;
   preventEventsBeforeInit: boolean;
@@ -116,6 +120,7 @@ class Flicking extends Component<FlickingEvents> {
   private _panelsPerView: FlickingOptions["panelsPerView"];
   private _noPanelStyleOverride: FlickingOptions["noPanelStyleOverride"];
   private _resizeOnContentsReady: FlickingOptions["resizeOnContentsReady"];
+  private _virtual: FlickingOptions["virtual"];
 
   private _needPanelThreshold: FlickingOptions["needPanelThreshold"];
   private _preventEventsBeforeInit: FlickingOptions["preventEventsBeforeInit"];
@@ -367,6 +372,7 @@ class Flicking extends Component<FlickingEvents> {
    * @default false
    */
   public get resizeOnContentsReady() { return this._resizeOnContentsReady; }
+  public get virtual() { return this._virtual; }
   // EVENTS
   /**
    * A Threshold from viewport edge before triggering `needPanel` event
@@ -639,6 +645,7 @@ class Flicking extends Component<FlickingEvents> {
     panelsPerView = -1,
     noPanelStyleOverride = false,
     resizeOnContentsReady = false,
+    virtual = null,
     needPanelThreshold = 0,
     preventEventsBeforeInit = true,
     deceleration = 0.0075,
@@ -673,6 +680,7 @@ class Flicking extends Component<FlickingEvents> {
     this._panelsPerView = panelsPerView;
     this._noPanelStyleOverride = noPanelStyleOverride;
     this._resizeOnContentsReady = resizeOnContentsReady;
+    this._virtual = virtual;
     this._needPanelThreshold = needPanelThreshold;
     this._preventEventsBeforeInit = preventEventsBeforeInit;
     this._deceleration = deceleration;
@@ -1286,11 +1294,14 @@ class Flicking extends Component<FlickingEvents> {
       align: this._align
     };
 
+    const virtual = this._virtual;
     const renderExternal = this._renderExternal;
 
-    return renderExternal
-      ? new (renderExternal.renderer as any)({ ...rendererOptions, ...renderExternal.rendererOptions })
-      : new VanillaRenderer(rendererOptions);
+    return virtual
+      ? new VirtualRenderer(rendererOptions)
+      : renderExternal
+        ? new (renderExternal.renderer as any)({ ...rendererOptions, ...renderExternal.rendererOptions })
+        : new VanillaRenderer(rendererOptions);
   }
 
   private async _moveToInitialPanel(): Promise<void> {

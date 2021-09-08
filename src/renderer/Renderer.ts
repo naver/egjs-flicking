@@ -444,6 +444,16 @@ abstract class Renderer {
 
     flicking.panels.forEach(panel => panel.resize(firstPanelSizeObj));
   }
+
+  protected _removeAllChildsFromCamera() {
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const cameraElement = flicking.camera.element;
+
+    // Remove other elements
+    while (cameraElement.firstChild) {
+      cameraElement.removeChild(cameraElement.firstChild);
+    }
+  }
 }
 
 export default Renderer;

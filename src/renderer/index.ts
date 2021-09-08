@@ -5,11 +5,13 @@
 import Renderer, { RendererOptions } from "./Renderer";
 import VanillaRenderer from "./VanillaRenderer";
 import ExternalRenderer from "./ExternalRenderer";
+import VirtualRenderer from "./VirtualRenderer";
 
 export {
   Renderer,
   VanillaRenderer,
-  ExternalRenderer
+  ExternalRenderer,
+  VirtualRenderer
 };
 
 export type {

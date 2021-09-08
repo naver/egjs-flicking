@@ -486,9 +486,17 @@ abstract class Camera {
     const unRenderedPanels = flicking.panels.filter(panel => !panel.rendered);
     const position = this._position;
 
-    this._offset = unRenderedPanels
-      .filter(panel => panel.position + panel.offset < position)
-      .reduce((offset, panel) => offset + panel.sizeIncludingMargin, 0);
+    if (flicking.virtual) {
+      const firstVisible = flicking.visiblePanels[0];
+      this._offset = firstVisible
+        ? flicking.panels.slice(0, firstVisible.index)
+          .reduce((offset, panel) => offset + panel.sizeIncludingMargin, 0)
+        : 0;
+    } else {
+      this._offset = unRenderedPanels
+        .filter(panel => panel.position + panel.offset < position)
+        .reduce((offset, panel) => offset + panel.sizeIncludingMargin, 0);
+    }
 
     this._applyTransform();
   }

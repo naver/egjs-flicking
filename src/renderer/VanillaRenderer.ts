@@ -104,16 +104,6 @@ class VanillaRenderer extends Renderer {
     });
   }
 
-  private _removeAllChildsFromCamera() {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
-    const cameraElement = flicking.camera.element;
-
-    // Remove other elements
-    while (cameraElement.firstChild) {
-      cameraElement.removeChild(cameraElement.firstChild);
-    }
-  }
-
   private _getRenderingPanelsByOrder(): Panel[] {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
     const panels = flicking.renderer.panels;
