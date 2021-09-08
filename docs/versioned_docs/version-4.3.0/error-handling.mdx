@@ -1,0 +1,31 @@
+---
+title: Handling errors
+id: error-handling
+slug: /error-handling
+custom_edit_url: null
+---
+
+import Link from "@docusaurus/Link";
+import useBaseUrl from "@docusaurus/useBaseUrl";
+
+All known Flicking errors are thrown as <Link to={useBaseUrl("docs/api/FlickingError")}>FlickingError</Link> with a `code` property set as listed on the <Link to={useBaseUrl("docs/api/ERROR_CODE")}>ERROR_CODE</Link>.
+
+A common use-case for this is when you're calling a <Link to={useBaseUrl("docs/api/Flicking#prev")}>prev</Link> / <Link to={useBaseUrl("docs/api/Flicking#next")}>next</Link> / <Link to={useBaseUrl("docs/api/Flicking#moveTo")}>moveTo</Link> of Flicking which can throw an error when Flicking's already animating.
+
+```js
+import { FlickingError, ERROR_CODE } from "@egjs/flicking";
+
+try {
+  await flicking.next();
+} catch (err) {
+  if (err instanceof FlickingError) {
+    if (err.code === ERROR_CODE.ANIMATION_ALREADY_PLAYING) {
+      console.error("Animation is already playing!");
+    } else if (err.code === ERROR_CODE.ANIMATION_INTERRUPTED) {
+      console.error("Animation is interrupted by user.");
+    }
+  }
+}
+```
+
+See all possible error codes at <Link to={useBaseUrl("docs/api/ERROR_CODE")}>ERROR_CODE</Link>.
