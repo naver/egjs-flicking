@@ -1,11 +1,9 @@
 const flicking = new Flicking("#flicking", {
-  circular: true,
-  moveType: "strict",
-  align: "prev"
-}).on("afterResize", () => {
-  console.log("resized");
-}).on("ready", () => {
-  console.log("ready");
+  panelsPerView: 3,
+  virtual: {
+    renderPanel: idx => `Panel ${idx}`,
+    initialPanelCount: 500
+  }
 });
 
 // Object.values(Flicking.EVENTS).forEach(evt => {
