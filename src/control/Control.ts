@@ -171,7 +171,7 @@ abstract class Control {
    * @chainable
    * @return {Promise<void>}
    */
-  public updatePosition(_progressInPanel: number): void {   // eslint-disable-line @typescript-eslint/no-unused-vars
+  public updatePosition(_progressInPanel: number): void { // eslint-disable-line @typescript-eslint/no-unused-vars
     const flicking = getFlickingAttached(this._flicking, "Control");
     const camera = flicking.camera;
     const activePanel = this._activePanel;

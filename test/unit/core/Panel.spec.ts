@@ -75,6 +75,12 @@ describe("Panel", () => {
       expect(panel.removed).to.be.false;
     });
 
+    it("is not loading on creation", async () => {
+      const panel = await createPanel(El.panel());
+
+      expect(panel.loading).to.be.false;
+    });
+
     it("has range from 0 to 0 as default", async () => {
       expect((await createPanel(El.panel())).range.min).to.equal(0);
       expect((await createPanel(El.panel())).range.max).to.equal(0);
@@ -103,6 +109,17 @@ describe("Panel", () => {
         panel.resize();
 
         expect(panel.position).to.equal(panel.element.offsetTop + 934); // pos + align
+      });
+    });
+
+    describe("loading", () => {
+      it("is not readonly", async () => {
+        const panel = await createPanel(El.panel());
+        expect(panel.loading).to.be.false;
+        panel.loading = true;
+        expect(panel.loading).to.be.true;
+        panel.loading = false;
+        expect(panel.loading).to.be.false;
       });
     });
   });
@@ -440,6 +457,32 @@ describe("Panel", () => {
         expect((await createPanel(El.panel(), { index: 3 })).decreaseIndex(-100).index).to.equal(3);
         expect((await createPanel(El.panel(), { index: 1 })).decreaseIndex(-5).index).to.equal(1);
         expect((await createPanel(El.panel(), { index: 10 })).decreaseIndex(-99).index).to.equal(10);
+      });
+    });
+
+    describe("updatePosition", () => {
+      it("should locate its position next to the previous panel", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const panel = flicking.getPanel(1)!;
+        const prevPos = panel.position;
+
+        panel.prev().setSize({ width: 500 });
+        panel.prev().resize();
+        panel.updatePosition();
+
+        expect(panel.position).not.equals(prevPos);
+        expect(panel.position).equals(500 + panel.alignPosition);
+      });
+
+      it("should locate its position at it's margin.prev when it's the first panel", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const panel = flicking.getPanel(0)!;
+
+        panel.element.style.marginLeft = "50px";
+        panel.resize();
+        panel.updatePosition();
+
+        expect(panel.position).equals(50 + panel.alignPosition);
       });
     });
 

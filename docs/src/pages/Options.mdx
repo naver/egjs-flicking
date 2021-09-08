@@ -376,6 +376,43 @@ This behavior can be useful in terms of performance when you're manually managin
   </ColumnItem>
 </Columns>
 
+### resizeOnContentsReady
+Enabling this option will automatically call [Flicking#resize](docs/api/Flicking#resize) when all image/video inside panels are loaded.
+This can be useful when you have contents inside Flicking that changes its size when it's loaded
+
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  resizeOnContentsReady: false
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking resizeOnContentsReady={false}>
+      <div style={{ maxWidth: "100%" }}><img style={{ maxWidth: "100%" }} src={require("@site/static/img/demo/bg01.jpg").default} /></div>
+      <div style={{ maxWidth: "100%" }}><img style={{ maxWidth: "100%" }} src={require("@site/static/img/demo/bg02.jpg").default} /></div>
+      <div style={{ maxWidth: "100%" }}><img style={{ maxWidth: "100%" }} src={require("@site/static/img/demo/bg03.jpg").default} /></div>
+    </Flicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  resizeOnContentsReady: true
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking resizeOnContentsReady={true} renderOnlyVisible={true}>
+      <div style={{ maxWidth: "100%" }}><img style={{ maxWidth: "100%" }} src={require("@site/static/img/demo/bg01.jpg").default} /></div>
+      <div style={{ maxWidth: "100%" }}><img style={{ maxWidth: "100%" }} src={require("@site/static/img/demo/bg02.jpg").default} /></div>
+      <div style={{ maxWidth: "100%" }}><img style={{ maxWidth: "100%" }} src={require("@site/static/img/demo/bg03.jpg").default} /></div>
+    </Flicking>
+  </ColumnItem>
+</Columns>
+
 ## Event
 ### needPanelThreshold
 A Threshold from viewport edge before triggering **[needPanel](docs/api/Flicking#event-needPanel)** event

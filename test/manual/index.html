@@ -13,14 +13,23 @@
 </head>
 <body>
   <div class="demo-area">
-    <div id="test"></div>
+    <div class="test"></div>
     <!-- Basic -->
     <div id="flicking" class="flicking-viewport">
       <div class="flicking-camera">
-        <div class="flicking-panel has-text-white has-background-primary">1</div>
-        <div class="flicking-panel has-text-white has-background-info">2</div>
-        <div class="flicking-panel has-text-white has-background-warning">3</div>
-        <div class="flicking-panel has-text-white has-background-success">4</div>
+        <div class="flicking-panel has-text-white has-background-primary">
+          <img src="https://cataas.com/cat?index=1" />
+        </div>
+        <div class="flicking-panel has-text-white has-background-danger">
+          <img src="https://cataas.com/cat?index=2" />
+        </div>
+        <div class="flicking-panel has-text-white has-background-warning">
+          <img src="https://cataas.com/cat?index=3" />
+        </div>
+        <div class="flicking-panel has-text-white has-background-info">
+          <img src="https://cataas.com/cat?index=4" loading="lazy" />
+        </div>
+        <div class="flicking-panel has-text-white has-background-link"></div>
       </div>
     </div>
     <button id="prev">PREV</button><button id="next">NEXT</button>

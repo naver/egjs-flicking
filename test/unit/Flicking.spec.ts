@@ -58,6 +58,20 @@ describe("Flicking", () => {
 
       expect(err).to.equal(null);
     });
+
+    it("should set current panel even if all panel's size is 0", async () => {
+      const flicking = await createFlicking(
+        El.viewport().add(
+          El.camera()
+            .add(El.panel("0px"))
+            .add(El.panel("0px"))
+            .add(El.panel("0px"))
+        ),
+      );
+
+      expect(flicking.currentPanel).not.to.be.null;
+      expect(flicking.currentPanel).to.equal(flicking.getPanel(0));
+    });
   });
 
   describe("Properties", () => {
@@ -193,6 +207,26 @@ describe("Flicking", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         expect(flicking.noPanelStyleOverride).to.be.false;
+      });
+    });
+
+    describe("resizeOnContentsReady", () => {
+      it("is false by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.resizeOnContentsReady).to.be.false;
+      });
+
+      it("should set all initial panels with images to be loading at init if it's set to true", async () => {
+        const flicking = await createFlicking(El.viewport("200px", "200px").add(
+          El.camera().add(
+            El.imgPanel("100%", "100%"),
+            El.imgPanel("100%", "100%"),
+            El.imgPanel("100%", "100%")
+          )
+        ), { resizeOnContentsReady: true });
+
+        expect(flicking.panels.every(panel => panel.loading)).to.be.true;
       });
     });
 

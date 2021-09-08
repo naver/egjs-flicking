@@ -3,6 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 import { ComponentEvent } from "@egjs/component";
+import ImReady from "@egjs/imready";
 
 import Flicking, { FlickingOptions } from "../Flicking";
 import Panel, { PanelOptions } from "../core/panel/Panel";
@@ -177,12 +178,10 @@ abstract class Renderer {
       // Resize the newly added panels
       panelsInserted.forEach(panel => panel.resize());
 
-      const insertedSize = this._getPanelSizeSum(panelsInserted);
-
       // Update panel indexes & positions
       panelsPushed.forEach(panel => {
         panel.increaseIndex(panelsInserted.length);
-        panel.increasePosition(insertedSize);
+        panel.updatePosition();
       });
 
       return [...addedPanels, ...panelsInserted];
@@ -209,6 +208,8 @@ abstract class Renderer {
       added: allPanelsInserted,
       removed: []
     }));
+
+    this.checkPanelContentsReady(allPanelsInserted);
 
     return allPanelsInserted;
   }
@@ -240,10 +241,9 @@ abstract class Renderer {
       if (panelsRemoved.length <= 0) return [];
 
       // Update panel indexes & positions
-      const removedSize = this._getPanelSizeSum(panelsRemoved);
       panelsPulled.forEach(panel => {
         panel.decreaseIndex(panelsRemoved.length);
-        panel.decreasePosition(removedSize);
+        panel.updatePosition();
       });
 
       this._removePanelElements(panelsRemoved);
@@ -289,21 +289,85 @@ abstract class Renderer {
     return allPanelsRemoved;
   }
 
+  /**
+   * @internal
+   */
+  public checkPanelContentsReady(checkingPanels: Panel[]) {
+    const resizeOnContentsReady = getFlickingAttached(this._flicking, "Renderer").resizeOnContentsReady;
+    const panels = this._panels;
+
+    if (!resizeOnContentsReady) return;
+
+    const hasContents = (panel: Panel) => !!panel.element.querySelector("img, video");
+    checkingPanels = checkingPanels.filter(panel => hasContents(panel));
+
+    if (checkingPanels.length <= 0) return;
+
+    const contentsReadyChecker = new ImReady();
+
+    checkingPanels.forEach(panel => {
+      panel.loading = true;
+    });
+
+    contentsReadyChecker.on("readyElement", e => {
+      const flicking = this._flicking;
+
+      if (!flicking) {
+        // Renderer's destroy() is called before
+        contentsReadyChecker.destroy();
+        return;
+      }
+
+      const panel = checkingPanels[e.index];
+      const camera = flicking.camera;
+      const control = flicking.control;
+      const prevProgressInPanel = control.activePanel
+        ? camera.getProgressInPanel(control.activePanel)
+        : 0;
+
+      panel.loading = false;
+      panel.resize();
+      panels.slice(panel.index + 1).forEach(panelBehind => panelBehind.updatePosition());
+
+      if (!flicking.initialized) return;
+
+      camera.updateRange();
+      camera.updateAnchors();
+
+      if (control.animating) {
+        // TODO: Need Axes update
+      } else {
+        control.updatePosition(prevProgressInPanel);
+        control.updateInput();
+      }
+    });
+
+    contentsReadyChecker.on("preReady", e => {
+      if (this._flicking) {
+        void this.render();
+      }
+
+      if (e.readyCount === e.totalCount) {
+        contentsReadyChecker.destroy();
+      }
+    });
+
+    contentsReadyChecker.on("ready", () => {
+      if (this._flicking) {
+        void this.render();
+      }
+      contentsReadyChecker.destroy();
+    });
+
+    contentsReadyChecker.check(checkingPanels.map(panel => panel.element));
+  }
+
   protected _getPanelAlign() {
     const align = this._align;
 
     return typeof align === "object"
       ? (align as { panel: string | number }).panel
       : align;
-  }
-
-  protected _getPanelSizeSum(panels: Panel[]): number {
-    const firstPanel = panels[0];
-    const lastPanel = panels[panels.length - 1];
-
-    const marginDiff = lastPanel.margin.next - firstPanel.margin.prev;
-
-    return (lastPanel.range.max - firstPanel.range.min) + marginDiff;
   }
 
   protected _updateCameraAndControl() {
@@ -336,7 +400,7 @@ abstract class Renderer {
     }, {});
 
     panels.forEach(panel => {
-      if (panel.index in visibleIndexes) {
+      if (panel.index in visibleIndexes || panel.loading) {
         panel.markForShow();
       } else if (!flicking.holding) {
         // During the input sequence,

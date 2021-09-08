@@ -11,6 +11,7 @@ import { Control, SnapControl, SnapControlOptions, FreeControl, StrictControl, F
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
 import { Renderer, VanillaRenderer, ExternalRenderer } from "./renderer";
 import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
+import * as AXES from "./const/axes";
 import * as ERROR from "./const/error";
 import { findIndex, getElement, includes, parseElement } from "./utils";
 import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, WillChangeEvent, WillRestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent, ChangedEvent, RestoredEvent, PanelChangeEvent } from "./type/event";
@@ -53,6 +54,7 @@ export interface FlickingOptions {
   adaptive: boolean;
   panelsPerView: number;
   noPanelStyleOverride: boolean;
+  resizeOnContentsReady: boolean;
   // EVENT
   needPanelThreshold: number;
   preventEventsBeforeInit: boolean;
@@ -114,6 +116,7 @@ class Flicking extends Component<FlickingEvents> {
   private _adaptive: FlickingOptions["adaptive"];
   private _panelsPerView: FlickingOptions["panelsPerView"];
   private _noPanelStyleOverride: FlickingOptions["noPanelStyleOverride"];
+  private _resizeOnContentsReady: FlickingOptions["resizeOnContentsReady"];
 
   private _needPanelThreshold: FlickingOptions["needPanelThreshold"];
   private _preventEventsBeforeInit: FlickingOptions["preventEventsBeforeInit"];
@@ -356,6 +359,15 @@ class Flicking extends Component<FlickingEvents> {
    * @default false
    */
   public get noPanelStyleOverride() { return this._noPanelStyleOverride; }
+  /**
+   * Enabling this option will automatically call {@link Flicking#resize} when all image/video inside panels are loaded.
+   * This can be useful when you have contents inside Flicking that changes its size when it's loaded
+   * @ko 이 옵션을 활성화할 경우, Flicking 패널 내부의 이미지/비디오들이 로드되었을 때 자동으로 {@link Flicking#resize}를 호출합니다.
+   * 이 동작은 Flicking 내부에 로드 전/후로 크기가 변하는 콘텐츠를 포함하고 있을 때 유용하게 사용하실 수 있습니다.
+   * @type {boolean}
+   * @default false
+   */
+  public get resizeOnContentsReady() { return this._resizeOnContentsReady; }
   // EVENTS
   /**
    * A Threshold from viewport edge before triggering `needPanel` event
@@ -553,6 +565,7 @@ class Flicking extends Component<FlickingEvents> {
   public set adaptive(val: FlickingOptions["adaptive"]) { this._adaptive = val; }
   public set panelsPerView(val: FlickingOptions["panelsPerView"]) { this._panelsPerView = val; }
   public set noPanelStyleOverride(val: FlickingOptions["noPanelStyleOverride"]) { this._noPanelStyleOverride = val; }
+  public set resizeOnContentsReady(val: FlickingOptions["resizeOnContentsReady"]) { this._resizeOnContentsReady = val; }
   // EVENTS
   public set needPanelThreshold(val: FlickingOptions["needPanelThreshold"]) { this._needPanelThreshold = val; }
   public set preventEventsBeforeInit(val: FlickingOptions["preventEventsBeforeInit"]) { this._preventEventsBeforeInit = val; }
@@ -626,6 +639,7 @@ class Flicking extends Component<FlickingEvents> {
     adaptive = false,
     panelsPerView = -1,
     noPanelStyleOverride = false,
+    resizeOnContentsReady = false,
     needPanelThreshold = 0,
     preventEventsBeforeInit = true,
     deceleration = 0.0075,
@@ -659,6 +673,7 @@ class Flicking extends Component<FlickingEvents> {
     this._adaptive = adaptive;
     this._panelsPerView = panelsPerView;
     this._noPanelStyleOverride = noPanelStyleOverride;
+    this._resizeOnContentsReady = resizeOnContentsReady;
     this._needPanelThreshold = needPanelThreshold;
     this._preventEventsBeforeInit = preventEventsBeforeInit;
     this._deceleration = deceleration;
@@ -729,6 +744,7 @@ class Flicking extends Component<FlickingEvents> {
     if (this._disableOnInit) {
       this.disableInput();
     }
+    renderer.checkPanelContentsReady(renderer.panels);
 
     this._plugins.forEach(plugin => plugin.init(this));
 
@@ -748,8 +764,6 @@ class Flicking extends Component<FlickingEvents> {
    * @return {void}
    */
   public destroy(): void {
-    if (!this._initialized) return;
-
     this.off();
     window.removeEventListener("resize", this.resize);
 
@@ -1286,6 +1300,8 @@ class Flicking extends Component<FlickingEvents> {
     const initialPanel = renderer.getPanel(this._defaultIndex) || renderer.getPanel(0);
 
     if (!initialPanel) return;
+
+    control.setActive(initialPanel, null, false);
 
     return control.moveToPanel(initialPanel, {
       duration: 0
