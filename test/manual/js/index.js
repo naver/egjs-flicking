@@ -1,5 +1,6 @@
 const flicking = new Flicking("#flicking", {
   panelsPerView: 3,
+  circular: true,
   virtual: {
     renderPanel: idx => `Panel ${idx}`,
     initialPanelCount: 500
