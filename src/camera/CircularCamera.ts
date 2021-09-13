@@ -262,7 +262,9 @@ class CircularCamera extends Camera {
         }
       });
 
-    this._circularOffset = this._calcPanelAreaSum(toggledPrev) - this._calcPanelAreaSum(toggledNext);
+    this._circularOffset = flicking.virtual
+      ? this._calcPanelAreaSum(toggledPrev)
+      : this._calcPanelAreaSum(toggledPrev) - this._calcPanelAreaSum(toggledNext);
   }
 }
 

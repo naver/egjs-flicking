@@ -96,10 +96,12 @@ class VirtualRenderer extends Renderer {
     return new VirtualPanel(options);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected _insertPanelElements(panels: Panel[], nextSibling: Panel | null) {
     return this;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected _removePanelElements(panels: Panel[]): this {
     return this;
   }
@@ -107,7 +109,7 @@ class VirtualRenderer extends Renderer {
   private _resetPanelElementOrder() {
     const elements = this._elements;
     const flicking = getFlickingAttached(this._flicking, "Renderer");
-    const visiblePanels = flicking.visiblePanels;
+    const visiblePanels = [...flicking.visiblePanels].sort((panel1, panel2) => (panel1.position + panel1.offset) - (panel2.position + panel2.offset));
     const cameraEl = flicking.camera.element;
 
     if (visiblePanels.length <= 0) return;

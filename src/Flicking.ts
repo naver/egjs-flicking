@@ -1320,8 +1320,13 @@ class Flicking extends Component<FlickingEvents> {
       align: this._align
     };
 
-    const virtual = this._virtual;
+    const virtual = this._virtual && this._panelsPerView > 0;
     const renderExternal = this._renderExternal;
+
+    if (this._virtual && this._panelsPerView <= 0) {
+      // eslint-disable-next-line no-console
+      console.warn("\"virtual\" and \"panelsPerView\" option should be used together, ignoring virtual.");
+    }
 
     return virtual
       ? new VirtualRenderer(rendererOptions)
