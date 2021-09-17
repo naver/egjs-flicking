@@ -2,15 +2,22 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { getFlickingAttached, range } from "../utils";
+import { getFlickingAttached, getMinusCompensatedIndex, range } from "../utils";
 import Panel, { PanelOptions } from "../core/panel/Panel";
 import VirtualPanel from "../core/panel/VirtualPanel";
 
-import Renderer from "./Renderer";
+import Renderer, { RendererOptions } from "./Renderer";
 
 export interface VirtualElement {
   el: HTMLElement;
-  renderingPanel: Panel | null;
+  renderingPanel: VirtualPanel | null;
+}
+
+export interface VirtualRendererOptions extends RendererOptions {
+  virtual: {
+    renderPanel: (index: number, panel: VirtualPanel) => string;
+    initialPanelCount: number;
+  };
 }
 
 /**
@@ -18,13 +25,36 @@ export interface VirtualElement {
  */
 class VirtualRenderer extends Renderer {
   private _elements: VirtualElement[] = [];
+  private _renderFn: (index: number, panel: VirtualPanel) => string;
+  private _initialPanelCount: number;
 
   public get elements() { return this._elements; }
 
+  // Options
+  public get renderPanel() { return this._renderFn; }
+  public get initialPanelCount() { return this._initialPanelCount; }
+
+  public set renderPanel(val: VirtualRendererOptions["virtual"]["renderPanel"]) { this._renderFn = val; }
+  public set initialPanelCount(val: VirtualRendererOptions["virtual"]["initialPanelCount"]) {
+    this._initialPanelCount = val;
+    this._updateVirtualPanels();
+  }
+
+  public constructor(options: Partial<VirtualRendererOptions> = {}) {
+    super(options);
+
+    const virtual = options.virtual ?? {
+      renderPanel: (index: number) => `Panel ${index}`,
+      initialPanelCount: 100
+    };
+    this._renderFn = virtual.renderPanel;
+    this._initialPanelCount = virtual.initialPanelCount;
+  }
+
   public async render() {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
-    const visiblePanels = flicking.visiblePanels;
-    const renderFn = flicking.virtual!.renderPanel;
+    const visiblePanels = flicking.visiblePanels as VirtualPanel[];
+    const renderFn = this._renderFn;
     const elements = this._elements;
     const invisibles = elements.map((_, idx) => idx);
 
@@ -42,7 +72,7 @@ class VirtualRenderer extends Renderer {
       }
 
       if (virtualEl.renderingPanel !== panel) {
-        el.innerHTML = renderFn(panel.index);
+        el.innerHTML = renderFn(panel.index, panel);
         virtualEl.renderingPanel = panel;
       }
     });
@@ -65,10 +95,45 @@ class VirtualRenderer extends Renderer {
     return Promise.resolve();
   }
 
+  public append() {
+    this.insert(this._panels.length);
+  }
+
+  public prepend() {
+    this.insert(0);
+  }
+
+  public insert(index: number) {
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const align = this._getPanelAlign();
+    const panels = this._panels;
+    const panelsPushed = panels.slice(index);
+    const insertingIdx = getMinusCompensatedIndex(index, panels.length);
+
+    panelsPushed.forEach(panel => {
+      panel.increaseIndex(1);
+      panel.updatePosition();
+    });
+
+    panels.splice(insertingIdx, 0, new VirtualPanel({ align, flicking, index: insertingIdx }));
+  }
+
+  public remove(index: number) {
+    const panels = this._panels;
+    const removingIdx = getMinusCompensatedIndex(index, panels.length);
+    const panelsPulled = panels.slice(removingIdx + 1);
+
+    panels.splice(removingIdx, 1);
+
+    panelsPulled.forEach(panel => {
+      panel.decreaseIndex(1);
+      panel.updatePosition();
+    });
+  }
+
   protected _collectPanels() {
     const flicking = getFlickingAttached(this._flicking, "Renderer");
     const panelsPerView = flicking.panelsPerView;
-    const initialPanelCount = flicking.virtual!.initialPanelCount;
     const fragment = document.createDocumentFragment();
 
     // Remove all child elements in the camera element
@@ -87,9 +152,7 @@ class VirtualRenderer extends Renderer {
 
     flicking.camera.element.appendChild(fragment);
 
-    const align = this._getPanelAlign();
-    this._panels = range(initialPanelCount)
-      .map(index => new VirtualPanel({ flicking, index, align }));
+    this._updateVirtualPanels();
   }
 
   protected _createPanel(el: any, options: PanelOptions) {
@@ -126,6 +189,23 @@ class VirtualRenderer extends Renderer {
         cameraEl.insertBefore(virtualEl.el, nextEl);
       }
     });
+  }
+
+  private _updateVirtualPanels() {
+    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const initialPanelCount = this._initialPanelCount;
+    const align = this._getPanelAlign();
+    const panels = this._panels;
+
+    if (initialPanelCount > panels.length) {
+      const firstIndex = panels.length;
+      const newPanels = range(initialPanelCount - panels.length)
+        .map(idx => new VirtualPanel({ flicking, index: firstIndex + idx, align }));
+
+      panels.push(...newPanels);
+    } else if (initialPanelCount < panels.length) {
+      panels.splice(initialPanelCount);
+    }
   }
 }
 

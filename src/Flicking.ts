@@ -6,7 +6,7 @@ import Component, { ComponentEvent } from "@egjs/component";
 
 import FlickingError from "./core/FlickingError";
 import Viewport from "./core/Viewport";
-import { Panel } from "./core/panel";
+import { Panel, VirtualPanel } from "./core/panel";
 import { Control, SnapControl, SnapControlOptions, FreeControl, StrictControl, FreeControlOptions, StrictControlOptions } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
 import { Renderer, VanillaRenderer, ExternalRenderer, VirtualRenderer } from "./renderer";
@@ -54,10 +54,6 @@ export interface FlickingOptions {
   panelsPerView: number;
   noPanelStyleOverride: boolean;
   resizeOnContentsReady: boolean;
-  virtual: {
-    renderPanel: (index: number) => string;
-    initialPanelCount: number;
-  } | null;
   // EVENT
   needPanelThreshold: number;
   preventEventsBeforeInit: boolean;
@@ -76,6 +72,10 @@ export interface FlickingOptions {
   disableOnInit: boolean;
   // PERFORMANCE
   renderOnlyVisible: boolean;
+  virtual: {
+    renderPanel: (index: number, panel: VirtualPanel) => string;
+    initialPanelCount: number;
+  } | null;
   // OTHERS
   autoInit: boolean;
   autoResize: boolean;
@@ -372,7 +372,6 @@ class Flicking extends Component<FlickingEvents> {
    * @default false
    */
   public get resizeOnContentsReady() { return this._resizeOnContentsReady; }
-  public get virtual() { return this._virtual; }
   // EVENTS
   /**
    * A Threshold from viewport edge before triggering `needPanel` event
@@ -527,6 +526,10 @@ class Flicking extends Component<FlickingEvents> {
    * @default false
    */
   public get renderOnlyVisible() { return this._renderOnlyVisible; }
+  /**
+   *
+   */
+  public get virtual() { return (this._virtual && this._panelsPerView > 0) ? this._renderer as VirtualRenderer : null; }
   // OTHERS
   /**
    * Call {@link Flicking#init init()} automatically when creating Flicking's instance
@@ -645,7 +648,6 @@ class Flicking extends Component<FlickingEvents> {
     panelsPerView = -1,
     noPanelStyleOverride = false,
     resizeOnContentsReady = false,
-    virtual = null,
     needPanelThreshold = 0,
     preventEventsBeforeInit = true,
     deceleration = 0.0075,
@@ -660,6 +662,7 @@ class Flicking extends Component<FlickingEvents> {
     preventClickOnDrag = true,
     disableOnInit = false,
     renderOnlyVisible = false,
+    virtual = null,
     autoInit = true,
     autoResize = true,
     renderExternal = null

@@ -266,7 +266,7 @@ export const circulateIndex = (index: number, max: number): number => {
   }
 };
 
-export const range = (end: number) => {
+export const range = (end: number): number[] => {
   const arr = new Array(end);
 
   for (let i = 0; i < end; i++) {
