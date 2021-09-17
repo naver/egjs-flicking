@@ -5,11 +5,13 @@
 import Panel, { PanelOptions } from "./Panel";
 import ElementPanel, { ElementPanelOptions } from "./ElementPanel";
 import ExternalPanel, { ExternalPanelOptions } from "./ExternalPanel";
+import VirtualPanel from "./VirtualPanel";
 
 export {
   Panel,
   ElementPanel,
-  ExternalPanel
+  ExternalPanel,
+  VirtualPanel
 };
 
 export type {
