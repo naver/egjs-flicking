@@ -5,7 +5,7 @@
 import Renderer, { RendererOptions } from "./Renderer";
 import VanillaRenderer from "./VanillaRenderer";
 import ExternalRenderer from "./ExternalRenderer";
-import VirtualRenderer from "./VirtualRenderer";
+import VirtualRenderer, { VirtualRendererOptions } from "./VirtualRenderer";
 
 export {
   Renderer,
@@ -15,5 +15,6 @@ export {
 };
 
 export type {
-  RendererOptions
+  RendererOptions,
+  VirtualRendererOptions
 };

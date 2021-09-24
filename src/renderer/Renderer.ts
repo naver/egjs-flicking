@@ -251,15 +251,15 @@ abstract class Renderer {
       // Remove panel elements
       panelsRemoved.forEach(panel => panel.destroy());
 
-      // Update camera & control
-      this._updateCameraAndControl();
-
       if (includes(panelsRemoved, activePanel)) {
         control.resetActive();
       }
 
       return [...removed, ...panelsRemoved];
     }, []);
+
+    // Update camera & control
+    this._updateCameraAndControl();
 
     void this.render();
 

@@ -12,6 +12,7 @@ import Panel, { PanelOptions } from "./Panel";
  */
 class VirtualPanel extends Panel {
   private _rendered: boolean;
+  private _cachedInnerHTML: string;
 
   /**
    * `HTMLElement` that panel's referencing
@@ -26,6 +27,16 @@ class VirtualPanel extends Panel {
   }
 
   public get rendered() { return this._rendered; }
+
+  /**
+   * Cached innerHTML by the previous render function
+   * @ko 이전 더링에서 캐시된 innerHTML 정보
+   * @type {string}
+   * @readonly
+   */
+  public get cachedInnerHTML() {
+    return this._cachedInnerHTML;
+  }
 
   /**
    * @param {object} options An options object<ko>옵션 오브젝트</ko>
@@ -46,6 +57,10 @@ class VirtualPanel extends Panel {
 
   public markForHide() {
     this._rendered = false;
+  }
+
+  public cacheRenderResult(result: string) {
+    this._cachedInnerHTML = result;
   }
 }
 
