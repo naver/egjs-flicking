@@ -7,10 +7,10 @@ import Component, { ComponentEvent } from "@egjs/component";
 import FlickingError from "./core/FlickingError";
 import Viewport from "./core/Viewport";
 import AutoResizer from "./core/AutoResizer";
-import { Panel, VirtualPanel } from "./core/panel";
+import { Panel } from "./core/panel";
 import { Control, SnapControl, SnapControlOptions, FreeControl, StrictControl, FreeControlOptions, StrictControlOptions } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
-import { Renderer, VanillaRenderer, ExternalRenderer, VirtualRenderer } from "./renderer";
+import { Renderer, VanillaRenderer, ExternalRenderer, VirtualRenderer, VirtualRendererOptions, RendererOptions } from "./renderer";
 import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
 import * as ERROR from "./const/error";
 import { findIndex, getElement, includes, parseElement } from "./utils";
@@ -73,10 +73,7 @@ export interface FlickingOptions {
   disableOnInit: boolean;
   // PERFORMANCE
   renderOnlyVisible: boolean;
-  virtual: {
-    renderPanel: (index: number, panel: VirtualPanel) => string;
-    initialPanelCount: number;
-  } | null;
+  virtual: Omit<VirtualRendererOptions, keyof RendererOptions> | null;
   // OTHERS
   autoInit: boolean;
   autoResize: boolean;
@@ -531,7 +528,35 @@ class Flicking extends Component<FlickingEvents> {
    */
   public get renderOnlyVisible() { return this._renderOnlyVisible; }
   /**
+   * By enabling this option, it will reduce memory consumption by restricting the number of DOM elements to `panelsPerView + 1`
+   * Must be used with `panelsPerview`.
+   * After Flicking's initialized, this property can be used to add/remove the panel count.
+   * @ko 이 옵션을 활성화할 경우 패널 엘리먼트의 개수를 `panelsPerView + 1` 개로 고정함으로써, 메모리 사용량을 줄일 수 있습니다.
+   * `panelsPerView` 옵션과 함께 사용되어야만 합니다.
+   * Flicking 초기화 이후에, 이 프로퍼티는 렌더링하는 패널의 개수를 추가/제거하기 위해 사용될 수 있습니다.
+   * @type {object}
+   * @property {function} renderPanel A rendering function for the panel element's innerHTML<ko>패널 엘리먼트의 innerHTML을 렌더링하는 함수</ko>
+   * @property {number} initialPanelCount Initial panel count to render<ko>최초로 렌더링할 패널의 개수</ko>
+   * @property {boolean} [cache=false] Whether to cache rendered panel's innerHTML<ko>렌더링된 패널의 innerHTML 정보를 캐시할지 여부</ko>
+   * @property {string} [panelClass="flicking-panel"] The class name that will be applied to rendered panel elements<ko>렌더링되는 패널 엘리먼트에 적용될 클래스 이름</ko>
+   * @example
+   * ```ts
+   * import Flicking, { VirtualPanel } from "@egjs/flicking";
    *
+   * const flicking = new Flicking("#some_el", {
+   *   panelsPerView: 3,
+   *   virtual: {
+   *     renderPanel: (index: number, panel: VirtualPanel) => `Panel ${index}`,
+   *     initialPanelCount: 100
+   *   }
+   * });
+   *
+   * // Add 100 virtual panels (at the end)
+   * flicking.virtual.append(100);
+   *
+   * // Remove 100 virtual panels from 0 to 100
+   * flicking.virtual.remove(0, 100);
+   * ```
    */
   public get virtual() { return (this._virtual && this._panelsPerView > 0) ? this._renderer as VirtualRenderer : null; }
   // OTHERS
@@ -1319,7 +1344,7 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   private _createRenderer(): Renderer {
-    const rendererOptions = {
+    const commonOptions = {
       align: this._align
     };
 
@@ -1332,10 +1357,10 @@ class Flicking extends Component<FlickingEvents> {
     }
 
     return virtual
-      ? new VirtualRenderer(rendererOptions)
+      ? new VirtualRenderer({ ...commonOptions, ...this._virtual as NonNullable<FlickingOptions["virtual"]> })
       : renderExternal
-        ? new (renderExternal.renderer as any)({ ...rendererOptions, ...renderExternal.rendererOptions })
-        : new VanillaRenderer(rendererOptions);
+        ? new (renderExternal.renderer as any)({ ...commonOptions, ...renderExternal.rendererOptions })
+        : new VanillaRenderer(commonOptions);
   }
 
   private async _moveToInitialPanel(): Promise<void> {
