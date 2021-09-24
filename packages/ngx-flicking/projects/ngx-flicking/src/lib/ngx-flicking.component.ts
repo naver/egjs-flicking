@@ -15,8 +15,11 @@ import {
   QueryList,
   ContentChildren,
   Renderer2,
-  HostBinding
+  HostBinding,
+  Inject,
+  PLATFORM_ID
 } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
 import VanillaFlicking, {
   FlickingOptions,
   FlickingEvents,
@@ -109,16 +112,18 @@ export class NgxFlickingComponent extends FlickingInterface
   @ContentChildren(NgxFlickingPanel) private _ngxPanels: QueryList<NgxFlickingPanel>;
   private _elRef: ElementRef<HTMLElement>;
   private _ngxRenderer: Renderer2;
+  private _platformId: any;
   private _pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
   private _elementDiffer: ListDiffer<NgxFlickingPanel> | null = null;
 
   public get ngxPanels() { return this._ngxPanels; }
 
-  public constructor(elRef: ElementRef<HTMLElement>, renderer: Renderer2) {
+  public constructor(elRef: ElementRef<HTMLElement>, renderer: Renderer2, @Inject(PLATFORM_ID) platformId) {
     super();
 
     this._elRef = elRef;
     this._ngxRenderer = renderer;
+    this._platformId = platformId;
     this._vanillaFlicking = null;
 
     EVENT_NAMES.forEach(evtName => {
@@ -127,6 +132,8 @@ export class NgxFlickingComponent extends FlickingInterface
   }
 
   public ngAfterViewInit() {
+    if (!isPlatformBrowser(this._platformId)) return;
+
     const viewportEl = this._elRef.nativeElement;
     const options: Partial<FlickingOptions> = {
       ...this.options,
