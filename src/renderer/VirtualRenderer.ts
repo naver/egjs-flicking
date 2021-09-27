@@ -19,7 +19,7 @@ export interface VirtualElement {
 }
 
 export interface VirtualRendererOptions extends RendererOptions {
-  renderPanel: (index: number, panel: VirtualPanel) => string;
+  renderPanel: (panel: VirtualPanel, index: number) => string;
   initialPanelCount: number;
   cache?: boolean;
   panelClass?: string;
@@ -30,7 +30,7 @@ export interface VirtualRendererOptions extends RendererOptions {
  */
 class VirtualRenderer extends Renderer {
   private _elements: VirtualElement[] = [];
-  private _renderFn: (index: number, panel: VirtualPanel) => string;
+  private _renderFn: (panel: VirtualPanel, index: number) => string;
   private _initialPanelCount: number;
   private _cache: boolean;
   private _panelClass: string;
@@ -42,8 +42,8 @@ class VirtualRenderer extends Renderer {
    * A rendering function for the panel element's innerHTML
    * @ko 패널 엘리먼트의 innerHTML을 렌더링하는 함수
    * @type {function}
-   * @param {number} index Index of the panel<ko>패널 인덱스</ko>
    * @param {VirtualPanel} panel Instance of the panel<ko>패널 인스턴스</ko>
+   * @param {number} index Index of the panel<ko>패널 인덱스</ko>
    */
   public get renderPanel() { return this._renderFn; }
   /**
@@ -68,7 +68,12 @@ class VirtualRenderer extends Renderer {
    */
   public get panelClass() { return this._panelClass; }
 
-  public set renderPanel(val: VirtualRendererOptions["renderPanel"]) { this._renderFn = val; }
+  public set renderPanel(val: VirtualRendererOptions["renderPanel"]) {
+    this._renderFn = val;
+    this._elements.forEach(el => el.renderingPanel = null);
+    this._panels.forEach((panel: VirtualPanel) => panel.uncacheRenderResult());
+  }
+
   public set cache(val: NonNullable<VirtualRendererOptions["cache"]>) { this._cache = val; }
   public set panelClass(val: NonNullable<VirtualRendererOptions["panelClass"]>) { this._panelClass = val; }
 
@@ -106,7 +111,7 @@ class VirtualRenderer extends Renderer {
         if (cache && panel.cachedInnerHTML) {
           el.innerHTML = panel.cachedInnerHTML;
         } else {
-          const renderedHTML = renderFn(panel.index, panel);
+          const renderedHTML = renderFn(panel, panel.index);
           el.innerHTML = renderedHTML;
 
           if (cache) {
@@ -130,6 +135,7 @@ class VirtualRenderer extends Renderer {
   public async forceRenderAllPanels() {
     this._elements.forEach(virtualEl => {
       virtualEl.el.style.display = "";
+      virtualEl.renderingPanel = null;
     });
 
     return Promise.resolve();
