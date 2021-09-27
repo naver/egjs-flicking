@@ -1,14 +1,15 @@
 import FlickingError from "~/core/FlickingError";
 import Viewport from "~/core/Viewport";
 import Flicking from "~/Flicking";
+import { SnapControl, FreeControl, StrictControl } from "~/control";
+import { VirtualRenderer } from "~/renderer";
 import * as ERROR from "~/const/error";
 import { ALIGN, DIRECTION, EVENTS, MOVE_TYPE } from "~/const/external";
+import { Plugin } from "~/type/external";
 import { AfterResizeEvent, BeforeResizeEvent } from "~/type/event";
 
 import El from "./helper/El";
 import { cleanup, createFlicking, range, simulate, tick } from "./helper/test-util";
-import { Plugin } from "~/type/external";
-import { SnapControl, FreeControl, StrictControl } from "~/control";
 
 describe("Flicking", () => {
   afterEach(() => {
@@ -85,6 +86,35 @@ describe("Flicking", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         expect(flicking.viewport).to.exist;
         expect(flicking.viewport).to.be.an.instanceof(Viewport);
+      });
+    });
+
+    describe("virtual", () => {
+      it("should be null when the virtual option is not given", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        expect(flicking.virtual).to.be.null;
+      });
+
+      it("should be null if the virtual option was given but cannot be enabled", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          virtual: {
+            renderPanel: panel => `Panel ${panel.index}`,
+            initialPanelCount: 100
+          },
+          panelsPerView: 0
+        });
+        expect(flicking.virtual).to.be.null;
+      });
+
+      it("should be an instance of VirtualRenderer if virtual mode is enabled", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          virtual: {
+            renderPanel: panel => `Panel ${panel.index}`,
+            initialPanelCount: 100
+          },
+          panelsPerView: 1
+        });
+        expect(flicking.virtual).to.be.an.instanceOf(VirtualRenderer);
       });
     });
   });
@@ -456,6 +486,14 @@ describe("Flicking", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         expect(flicking.renderOnlyVisible).to.equal(false);
+      });
+    });
+
+    describe("virtual", () => {
+      it("is null by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.virtual).to.equal(null);
       });
     });
 

@@ -542,7 +542,7 @@ class Flicking extends Component<FlickingEvents> {
    * const flicking = new Flicking("#some_el", {
    *   panelsPerView: 3,
    *   virtual: {
-   *     renderPanel: (index: number, panel: VirtualPanel) => `Panel ${index}`,
+   *     renderPanel: (panel: VirtualPanel, index: number) => `Panel ${index}`,
    *     initialPanelCount: 100
    *   }
    * });

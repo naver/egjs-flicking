@@ -1,8 +1,8 @@
 import Panel from "~/core/panel/Panel";
 import { ALIGN } from "~/const/external";
 
-import El from "../helper/El";
-import { createFlicking, createPanel, tick } from "../helper/test-util";
+import El from "../../helper/El";
+import { createFlicking, createPanel, tick } from "../../helper/test-util";
 
 class PanelImpl extends Panel {
   private _visible: boolean = true;
