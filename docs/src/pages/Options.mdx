@@ -4,7 +4,7 @@ custom_edit_url: null
 ---
 
 import Flicking from "@egjs/react-flicking";
-import EventFlicking from "@site/src/component/EventFlicking";
+import ReadyLoggerFlicking from "@site/src/component/ReadyLoggerFlicking";
 import Panel from "@site/src/component/Panel";
 import Panels from "@site/src/component/Panels";
 import LinkedPanel from "@site/src/component/LinkedPanel";
@@ -457,9 +457,9 @@ When enabled, events are not triggered before `ready` when initializing
 
   </ColumnItem>
   <ColumnItem is={6}>
-    <EventFlicking>
+    <ReadyLoggerFlicking>
       { Panels(3) }
-    </EventFlicking>
+    </ReadyLoggerFlicking>
   </ColumnItem>
 </Columns>
 <Columns>
@@ -471,9 +471,9 @@ When enabled, events are not triggered before `ready` when initializing
 
   </ColumnItem>
   <ColumnItem is={6}>
-    <EventFlicking preventEventsBeforeInit={false}>
+    <ReadyLoggerFlicking preventEventsBeforeInit={false}>
       { Panels(3) }
-    </EventFlicking>
+    </ReadyLoggerFlicking>
   </ColumnItem>
 </Columns>
 
@@ -952,6 +952,46 @@ Hint: See panel elements in the developer console
     <Flicking renderOnlyVisible={true}>
       { Panels(5) }
     </Flicking>
+  </ColumnItem>
+</Columns>
+
+### virtual
+By enabling this option, it will reduce memory consumption by restricting the number of DOM elements to `panelsPerView + 1`
+Must be used with **[panelsPerView](#panelsperview)**.
+After Flicking's initialized, this property can be used to add/remove the panel count.
+
+<Columns>
+  <ColumnItem is={12}>
+
+  ```js
+  virtual: null
+  ```
+
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={12}>
+
+  ```js
+  panelsPerView: 2,
+  virtual: {
+    renderPanel: (panel, index) => `<span class="flicking-index">${index + 1}</span>`,
+    initialPanelCount: 100,
+    panelClass: "flicking-panel has-background-primary has-text-white is-size-1",
+    cache: false
+  }
+  ```
+
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={12}>
+    <Flicking panelsPerView={2} virtual={{
+      renderPanel: (panel, index) => `<span class="flicking-index">${index + 1}</span>`,
+      initialPanelCount: 100,
+      panelClass: "flicking-panel has-background-primary has-text-white is-size-1",
+      cache: false
+    }}></Flicking>
   </ColumnItem>
 </Columns>
 
