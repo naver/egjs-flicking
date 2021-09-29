@@ -2,7 +2,7 @@ import { ALIGN, EVENTS } from "~/const/external";
 import Panel, { PanelOptions } from "~/core/panel/Panel";
 import ElementPanel from "~/core/panel/ElementPanel";
 import Renderer from "~/renderer/Renderer";
-import { getFlickingAttached, toArray } from "~/utils";
+import { getFlickingAttached, parsePanelAlign, toArray } from "~/utils";
 
 import El from "../helper/El";
 import { createFlicking, range, waitEvent } from "../helper/test-util";
@@ -16,7 +16,7 @@ class RendererImpl extends Renderer {
   }
 
   protected _collectPanels(): void {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const flicking = getFlickingAttached(this._flicking);
 
     const cameraElement = flicking.camera.element;
 
@@ -27,7 +27,7 @@ class RendererImpl extends Renderer {
       }
     });
 
-    const align = this._getPanelAlign();
+    const align = parsePanelAlign(this._align);
     const cameraChilds = toArray(cameraElement.children);
 
     this._panels = cameraChilds.map(

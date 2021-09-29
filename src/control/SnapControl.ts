@@ -85,7 +85,7 @@ class SnapControl extends Control {
    * @return {Promise<void>} A Promise which will be resolved after reaching the target position<ko>해당 좌표 도달시에 resolve되는 Promise</ko>
    */
   public async moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
-    const flicking = getFlickingAttached(this._flicking, "Control");
+    const flicking = getFlickingAttached(this._flicking);
     const camera = flicking.camera;
     const activeAnchor = camera.findActiveAnchor();
     const anchorAtCamera = camera.findNearestAnchor(camera.position);
@@ -128,7 +128,7 @@ class SnapControl extends Control {
   }
 
   private _findSnappedAnchor(position: number, anchorAtCamera: AnchorPoint): AnchorPoint {
-    const flicking = getFlickingAttached(this._flicking, "Control");
+    const flicking = getFlickingAttached(this._flicking);
     const camera = flicking.camera;
     const count = this._count;
 
@@ -191,7 +191,7 @@ class SnapControl extends Control {
   }
 
   private _findAdjacentAnchor(posDelta: number, anchorAtCamera: AnchorPoint): AnchorPoint {
-    const flicking = getFlickingAttached(this._flicking, "Control");
+    const flicking = getFlickingAttached(this._flicking);
     const camera = flicking.camera;
     const adjacentAnchor = (posDelta > 0 ? camera.getNextAnchor(anchorAtCamera) : camera.getPrevAnchor(anchorAtCamera)) ?? anchorAtCamera;
 

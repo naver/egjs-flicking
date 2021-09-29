@@ -376,7 +376,7 @@ abstract class Camera {
    * @return {AnchorPoint | null}
    */
   public findActiveAnchor(): AnchorPoint | null {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const activeIndex = flicking.control.activeIndex;
 
     return find(this._anchors, anchor => anchor.panel.index === activeIndex);
@@ -449,7 +449,7 @@ abstract class Camera {
    * @return {this}
    */
   public updateAnchors(): this {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const panels = flicking.renderer.panels;
 
     this._anchors = panels.map((panel, index) => new AnchorPoint({
@@ -471,7 +471,7 @@ abstract class Camera {
    * @return {this}
    */
   public updateAdaptiveHeight() {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const activePanel = flicking.control.activePanel;
 
     if (!flicking.horizontal || !flicking.adaptive || !activePanel) return;
@@ -482,7 +482,7 @@ abstract class Camera {
   }
 
   public updateOffset() {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const unRenderedPanels = flicking.panels.filter(panel => !panel.rendered);
     const position = this._position;
 
@@ -533,7 +533,7 @@ abstract class Camera {
   }
 
   protected _refreshVisiblePanels() {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const panels = flicking.renderer.panels;
 
     const newVisiblePanels = panels.filter(panel => this.canSee(panel));
@@ -559,7 +559,7 @@ abstract class Camera {
 
     if (needPanelTriggered.prev && needPanelTriggered.next) return;
 
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const panels = flicking.renderer.panels;
 
     if (panels.length <= 0) {
@@ -606,7 +606,7 @@ abstract class Camera {
   }
 
   protected _checkReachEnd(prevPos: number, newPos: number): void {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const range = this._range;
 
     const wasBetweenRange = prevPos > range.min && prevPos < range.max;
@@ -623,7 +623,7 @@ abstract class Camera {
 
   protected _applyTransform(): void {
     const el = this._el;
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
 
     const actualPosition = this._position - this._alignPos - this._offset;
 

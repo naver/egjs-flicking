@@ -49,7 +49,7 @@ export const MESSAGE = {
   WRONG_TYPE: (wrongVal: any, correctTypes: string[]) => `${wrongVal}(${typeof wrongVal}) is not a ${correctTypes.map(type => `"${type}"`).join(" or ")}.`,
   ELEMENT_NOT_FOUND: (selector: string) => `Element with selector "${selector}" not found.`,
   VAL_MUST_NOT_NULL: (val: any, name: string) => `${name} should be provided. Given: ${val}`,
-  NOT_ATTACHED_TO_FLICKING: (name: string) => `${name} is not attached to the Flicking instance. "init()" should be called first.`,
+  NOT_ATTACHED_TO_FLICKING: "This module is not attached to the Flicking instance. \"init()\" should be called first.",
   WRONG_OPTION: (optionName: string, val: any) => `Option "${optionName}" is not in correct format, given: ${val}`,
   INDEX_OUT_OF_RANGE: (val: number, min: number, max: number) => `Index "${val}" is out of range: should be between ${min} and ${max}.`,
   POSITION_NOT_REACHABLE: (position: number) => `Position "${position}" is not reachable.`,

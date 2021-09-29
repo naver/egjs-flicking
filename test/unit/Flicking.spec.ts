@@ -2,7 +2,7 @@ import FlickingError from "~/core/FlickingError";
 import Viewport from "~/core/Viewport";
 import Flicking from "~/Flicking";
 import { SnapControl, FreeControl, StrictControl } from "~/control";
-import { VirtualRenderer } from "~/renderer";
+import { VirtualManager } from "~/renderer";
 import * as ERROR from "~/const/error";
 import { ALIGN, DIRECTION, EVENTS, MOVE_TYPE } from "~/const/external";
 import { Plugin } from "~/type/external";
@@ -106,7 +106,7 @@ describe("Flicking", () => {
         expect(flicking.virtual).to.be.null;
       });
 
-      it("should be an instance of VirtualRenderer if virtual mode is enabled", async () => {
+      it("should be an instance of VirtualManager if virtual mode is enabled", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
           virtual: {
             renderPanel: panel => `Panel ${panel.index}`,
@@ -114,7 +114,7 @@ describe("Flicking", () => {
           },
           panelsPerView: 1
         });
-        expect(flicking.virtual).to.be.an.instanceOf(VirtualRenderer);
+        expect(flicking.virtual).to.be.an.instanceOf(VirtualManager);
       });
     });
   });
