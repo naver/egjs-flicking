@@ -21,7 +21,7 @@ class LinearCamera extends Camera {
    * @return {this}
    */
   public updateRange() {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const renderer = flicking.renderer;
 
     const firstPanel = renderer.getPanel(0);

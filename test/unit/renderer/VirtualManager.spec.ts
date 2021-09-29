@@ -1,9 +1,9 @@
-import VirtualRenderer from "~/renderer/VirtualRenderer";
+import VirtualManager from "~/renderer/VirtualManager";
 
 import El from "../helper/El";
 import { createFlicking } from "../helper/test-util";
 
-describe("VirtualRenderer", () => {
+describe("VirtualManager", () => {
   describe("Options", () => {
     describe("renderPanel", () => {
       it("should set visible panel element's innerHTML by its result", async () => {
@@ -30,9 +30,8 @@ describe("VirtualRenderer", () => {
             initialPanelCount: panelCount
           }
         });
-        const renderer = flicking.renderer as VirtualRenderer;
 
-        expect(renderer.panels.length).to.equal(panelCount);
+        expect(flicking.panels.length).to.equal(panelCount);
       });
     });
 
@@ -47,9 +46,9 @@ describe("VirtualRenderer", () => {
             panelClass: expectedClass
           }
         });
-        const renderer = flicking.renderer as VirtualRenderer;
+        const virtual = flicking.virtual;
 
-        expect(renderer.elements.every(virtualEl => virtualEl.el.classList.contains(expectedClass))).to.be.true;
+        expect(virtual.elements.every(virtualEl => virtualEl.element.classList.contains(expectedClass))).to.be.true;
       });
     });
 
@@ -65,7 +64,7 @@ describe("VirtualRenderer", () => {
             cache: true
           }
         });
-        const renderer = flicking.renderer as VirtualRenderer;
+        const renderer = flicking.renderer;
         const prevRenderCallCount = renderStub.callCount;
 
         // Render again
@@ -87,16 +86,16 @@ describe("VirtualRenderer", () => {
             initialPanelCount: 100
           }
         });
-        const renderer = flicking.renderer as VirtualRenderer;
+        const renderer = flicking.renderer;
 
         await renderer.render();
 
         const visibles = flicking.visiblePanels;
-        const invisibles = renderer.elements.filter(virtualEl => visibles.every(visible => visible.element !== virtualEl.el));
+        const invisibles = flicking.virtual.elements.filter(virtualEl => visibles.every(visible => visible.element !== virtualEl.element));
 
         expect(visibles).not.to.be.empty;
         expect(visibles.every(visible => visible.element.style.display !== "none"));
-        expect(invisibles.every(invisible => invisible.el.style.display === "none"));
+        expect(invisibles.every(invisible => invisible.element.style.display === "none"));
       });
     });
   });

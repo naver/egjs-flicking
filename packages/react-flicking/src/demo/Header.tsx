@@ -12,6 +12,7 @@ export default class Header extends React.Component {
         <li><Link to="/gap">Gap</Link></li>
         <li><Link to="/progress">Progress</Link></li>
         <li><Link to="/bound">Bound</Link></li>
+        <li><Link to="/virtual">Virtual</Link></li>
         <li><Link to="/parallax">Parallax</Link></li>
         <li><Link to="/fade">Fade</Link></li>
         <li><Link to="/autoplay">AutoPlay</Link></li>

@@ -49,9 +49,9 @@ export const checkExistence = (value: any, nameOnErrMsg: string) => {
 
 export const clamp = (x: number, min: number, max: number) => Math.max(Math.min(x, max), min);
 
-export const getFlickingAttached = (val: Flicking | null, nameToThrowOnError: string): Flicking => {
+export const getFlickingAttached = (val: Flicking | null): Flicking => {
   if (!val) {
-    throw new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING(nameToThrowOnError), ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
+    throw new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING, ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
   }
 
   return val;
@@ -162,6 +162,10 @@ export const parseArithmeticExpression = (cssValue: number | string): { percenta
 };
 
 export const parseCSSSizeValue = (val: string | number): string => isString(val) ? val : `${val}px`;
+
+export const parsePanelAlign = (align: FlickingOptions["align"]) => typeof align === "object"
+  ? (align as { panel: string | number }).panel
+  : align;
 
 export const getDirection = (start: number, end: number): ValueOf<typeof DIRECTION> => {
   if (start === end) return DIRECTION.NONE;

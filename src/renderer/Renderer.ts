@@ -10,10 +10,13 @@ import Panel, { PanelOptions } from "../core/panel/Panel";
 import FlickingError from "../core/FlickingError";
 import { ALIGN, EVENTS } from "../const/external";
 import * as ERROR from "../const/error";
-import { getFlickingAttached, getMinusCompensatedIndex, includes } from "../utils";
+import { getFlickingAttached, getMinusCompensatedIndex, includes, parsePanelAlign } from "../utils";
+
+import VirtualManager from "./VirtualManager";
 
 export interface RendererOptions {
   align: FlickingOptions["align"];
+  virtual: FlickingOptions["virtual"];
 }
 
 /**
@@ -24,6 +27,7 @@ abstract class Renderer {
   // Internal States
   protected _flicking: Flicking | null;
   protected _panels: Panel[];
+  protected _virtualManager: VirtualManager | null;
 
   // Options
   protected _align: RendererOptions["align"];
@@ -44,6 +48,20 @@ abstract class Renderer {
    * @readonly
    */
   public get panelCount() { return this._panels.length; }
+  /**
+   * Manager instance for virtual panels
+   * @ko virtual 패널 추가/제거 기능을 담당하는 매니저 인스턴스
+   * @type {VirtualManager}
+   * @readonly
+   */
+  public get virtualManager() { return this._virtualManager; }
+  /**
+   * Whehter the virtual mode is enabled
+   * @ko virtual 모드가 활성되었는지 여부
+   * @type {boolean}
+   * @readonly
+   */
+  public get virtualEnabled() { return !!this._virtualManager; }
 
   // Options Getter
   /**
@@ -57,7 +75,7 @@ abstract class Renderer {
   public set align(val: RendererOptions["align"]) {
     this._align = val;
 
-    const panelAlign = this._getPanelAlign();
+    const panelAlign = parsePanelAlign(val);
     this._panels.forEach(panel => { panel.align = panelAlign; });
   }
 
@@ -66,10 +84,14 @@ abstract class Renderer {
    * @param {Constants.ALIGN | string | number} [options.align] An {@link Flicking#align align} value that will be applied to all panels<ko>전체 패널에 적용될 {@link Flicking#align align} 값</ko>
    */
   public constructor({
-    align = ALIGN.CENTER
+    align = ALIGN.CENTER,
+    virtual = null
   }: Partial<RendererOptions> = {}) {
     this._flicking = null;
     this._panels = [];
+    this._virtualManager = virtual
+      ? new VirtualManager(virtual)
+      : null;
 
     // Bind options
     this._align = align;
@@ -103,6 +125,7 @@ abstract class Renderer {
    */
   public init(flicking: Flicking): this {
     this._flicking = flicking;
+    this._virtualManager?.init(flicking);
     this._collectPanels();
 
     return this;
@@ -115,6 +138,7 @@ abstract class Renderer {
    */
   public destroy(): void {
     this._flicking = null;
+    this._virtualManager?.destroy();
     this._panels = [];
   }
 
@@ -135,10 +159,16 @@ abstract class Renderer {
    * @return {this}
    */
   public updatePanelSize(): this {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const flicking = getFlickingAttached(this._flicking);
+    const panels = this._panels;
+
+    if (panels.length <= 0) return this;
 
     if (flicking.panelsPerView > 0) {
-      this._updatePanelSizeByGrid(flicking);
+      const firstPanel = panels[0];
+      firstPanel.resize();
+
+      this._updatePanelSizeByGrid(firstPanel, panels);
     } else {
       flicking.panels.forEach(panel => panel.resize());
     }
@@ -160,10 +190,11 @@ abstract class Renderer {
     elements: any[];
   }>): Panel[] {
     const panels = this._panels;
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const flicking = getFlickingAttached(this._flicking);
 
     const { control } = flicking;
-    const align = this._getPanelAlign();
+    const prevFirstPanel = panels[0];
+    const align = parsePanelAlign(this._align);
 
     const allPanelsInserted = items.reduce((addedPanels, item) => {
       const insertingIdx = getMinusCompensatedIndex(item.index, panels.length);
@@ -176,7 +207,13 @@ abstract class Renderer {
       this._insertPanelElements(panelsInserted, panelsPushed[0] ?? null);
 
       // Resize the newly added panels
-      panelsInserted.forEach(panel => panel.resize());
+      if (flicking.panelsPerView > 0) {
+        const firstPanel = prevFirstPanel || panelsInserted[0].resize();
+
+        this._updatePanelSizeByGrid(firstPanel, panelsInserted);
+      } else {
+        panelsInserted.forEach(panel => panel.resize());
+      }
 
       // Update panel indexes & positions
       panelsPushed.forEach(panel => {
@@ -225,7 +262,7 @@ abstract class Renderer {
    */
   public batchRemove(...items: Array<{ index: number; deleteCount: number }>): Panel[] {
     const panels = this._panels;
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const flicking = getFlickingAttached(this._flicking);
 
     const { camera, control } = flicking;
     const activePanel = control.activePanel;
@@ -293,10 +330,11 @@ abstract class Renderer {
    * @internal
    */
   public checkPanelContentsReady(checkingPanels: Panel[]) {
-    const resizeOnContentsReady = getFlickingAttached(this._flicking, "Renderer").resizeOnContentsReady;
+    const flicking = getFlickingAttached(this._flicking);
+    const resizeOnContentsReady = flicking.resizeOnContentsReady;
     const panels = this._panels;
 
-    if (!resizeOnContentsReady) return;
+    if (!resizeOnContentsReady || flicking.renderer.virtualEnabled) return;
 
     const hasContents = (panel: Panel) => !!panel.element.querySelector("img, video");
     checkingPanels = checkingPanels.filter(panel => hasContents(panel));
@@ -310,9 +348,7 @@ abstract class Renderer {
     });
 
     contentsReadyChecker.on("readyElement", e => {
-      const flicking = this._flicking;
-
-      if (!flicking) {
+      if (!this._flicking) {
         // Renderer's destroy() is called before
         contentsReadyChecker.destroy();
         return;
@@ -362,16 +398,8 @@ abstract class Renderer {
     contentsReadyChecker.check(checkingPanels.map(panel => panel.element));
   }
 
-  protected _getPanelAlign() {
-    const align = this._align;
-
-    return typeof align === "object"
-      ? (align as { panel: string | number }).panel
-      : align;
-  }
-
   protected _updateCameraAndControl() {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const flicking = getFlickingAttached(this._flicking);
     const { camera, control } = flicking;
 
     camera.updateRange();
@@ -381,9 +409,9 @@ abstract class Renderer {
   }
 
   protected _updateRenderingPanels(): void {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const flicking = getFlickingAttached(this._flicking);
 
-    if (flicking.renderOnlyVisible) {
+    if (flicking.renderOnlyVisible || this._virtualManager) {
       this._showOnlyVisiblePanels(flicking);
     } else {
       flicking.panels.forEach(panel => panel.markForShow());
@@ -412,8 +440,8 @@ abstract class Renderer {
     camera.updateOffset();
   }
 
-  protected _updatePanelSizeByGrid(flicking: Flicking) {
-    const panels = flicking.panels;
+  protected _updatePanelSizeByGrid(referencePanel: Panel, panels: Panel[]) {
+    const flicking = getFlickingAttached(this._flicking);
     const panelsPerView = flicking.panelsPerView;
 
     if (panelsPerView <= 0) {
@@ -421,12 +449,8 @@ abstract class Renderer {
     }
     if (panels.length <= 0) return;
 
-    // resize only the first panel
-    const firstPanel = panels[0];
-    firstPanel.resize();
-
     const viewportSize = flicking.camera.size;
-    const gap = firstPanel.margin.prev + firstPanel.margin.next;
+    const gap = referencePanel.margin.prev + referencePanel.margin.next;
 
     const panelSize = (viewportSize - gap * (panelsPerView - 1)) / panelsPerView;
     const panelSizeObj = flicking.horizontal
@@ -434,8 +458,8 @@ abstract class Renderer {
       : { height: panelSize };
     const firstPanelSizeObj = {
       size: panelSize,
-      height: firstPanel.height,
-      margin: firstPanel.margin
+      height: referencePanel.height,
+      margin: referencePanel.margin
     };
 
     if (!flicking.noPanelStyleOverride) {
@@ -446,7 +470,7 @@ abstract class Renderer {
   }
 
   protected _removeAllChildsFromCamera() {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const flicking = getFlickingAttached(this._flicking);
     const cameraElement = flicking.camera.element;
 
     // Remove other elements

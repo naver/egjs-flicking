@@ -9,13 +9,14 @@ import Viewport from "./core/Viewport";
 import { Panel } from "./core/panel";
 import { Control, SnapControl, SnapControlOptions, FreeControl, StrictControl, FreeControlOptions, StrictControlOptions } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
-import { Renderer, VanillaRenderer, ExternalRenderer, VirtualRenderer, VirtualRendererOptions, RendererOptions } from "./renderer";
+import { Renderer, VanillaRenderer, ExternalRenderer, RendererOptions } from "./renderer";
 import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
 import * as ERROR from "./const/error";
 import { findIndex, getElement, includes, parseElement } from "./utils";
 import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, WillChangeEvent, WillRestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent, ChangedEvent, RestoredEvent, PanelChangeEvent } from "./type/event";
 import { LiteralUnion, ValueOf } from "./type/internal";
 import { ElementLike, Plugin, Status, MoveTypeOptions } from "./type/external";
+import { VirtualOptions } from "./renderer/VirtualManager";
 
 /**
  * @interface
@@ -72,7 +73,7 @@ export interface FlickingOptions {
   disableOnInit: boolean;
   // PERFORMANCE
   renderOnlyVisible: boolean;
-  virtual: Omit<VirtualRendererOptions, keyof RendererOptions> | null;
+  virtual: VirtualOptions | null;
   // OTHERS
   autoInit: boolean;
   autoResize: boolean;
@@ -530,7 +531,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 이 옵션을 활성화할 경우 패널 엘리먼트의 개수를 `panelsPerView + 1` 개로 고정함으로써, 메모리 사용량을 줄일 수 있습니다.
    * `panelsPerView` 옵션과 함께 사용되어야만 합니다.
    * Flicking 초기화 이후에, 이 프로퍼티는 렌더링하는 패널의 개수를 추가/제거하기 위해 사용될 수 있습니다.
-   * @type {object}
+   * @type {VirtualManager}
    * @property {function} renderPanel A rendering function for the panel element's innerHTML<ko>패널 엘리먼트의 innerHTML을 렌더링하는 함수</ko>
    * @property {number} initialPanelCount Initial panel count to render<ko>최초로 렌더링할 패널의 개수</ko>
    * @property {boolean} [cache=false] Whether to cache rendered panel's innerHTML<ko>렌더링된 패널의 innerHTML 정보를 캐시할지 여부</ko>
@@ -554,7 +555,8 @@ class Flicking extends Component<FlickingEvents> {
    * flicking.virtual.remove(0, 100);
    * ```
    */
-  public get virtual() { return (this._virtual && this._panelsPerView > 0) ? this._renderer as VirtualRenderer : null; }
+  public get virtual() { return this._renderer.virtualManager; }
+
   // OTHERS
   /**
    * Call {@link Flicking#init init()} automatically when creating Flicking's instance
@@ -1318,23 +1320,23 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   private _createRenderer(): Renderer {
-    const commonOptions = {
-      align: this._align
-    };
-
-    const virtual = this._virtual && this._panelsPerView > 0;
     const renderExternal = this._renderExternal;
+    const virtual = this._virtual && this._panelsPerView > 0;
+    const commonOptions: RendererOptions = {
+      align: this._align,
+      virtual: virtual
+        ? this._virtual
+        : null
+    };
 
     if (this._virtual && this._panelsPerView <= 0) {
       // eslint-disable-next-line no-console
       console.warn("\"virtual\" and \"panelsPerView\" option should be used together, ignoring virtual.");
     }
 
-    return virtual
-      ? new VirtualRenderer({ ...commonOptions, ...this._virtual as NonNullable<FlickingOptions["virtual"]> })
-      : renderExternal
-        ? new (renderExternal.renderer as any)({ ...commonOptions, ...renderExternal.rendererOptions })
-        : new VanillaRenderer(commonOptions);
+    return renderExternal
+      ? new (renderExternal.renderer as any)({ ...commonOptions, ...renderExternal.rendererOptions })
+      : new VanillaRenderer(commonOptions);
   }
 
   private async _moveToInitialPanel(): Promise<void> {

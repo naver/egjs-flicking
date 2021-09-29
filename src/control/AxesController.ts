@@ -211,7 +211,7 @@ class AxesController {
    * @return {this}
    */
   public update(controlParams: ControlParams): this {
-    const flicking = getFlickingAttached(this._flicking, "Control");
+    const flicking = getFlickingAttached(this._flicking);
     const camera = flicking.camera;
     const axes = this._axes!;
     const axis = axes.axis[AXES.POSITION_KEY];
@@ -231,7 +231,7 @@ class AxesController {
    * @return {this}
    */
   public addPreventClickHandler(): this {
-    const flicking = getFlickingAttached(this._flicking, "Control");
+    const flicking = getFlickingAttached(this._flicking);
     const axes = this._axes!;
     const cameraEl = flicking.camera.element;
 
@@ -248,7 +248,7 @@ class AxesController {
    * @return {this}
    */
   public removePreventClickHandler(): this {
-    const flicking = getFlickingAttached(this._flicking, "Control");
+    const flicking = getFlickingAttached(this._flicking);
     const axes = this._axes!;
     const cameraEl = flicking.camera.element;
 
@@ -284,13 +284,13 @@ class AxesController {
     const axes = this._axes;
 
     if (!axes) {
-      return Promise.reject(new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Control"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING));
+      return Promise.reject(new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING, ERROR.CODE.NOT_ATTACHED_TO_FLICKING));
     }
 
     const startPos = axes.get([AXES.POSITION_KEY])[AXES.POSITION_KEY];
 
     if (startPos === position) {
-      const flicking = getFlickingAttached(this._flicking, "Control");
+      const flicking = getFlickingAttached(this._flicking);
 
       flicking.camera.lookAt(position);
       return Promise.resolve();
@@ -317,7 +317,7 @@ class AxesController {
     };
 
     if (duration === 0) {
-      const flicking = getFlickingAttached(this._flicking, "Control");
+      const flicking = getFlickingAttached(this._flicking);
       const camera = flicking.camera;
 
       animate();

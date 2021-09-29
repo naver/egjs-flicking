@@ -2,7 +2,8 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import VirtualRenderer from "../../renderer/VirtualRenderer";
+import { DIRECTION } from "../../const/external";
+import { circulateIndex } from "../../utils";
 
 import Panel, { PanelOptions } from "./Panel";
 
@@ -21,9 +22,20 @@ class VirtualPanel extends Panel {
    * @readonly
    */
   public get element() {
+    return this.virtualElement.element;
+  }
+
+  /**
+   * `VirtualElement` that panel's referencing
+   * @ko 패널이 참조하고있는 `VirtualElement`
+   * @type {VirtualElement}
+   * @readonly
+   */
+  public get virtualElement() {
     const flicking = this._flicking;
-    const renderer = flicking.renderer as VirtualRenderer;
-    return renderer.elements[this._index % renderer.elements.length].el;
+    const virtual = flicking.virtual!;
+
+    return virtual.elements[circulateIndex(this._virtualIndex, virtual.elements.length)];
   }
 
   public get rendered() { return this._rendered; }
@@ -36,6 +48,21 @@ class VirtualPanel extends Panel {
    */
   public get cachedInnerHTML() {
     return this._cachedInnerHTML;
+  }
+
+  private get _virtualIndex() {
+    const flicking = this._flicking;
+    const panelCount = flicking.panelCount;
+    let index = this._index;
+
+    if (this._toggled) {
+      // To prevent element duplication
+      index = this._toggleDirection === DIRECTION.NEXT
+        ? index + panelCount
+        : index - panelCount;
+    }
+
+    return index;
   }
 
   /**

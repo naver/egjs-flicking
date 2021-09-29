@@ -190,7 +190,7 @@ describe("Util Functions", () => {
         }
 
         public test() {
-          const flicking = getFlickingAttached(this._flicking, "TEST_CLASS");
+          const flicking = getFlickingAttached(this._flicking);
         }
       }
 
@@ -202,7 +202,7 @@ describe("Util Functions", () => {
         private _flicking: Flicking | null = null;
 
         public test() {
-          const flicking = getFlickingAttached(this._flicking, "TEST_CLASS");
+          const flicking = getFlickingAttached(this._flicking);
         }
       }
 

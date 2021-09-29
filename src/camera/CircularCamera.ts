@@ -142,7 +142,7 @@ class CircularCamera extends Camera {
    * @return {this}
    */
   public updateRange() {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const renderer = flicking.renderer;
 
     const panels = renderer.panels;
@@ -177,7 +177,7 @@ class CircularCamera extends Camera {
   }
 
   public lookAt(pos: number) {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const prevPos = this._position;
 
     if (pos === prevPos) return super.lookAt(pos);
@@ -197,7 +197,7 @@ class CircularCamera extends Camera {
 
   protected _applyTransform(): void {
     const el = this._el;
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
 
     const actualPosition = this._position - this._alignPos - this._offset + this._circularOffset;
 
@@ -222,7 +222,7 @@ class CircularCamera extends Camera {
       return;
     }
 
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const toggledPrev: Panel[] = [];
     const toggledNext: Panel[] = [];
 

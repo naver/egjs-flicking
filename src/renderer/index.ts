@@ -5,16 +5,16 @@
 import Renderer, { RendererOptions } from "./Renderer";
 import VanillaRenderer from "./VanillaRenderer";
 import ExternalRenderer from "./ExternalRenderer";
-import VirtualRenderer, { VirtualRendererOptions } from "./VirtualRenderer";
+import VirtualManager, { VirtualOptions } from "./VirtualManager";
 
 export {
   Renderer,
   VanillaRenderer,
   ExternalRenderer,
-  VirtualRenderer
+  VirtualManager
 };
 
 export type {
   RendererOptions,
-  VirtualRendererOptions
+  VirtualOptions
 };
