@@ -8,6 +8,7 @@ import ElementPanel from "../core/panel/ElementPanel";
 import VirtualPanel from "../core/panel/VirtualPanel";
 
 import Renderer from "./Renderer";
+import VanillaVirtualElement from "./VanillaVirtualElement";
 
 /**
  *
@@ -35,9 +36,11 @@ class VanillaRenderer extends Renderer {
     const cameraElement = camera.element;
     const virtual = this._virtualManager;
 
+    flicking.panels.forEach(panel => panel.markForShow());
+
     if (virtual) {
       virtual.elements.forEach(virtualEl => {
-        virtualEl.element.style.display = "";
+        virtualEl.show();
         virtualEl.renderingPanel = null;
       });
     } else {
@@ -72,11 +75,11 @@ class VanillaRenderer extends Renderer {
         panelEl.className = virtual.panelClass;
         fragment.appendChild(panelEl);
 
-        return {
+        return new VanillaVirtualElement({
           element: panelEl,
           index: idx,
           renderingPanel: null
-        };
+        });
       });
 
       cameraElement.appendChild(fragment);
@@ -143,28 +146,26 @@ class VanillaRenderer extends Renderer {
 
       invisibles[virtualEl.index] = -1;
 
-      if (el.style.display) {
-        el.style.display = "";
-      }
+      virtualEl.show();
 
       if (virtualEl.renderingPanel !== panel) {
-        if (cache && panel.cachedInnerHTML) {
-          el.innerHTML = panel.cachedInnerHTML;
-        } else {
-          const renderedHTML = renderPanel(panel, panel.index);
-          el.innerHTML = renderedHTML;
+        el.innerHTML = panel.cachedInnerHTML
+          ? panel.cachedInnerHTML
+          : renderPanel(panel, panel.index);
 
-          if (cache) {
-            panel.cacheRenderResult(renderedHTML);
-          }
+        if (cache) {
+          panel.cacheRenderResult(el.innerHTML);
         }
+
         virtualEl.renderingPanel = panel;
       }
     });
 
     invisibles.filter(val => val >= 0)
       .forEach(idx => {
-        elements[idx].element.style.display = "none";
+        const virtualEl = elements[idx];
+
+        virtualEl.hide();
       });
   }
 

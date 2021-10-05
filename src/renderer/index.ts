@@ -6,15 +6,19 @@ import Renderer, { RendererOptions } from "./Renderer";
 import VanillaRenderer from "./VanillaRenderer";
 import ExternalRenderer from "./ExternalRenderer";
 import VirtualManager, { VirtualOptions } from "./VirtualManager";
+import VanillaVirtualElement from "./VanillaVirtualElement";
+import type VirtualElement from "./VirtualElement";
 
 export {
   Renderer,
   VanillaRenderer,
   ExternalRenderer,
-  VirtualManager
+  VirtualManager,
+  VanillaVirtualElement
 };
 
 export type {
   RendererOptions,
-  VirtualOptions
+  VirtualOptions,
+  VirtualElement
 };

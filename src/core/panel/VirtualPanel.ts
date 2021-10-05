@@ -12,8 +12,8 @@ import Panel, { PanelOptions } from "./Panel";
  * @ko 슬라이드 데이터 컴포넌트로, 단일 HTMLElement의 정보를 갖고 있습니다
  */
 class VirtualPanel extends Panel {
-  private _rendered: boolean;
-  private _cachedInnerHTML: string | null;
+  protected _rendered: boolean;
+  protected _cachedInnerHTML: string | null;
 
   /**
    * `HTMLElement` that panel's referencing
@@ -22,7 +22,8 @@ class VirtualPanel extends Panel {
    * @readonly
    */
   public get element() {
-    return this.virtualElement.element;
+    const virtualEl = this.virtualElement;
+    return virtualEl && virtualEl.element;
   }
 
   /**
@@ -42,7 +43,7 @@ class VirtualPanel extends Panel {
 
   /**
    * Cached innerHTML by the previous render function
-   * @ko 이전 더링에서 캐시된 innerHTML 정보
+   * @ko 이전 렌더링에서 캐시된 innerHTML 정보
    * @type {string|null}
    * @readonly
    */
@@ -84,6 +85,15 @@ class VirtualPanel extends Panel {
 
   public markForHide() {
     this._rendered = false;
+  }
+
+  public setSize(size: Partial<{
+    width: number | string;
+    height: number | string;
+  }>) {
+    if (!this.element) return this;
+
+    return super.setSize(size);
   }
 
   public cacheRenderResult(result: string) {

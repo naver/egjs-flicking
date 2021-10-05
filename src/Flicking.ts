@@ -1015,7 +1015,7 @@ class Flicking extends Component<FlickingEvents> {
    * @param {boolean} [options.includePanelHTML=false] Include panel's `outerHTML` to the returning status<ko>패널의 `outerHTML`을 반환값에 포함시킵니다</ko>
    * @param {boolean} [options.visiblePanelsOnly=false] Include only {@link Flicking#visiblePanel visiblePanel}'s HTML. This option is available only when the `includePanelHTML` is true
    * <ko>현재 보이는 패널({@link Flicking#visiblePanel visiblePanel})의 HTML만 반환합니다. `includePanelHTML`이 `true`일 경우에만 동작합니다.</ko>
-   * @return {Partial<Status>} An object with current status value information<ko>현재 상태값 정보를 가진 객체.</ko>
+   * @return {Status} An object with current status value information<ko>현재 상태값 정보를 가진 객체.</ko>
    */
   public getStatus({
     index = true,

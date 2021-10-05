@@ -1,5 +1,7 @@
 import VanillaRenderer from "~/renderer/VanillaRenderer";
-import El from "helper/El";
+import { VirtualPanel } from "~/core";
+
+import El from "../helper/El";
 import { createFlicking, range } from "../helper/test-util";
 
 describe("NativeRenderer", () => {
@@ -16,6 +18,19 @@ describe("NativeRenderer", () => {
         expect(prevPanels).to.be.empty;
         expect(renderer.panels).not.to.be.empty;
         expect(renderer.panels.length).to.equal(3);
+      });
+
+      it("should collect virtual panels when virtual mode is enabled", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL_WITH_PANELS(0), {
+          panelsPerView: 1,
+          virtual: {
+            renderPanel: panel => `Panel ${panel.index}`,
+            initialPanelCount: 100
+          }
+        });
+
+        expect(flicking.renderer.virtualEnabled).to.be.true;
+        expect(flicking.panels.every(panel => panel instanceof VirtualPanel)).to.be.true;
       });
     });
 

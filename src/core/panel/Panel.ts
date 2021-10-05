@@ -288,7 +288,6 @@ abstract class Panel {
     margin: { prev: number; next: number };
   }): this {
     const el = this.element;
-    const elStyle = getStyle(el);
     const flicking = this._flicking;
     const horizontal = flicking.horizontal;
 
@@ -297,6 +296,8 @@ abstract class Panel {
       this._margin = { ...cached.margin };
       this._height = cached.height;
     } else {
+      const elStyle = getStyle(el);
+
       this._size = horizontal ? el.offsetWidth : el.offsetHeight;
       this._margin = horizontal
         ? {
@@ -383,7 +384,7 @@ abstract class Panel {
   }
 
   /**
-   * Check whether the given range is fully included in this panel's area
+   * Check whether the given range is fully included in this panel's area (inclusive)
    * @ko 주어진 범위가 이 패널 내부에 완전히 포함되는지를 반환합니다
    * @param {number} min Minimum value of the range to check<ko>확인하고자 하는 최소 범위</ko>
    * @param {number} max Maximum value of the range to check<ko>확인하고자 하는 최대 범위</ko>
@@ -400,6 +401,19 @@ abstract class Panel {
     }
 
     return max >= panelRange.min && min <= panelRange.max;
+  }
+
+  /**
+   * Check whether the panel is visble in the given range (exclusive)
+   * @ko 주어진 범위 내에서 이 패널의 일부가 보여지는지를 반환합니다
+   * @param {number} min Minimum value of the range to check<ko>확인하고자 하는 최소 범위</ko>
+   * @param {number} max Maximum value of the range to check<ko>확인하고자 하는 최대 범위</ko>
+   * @returns {boolean} A Boolean value indicating whether the panel is visible<ko>해당 범위 내에서 패널을 볼 수 있는지 여부</ko>
+   */
+  public isVisibleOnRange(min: number, max: number): boolean {
+    const panelRange = this.range;
+
+    return max > panelRange.min && min < panelRange.max;
   }
 
   /**
