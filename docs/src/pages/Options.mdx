@@ -960,6 +960,35 @@ By enabling this option, it will reduce memory consumption by restricting the nu
 Must be used with **[panelsPerView](#panelsperview)**.
 After Flicking's initialized, this property can be used to add/remove the panel count.
 
+#### **renderPanel**
+A rendering function for the panel element's innerHTML.
+It should return the string value to be used as innerHTML of the panel.
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|panel|[VirtualPanel](docs/api/VirtualPanel)|||Instance of the panel|
+|index|number|||Index of the panel|
+
+*Type*: function
+*Return*: string
+
+#### **initialPanelCount**
+Initial number of panels to render
+
+*Type*: number
+
+#### **panelClass**
+The class name that will be applied to rendered panel elements
+
+*Type*: string
+*Default*: `"flicking-panel"`
+
+#### **cache**
+Whether to cache rendered panel's innerHTML
+
+*Type*: boolean
+*Default*: `false`
+
 <Columns>
   <ColumnItem is={12}>
 
@@ -972,10 +1001,10 @@ After Flicking's initialized, this property can be used to add/remove the panel 
 <Columns>
   <ColumnItem is={12}>
 
-  ```js
+  ```ts
   panelsPerView: 2,
   virtual: {
-    renderPanel: (panel, index) => `<span class="flicking-index">${index + 1}</span>`,
+    renderPanel: (panel: VirtualPanel, index: number) => `<span class="flicking-index">${index + 1}</span>`,
     initialPanelCount: 100,
     panelClass: "flicking-panel has-background-primary has-text-white is-size-1",
     cache: false
@@ -991,7 +1020,7 @@ After Flicking's initialized, this property can be used to add/remove the panel 
       initialPanelCount: 100,
       panelClass: "flicking-panel has-background-primary has-text-white is-size-1",
       cache: false
-    }}></Flicking>
+    }} />
   </ColumnItem>
 </Columns>
 
