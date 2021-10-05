@@ -11,7 +11,8 @@ import VanillaFlicking, {
   sync,
   getRenderingPanels,
   getDefaultCameraTransform,
-  Plugin
+  Plugin,
+  range
 } from "@egjs/flicking";
 import { isFragment } from "react-is";
 
@@ -22,6 +23,7 @@ import ReactPanelComponent from "./ReactPanelComponent";
 import NonStrictPanelComponent from "./NonStrictPanelComponent";
 import StrictPanelComponent from "./StrictPanelComponent";
 import ViewportSlot from "./ViewportSlot";
+import VirtualPanelComponent from "./VirtualPanelComponent";
 
 class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = DEFAULT_PROPS;
@@ -41,7 +43,9 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   public constructor(props) {
     super(props);
 
-    this._panels = this._getChildren().map(() => React.createRef());
+    this._panels = (this.props.panelsPerView ?? -1) > 0 && !!this.props.virtual
+      ? range(props.panelsPerView + 1).map(() => React.createRef())
+      : this._getChildren().map(() => React.createRef());
   }
 
   public setRenderCallback(callback: () => any) {
@@ -84,7 +88,9 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const children = this._getChildren(nextProps.children);
     const diffResult = this._jsxDiffer.update(children);
 
-    this._panels = children.map(() => React.createRef());
+    this._panels = (nextProps.panelsPerView ?? -1) > 0 && nextProps.virtual
+      ? range(nextProps.panelsPerView! + 1).map(() => React.createRef())
+      : children.map(() => React.createRef());
     this._diffResult = diffResult;
 
     return true;
@@ -114,7 +120,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const Camera = props.cameraTag as any;
     const attributes: { [key: string]: any } = {};
     const flicking = this._vanillaFlicking;
-    const initialized = this._diffResult && flicking && flicking.initialized;
+    const initialized = !!this._diffResult && flicking && flicking.initialized;
 
     for (const name in props) {
       if (!(name in DEFAULT_PROPS) && !(name in VanillaFlicking.prototype)) {
@@ -143,12 +149,9 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       }}
       : {};
 
-    const children = initialized
-      ? getRenderingPanels(flicking, this._diffResult!)
-      : this._getChildren();
-    const panels = this.props.useFindDOMNode
-      ? children.map((child, idx) => <NonStrictPanelComponent key={child.key!} ref={this._panels[idx]}>{child}</NonStrictPanelComponent>)
-      : children.map((child, idx) => <StrictPanelComponent key={child.key!} ref={this._panels[idx] as any}>{child}</StrictPanelComponent>)
+    const panels = props.virtual && props.panelsPerView && props.panelsPerView > 0
+      ? this._getVirtualPanels(initialized)
+      : this._getPanels(initialized);
 
     return (
       <Viewport {...attributes} className={viewportClasses.join(" ")} ref={(e?: HTMLElement) => {
@@ -207,6 +210,63 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       ? React.Children.toArray(child.props.children)
         .reduce((allChilds, fragChild) => [...allChilds, ...this._unpackFragment(fragChild)], [])
       : [child];
+  }
+
+  private _getVirtualPanels(initialized: boolean) {
+    const {
+      panelClass = "flicking-panel",
+      renderPanel
+    } = this.props.virtual!;
+    const panelsPerView = this.props.panelsPerView!;
+
+    if (initialized) {
+      const flicking = this._vanillaFlicking!;
+      const virtualElements = flicking.virtual.getVirtualElementsByOrder();
+      const firstPanel = flicking.panels[0];
+      const size = firstPanel
+        ? flicking.horizontal
+          ? { width: firstPanel.size }
+          : { height: firstPanel.size }
+        : {};
+
+      return virtualElements.map(virtualEl => {
+        const renderingPanel = virtualEl.renderingPanel;
+
+        const innerHTML = renderingPanel
+          ? renderingPanel.cachedInnerHTML
+            ? renderingPanel.cachedInnerHTML
+            : renderPanel(renderingPanel, renderingPanel.index)
+          : null;
+
+        return <VirtualPanelComponent
+          key={virtualEl.index}
+          index={virtualEl.index}
+          ref={this._panels[virtualEl.index] as any}
+          className={panelClass}
+          size={size}
+          innerHTML={innerHTML} />
+      });
+    } else {
+      return range(panelsPerView + 1).map(idx => {
+        return <VirtualPanelComponent
+          key={idx}
+          index={idx}
+          ref={this._panels[idx] as any}
+          className={panelClass}
+          size={{}}
+          innerHTML={null} />
+      });
+    }
+  }
+
+  private _getPanels(initialized: boolean) {
+    const children = initialized
+      ? getRenderingPanels(this._vanillaFlicking, this._diffResult!)
+      : this._getChildren();
+
+    return this.props.useFindDOMNode
+      ? children.map((child, idx) => <NonStrictPanelComponent key={child.key!} ref={this._panels[idx] as any}>{child}</NonStrictPanelComponent>)
+      : children.map((child, idx) => <StrictPanelComponent key={child.key!} ref={this._panels[idx] as any}>{child}</StrictPanelComponent>)
   }
 }
 
