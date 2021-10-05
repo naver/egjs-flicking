@@ -1,6 +1,7 @@
-import { ExternalRenderer, PanelOptions, RendererOptions } from "@egjs/flicking";
+import { ExternalRenderer, getFlickingAttached, PanelOptions, parsePanelAlign, range, RendererOptions, VirtualPanel } from "@egjs/flicking";
 
 import VueFlicking from "./Flicking";
+import VirtualPanelComponent from "./VirtualPanelComponent";
 import VuePanel from "./VuePanel";
 import VuePanelComponent from "./VuePanelComponent";
 
@@ -25,30 +26,61 @@ class VueRenderer extends ExternalRenderer {
     if (!flicking) return;
 
     this._updateRenderingPanels();
+    this._renderVirtualPanels();
+
     this._vueFlicking.$forceUpdate();
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
   public async forceRenderAllPanels() {
     this._panels.forEach(panel => panel.markForShow());
+
+    const virtualManager = this._virtualManager;
+
+    if (virtualManager) {
+      const elements = virtualManager.elements as VirtualPanelComponent[];
+
+      elements.forEach(el => {
+        el.show();
+        el.renderingPanel = null;
+      });
+    }
+
     this._vueFlicking.$forceUpdate();
   }
 
   protected _collectPanels() {
-    const align = this._getPanelAlign();
-    const childRefs = this._vueFlicking.$refs;
+    const align = parsePanelAlign(this._align);
+    const flicking = getFlickingAttached(this._flicking);
+    const vueFlicking = this._vueFlicking;
+    const childRefs = vueFlicking.$refs;
     const children: any[] = Object.keys(childRefs).map(refKey => childRefs[refKey]);
+    const virtualManager = this._virtualManager;
 
-    this._panels = children.map((panelComponent, index) => new VuePanel({
-      flicking: this._flicking!,
-      index,
-      align,
-      externalComponent: panelComponent
-    }));
+    if (virtualManager) {
+      virtualManager.updateElements(children);
+
+      this._panels = range(vueFlicking.options.virtual!.initialPanelCount).map(index => new VirtualPanel({
+        flicking,
+        index,
+        align
+      }));
+    } else {
+      this._panels = children.map((panelComponent, index) => new VuePanel({
+        flicking,
+        index,
+        align,
+        externalComponent: panelComponent
+      }));
+    }
   }
 
   protected _createPanel(externalComponent: VuePanelComponent, options: PanelOptions) {
-    return new VuePanel({ externalComponent, ...options });
+    const virtual = this._virtualManager;
+
+    return virtual
+      ? new VirtualPanel(options)
+      : new VuePanel({ externalComponent, ...options });
   }
 }
 
