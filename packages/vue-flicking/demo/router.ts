@@ -6,6 +6,7 @@ import Progress from "./features/Progress.vue";
 import Snap from "./features/Snap.vue";
 import VariableSize from "./features/VariableSize.vue";
 import Infinite from "./features/Infinite.vue";
+import Virtual from "./features/Virtual.vue";
 
 import AutoPlay from "./plugins/Autoplay.vue";
 import Fade from "./plugins/Fade.vue";
@@ -54,6 +55,11 @@ export default {
       path: "/infinite",
       name: "Infinite",
       component: Infinite,
+    },
+    {
+      path: "/virtual",
+      name: "Virtual",
+      component: Virtual,
     },
     {
       path: "/autoplay",
