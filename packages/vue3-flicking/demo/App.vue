@@ -65,6 +65,28 @@
           <span class="flicking-arrow-next"></span>
         </template>
       </Flicking>
+      <Flicking :plugins="arrow">
+        <div class="panel">0</div>
+        <div class="panel">1</div>
+        <div class="panel">2</div>
+        <div class="panel">3</div>
+        <div class="panel">4</div>
+        <template #viewport>
+          <span class="flicking-arrow-prev"></span>
+          <span class="flicking-arrow-next"></span>
+        </template>
+      </Flicking>
+      <Flicking class="flicking flicking0" ref="vFlick" :options="{
+        panelsPerView: 5,
+        circular: true,
+        virtual: {
+          panelClass: 'panel',
+          renderPanel: (panel) => `Panel ${panel.index}`,
+          initialPanelCount: 100
+        }
+      }"></Flicking>
+      <button @click="this.vPrepend">Prepend</button>
+      <button @click="this.vAppend">Append</button>
     </div>
   </article>
 </template>
@@ -101,6 +123,12 @@ export default {
     },
     next() {
       this.$refs.flick.next();
+    },
+    vPrepend() {
+      this.$refs.vFlick.virtual.prepend(100);
+    },
+    vAppend() {
+      this.$refs.vFlick.virtual.append(100);
     }
   }
 }

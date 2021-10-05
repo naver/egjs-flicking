@@ -1,4 +1,3 @@
-
 import { Vue } from "vue-class-component";
 
 class VuePanelComponent extends Vue {
