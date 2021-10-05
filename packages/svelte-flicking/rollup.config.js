@@ -5,7 +5,6 @@ import resolve from "@rollup/plugin-node-resolve";
 import livereload from "rollup-plugin-livereload";
 import { terser } from "rollup-plugin-terser";
 import sveltePreprocess from "svelte-preprocess";
-import typescript from "@rollup/plugin-typescript";
 import css from "rollup-plugin-css-only";
 
 const production = !process.env.ROLLUP_WATCH;
