@@ -9,13 +9,10 @@
   import Test2 from "./Test2.svelte";
 
   let flick: Flicking;
-  let sync0: Flicking;
-  let sync1: Flicking;
-  let sync2: Flicking;
+  let vFlick: Flicking;
   let panels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   let list0 = [0, 1, 2];
   const plugins = [new Arrow()];
-  let plugins2: any[] = [];
 
   function prepend() {
     panels = [panels[0] - 2, panels[0] - 1, ...panels];
@@ -34,25 +31,13 @@
     flick.next();
   }
 
-  onMount(() => {
-    plugins2 = [new Sync({
-      type: "camera",
-      synchronizedFlickingOptions: [
-        {
-          flicking: sync0.vanillaFlicking,
-          isClickable: false
-        },
-        {
-          flicking: sync1.vanillaFlicking,
-          isClickable: false
-        },
-        {
-          flicking: sync2.vanillaFlicking,
-          isClickable: false
-        }
-      ]
-    })];
-  });
+  function vPrepend() {
+    vFlick.virtual.prepend(100);
+  }
+
+  function vAppend() {
+    vFlick.virtual.append(100);
+  }
 </script>
 
 <div class="container">
@@ -121,27 +106,25 @@
       <span class="flicking-arrow-next"></span>
     </svelte:fragment>
   </Flicking>
-  <Flicking plugins={plugins2} bind:this={sync0}>
-    <FlickingPanel><div class="panel">0</div></FlickingPanel>
-    <FlickingPanel><div class="panel">1</div></FlickingPanel>
-    <FlickingPanel><div class="panel">2</div></FlickingPanel>
-    <FlickingPanel><div class="panel">3</div></FlickingPanel>
-    <FlickingPanel><div class="panel">4</div></FlickingPanel>
-  </Flicking>
-  <Flicking bind:this={sync1}>
-    <FlickingPanel><div class="panel">0</div></FlickingPanel>
-    <FlickingPanel><div class="panel">1</div></FlickingPanel>
-    <FlickingPanel><div class="panel">2</div></FlickingPanel>
-    <FlickingPanel><div class="panel">3</div></FlickingPanel>
-    <FlickingPanel><div class="panel">4</div></FlickingPanel>
-  </Flicking>
-  <Flicking bind:this={sync2}>
-    <FlickingPanel><div class="panel">0</div></FlickingPanel>
-    <FlickingPanel><div class="panel">1</div></FlickingPanel>
-    <FlickingPanel><div class="panel">2</div></FlickingPanel>
-    <FlickingPanel><div class="panel">3</div></FlickingPanel>
-    <FlickingPanel><div class="panel">4</div></FlickingPanel>
-  </Flicking>
+  <h1>Virtual</h1>
+  <Flicking bind:this={vFlick} options={{
+    panelsPerView: 5,
+    circular: true,
+    virtual: {
+      cache: true,
+      panelClass: 'panel',
+      renderPanel: (panel) => `<span>Panel ${panel.index}</span>`,
+      initialPanelCount: 100
+    }
+  }} />
+  <div>
+    <span class="button" on:click={() => {
+      vPrepend();
+    }}>Prepend</span>
+    <span class="button" on:click={() => {
+      vAppend();
+    }}>Append</span>
+  </div>
 </div>
 
 <style>
