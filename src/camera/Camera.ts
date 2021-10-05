@@ -278,7 +278,7 @@ abstract class Camera {
     this._refreshVisiblePanels();
     this._checkNeedPanel();
     this._checkReachEnd(prevPos, pos);
-    this._applyTransform();
+    this.applyTransform();
   }
 
   /**
@@ -418,7 +418,7 @@ abstract class Camera {
   public canSee(panel: Panel): boolean {
     const visibleRange = this.visibleRange;
     // Should not include margin, as we don't declare what the margin is visible as what the panel is visible.
-    return panel.includeRange(visibleRange.min, visibleRange.max, false);
+    return panel.isVisibleOnRange(visibleRange.min, visibleRange.max);
   }
 
   /**
@@ -481,9 +481,14 @@ abstract class Camera {
     });
   }
 
-  public updateOffset() {
+  /**
+   * Update current offset of the camera
+   * @ko 현재 카메라의 오프셋을 업데이트합니다
+   * @chainable
+   * @return {this}
+   */
+  public updateOffset(): this {
     const flicking = getFlickingAttached(this._flicking);
-    const unRenderedPanels = flicking.panels.filter(panel => !panel.rendered);
     const position = this._position;
 
     if (flicking.virtual) {
@@ -503,12 +508,16 @@ abstract class Camera {
       this._offset = flicking.panels.slice(0, firstVisibleIndex)
         .reduce((offset, panel) => offset + panel.sizeIncludingMargin, 0);
     } else {
+      const unRenderedPanels = flicking.panels.filter(panel => !panel.rendered);
+
       this._offset = unRenderedPanels
         .filter(panel => panel.position + panel.offset < position)
         .reduce((offset, panel) => offset + panel.sizeIncludingMargin, 0);
     }
 
-    this._applyTransform();
+    this.applyTransform();
+
+    return this;
   }
 
   /**
@@ -519,6 +528,25 @@ abstract class Camera {
    */
   public resetNeedPanelHistory(): this {
     this._needPanelTriggered = { prev: false, next: false };
+    return this;
+  }
+
+  /**
+   * Apply "transform" style with the current position to camera element
+   * @ko 현재 위치를 기준으로한 transform 스타일을 카메라 엘리먼트에 적용합니다.
+   * @chainable
+   * @return {this}
+   */
+  public applyTransform(): this {
+    const el = this._el;
+    const flicking = getFlickingAttached(this._flicking);
+
+    const actualPosition = this._position - this._alignPos - this._offset;
+
+    el.style[this._transform] = flicking.horizontal
+      ? `translate(${-actualPosition}px)`
+      : `translate(0, ${-actualPosition}px)`;
+
     return this;
   }
 
@@ -619,17 +647,6 @@ abstract class Camera {
     flicking.trigger(new ComponentEvent(EVENTS.REACH_EDGE, {
       direction
     }));
-  }
-
-  protected _applyTransform(): void {
-    const el = this._el;
-    const flicking = getFlickingAttached(this._flicking);
-
-    const actualPosition = this._position - this._alignPos - this._offset;
-
-    el.style[this._transform] = flicking.horizontal
-      ? `translate(${-actualPosition}px)`
-      : `translate(0, ${-actualPosition}px)`;
   }
 
   protected _checkTranslateSupport = () => {

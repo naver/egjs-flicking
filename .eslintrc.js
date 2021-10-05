@@ -268,7 +268,7 @@ module.exports = {
     }
   ],
   "rules": {
-    "arrow-body-style": "error",
+    "arrow-body-style": "off",
     "arrow-parens": [
       "off",
       "always"

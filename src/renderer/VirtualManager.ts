@@ -2,25 +2,13 @@ import Flicking from "../Flicking";
 import VirtualPanel from "../core/panel/VirtualPanel";
 import { getFlickingAttached, parsePanelAlign, range } from "../utils";
 
+import VirtualElement from "./VirtualElement";
+
 export interface VirtualOptions {
   renderPanel: (panel: VirtualPanel, index: number) => string;
   initialPanelCount: number;
   cache?: boolean;
   panelClass?: string;
-}
-
-
-/**
- * An interface of virtual element
- * @ko 가상 엘리먼트의 인터페이스
- * @interface
- * @property {HTMLElement} el An actual HTML element of virtual element<ko>가상 엘리먼트가 가리키는 실제 HTML 엘리먼트</ko>
- * @property {VirtualPanel | null} renderingPanel A panel that currently rendering this element<ko>현재 이 가상 엘리먼트를 렌더링하는 패널</ko>
- */
-export interface VirtualElement {
-  element: HTMLElement;
-  index: number;
-  renderingPanel: VirtualPanel | null;
 }
 
 /**
@@ -120,11 +108,22 @@ class VirtualManager {
   public getVirtualElementsByOrder() {
     const elements = this._elements;
     const flicking = getFlickingAttached(this._flicking);
-    const visiblePanels = [...flicking.visiblePanels].sort((panel1, panel2) => (panel1.position + panel1.offset) - (panel2.position + panel2.offset)) as VirtualPanel[];
+    const visiblePanels = [...flicking.visiblePanels]
+      .filter(panel => panel.rendered)
+      .sort((panel1, panel2) => {
+        return (panel1.position + panel1.offset) - (panel2.position + panel2.offset);
+      }) as VirtualPanel[];
 
     if (visiblePanels.length <= 0) return [...elements];
 
-    return visiblePanels.map(panel => panel.virtualElement);
+    const visibleElements = visiblePanels.map(panel => panel.virtualElement);
+    const visibleIndexes = visibleElements.reduce((visibles, el) => {
+      visibles[el.index] = true;
+      return visibles;
+    }, {});
+    const invisibleElements = elements.filter(el => !(el.index in visibleIndexes));
+
+    return [...visibleElements, ...invisibleElements];
   }
 
   /**
@@ -175,6 +174,15 @@ class VirtualManager {
     const flicking = getFlickingAttached(this._flicking);
 
     return flicking.renderer.batchRemove({ index, deleteCount: count }) as VirtualPanel[];
+  }
+
+  public async update() {
+    const flicking = getFlickingAttached(this._flicking);
+
+    flicking.panels.forEach((panel: VirtualPanel) => panel.uncacheRenderResult());
+
+    await flicking.renderer.forceRenderAllPanels();
+    await flicking.renderer.render();
   }
 }
 
