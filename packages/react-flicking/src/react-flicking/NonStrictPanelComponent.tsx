@@ -4,14 +4,23 @@ import { findDOMNode } from "react-dom";
 import ReactPanelComponent from "./ReactPanelComponent";
 
 class NonStrictPanelComponent extends React.Component implements ReactPanelComponent {
-  public hide: boolean = false;
+  private _hide: boolean = false;
 
   public get element() { return findDOMNode(this) as HTMLElement; }
+  public get rendered() { return !this._hide; }
 
   public render() {
-    return this.hide
+    return this._hide
       ? <></>
       : this.props.children;
+  }
+
+  public show() {
+    this._hide = false;
+  }
+
+  public hide() {
+    this._hide = true;
   }
 }
 

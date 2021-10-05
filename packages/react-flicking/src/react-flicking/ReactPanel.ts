@@ -1,19 +1,19 @@
 import { ExternalPanel } from "@egjs/flicking";
 
-import NonStrictPanelComponent from "./NonStrictPanelComponent";
+import ReactPanelComponent from "./ReactPanelComponent";
 
-class ReactPanel extends ExternalPanel<NonStrictPanelComponent> {
+class ReactPanel extends ExternalPanel<ReactPanelComponent> {
   public get element() {
     return this._externalComponent.element as HTMLElement;
   }
-  public get rendered() { return !this._externalComponent.hide; }
+  public get rendered() { return this._externalComponent.rendered; }
 
   public markForShow() {
-    this._externalComponent.hide = false;
+    this._externalComponent.show();
   }
 
   public markForHide() {
-    this._externalComponent.hide = true;
+    this._externalComponent.hide();
   }
 }
 

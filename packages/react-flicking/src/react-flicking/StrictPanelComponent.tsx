@@ -2,16 +2,25 @@ import * as React from "react";
 import ReactPanelComponent from "./ReactPanelComponent";
 
 class StrictPanelComponent extends React.Component implements ReactPanelComponent {
-  public hide: boolean = false;
+  private _hide: boolean = false;
 
   private _elRef: React.RefObject<HTMLElement> = React.createRef();
 
   public get element() { return this._elRef.current!; }
+  public get rendered() { return !this._hide; }
 
   public render() {
-    return this.hide
+    return this._hide
       ? <></>
       : this._getElement();
+  }
+
+  public show() {
+    this._hide = false;
+  }
+
+  public hide() {
+    this._hide = true;
   }
 
   private _getElement() {
