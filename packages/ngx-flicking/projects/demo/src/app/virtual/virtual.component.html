@@ -1,0 +1,8 @@
+<div id="variable-size" class="container">
+  <ngx-flicking class="flicking flicking0"
+  [options]="flickingOptions" #flick></ngx-flicking>
+  <div class="buttons">
+    <button id="prepend" (click)="flick.virtual.prepend(100)">Prepend</button>
+    <button id="append" (click)="flick.virtual.append(100)">Append</button>
+  </div>
+</div>
