@@ -6,6 +6,8 @@ import Panel, { PanelOptions } from "./Panel";
 import ElementPanel, { ElementPanelOptions } from "./ElementPanel";
 import ExternalPanel, { ExternalPanelOptions } from "./ExternalPanel";
 import VirtualPanel from "./VirtualPanel";
+import ElementProvider from "./provider/ElementProvider";
+import ExternalElementProvider from "./provider/ExternalElementProvider";
 
 export {
   Panel,
@@ -17,5 +19,7 @@ export {
 export type {
   PanelOptions,
   ElementPanelOptions,
-  ExternalPanelOptions
+  ExternalPanelOptions,
+  ElementProvider,
+  ExternalElementProvider
 };

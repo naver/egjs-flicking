@@ -7,21 +7,26 @@ import { getProgress, getStyle, isString, parseAlign } from "../../utils";
 import { ALIGN, DIRECTION } from "../../const/external";
 import { LiteralUnion, ValueOf } from "../../type/internal";
 
+import ElementProvider from "./provider/ElementProvider";
+
 export interface PanelOptions {
   index: number;
   align: LiteralUnion<ValueOf<typeof ALIGN>> | number;
   flicking: Flicking;
+  elementProvider: ElementProvider;
 }
 
-abstract class Panel {
+class Panel {
   // Internal States
   protected _flicking: Flicking;
+  protected _elProvider: ElementProvider;
   protected _index: number;
   protected _pos: number;
   protected _size: number;
   protected _height: number;
   protected _margin: { prev: number; next: number };
   protected _alignPos: number; // Actual align pos
+  protected _rendered: boolean;
   protected _removed: boolean;
   protected _loading: boolean;
   protected _toggleDirection: ValueOf<typeof DIRECTION>;
@@ -38,7 +43,7 @@ abstract class Panel {
    * @type {HTMLElement}
    * @readonly
    */
-  abstract get element(): HTMLElement;
+  public get element() { return this._elProvider.element; }
   /**
    * Index of the panel
    * @ko 패널의 인덱스
@@ -104,19 +109,19 @@ abstract class Panel {
    */
   public get removed() { return this._removed; }
   /**
+   * A value indicating whether the panel's element is being rendered on the screen
+   * @ko 패널의 엘리먼트가 화면상에 렌더링되고있는지 여부를 나타내는 값
+   * @type {boolean}
+   * @readonly
+   */
+  public get rendered() { return this._rendered; }
+  /**
    * A value indicating whether the panel's image/video is not loaded and waiting for resize
    * @ko 패널 내부의 이미지/비디오가 아직 로드되지 않아 {@link Panel#resize resize}될 것인지를 나타내는 값
    * @type {boolean}
    * @readonly
    */
   public get loading() { return this._loading; }
-  /**
-   * A value indicating whether the panel's element is being rendered on the screen
-   * @ko 패널의 엘리먼트가 화면상에 렌더링되고있는지 여부를 나타내는 값
-   * @type {boolean}
-   * @readonly
-   */
-  public abstract get rendered();
   /**
    * Panel element's range of the bounding box
    * @ko 패널 엘리먼트의 Bounding box 범위
@@ -247,18 +252,22 @@ abstract class Panel {
    * @param {number} [options.index] An initial index of the panel<ko>패널의 초기 인덱스</ko>
    * @param {Constants.ALIGN | string | number} [options.align] An initial {@link Flicking#align align} value of the panel<ko>패널의 초기 {@link Flicking#align align}값</ko>
    * @param {Flicking} [options.flicking] A Flicking instance panel's referencing<ko>패널이 참조하는 {@link Flicking} 인스턴스</ko>
+   * @param {Flicking} [options.elementProvider] A provider instance that redirects elements<ko>실제 엘리먼트를 반환하는 엘리먼트 공급자의 인스턴스</ko>
    */
   public constructor({
     index,
     align,
-    flicking
+    flicking,
+    elementProvider
   }: PanelOptions) {
     this._index = index;
     this._flicking = flicking;
+    this._elProvider = elementProvider;
 
     this._align = align;
 
     this._removed = false;
+    this._rendered = true;
     this._loading = false;
     this._resetInternalStates();
   }
@@ -267,13 +276,17 @@ abstract class Panel {
    * Mark panel element to be appended on the camera element
    * @internal
    */
-  public abstract markForShow();
+  public markForShow() {
+    this._rendered = true;
+  }
 
   /**
    * Mark panel element to be removed from the camera element
    * @internal
    */
-  public abstract markForHide();
+  public markForHide() {
+    this._rendered = false;
+  }
 
   /**
    * Update size of the panel
