@@ -12,11 +12,11 @@ import { ALIGN, EVENTS } from "../const/external";
 import * as ERROR from "../const/error";
 import { getFlickingAttached, getMinusCompensatedIndex, includes, parsePanelAlign } from "../utils";
 
-import VirtualManager from "./VirtualManager";
+import RenderingStrategy from "./strategy/RenderingStrategy";
 
 export interface RendererOptions {
   align: FlickingOptions["align"];
-  virtual: FlickingOptions["virtual"];
+  strategy: RenderingStrategy;
 }
 
 /**
@@ -27,10 +27,10 @@ abstract class Renderer {
   // Internal States
   protected _flicking: Flicking | null;
   protected _panels: Panel[];
-  protected _virtualManager: VirtualManager | null;
 
   // Options
   protected _align: RendererOptions["align"];
+  protected _strategy: RendererOptions["strategy"];
 
   // Internal states Getter
   /**
@@ -48,20 +48,6 @@ abstract class Renderer {
    * @readonly
    */
   public get panelCount() { return this._panels.length; }
-  /**
-   * Manager instance for virtual panels
-   * @ko virtual 패널 추가/제거 기능을 담당하는 매니저 인스턴스
-   * @type {VirtualManager}
-   * @readonly
-   */
-  public get virtualManager() { return this._virtualManager; }
-  /**
-   * Whehter the virtual mode is enabled
-   * @ko virtual 모드가 활성되었는지 여부
-   * @type {boolean}
-   * @readonly
-   */
-  public get virtualEnabled() { return !!this._virtualManager; }
 
   // Options Getter
   /**
@@ -85,16 +71,14 @@ abstract class Renderer {
    */
   public constructor({
     align = ALIGN.CENTER,
-    virtual = null
-  }: Partial<RendererOptions> = {}) {
+    strategy
+  }: Omit<Partial<RendererOptions>, "strategy"> & Pick<RendererOptions, "strategy">) {
     this._flicking = null;
     this._panels = [];
-    this._virtualManager = virtual
-      ? new VirtualManager(virtual)
-      : null;
 
     // Bind options
     this._align = align;
+    this._strategy = strategy;
   }
 
   /**
@@ -112,7 +96,7 @@ abstract class Renderer {
   public abstract forceRenderAllPanels(): Promise<void>;
 
   protected abstract _collectPanels(): void;
-  protected abstract _createPanel(el: any, options: PanelOptions): Panel;
+  protected abstract _createPanel(el: any, options: Omit<PanelOptions, "elementProvider">): Panel;
   protected abstract _insertPanelElements(panels: Panel[], nextSibling: Panel | null): void;
   protected abstract _removePanelElements(panels: Panel[]): void;
 
@@ -125,7 +109,6 @@ abstract class Renderer {
    */
   public init(flicking: Flicking): this {
     this._flicking = flicking;
-    this._virtualManager?.init(flicking);
     this._collectPanels();
 
     return this;
@@ -138,7 +121,6 @@ abstract class Renderer {
    */
   public destroy(): void {
     this._flicking = null;
-    this._virtualManager?.destroy();
     this._panels = [];
   }
 
@@ -181,13 +163,16 @@ abstract class Renderer {
    * This will increase index of panels after by the number of panels added
    * @ko 주어진 인덱스에 새로운 패널들을 추가합니다
    * 해당 인덱스보다 같거나 큰 인덱스를 가진 기존 패널들은 추가한 패널의 개수만큼 인덱스가 증가합니다.
-   * @param {number} index Index to insert new panels at<ko>새로 패널들을 추가할 인덱스</ko>
-   * @param {any[]} elements An array of element or framework component with element in it<ko>엘리먼트의 배열 혹은 프레임워크에서 엘리먼트를 포함한 컴포넌트들의 배열</ko>
+   * @param {Array<object>} items An array of items to insert<ko>추가할 아이템들의 배열</ko>
+   * @param {number} [items.index] Index to insert new panels at<ko>새로 패널들을 추가할 인덱스</ko>
+   * @param {any[]} [items.elements] An array of element or framework component with element in it<ko>엘리먼트의 배열 혹은 프레임워크에서 엘리먼트를 포함한 컴포넌트들의 배열</ko>
+   * @param {boolean} [items.hasDOMInElements] Whether it contains actual DOM elements. If set to true, renderer will add them to the camera element<ko>내부에 실제 DOM 엘리먼트들을 포함하고 있는지 여부. true로 설정할 경우, 렌더러는 해당 엘리먼트들을 카메라 엘리먼트 내부에 추가합니다</ko>
    * @return {Panel[]} An array of prepended panels<ko>추가된 패널들의 배열</ko>
    */
   public batchInsert(...items: Array<{
     index: number;
     elements: any[];
+    hasDOMInElements: boolean;
   }>): Panel[] {
     const panels = this._panels;
     const flicking = getFlickingAttached(this._flicking);
@@ -203,8 +188,10 @@ abstract class Renderer {
 
       panels.splice(insertingIdx, 0, ...panelsInserted);
 
-      // Insert the actual elements as camera element's children
-      this._insertPanelElements(panelsInserted, panelsPushed[0] ?? null);
+      if (item.hasDOMInElements) {
+        // Insert the actual elements as camera element's children
+        this._insertPanelElements(panelsInserted, panelsPushed[0] ?? null);
+      }
 
       // Resize the newly added panels
       if (flicking.panelsPerView > 0) {
@@ -256,11 +243,13 @@ abstract class Renderer {
    * This will decrease index of panels after by the number of panels removed
    * @ko 주어진 인덱스의 패널을 제거합니다
    * 해당 인덱스보다 큰 인덱스를 가진 기존 패널들은 제거한 패널의 개수만큼 인덱스가 감소합니다
-   * @param {number} index Index of panel to remove<ko>제거할 패널의 인덱스</ko>
-   * @param {number} [deleteCount=1] Number of panels to remove from index<ko>`index` 이후로 제거할 패널의 개수</ko>
+   * @param {Array<object>} items An array of items to remove<ko>제거할 아이템들의 배열</ko>
+   * @param {number} [items.index] Index of panel to remove<ko>제거할 패널의 인덱스</ko>
+   * @param {number} [items.deleteCount=1] Number of panels to remove from index<ko>`index` 이후로 제거할 패널의 개수</ko>
+   * @param {boolean} [items.hasDOMInElements=1] Whether it contains actual DOM elements. If set to true, renderer will remove them from the camera element<ko>내부에 실제 DOM 엘리먼트들을 포함하고 있는지 여부. true로 설정할 경우, 렌더러는 해당 엘리먼트들을 카메라 엘리먼트 내부에서 제거합니다</ko>
    * @return An array of removed panels<ko>제거된 패널들의 배열</ko>
    */
-  public batchRemove(...items: Array<{ index: number; deleteCount: number }>): Panel[] {
+  public batchRemove(...items: Array<{ index: number; deleteCount: number; hasDOMInElements: boolean }>): Panel[] {
     const panels = this._panels;
     const flicking = getFlickingAttached(this._flicking);
 
@@ -283,7 +272,9 @@ abstract class Renderer {
         panel.updatePosition();
       });
 
-      this._removePanelElements(panelsRemoved);
+      if (item.hasDOMInElements) {
+        this._removePanelElements(panelsRemoved);
+      }
 
       // Remove panel elements
       panelsRemoved.forEach(panel => panel.destroy());
@@ -334,7 +325,7 @@ abstract class Renderer {
     const resizeOnContentsReady = flicking.resizeOnContentsReady;
     const panels = this._panels;
 
-    if (!resizeOnContentsReady || flicking.renderer.virtualEnabled) return;
+    if (!resizeOnContentsReady || flicking.virtualEnabled) return;
 
     const hasContents = (panel: Panel) => !!panel.element.querySelector("img, video");
     checkingPanels = checkingPanels.filter(panel => hasContents(panel));
@@ -408,16 +399,6 @@ abstract class Renderer {
     control.updateInput();
   }
 
-  protected _updateRenderingPanels(): void {
-    const flicking = getFlickingAttached(this._flicking);
-
-    if (flicking.renderOnlyVisible || this._virtualManager) {
-      this._showOnlyVisiblePanels(flicking);
-    } else {
-      flicking.panels.forEach(panel => panel.markForShow());
-    }
-  }
-
   protected _showOnlyVisiblePanels(flicking: Flicking) {
     const panels = flicking.renderer.panels;
     const camera = flicking.camera;
@@ -436,8 +417,6 @@ abstract class Renderer {
         panel.markForHide();
       }
     });
-
-    camera.updateOffset();
   }
 
   protected _updatePanelSizeByGrid(referencePanel: Panel, panels: Panel[]) {

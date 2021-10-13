@@ -12,15 +12,19 @@ import Renderer from "./Renderer";
  *
  */
 abstract class ExternalRenderer extends Renderer {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   protected _insertPanelElements(panels: Panel[], nextSibling: Panel | null): void {
-    // DO NOTHING
+    // DO NOTHING, overrided to prevent an unexpected error
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected _removePanelElements(panels: Panel[]): void {
-    // DO NOTHING
+    // DO NOTHING, overrided to prevent an unexpected error
   }
+
+  protected _removeAllChildsFromCamera(): void {
+    // DO NOTHING, overrided to prevent an unexpected error
+  }
+  /* eslint-enable @typescript-eslint/no-unused-vars */
 
   protected _renderVirtualPanels() {
     const flicking = getFlickingAttached(this._flicking);

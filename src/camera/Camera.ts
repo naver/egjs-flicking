@@ -10,7 +10,7 @@ import Panel from "../core/panel/Panel";
 import AnchorPoint from "../core/AnchorPoint";
 import * as ERROR from "../const/error";
 import { ALIGN, DIRECTION, EVENTS } from "../const/external";
-import { checkExistence, clamp, find, getFlickingAttached, getProgress, includes, parseAlign } from "../utils";
+import { checkExistence, clamp, find, getFlickingAttached, getProgress, includes, parseAlign, toArray } from "../utils";
 
 export interface CameraOptions {
   align: FlickingOptions["align"];
@@ -38,12 +38,19 @@ abstract class Camera {
 
   // Internal states getter
   /**
-   * The camera(`.flicking-camera`) element
-   * @ko 카메라(`.flicking-camera`) 엘리먼트
+   * The camera element(`.flicking-camera`)
+   * @ko 카메라 엘리먼트(`.flicking-camera`)
    * @type {HTMLElement}
    * @readonly
    */
   public get element() { return this._el; }
+  /**
+   * An array of the child elements of the camera element(`.flicking-camera`)
+   * @ko 카메라 엘리먼트(`.flicking-camera`)의 자식 엘리먼트 배열
+   * @type {HTMLElement[]}
+   * @readonly
+   */
+  public get children() { return toArray(this._el.children) as HTMLElement[]; }
   /**
    * Current position of the camera
    * @ko Camera의 현재 좌표

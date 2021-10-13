@@ -5,20 +5,15 @@
 import Renderer, { RendererOptions } from "./Renderer";
 import VanillaRenderer from "./VanillaRenderer";
 import ExternalRenderer from "./ExternalRenderer";
-import VirtualManager, { VirtualOptions } from "./VirtualManager";
-import VanillaVirtualElement from "./VanillaVirtualElement";
-import type VirtualElement from "./VirtualElement";
+
+export * from "./strategy";
 
 export {
   Renderer,
   VanillaRenderer,
-  ExternalRenderer,
-  VirtualManager,
-  VanillaVirtualElement
+  ExternalRenderer
 };
 
 export type {
-  RendererOptions,
-  VirtualOptions,
-  VirtualElement
+  RendererOptions
 };
