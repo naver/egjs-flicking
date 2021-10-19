@@ -93,12 +93,9 @@ abstract class Renderer {
    * @return {this}
    */
   public abstract render(): Promise<void>;
-  public abstract forceRenderAllPanels(): Promise<void>;
 
   protected abstract _collectPanels(): void;
   protected abstract _createPanel(el: any, options: Omit<PanelOptions, "elementProvider">): Panel;
-  protected abstract _insertPanelElements(panels: Panel[], nextSibling: Panel | null): void;
-  protected abstract _removePanelElements(panels: Panel[]): void;
 
   /**
    * Initialize Renderer
@@ -132,6 +129,12 @@ abstract class Renderer {
    */
   public getPanel(index: number): Panel | null {
     return this._panels[index] || null;
+  }
+
+  public forceRenderAllPanels(): Promise<void> {
+    this._panels.forEach(panel => panel.markForShow());
+
+    return Promise.resolve();
   }
 
   /**
@@ -442,7 +445,7 @@ abstract class Renderer {
     };
 
     if (!flicking.noPanelStyleOverride) {
-      flicking.panels.forEach(panel => panel.setSize(panelSizeObj));
+      this._strategy.updatePanelSizes(flicking, panelSizeObj);
     }
 
     flicking.panels.forEach(panel => panel.resize(firstPanelSizeObj));
@@ -456,6 +459,26 @@ abstract class Renderer {
     while (cameraElement.firstChild) {
       cameraElement.removeChild(cameraElement.firstChild);
     }
+  }
+
+  protected _insertPanelElements(panels: Panel[], nextSibling: Panel | null = null) {
+    const flicking = getFlickingAttached(this._flicking);
+    const camera = flicking.camera;
+    const cameraElement = camera.element;
+    const nextSiblingElement = nextSibling?.element || null;
+    const fragment = document.createDocumentFragment();
+
+    panels.forEach(panel => fragment.appendChild(panel.element));
+    cameraElement.insertBefore(fragment, nextSiblingElement);
+  }
+
+  protected _removePanelElements(panels: Panel[]) {
+    const flicking = getFlickingAttached(this._flicking);
+    const cameraElement = flicking.camera.element;
+
+    panels.forEach(panel => {
+      cameraElement.removeChild(panel.element);
+    });
   }
 }
 

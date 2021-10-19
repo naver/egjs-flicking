@@ -8,6 +8,10 @@ import { circulateIndex } from "../../utils";
 import Panel, { PanelOptions } from "./Panel";
 import VirtualElementProvider from "./provider/VirtualElementProvider";
 
+interface VirtualPanelOptions extends PanelOptions {
+  elementProvider: VirtualElementProvider;
+}
+
 /**
  * An slide data component that holds information of a single HTMLElement
  * @ko 슬라이드 데이터 컴포넌트로, 단일 HTMLElement의 정보를 갖고 있습니다
@@ -60,10 +64,11 @@ class VirtualPanel extends Panel {
    * @param {Constants.ALIGN | string | number} [options.align] An initial {@link Flicking#align align} value of the panel<ko>패널의 초기 {@link Flicking#align align}값</ko>
    * @param {Flicking} [options.flicking] A Flicking instance panel's referencing<ko>패널이 참조하는 {@link Flicking} 인스턴스</ko>
    */
-  public constructor(options: PanelOptions) {
+  public constructor(options: VirtualPanelOptions) {
     super(options);
 
     this._cachedInnerHTML = null;
+    options.elementProvider.init(this);
   }
 
   public cacheRenderResult(result: string) {
@@ -72,14 +77,6 @@ class VirtualPanel extends Panel {
 
   public uncacheRenderResult() {
     this._cachedInnerHTML = null;
-  }
-
-  public show() {
-    this._elProvider.show();
-  }
-
-  public hide() {
-    this._elProvider.hide();
   }
 
   public render() {

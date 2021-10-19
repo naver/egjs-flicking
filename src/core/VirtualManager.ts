@@ -95,11 +95,22 @@ class VirtualManager {
   }
 
   public show(index: number) {
-    this._elements[index].visible = true;
+    const el = this._elements[index];
+    const nativeEl = el.nativeElement;
+
+    el.visible = true;
+
+    if (nativeEl.style.display) {
+      nativeEl.style.display = "";
+    }
   }
 
   public hide(index: number) {
-    this._elements[index].visible = false;
+    const el = this._elements[index];
+    const nativeEl = el.nativeElement;
+
+    el.visible = false;
+    nativeEl.style.display = "none";
   }
 
   /**
@@ -158,9 +169,10 @@ class VirtualManager {
     const panelsPerView = flicking.panelsPerView;
     const fragment = document.createDocumentFragment();
 
-    const newElements = range(panelsPerView + 1).map(() => {
+    const newElements = range(panelsPerView + 1).map(idx => {
       const panelEl = document.createElement("div");
       panelEl.className = this._panelClass;
+      panelEl.dataset.elementIndex = idx.toString();
       return panelEl;
     });
 

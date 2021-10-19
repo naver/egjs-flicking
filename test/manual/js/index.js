@@ -1,8 +1,9 @@
 const flicking = new Flicking("#flicking", {
   panelsPerView: 5,
+  circular: true,
   virtual: {
     renderPanel: panel => `Panel ${panel.index}`,
-    initialPanelCount: 100
+    initialPanelCount: 10
   }
 });
 
@@ -19,9 +20,3 @@ document.querySelector("#prev").addEventListener("click", () => {
 document.querySelector("#next").addEventListener("click", () => {
   flicking.virtual.append(5);
 });
-
-// flicking.panels.forEach(panel => {
-//   panel.element.addEventListener("click", e => {
-//     console.error("clicked");
-//   });
-// });

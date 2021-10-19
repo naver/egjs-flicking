@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 import Flicking from "../../Flicking";
-import { getProgress, getStyle, isString, parseAlign } from "../../utils";
+import { getProgress, getStyle, parseAlign, setSize } from "../../utils";
 import { ALIGN, DIRECTION } from "../../const/external";
 import { LiteralUnion, ValueOf } from "../../type/internal";
 
@@ -278,6 +278,7 @@ class Panel {
    */
   public markForShow() {
     this._rendered = true;
+    this._elProvider.show(this._flicking);
   }
 
   /**
@@ -286,6 +287,7 @@ class Panel {
    */
   public markForHide() {
     this._rendered = false;
+    this._elProvider.hide(this._flicking);
   }
 
   /**
@@ -338,29 +340,11 @@ class Panel {
    * @chainable
    * @return {this}
    */
-  public setSize({
-    width,
-    height
-  }: Partial<{
+  public setSize(size: Partial<{
     width: number | string;
     height: number | string;
   }>): this {
-    const el = this.element;
-
-    if (width != null) {
-      if (isString(width)) {
-        el.style.width = width;
-      } else {
-        el.style.width = `${width}px`;
-      }
-    }
-    if (height != null) {
-      if (isString(height)) {
-        el.style.height = height;
-      } else {
-        el.style.height = `${height}px`;
-      }
-    }
+    setSize(this.element, size);
 
     return this;
   }

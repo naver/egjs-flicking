@@ -258,6 +258,26 @@ export const getProgress = (pos: number, prev: number, next: number) => (pos - p
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 export const getStyle = (el: HTMLElement): CSSStyleDeclaration => window.getComputedStyle(el) || (el as any).currentStyle as CSSStyleDeclaration;
 
+export const setSize = (el: HTMLElement, { width, height }: Partial<{
+  width: number | string;
+  height: number | string;
+}>) => {
+  if (width != null) {
+    if (isString(width)) {
+      el.style.width = width;
+    } else {
+      el.style.width = `${width}px`;
+    }
+  }
+  if (height != null) {
+    if (isString(height)) {
+      el.style.height = height;
+    } else {
+      el.style.height = `${height}px`;
+    }
+  }
+};
+
 export const isBetween = (val: number, min: number, max: number) => val >= min && val <= max;
 
 export const circulateIndex = (index: number, max: number): number => {

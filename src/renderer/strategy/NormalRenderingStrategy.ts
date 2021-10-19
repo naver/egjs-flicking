@@ -54,6 +54,33 @@ class NormalRenderingStrategy extends RenderingStrategy {
       elementProvider: new this._providerCtor(element)
     });
   }
+
+  public updatePanelSizes(flicking: Flicking, size: Partial<{
+    width: number | string;
+    height: number | string;
+  }>) {
+    flicking.panels.forEach(panel => panel.setSize(size));
+  }
+
+  private _showOnlyVisiblePanels(flicking: Flicking) {
+    const panels = flicking.renderer.panels;
+    const camera = flicking.camera;
+
+    const visibleIndexes = camera.visiblePanels.reduce((visibles, panel) => {
+      visibles[panel.index] = true;
+      return visibles;
+    }, {});
+
+    panels.forEach(panel => {
+      if (panel.index in visibleIndexes || panel.loading) {
+        panel.markForShow();
+      } else if (!flicking.holding) {
+        // During the input sequence,
+        // Do not remove panel elements as it won't trigger touchend event.
+        panel.markForHide();
+      }
+    });
+  }
 }
 
 export default NormalRenderingStrategy;

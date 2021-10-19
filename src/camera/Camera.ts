@@ -497,30 +497,11 @@ abstract class Camera {
   public updateOffset(): this {
     const flicking = getFlickingAttached(this._flicking);
     const position = this._position;
+    const unRenderedPanels = flicking.panels.filter(panel => !panel.rendered);
 
-    if (flicking.virtual) {
-      const visiblePanels = [...flicking.visiblePanels]
-        .sort((panel1, panel2) => {
-          const panel1Pos = panel1.toggleDirection === DIRECTION.NEXT
-            ? panel1.position + panel1.offset
-            : panel1.position;
-          const panel2Pos = panel2.toggleDirection === DIRECTION.NEXT
-            ? panel2.position + panel2.offset
-            : panel2.position;
-
-          return panel1Pos - panel2Pos;
-        });
-      const firstVisibleIndex = visiblePanels[0]?.index ?? 0;
-
-      this._offset = flicking.panels.slice(0, firstVisibleIndex)
-        .reduce((offset, panel) => offset + panel.sizeIncludingMargin, 0);
-    } else {
-      const unRenderedPanels = flicking.panels.filter(panel => !panel.rendered);
-
-      this._offset = unRenderedPanels
-        .filter(panel => panel.position + panel.offset < position)
-        .reduce((offset, panel) => offset + panel.sizeIncludingMargin, 0);
-    }
+    this._offset = unRenderedPanels
+      .filter(panel => panel.position + panel.offset < position)
+      .reduce((offset, panel) => offset + panel.sizeIncludingMargin, 0);
 
     this.applyTransform();
 
@@ -580,6 +561,8 @@ abstract class Camera {
 
     if (added.length > 0 || removed.length > 0) {
       void flicking.renderer.render().then(() => {
+        this.updateOffset();
+
         flicking.trigger(new ComponentEvent(EVENTS.VISIBLE_CHANGE, {
           added,
           removed,

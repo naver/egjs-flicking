@@ -6,7 +6,7 @@ import Flicking from "../../Flicking";
 import { PanelOptions } from "../../core/panel/Panel";
 import VirtualPanel from "../../core/panel/VirtualPanel";
 import VirtualElementProvider from "../../core/panel/provider/VirtualElementProvider";
-import { parsePanelAlign, range } from "../../utils";
+import { parsePanelAlign, range, setSize } from "../../utils";
 
 import RenderingStrategy from "./RenderingStrategy";
 
@@ -51,25 +51,49 @@ class VirtualRenderingStrategy extends RenderingStrategy {
   }
 
   public updateRenderingPanels(flicking: Flicking) {
-    this._showOnlyVisiblePanels(flicking);
+    const panels = flicking.renderer.panels;
+    const camera = flicking.camera;
+
+    const visibleIndexes = camera.visiblePanels.reduce((visibles, panel) => {
+      visibles[panel.index] = true;
+      return visibles;
+    }, {});
+
+    panels.forEach(panel => {
+      if (panel.index in visibleIndexes || panel.loading) {
+        panel.markForShow();
+      } else {
+        panel.markForHide();
+      }
+    });
   }
 
   public collectPanels(flicking: Flicking) {
     const align = parsePanelAlign(flicking.renderer.align);
 
-    return range(flicking.panelsPerView + 1).map(index => new VirtualPanel({
+    return range(flicking.virtual.initialPanelCount).map(index => new VirtualPanel({
       index,
-      elementProvider: new VirtualElementProvider(flicking, index),
+      elementProvider: new VirtualElementProvider(flicking),
       align,
       flicking
     }));
   }
 
-  public createPanel(options: PanelOptions) {
+  public createPanel(_el: any, options: PanelOptions) {
     return new VirtualPanel({
       ...options,
-      elementProvider: new VirtualElementProvider(options.flicking, options.index)
+      elementProvider: new VirtualElementProvider(options.flicking)
     });
+  }
+
+  public updatePanelSizes(flicking: Flicking, size: Partial<{
+    width: number | string;
+    height: number | string;
+  }>) {
+    flicking.virtual.elements.forEach(el => {
+      setSize(el.nativeElement, size);
+    });
+    flicking.panels.forEach(panel => panel.setSize(size));
   }
 }
 

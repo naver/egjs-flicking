@@ -2,6 +2,8 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import Flicking from "../../../Flicking";
+
 import ElementProvider from "./ElementProvider";
 
 /**
@@ -16,18 +18,22 @@ class VanillaElementProvider implements ElementProvider {
     this._element = element;
   }
 
-  public show(): void {
+  public show(flicking: Flicking): void {
     const el = this.element;
+    const cameraEl = flicking.camera.element;
 
-    if (el.style.display) {
-      el.style.display = "";
+    if (el.parentElement !== cameraEl) {
+      cameraEl.appendChild(el);
     }
   }
 
-  public hide(): void {
+  public hide(flicking: Flicking): void {
     const el = this.element;
+    const cameraEl = flicking.camera.element;
 
-    el.style.display = "none";
+    if (el.parentElement === cameraEl) {
+      cameraEl.removeChild(el);
+    }
   }
 }
 
