@@ -15,7 +15,7 @@ import { getFlickingAttached, getMinusCompensatedIndex, includes, parsePanelAlig
 import RenderingStrategy from "./strategy/RenderingStrategy";
 
 export interface RendererOptions {
-  align: FlickingOptions["align"];
+  align?: FlickingOptions["align"];
   strategy: RenderingStrategy;
 }
 
@@ -29,7 +29,7 @@ abstract class Renderer {
   protected _panels: Panel[];
 
   // Options
-  protected _align: RendererOptions["align"];
+  protected _align: NonNullable<RendererOptions["align"]>;
   protected _strategy: RendererOptions["strategy"];
 
   // Internal states Getter
@@ -62,7 +62,7 @@ abstract class Renderer {
   public get align() { return this._align; }
 
   // Options Setter
-  public set align(val: RendererOptions["align"]) {
+  public set align(val: NonNullable<RendererOptions["align"]>) {
     this._align = val;
 
     const panelAlign = parsePanelAlign(val);
@@ -71,7 +71,8 @@ abstract class Renderer {
 
   /**
    * @param {object} options An options object<ko>옵션 오브젝트</ko>
-   * @param {Constants.ALIGN | string | number} [options.align] An {@link Flicking#align align} value that will be applied to all panels<ko>전체 패널에 적용될 {@link Flicking#align align} 값</ko>
+   * @param {Constants.ALIGN | string | number} [options.align="center"] An {@link Flicking#align align} value that will be applied to all panels<ko>전체 패널에 적용될 {@link Flicking#align align} 값</ko>
+   * @param {RenderingStrategy} [options.strategy]
    */
   public constructor({
     align = ALIGN.CENTER,

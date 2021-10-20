@@ -72,12 +72,12 @@ class Flicking extends React.PureComponent<Partial<FlickingProps & FlickingOptio
     );
 
     this._vanillaFlicking = flicking;
-    this._bindEvents();
 
     const children = this._getChildren();
     this._jsxDiffer = new ListDiffer(children, panel => panel.key!);
     this._pluginsDiffer = new ListDiffer<any>();
 
+    this._bindEvents();
     this._checkPlugins();
   }
 

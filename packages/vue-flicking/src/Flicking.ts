@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
@@ -14,19 +14,22 @@ import VanillaFlicking, {
   Status,
   getRenderingPanels,
   getDefaultCameraTransform,
-  range
+  range,
+  VirtualRenderingStrategy,
+  NormalRenderingStrategy,
+  VirtualElementProvider,
+  VirtualPanel,
+  ExternalPanel
 } from "@egjs/flicking";
 
-import VueRenderer from "./VueRenderer";
-import VuePanelComponent from "./VuePanelComponent";
-import VirtualPanelComponent from "./VirtualPanelComponent";
+import VueRenderer, { VueRendererOptions } from "./VueRenderer";
+import VuePanel from "./VuePanel";
+import VueElementProvider from "./VueElementProvider";
 
 @Component({
   components: {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    Panel: VuePanelComponent,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    VirtualPanel: VirtualPanelComponent
+    Panel: VuePanel
   }
 })
 class Flicking extends Vue {
@@ -46,12 +49,27 @@ class Flicking extends Vue {
   private _diffResult: DiffResult<VNode> | null = null;
 
   public mounted() {
+    const options = this.options;
     const viewportEl = this.$el as HTMLElement;
+    const rendererOptions: VueRendererOptions = {
+      align: options.align,
+      vueFlicking: this,
+      strategy: options.virtual && (options.panelsPerView ?? -1) > 0
+        ? new VirtualRenderingStrategy({
+          providerCtor: VirtualElementProvider,
+          panelCtor: VirtualPanel
+        })
+        : new NormalRenderingStrategy({
+          providerCtor: VueElementProvider,
+          panelCtor: ExternalPanel
+        })
+    };
+
     const flicking = new VanillaFlicking(viewportEl, {
       ...this.options,
       ...{ renderExternal: {
         renderer: VueRenderer,
-        rendererOptions: { vueFlicking: this }
+        rendererOptions
       }}
     });
     this._vanillaFlicking = flicking;
@@ -66,13 +84,14 @@ class Flicking extends Vue {
 
     this._bindEvents();
     this._checkPlugins();
+
     if (this.status) {
       flicking.setStatus(this.status);
     }
   }
 
   public beforeDestroy() {
-    this._vanillaFlicking.destroy();
+    this._vanillaFlicking?.destroy();
   }
 
   public beforeMount() {
@@ -89,11 +108,12 @@ class Flicking extends Vue {
     const flicking = this._vanillaFlicking;
     const diffResult = this._diffResult;
 
-    if (!diffResult) return;
+    this._checkPlugins();
+    this.$emit("render");
+
+    if (!diffResult || !flicking.initialized) return;
 
     sync(flicking, diffResult, this.$children);
-
-    this._checkPlugins();
 
     if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
       this.$forceUpdate();
@@ -108,7 +128,7 @@ class Flicking extends Vue {
     const initialized = !!this._diffResult && flicking && flicking.initialized;
     const isHorizontal = flicking
       ? flicking.horizontal
-      : this.options.horizontal ?? true;
+      : options.horizontal ?? true;
 
     const viewportData: VNodeData = {
       class: {
@@ -122,15 +142,13 @@ class Flicking extends Vue {
         "flicking-camera": true
       },
       style: !initialized && this.firstPanelSize
-        ? { transform: getDefaultCameraTransform(this.options.align, this.options.horizontal, this.firstPanelSize) }
+        ? { transform: getDefaultCameraTransform(options.align, options.horizontal, this.firstPanelSize) }
         : {}
     };
 
-    const panels = options.virtual && options.panelsPerView && options.panelsPerView > 0
+    const panels = options.virtual && (options.panelsPerView ?? -1) > 0
       ? this._getVirtualPanels(h, initialized)
       : this._getPanels(h, initialized);
-
-    this.$emit("render");
 
     return h(this.viewportTag, viewportData,
       [h(this.cameraTag, cameraData,
@@ -181,43 +199,32 @@ class Flicking extends Vue {
   }
 
   private _getVirtualPanels(h: CreateElement, initialized: boolean) {
+    const options = this.options;
     const {
-      panelClass = "flicking-panel",
-      renderPanel
-    } = this.options.virtual!;
-    const panelsPerView = this.options.panelsPerView!;
+      panelClass = "flicking-panel"
+    } = options.virtual!;
+    const panelsPerView = options.panelsPerView!;
+    const flicking = this._vanillaFlicking;
 
-    if (initialized) {
-      const flicking = this._vanillaFlicking;
-      const virtualElements = flicking.virtual.getVirtualElementsByOrder();
-      const firstPanel = flicking.panels[0];
-      const size = firstPanel
-        ? flicking.horizontal
-          ? { width: `${firstPanel.size}px` }
-          : { height: `${firstPanel.size}px` }
-        : {};
+    const renderingIndexes = initialized
+      ? flicking.renderer.strategy.getRenderingIndexesByOrder(flicking)
+      : range(panelsPerView + 1);
 
-      return virtualElements.map(virtualEl => {
-        const renderingPanel = virtualEl.renderingPanel;
+    const firstPanel = flicking && flicking.panels[0];
+    const size = firstPanel
+      ? flicking.horizontal
+        ? { width: firstPanel.size }
+        : { height: firstPanel.size }
+      : {};
 
-        const innerHTML = renderingPanel
-          ? renderingPanel.cachedInnerHTML
-            ? renderingPanel.cachedInnerHTML
-            : renderPanel(renderingPanel, renderingPanel.index)
-          : null;
-
-        return h("VirtualPanel", {
-          key: virtualEl.index,
-          staticClass: panelClass,
-          style: size,
-          props: { innerHTML }
-        });
-      });
-    } else {
-      return range(panelsPerView + 1).map(idx => {
-        return h("VirtualPanel", { key: idx, staticClass: panelClass });
-      });
-    }
+    return renderingIndexes.map(idx => h("div", {
+      key: idx,
+      staticClass: panelClass,
+      style: size,
+      domProps: {
+        "data-element-index": idx
+      }
+    }));
   }
 }
 

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { VueConstructor } from "vue";
 
@@ -19,10 +23,11 @@ const plugin = {
   install,
   version
 };
+
+export * from "@egjs/flicking";
 export default plugin;
 export {
   version,
   Flicking,
   install
 };
-export * from "@egjs/flicking";
