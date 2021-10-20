@@ -1362,7 +1362,6 @@ class Flicking extends Component<FlickingEvents> {
 
   private _createRenderer(): Renderer {
     const renderExternal = this._renderExternal;
-    const virtual = this.virtualEnabled;
 
     if (this._virtual && this._panelsPerView <= 0) {
       // eslint-disable-next-line no-console
@@ -1370,19 +1369,34 @@ class Flicking extends Component<FlickingEvents> {
     }
 
     return renderExternal
-      ? new (renderExternal.renderer as any)(renderExternal.rendererOptions)
-      : new VanillaRenderer({
-        align: this._align,
-        strategy: virtual
-          ? new VirtualRenderingStrategy({
-            providerCtor: VirtualElementProvider,
-            panelCtor: VirtualPanel
-          })
-          : new NormalRenderingStrategy({
-            providerCtor: VanillaElementProvider,
-            panelCtor: Panel
-          })
-      });
+      ? this._createExternalRenderer()
+      : this._createVanillaRenderer();
+  }
+
+  private _createVanillaRenderer(): VanillaRenderer {
+    const virtual = this.virtualEnabled;
+
+    return new VanillaRenderer({
+      align: this._align,
+      strategy: virtual
+        ? new VirtualRenderingStrategy({
+          providerCtor: VirtualElementProvider,
+          panelCtor: VirtualPanel
+        })
+        : new NormalRenderingStrategy({
+          providerCtor: VanillaElementProvider,
+          panelCtor: Panel
+        })
+    });
+  }
+
+  private _createExternalRenderer(): ExternalRenderer {
+    const {
+      renderer,
+      rendererOptions
+    } = this._renderExternal!;
+
+    return new (renderer)(rendererOptions);
   }
 
   private async _moveToInitialPanel(): Promise<void> {

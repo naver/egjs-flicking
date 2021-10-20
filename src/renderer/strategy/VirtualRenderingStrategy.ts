@@ -32,7 +32,7 @@ class VirtualRenderingStrategy extends RenderingStrategy {
       });
   }
 
-  public getRenderingElementsByOrder(flicking: Flicking) {
+  public getRenderingIndexesByOrder(flicking: Flicking) {
     const virtualManager = flicking.virtual;
     const visiblePanels = [...flicking.visiblePanels]
       .filter(panel => panel.rendered)
@@ -40,14 +40,22 @@ class VirtualRenderingStrategy extends RenderingStrategy {
         return (panel1.position + panel1.offset) - (panel2.position + panel2.offset);
       }) as VirtualPanel[];
 
-    if (visiblePanels.length <= 0) return virtualManager.elements.map(el => el.nativeElement);
+    if (visiblePanels.length <= 0) return virtualManager.elements.map((_, idx) => idx);
 
-    const visibleElements = visiblePanels.map(panel => panel.element);
-    const invisibleElements = virtualManager.elements
+    const visibleIndexes = visiblePanels.map(panel => panel.elementIndex);
+    const invisibleIndexes = virtualManager.elements
+      .map((el, idx) => ({ ...el, idx }))
       .filter(el => !el.visible)
-      .map(el => el.nativeElement);
+      .map(el => el.idx);
 
-    return [...visibleElements, ...invisibleElements];
+    return [...visibleIndexes, ...invisibleIndexes];
+  }
+
+  public getRenderingElementsByOrder(flicking: Flicking) {
+    const virtualManager = flicking.virtual;
+    const elements = virtualManager.elements;
+
+    return this.getRenderingIndexesByOrder(flicking).map(index => elements[index].nativeElement);
   }
 
   public updateRenderingPanels(flicking: Flicking) {

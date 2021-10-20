@@ -48,6 +48,10 @@ abstract class Renderer {
    * @readonly
    */
   public get panelCount() { return this._panels.length; }
+  /**
+   * @internal
+   */
+  public get strategy() { return this._strategy; }
 
   // Options Getter
   /**
@@ -72,7 +76,7 @@ abstract class Renderer {
   public constructor({
     align = ALIGN.CENTER,
     strategy
-  }: Omit<Partial<RendererOptions>, "strategy"> & Pick<RendererOptions, "strategy">) {
+  }: RendererOptions) {
     this._flicking = null;
     this._panels = [];
 

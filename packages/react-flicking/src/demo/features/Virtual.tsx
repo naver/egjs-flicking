@@ -5,17 +5,18 @@ import Flicking from "../../react-flicking/Flicking";
 export default () => {
   const [num, setNum] = React.useState(1);
   const flicking = React.useRef<Flicking>();
+  const virtual = React.useMemo(() => ({
+    cache: true,
+    panelClass: "panel",
+    renderPanel: (panel) => `<span>Panel ${panel.index}</span>`,
+    initialPanelCount: 100
+  }), []);
 
   return (
     <div className="container">
       <h1>virtual</h1>
       <button onClick={() => setNum(num + 1)}>{ num }</button>
-      <Flicking ref={flicking as any} className="flicking flicking0" panelsPerView={5} circular={true} virtual={{
-        cache: true,
-        panelClass: "panel",
-        renderPanel: (panel) => `<span>Panel ${panel.index}</span>`,
-        initialPanelCount: 100
-      }} />
+      <Flicking ref={flicking as any} className="flicking flicking0" panelsPerView={5} circular={true} virtual={virtual} />
       <button onClick={() => {
         flicking.current?.virtual.prepend(100);
       }}>PREPEND</button>

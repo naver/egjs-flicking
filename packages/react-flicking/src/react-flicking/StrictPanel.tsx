@@ -1,12 +1,15 @@
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 import * as React from "react";
-import ReactPanelComponent from "./ReactPanelComponent";
 
-class StrictPanelComponent extends React.Component implements ReactPanelComponent {
+class StrictPanel extends React.Component {
   private _hide: boolean = false;
 
   private _elRef: React.RefObject<HTMLElement> = React.createRef();
 
-  public get element() { return this._elRef.current!; }
+  public get nativeElement() { return this._elRef.current!; }
   public get rendered() { return !this._hide; }
 
   public render() {
@@ -30,4 +33,4 @@ class StrictPanelComponent extends React.Component implements ReactPanelComponen
   }
 }
 
-export default StrictPanelComponent;
+export default StrictPanel;

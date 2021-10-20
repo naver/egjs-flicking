@@ -14,13 +14,19 @@ class NormalRenderingStrategy extends RenderingStrategy {
     // DO_NOTHING
   }
 
-  public getRenderingElementsByOrder(flicking: Flicking) {
+  public getRenderingIndexesByOrder(flicking: Flicking) {
     const renderedPanels = flicking.renderer.panels.filter(panel => panel.rendered);
     const toggledPrev = renderedPanels.filter(panel => panel.toggled && panel.toggleDirection === DIRECTION.PREV);
     const toggledNext = renderedPanels.filter(panel => panel.toggled && panel.toggleDirection === DIRECTION.NEXT);
     const notToggled = renderedPanels.filter(panel => panel.toggled);
 
-    return [...toggledPrev, ...notToggled, ...toggledNext].map(panel => panel.element);
+    return [...toggledPrev, ...notToggled, ...toggledNext].map(panel => panel.index);
+  }
+
+  public getRenderingElementsByOrder(flicking: Flicking) {
+    const panels = flicking.panels;
+
+    return this.getRenderingIndexesByOrder(flicking).map(index => panels[index].element);
   }
 
   public updateRenderingPanels(flicking: Flicking) {

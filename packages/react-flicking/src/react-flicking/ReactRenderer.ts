@@ -1,9 +1,12 @@
-import { ExternalRenderer, PanelOptions, RendererOptions, parsePanelAlign, getFlickingAttached, range, VirtualPanel } from "@egjs/flicking";
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+import { ExternalRenderer, PanelOptions, RendererOptions, getFlickingAttached } from "@egjs/flicking";
 
 import ReactFlicking from "./Flicking";
-import ReactPanel from "./ReactPanel";
-import NonStrictPanelComponent from "./NonStrictPanelComponent";
-import VirtualPanelComponent from "./VirtualPanelComponent";
+import StrictPanel from "./StrictPanel";
+import NonStrictPanel from "./NonStrictPanel";
 
 export interface ReactRendererOptions extends RendererOptions {
   reactFlicking: ReactFlicking;
@@ -21,74 +24,40 @@ class ReactRenderer extends ExternalRenderer {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   public async render() {
-    const flicking = this._flicking;
+    const flicking = getFlickingAttached(this._flicking);
     const reactFlicking = this._reactFlicking;
+    const strategy = this._strategy;
 
-    if (!flicking || !reactFlicking.mounted) return;
-
-    this._updateRenderingPanels();
-    this._renderVirtualPanels();
+    strategy.updateRenderingPanels(flicking);
+    strategy.renderPanels(flicking);
 
     return new Promise<void>(resolve => {
-      reactFlicking.setRenderCallback(resolve);
-      reactFlicking.setState({});
+      reactFlicking.renderEmitter.once("render", resolve);
+      reactFlicking.forceUpdate();
     });
   }
 
   public async forceRenderAllPanels() {
     const reactFlicking = this._reactFlicking;
-    const virtualManager = this._virtualManager;
 
-    if (!reactFlicking.mounted) return;
-
-    this._panels.forEach(panel => panel.markForShow());
-
-    if (virtualManager) {
-      const elements = virtualManager.elements as VirtualPanelComponent[];
-
-      elements.forEach(el => {
-        el.show();
-        el.renderingPanel = null;
-      });
-    }
+    await super.forceRenderAllPanels();
 
     return new Promise<void>(resolve => {
-      reactFlicking.setRenderCallback(resolve);
-      reactFlicking.setState({});
+      reactFlicking.renderEmitter.once("render", resolve);
+      reactFlicking.forceUpdate();
     });
   }
 
   protected _collectPanels() {
-    const align = parsePanelAlign(this._align);
     const flicking = getFlickingAttached(this._flicking);
     const reactFlicking = this._reactFlicking;
     const reactPanels = reactFlicking.reactPanels;
-    const virtualManager = this._virtualManager;
 
-    if (virtualManager) {
-      virtualManager.updateElements(reactPanels as VirtualPanelComponent[]);
-
-      this._panels = range(reactFlicking.props.virtual!.initialPanelCount).map(index => new VirtualPanel({
-        flicking,
-        index,
-        align
-      }));
-    } else {
-      this._panels = reactPanels.map((panelComponent, index) => new ReactPanel({
-        flicking,
-        index,
-        align,
-        externalComponent: panelComponent
-      }));
-    }
+    this._panels = this._strategy.collectPanels(flicking, reactPanels);
   }
 
-  protected _createPanel(externalComponent: NonStrictPanelComponent, options: PanelOptions) {
-    const virtual = this._virtualManager;
-
-    return virtual
-      ? new VirtualPanel(options)
-      : new ReactPanel({ externalComponent, ...options });
+  protected _createPanel(externalComponent: StrictPanel | NonStrictPanel | HTMLDivElement, options: PanelOptions) {
+    return this._strategy.createPanel(externalComponent, options);
   }
 }
 

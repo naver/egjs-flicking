@@ -10,13 +10,19 @@ export interface ExternalPanelOptions extends PanelOptions {
 }
 
 /**
- * An slide data component that holds information of a single HTMLElement
+ * A slide data component that holds information of a single HTMLElement
  * @ko 슬라이드 데이터 컴포넌트로, 단일 HTMLElement의 정보를 갖고 있습니다
  */
 class ExternalPanel extends Panel {
   protected _elProvider: ExternalElementProvider;
 
   public get rendered() { return this._elProvider.rendered; }
+
+  public constructor(options: ExternalPanelOptions) {
+    super(options);
+
+    this._elProvider = options.elementProvider;
+  }
 
   public markForShow() {
     this._elProvider.show();

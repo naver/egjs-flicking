@@ -16,6 +16,10 @@ export interface PanelOptions {
   elementProvider: ElementProvider;
 }
 
+/**
+ * A slide data component that holds information of a single HTMLElement
+ * @ko 슬라이드 데이터 컴포넌트로, 단일 HTMLElement의 정보를 갖고 있습니다
+ */
 class Panel {
   // Internal States
   protected _flicking: Flicking;

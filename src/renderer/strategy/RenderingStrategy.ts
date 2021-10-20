@@ -24,9 +24,8 @@ abstract class RenderingStrategy {
   }
 
   public abstract renderPanels(flicking: Flicking): void;
-
+  public abstract getRenderingIndexesByOrder(flicking: Flicking): number[];
   public abstract getRenderingElementsByOrder(flicking: Flicking): HTMLElement[];
-
   public abstract updateRenderingPanels(flicking: Flicking): void;
 
   public abstract createPanel(

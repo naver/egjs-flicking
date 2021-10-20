@@ -67,8 +67,9 @@ class VirtualPanel extends Panel {
   public constructor(options: VirtualPanelOptions) {
     super(options);
 
-    this._cachedInnerHTML = null;
     options.elementProvider.init(this);
+    this._elProvider = options.elementProvider;
+    this._cachedInnerHTML = null;
   }
 
   public cacheRenderResult(result: string) {
@@ -84,7 +85,7 @@ class VirtualPanel extends Panel {
     const { renderPanel, cache } = flicking.virtual;
 
     const element = this._elProvider.element;
-    const newInnerHTML = this._cachedInnerHTML || renderPanel(this, this.index);
+    const newInnerHTML = this._cachedInnerHTML || renderPanel(this, this._index);
 
     if (newInnerHTML === element.innerHTML) return;
 
@@ -93,6 +94,16 @@ class VirtualPanel extends Panel {
     if (cache) {
       this.cacheRenderResult(newInnerHTML);
     }
+  }
+
+  public increaseIndex(val: number) {
+    this.uncacheRenderResult();
+    return super.increaseIndex(val);
+  }
+
+  public decreaseIndex(val: number) {
+    this.uncacheRenderResult();
+    return super.increaseIndex(val);
   }
 }
 

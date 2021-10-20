@@ -3,67 +3,70 @@
  * egjs projects are licensed under the MIT license
  */
 import * as React from "react";
+import Component from "@egjs/component";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import VanillaFlicking, {
   FlickingOptions,
+  VirtualRenderingStrategy,
   EVENTS,
   withFlickingMethods,
   sync,
   getRenderingPanels,
   getDefaultCameraTransform,
   Plugin,
-  range
+  range,
+  VirtualPanel,
+  VirtualElementProvider,
+  NormalRenderingStrategy,
+  ExternalPanel
 } from "@egjs/flicking";
 import { isFragment } from "react-is";
 
 import { DEFAULT_PROPS } from "./consts";
 import { FlickingProps } from "./types";
-import ReactRenderer from "./ReactRenderer";
-import ReactPanelComponent from "./ReactPanelComponent";
-import NonStrictPanelComponent from "./NonStrictPanelComponent";
-import StrictPanelComponent from "./StrictPanelComponent";
+import ReactRenderer, { ReactRendererOptions } from "./ReactRenderer";
+import StrictPanel from "./StrictPanel";
+import NonStrictPanel from "./NonStrictPanel";
 import ViewportSlot from "./ViewportSlot";
-import VirtualPanelComponent from "./VirtualPanelComponent";
+import ReactElementProvider from "./ReactElementProvider";
 
-class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
+class Flicking extends React.PureComponent<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = DEFAULT_PROPS;
 
   @withFlickingMethods private _vanillaFlicking: VanillaFlicking;
-  private _panels: React.RefObject<ReactPanelComponent>[] = [];
+  private _panels: React.RefObject<StrictPanel | NonStrictPanel | HTMLDivElement>[] = [];
   private _pluginsDiffer: ListDiffer<any>;
   private _jsxDiffer: ListDiffer<React.ReactElement>;
   private _viewportElement: HTMLElement;
   private _diffResult: DiffResult<React.ReactElement> | null;
-  private _mounted: boolean;
-  private _renderCallback: () => any;
+  private _renderEmitter = new Component<{ render: void }>();
 
-  public get mounted() { return this._mounted; }
   public get reactPanels() { return this._panels.map(panel => panel.current!); }
-
-  public constructor(props) {
-    super(props);
-
-    this._panels = (this.props.panelsPerView ?? -1) > 0 && !!this.props.virtual
-      ? range(props.panelsPerView + 1).map(() => React.createRef())
-      : this._getChildren().map(() => React.createRef());
-  }
-
-  public setRenderCallback(callback: () => any) {
-    this._renderCallback = callback;
-  }
+  public get renderEmitter() { return this._renderEmitter; }
 
   public componentDidMount() {
-    this._mounted = true;
-
-    const props = this.props as Required<FlickingProps>;
+    const props = this.props as Required<FlickingProps & FlickingOptions>;
+    const rendererOptions: ReactRendererOptions = {
+      align: props.align,
+      reactFlicking: this,
+      strategy: props.virtual && props.panelsPerView > 0
+        ? new VirtualRenderingStrategy({
+          providerCtor: VirtualElementProvider,
+          panelCtor: VirtualPanel
+        })
+        : new NormalRenderingStrategy({
+          providerCtor: ReactElementProvider,
+          panelCtor: ExternalPanel
+        })
+    };
 
     const flicking = new VanillaFlicking(
       this._viewportElement,
       {
         ...props,
         ...{ renderExternal: {
-          renderer: ReactRenderer as any,
-          rendererOptions: { reactFlicking: this }
+          renderer: ReactRenderer,
+          rendererOptions
         }}
       },
     );
@@ -79,21 +82,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   }
 
   public componentWillUnmount() {
-    this._mounted = false;
-
-    this._vanillaFlicking.destroy();
-  }
-
-  public shouldComponentUpdate(nextProps: this["props"]) {
-    const children = this._getChildren(nextProps.children);
-    const diffResult = this._jsxDiffer.update(children);
-
-    this._panels = (nextProps.panelsPerView ?? -1) > 0 && nextProps.virtual
-      ? range(nextProps.panelsPerView! + 1).map(() => React.createRef())
-      : children.map(() => React.createRef());
-    this._diffResult = diffResult;
-
-    return true;
+    this._vanillaFlicking?.destroy();
   }
 
   public componentDidUpdate() {
@@ -101,14 +90,14 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const diffResult = this._diffResult;
 
     this._checkPlugins();
-    this._renderCallback && this._renderCallback();
+    this._renderEmitter.trigger("render");
 
     if (!diffResult || !flicking.initialized) return;
 
     sync(flicking, diffResult, this.reactPanels);
 
     if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
-      this.setState({});
+      this.forceUpdate();
     }
 
     this._diffResult = null;
@@ -120,7 +109,11 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const Camera = props.cameraTag as any;
     const attributes: { [key: string]: any } = {};
     const flicking = this._vanillaFlicking;
-    const initialized = !!this._diffResult && flicking && flicking.initialized;
+    const children = this._getChildren(props.children);
+    const diffResult = this._jsxDiffer?.update(children) ?? null;
+
+    this._panels = this._createPanelRefs(props, children);
+    this._diffResult = diffResult;
 
     for (const name in props) {
       if (!(name in DEFAULT_PROPS) && !(name in VanillaFlicking.prototype)) {
@@ -128,6 +121,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       }
     }
 
+    const initialized = !!this._diffResult && flicking && flicking.initialized;
     const viewportClasses: string[] = ["flicking-viewport"];
     const isHorizontal = flicking
       ? flicking.horizontal
@@ -149,7 +143,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       }}
       : {};
 
-    const panels = props.virtual && props.panelsPerView && props.panelsPerView > 0
+    const panels = !!props.virtual && (props.panelsPerView ?? -1) > 0
       ? this._getVirtualPanels(initialized)
       : this._getPanels(initialized);
 
@@ -163,6 +157,14 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
         { this._getViewportSlot() }
       </Viewport>
     );
+  }
+
+  private _createPanelRefs(props: this["props"], children: Array<React.ReactElement<any>>): React.RefObject<StrictPanel | NonStrictPanel | HTMLDivElement>[] {
+    const panelsPerView = props.panelsPerView ?? -1;
+
+    return panelsPerView > 0 && !!props.virtual
+      ? range(panelsPerView + 1).map(() => React.createRef())
+      : children.map(() => React.createRef());
   }
 
   private _bindEvents() {
@@ -186,10 +188,11 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   }
 
   private _checkPlugins() {
+    const flicking = this._vanillaFlicking;
     const { list, added, removed, prevList } = this._pluginsDiffer.update(this.props.plugins!) as DiffResult<Plugin>;
 
-    this._vanillaFlicking.addPlugins(...added.map(index => list[index]));
-    this._vanillaFlicking.removePlugins(...removed.map(index => prevList[index]));
+    flicking.addPlugins(...added.map(index => list[index]));
+    flicking.removePlugins(...removed.map(index => prevList[index]));
   }
 
   private _getChildren(children: React.ReactNode = this.props.children) {
@@ -214,49 +217,30 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
 
   private _getVirtualPanels(initialized: boolean) {
     const {
-      panelClass = "flicking-panel",
-      renderPanel
+      panelClass = "flicking-panel"
     } = this.props.virtual!;
     const panelsPerView = this.props.panelsPerView!;
+    const flicking = this._vanillaFlicking;
 
-    if (initialized) {
-      const flicking = this._vanillaFlicking!;
-      const virtualElements = flicking.virtual.getVirtualElementsByOrder();
-      const firstPanel = flicking.panels[0];
-      const size = firstPanel
-        ? flicking.horizontal
-          ? { width: firstPanel.size }
-          : { height: firstPanel.size }
-        : {};
+    const renderingIndexes = initialized
+      ? flicking.renderer.strategy.getRenderingIndexesByOrder(flicking)
+      : range(panelsPerView + 1);
 
-      return virtualElements.map(virtualEl => {
-        const renderingPanel = virtualEl.renderingPanel;
+    const firstPanel = flicking && flicking.panels[0];
+    const size = firstPanel
+      ? flicking.horizontal
+        ? { width: firstPanel.size }
+        : { height: firstPanel.size }
+      : {};
 
-        const innerHTML = renderingPanel
-          ? renderingPanel.cachedInnerHTML
-            ? renderingPanel.cachedInnerHTML
-            : renderPanel(renderingPanel, renderingPanel.index)
-          : null;
-
-        return <VirtualPanelComponent
-          key={virtualEl.index}
-          index={virtualEl.index}
-          ref={this._panels[virtualEl.index] as any}
-          className={panelClass}
-          size={size}
-          innerHTML={innerHTML} />
-      });
-    } else {
-      return range(panelsPerView + 1).map(idx => {
-        return <VirtualPanelComponent
-          key={idx}
-          index={idx}
-          ref={this._panels[idx] as any}
-          className={panelClass}
-          size={{}}
-          innerHTML={null} />
-      });
-    }
+    return renderingIndexes.map(idx => {
+      return <div
+        key={idx}
+        data-element-index={idx}
+        ref={this._panels[idx] as React.RefObject<HTMLDivElement>}
+        className={panelClass}
+        style={size} />
+    });
   }
 
   private _getPanels(initialized: boolean) {
@@ -265,8 +249,8 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       : this._getChildren();
 
     return this.props.useFindDOMNode
-      ? children.map((child, idx) => <NonStrictPanelComponent key={child.key!} ref={this._panels[idx] as any}>{child}</NonStrictPanelComponent>)
-      : children.map((child, idx) => <StrictPanelComponent key={child.key!} ref={this._panels[idx] as any}>{child}</StrictPanelComponent>)
+      ? children.map((child, idx) => <NonStrictPanel key={child.key!} ref={this._panels[idx] as any}>{child}</NonStrictPanel>)
+      : children.map((child, idx) => <StrictPanel key={child.key!} ref={this._panels[idx] as any}>{child}</StrictPanel>)
   }
 }
 

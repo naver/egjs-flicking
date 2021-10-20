@@ -1,12 +1,14 @@
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 
-import ReactPanelComponent from "./ReactPanelComponent";
-
-class NonStrictPanelComponent extends React.Component implements ReactPanelComponent {
+class NonStrictPanel extends React.Component {
   private _hide: boolean = false;
 
-  public get element() { return findDOMNode(this) as HTMLElement; }
+  public get nativeElement() { return findDOMNode(this) as HTMLElement; }
   public get rendered() { return !this._hide; }
 
   public render() {
@@ -24,4 +26,4 @@ class NonStrictPanelComponent extends React.Component implements ReactPanelCompo
   }
 }
 
-export default NonStrictPanelComponent;
+export default NonStrictPanel;
