@@ -1,9 +1,16 @@
-import { ExternalRenderer, getFlickingAttached, PanelOptions, parsePanelAlign, range, RendererOptions, VirtualPanel } from "@egjs/flicking";
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+import {
+  ExternalRenderer,
+  getFlickingAttached,
+  PanelOptions,
+  RendererOptions
+} from "@egjs/flicking";
 
 import VueFlicking from "./Flicking";
-import VirtualPanelComponent from "./VirtualPanelComponent";
 import VuePanel from "./VuePanel";
-import VuePanelComponent from "./VuePanelComponent";
 
 export interface VueRendererOptions extends RendererOptions {
   vueFlicking: VueFlicking;
@@ -11,7 +18,7 @@ export interface VueRendererOptions extends RendererOptions {
 
 class VueRenderer extends ExternalRenderer {
   // Internal States
-  protected _vueFlicking: VueFlicking;
+  private _vueFlicking: VueFlicking;
 
   public constructor(options: VueRendererOptions) {
     super(options);
@@ -19,68 +26,42 @@ class VueRenderer extends ExternalRenderer {
     this._vueFlicking = options.vueFlicking;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async render() {
-    const flicking = this._flicking;
+    const flicking = getFlickingAttached(this._flicking);
+    const vueFlicking = this._vueFlicking;
+    const strategy = this._strategy;
 
-    if (!flicking) return;
+    strategy.updateRenderingPanels(flicking);
+    strategy.renderPanels(flicking);
 
-    this._updateRenderingPanels();
-    this._renderVirtualPanels();
-
-    this._vueFlicking.$forceUpdate();
+    return new Promise<void>((resolve) => {
+      vueFlicking.renderEmitter.once("render", resolve);
+      vueFlicking.$forceUpdate();
+    });
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async forceRenderAllPanels() {
-    this._panels.forEach(panel => panel.markForShow());
+    const vueFlicking = this._vueFlicking;
 
-    const virtualManager = this._virtualManager;
+    await super.forceRenderAllPanels();
 
-    if (virtualManager) {
-      const elements = virtualManager.elements as VirtualPanelComponent[];
-
-      elements.forEach(el => {
-        el.show();
-        el.renderingPanel = null;
-      });
-    }
-
-    this._vueFlicking.$forceUpdate();
+    return new Promise<void>((resolve) => {
+      vueFlicking.renderEmitter.once("render", resolve);
+      vueFlicking.$forceUpdate();
+    });
   }
 
   protected _collectPanels() {
-    const align = parsePanelAlign(this._align);
     const flicking = getFlickingAttached(this._flicking);
     const vueFlicking = this._vueFlicking;
     const childRefs = vueFlicking.$refs;
-    const children: any[] = Object.keys(childRefs).map(refKey => childRefs[refKey]);
-    const virtualManager = this._virtualManager;
+    const vuePanels: any[] = Object.keys(childRefs).map(refKey => childRefs[refKey]);
 
-    if (virtualManager) {
-      virtualManager.updateElements(children);
-
-      this._panels = range(vueFlicking.options.virtual!.initialPanelCount).map(index => new VirtualPanel({
-        flicking,
-        index,
-        align
-      }));
-    } else {
-      this._panels = children.map((panelComponent, index) => new VuePanel({
-        flicking,
-        index,
-        align,
-        externalComponent: panelComponent
-      }));
-    }
+    this._panels = this._strategy.collectPanels(flicking, vuePanels);
   }
 
-  protected _createPanel(externalComponent: VuePanelComponent, options: PanelOptions) {
-    const virtual = this._virtualManager;
-
-    return virtual
-      ? new VirtualPanel(options)
-      : new VuePanel({ externalComponent, ...options });
+  protected _createPanel(externalComponent: VuePanel, options: PanelOptions) {
+    return this._strategy.createPanel(externalComponent, options);
   }
 }
 

@@ -3,13 +3,28 @@
  * egjs projects are licensed under the MIT license
  */
 import Flicking from "../../Flicking";
-import { PanelOptions } from "../../core/panel/Panel";
+import Panel, { PanelOptions } from "../../core/panel/Panel";
+import ElementProvider from "../../core/panel/provider/ElementProvider";
 import { DIRECTION } from "../../const/external";
 import { parsePanelAlign } from "../../utils";
 
 import RenderingStrategy from "./RenderingStrategy";
 
-class NormalRenderingStrategy extends RenderingStrategy {
+export interface NormalRenderingStrategyOptions {
+  providerCtor: new (...args: any) => ElementProvider;
+  panelCtor: new (options: PanelOptions) => Panel;
+}
+
+
+class NormalRenderingStrategy implements RenderingStrategy {
+  private _providerCtor: NormalRenderingStrategyOptions["providerCtor"];
+  private _panelCtor: NormalRenderingStrategyOptions["panelCtor"];
+
+  public constructor({ providerCtor, panelCtor }: NormalRenderingStrategyOptions) {
+    this._providerCtor = providerCtor;
+    this._panelCtor = panelCtor;
+  }
+
   public renderPanels() {
     // DO_NOTHING
   }
@@ -86,6 +101,8 @@ class NormalRenderingStrategy extends RenderingStrategy {
         panel.markForHide();
       }
     });
+
+    camera.updateOffset();
   }
 }
 

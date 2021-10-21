@@ -41,10 +41,16 @@
         }">Append</span>
       </div>
       <h1>Method call</h1>
-      <Flicking ref="flick">
+      <Flicking ref="flick" :options="{ circular: true }">
         <div class="panel">0</div>
         <div class="panel">1</div>
         <div class="panel">2</div>
+        <div class="panel">3</div>
+        <div class="panel">4</div>
+        <div class="panel">5</div>
+        <div class="panel">6</div>
+        <div class="panel">7</div>
+        <div class="panel">8</div>
       </Flicking>
       <div>
         <span class="button" @click="() => {

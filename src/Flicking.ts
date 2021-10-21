@@ -7,8 +7,8 @@ import Component, { ComponentEvent } from "@egjs/component";
 import FlickingError from "./core/FlickingError";
 import Viewport from "./core/Viewport";
 import AutoResizer from "./core/AutoResizer";
-import { Panel, VirtualPanel } from "./core/panel";
-import { VanillaElementProvider, VirtualElementProvider } from "./core/panel/provider";
+import { Panel } from "./core/panel";
+import { VanillaElementProvider } from "./core/panel/provider";
 import VirtualManager, { VirtualOptions } from "./core/VirtualManager";
 import { Control, SnapControl, SnapControlOptions, FreeControl, StrictControl, FreeControlOptions, StrictControlOptions } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
@@ -1379,10 +1379,7 @@ class Flicking extends Component<FlickingEvents> {
     return new VanillaRenderer({
       align: this._align,
       strategy: virtual
-        ? new VirtualRenderingStrategy({
-          providerCtor: VirtualElementProvider,
-          panelCtor: VirtualPanel
-        })
+        ? new VirtualRenderingStrategy()
         : new NormalRenderingStrategy({
           providerCtor: VanillaElementProvider,
           panelCtor: Panel

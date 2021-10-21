@@ -10,7 +10,7 @@ import { parsePanelAlign, range, setSize } from "../../utils";
 
 import RenderingStrategy from "./RenderingStrategy";
 
-class VirtualRenderingStrategy extends RenderingStrategy {
+class VirtualRenderingStrategy implements RenderingStrategy {
   public renderPanels(flicking: Flicking) {
     const virtualManager = flicking.virtual;
     const visiblePanels = flicking.visiblePanels as VirtualPanel[];
@@ -74,6 +74,8 @@ class VirtualRenderingStrategy extends RenderingStrategy {
         panel.markForHide();
       }
     });
+
+    camera.updateOffset();
   }
 
   public collectPanels(flicking: Flicking) {

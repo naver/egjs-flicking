@@ -561,8 +561,6 @@ abstract class Camera {
 
     if (added.length > 0 || removed.length > 0) {
       void flicking.renderer.render().then(() => {
-        this.updateOffset();
-
         flicking.trigger(new ComponentEvent(EVENTS.VISIBLE_CHANGE, {
           added,
           removed,

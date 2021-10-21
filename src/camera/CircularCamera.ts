@@ -203,10 +203,9 @@ class CircularCamera extends Camera {
   }
 
   public updateOffset() {
-    super.updateOffset();
     this._updateCircularOffset();
 
-    return this;
+    return super.updateOffset();
   }
 
   public lookAt(pos: number) {
@@ -222,11 +221,9 @@ class CircularCamera extends Camera {
     super.lookAt(pos);
 
     if (toggled.some(isToggled => isToggled)) {
-      void flicking.renderer.render()
-        .then(() => {
-          this.updateOffset();
-          this.applyTransform();
-        });
+      void flicking.renderer.render().then(() => {
+        this.updateOffset();
+      });
     }
   }
 

@@ -18,7 +18,7 @@ export interface VueRendererOptions extends RendererOptions {
 
 class VueRenderer extends ExternalRenderer {
   // Internal States
-  protected _vueFlicking: VueFlicking;
+  private _vueFlicking: VueFlicking;
 
   public constructor(options: VueRendererOptions) {
     super(options);
@@ -26,7 +26,6 @@ class VueRenderer extends ExternalRenderer {
     this._vueFlicking = options.vueFlicking;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async render() {
     const flicking = getFlickingAttached(this._flicking);
     const vueFlicking = this._vueFlicking;
