@@ -43,14 +43,20 @@ import VanillaFlicking, {
   BeforeResizeEvent,
   AfterResizeEvent,
   ReachEdgeEvent,
-  PanelChangeEvent
+  PanelChangeEvent,
+  VirtualRenderingStrategy,
+  NormalRenderingStrategy,
+  ExternalPanel,
+  range,
+  CLASS
 } from "@egjs/flicking";
 import ListDiffer from "@egjs/list-differ";
 
 import { EVENT_NAMES } from "./consts";
 import FlickingInterface from "./FlickingInterface";
 import { NgxFlickingPanel } from "./ngx-flicking-panel.directive";
-import NgxRenderer from "./NgxRenderer";
+import NgxRenderer, { NgxRendererOptions } from "./NgxRenderer";
+import NgxElementProvider from "./NgxElementProvider";
 
 @Component({
   selector: "ngx-flicking, [NgxFlicking]",
@@ -93,11 +99,11 @@ export class NgxFlickingComponent extends FlickingInterface
   @Output() public reachEdge: EventEmitter<ReachEdgeEvent<NgxFlickingComponent>>;
   @Output() public panelChange: EventEmitter<PanelChangeEvent<NgxFlickingComponent>>;
 
-  @HostBinding("class.vertical") public get isVertical() {
+  @HostBinding(`class.${CLASS.VERTICAL}`) public get isVertical() {
     return this.options.horizontal === false;
   }
 
-  @HostBinding("class.flicking-hidden") public get isHiddenBeforeInit() {
+  @HostBinding(`class.${CLASS.HIDDEN}`) public get isHiddenBeforeInit() {
     const initialized = this._vanillaFlicking && this._vanillaFlicking.initialized;
     return this.hideBeforeInit && !initialized;
   }
@@ -134,17 +140,32 @@ export class NgxFlickingComponent extends FlickingInterface
   public ngAfterViewInit() {
     if (!isPlatformBrowser(this._platformId)) return;
 
+    const options = this.options;
     const viewportEl = this._elRef.nativeElement;
-    const options: Partial<FlickingOptions> = {
+    const virtual = options.virtual && options.panelsPerView > 0;
+    const rendererOptions: NgxRendererOptions = {
+      ngxFlicking: this,
+      ngxRenderer: this._ngxRenderer,
+      strategy: virtual
+        ? new VirtualRenderingStrategy()
+        : new NormalRenderingStrategy({
+          providerCtor: NgxElementProvider,
+          panelCtor: ExternalPanel
+        })
+    };
+
+    if (virtual) {
+      this._initVirtualElements();
+    }
+
+    // This prevents mousemove to call ngDoCheck & noAfterContentChecked everytime
+    const flicking = new VanillaFlicking(viewportEl, {
       ...this.options,
       renderExternal: {
         renderer: NgxRenderer,
-        rendererOptions: { ngxFlicking: this, ngxRenderer: this._ngxRenderer }
+        rendererOptions
       }
-    };
-
-    // This prevents mousemove to call ngDoCheck & noAfterContentChecked everytime
-    const flicking = new VanillaFlicking(viewportEl, options);
+    });
     this._vanillaFlicking = flicking;
 
     const elementDiffer = new ListDiffer(this._ngxPanels.toArray());
@@ -205,5 +226,27 @@ export class NgxFlickingComponent extends FlickingInterface
 
     flicking.addPlugins(...added.map(index => list[index]));
     flicking.removePlugins(...removed.map(index => prevList[index]));
+  }
+
+  private _initVirtualElements() {
+    const options = this.options;
+    const renderer = this._ngxRenderer;
+    const cameraElement = this._elRef.nativeElement.firstElementChild;
+    const panelsPerView = options.panelsPerView!;
+    const virtual = options.virtual!;
+    const fragment = document.createDocumentFragment();
+
+    const newElements = range(panelsPerView + 1).map(idx => {
+      const panelEl = renderer.createElement("div");
+      panelEl.className = virtual.panelClass ?? CLASS.DEFAULT_VIRTUAL;
+      panelEl.dataset.elementIndex = idx.toString();
+      return panelEl;
+    });
+
+    newElements.forEach(el => {
+      fragment.appendChild(el);
+    });
+
+    renderer.appendChild(cameraElement, fragment);
   }
 }

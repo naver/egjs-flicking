@@ -50,10 +50,7 @@ class Flicking extends React.PureComponent<Partial<FlickingProps & FlickingOptio
       align: props.align,
       reactFlicking: this,
       strategy: props.virtual && props.panelsPerView > 0
-        ? new VirtualRenderingStrategy({
-          providerCtor: VirtualElementProvider,
-          panelCtor: VirtualPanel
-        })
+        ? new VirtualRenderingStrategy()
         : new NormalRenderingStrategy({
           providerCtor: ReactElementProvider,
           panelCtor: ExternalPanel

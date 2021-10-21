@@ -1,23 +1,42 @@
-import { Directive, ElementRef } from "@angular/core";
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+import { Directive, ElementRef, Renderer2 } from "@angular/core";
+import Flicking from "@egjs/flicking";
 
 @Directive({
   selector: "[flicking-panel], [FlickingPanel]"
 })
 export class NgxFlickingPanel {
-  public get element() { return this._elementref.nativeElement; }
-  private _visible: boolean;
+  public get nativeElement() { return this._elementref.nativeElement; }
+  private _rendered: boolean;
 
-  public get visible() { return this._visible; }
+  public get rendered() { return this._rendered; }
 
-  public constructor(private _elementref: ElementRef) {
-    this._visible = true;
+  public constructor(private _elementref: ElementRef, private _renderer: Renderer2) {
+    this._rendered = true;
   }
 
-  public show() {
-    this._visible = true;
+  public show(flicking: Flicking) {
+    this._rendered = true;
+
+    const el = this.nativeElement;
+    const cameraEl = flicking.camera.element;
+
+    if (el.parentElement !== cameraEl) {
+      this._renderer.appendChild(cameraEl, el);
+    }
   }
 
-  public hide() {
-    this._visible = false;
+  public hide(flicking: Flicking) {
+    this._rendered = false;
+
+    const el = this.nativeElement;
+    const cameraEl = flicking.camera.element;
+
+    if (el.parentElement === cameraEl) {
+      this._renderer.removeChild(cameraEl, el);
+    }
   }
 }

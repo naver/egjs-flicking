@@ -33,7 +33,7 @@ class NormalRenderingStrategy implements RenderingStrategy {
     const renderedPanels = flicking.renderer.panels.filter(panel => panel.rendered);
     const toggledPrev = renderedPanels.filter(panel => panel.toggled && panel.toggleDirection === DIRECTION.PREV);
     const toggledNext = renderedPanels.filter(panel => panel.toggled && panel.toggleDirection === DIRECTION.NEXT);
-    const notToggled = renderedPanels.filter(panel => panel.toggled);
+    const notToggled = renderedPanels.filter(panel => !panel.toggled);
 
     return [...toggledPrev, ...notToggled, ...toggledNext].map(panel => panel.index);
   }

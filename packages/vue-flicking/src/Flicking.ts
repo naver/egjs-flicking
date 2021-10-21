@@ -52,13 +52,9 @@ class Flicking extends Vue {
     const options = this.options;
     const viewportEl = this.$el as HTMLElement;
     const rendererOptions: VueRendererOptions = {
-      align: options.align,
       vueFlicking: this,
       strategy: options.virtual && (options.panelsPerView ?? -1) > 0
-        ? new VirtualRenderingStrategy({
-          providerCtor: VirtualElementProvider,
-          panelCtor: VirtualPanel
-        })
+        ? new VirtualRenderingStrategy()
         : new NormalRenderingStrategy({
           providerCtor: VueElementProvider,
           panelCtor: ExternalPanel

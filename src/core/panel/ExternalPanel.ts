@@ -25,13 +25,13 @@ class ExternalPanel extends Panel {
   }
 
   public markForShow() {
-    this._elProvider.show();
+    this._elProvider.show(this._flicking);
 
     return super.markForShow();
   }
 
   public markForHide() {
-    this._elProvider.hide();
+    this._elProvider.hide(this._flicking);
 
     return super.markForHide();
   }

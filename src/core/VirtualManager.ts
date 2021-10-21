@@ -4,6 +4,7 @@
  */
 import Flicking from "../Flicking";
 import { range } from "../utils";
+import { CLASS } from "../const/external";
 
 import VirtualPanel from "./panel/VirtualPanel";
 
@@ -76,7 +77,7 @@ class VirtualManager {
     this._renderPanel = options?.renderPanel ?? (() => "");
     this._initialPanelCount = options?.initialPanelCount ?? -1;
     this._cache = options?.cache ?? false;
-    this._panelClass = options?.panelClass ?? "flicking-panel";
+    this._panelClass = options?.panelClass ?? CLASS.DEFAULT_VIRTUAL;
 
     this._elements = [];
   }

@@ -93,14 +93,8 @@ export const MOVE_TYPE = {
   STRICT: "strict"
 } as const;
 
-/**
- * An object with all modes that {@link Renderer} can have
- * @ko {@link Renderer}가 가질 수 있는 모드 값들을 담은 오브젝트
- * @type {object}
- * @property {"default"} DEFAULT A default rendering mode<ko>디폴트 렌더링 모드</ko>
- * @property {"virtual"} VIRTUAL A virtual rendering mode<ko>Virtual이 활성화된 상태에서의 렌더링 모드</ko>
- */
-export const RENDERING_MODE = {
-  DEFAULT: "default",
-  VIRTUAL: "virtual"
-} as const;
+export const CLASS = {
+  VERTICAL: "vertical",
+  HIDDEN: "flicking-hidden",
+  DEFAULT_VIRTUAL: "flicking-panel"
+};

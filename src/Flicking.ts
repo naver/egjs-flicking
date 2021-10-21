@@ -1393,7 +1393,7 @@ class Flicking extends Component<FlickingEvents> {
       rendererOptions
     } = this._renderExternal!;
 
-    return new (renderer)(rendererOptions);
+    return new (renderer)({ align: this._align, ...rendererOptions });
   }
 
   private async _moveToInitialPanel(): Promise<void> {
