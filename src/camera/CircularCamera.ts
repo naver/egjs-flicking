@@ -70,11 +70,12 @@ class CircularCamera extends Camera {
     const range = this._range;
     const anchors = this._anchors;
     const rangeDiff = this.rangeDiff;
+    const anchorCount = anchors.length;
     const positionInRange = circulatePosition(position, range.min, range.max);
 
     let anchorInRange: AnchorPoint | null = super.findAnchorIncludePosition(positionInRange);
 
-    if (anchors.length > 0 && (position === range.min || position === range.max)) {
+    if (anchorCount > 0 && (position === range.min || position === range.max)) {
       const possibleAnchors = [
         anchorInRange,
         new AnchorPoint({
@@ -83,9 +84,9 @@ class CircularCamera extends Camera {
           panel: anchors[0].panel
         }),
         new AnchorPoint({
-          index: anchors.length - 1,
-          position: anchors[anchors.length - 1].position - rangeDiff,
-          panel: anchors[anchors.length - 1].panel
+          index: anchorCount - 1,
+          position: anchors[anchorCount - 1].position - rangeDiff,
+          panel: anchors[anchorCount - 1].panel
         })
       ].filter(anchor => !!anchor) as AnchorPoint[];
 
