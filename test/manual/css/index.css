@@ -37,6 +37,8 @@ header {
   border: 10px solid transparent;
   box-sizing: border-box;
   max-width: 100%;
+  width: 30%;
+  height: 100px;
 }
 
 .flicking-panel img {

@@ -26,6 +26,20 @@ describe("CircularCamera", () => {
         expect(camera.findAnchorIncludePosition(panels[2].range.max + 1).panel).to.equal(panels[0]);
         expect(camera.findAnchorIncludePosition(panels[0].range.min - 1).panel).to.equal(panels[2]);
       });
+
+      it("should return panel at toggled position if the given position is same to the camera range max", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { circular: true });
+        const camera = flicking.camera;
+
+        expect(camera.findAnchorIncludePosition(camera.range.max).index).to.equal(0);
+      });
+
+      it("should return panel at toggled position if the given position is same to the camera range min", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { circular: true });
+        const camera = flicking.camera;
+
+        expect(camera.findAnchorIncludePosition(camera.range.min).index).to.equal(flicking.panelCount - 1);
+      });
     });
 
     describe("clampToReachablePosition", () => {

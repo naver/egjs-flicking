@@ -1,5 +1,7 @@
 const flicking = new Flicking("#flicking", {
-  resizeOnContentsReady: true
+  circular: true,
+  moveType: "strict",
+  align: "prev"
 }).on("ready", () => {
   console.log(flicking.currentPanel)
 });
