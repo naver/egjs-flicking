@@ -1,5 +1,6 @@
 import VirtualPanel from "~/core/panel/VirtualPanel";
-import { ALIGN } from "~/exports";
+import VirtualElementProvider from "~/core/panel/provider/VirtualElementProvider";
+import { ALIGN } from "~/const/external";
 
 import El from "../../helper/El";
 import { createFlicking } from "../../helper/test-util";
@@ -9,7 +10,7 @@ describe("VirtualPanel", () => {
     describe("rendered", () => {
       it("is true on creation", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL_WITH_PANELS(0));
-        const panel = new VirtualPanel({ index: 0, align: ALIGN.CENTER, flicking });
+        const panel = new VirtualPanel({ index: 0, align: ALIGN.CENTER, flicking, elementProvider: new VirtualElementProvider(flicking) });
 
         expect(panel.rendered).to.be.true;
       });
@@ -18,7 +19,7 @@ describe("VirtualPanel", () => {
     describe("cachedInnerHTML", () => {
       it("is null on creation", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL_WITH_PANELS(0));
-        const panel = new VirtualPanel({ index: 0, align: ALIGN.CENTER, flicking });
+        const panel = new VirtualPanel({ index: 0, align: ALIGN.CENTER, flicking, elementProvider: new VirtualElementProvider(flicking) });
 
         expect(panel.cachedInnerHTML).to.be.null;
       });
@@ -29,7 +30,7 @@ describe("VirtualPanel", () => {
     describe("cacheRenderResult", async () => {
       it("should set cachedInnerHTML's value to the given parameter", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL_WITH_PANELS(0));
-        const panel = new VirtualPanel({ index: 0, align: ALIGN.CENTER, flicking });
+        const panel = new VirtualPanel({ index: 0, align: ALIGN.CENTER, flicking, elementProvider: new VirtualElementProvider(flicking) });
         const expected = "NEW_INNERHTML";
 
         panel.cacheRenderResult(expected);
@@ -41,7 +42,7 @@ describe("VirtualPanel", () => {
     describe("uncacheRenderResult", async () => {
       it("should set cachedInnerHTML's value to null", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL_WITH_PANELS(0));
-        const panel = new VirtualPanel({ index: 0, align: ALIGN.CENTER, flicking });
+        const panel = new VirtualPanel({ index: 0, align: ALIGN.CENTER, flicking, elementProvider: new VirtualElementProvider(flicking) });
 
         panel.cacheRenderResult("SOME_RENDER_RESULT");
         panel.uncacheRenderResult();

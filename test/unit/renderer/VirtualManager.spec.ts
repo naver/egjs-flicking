@@ -1,5 +1,3 @@
-import VirtualManager from "~/renderer/VirtualManager";
-
 import El from "../helper/El";
 import { createFlicking } from "../helper/test-util";
 
@@ -48,7 +46,7 @@ describe("VirtualManager", () => {
         });
         const virtual = flicking.virtual;
 
-        expect(virtual.elements.every(virtualEl => virtualEl.element.classList.contains(expectedClass))).to.be.true;
+        expect(virtual.elements.every(virtualEl => virtualEl.nativeElement.classList.contains(expectedClass))).to.be.true;
       });
     });
 
@@ -91,11 +89,11 @@ describe("VirtualManager", () => {
         await renderer.render();
 
         const visibles = flicking.visiblePanels;
-        const invisibles = flicking.virtual.elements.filter(virtualEl => visibles.every(visible => visible.element !== virtualEl.element));
+        const invisibles = flicking.virtual.elements.filter(virtualEl => visibles.every(visible => visible.element !== virtualEl.nativeElement));
 
         expect(visibles).not.to.be.empty;
         expect(visibles.every(visible => visible.element.style.display !== "none"));
-        expect(invisibles.every(invisible => invisible.element.style.display === "none"));
+        expect(invisibles.every(invisible => invisible.nativeElement.style.display === "none"));
       });
     });
   });
@@ -225,9 +223,8 @@ describe("VirtualManager", () => {
         }
       });
       const prevPanels = [...flicking.panels];
-      const renderer = flicking.virtual;
 
-      renderer.remove(50, 1);
+      flicking.virtual.remove(50, 1);
 
       expect(prevPanels.slice(0, 50).every((panel, index) => panel.index === index)).to.be.true;
       expect(prevPanels.slice(51).every((panel, index) => panel.index === index + 51 - 1)).to.be.true;

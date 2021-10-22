@@ -1,6 +1,6 @@
 import Flicking, { FlickingOptions } from "~/Flicking";
 import Panel, { PanelOptions } from "~/core/panel/Panel";
-import ElementPanel from "~/core/panel/ElementPanel";
+import VanillaElementProvider from "~/core/panel/provider/VanillaElementProvider";
 import { ALIGN, EVENTS } from "~/const/external";
 
 import El from "./El";
@@ -50,7 +50,7 @@ export const createPanel = async (el: El, panelOption: Partial<PanelOptions> = {
 
   flicking.camera.element.appendChild(el.el);
 
-  return new ElementPanel({ el: el.el, align: ALIGN.CENTER, index: 0, flicking, ...panelOption });
+  return new Panel({ elementProvider: new VanillaElementProvider(el.el), align: ALIGN.CENTER, index: 0, flicking, ...panelOption });
 };
 
 export const tick = (time) => {

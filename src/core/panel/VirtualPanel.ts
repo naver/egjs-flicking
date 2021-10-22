@@ -103,7 +103,7 @@ class VirtualPanel extends Panel {
 
   public decreaseIndex(val: number) {
     this.uncacheRenderResult();
-    return super.increaseIndex(val);
+    return super.decreaseIndex(val);
   }
 }
 

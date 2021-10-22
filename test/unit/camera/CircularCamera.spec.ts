@@ -117,23 +117,23 @@ describe("CircularCamera", () => {
 
         camera.lookAt(camRange.min);
         sinon.stub(panel, "range")
-          .get(() => ({ min: camera.visibleRange.min + camera.rangeDiff, max: camera.visibleRange.min + camera.rangeDiff }));
+          .get(() => ({ min: camera.visibleRange.min + camera.rangeDiff + 1, max: camera.visibleRange.min + camera.rangeDiff + 1 }));
 
         expect(camera.canSee(panel)).to.be.true;
 
         sinon.stub(panel, "range")
-          .get(() => ({ min: camera.visibleRange.max + camera.rangeDiff, max: camera.visibleRange.max + camera.rangeDiff }));
+          .get(() => ({ min: camera.visibleRange.max + camera.rangeDiff - 1, max: camera.visibleRange.max + camera.rangeDiff - 1 }));
 
         expect(camera.canSee(panel)).to.be.true;
 
         camera.lookAt(camRange.max);
         sinon.stub(panel, "range")
-          .get(() => ({ min: camera.visibleRange.min - camera.rangeDiff, max: camera.visibleRange.min - camera.rangeDiff }));
+          .get(() => ({ min: camera.visibleRange.min - camera.rangeDiff + 1, max: camera.visibleRange.min - camera.rangeDiff + 1 }));
 
         expect(camera.canSee(panel)).to.be.true;
 
         sinon.stub(panel, "range")
-          .get(() => ({ min: camera.visibleRange.max - camera.rangeDiff, max: camera.visibleRange.max - camera.rangeDiff }));
+          .get(() => ({ min: camera.visibleRange.max - camera.rangeDiff - 1, max: camera.visibleRange.max - camera.rangeDiff - 1 }));
 
         expect(camera.canSee(panel)).to.be.true;
       });

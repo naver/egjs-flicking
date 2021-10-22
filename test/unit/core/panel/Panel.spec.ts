@@ -1,4 +1,5 @@
 import Panel from "~/core/panel/Panel";
+import VanillaElementProvider from "~/core/panel/provider/VanillaElementProvider";
 import { ALIGN } from "~/const/external";
 
 import El from "../../helper/El";
@@ -354,7 +355,7 @@ describe("Panel", () => {
     describe("focus", () => {
       it("should call Flicking's 'moveTo' with panel's index as a parameter", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
-        const panel = new PanelImpl({ index: 5, flicking, align: ALIGN.PREV });
+        const panel = new PanelImpl({ index: 5, flicking, align: ALIGN.PREV, elementProvider: new VanillaElementProvider(document.createElement("div")) });
 
         const moveToSpy = sinon.spy();
         flicking.moveTo = moveToSpy;
@@ -366,7 +367,7 @@ describe("Panel", () => {
 
       it("should call Flicking's 'moveTo' with the same duration as a parameter", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
-        const panel = new PanelImpl({ index: 5, flicking, align: ALIGN.PREV });
+        const panel = new PanelImpl({ index: 5, flicking, align: ALIGN.PREV, elementProvider: new VanillaElementProvider(document.createElement("div")) });
 
         const moveToSpy = sinon.spy();
         flicking.moveTo = moveToSpy;
@@ -510,7 +511,7 @@ describe("Panel", () => {
         const childEl = new El("test");
 
         panel.element.appendChild(childEl.el);
-        (panel as any)._el = null;
+        (panel.elementProvider as any)._element = null;
 
         expect(panel.element).equals(null);
         expect(panel.contains(childEl.el)).to.be.false;
