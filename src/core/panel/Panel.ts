@@ -49,6 +49,11 @@ class Panel {
    */
   public get element() { return this._elProvider.element; }
   /**
+   * @internal
+   * @readonly
+   */
+  public get elementProvider() { return this._elProvider; }
+  /**
    * Index of the panel
    * @ko 패널의 인덱스
    * @type {number}

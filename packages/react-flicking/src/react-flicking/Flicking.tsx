@@ -15,8 +15,6 @@ import VanillaFlicking, {
   getDefaultCameraTransform,
   Plugin,
   range,
-  VirtualPanel,
-  VirtualElementProvider,
   NormalRenderingStrategy,
   ExternalPanel
 } from "@egjs/flicking";
@@ -47,7 +45,6 @@ class Flicking extends React.PureComponent<Partial<FlickingProps & FlickingOptio
   public componentDidMount() {
     const props = this.props as Required<FlickingProps & FlickingOptions>;
     const rendererOptions: ReactRendererOptions = {
-      align: props.align,
       reactFlicking: this,
       strategy: props.virtual && props.panelsPerView > 0
         ? new VirtualRenderingStrategy()
@@ -76,6 +73,10 @@ class Flicking extends React.PureComponent<Partial<FlickingProps & FlickingOptio
 
     this._bindEvents();
     this._checkPlugins();
+
+    if (props.status) {
+      flicking.setStatus(props.status);
+    }
   }
 
   public componentWillUnmount() {

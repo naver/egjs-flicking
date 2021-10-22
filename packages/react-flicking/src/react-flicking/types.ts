@@ -21,13 +21,15 @@ import {
   AfterResizeEvent,
   ReachEdgeEvent,
   PanelChangeEvent,
-  Plugin
+  Plugin,
+  Status
 } from "@egjs/flicking";
 
 export interface FlickingProps {
   viewportTag: keyof JSX.IntrinsicElements;
   cameraTag: keyof JSX.IntrinsicElements;
   plugins: Plugin[];
+  status?: Status;
   useFindDOMNode: boolean;
   hideBeforeInit: boolean;
   firstPanelSize?: string;

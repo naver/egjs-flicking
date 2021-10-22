@@ -17,8 +17,6 @@ import VanillaFlicking, {
   range,
   VirtualRenderingStrategy,
   NormalRenderingStrategy,
-  VirtualElementProvider,
-  VirtualPanel,
   ExternalPanel
 } from "@egjs/flicking";
 
