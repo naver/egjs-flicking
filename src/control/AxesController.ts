@@ -282,6 +282,7 @@ class AxesController {
    */
   public animateTo(position: number, duration: number, axesEvent?: OnRelease): Promise<void> {
     const axes = this._axes;
+    const state = this._stateMachine.state;
 
     if (!axes) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING("Control"), ERROR.CODE.NOT_ATTACHED_TO_FLICKING));
@@ -293,6 +294,10 @@ class AxesController {
       const flicking = getFlickingAttached(this._flicking, "Control");
 
       flicking.camera.lookAt(position);
+
+      if (state.targetPanel) {
+        flicking.control.setActive(state.targetPanel, flicking.control.activePanel, axesEvent?.isTrusted ?? false);
+      }
       return Promise.resolve();
     }
 
