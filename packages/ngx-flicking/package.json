@@ -29,7 +29,7 @@
     "@angular/cli": "~10.0.0",
     "@angular/compiler-cli": "~10.0.0",
     "@egjs/flicking": "^4.2.3",
-    "@egjs/flicking-plugins": "^4.2.1",
+    "@egjs/flicking-plugins": "^4.2.2",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
