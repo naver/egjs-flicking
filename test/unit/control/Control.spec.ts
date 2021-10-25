@@ -147,6 +147,32 @@ describe("Control", () => {
         expect(activePanelAfter).to.equal(panel);
       });
 
+      it("should change activePanel to given panel after resolved when duration is 0", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const control = flicking.control;
+        const panel = flicking.getPanel(2);
+        const activePanelBefore = control.activePanel;
+
+        void control.moveToPanel(panel, { duration: 0 });
+        const activePanelAfter = control.activePanel;
+
+        expect(activePanelBefore).to.equal(flicking.getPanel(0));
+        expect(activePanelAfter).to.equal(panel);
+      });
+
+      it("should change activePanel to given panel after resolved when duration is 0 and moving to the same position", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const control = flicking.control;
+
+        control.setActive(flicking.panels[2], flicking.panels[0], false);
+        const activePanelBefore = control.activePanel;
+        void control.moveToPanel(flicking.panels[0], { duration: 0 });
+        const activePanelAfter = control.activePanel;
+
+        expect(activePanelBefore).to.equal(flicking.getPanel(2));
+        expect(activePanelAfter).to.equal(flicking.getPanel(0));
+      });
+
       it(`should trigger ${EVENTS.WILL_CHANGE} if active panel was null`, async () => {
         const control = new ControlImpl();
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
