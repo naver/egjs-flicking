@@ -987,8 +987,7 @@ Call **[init()](docs/api/Flicking#init)** automatically when creating Flicking's
 </Columns>
 
 ### autoResize
-Attach Flicking's **[resize](docs/api/Flicking#resize)** method to window's resize event.
-Flicking will automatically call **[resize](docs/api/Flicking#resize)** window size and orientation change.
+Whether to automatically call **[resize()](docs/api/Flicking#resize)** when the viewport element(.flicking-viewport)'s size is changed
 
 Change window size or change orientation(on mobile) to see its effect.
 
@@ -1019,6 +1018,41 @@ Change window size or change orientation(on mobile) to see its effect.
 <Columns>
   <ColumnItem is={12}>
     <Flicking autoResize={false}>
+      { Panels(5) }
+    </Flicking>
+  </ColumnItem>
+</Columns>
+
+### useResizeObserver
+Whether to listen **[ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)**'s event instead of Window's **[resize](https://developer.mozilla.org/ko/docs/Web/API/Window/resize_event)** event when using the `autoResize` option
+
+<Columns>
+  <ColumnItem is={12}>
+
+  ```js
+  useResizeObserver: true
+  ```
+
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={12}>
+    <Flicking useResizeObserver={true}>
+      { Panels(5) }
+    </Flicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={12}>
+
+  ```js
+  useResizeObserver: false
+  ```
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={12}>
+    <Flicking useResizeObserver={false}>
       { Panels(5) }
     </Flicking>
   </ColumnItem>
