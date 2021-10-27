@@ -64,6 +64,18 @@ class El {
     );
   }
 
+  /**
+   * Structure with no panels in it
+   * @example
+   * - Viewport (width: 1000px, height: 1000px)
+   *   - Camera
+   */
+  public static get EMPTY() {
+    return El.viewport("1000px", "1000px").add(
+      El.camera()
+    );
+  }
+
   public static viewport(width?: string, height?: string) {
     const el = new El(EL_CLASS.VIEWPORT);
     if (width) {
