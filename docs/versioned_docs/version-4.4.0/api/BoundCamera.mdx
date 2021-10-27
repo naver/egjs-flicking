@@ -1,0 +1,456 @@
+---
+custom_edit_url: null
+---
+
+```ts
+class BoundCamera extends Camera
+```
+A [Camera](Camera) that set range not to go out of the first/last panel, so it won't show empty spaces before/after the first/last panel
+
+<div className="container">
+  <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
+  <div className="row"><div className="col col--6"><a href="#element">element</a><br/><a href="#children">children</a><br/><a href="#position">position</a><br/><a href="#alignPosition">alignPosition</a><br/><a href="#offset">offset</a><br/><a href="#range">range</a><br/><a href="#rangeDiff">rangeDiff</a><br/><a href="#visiblePanels">visiblePanels</a><br/><a href="#visibleRange">visibleRange</a><br/><a href="#anchorPoints">anchorPoints</a><br/><a href="#controlParams">controlParams</a><br/><a href="#atEdge">atEdge</a><br/><a href="#size">size</a><br/><a href="#progress">progress</a><br/><a href="#align">align</a></div><div className="col col--6"><a href="#updateRange">updateRange</a><br/><a href="#init">init</a><br/><a href="#destroy">destroy</a><br/><a href="#lookAt">lookAt</a><br/><a href="#getPrevAnchor">getPrevAnchor</a><br/><a href="#getNextAnchor">getNextAnchor</a><br/><a href="#getProgressInPanel">getProgressInPanel</a><br/><a href="#findAnchorIncludePosition">findAnchorIncludePosition</a><br/><a href="#findNearestAnchor">findNearestAnchor</a><br/><a href="#findActiveAnchor">findActiveAnchor</a><br/><a href="#clampToReachablePosition">clampToReachablePosition</a><br/><a href="#canReach">canReach</a><br/><a href="#canSee">canSee</a><br/><a href="#updateAlignPos">updateAlignPos</a><br/><a href="#updateAnchors">updateAnchors</a><br/><a href="#updateAdaptiveHeight">updateAdaptiveHeight</a><br/><a href="#updateOffset">updateOffset</a><br/><a href="#resetNeedPanelHistory">resetNeedPanelHistory</a><br/><a href="#applyTransform">applyTransform</a></div></div>
+</div>
+
+## Properties
+
+### element {#element}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+The camera element(`.flicking-camera`)
+
+**Type**: HTMLElement
+
+### children {#children}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+An array of the child elements of the camera element(`.flicking-camera`)
+
+**Type**: Array&lt;HTMLElement&gt;
+
+### position {#position}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Current position of the camera
+
+**Type**: number
+
+### alignPosition {#alignPosition}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Align position inside the viewport where [Panel](Panel)'s [alignPosition](Panel#alignPosition) should be located at
+
+**Type**: number
+
+### offset {#offset}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Position offset, used for the [renderOnlyVisible](Flicking#renderOnlyVisible) option
+
+**Type**: number
+
+**Default**: 0
+
+### range {#range}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+A range that Camera's [position](Camera#position) can reach
+
+**Type**: object
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|min|number|A minimum position|
+|min|number|A maximum position|
+
+### rangeDiff {#rangeDiff}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+A difference between Camera's minimum and maximum position that can reach
+
+**Type**: number
+
+### visiblePanels {#visiblePanels}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+An array of visible panels from the current position
+
+**Type**: Array&lt;[Panel](Panel)&gt;
+
+### visibleRange {#visibleRange}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+A range of the visible area from the current position
+
+**Type**: object
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|min|number|A minimum position|
+|min|number|A maximum position|
+
+### anchorPoints {#anchorPoints}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+An array of [AnchorPoint](AnchorPoint)s that Camera can be stopped at
+
+**Type**: Array&lt;[AnchorPoint](AnchorPoint)&gt;
+
+### controlParams {#controlParams}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+A current parameters of the Camera for updating [AxesController](AxesController)
+
+**Type**: [ControlParams](ControlParams)
+
+### atEdge {#atEdge}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+A Boolean value indicating whether Camera's over the minimum or maximum position reachable
+
+**Type**: boolean
+
+### size {#size}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Return the size of the viewport
+
+**Type**: number
+
+### progress {#progress}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Return the camera's position progress from the first panel to last panel
+Range is from 0 to last panel's index
+
+**Type**: number
+
+### align {#align}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+A value indicating where the [alignPosition](Camera#alignPosition) should be located at inside the viewport element
+
+**Type**: [ALIGN](ALIGN) \| string \| number
+
+## Methods
+
+### updateRange {#updateRange}
+
+<div className="bulma-tags">
+
+</div>
+
+Update [range](Camera#range) of Camera
+
+**Returns**: this
+
+**Throws**: [FlickingError](FlickingError)
+
+[NOT_ATTACHED_TO_FLICKING](ERROR_CODE) When [init](Camera#init) is not called before
+
+### init {#init}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Initialize Camera
+
+**Returns**: this
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|flicking|[Flicking](Flicking)|||An instance of [Flicking](Flicking)|
+
+**Throws**: [FlickingError](FlickingError)
+
+[VAL_MUST_NOT_NULL](ERROR_CODE) If the camera element(`.flicking-camera`) does not exist inside viewport element
+
+### destroy {#destroy}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Destroy Camera and return to initial state
+
+**Returns**: void
+
+### lookAt {#lookAt}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Move to the given position and apply CSS transform
+
+**Returns**: this
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|pos|number|||A new position|
+
+**Throws**: [FlickingError](FlickingError)
+
+[NOT_ATTACHED_TO_FLICKING](ERROR_CODE) When [init](Camera#init) is not called before
+
+### getPrevAnchor {#getPrevAnchor}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Return a previous [AnchorPoint](AnchorPoint) of given [AnchorPoint](AnchorPoint)
+If it does not exist, return `null` instead
+
+**Returns**: [AnchorPoint](AnchorPoint) \| null
+- The previous [AnchorPoint](AnchorPoint)
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|anchor|[AnchorPoint](AnchorPoint)|||A reference [AnchorPoint](AnchorPoint)|
+
+### getNextAnchor {#getNextAnchor}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Return a next [AnchorPoint](AnchorPoint) of given [AnchorPoint](AnchorPoint)
+If it does not exist, return `null` instead
+
+**Returns**: [AnchorPoint](AnchorPoint) \| null
+- The next [AnchorPoint](AnchorPoint)
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|anchor|[AnchorPoint](AnchorPoint)|||A reference [AnchorPoint](AnchorPoint)|
+
+### getProgressInPanel {#getProgressInPanel}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Return the camera's position progress in the panel below
+Value is from 0 to 1 when the camera's inside panel
+Value can be lower than 0 or bigger than 1 when it's in the margin area
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|panel|[Panel](Panel)||||
+
+### findAnchorIncludePosition {#findAnchorIncludePosition}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Return [AnchorPoint](AnchorPoint) that includes given position
+If there's no [AnchorPoint](AnchorPoint) that includes the given position, return `null` instead
+
+**Returns**: [AnchorPoint](AnchorPoint) \| null
+- The [AnchorPoint](AnchorPoint) that includes the given position
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|position|number|||A position to check|
+
+### findNearestAnchor {#findNearestAnchor}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Return [AnchorPoint](AnchorPoint) nearest to given position
+If there're no [AnchorPoint](AnchorPoint)s, return `null` instead
+
+**Returns**: [AnchorPoint](AnchorPoint) \| null
+- The [AnchorPoint](AnchorPoint) nearest to the given position
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|position|number|||A position to check|
+
+### findActiveAnchor {#findActiveAnchor}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Return [AnchorPoint](AnchorPoint) that matches [Flicking#currentPanel](Flicking#currentPanel)
+
+**Returns**: [AnchorPoint](AnchorPoint) \| null
+
+### clampToReachablePosition {#clampToReachablePosition}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Clamp the given position between camera's range
+
+**Returns**: number
+- A clamped position
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|position|number|||A position to clamp|
+
+### canReach {#canReach}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Check whether the given panel is inside of the Camera's range
+
+**Returns**: boolean
+- Whether the panel's inside Camera's range
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|panel|[Panel](Panel)|||An instance of [Panel](Panel) to check|
+
+### canSee {#canSee}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Check whether the given panel element is visible at the current position
+
+**Returns**: boolean
+- Whether the panel element is visible at the current position
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|panel|[Panel](Panel)|||An instance of [Panel](Panel) to check|
+
+### updateAlignPos {#updateAlignPos}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Update Camera's [alignPosition](Camera#alignPosition)
+
+**Returns**: this
+
+### updateAnchors {#updateAnchors}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Update Camera's [anchorPoints](Camera#anchorPoints)
+
+**Returns**: this
+
+**Throws**: [FlickingError](FlickingError)
+
+[NOT_ATTACHED_TO_FLICKING](ERROR_CODE) When [init](Camera#init) is not called before
+
+### updateAdaptiveHeight {#updateAdaptiveHeight}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Update Viewport's height to active panel's height
+
+**Returns**: this
+
+**Throws**: [FlickingError](FlickingError)
+
+[NOT_ATTACHED_TO_FLICKING](ERROR_CODE) When [init](Camera#init) is not called before
+
+### updateOffset {#updateOffset}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Update current offset of the camera
+
+**Returns**: this
+
+### resetNeedPanelHistory {#resetNeedPanelHistory}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Reset the history of [needPanel](Flicking#event-needPanel) events so it can be triggered again
+
+**Returns**: this
+
+### applyTransform {#applyTransform}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+Apply "transform" style with the current position to camera element
+
+**Returns**: this
+

@@ -72,7 +72,7 @@ abstract class Renderer {
   /**
    * @param {object} options An options object<ko>옵션 오브젝트</ko>
    * @param {Constants.ALIGN | string | number} [options.align="center"] An {@link Flicking#align align} value that will be applied to all panels<ko>전체 패널에 적용될 {@link Flicking#align align} 값</ko>
-   * @param {RenderingStrategy} [options.strategy]
+   * @param {object} [options.strategy] An instance of RenderingStrategy(internal module)<ko>RenderingStrategy의 인스턴스(내부 모듈)</ko>
    */
   public constructor({
     align = ALIGN.CENTER,
