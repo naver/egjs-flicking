@@ -1,14 +1,15 @@
 import FlickingError from "~/core/FlickingError";
 import Viewport from "~/core/Viewport";
 import Flicking from "~/Flicking";
+import { SnapControl, FreeControl, StrictControl } from "~/control";
+import VirtualManager from "~/core/VirtualManager";
 import * as ERROR from "~/const/error";
 import { ALIGN, DIRECTION, EVENTS, MOVE_TYPE } from "~/const/external";
+import { Plugin } from "~/type/external";
 import { AfterResizeEvent, BeforeResizeEvent } from "~/type/event";
 
 import El from "./helper/El";
-import { cleanup, createFlicking, range, simulate, tick, waitEvent } from "./helper/test-util";
-import { Plugin } from "~/type/external";
-import { SnapControl, FreeControl, StrictControl } from "~/control";
+import { cleanup, createFlicking, range, simulate, tick } from "./helper/test-util";
 
 describe("Flicking", () => {
   afterEach(() => {
@@ -85,6 +86,21 @@ describe("Flicking", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         expect(flicking.viewport).to.exist;
         expect(flicking.viewport).to.be.an.instanceof(Viewport);
+      });
+    });
+
+    describe("virtual", () => {
+      it("should be an instance of VirtualManager", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        expect(flicking.virtual).to.be.an.instanceOf(VirtualManager);
+      });
+
+      it("should have virtual options in it", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        expect(typeof flicking.virtual.panelClass).to.equal("string");
+        expect(typeof flicking.virtual.cache).to.equal("boolean");
+        expect(typeof flicking.virtual.initialPanelCount).to.equal("number");
+        expect(typeof flicking.virtual.renderPanel).to.equal("function");
       });
     });
   });
@@ -456,6 +472,32 @@ describe("Flicking", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         expect(flicking.renderOnlyVisible).to.equal(false);
+      });
+    });
+
+    describe("virtual", () => {
+      it("has cache as false by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.virtual.cache).to.be.false;
+      });
+
+      it("has initialPanelCount as -1 by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.virtual.initialPanelCount).to.equal(-1);
+      });
+
+      it("has panelClass as 'flicking-panel' by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.virtual.panelClass).to.equal("flicking-panel");
+      });
+
+      it("has renderPanel as a function that returns an empty string by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.virtual.renderPanel(null, 0)).to.equal("");
       });
     });
 

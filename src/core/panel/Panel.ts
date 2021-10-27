@@ -3,25 +3,34 @@
  * egjs projects are licensed under the MIT license
  */
 import Flicking from "../../Flicking";
-import { getProgress, getStyle, isString, parseAlign } from "../../utils";
+import { getProgress, getStyle, parseAlign, setSize } from "../../utils";
 import { ALIGN, DIRECTION } from "../../const/external";
 import { LiteralUnion, ValueOf } from "../../type/internal";
+
+import ElementProvider from "./provider/ElementProvider";
 
 export interface PanelOptions {
   index: number;
   align: LiteralUnion<ValueOf<typeof ALIGN>> | number;
   flicking: Flicking;
+  elementProvider: ElementProvider;
 }
 
-abstract class Panel {
+/**
+ * A slide data component that holds information of a single HTMLElement
+ * @ko 슬라이드 데이터 컴포넌트로, 단일 HTMLElement의 정보를 갖고 있습니다
+ */
+class Panel {
   // Internal States
   protected _flicking: Flicking;
+  protected _elProvider: ElementProvider;
   protected _index: number;
   protected _pos: number;
   protected _size: number;
   protected _height: number;
   protected _margin: { prev: number; next: number };
   protected _alignPos: number; // Actual align pos
+  protected _rendered: boolean;
   protected _removed: boolean;
   protected _loading: boolean;
   protected _toggleDirection: ValueOf<typeof DIRECTION>;
@@ -38,7 +47,12 @@ abstract class Panel {
    * @type {HTMLElement}
    * @readonly
    */
-  abstract get element(): HTMLElement;
+  public get element() { return this._elProvider.element; }
+  /**
+   * @internal
+   * @readonly
+   */
+  public get elementProvider() { return this._elProvider; }
   /**
    * Index of the panel
    * @ko 패널의 인덱스
@@ -104,19 +118,19 @@ abstract class Panel {
    */
   public get removed() { return this._removed; }
   /**
+   * A value indicating whether the panel's element is being rendered on the screen
+   * @ko 패널의 엘리먼트가 화면상에 렌더링되고있는지 여부를 나타내는 값
+   * @type {boolean}
+   * @readonly
+   */
+  public get rendered() { return this._rendered; }
+  /**
    * A value indicating whether the panel's image/video is not loaded and waiting for resize
    * @ko 패널 내부의 이미지/비디오가 아직 로드되지 않아 {@link Panel#resize resize}될 것인지를 나타내는 값
    * @type {boolean}
    * @readonly
    */
   public get loading() { return this._loading; }
-  /**
-   * A value indicating whether the panel's element is being rendered on the screen
-   * @ko 패널의 엘리먼트가 화면상에 렌더링되고있는지 여부를 나타내는 값
-   * @type {boolean}
-   * @readonly
-   */
-  public abstract get rendered();
   /**
    * Panel element's range of the bounding box
    * @ko 패널 엘리먼트의 Bounding box 범위
@@ -247,18 +261,22 @@ abstract class Panel {
    * @param {number} [options.index] An initial index of the panel<ko>패널의 초기 인덱스</ko>
    * @param {Constants.ALIGN | string | number} [options.align] An initial {@link Flicking#align align} value of the panel<ko>패널의 초기 {@link Flicking#align align}값</ko>
    * @param {Flicking} [options.flicking] A Flicking instance panel's referencing<ko>패널이 참조하는 {@link Flicking} 인스턴스</ko>
+   * @param {Flicking} [options.elementProvider] A provider instance that redirects elements<ko>실제 엘리먼트를 반환하는 엘리먼트 공급자의 인스턴스</ko>
    */
   public constructor({
     index,
     align,
-    flicking
+    flicking,
+    elementProvider
   }: PanelOptions) {
     this._index = index;
     this._flicking = flicking;
+    this._elProvider = elementProvider;
 
     this._align = align;
 
     this._removed = false;
+    this._rendered = true;
     this._loading = false;
     this._resetInternalStates();
   }
@@ -267,13 +285,19 @@ abstract class Panel {
    * Mark panel element to be appended on the camera element
    * @internal
    */
-  public abstract markForShow();
+  public markForShow() {
+    this._rendered = true;
+    this._elProvider.show(this._flicking);
+  }
 
   /**
    * Mark panel element to be removed from the camera element
    * @internal
    */
-  public abstract markForHide();
+  public markForHide() {
+    this._rendered = false;
+    this._elProvider.hide(this._flicking);
+  }
 
   /**
    * Update size of the panel
@@ -288,7 +312,6 @@ abstract class Panel {
     margin: { prev: number; next: number };
   }): this {
     const el = this.element;
-    const elStyle = getStyle(el);
     const flicking = this._flicking;
     const horizontal = flicking.horizontal;
 
@@ -297,6 +320,8 @@ abstract class Panel {
       this._margin = { ...cached.margin };
       this._height = cached.height;
     } else {
+      const elStyle = getStyle(el);
+
       this._size = horizontal ? el.offsetWidth : el.offsetHeight;
       this._margin = horizontal
         ? {
@@ -324,29 +349,11 @@ abstract class Panel {
    * @chainable
    * @return {this}
    */
-  public setSize({
-    width,
-    height
-  }: Partial<{
+  public setSize(size: Partial<{
     width: number | string;
     height: number | string;
   }>): this {
-    const el = this.element;
-
-    if (width != null) {
-      if (isString(width)) {
-        el.style.width = width;
-      } else {
-        el.style.width = `${width}px`;
-      }
-    }
-    if (height != null) {
-      if (isString(height)) {
-        el.style.height = height;
-      } else {
-        el.style.height = `${height}px`;
-      }
-    }
+    setSize(this.element, size);
 
     return this;
   }
@@ -383,7 +390,7 @@ abstract class Panel {
   }
 
   /**
-   * Check whether the given range is fully included in this panel's area
+   * Check whether the given range is fully included in this panel's area (inclusive)
    * @ko 주어진 범위가 이 패널 내부에 완전히 포함되는지를 반환합니다
    * @param {number} min Minimum value of the range to check<ko>확인하고자 하는 최소 범위</ko>
    * @param {number} max Maximum value of the range to check<ko>확인하고자 하는 최대 범위</ko>
@@ -400,6 +407,19 @@ abstract class Panel {
     }
 
     return max >= panelRange.min && min <= panelRange.max;
+  }
+
+  /**
+   * Check whether the panel is visble in the given range (exclusive)
+   * @ko 주어진 범위 내에서 이 패널의 일부가 보여지는지를 반환합니다
+   * @param {number} min Minimum value of the range to check<ko>확인하고자 하는 최소 범위</ko>
+   * @param {number} max Maximum value of the range to check<ko>확인하고자 하는 최대 범위</ko>
+   * @returns {boolean} A Boolean value indicating whether the panel is visible<ko>해당 범위 내에서 패널을 볼 수 있는지 여부</ko>
+   */
+  public isVisibleOnRange(min: number, max: number): boolean {
+    const panelRange = this.range;
+
+    return max > panelRange.min && min < panelRange.max;
   }
 
   /**

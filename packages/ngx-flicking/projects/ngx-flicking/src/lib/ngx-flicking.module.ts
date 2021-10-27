@@ -6,9 +6,7 @@ import { NgxFlickingPanel } from "./ngx-flicking-panel.directive";
 
 @NgModule({
   declarations: [NgxFlickingComponent, NgxFlickingPanel],
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   exports: [NgxFlickingComponent, NgxFlickingPanel]
 })
 export class NgxFlickingModule { }

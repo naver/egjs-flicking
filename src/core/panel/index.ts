@@ -3,17 +3,18 @@
  * egjs projects are licensed under the MIT license
  */
 import Panel, { PanelOptions } from "./Panel";
-import ElementPanel, { ElementPanelOptions } from "./ElementPanel";
 import ExternalPanel, { ExternalPanelOptions } from "./ExternalPanel";
+import VirtualPanel from "./VirtualPanel";
+
+export * from "./provider";
 
 export {
   Panel,
-  ElementPanel,
-  ExternalPanel
+  ExternalPanel,
+  VirtualPanel
 };
 
 export type {
   PanelOptions,
-  ElementPanelOptions,
   ExternalPanelOptions
 };

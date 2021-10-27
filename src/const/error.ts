@@ -25,6 +25,7 @@
  * <ko>프레임워크(React, Angular, Vue ...)에서 사용 불가능한 메소드를 호출했을 경우</ko>
  * @property {number} NOT_INITIALIZED When the {@link Flicking#init} is not called before but is needed<ko>{@link Flicking#init}의 호출이 필요하나, 아직 호출되지 않았을 경우</ko>
  * @property {number} NO_ACTIVE When there're no active panel that flicking has selected. This may be due to the absence of any panels<ko>현재 Flicking이 선택한 패널이 없을 경우. 일반적으로 패널이 하나도 없는 경우에 발생할 수 있습니다</ko>
+ * @property {number} NOT_ALLOWED_IN_VIRTUAL When the non-allowed method is called while the virtual option is enabled<ko>virtual 옵션이 활성화된 상태에서 사용 불가능한 메소드가 호출되었을 경우</ko>
  */
 export const CODE = {
   WRONG_TYPE: 0,
@@ -40,14 +41,15 @@ export const CODE = {
   ANIMATION_ALREADY_PLAYING: 10,
   NOT_ALLOWED_IN_FRAMEWORK: 11,
   NOT_INITIALIZED: 12,
-  NO_ACTIVE: 13
+  NO_ACTIVE: 13,
+  NOT_ALLOWED_IN_VIRTUAL: 14
 } as const;
 
 export const MESSAGE = {
   WRONG_TYPE: (wrongVal: any, correctTypes: string[]) => `${wrongVal}(${typeof wrongVal}) is not a ${correctTypes.map(type => `"${type}"`).join(" or ")}.`,
   ELEMENT_NOT_FOUND: (selector: string) => `Element with selector "${selector}" not found.`,
   VAL_MUST_NOT_NULL: (val: any, name: string) => `${name} should be provided. Given: ${val}`,
-  NOT_ATTACHED_TO_FLICKING: (name: string) => `${name} is not attached to the Flicking instance. "init()" should be called first.`,
+  NOT_ATTACHED_TO_FLICKING: "This module is not attached to the Flicking instance. \"init()\" should be called first.",
   WRONG_OPTION: (optionName: string, val: any) => `Option "${optionName}" is not in correct format, given: ${val}`,
   INDEX_OUT_OF_RANGE: (val: number, min: number, max: number) => `Index "${val}" is out of range: should be between ${min} and ${max}.`,
   POSITION_NOT_REACHABLE: (position: number) => `Position "${position}" is not reachable.`,
@@ -57,5 +59,6 @@ export const MESSAGE = {
   ANIMATION_ALREADY_PLAYING: "Animation is already playing.",
   NOT_ALLOWED_IN_FRAMEWORK: "This behavior is not allowed in the frameworks like React, Vue, or Angular.",
   NOT_INITIALIZED: "Flicking is not initialized yet, call init() first.",
-  NO_ACTIVE: "There's no active panel that Flicking has selected. This may be due to the absence of any panels."
+  NO_ACTIVE: "There's no active panel that Flicking has selected. This may be due to the absence of any panels.",
+  NOT_ALLOWED_IN_VIRTUAL: "This behavior is not allowed when the virtual option is enabled"
 } as const;

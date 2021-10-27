@@ -19,6 +19,7 @@ import Snap from "./features/Snap";
 import Gap from "./features/Gap";
 import Progress from "./features/Progress";
 import Bound from "./features/Bound";
+import Virtual from "./features/Virtual";
 import Parallax from "./plugins/Parallax";
 import Fade from "./plugins/Fade";
 import AutoPlay from "./plugins/AutoPlay";
@@ -54,6 +55,9 @@ export default class App extends Component<{}> {
           </Route>
           <Route path="/bound">
             <Bound />
+          </Route>
+          <Route path="/virtual">
+            <Virtual />
           </Route>
           <Route path="/parallax">
             <Parallax />

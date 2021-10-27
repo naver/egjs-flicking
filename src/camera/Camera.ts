@@ -10,7 +10,7 @@ import Panel from "../core/panel/Panel";
 import AnchorPoint from "../core/AnchorPoint";
 import * as ERROR from "../const/error";
 import { ALIGN, DIRECTION, EVENTS } from "../const/external";
-import { checkExistence, clamp, find, getFlickingAttached, getProgress, includes, parseAlign } from "../utils";
+import { checkExistence, clamp, find, getFlickingAttached, getProgress, includes, parseAlign, toArray } from "../utils";
 
 export interface CameraOptions {
   align: FlickingOptions["align"];
@@ -38,12 +38,19 @@ abstract class Camera {
 
   // Internal states getter
   /**
-   * The camera(`.flicking-camera`) element
-   * @ko 카메라(`.flicking-camera`) 엘리먼트
+   * The camera element(`.flicking-camera`)
+   * @ko 카메라 엘리먼트(`.flicking-camera`)
    * @type {HTMLElement}
    * @readonly
    */
   public get element() { return this._el; }
+  /**
+   * An array of the child elements of the camera element(`.flicking-camera`)
+   * @ko 카메라 엘리먼트(`.flicking-camera`)의 자식 엘리먼트 배열
+   * @type {HTMLElement[]}
+   * @readonly
+   */
+  public get children() { return toArray(this._el.children) as HTMLElement[]; }
   /**
    * Current position of the camera
    * @ko Camera의 현재 좌표
@@ -278,7 +285,7 @@ abstract class Camera {
     this._refreshVisiblePanels();
     this._checkNeedPanel();
     this._checkReachEnd(prevPos, pos);
-    this._applyTransform();
+    this.applyTransform();
   }
 
   /**
@@ -376,7 +383,7 @@ abstract class Camera {
    * @return {AnchorPoint | null}
    */
   public findActiveAnchor(): AnchorPoint | null {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const activeIndex = flicking.control.activeIndex;
 
     return find(this._anchors, anchor => anchor.panel.index === activeIndex);
@@ -418,7 +425,7 @@ abstract class Camera {
   public canSee(panel: Panel): boolean {
     const visibleRange = this.visibleRange;
     // Should not include margin, as we don't declare what the margin is visible as what the panel is visible.
-    return panel.includeRange(visibleRange.min, visibleRange.max, false);
+    return panel.isVisibleOnRange(visibleRange.min, visibleRange.max);
   }
 
   /**
@@ -449,7 +456,7 @@ abstract class Camera {
    * @return {this}
    */
   public updateAnchors(): this {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const panels = flicking.renderer.panels;
 
     this._anchors = panels.map((panel, index) => new AnchorPoint({
@@ -471,7 +478,7 @@ abstract class Camera {
    * @return {this}
    */
   public updateAdaptiveHeight() {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const activePanel = flicking.control.activePanel;
 
     if (!flicking.horizontal || !flicking.adaptive || !activePanel) return;
@@ -481,16 +488,24 @@ abstract class Camera {
     });
   }
 
-  public updateOffset() {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
-    const unRenderedPanels = flicking.panels.filter(panel => !panel.rendered);
+  /**
+   * Update current offset of the camera
+   * @ko 현재 카메라의 오프셋을 업데이트합니다
+   * @chainable
+   * @return {this}
+   */
+  public updateOffset(): this {
+    const flicking = getFlickingAttached(this._flicking);
     const position = this._position;
+    const unRenderedPanels = flicking.panels.filter(panel => !panel.rendered);
 
     this._offset = unRenderedPanels
       .filter(panel => panel.position + panel.offset < position)
       .reduce((offset, panel) => offset + panel.sizeIncludingMargin, 0);
 
-    this._applyTransform();
+    this.applyTransform();
+
+    return this;
   }
 
   /**
@@ -501,6 +516,25 @@ abstract class Camera {
    */
   public resetNeedPanelHistory(): this {
     this._needPanelTriggered = { prev: false, next: false };
+    return this;
+  }
+
+  /**
+   * Apply "transform" style with the current position to camera element
+   * @ko 현재 위치를 기준으로한 transform 스타일을 카메라 엘리먼트에 적용합니다.
+   * @chainable
+   * @return {this}
+   */
+  public applyTransform(): this {
+    const el = this._el;
+    const flicking = getFlickingAttached(this._flicking);
+
+    const actualPosition = this._position - this._alignPos - this._offset;
+
+    el.style[this._transform] = flicking.horizontal
+      ? `translate(${-actualPosition}px)`
+      : `translate(0, ${-actualPosition}px)`;
+
     return this;
   }
 
@@ -515,7 +549,7 @@ abstract class Camera {
   }
 
   protected _refreshVisiblePanels() {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const panels = flicking.renderer.panels;
 
     const newVisiblePanels = panels.filter(panel => this.canSee(panel));
@@ -541,7 +575,7 @@ abstract class Camera {
 
     if (needPanelTriggered.prev && needPanelTriggered.next) return;
 
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const panels = flicking.renderer.panels;
 
     if (panels.length <= 0) {
@@ -588,7 +622,7 @@ abstract class Camera {
   }
 
   protected _checkReachEnd(prevPos: number, newPos: number): void {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const range = this._range;
 
     const wasBetweenRange = prevPos > range.min && prevPos < range.max;
@@ -601,17 +635,6 @@ abstract class Camera {
     flicking.trigger(new ComponentEvent(EVENTS.REACH_EDGE, {
       direction
     }));
-  }
-
-  protected _applyTransform(): void {
-    const el = this._el;
-    const flicking = getFlickingAttached(this._flicking, "Camera");
-
-    const actualPosition = this._position - this._alignPos - this._offset;
-
-    el.style[this._transform] = flicking.horizontal
-      ? `translate(${-actualPosition}px)`
-      : `translate(0, ${-actualPosition}px)`;
   }
 
   protected _checkTranslateSupport = () => {

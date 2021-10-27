@@ -150,9 +150,9 @@ class CircularCamera extends Camera {
 
     // Check looped visible area for circular case
     if (visibleRange.min < range.min) {
-      return visibleInCurrentRange || panel.includeRange(visibleRange.min + rangeDiff, visibleRange.max + rangeDiff, false);
+      return visibleInCurrentRange || panel.isVisibleOnRange(visibleRange.min + rangeDiff, visibleRange.max + rangeDiff);
     } else if (visibleRange.max > range.max) {
-      return visibleInCurrentRange || panel.includeRange(visibleRange.min - rangeDiff, visibleRange.max - rangeDiff, false);
+      return visibleInCurrentRange || panel.isVisibleOnRange(visibleRange.min - rangeDiff, visibleRange.max - rangeDiff);
     }
 
     return visibleInCurrentRange;
@@ -168,7 +168,7 @@ class CircularCamera extends Camera {
    * @return {this}
    */
   public updateRange() {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const renderer = flicking.renderer;
 
     const panels = renderer.panels;
@@ -197,13 +197,19 @@ class CircularCamera extends Camera {
       this._range = { min: firstPanel.position, max: lastPanel.position };
     }
 
-    this._updateCircularOffset();
+    this.updateOffset();
 
     return this;
   }
 
+  public updateOffset() {
+    this._updateCircularOffset();
+
+    return super.updateOffset();
+  }
+
   public lookAt(pos: number) {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const prevPos = this._position;
 
     if (pos === prevPos) return super.lookAt(pos);
@@ -212,24 +218,26 @@ class CircularCamera extends Camera {
     const toggled = panels.map(panel => panel.toggle(prevPos, pos));
 
     this._position = pos;
+    super.lookAt(pos);
 
     if (toggled.some(isToggled => isToggled)) {
-      this._updateCircularOffset();
-      void flicking.renderer.render();
+      void flicking.renderer.render().then(() => {
+        this.updateOffset();
+      });
     }
-
-    return super.lookAt(pos);
   }
 
-  protected _applyTransform(): void {
+  public applyTransform(): this {
     const el = this._el;
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
 
     const actualPosition = this._position - this._alignPos - this._offset + this._circularOffset;
 
     el.style[this._transform] = flicking.horizontal
       ? `translate(${-actualPosition}px)`
       : `translate(0, ${-actualPosition}px)`;
+
+    return this;
   }
 
   protected _resetInternalValues() {
@@ -248,19 +256,10 @@ class CircularCamera extends Camera {
       return;
     }
 
-    const flicking = getFlickingAttached(this._flicking, "Camera");
-    const toggledPrev: Panel[] = [];
-    const toggledNext: Panel[] = [];
-
-    flicking.panels
-      .filter(panel => panel.toggled)
-      .forEach(panel => {
-        if (panel.toggleDirection === DIRECTION.PREV) {
-          toggledPrev.push(panel);
-        } else {
-          toggledNext.push(panel);
-        }
-      });
+    const flicking = getFlickingAttached(this._flicking);
+    const toggled = flicking.panels.filter(panel => panel.toggled);
+    const toggledPrev = toggled.filter(panel => panel.toggleDirection === DIRECTION.PREV);
+    const toggledNext = toggled.filter(panel => panel.toggleDirection === DIRECTION.NEXT);
 
     this._circularOffset = this._calcPanelAreaSum(toggledPrev) - this._calcPanelAreaSum(toggledNext);
   }

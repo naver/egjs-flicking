@@ -1,22 +1,29 @@
 import { ALIGN, EVENTS } from "~/const/external";
 import Panel, { PanelOptions } from "~/core/panel/Panel";
-import ElementPanel from "~/core/panel/ElementPanel";
+import VanillaElementProvider from "~/core/panel/provider/VanillaElementProvider";
 import Renderer from "~/renderer/Renderer";
-import { getFlickingAttached, toArray } from "~/utils";
+import NormalRenderingStrategy from "~/renderer/strategy/NormalRenderingStrategy";
+import { getFlickingAttached, parsePanelAlign, toArray } from "~/utils";
 
 import El from "../helper/El";
 import { createFlicking, range, waitEvent } from "../helper/test-util";
 
 class RendererImpl extends Renderer {
+  public constructor(options = {}) {
+    super({
+      strategy: new NormalRenderingStrategy({
+        providerCtor: VanillaElementProvider,
+        panelCtor: Panel
+      }),
+      ...options
+    });
+  }
+
   public async render() { return; }
   public async forceRenderAllPanels() { return; }
 
-  public updateRenderingPanels() {
-    this._updateRenderingPanels();
-  }
-
   protected _collectPanels(): void {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const flicking = getFlickingAttached(this._flicking);
 
     const cameraElement = flicking.camera.element;
 
@@ -27,17 +34,15 @@ class RendererImpl extends Renderer {
       }
     });
 
-    const align = this._getPanelAlign();
+    const align = parsePanelAlign(this._align);
     const cameraChilds = toArray(cameraElement.children);
 
     this._panels = cameraChilds.map(
-      (el: HTMLElement, index: number) => new ElementPanel({ flicking, el, index, align })
+      (el: HTMLElement, index: number) => new Panel({ flicking, elementProvider: new VanillaElementProvider(el), index, align })
     );
   }
 
-  protected _createPanel(el: any, options: PanelOptions): Panel { return new ElementPanel({ el, ...options }); }
-  protected _insertPanelElements(panels: Panel[], nextSibling: Panel | null): void {}
-  protected _removePanelElements(panels: Panel[]): void {}
+  protected _createPanel(el: any, options: PanelOptions): Panel { return new Panel({ elementProvider: new VanillaElementProvider(el), ...options }); }
 }
 
 describe("Renderer", () => {
@@ -106,7 +111,7 @@ describe("Renderer", () => {
         const prevPanelCount = renderer.panelCount;
         const element = El.panel().el;
 
-        renderer.batchInsert({ index: 2, elements: [element] });
+        renderer.batchInsert({ index: 2, elements: [element], hasDOMInElements: true });
 
         expect(renderer.panels.length).to.equal(prevPanelCount + 1);
         expect(renderer.panels[2].element).to.equal(element);
@@ -117,7 +122,7 @@ describe("Renderer", () => {
         const renderer = new RendererImpl().init(flicking);
         const elements = range(5).map(() => El.panel().el);
 
-        const returnVal = renderer.batchInsert({ index: 2, elements });
+        const returnVal = renderer.batchInsert({ index: 2, elements, hasDOMInElements: true });
 
         expect(returnVal.map(panel => panel.element)).to.deep.equal(elements);
       });
@@ -130,7 +135,7 @@ describe("Renderer", () => {
         const shouldPushed = renderer.panels.slice(1);
         const prevIndexes = shouldPushed.map(panel => panel.index);
 
-        renderer.batchInsert({ index: 1, elements: [element] });
+        renderer.batchInsert({ index: 1, elements: [element], hasDOMInElements: true });
 
         expect(shouldPushed.every((panel, idx) => panel.index === prevIndexes[idx] + 1)).to.be.true;
         // Panel 0 is not pushed
@@ -144,7 +149,7 @@ describe("Renderer", () => {
         const panelChangeSpy = sinon.spy();
 
         flicking.on(EVENTS.PANEL_CHANGE, panelChangeSpy);
-        renderer.batchInsert({ index: 1, elements: [element] });
+        renderer.batchInsert({ index: 1, elements: [element], hasDOMInElements: true });
 
         expect(panelChangeSpy.calledOnce).to.be.true;
         expect(panelChangeSpy.firstCall.args[0].added.length).to.equal(1);
@@ -157,7 +162,7 @@ describe("Renderer", () => {
         const renderer = new RendererImpl().init(flicking);
         const elements = range(5).map(() => El.panel().el);
 
-        const newPanels = renderer.batchInsert({ index: 1, elements: elements });
+        const newPanels = renderer.batchInsert({ index: 1, elements: elements, hasDOMInElements: true });
 
         expect(newPanels.every((panel, idx) => panel.index === 1 + idx)).to.be.true;
       });
@@ -168,7 +173,7 @@ describe("Renderer", () => {
         const elements = range(5).map(() => El.imgPanel().el);
         const checkPanelContentsReadySpy = sinon.spy(renderer, "checkPanelContentsReady");
 
-        const newPanels = renderer.batchInsert({ index: 1, elements: elements });
+        const newPanels = renderer.batchInsert({ index: 1, elements: elements, hasDOMInElements: true });
 
         expect(checkPanelContentsReadySpy.calledOnceWith(newPanels));
       });
@@ -181,7 +186,7 @@ describe("Renderer", () => {
         const prevPanels = [...renderer.panels];
         const prevPanelCount = renderer.panelCount;
 
-        renderer.batchRemove({ index: 1, deleteCount: 2 });
+        renderer.batchRemove({ index: 1, deleteCount: 2, hasDOMInElements: true });
 
         expect(renderer.panels.length).to.equal(prevPanelCount - 2);
         expect(renderer.panels[0]).to.equal(prevPanels[0]);
@@ -192,7 +197,7 @@ describe("Renderer", () => {
         const renderer = new RendererImpl().init(flicking);
         const prevPanels = [...renderer.panels];
 
-        const returnVal = renderer.batchRemove({ index: 2, deleteCount: 1 });
+        const returnVal = renderer.batchRemove({ index: 2, deleteCount: 1, hasDOMInElements: true });
 
         expect(returnVal.length).to.equal(1);
         expect(returnVal[0]).to.deep.equal(prevPanels[2]);
@@ -204,7 +209,7 @@ describe("Renderer", () => {
         const shouldPulled = renderer.panels[2];
         const prevIndex = shouldPulled.index;
 
-        renderer.batchRemove({ index: 0, deleteCount: 2 });
+        renderer.batchRemove({ index: 0, deleteCount: 2, hasDOMInElements: true });
 
         expect(prevIndex).to.equal(2);
         expect(shouldPulled.index).to.equal(0);
@@ -217,7 +222,7 @@ describe("Renderer", () => {
         const panelChangeSpy = sinon.spy();
 
         flicking.on(EVENTS.PANEL_CHANGE, panelChangeSpy);
-        renderer.batchRemove({ index: 1, deleteCount: 1 });
+        renderer.batchRemove({ index: 1, deleteCount: 1, hasDOMInElements: true });
 
         expect(panelChangeSpy.calledOnce).to.be.true;
         expect(panelChangeSpy.firstCall.args[0].added.length).to.equal(0);
@@ -321,7 +326,7 @@ describe("Renderer", () => {
       const renderer = new RendererImpl().init(flicking);
 
       flicking.panels.forEach(panel => panel.markForHide());
-      renderer.updateRenderingPanels();
+      renderer.strategy.updateRenderingPanels(flicking);
 
       expect(flicking.panels.every(panel => panel.rendered)).to.be.true;
     });
@@ -331,7 +336,7 @@ describe("Renderer", () => {
       const renderer = new RendererImpl().init(flicking);
 
       flicking.panels.forEach(panel => panel.markForHide());
-      renderer.updateRenderingPanels();
+      renderer.strategy.updateRenderingPanels(flicking);
 
       const nonVisible = flicking.panels.filter(panel => !flicking.visiblePanels.includes(panel));
       expect(nonVisible.length).to.be.greaterThan(0);
@@ -352,7 +357,7 @@ describe("Renderer", () => {
       const renderer = new RendererImpl().init(flicking);
 
       flicking.panels.forEach(panel => panel.markForHide());
-      renderer.updateRenderingPanels();
+      renderer.strategy.updateRenderingPanels(flicking);
 
       const nonVisibleButLoading = flicking.panels.filter(panel => !flicking.visiblePanels.includes(panel));
       expect(nonVisibleButLoading.length).to.be.greaterThan(0);

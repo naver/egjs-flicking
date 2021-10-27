@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import { Renderer2 } from "@angular/core";
-import { ExternalRenderer, Panel, PanelOptions, RendererOptions } from "@egjs/flicking";
+import {
+  ExternalRenderer,
+  getFlickingAttached,
+  PanelOptions,
+  RendererOptions
+} from "@egjs/flicking";
 
 import { NgxFlickingPanel } from "./ngx-flicking-panel.directive";
 import { NgxFlickingComponent } from "./ngx-flicking.component";
-import NgxPanel from "./NgxPanel";
 
 export interface NgxRendererOptions extends RendererOptions {
   ngxFlicking: NgxFlickingComponent;
@@ -12,7 +17,7 @@ export interface NgxRendererOptions extends RendererOptions {
 
 class NgxRenderer extends ExternalRenderer {
   // Internal States
-  protected _ngxFlicking: NgxFlickingComponent;
+  private _ngxFlicking: NgxFlickingComponent;
   private _ngxRenderer: Renderer2;
 
   public constructor(options: NgxRendererOptions) {
@@ -24,98 +29,43 @@ class NgxRenderer extends ExternalRenderer {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   public async render() {
-    const flicking = this._flicking!;
-    const cameraEl = flicking.camera.element;
-    const wasRenderedPanels = this._panels.filter(panel => panel.element.parentElement === cameraEl);
+    const flicking = getFlickingAttached(this._flicking);
+    const strategy = this._strategy;
 
-    this._updateRenderingPanels();
-    const renderingPanels = this._getRenderingPanelsByOrder();
+    strategy.updateRenderingPanels(flicking);
+    strategy.renderPanels(flicking);
 
-    this._unrenderPanelElements(wasRenderedPanels.filter(panel => !panel.rendered));
-    this._renderPanelElements(renderingPanels.filter(panel => panel.element.parentElement !== cameraEl), null);
-    this._resetPanelElementOrder(renderingPanels);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/require-await
-  public async forceRenderAllPanels() {
-    const flicking = this._flicking!;
-    const renderer = this._ngxRenderer;
-    const camera = flicking.camera;
-    const cameraElement = camera.element;
-    const fragment = document.createDocumentFragment();
-
-    this._panels.forEach(panel => renderer.appendChild(fragment, panel.element));
-
-    renderer.appendChild(cameraElement, fragment);
+    this._resetPanelElementOrder();
   }
 
   protected _collectPanels() {
-    const align = this._getPanelAlign();
+    const flicking = getFlickingAttached(this._flicking);
     const children = this._ngxFlicking.ngxPanels.toArray();
 
-    this._panels = children.map((panelComponent, index) => new NgxPanel({
-      flicking: this._flicking!,
-      index,
-      align,
-      externalComponent: panelComponent
-    }));
+    this._panels = this._strategy.collectPanels(flicking, children);
   }
 
   protected _createPanel(externalComponent: NgxFlickingPanel, options: PanelOptions) {
-    return new NgxPanel({ externalComponent, ...options });
+    return this._strategy.createPanel(externalComponent, options);
   }
 
-  private _renderPanelElements(panels: Panel[], nextSibling: Panel | null) {
-    const flicking = this._flicking!;
-    const renderer = this._ngxRenderer;
-    const camera = flicking.camera;
-    const cameraElement = camera.element;
-    const nextSiblingElement = nextSibling?.element || null;
-    const fragment = document.createDocumentFragment();
-
-    panels.forEach(panel => renderer.appendChild(fragment, panel.element));
-    renderer.insertBefore(cameraElement, fragment, nextSiblingElement);
-
-    return this;
-  }
-
-  private _unrenderPanelElements(panels: Panel[]): this {
-    const flicking = this._flicking!;
-    const renderer = this._ngxRenderer;
-    const cameraElement = flicking.camera.element;
-
-    panels
-      .filter(panel => panel.element.parentElement === cameraElement)
-      .forEach(panel => {
-        renderer.removeChild(cameraElement, panel.element);
-      });
-
-    return this;
-  }
-
-  private _resetPanelElementOrder(panels: Panel[]) {
-    const flicking = this._flicking!;
+  private _resetPanelElementOrder() {
+    const flicking = getFlickingAttached(this._flicking);
     const renderer = this._ngxRenderer;
     const cameraEl = flicking.camera.element;
 
     // We're using reversed panels here as last panel should be the last element of camera element
-    const reversedPanels = [...panels].reverse();
-    reversedPanels.forEach((panel, idx) => {
-      const nextPanel = reversedPanels[idx - 1];
-      const nextPanelEl = nextPanel ? nextPanel.element : null;
+    const reversedElements = this._strategy
+      .getRenderingElementsByOrder(flicking)
+      .reverse();
 
-      if (panel.element.nextElementSibling !== nextPanelEl) {
-        renderer.insertBefore(cameraEl, panel.element, nextPanelEl);
+    reversedElements.forEach((el, idx) => {
+      const nextEl = reversedElements[idx - 1] ? reversedElements[idx - 1] : null;
+
+      if (el.nextElementSibling !== nextEl) {
+        renderer.insertBefore(cameraEl, el, nextEl);
       }
     });
-  }
-
-  private _getRenderingPanelsByOrder(): Panel[] {
-    const flicking = this._flicking!;
-    const panels = flicking.renderer.panels;
-
-    return panels.filter(panel => panel.rendered)
-      .sort((a, b) => (a.position + a.offset) - (b.position + b.offset));
   }
 }
 

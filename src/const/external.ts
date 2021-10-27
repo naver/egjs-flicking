@@ -92,3 +92,9 @@ export const MOVE_TYPE = {
   FREE_SCROLL: "freeScroll",
   STRICT: "strict"
 } as const;
+
+export const CLASS = {
+  VERTICAL: "vertical",
+  HIDDEN: "flicking-hidden",
+  DEFAULT_VIRTUAL: "flicking-panel"
+};

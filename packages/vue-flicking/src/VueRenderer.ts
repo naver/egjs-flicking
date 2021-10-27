@@ -1,8 +1,16 @@
-import { ExternalRenderer, PanelOptions, RendererOptions } from "@egjs/flicking";
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+import {
+  ExternalRenderer,
+  getFlickingAttached,
+  PanelOptions,
+  RendererOptions
+} from "@egjs/flicking";
 
 import VueFlicking from "./Flicking";
 import VuePanel from "./VuePanel";
-import VuePanelComponent from "./VuePanelComponent";
 
 export interface VueRendererOptions extends RendererOptions {
   vueFlicking: VueFlicking;
@@ -10,7 +18,7 @@ export interface VueRendererOptions extends RendererOptions {
 
 class VueRenderer extends ExternalRenderer {
   // Internal States
-  protected _vueFlicking: VueFlicking;
+  private _vueFlicking: VueFlicking;
 
   public constructor(options: VueRendererOptions) {
     super(options);
@@ -18,43 +26,41 @@ class VueRenderer extends ExternalRenderer {
     this._vueFlicking = options.vueFlicking;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async render() {
-    const flicking = this._flicking;
+    const flicking = getFlickingAttached(this._flicking);
+    const vueFlicking = this._vueFlicking;
+    const strategy = this._strategy;
 
-    if (!flicking) return;
-
-    this._updateRenderingPanels();
-    this._vueFlicking.$forceUpdate();
+    strategy.updateRenderingPanels(flicking);
+    strategy.renderPanels(flicking);
 
     return new Promise<void>((resolve) => {
-      this._vueFlicking.$once("render", resolve);
+      vueFlicking.$once("render", resolve);
+      vueFlicking.$forceUpdate();
     });
   }
 
   public async forceRenderAllPanels() {
-    this._panels.forEach(panel => panel.markForShow());
-    this._vueFlicking.$forceUpdate();
+    const vueFlicking = this._vueFlicking;
+
+    await super.forceRenderAllPanels();
 
     return new Promise<void>((resolve) => {
-      this._vueFlicking.$once("render", resolve);
+      vueFlicking.$once("render", resolve);
+      vueFlicking.$forceUpdate();
     });
   }
 
   protected _collectPanels() {
-    const align = this._getPanelAlign();
-    const children = this._vueFlicking.$children as VuePanelComponent[];
+    const flicking = getFlickingAttached(this._flicking);
+    const vueFlicking = this._vueFlicking;
+    const vuePanels = vueFlicking.$children;
 
-    this._panels = children.map((panelComponent, index) => new VuePanel({
-      flicking: this._flicking!,
-      index,
-      align,
-      externalComponent: panelComponent
-    }));
+    this._panels = this._strategy.collectPanels(flicking, vuePanels);
   }
 
-  protected _createPanel(externalComponent: VuePanelComponent, options: PanelOptions) {
-    return new VuePanel({ externalComponent, ...options });
+  protected _createPanel(externalComponent: VuePanel, options: PanelOptions) {
+    return this._strategy.createPanel(externalComponent, options);
   }
 }
 

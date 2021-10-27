@@ -79,13 +79,13 @@ export default (flicking: Flicking, diffResult: DiffResult<any>, rendered: any[]
 
 const batchInsert = (renderer: Renderer, diffResult: DiffResult<any>, rendered: any[], startIdx: number, endIdx?: number) => {
   renderer.batchInsert(
-    ...diffResult.added.slice(startIdx, endIdx).map((index, elIdx) => ({ index, elements: [rendered[elIdx + diffResult.prevList.length]] }))
+    ...diffResult.added.slice(startIdx, endIdx).map((index, elIdx) => ({ index, elements: [rendered[elIdx + diffResult.prevList.length]], hasDOMInElements: false }))
   );
 };
 
 const batchRemove = (renderer: Renderer, startIdx: number, endIdx?: number) => {
   const removed = renderer.panels.slice(startIdx, endIdx);
 
-  renderer.batchRemove({ index: startIdx, deleteCount: removed.length });
+  renderer.batchRemove({ index: startIdx, deleteCount: removed.length, hasDOMInElements: false });
 };
 

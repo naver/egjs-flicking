@@ -23,7 +23,7 @@ class BoundCamera extends Camera {
    * @return {this}
    */
   public updateRange() {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const renderer = flicking.renderer;
     const alignPos = this._alignPos;
 
@@ -61,7 +61,7 @@ class BoundCamera extends Camera {
   }
 
   public updateAnchors(): this {
-    const flicking = getFlickingAttached(this._flicking, "Camera");
+    const flicking = getFlickingAttached(this._flicking);
     const panels = flicking.renderer.panels;
 
     if (panels.length <= 0) {

@@ -49,9 +49,9 @@ export const checkExistence = (value: any, nameOnErrMsg: string) => {
 
 export const clamp = (x: number, min: number, max: number) => Math.max(Math.min(x, max), min);
 
-export const getFlickingAttached = (val: Flicking | null, nameToThrowOnError: string): Flicking => {
+export const getFlickingAttached = (val: Flicking | null): Flicking => {
   if (!val) {
-    throw new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING(nameToThrowOnError), ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
+    throw new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING, ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
   }
 
   return val;
@@ -163,6 +163,10 @@ export const parseArithmeticExpression = (cssValue: number | string): { percenta
 
 export const parseCSSSizeValue = (val: string | number): string => isString(val) ? val : `${val}px`;
 
+export const parsePanelAlign = (align: FlickingOptions["align"]) => typeof align === "object"
+  ? (align as { panel: string | number }).panel
+  : align;
+
 export const getDirection = (start: number, end: number): ValueOf<typeof DIRECTION> => {
   if (start === end) return DIRECTION.NONE;
   return start < end ? DIRECTION.NEXT : DIRECTION.PREV;
@@ -254,6 +258,26 @@ export const getProgress = (pos: number, prev: number, next: number) => (pos - p
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 export const getStyle = (el: HTMLElement): CSSStyleDeclaration => window.getComputedStyle(el) || (el as any).currentStyle as CSSStyleDeclaration;
 
+export const setSize = (el: HTMLElement, { width, height }: Partial<{
+  width: number | string;
+  height: number | string;
+}>) => {
+  if (width != null) {
+    if (isString(width)) {
+      el.style.width = width;
+    } else {
+      el.style.width = `${width}px`;
+    }
+  }
+  if (height != null) {
+    if (isString(height)) {
+      el.style.height = height;
+    } else {
+      el.style.height = `${height}px`;
+    }
+  }
+};
+
 export const isBetween = (val: number, min: number, max: number) => val >= min && val <= max;
 
 export const circulateIndex = (index: number, max: number): number => {
@@ -264,6 +288,16 @@ export const circulateIndex = (index: number, max: number): number => {
   } else {
     return index;
   }
+};
+
+export const range = (end: number): number[] => {
+  const arr = new Array(end);
+
+  for (let i = 0; i < end; i++) {
+    arr[i] = i;
+  }
+
+  return arr;
 };
 
 export const setPrototypeOf = Object.setPrototypeOf || ((obj, proto) => {

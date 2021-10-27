@@ -1,38 +1,34 @@
 <script>
   import {
-    getContext,
-    onDestroy
+    onDestroy,
+    getContext
   } from "svelte";
   import * as uuid from "uuid-browser";
 
-  import { findIndex } from "./utils";
-
   const id = uuid.v4();
+  const sveltePanels = getContext("panels");
+
   let hidden = false;
+  let order = Number.MAX_SAFE_INTEGER;
   let element;
 
-  const flickingID = getContext("flickingID");
-  const sveltePanels = getContext(`${flickingID}-panels`);
-  const pending = getContext(`${flickingID}-pending`);
-
-  pending.push({
+  sveltePanels.add({
     show,
     hide,
     id,
-    hidden() {
-      return hidden;
+    setOrder(newOrder) {
+      order = newOrder;
     },
-    element() {
+    rendered() {
+      return !hidden;
+    },
+    nativeElement() {
       return element;
     }
   });
 
   onDestroy(() => {
-    const panelIdx = findIndex(sveltePanels, panel => panel.id === id);
-
-    if (panelIdx >= 0) {
-      sveltePanels.splice(panelIdx, 1);
-    }
+    sveltePanels.remove(id);
   });
 
   export function show() {
@@ -45,7 +41,7 @@
 </script>
 
 {#if !hidden}
-  <div bind:this={element} data-key={id} class="flicking-panel" {...$$restProps}>
+  <div bind:this={element} data-key={id} class="flicking-panel" style="order: {order}" {...$$restProps}>
     <slot />
   </div>
 {/if}

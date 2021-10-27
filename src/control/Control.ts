@@ -172,7 +172,7 @@ abstract class Control {
    * @return {Promise<void>}
    */
   public updatePosition(_progressInPanel: number): void { // eslint-disable-line @typescript-eslint/no-unused-vars
-    const flicking = getFlickingAttached(this._flicking, "Control");
+    const flicking = getFlickingAttached(this._flicking);
     const camera = flicking.camera;
     const activePanel = this._activePanel;
 
@@ -188,7 +188,7 @@ abstract class Control {
    * @return {this}
    */
   public updateInput(): this {
-    const flicking = getFlickingAttached(this._flicking, "Control");
+    const flicking = getFlickingAttached(this._flicking);
     const camera = flicking.camera;
 
     this._controller.update(camera.controlParams);
@@ -255,7 +255,7 @@ abstract class Control {
     direction?: ValueOf<typeof DIRECTION>;
     axesEvent?: OnRelease;
   }) {
-    const flicking = getFlickingAttached(this._flicking, "Control");
+    const flicking = getFlickingAttached(this._flicking);
     const camera = flicking.camera;
 
     let position = panel.position;
@@ -299,7 +299,7 @@ abstract class Control {
    * @internal
    */
   public setActive(newActivePanel: Panel, prevActivePanel: Panel | null, isTrusted: boolean) {
-    const flicking = getFlickingAttached(this._flicking, "Control");
+    const flicking = getFlickingAttached(this._flicking);
 
     this._activePanel = newActivePanel;
 
@@ -322,7 +322,7 @@ abstract class Control {
   }
 
   protected _triggerIndexChangeEvent(panel: Panel, position: number, axesEvent?: OnRelease): void {
-    const flicking = getFlickingAttached(this._flicking, "Control");
+    const flicking = getFlickingAttached(this._flicking);
     const triggeringEvent = panel !== this._activePanel ? EVENTS.WILL_CHANGE : EVENTS.WILL_RESTORE;
     const camera = flicking.camera;
     const activePanel = this._activePanel;
@@ -351,7 +351,7 @@ abstract class Control {
     newActivePanel: Panel;
     axesEvent?: OnRelease;
   }) {
-    const flicking = getFlickingAttached(this._flicking, "Control");
+    const flicking = getFlickingAttached(this._flicking);
     const animate = () => this._controller.animateTo(position, duration, axesEvent);
     const state = this._controller.state;
 

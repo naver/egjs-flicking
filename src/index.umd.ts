@@ -9,6 +9,7 @@ import * as Control from "./control";
 import * as Renderer from "./renderer";
 import * as Constants from "./const/external";
 import * as CFC from "./cfc";
+import * as Utils from "./utils";
 import { merge } from "./utils";
 
 merge(Flicking, Core);
@@ -17,5 +18,6 @@ merge(Flicking, Control);
 merge(Flicking, Renderer);
 merge(Flicking, Constants);
 merge(Flicking, CFC);
+merge(Flicking, Utils);
 
 export default Flicking;

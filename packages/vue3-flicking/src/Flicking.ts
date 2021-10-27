@@ -1,55 +1,62 @@
-/**
+/*
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-/* eslint-disable max-classes-per-file */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Vue, Options, prop, VueConstructor } from "vue-class-component";
+import { h, VNode, resolveComponent, Fragment, getCurrentInstance } from "vue";
+import { Vue, Options, VueConstructor } from "vue-class-component";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
-import { h, VNode, resolveComponent, Fragment } from "vue";
+import Component from "@egjs/component";
 import VanillaFlicking, {
   EVENTS,
-  FlickingOptions,
   withFlickingMethods,
   sync,
   Plugin,
-  Status,
   getRenderingPanels,
-  getDefaultCameraTransform
+  getDefaultCameraTransform,
+  range,
+  VirtualRenderingStrategy,
+  NormalRenderingStrategy,
+  ExternalPanel
 } from "@egjs/flicking";
 
-import VueRenderer from "./VueRenderer";
-import VuePanelComponent from "./VuePanelComponent";
-
-class FlickingProps {
-  viewportTag = prop<string>({ required: false, default: "div" });
-  cameraTag = prop<string>({ required: false, default: "div" });
-  hideBeforeInit = prop<boolean>({ required: false, default: false });
-  firstPanelSize = prop<string>({ required: false });
-  options = prop<Partial<FlickingOptions>>({ required: false, default: {} });
-  plugins = prop<Plugin[]>({ required: false, default: [] });
-  status = prop<Status>({ required: false });
-}
+import FlickingProps from "./FlickingProps";
+import VueRenderer, { VueRendererOptions } from "./VueRenderer";
+import VuePanel from "./VuePanel";
+import VueElementProvider from "./VueElementProvider";
 
 @Options({
   components: {
-    Panel: VuePanelComponent
+    Panel: VuePanel
   }
 })
 class Flicking extends Vue.with(FlickingProps) {
+  public readonly renderEmitter = new Component<{ render: void }>();
+
   @withFlickingMethods private vanillaFlicking: VanillaFlicking | null = null;
   private pluginsDiffer!: ListDiffer<Plugin>;
   private slotDiffer!: ListDiffer<VNode>;
   private diffResult?: DiffResult<VNode> = undefined;
 
   public mounted() {
+    const options = this.options;
     const viewportEl = this.$el as HTMLElement;
+    const rendererOptions: VueRendererOptions = {
+      vueFlicking: this,
+      strategy: options.virtual && (options.panelsPerView ?? -1) > 0
+        ? new VirtualRenderingStrategy()
+        : new NormalRenderingStrategy({
+          providerCtor: VueElementProvider,
+          panelCtor: ExternalPanel
+        })
+    };
+
     const flicking = new VanillaFlicking(viewportEl, {
       ...this.options,
       ...{ renderExternal: {
         renderer: VueRenderer,
-        rendererOptions: { vueFlicking: this }
+        rendererOptions
       }}
     });
     this.vanillaFlicking = flicking;
@@ -62,8 +69,9 @@ class Flicking extends Vue.with(FlickingProps) {
     this.slotDiffer = new ListDiffer<VNode>(slots, vnode => vnode.key! as string | number);
     this.pluginsDiffer = new ListDiffer<Plugin>();
 
-    this._bindEvents();
-    this._checkPlugins();
+    this.bindEvents();
+    this.checkPlugins();
+
     if (this.status) {
       flicking.setStatus(this.status);
     }
@@ -74,32 +82,38 @@ class Flicking extends Vue.with(FlickingProps) {
   }
 
   public beforeMount() {
-    this._fillKeys();
+    this.fillKeys();
   }
 
   public beforeUpdate() {
-    this._fillKeys();
+    this.fillKeys();
+
+    this.diffResult = this.slotDiffer.update(this.getSlots());
   }
 
   public updated() {
     const flicking = this.vanillaFlicking;
     const diffResult = this.diffResult;
 
-    if (!diffResult) return;
+    this.checkPlugins();
+    this.renderEmitter.trigger("render");
 
-    const children = (this.$.subTree as any).children[0].children.map((c: any) => c.component.ctx);
+    if (!diffResult || !flicking?.initialized) return;
 
-    sync(flicking!, diffResult, children);
+    const children = this.getChildren();
 
-    this._checkPlugins();
+    sync(flicking, diffResult, children);
 
     if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
       this.$forceUpdate();
     }
+
+    this.diffResult = undefined;
   }
 
   public render() {
     const flicking = this.vanillaFlicking;
+    const options = this.options;
     const initialized = flicking && flicking.initialized;
     const isHorizontal = flicking
       ? flicking.horizontal
@@ -121,30 +135,16 @@ class Flicking extends Vue.with(FlickingProps) {
         : {}
     };
 
-    const getPanels = () => {
-      const defaultSlots = this.getSlots();
-      this.diffResult = initialized
-        ? this.slotDiffer.update(defaultSlots)
-        : undefined;
-
-      const slots = this.diffResult
-        ? getRenderingPanels(flicking!, this.diffResult)
-        : defaultSlots;
-      const panelComponent = resolveComponent("Panel");
-      const panels = slots.map((slot, idx) => h(panelComponent as any, {
-        key: slot.key!,
-        ref: idx.toString()
-      }, () => slot));
-
-      return panels;
-    };
+    const panels = options.virtual && options.panelsPerView && options.panelsPerView > 0
+      ? this.getVirtualPanels
+      : this.getPanels;
 
     const viewportSlots = this.$slots.viewport
       ? this.$slots.viewport()
       : [];
 
     return h(this.viewportTag, viewportData,
-      [h(this.cameraTag, cameraData, { default: getPanels }), ...viewportSlots]
+      [h(this.cameraTag, cameraData, { default: panels }), ...viewportSlots]
     );
   }
 
@@ -168,7 +168,7 @@ class Flicking extends Vue.with(FlickingProps) {
     return childSlots;
   }
 
-  private _bindEvents() {
+  private bindEvents() {
     const flicking = this.vanillaFlicking;
     const events = (Object.keys(EVENTS) as Array<keyof typeof EVENTS>)
       .map(key => EVENTS[key]);
@@ -182,14 +182,14 @@ class Flicking extends Vue.with(FlickingProps) {
     });
   }
 
-  private _checkPlugins() {
+  private checkPlugins() {
     const { list, added, removed, prevList } = this.pluginsDiffer.update(this.plugins);
 
     this.vanillaFlicking!.addPlugins(...added.map(index => list[index]));
     this.vanillaFlicking!.removePlugins(...removed.map(index => prevList[index]));
   }
 
-  private _fillKeys() {
+  private fillKeys() {
     const vnodes = this.getSlots();
 
     vnodes.forEach((node, idx) => {
@@ -198,6 +198,63 @@ class Flicking extends Vue.with(FlickingProps) {
       }
     });
   }
+
+  private getChildren() {
+    const childRefs = this.$refs;
+
+    return Object.keys(childRefs).map(refKey => childRefs[refKey]);
+  }
+
+  private getPanels = () => {
+    const componentInstance = getCurrentInstance() as unknown as { ctx: Flicking } | null;
+    const vueFlicking = componentInstance?.ctx;
+    const flicking = this.vanillaFlicking;
+    const defaultSlots = this.getSlots();
+    const diffResult = vueFlicking?.diffResult;
+
+    const slots = diffResult
+      ? getRenderingPanels(flicking!, diffResult)
+      : defaultSlots;
+
+    const panelComponent = resolveComponent("Panel");
+    const panels = slots.map((slot, idx) => h(panelComponent as any, {
+      key: slot.key!,
+      ref: idx.toString()
+    }, () => slot));
+
+    return panels;
+  };
+
+  private getVirtualPanels = () => {
+    const options = this.options;
+    const {
+      panelClass = "flicking-panel"
+    } = options.virtual!;
+    const panelsPerView = options.panelsPerView!;
+    const flicking = this.vanillaFlicking;
+    const initialized = flicking && flicking.initialized;
+
+    const renderingIndexes = initialized
+      ? flicking.renderer.strategy.getRenderingIndexesByOrder(flicking)
+      : range(panelsPerView + 1);
+
+    const firstPanel = initialized && flicking.panels[0];
+    const size = firstPanel
+      ? flicking.horizontal
+        ? { width: firstPanel.size }
+        : { height: firstPanel.size }
+      : {};
+
+    return renderingIndexes.map(idx => h("div", {
+      key: idx,
+      ref: idx.toString(),
+      class: panelClass,
+      style: size,
+      domProps: {
+        "data-element-index": idx
+      }
+    }));
+  };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

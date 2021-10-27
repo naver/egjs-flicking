@@ -1,8 +1,12 @@
-import { ExternalRenderer, PanelOptions, RendererOptions } from "@egjs/flicking";
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+import { ExternalRenderer, PanelOptions, RendererOptions, getFlickingAttached } from "@egjs/flicking";
 
 import ReactFlicking from "./Flicking";
-import ReactPanel from "./ReactPanel";
-import NonStrictPanelComponent from "./NonStrictPanelComponent";
+import StrictPanel from "./StrictPanel";
+import NonStrictPanel from "./NonStrictPanel";
 
 export interface ReactRendererOptions extends RendererOptions {
   reactFlicking: ReactFlicking;
@@ -20,46 +24,40 @@ class ReactRenderer extends ExternalRenderer {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   public async render() {
-    const flicking = this._flicking;
+    const flicking = getFlickingAttached(this._flicking);
     const reactFlicking = this._reactFlicking;
+    const strategy = this._strategy;
 
-    if (!flicking || !reactFlicking.mounted) return;
-
-    this._updateRenderingPanels();
+    strategy.updateRenderingPanels(flicking);
+    strategy.renderPanels(flicking);
 
     return new Promise<void>(resolve => {
-      reactFlicking.setRenderCallback(resolve);
-      reactFlicking.setState({});
+      reactFlicking.renderEmitter.once("render", resolve);
+      reactFlicking.forceUpdate();
     });
   }
 
   public async forceRenderAllPanels() {
     const reactFlicking = this._reactFlicking;
 
-    if (!reactFlicking.mounted) return;
-
-    this._panels.forEach(panel => panel.markForShow());
+    await super.forceRenderAllPanels();
 
     return new Promise<void>(resolve => {
-      reactFlicking.setRenderCallback(resolve);
-      reactFlicking.setState({});
+      reactFlicking.renderEmitter.once("render", resolve);
+      reactFlicking.forceUpdate();
     });
   }
 
   protected _collectPanels() {
-    const align = this._getPanelAlign();
-    const children = this._reactFlicking.reactPanels;
+    const flicking = getFlickingAttached(this._flicking);
+    const reactFlicking = this._reactFlicking;
+    const reactPanels = reactFlicking.reactPanels;
 
-    this._panels = children.map((panelComponent, index) => new ReactPanel({
-      flicking: this._flicking!,
-      index,
-      align,
-      externalComponent: panelComponent
-    }));
+    this._panels = this._strategy.collectPanels(flicking, reactPanels);
   }
 
-  protected _createPanel(externalComponent: NonStrictPanelComponent, options: PanelOptions) {
-    return new ReactPanel({ externalComponent, ...options });
+  protected _createPanel(externalComponent: StrictPanel | NonStrictPanel | HTMLDivElement, options: PanelOptions) {
+    return this._strategy.createPanel(externalComponent, options);
   }
 }
 

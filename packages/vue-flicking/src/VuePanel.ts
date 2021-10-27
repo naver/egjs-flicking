@@ -1,17 +1,19 @@
-import { ExternalPanel } from "@egjs/flicking";
+/*
+ * Copyright (c) 2015 NAVER Corp.
+ * egjs projects are licensed under the MIT license
+ */
+import { Component, Vue } from "vue-property-decorator";
 
-import VuePanelComponent from "./VuePanelComponent";
+@Component({})
+class VuePanel extends Vue {
+  public hide = false;
 
-class VuePanel extends ExternalPanel<VuePanelComponent> {
-  public get element() { return this._externalComponent.$el as HTMLElement; }
-  public get rendered() { return !this._externalComponent.hide; }
+  public get nativeElement() { return this.$el as HTMLElement; }
 
-  public markForShow() {
-    this._externalComponent.hide = false;
-  }
-
-  public markForHide() {
-    this._externalComponent.hide = true;
+  public render() {
+    return this.hide
+      ? undefined
+      : this.$slots.default ?? [];
   }
 }
 

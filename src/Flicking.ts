@@ -8,9 +8,11 @@ import FlickingError from "./core/FlickingError";
 import Viewport from "./core/Viewport";
 import AutoResizer from "./core/AutoResizer";
 import { Panel } from "./core/panel";
+import { VanillaElementProvider } from "./core/panel/provider";
+import VirtualManager, { VirtualOptions } from "./core/VirtualManager";
 import { Control, SnapControl, SnapControlOptions, FreeControl, StrictControl, FreeControlOptions, StrictControlOptions } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
-import { Renderer, VanillaRenderer, ExternalRenderer } from "./renderer";
+import { Renderer, VanillaRenderer, ExternalRenderer, RendererOptions, NormalRenderingStrategy, VirtualRenderingStrategy } from "./renderer";
 import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
 import * as ERROR from "./const/error";
 import { findIndex, getElement, includes, parseElement } from "./utils";
@@ -73,13 +75,14 @@ export interface FlickingOptions {
   disableOnInit: boolean;
   // PERFORMANCE
   renderOnlyVisible: boolean;
+  virtual: VirtualOptions | null;
   // OTHERS
   autoInit: boolean;
   autoResize: boolean;
   useResizeObserver: boolean;
   renderExternal: {
-    renderer: typeof ExternalRenderer;
-    rendererOptions: {[key: string]: any};
+    renderer: new (options: RendererOptions) => ExternalRenderer;
+    rendererOptions: RendererOptions;
   } | null;
 }
 
@@ -108,6 +111,7 @@ class Flicking extends Component<FlickingEvents> {
   private _camera: Camera;
   private _control: Control;
   private _renderer: Renderer;
+  private _virtualManager: VirtualManager;
 
   // Options
   private _align: FlickingOptions["align"];
@@ -119,6 +123,7 @@ class Flicking extends Component<FlickingEvents> {
   private _panelsPerView: FlickingOptions["panelsPerView"];
   private _noPanelStyleOverride: FlickingOptions["noPanelStyleOverride"];
   private _resizeOnContentsReady: FlickingOptions["resizeOnContentsReady"];
+  private _virtual: FlickingOptions["virtual"];
 
   private _needPanelThreshold: FlickingOptions["needPanelThreshold"];
   private _preventEventsBeforeInit: FlickingOptions["preventEventsBeforeInit"];
@@ -211,6 +216,16 @@ class Flicking extends Component<FlickingEvents> {
    * @readonly
    */
   public get circularEnabled() { return this._camera.controlParams.circular; }
+  /**
+   * Whether the `virtual` option is enabled.
+   * The {@link Flicking#virtual virtual} option can't be enabled when  {@link Flicking#panelsPerView panelsPerView} is less or equal than zero.
+   * @ko {@link Flicking#virtual virtual} 옵션이 활성화되었는지 여부를 나타내는 멤버 변수.
+   * {@link Flicking#virtual virtual} 옵션은 {@link Flicking#panelsPerView panelsPerView} 옵션의 값이 0보다 같거나 작으면 비활성화됩니다.
+   * @type {boolean}
+   * @default false
+   * @readonly
+   */
+  public get virtualEnabled() { return this._panelsPerView > 0 && this._virtual != null; }
   /**
    * Index number of the {@link Flicking#currentPanel currentPanel}
    * @ko {@link Flicking#currentPanel currentPanel}의 인덱스 번호
@@ -525,6 +540,39 @@ class Flicking extends Component<FlickingEvents> {
    * @default false
    */
   public get renderOnlyVisible() { return this._renderOnlyVisible; }
+  /**
+   * By enabling this option, it will reduce memory consumption by restricting the number of DOM elements to `panelsPerView + 1`
+   * Must be used with `panelsPerview`.
+   * After Flicking's initialized, this property can be used to add/remove the panel count.
+   * @ko 이 옵션을 활성화할 경우 패널 엘리먼트의 개수를 `panelsPerView + 1` 개로 고정함으로써, 메모리 사용량을 줄일 수 있습니다.
+   * `panelsPerView` 옵션과 함께 사용되어야만 합니다.
+   * Flicking 초기화 이후에, 이 프로퍼티는 렌더링하는 패널의 개수를 추가/제거하기 위해 사용될 수 있습니다.
+   * @type {VirtualManager}
+   * @property {function} renderPanel A rendering function for the panel element's innerHTML<ko>패널 엘리먼트의 innerHTML을 렌더링하는 함수</ko>
+   * @property {number} initialPanelCount Initial panel count to render<ko>최초로 렌더링할 패널의 개수</ko>
+   * @property {boolean} [cache=false] Whether to cache rendered panel's innerHTML<ko>렌더링된 패널의 innerHTML 정보를 캐시할지 여부</ko>
+   * @property {string} [panelClass="flicking-panel"] The class name that will be applied to rendered panel elements<ko>렌더링되는 패널 엘리먼트에 적용될 클래스 이름</ko>
+   * @example
+   * ```ts
+   * import Flicking, { VirtualPanel } from "@egjs/flicking";
+   *
+   * const flicking = new Flicking("#some_el", {
+   *   panelsPerView: 3,
+   *   virtual: {
+   *     renderPanel: (panel: VirtualPanel, index: number) => `Panel ${index}`,
+   *     initialPanelCount: 100
+   *   }
+   * });
+   *
+   * // Add 100 virtual panels (at the end)
+   * flicking.virtual.append(100);
+   *
+   * // Remove 100 virtual panels from 0 to 100
+   * flicking.virtual.remove(0, 100);
+   * ```
+   */
+  public get virtual() { return this._virtualManager; }
+
   // OTHERS
   /**
    * Call {@link Flicking#init init()} automatically when creating Flicking's instance
@@ -678,6 +726,7 @@ class Flicking extends Component<FlickingEvents> {
     preventClickOnDrag = true,
     disableOnInit = false,
     renderOnlyVisible = false,
+    virtual = null,
     autoInit = true,
     autoResize = true,
     useResizeObserver = true,
@@ -699,6 +748,7 @@ class Flicking extends Component<FlickingEvents> {
     this._panelsPerView = panelsPerView;
     this._noPanelStyleOverride = noPanelStyleOverride;
     this._resizeOnContentsReady = resizeOnContentsReady;
+    this._virtual = virtual;
     this._needPanelThreshold = needPanelThreshold;
     this._preventEventsBeforeInit = preventEventsBeforeInit;
     this._deceleration = deceleration;
@@ -724,6 +774,7 @@ class Flicking extends Component<FlickingEvents> {
     this._renderer = this._createRenderer();
     this._camera = this._createCamera();
     this._control = this._createControl();
+    this._virtualManager = new VirtualManager(this, virtual);
 
     if (this._autoInit) {
       void this.init();
@@ -744,10 +795,12 @@ class Flicking extends Component<FlickingEvents> {
     const camera = this._camera;
     const renderer = this._renderer;
     const control = this._control;
+    const virtualManager = this._virtualManager;
     const originalTrigger = this.trigger;
     const preventEventsBeforeInit = this._preventEventsBeforeInit;
 
     camera.init(this);
+    virtualManager.init();
     renderer.init(this);
     control.init(this);
 
@@ -977,7 +1030,7 @@ class Flicking extends Component<FlickingEvents> {
    * @param {boolean} [options.includePanelHTML=false] Include panel's `outerHTML` to the returning status<ko>패널의 `outerHTML`을 반환값에 포함시킵니다</ko>
    * @param {boolean} [options.visiblePanelsOnly=false] Include only {@link Flicking#visiblePanel visiblePanel}'s HTML. This option is available only when the `includePanelHTML` is true
    * <ko>현재 보이는 패널({@link Flicking#visiblePanel visiblePanel})의 HTML만 반환합니다. `includePanelHTML`이 `true`일 경우에만 동작합니다.</ko>
-   * @return {Partial<Status>} An object with current status value information<ko>현재 상태값 정보를 가진 객체.</ko>
+   * @return {Status} An object with current status value information<ko>현재 상태값 정보를 가진 객체.</ko>
    */
   public getStatus({
     index = true,
@@ -1052,8 +1105,8 @@ class Flicking extends Component<FlickingEvents> {
 
     // Can't add/remove panels on external rendering
     if (panels[0]?.html && !this._renderExternal) {
-      renderer.batchRemove({ index: 0, deleteCount: this.panels.length });
-      renderer.batchInsert({ index: 0, elements: parseElement(panels.map(panel => panel.html!)) });
+      renderer.batchRemove({ index: 0, deleteCount: this.panels.length, hasDOMInElements: true });
+      renderer.batchInsert({ index: 0, elements: parseElement(panels.map(panel => panel.html!)), hasDOMInElements: true });
     }
 
     if (index) {
@@ -1245,7 +1298,7 @@ class Flicking extends Component<FlickingEvents> {
       throw new FlickingError(ERROR.MESSAGE.NOT_ALLOWED_IN_FRAMEWORK, ERROR.CODE.NOT_ALLOWED_IN_FRAMEWORK);
     }
 
-    return this._renderer.batchInsert({ index, elements: parseElement(element) });
+    return this._renderer.batchInsert({ index, elements: parseElement(element), hasDOMInElements: true });
   }
 
   /**
@@ -1262,7 +1315,7 @@ class Flicking extends Component<FlickingEvents> {
       throw new FlickingError(ERROR.MESSAGE.NOT_ALLOWED_IN_FRAMEWORK, ERROR.CODE.NOT_ALLOWED_IN_FRAMEWORK);
     }
 
-    return this._renderer.batchRemove({ index, deleteCount });
+    return this._renderer.batchRemove({ index, deleteCount, hasDOMInElements: true });
   }
 
   private _createControl(): Control {
@@ -1308,15 +1361,39 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   private _createRenderer(): Renderer {
-    const rendererOptions = {
-      align: this._align
-    };
-
     const renderExternal = this._renderExternal;
 
+    if (this._virtual && this._panelsPerView <= 0) {
+      // eslint-disable-next-line no-console
+      console.warn("\"virtual\" and \"panelsPerView\" option should be used together, ignoring virtual.");
+    }
+
     return renderExternal
-      ? new (renderExternal.renderer as any)({ ...rendererOptions, ...renderExternal.rendererOptions })
-      : new VanillaRenderer(rendererOptions);
+      ? this._createExternalRenderer()
+      : this._createVanillaRenderer();
+  }
+
+  private _createVanillaRenderer(): VanillaRenderer {
+    const virtual = this.virtualEnabled;
+
+    return new VanillaRenderer({
+      align: this._align,
+      strategy: virtual
+        ? new VirtualRenderingStrategy()
+        : new NormalRenderingStrategy({
+          providerCtor: VanillaElementProvider,
+          panelCtor: Panel
+        })
+    });
+  }
+
+  private _createExternalRenderer(): ExternalRenderer {
+    const {
+      renderer,
+      rendererOptions
+    } = this._renderExternal!;
+
+    return new (renderer)({ align: this._align, ...rendererOptions });
   }
 
   private async _moveToInitialPanel(): Promise<void> {

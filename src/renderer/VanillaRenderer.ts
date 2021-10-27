@@ -4,7 +4,6 @@
  */
 import { getFlickingAttached, toArray } from "../utils";
 import Panel, { PanelOptions } from "../core/panel/Panel";
-import ElementPanel from "../core/panel/ElementPanel";
 
 import Renderer from "./Renderer";
 
@@ -14,35 +13,47 @@ import Renderer from "./Renderer";
 class VanillaRenderer extends Renderer {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async render() {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
-    const cameraEl = flicking.camera.element;
-    const wasRenderedPanels = this._panels.filter(panel => panel.element.parentElement === cameraEl);
+    const flicking = getFlickingAttached(this._flicking);
+    const strategy = this._strategy;
 
-    this._updateRenderingPanels();
-    const renderingPanels = this._getRenderingPanelsByOrder();
+    strategy.updateRenderingPanels(flicking);
+    strategy.renderPanels(flicking);
 
-    this._removePanelElements(wasRenderedPanels.filter(panel => !panel.rendered));
-    this._insertPanelElements(renderingPanels.filter(panel => panel.element.parentElement !== cameraEl), null);
-    this._resetPanelElementOrder(renderingPanels);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/require-await
-  public async forceRenderAllPanels() {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
-    const camera = flicking.camera;
-    const cameraElement = camera.element;
-    const fragment = document.createDocumentFragment();
-
-    this._panels.forEach(panel => fragment.appendChild(panel.element));
-
-    this._removeAllChildsFromCamera();
-
-    cameraElement.appendChild(fragment);
+    this._resetPanelElementOrder();
   }
 
   protected _collectPanels() {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
+    const flicking = getFlickingAttached(this._flicking);
+    const camera = flicking.camera;
 
+    this._removeAllTextNodes();
+    this._panels = this._strategy.collectPanels(flicking, camera.children);
+  }
+
+  protected _createPanel(el: HTMLElement, options: Omit<PanelOptions, "elementProvider">): Panel {
+    return this._strategy.createPanel(el, options);
+  }
+
+  private _resetPanelElementOrder() {
+    const flicking = getFlickingAttached(this._flicking);
+    const cameraEl = flicking.camera.element;
+
+    // We're using reversed panels here as last panel should be the last element of camera element
+    const reversedElements = this._strategy
+      .getRenderingElementsByOrder(flicking)
+      .reverse();
+
+    reversedElements.forEach((el, idx) => {
+      const nextEl = reversedElements[idx - 1] ? reversedElements[idx - 1] : null;
+
+      if (el.nextElementSibling !== nextEl) {
+        cameraEl.insertBefore(el, nextEl);
+      }
+    });
+  }
+
+  private _removeAllTextNodes() {
+    const flicking = getFlickingAttached(this._flicking);
     const cameraElement = flicking.camera.element;
 
     // Remove all text nodes in the camera element
@@ -51,75 +62,6 @@ class VanillaRenderer extends Renderer {
         cameraElement.removeChild(node);
       }
     });
-
-    const align = this._getPanelAlign();
-    const cameraChilds = toArray(cameraElement.children);
-
-    this._panels = cameraChilds.map(
-      (el: HTMLElement, index: number) => new ElementPanel({ flicking, el, index, align })
-    );
-  }
-
-  protected _createPanel(el: HTMLElement, options: PanelOptions): ElementPanel {
-    return new ElementPanel({ el, ...options });
-  }
-
-  protected _insertPanelElements(panels: Panel[], nextSibling: Panel | null) {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
-    const camera = flicking.camera;
-    const cameraElement = camera.element;
-    const nextSiblingElement = nextSibling?.element || null;
-    const fragment = document.createDocumentFragment();
-
-    panels.forEach(panel => fragment.appendChild(panel.element));
-    cameraElement.insertBefore(fragment, nextSiblingElement);
-
-    return this;
-  }
-
-  protected _removePanelElements(panels: Panel[]): this {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
-    const cameraElement = flicking.camera.element;
-
-    panels.forEach(panel => {
-      cameraElement.removeChild(panel.element);
-    });
-
-    return this;
-  }
-
-  private _resetPanelElementOrder(panels: Panel[]) {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
-    const cameraEl = flicking.camera.element;
-
-    // We're using reversed panels here as last panel should be the last element of camera element
-    const reversedPanels = [...panels].reverse();
-    reversedPanels.forEach((panel, idx) => {
-      const nextPanel = reversedPanels[idx - 1];
-      const nextPanelEl = nextPanel ? nextPanel.element : null;
-
-      if (panel.element.nextElementSibling !== nextPanelEl) {
-        cameraEl.insertBefore(panel.element, nextPanelEl);
-      }
-    });
-  }
-
-  private _removeAllChildsFromCamera() {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
-    const cameraElement = flicking.camera.element;
-
-    // Remove other elements
-    while (cameraElement.firstChild) {
-      cameraElement.removeChild(cameraElement.firstChild);
-    }
-  }
-
-  private _getRenderingPanelsByOrder(): Panel[] {
-    const flicking = getFlickingAttached(this._flicking, "Renderer");
-    const panels = flicking.renderer.panels;
-
-    return panels.filter(panel => panel.rendered)
-      .sort((a, b) => (a.position + a.offset) - (b.position + b.offset));
   }
 }
 
