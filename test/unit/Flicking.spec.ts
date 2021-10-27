@@ -6,7 +6,7 @@ import { ALIGN, DIRECTION, EVENTS, MOVE_TYPE } from "~/const/external";
 import { AfterResizeEvent, BeforeResizeEvent } from "~/type/event";
 
 import El from "./helper/El";
-import { cleanup, createFlicking, range, simulate, tick } from "./helper/test-util";
+import { cleanup, createFlicking, range, simulate, tick, waitEvent } from "./helper/test-util";
 import { Plugin } from "~/type/external";
 import { SnapControl, FreeControl, StrictControl } from "~/control";
 
@@ -485,9 +485,11 @@ describe("Flicking", () => {
 
         expect(flicking.autoResize).to.be.true;
       });
+    });
 
-      it("should receive window resize event and emit resize event", async () => {
-        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoResize: true });
+    describe("useResizeObserver", () => {
+      it("should receive window resize event and emit resize event if set to false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoResize: true, useResizeObserver: false });
         const resizeSpy = sinon.spy();
         flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
 
@@ -501,8 +503,8 @@ describe("Flicking", () => {
         });
       });
 
-      it("should not attach resize event until init() is called", async () => {
-        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false, autoResize: true });
+      it("should not attach resize event until init() is called if set to false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false, autoResize: true, useResizeObserver: false });
         const resizeSpy = sinon.spy();
         flicking.on(EVENTS.BEFORE_RESIZE, resizeSpy);
 

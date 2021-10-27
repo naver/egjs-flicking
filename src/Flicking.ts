@@ -6,6 +6,7 @@ import Component, { ComponentEvent } from "@egjs/component";
 
 import FlickingError from "./core/FlickingError";
 import Viewport from "./core/Viewport";
+import AutoResizer from "./core/AutoResizer";
 import { Panel } from "./core/panel";
 import { Control, SnapControl, SnapControlOptions, FreeControl, StrictControl, FreeControlOptions, StrictControlOptions } from "./control";
 import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
@@ -75,6 +76,7 @@ export interface FlickingOptions {
   // OTHERS
   autoInit: boolean;
   autoResize: boolean;
+  useResizeObserver: boolean;
   renderExternal: {
     renderer: typeof ExternalRenderer;
     rendererOptions: {[key: string]: any};
@@ -102,6 +104,7 @@ class Flicking extends Component<FlickingEvents> {
 
   // Core components
   private _viewport: Viewport;
+  private _autoResizer: AutoResizer;
   private _camera: Camera;
   private _control: Control;
   private _renderer: Renderer;
@@ -135,8 +138,9 @@ class Flicking extends Component<FlickingEvents> {
 
   private _renderOnlyVisible: FlickingOptions["renderOnlyVisible"];
 
-  private _autoResize: FlickingOptions["autoResize"];
   private _autoInit: FlickingOptions["autoInit"];
+  private _autoResize: FlickingOptions["autoResize"];
+  private _useResizeObserver: FlickingOptions["useResizeObserver"];
   private _renderExternal: FlickingOptions["renderExternal"];
 
   // Internal State
@@ -515,8 +519,8 @@ class Flicking extends Component<FlickingEvents> {
   public get disableOnInit() { return this._disableOnInit; }
   // PERFORMANCE
   /**
-   * Whether to render visible panels only. This can dramatically increase performance when there're many panels.
-   * @ko 보이는 패널만 렌더링할지 여부를 설정합니다. 패널이 많을 경우에 퍼포먼스를 크게 향상시킬 수 있습니다.
+   * Whether to render visible panels only. This can dramatically increase performance when there're many panels
+   * @ko 보이는 패널만 렌더링할지 여부를 설정합니다. 패널이 많을 경우에 퍼포먼스를 크게 향상시킬 수 있습니다
    * @type {boolean}
    * @default false
    */
@@ -531,14 +535,19 @@ class Flicking extends Component<FlickingEvents> {
    */
   public get autoInit() { return this._autoInit; }
   /**
-   * Attach Flicking's {@link Flicking#resize resize} method to window's resize event.
-   * Flicking will automatically call {@link Flicking#resize resize} window size and orientation change.
-   * @ko Flicking의 {@link Flicking#resize resize} 메소드를 window의 resize 이벤트 핸들러로 등록합니다.
-   * 설정시 window 창 크기 및 orientation 변경에 의해 자동으로 {@link Flicking#resize resize}를 호출합니다.
+   * Whether to automatically call {@link Flicking#resize resize()} when the viewport element(.flicking-viewport)'s size is changed
+   * @ko 뷰포트 엘리먼트(.flicking-viewport)의 크기 변경시 {@link Flicking#resize resize()} 메소드를 자동으로 호출할지 여부를 설정합니다
    * @type {boolean}
    * @default true
    */
   public get autoResize() { return this._autoResize; }
+  /**
+   * Whether to listen {@link https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver ResizeObserver}'s event instead of Window's {@link https://developer.mozilla.org/ko/docs/Web/API/Window/resize_event resize} event when using the `autoResize` option
+   * @ko autoResize 옵션 사용시 {@link https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver ResizeObserver}의 이벤트를 Window객체의 {@link https://developer.mozilla.org/ko/docs/Web/API/Window/resize_event resize} 이벤트 대신 수신할지 여부를 설정합니다
+   * @type {boolean}
+   * @default true
+   */
+  public get useResizeObserver() { return this._useResizeObserver; }
   /**
    * This is an option for the frameworks(React, Vue, Angular, ...). Don't set it as it's automatically managed by Flicking.
    * @ko 프레임워크(React, Vue, Angular, ...)에서만 사용하는 옵션으로, 자동으로 설정되므로 따로 사용하실 필요 없습니다!
@@ -599,7 +608,23 @@ class Flicking extends Component<FlickingEvents> {
   // PERFORMANCE
   public set renderOnlyVisible(val: FlickingOptions["renderOnlyVisible"]) { this._renderOnlyVisible = val; }
   // OTHERS
-  public set autoResize(val: FlickingOptions["autoResize"]) { this._autoResize = val; }
+  public set autoResize(val: FlickingOptions["autoResize"]) {
+    this._autoResize = val;
+
+    if (val) {
+      this._autoResizer.enable();
+    } else {
+      this._autoResizer.disable();
+    }
+  }
+
+  public set useResizeObserver(val: FlickingOptions["useResizeObserver"]) {
+    this._useResizeObserver = val;
+
+    if (this._autoResize) {
+      this._autoResizer.enable();
+    }
+  }
 
   /**
    * @param root A root HTMLElement to initialize Flicking on it. When it's a typeof `string`, it should be a css selector string
@@ -655,6 +680,7 @@ class Flicking extends Component<FlickingEvents> {
     renderOnlyVisible = false,
     autoInit = true,
     autoResize = true,
+    useResizeObserver = true,
     renderExternal = null
   }: Partial<FlickingOptions> = {}) {
     super();
@@ -687,17 +713,17 @@ class Flicking extends Component<FlickingEvents> {
     this._preventClickOnDrag = preventClickOnDrag;
     this._disableOnInit = disableOnInit;
     this._renderOnlyVisible = renderOnlyVisible;
-    this._autoResize = autoResize;
     this._autoInit = autoInit;
+    this._autoResize = autoResize;
+    this._useResizeObserver = useResizeObserver;
     this._renderExternal = renderExternal;
 
     // Create core components
     this._viewport = new Viewport(getElement(root));
+    this._autoResizer = new AutoResizer(this);
     this._renderer = this._createRenderer();
     this._camera = this._createCamera();
     this._control = this._createControl();
-
-    this.resize = this.resize.bind(this);
 
     if (this._autoInit) {
       void this.init();
@@ -735,7 +761,7 @@ class Flicking extends Component<FlickingEvents> {
     await this._moveToInitialPanel();
 
     if (this._autoResize) {
-      window.addEventListener("resize", this.resize);
+      this._autoResizer.enable();
     }
     if (this._preventClickOnDrag) {
       control.controller.addPreventClickHandler();
@@ -764,8 +790,8 @@ class Flicking extends Component<FlickingEvents> {
    */
   public destroy(): void {
     this.off();
-    window.removeEventListener("resize", this.resize);
 
+    this._autoResizer.disable();
     this._control.destroy();
     this._camera.destroy();
     this._renderer.destroy();
