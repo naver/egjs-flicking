@@ -4,6 +4,7 @@ custom_edit_url: null
 ---
 
 import Flicking from "@egjs/react-flicking";
+import EventFlicking from "@site/src/component/EventFlicking";
 import ReadyLoggerFlicking from "@site/src/component/ReadyLoggerFlicking";
 import Panel from "@site/src/component/Panel";
 import Panels from "@site/src/component/Panels";
@@ -1005,11 +1006,11 @@ Whether to cache rendered panel's innerHTML
 <Columns>
   <ColumnItem is={12}>
 
-  ```ts
+  ```js
   panelsPerView: 2,
   virtual: {
-    renderPanel: (panel: VirtualPanel, index: number) => `<span class="flicking-index">${index + 1}</span>`,
-    initialPanelCount: 100,
+    renderPanel: (panel, index) => `<span class="flicking-index">${index + 1}</span>`,
+    initialPanelCount: 1000,
     panelClass: "flicking-panel has-background-primary has-text-white is-size-1",
     cache: false
   }
@@ -1021,7 +1022,7 @@ Whether to cache rendered panel's innerHTML
   <ColumnItem is={12}>
     <Flicking panelsPerView={2} virtual={{
       renderPanel: (panel, index) => `<span class="flicking-index">${index + 1}</span>`,
-      initialPanelCount: 100,
+      initialPanelCount: 1000,
       panelClass: "flicking-panel has-background-primary has-text-white is-size-1",
       cache: false
     }} />
@@ -1097,7 +1098,8 @@ Change window size or change orientation(on mobile) to see its effect.
 </Columns>
 
 ### useResizeObserver
-Whether to listen **[ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)**'s event instead of Window's **[resize](https://developer.mozilla.org/ko/docs/Web/API/Window/resize_event)** event when using the `autoResize` option
+Whether to listen **[ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)**'s event instead of Window's **[resize](https://developer.mozilla.org/ko/docs/Web/API/Window/resize_event)** event when using the `autoResize` option.
+Enabling this option will make Flicking to resize only when the viewport element(`.flicking-viewport`)'s size changes.
 
 <Columns>
   <ColumnItem is={12}>
@@ -1110,9 +1112,9 @@ Whether to listen **[ResizeObserver](https://developer.mozilla.org/en-US/docs/We
 </Columns>
 <Columns>
   <ColumnItem is={12}>
-    <Flicking useResizeObserver={true}>
+    <EventFlicking useResizeObserver={true} events={["afterResize"]}>
       { Panels(5) }
-    </Flicking>
+    </EventFlicking>
   </ColumnItem>
 </Columns>
 <Columns>
@@ -1125,8 +1127,8 @@ Whether to listen **[ResizeObserver](https://developer.mozilla.org/en-US/docs/We
 </Columns>
 <Columns>
   <ColumnItem is={12}>
-    <Flicking useResizeObserver={false}>
+    <EventFlicking useResizeObserver={false} events={["afterResize"]}>
       { Panels(5) }
-    </Flicking>
+    </EventFlicking>
   </ColumnItem>
 </Columns>
