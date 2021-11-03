@@ -2,7 +2,14 @@ const path = require("path");
 
 module.exports = config => {
   const karmaConfig = {
-    frameworks: ["mocha", "chai", "sinon", "karma-typescript", "viewport"],
+    basePath: "",
+    frameworks: [
+      "mocha",
+      "chai",
+      "sinon",
+      "karma-typescript",
+      "viewport"
+    ],
     mime: {
       "text/x-typescript": ["ts","tsx"]
     },
@@ -13,14 +20,13 @@ module.exports = config => {
     },
     files: [
       "./node_modules/hammer-simulator/index.js",
-      "./setup.js",
+      "./setup.ts",
       "./hammer-simulator.run.js",
       "../../css/flicking.css",
       "../../src/**/*.ts",
       "../../packages/react-flicking/src/!(demo)/**/*.+(ts|tsx)",
       "../../packages/vue-flicking/src/**/*.ts",
-      "../../packages/ngx-flicking/projects/ngx-flicking/src/**/*.ts",
-      "./!(node_modules)/**/*.+(ts|tsx)"
+      "./!(node_modules|NgxFlickingWebComponent)/**/*.+(ts|tsx)"
     ],
     preprocessors: {
       "../../**/*.{ts,tsx}": ["karma-typescript"]

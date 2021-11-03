@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import VanillaFlicking from "~/Flicking";
 import Flicking from "~egjs/react-flicking";
 
-import DummyFlicking from "../helper/DummyFlicking";
+import DummyFlicking from "../DummyFlicking";
 import FixtureRenderer from "./FixtureRenderer";
 
 class ReactFixtureRenderer implements FixtureRenderer {

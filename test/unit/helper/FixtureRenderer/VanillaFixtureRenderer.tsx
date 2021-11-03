@@ -3,8 +3,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import Flicking from "~/Flicking";
 
-import DummyFlicking from "../helper/DummyFlicking";
-import { createSandbox } from "../helper/test-util";
+import DummyFlicking from "../DummyFlicking";
+import { createSandbox } from "../test-util";
 import FixtureRenderer from "./FixtureRenderer";
 
 class VanillaFixtureRenderer implements FixtureRenderer {

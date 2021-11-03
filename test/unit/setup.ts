@@ -1,9 +1,11 @@
-window.timer = sinon.useFakeTimers();
-window.flickings = [];
+import "core-js/es7/reflect";
+
+(window as any).timer = sinon.useFakeTimers();
+(window as any).flickings = [];
 
 before(() => {
   const cssLinks = [
-    "/base/css/flicking.css"
+    // "/base/css/flicking.css"
   ];
   cssLinks.forEach(cssLink => {
     const link = document.createElement("link");
@@ -17,14 +19,14 @@ before(() => {
 });
 
 beforeEach(() => {
-  window.timer.reset();
+  (window as any).timer.reset();
 });
 
 afterEach(() => {
-  window.flickings.forEach(flicking => {
+  (window as any).flickings.forEach(flicking => {
     flicking.destroy();
   });
-  window.flickings = [];
+  (window as any).flickings = [];
   cleanup();
 });
 

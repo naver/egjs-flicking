@@ -6,11 +6,11 @@ import VanillaElementProvider from "~/core/panel/provider/VanillaElementProvider
 import { ALIGN, EVENTS } from "~/const/external";
 import { merge } from "~/utils";
 
-import FixtureRenderer from "../Renderer/FixtureRenderer";
-import VanillaFixtureRenderer from "../Renderer/VanillaFixtureRenderer";
-import ReactFixtureRenderer from "../Renderer/ReactFixtureRenderer";
-import VueFixtureRenderer from "../Renderer/VueFixtureRenderer";
-import NgxFixtureRenderer from "../Renderer/NgxFixtureRenderer";
+import FixtureRenderer from "./FixtureRenderer/FixtureRenderer";
+import VanillaFixtureRenderer from "./FixtureRenderer/VanillaFixtureRenderer";
+import ReactFixtureRenderer from "./FixtureRenderer/ReactFixtureRenderer";
+import VueFixtureRenderer from "./FixtureRenderer/VueFixtureRenderer";
+import NgxFixtureRenderer from "./FixtureRenderer/NgxFixtureRenderer";
 
 import El from "./El";
 

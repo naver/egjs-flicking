@@ -2,14 +2,14 @@
 	"name": "unit",
 	"version": "0.0.0",
 	"scripts": {
+    "postinstall": "npm install --prefix NgxFlickingWebComponent",
+    "pretest": "npm run build --prefix NgxFlickingWebComponent",
 		"test": "karma start",
 		"test:chrome": "karma start --chrome",
-		"coverage": "karma start --coverage && print-coveralls --sort=desc"
+		"coverage": "karma start --coverage && print-coveralls --sort=desc",
+		"ngx-build": "npm run build --prefix NgxFlickingWebComponent"
 	},
 	"devDependencies": {
-		"@angular/compiler": "^10.0.0",
-		"@angular/core": "^10.0.0",
-		"@angular/platform-browser-dynamic": "^10.0.0",
 		"@testing-library/react": "^12.1.2",
 		"@types/chai": "^4.2.22",
 		"@types/karma-chai": "^0.1.2",

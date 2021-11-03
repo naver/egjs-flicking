@@ -5,8 +5,8 @@ import VanillaFlicking from "~/Flicking";
 import { Flicking } from "~egjs/vue-flicking";
 
 import FixtureRenderer from "./FixtureRenderer";
-import DummyFlicking from "../helper/DummyFlicking";
-import { createSandbox } from "../helper/test-util";
+import DummyFlicking from "../DummyFlicking";
+import { createSandbox } from "../test-util";
 
 class VueFixtureRenderer implements FixtureRenderer {
   public async render(el: JSX.Element): Promise<VanillaFlicking> {
