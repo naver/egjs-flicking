@@ -99,11 +99,11 @@ export class NgxFlickingComponent extends FlickingInterface
   @Output() public reachEdge: EventEmitter<ReachEdgeEvent<NgxFlickingComponent>>;
   @Output() public panelChange: EventEmitter<PanelChangeEvent<NgxFlickingComponent>>;
 
-  @HostBinding(`class.${CLASS.VERTICAL}`) public get isVertical() {
+  @HostBinding("class.vertical") public get isVertical() {
     return this.options.horizontal === false;
   }
 
-  @HostBinding(`class.${CLASS.HIDDEN}`) public get isHiddenBeforeInit() {
+  @HostBinding("class.flicking-hidden") public get isHiddenBeforeInit() {
     const initialized = this._vanillaFlicking && this._vanillaFlicking.initialized;
     return this.hideBeforeInit && !initialized;
   }
