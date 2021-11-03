@@ -1,10 +1,18 @@
+import { cleanup as reactCleanUp } from "@testing-library/react";
+
 import Flicking, { FlickingOptions } from "~/Flicking";
 import Panel, { PanelOptions } from "~/core/panel/Panel";
 import VanillaElementProvider from "~/core/panel/provider/VanillaElementProvider";
 import { ALIGN, EVENTS } from "~/const/external";
+import { merge } from "~/utils";
+
+import FixtureRenderer from "../Renderer/FixtureRenderer";
+import VanillaFixtureRenderer from "../Renderer/VanillaFixtureRenderer";
+import ReactFixtureRenderer from "../Renderer/ReactFixtureRenderer";
+import VueFixtureRenderer from "../Renderer/VueFixtureRenderer";
+import NgxFixtureRenderer from "../Renderer/NgxFixtureRenderer";
 
 import El from "./El";
-import { merge } from "~/utils";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 declare let Simulator: any;
@@ -98,3 +106,28 @@ export const waitEvent = (emitter: any, eventName: string) => {
 };
 
 export class NullClass {}
+
+export const cfc = {
+  it: (title: string, fn?: ({ renderer }: { renderer: FixtureRenderer }) => Promise<void>) => {
+    describe(title, () => {
+      it("Vanilla", async () => {
+        await fn({ renderer: new VanillaFixtureRenderer() });
+      });
+      it("React", async () => {
+        try {
+          await fn({ renderer: new ReactFixtureRenderer() });
+        } catch (e) {
+          throw e;
+        } finally {
+          reactCleanUp();
+        }
+      });
+      it("Vue@2", async () => {
+        await fn({ renderer: new VueFixtureRenderer() });
+      });
+      it("Angular", async () => {
+        await fn({ renderer: new NgxFixtureRenderer() });
+      });
+    });
+  }
+};

@@ -4,7 +4,7 @@ module.exports = {
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "./test/unit/tsconfig.json",
+    "project": "./tsconfig.eslint.json",
     "sourceType": "module"
   },
   "rules": {
@@ -23,6 +23,7 @@ module.exports = {
     "@typescript-eslint/restrict-template-expressions": "off",
     "@typescript-eslint/require-await": "off",
     "@typescript-eslint/restrict-plus-operands": "off",
+    "@typescript-eslint/no-unnecessary-type-assertion": "off",
     "@jsdoc/check-indentation": "off"
   }
 };

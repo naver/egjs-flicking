@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/naming-convention */
+const path = require("path");
 
 module.exports = config => {
   const karmaConfig = {
@@ -15,19 +13,20 @@ module.exports = config => {
     },
     files: [
       "./node_modules/hammer-simulator/index.js",
-      "./test/unit/setup.js",
-      "./test/unit/hammer-simulator.run.js",
-      "./css/flicking.css",
-      "./src/**/*.ts",
-      "./test/unit/**/*.ts"
-      // {pattern: "./test/unit/images/**/*.*", watched: false, included: false, served: true}
+      "./setup.js",
+      "./hammer-simulator.run.js",
+      "../../css/flicking.css",
+      "../../src/**/*.ts",
+      "../../packages/react-flicking/src/!(demo)/**/*.+(ts|tsx)",
+      "../../packages/vue-flicking/src/**/*.ts",
+      "../../packages/ngx-flicking/projects/ngx-flicking/src/**/*.ts",
+      "./!(node_modules)/**/*.+(ts|tsx)"
     ],
     preprocessors: {
-      "src/**/*.ts": ["karma-typescript"],
-      "test/unit/**/*.ts": ["karma-typescript"]
+      "../../**/*.{ts,tsx}": ["karma-typescript"]
     },
     karmaTypescriptConfig: {
-      tsconfig: "./test/unit/tsconfig.json",
+      tsconfig: "./tsconfig.json",
       reports: {
         html: {
           "directory": "coverage",
@@ -48,13 +47,10 @@ module.exports = config => {
     customLaunchers: {
       CustomChromeHeadless: {
         base: "ChromeHeadless",
-        flags: ["--window-size=400,300", "--no-sandbox", "--disable-setuid-sandbox"]
+        flags: ["--window-size=1280,720", "--no-sandbox", "--disable-setuid-sandbox"]
       }
     },
     reporters: ["mocha"]
-    // proxies: {
-    //   "/images/": "/base/test/unit/images/"
-    // }
   };
 
   karmaConfig.browsers.push(config.chrome ? "Chrome" : "CustomChromeHeadless");
