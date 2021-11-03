@@ -1,5 +1,5 @@
 
-import { Component } from "react";
+import React, { Component } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -29,6 +29,7 @@ import Header from "./Header";
 export default class App extends Component<{}> {
   public render() {
     return (
+    <React.StrictMode>
       <Router>
         <Header/>
         <Switch>
@@ -72,7 +73,8 @@ export default class App extends Component<{}> {
             <Arrow />
           </Route>
         </Switch>
-      </Router>);
+      </Router>
+    </React.StrictMode>);
   }
   public componentDidMount() {
     hljs.initHighlighting();

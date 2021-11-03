@@ -4,7 +4,7 @@
  */
 import * as React from "react";
 import Component from "@egjs/component";
-import ListDiffer, { DiffResult } from "@egjs/list-differ";
+import ListDiffer, { diff, DiffResult } from "@egjs/list-differ";
 import VanillaFlicking, {
   FlickingOptions,
   VirtualRenderingStrategy,
@@ -28,7 +28,13 @@ import NonStrictPanel from "./NonStrictPanel";
 import ViewportSlot from "./ViewportSlot";
 import ReactElementProvider from "./ReactElementProvider";
 
-class Flicking extends React.PureComponent<Partial<FlickingProps & FlickingOptions>> {
+enum LifeCycleState {
+  BEFORE_UPDATE,
+  RENDER,
+  UPDATED
+}
+
+class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = DEFAULT_PROPS;
 
   @withFlickingMethods private _vanillaFlicking: VanillaFlicking;
@@ -38,9 +44,16 @@ class Flicking extends React.PureComponent<Partial<FlickingProps & FlickingOptio
   private _viewportElement: HTMLElement;
   private _diffResult: DiffResult<React.ReactElement> | null;
   private _renderEmitter = new Component<{ render: void }>();
+  private _currentState: LifeCycleState = LifeCycleState.BEFORE_UPDATE;
 
   public get reactPanels() { return this._panels.map(panel => panel.current!); }
   public get renderEmitter() { return this._renderEmitter; }
+
+  public constructor(props: Partial<FlickingProps & FlickingOptions>) {
+    super(props);
+
+    this._panels = this._createPanelRefs(props, this._getChildren());
+  }
 
   public componentDidMount() {
     const props = this.props as Required<FlickingProps & FlickingOptions>;
@@ -66,6 +79,7 @@ class Flicking extends React.PureComponent<Partial<FlickingProps & FlickingOptio
     );
 
     this._vanillaFlicking = flicking;
+    this._currentState = LifeCycleState.UPDATED;
 
     const children = this._getChildren();
     this._jsxDiffer = new ListDiffer(children, panel => panel.key!);
@@ -83,20 +97,40 @@ class Flicking extends React.PureComponent<Partial<FlickingProps & FlickingOptio
     this._vanillaFlicking?.destroy();
   }
 
+  public shouldComponentUpdate(nextProps: this["props"]) {
+    const props = this.props;
+
+    if (this._currentState !== LifeCycleState.BEFORE_UPDATE && props.children !== nextProps.children) {
+      const nextChildren = this._getChildren(nextProps.children);
+
+      this._panels = this._createPanelRefs(nextProps, nextChildren);
+      this._diffResult = this._jsxDiffer.update(nextChildren);
+    }
+
+    this._currentState = LifeCycleState.BEFORE_UPDATE;
+
+    for (const key in nextProps) {
+      if (props[key] !== nextProps[key]) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   public componentDidUpdate() {
     const flicking = this._vanillaFlicking;
+    const renderEmitter = this._renderEmitter;
     const diffResult = this._diffResult;
 
     this._checkPlugins();
-    this._renderEmitter.trigger("render");
+    renderEmitter.trigger("render");
+
+    this._currentState = LifeCycleState.UPDATED;
 
     if (!diffResult || !flicking.initialized) return;
 
     sync(flicking, diffResult, this.reactPanels);
-
-    if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
-      this.forceUpdate();
-    }
 
     this._diffResult = null;
   }
@@ -107,11 +141,8 @@ class Flicking extends React.PureComponent<Partial<FlickingProps & FlickingOptio
     const Camera = props.cameraTag as any;
     const attributes: { [key: string]: any } = {};
     const flicking = this._vanillaFlicking;
-    const children = this._getChildren(props.children);
-    const diffResult = this._jsxDiffer?.update(children) ?? null;
 
-    this._panels = this._createPanelRefs(props, children);
-    this._diffResult = diffResult;
+    this._currentState = LifeCycleState.RENDER;
 
     for (const name in props) {
       if (!(name in DEFAULT_PROPS) && !(name in VanillaFlicking.prototype)) {
@@ -119,7 +150,7 @@ class Flicking extends React.PureComponent<Partial<FlickingProps & FlickingOptio
       }
     }
 
-    const initialized = !!this._diffResult && flicking && flicking.initialized;
+    const initialized = flicking && flicking.initialized;
     const viewportClasses: string[] = ["flicking-viewport"];
     const isHorizontal = flicking
       ? flicking.horizontal
@@ -142,8 +173,8 @@ class Flicking extends React.PureComponent<Partial<FlickingProps & FlickingOptio
       : {};
 
     const panels = !!props.virtual && (props.panelsPerView ?? -1) > 0
-      ? this._getVirtualPanels(initialized)
-      : this._getPanels(initialized);
+      ? this._getVirtualPanels()
+      : this._getPanels();
 
     return (
       <Viewport {...attributes} className={viewportClasses.join(" ")} ref={(e?: HTMLElement) => {
@@ -213,12 +244,13 @@ class Flicking extends React.PureComponent<Partial<FlickingProps & FlickingOptio
       : [child];
   }
 
-  private _getVirtualPanels(initialized: boolean) {
+  private _getVirtualPanels() {
     const {
       panelClass = "flicking-panel"
     } = this.props.virtual!;
     const panelsPerView = this.props.panelsPerView!;
     const flicking = this._vanillaFlicking;
+    const initialized = flicking && flicking.initialized;
 
     const renderingIndexes = initialized
       ? flicking.renderer.strategy.getRenderingIndexesByOrder(flicking)
@@ -241,10 +273,16 @@ class Flicking extends React.PureComponent<Partial<FlickingProps & FlickingOptio
     });
   }
 
-  private _getPanels(initialized: boolean) {
-    const children = initialized
-      ? getRenderingPanels(this._vanillaFlicking, this._diffResult!)
-      : this._getChildren();
+  private _getPanels() {
+    const origChildren = this._getChildren();
+    const vanillaFlicking = this._vanillaFlicking;
+    const diffResult = this._diffResult;
+
+    const children = vanillaFlicking && vanillaFlicking.initialized
+      ? diffResult
+        ? getRenderingPanels(vanillaFlicking, diffResult)
+        : getRenderingPanels(vanillaFlicking, diff(origChildren, origChildren))
+      : origChildren;
 
     return this.props.useFindDOMNode
       ? children.map((child, idx) => <NonStrictPanel key={child.key!} ref={this._panels[idx] as any}>{child}</NonStrictPanel>)
