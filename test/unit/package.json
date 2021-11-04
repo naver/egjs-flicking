@@ -2,14 +2,16 @@
 	"name": "unit",
 	"version": "0.0.0",
 	"scripts": {
-    "postinstall": "npm install --prefix ./libs",
+		"preprocess": "ts-node ./preprocess",
 		"test": "karma start",
 		"test:chrome": "karma start --chrome",
-		"prepare": "npm run build --prefix ./libs",
 		"coverage": "karma start --coverage && print-coveralls --sort=desc"
 	},
 	"devDependencies": {
+		"@babel/core": "^7.16.0",
+		"@babel/preset-env": "^7.16.0",
 		"@testing-library/react": "^12.1.2",
+		"@testing-library/svelte": "^3.0.3",
 		"@types/chai": "^4.2.22",
 		"@types/karma-chai": "^0.1.2",
 		"@types/mocha": "^9.0.0",
@@ -19,9 +21,11 @@
 		"@types/sinon": "^10.0.6",
 		"@vue/test-utils": "^1.2.2",
 		"chai": "^4.3.4",
+		"chalk": "^4.1.2",
 		"hammer-simulator": "^0.0.1",
 		"inject-loader": "^4.0.1",
 		"karma": "^3.1.4",
+		"karma-babel-preprocessor": "^8.0.1",
 		"karma-chai": "^0.1.0",
 		"karma-chrome-launcher": "^2.2.0",
 		"karma-mocha": "^1.3.0",
@@ -33,6 +37,7 @@
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
 		"sinon": "^11.1.2",
+		"svelte": "^3.44.1",
 		"typescript": "^4.2.3",
 		"vue": "2.6.10"
 	}

@@ -10,7 +10,7 @@ import FixtureRenderer from "./FixtureRenderer/FixtureRenderer";
 import VanillaFixtureRenderer from "./FixtureRenderer/VanillaFixtureRenderer";
 import ReactFixtureRenderer from "./FixtureRenderer/ReactFixtureRenderer";
 import VueFixtureRenderer from "./FixtureRenderer/VueFixtureRenderer";
-import NgxFixtureRenderer from "./FixtureRenderer/NgxFixtureRenderer";
+import SvelteFixtureRenderer from "./FixtureRenderer/SvelteFixtureRenderer";
 
 import El from "./El";
 
@@ -106,28 +106,3 @@ export const waitEvent = (emitter: any, eventName: string) => {
 };
 
 export class NullClass {}
-
-export const cfc = {
-  it: (title: string, fn?: ({ renderer }: { renderer: FixtureRenderer }) => Promise<void>) => {
-    describe(title, () => {
-      it("Vanilla", async () => {
-        await fn({ renderer: new VanillaFixtureRenderer() });
-      });
-      it("React", async () => {
-        try {
-          await fn({ renderer: new ReactFixtureRenderer() });
-        } catch (e) {
-          throw e;
-        } finally {
-          reactCleanUp();
-        }
-      });
-      it("Vue@2", async () => {
-        await fn({ renderer: new VueFixtureRenderer() });
-      });
-      it("Angular", async () => {
-        await fn({ renderer: new NgxFixtureRenderer() });
-      });
-    });
-  }
-};

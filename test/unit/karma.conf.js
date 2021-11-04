@@ -20,12 +20,11 @@ module.exports = config => {
       "./setup.ts",
       "./node_modules/hammer-simulator/index.js",
       "./hammer-simulator.run.js",
-      { pattern: "./libs/dist/libs/**/*.js", included: false },
+      "./dist/svelte-flicking.js",
       "../../css/flicking.css",
       "../../src/**/*.ts",
       "../../packages/react-flicking/src/!(demo)/**/*.+(ts|tsx)",
       "../../packages/vue-flicking/src/**/*.ts",
-      "../../packages/ngx-flicking/projects/ngx-flicking/src/**/*.ts",
       "./!(node_modules|libs)/**/*.+(ts|tsx)"
     ],
     preprocessors: {

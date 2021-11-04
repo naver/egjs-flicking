@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { Children } from "react";
+import { Children, isValidElement } from "react";
 import { mount } from "@vue/test-utils";
 import VanillaFlicking from "~/Flicking";
 import { Flicking } from "~egjs/vue-flicking";
@@ -33,10 +33,13 @@ class VueFixtureRenderer implements FixtureRenderer {
 
     if (el.type === DummyFlicking) {
       return h("flicking", { props: { viewportTag: el.props.tag, cameraTag: el.props.cameraTag, options: el.props.options }, ref: "flicking" }, parsedChildren);
+    } else if (!isValidElement(el)) {
+      return el;
     } else {
-      const className = el.props?.className ?? "";
+      const dom = el as JSX.Element;
+      const className = dom.props?.className ?? "";
 
-      return h(el.type, { attrs: { ...el.props, class: className } }, parsedChildren);
+      return h(dom.type, { attrs: { ...dom.props, class: className } }, parsedChildren);
     }
   }
 }

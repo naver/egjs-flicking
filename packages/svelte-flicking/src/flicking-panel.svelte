@@ -3,9 +3,9 @@
     onDestroy,
     getContext
   } from "svelte";
-  import * as uuid from "uuid-browser";
+  import { v4 } from "uuid";
 
-  const id = uuid.v4();
+  const id = v4();
   const sveltePanels = getContext("panels");
 
   let hidden = false;
