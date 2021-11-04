@@ -1,0 +1,21 @@
+{
+  "name": "unit-libs",
+  "version": "0.0.0",
+  "scripts": {
+		"build": "ng build react-ng-wrapper && npm run build:angular-component-library && ng build react-wrappers",
+    "build:angular-component-library": "cpx '../../../packages/ngx-flicking/projects/ngx-flicking/src/lib/**/*' ./angular-component-library/src/lib && ng build angular-component-library && rm -rf ./angular-component-library/src/lib"
+	},
+  "devDependencies": {
+		"@angular-devkit/build-angular": "~0.1000.8",
+    "@angular-devkit/build-ng-packagr": "~0.1000.8",
+    "@angular/cli": "~10.0.0",
+    "@angular/compiler-cli": "~10.0.0",
+    "@angular/common": "~10.0.0",
+    "@angular/compiler": "~10.0.0",
+    "@angular/core": "~10.0.0",
+    "@angular/platform-browser": "~10.0.0",
+    "@angular/platform-browser-dynamic": "~10.0.0",
+    "ng-packagr": "^10.0.0",
+    "typescript": "~3.9.5"
+  }
+}

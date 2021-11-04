@@ -2,12 +2,11 @@
 	"name": "unit",
 	"version": "0.0.0",
 	"scripts": {
-    "postinstall": "npm install --prefix NgxFlickingWebComponent",
-    "pretest": "npm run build --prefix NgxFlickingWebComponent",
+    "postinstall": "npm install --prefix ./libs",
 		"test": "karma start",
 		"test:chrome": "karma start --chrome",
-		"coverage": "karma start --coverage && print-coveralls --sort=desc",
-		"ngx-build": "npm run build --prefix NgxFlickingWebComponent"
+		"prepare": "npm run build --prefix ./libs",
+		"coverage": "karma start --coverage && print-coveralls --sort=desc"
 	},
 	"devDependencies": {
 		"@testing-library/react": "^12.1.2",

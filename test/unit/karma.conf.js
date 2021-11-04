@@ -1,5 +1,3 @@
-const path = require("path");
-
 module.exports = config => {
   const karmaConfig = {
     basePath: "",
@@ -19,14 +17,16 @@ module.exports = config => {
       }
     },
     files: [
-      "./node_modules/hammer-simulator/index.js",
       "./setup.ts",
+      "./node_modules/hammer-simulator/index.js",
       "./hammer-simulator.run.js",
+      { pattern: "./libs/dist/libs/**/*.js", included: false },
       "../../css/flicking.css",
       "../../src/**/*.ts",
       "../../packages/react-flicking/src/!(demo)/**/*.+(ts|tsx)",
       "../../packages/vue-flicking/src/**/*.ts",
-      "./!(node_modules|NgxFlickingWebComponent)/**/*.+(ts|tsx)"
+      "../../packages/ngx-flicking/projects/ngx-flicking/src/**/*.ts",
+      "./!(node_modules|libs)/**/*.+(ts|tsx)"
     ],
     preprocessors: {
       "../../**/*.{ts,tsx}": ["karma-typescript"]

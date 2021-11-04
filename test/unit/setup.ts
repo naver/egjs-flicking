@@ -1,7 +1,9 @@
-import "core-js/es7/reflect";
+import * as Flicking from "~/Flicking";
+(window as any).Flicking = Flicking;
 
 (window as any).timer = sinon.useFakeTimers();
 (window as any).flickings = [];
+
 
 before(() => {
   const cssLinks = [

@@ -1,48 +1,41 @@
-import { Children, isValidElement } from "react";
+import { Children, cloneElement, createRef, isValidElement, RefObject } from "react";
+import { render } from "@testing-library/react";
 import VanillaFlicking from "~/Flicking";
 
-import FixtureRenderer from "./FixtureRenderer";
 import DummyFlicking from "../DummyFlicking";
-import { createSandbox } from "../test-util";
+import FixtureRenderer from "./FixtureRenderer";
 
+import { ReactNgWrapper } from "../../libs/dist/libs/react-ng-wrapper/bundles/hybrid-react-ng-wrapper.umd.js";
+import { NgxFlickingComponent } from "../../libs/dist/libs/angular-component-library/bundles/hybrid-angular-component-library.umd.js";
+
+console.log(ReactNgWrapper, NgxFlickingComponent);
+
+class NgxHybridFlicking extends ReactNgWrapper<NgxFlickingComponent> {
+  public constructor(props) {
+    super(props, NgxFlickingComponent as any);
+  }
+}
 class NgxFixtureRenderer implements FixtureRenderer {
   public async render(el: JSX.Element): Promise<VanillaFlicking> {
-    const sandbox = createSandbox("vue-ui");
-    const elAsAngularTemplate = this._parseJSX(el);
+    const flickingRef = createRef();
+    const replaced = this._replaceFlickingJSX(el, flickingRef);
 
-    sandbox.innerHTML = elAsAngularTemplate;
+    render(replaced);
 
-    console.log(document.querySelector("ngx-flicking"));
-
-    (window as any).flicking = document.querySelector("ngx-flicking")
-
-    return document.querySelector("ngx-flicking") as unknown as VanillaFlicking;
+    return Promise.resolve(flickingRef.current as unknown as VanillaFlicking);
   }
 
-  private _parseJSX(el: JSX.Element, isPanel: boolean = false) {
-    const childs = Children.toArray(el.props?.children ?? []) as JSX.Element[];
+  private _replaceFlickingJSX(el: JSX.Element, flickingRef): JSX.Element {
+    const children = Children.toArray(el.props?.children ?? []) as JSX.Element[];
+    const replacedChildren = children.map(child => this._replaceFlickingJSX(child, flickingRef));
+    const FlickingComp = NgxHybridFlicking as any;
 
-    if (!isValidElement(el)) {
+    if (el.type === DummyFlicking) {
+      return <FlickingComp>{ replacedChildren }</FlickingComp>;
+    } else if (!isValidElement(el)) {
       return el;
-    } else if (el.type === DummyFlicking) {
-      return `<ngx-flicking>${childs.map(child => this._parseJSX(child, true)).join("")}</ngx-flicking>`;
     } else {
-      const props = (el.props as any);
-      const parsedChildren = childs.map(child => this._parseJSX(child));
-      const attrs = [];
-      const type = isPanel ? "flicking-panel" : el.type;
-
-      if (props.className) {
-        attrs.push(`class="${props.className}"`);
-      }
-
-      const { className, children, ...otherProps } = props;
-
-      for (const key in otherProps) {
-        attrs.push(`${key}="${otherProps[key]}"`);
-      }
-
-      return `<${type} ${attrs.join(" ")}>${parsedChildren.join("")}</${type}>`;
+      return cloneElement(el, el.props, replacedChildren);
     }
   }
 }

@@ -1,0 +1,11 @@
+{
+  "$schema": "../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../dist/libs/react-wrappers",
+  "lib": {
+    "entryFile": "src/index.ts",
+    "umdModuleIds": {
+      "react": "React",
+      "react-dom": "ReactDOM"
+    }
+  }
+}

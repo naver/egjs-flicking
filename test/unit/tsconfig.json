@@ -31,10 +31,13 @@
     "../../packages/react-flicking/src/react-flicking/**/*.ts",
     "../../packages/react-flicking/src/react-flicking/**/*.tsx",
     "../../packages/vue-flicking/src/**/*.ts",
+    "../../packages/ngx-flicking/projects/ngx-flicking/src/**/*.ts",
+    "./dist/**/*",
     "./**/*.ts",
     "./**/*.tsx"
   ],
   "exclude": [
+    "libs",
     "node_modules/**/*"
   ]
 }
