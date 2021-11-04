@@ -10,8 +10,6 @@
 	"devDependencies": {
 		"@babel/core": "^7.16.0",
 		"@babel/preset-env": "^7.16.0",
-		"@testing-library/react": "^12.1.2",
-		"@testing-library/svelte": "^3.0.3",
 		"@types/chai": "^4.2.22",
 		"@types/karma-chai": "^0.1.2",
 		"@types/mocha": "^9.0.0",

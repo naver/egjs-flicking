@@ -20,12 +20,9 @@ module.exports = config => {
       "./setup.ts",
       "./node_modules/hammer-simulator/index.js",
       "./hammer-simulator.run.js",
-      "./dist/svelte-flicking.js",
       "../../css/flicking.css",
       "../../src/**/*.ts",
-      "../../packages/react-flicking/src/!(demo)/**/*.+(ts|tsx)",
-      "../../packages/vue-flicking/src/**/*.ts",
-      "./!(node_modules|libs)/**/*.+(ts|tsx)"
+      "./!(node_modules|ui)/**/*.+(ts|tsx)"
     ],
     preprocessors: {
       "../../**/*.{ts,tsx}": ["karma-typescript"]
