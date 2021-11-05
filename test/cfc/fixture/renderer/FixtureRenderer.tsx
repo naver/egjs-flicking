@@ -1,4 +1,4 @@
-import Flicking from "~/Flicking";
+import Flicking from "@egjs/flicking";
 
 interface FixtureRenderer {
   render(el: JSX.Element): Promise<Flicking>;
