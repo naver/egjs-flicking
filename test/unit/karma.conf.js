@@ -22,7 +22,7 @@ module.exports = config => {
       "./hammer-simulator.run.js",
       "../../css/flicking.css",
       "../../src/**/*.ts",
-      "./!(node_modules|ui)/**/*.+(ts|tsx)"
+      "./!(node_modules)/**/*.+(ts|tsx)"
     ],
     preprocessors: {
       "../../**/*.{ts,tsx}": ["karma-typescript"]
@@ -49,7 +49,7 @@ module.exports = config => {
     customLaunchers: {
       CustomChromeHeadless: {
         base: "ChromeHeadless",
-        flags: ["--window-size=1280,720", "--no-sandbox", "--disable-setuid-sandbox"]
+        flags: ["--window-size=640,480", "--no-sandbox", "--disable-setuid-sandbox"]
       }
     },
     reporters: ["mocha"]

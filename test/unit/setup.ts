@@ -1,21 +1,6 @@
 (window as any).timer = sinon.useFakeTimers();
 (window as any).flickings = [];
 
-before(() => {
-  const cssLinks = [
-    // "/base/css/flicking.css"
-  ];
-  cssLinks.forEach(cssLink => {
-    const link = document.createElement("link");
-
-    link.id = "fixture_css";
-    link.rel = "stylesheet";
-    link.href = cssLink;
-
-    (document.head || document.getElementsByTagName("head")[0]).appendChild(link);
-  });
-});
-
 beforeEach(() => {
   (window as any).timer.reset();
 });
