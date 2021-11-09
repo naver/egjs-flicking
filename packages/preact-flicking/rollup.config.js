@@ -14,12 +14,10 @@ const defaultOptions = {
         extensions: ["js", "jsx", "ts", "tsx"],
         noPropTypes: false,
         noEnv: false,
-        noReactIs: false,
         resolvePreactCompat: true,
         usePreactX: true,
         aliasModules: {
-          'react-dom': 'preact/compat',
-          'react-is': 'preact/compat'
+          "react-dom": "preact/compat"
         }
       })
     ]
