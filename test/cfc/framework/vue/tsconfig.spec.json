@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./out-tsc/spec",
+    "skipLibCheck": true,
+    "strict": false,
+    "paths": {
+      "@common/renderer": ["./VueFixtureRenderer"],
+      "@egjs/flicking": ["../../../../src/index.ts"],
+      "@egjs/vue-flicking": ["./lib/@egjs/vue-flicking/index.ts"]
+    }
+  },
+  "include": []
+}

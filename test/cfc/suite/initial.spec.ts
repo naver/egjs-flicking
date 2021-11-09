@@ -1,9 +1,9 @@
 import Basic from "../fixture/Basic";
-import { cfc } from "../utils";
+import { render } from "@common/renderer";
 
 describe("Initial Rendering State", () => {
-  cfc.it("should render viewport & camera element", async ({ renderer }) => {
-    const flicking = await renderer.render(Basic);
+  it("should render viewport & camera element", async () => {
+    const flicking = await render(Basic);
 
     expect(document.querySelectorAll("#test").length).toEqual(1);
     expect(document.querySelectorAll(".flicking-wrapper").length).toEqual(1);
