@@ -15,7 +15,7 @@
     "test:angular": "npm test --prefix framework/angular",
     "test:react": "npm test --prefix framework/react",
     "test:vue": "npm test --prefix framework/vue",
-    "test:vue3": "npm test --prefix framework/vue",
+    "test:vue3": "npm test --prefix framework/vue3",
     "test:svelte": "npm test --prefix framework/svelte"
   },
   "devDependencies": {

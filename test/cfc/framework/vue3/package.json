@@ -1,0 +1,12 @@
+{
+  "name": "vue",
+  "version": "0.0.0",
+  "scripts": {
+    "test": "jest --config=\"./jest.config.js\""
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^2.0.0-rc.16",
+    "vue": "^3.2.21",
+    "vue-class-component": "^8.0.0-rc.1"
+  }
+}

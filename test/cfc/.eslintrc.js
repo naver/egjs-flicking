@@ -11,6 +11,7 @@ module.exports = {
     "import/order": "off",
     "guard-for-in": "off",
     "max-classes-per-file": "off",
+    "prefer-arrow/prefer-arrow-functions": "off",
     "@typescript-eslint/no-unused-expressions": "off",
     "@typescript-eslint/no-unsafe-assignment": "off",
     "@typescript-eslint/ban-ts-comment": "off",

@@ -24,8 +24,8 @@
     }
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx"
+    "suite/**/*",
+    "common/**/*"
   ],
   "exclude": [
     "**/node_modules"
