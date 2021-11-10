@@ -4,7 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import Flicking from "@egjs/flicking";
 
 import DummyFlicking from "../../fixture/DummyFlicking";
-import { createSandbox } from "../../common/utils";
+import { createSandbox, cleanup } from "../../common/utils";
 
 const render = async (el: JSX.Element): Promise<Flicking> => {
   const sandbox = createSandbox("vanilla-ui");
@@ -56,5 +56,6 @@ const parseJSX = (el: JSX.Element): JSX.Element => {
 };
 
 export {
-  render
+  render,
+  cleanup
 };

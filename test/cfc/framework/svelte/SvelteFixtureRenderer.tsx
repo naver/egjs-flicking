@@ -5,7 +5,7 @@ import { Children, ReactElement, isValidElement } from "react";
 import { render as renderSvelteComponent } from "@testing-library/svelte";
 
 import DummyFlicking from "../../fixture/DummyFlicking";
-import { createSandbox } from "../../common/utils";
+import { createSandbox, cleanup } from "../../common/utils";
 
 let testIndex = 0;
 
@@ -81,5 +81,6 @@ const parseFlickingJSX = (el: JSX.Element, isPanel = false): string => {
 };
 
 export {
-  render
+  render,
+  cleanup
 };

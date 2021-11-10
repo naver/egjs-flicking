@@ -70,12 +70,14 @@ const parseJSX = (el: JSX.Element) => {
       attrs.push(`${key}="${otherProps[key]}"`);
     }
 
-    return `<${el.type} ${attrs.join(" ")}>${ replacedChildren }</${el.type}>`;
+    const type = el.type as string;
+
+    return `<${type} ${attrs.join(" ")}>${ replacedChildren }</${type}>`;
   }
 };
 
 const cleanup = () => {
-  renderedComponents.forEach(comp => comp.destroy());
+  renderedComponents.forEach(comp => comp.unmount());
   renderedComponents.splice(0, renderedComponents.length);
 };
 
