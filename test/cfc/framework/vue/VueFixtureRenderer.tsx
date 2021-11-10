@@ -5,10 +5,10 @@ import VanillaFlicking from "@egjs/flicking";
 import { Flicking } from "@egjs/vue-flicking";
 
 import DummyFlicking from "../../fixture/DummyFlicking";
-import { createSandbox } from "../../common/utils";
+
+const renderedComponents = [];
 
 const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
-  const sandbox = createSandbox("vue-ui");
   const elAsVueComponent = Vue.component("vue-flicking-test-component", {
     components: {
       flicking: Flicking
@@ -17,10 +17,10 @@ const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
       return parseJSX(h, el);
     }
   });
-  const wrapper = mount(elAsVueComponent);
-  const flickingInst = wrapper.findComponent<Flicking>(Flicking);
+  const mounted = mount(elAsVueComponent, { attachTo: document.body });
+  const flickingInst = mounted.findComponent<Flicking>(Flicking);
 
-  sandbox.appendChild(wrapper.element);
+  renderedComponents.push(mounted);
 
   return flickingInst.vm as unknown as VanillaFlicking;
 };
@@ -38,6 +38,12 @@ const parseJSX = (h: Vue.CreateElement, el: JSX.Element) => {
   }
 };
 
+const cleanup = () => {
+  renderedComponents.forEach(comp => comp.destroy());
+  renderedComponents.splice(0, renderedComponents.length);
+};
+
 export {
-  render
+  render,
+  cleanup
 };

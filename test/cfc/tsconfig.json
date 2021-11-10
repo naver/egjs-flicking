@@ -17,6 +17,7 @@
       "@common/renderer": ["./common/FixtureRenderer.tsx"],
       "@egjs/flicking": ["../../src/index.ts"],
       "@egjs/react-flicking": ["../../packages/react-flicking/src/react-flicking/index.ts"],
+      "@egjs/preact-flicking": ["../../packages/preact-flicking/src/preact-flicking/index.ts"],
       "@egjs/vue-flicking": ["../../packages/vue-flicking/src/index.ts"],
       "@egjs/vue3-flicking": ["../../packages/vue3-flicking/src/index.ts"],
       "@egjs/ngx-flicking": ["../../packages/ngx-flicking/projects/ngx-flicking/src/public-api.ts"],

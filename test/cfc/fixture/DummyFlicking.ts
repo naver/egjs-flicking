@@ -1,7 +1,7 @@
-import * as React from "react";
+import { Component } from "react";
 import { FlickingOptions } from "@egjs/flicking";
 
-class DummyFlicking extends React.Component<{
+class DummyFlicking extends Component<{
   tag: string;
   cameraTag: string;
   options: Partial<FlickingOptions>;

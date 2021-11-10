@@ -1,0 +1,17 @@
+{
+  "name": "preact",
+  "version": "0.0.0",
+  "scripts": {
+    "test": "jest --config=\"./jest.config.js\""
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.16.0",
+    "@babel/plugin-proposal-decorators": "^7.16.0",
+    "@babel/plugin-transform-react-jsx": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-typescript": "^7.16.0",
+    "@testing-library/preact": "^2.0.1",
+    "preact": "^10.4.4",
+    "preact-render-to-string": "^5.1.9"
+  }
+}

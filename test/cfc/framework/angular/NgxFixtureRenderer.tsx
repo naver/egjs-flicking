@@ -6,7 +6,7 @@ import VanillaFlicking from "@egjs/flicking";
 import { NgxFlickingComponent, NgxFlickingPanel, NgxFlickingService } from "@egjs/ngx-flicking";
 
 import DummyFlicking from "../../fixture/DummyFlicking";
-import { createSandbox } from "../../common/utils";
+import { createSandbox, cleanup } from "../../common/utils";
 
 const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
   const sandbox = createSandbox("angular-ui");
@@ -84,5 +84,6 @@ const parseFlickingJSX = (el: JSX.Element, isPanel = false): string => {
 };
 
 export {
-  render
+  render,
+  cleanup
 };

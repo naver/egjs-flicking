@@ -7,6 +7,7 @@ export default async () => {
 
   await Promise.all([
     fs.copy(path.resolve(__dirname, "../../../packages/react-flicking/src/react-flicking/"), path.resolve(frameworkDir, "./react/lib/@egjs/react-flicking")),
+    fs.copy(path.resolve(__dirname, "../../../packages/preact-flicking/src/preact-flicking/"), path.resolve(frameworkDir, "./preact/lib/@egjs/preact-flicking")),
     fs.copy(path.resolve(__dirname, "../../../packages/vue-flicking/src/"), path.resolve(frameworkDir, "./vue/lib/@egjs/vue-flicking")),
     fs.copy(path.resolve(__dirname, "../../../packages/vue3-flicking/src/"), path.resolve(frameworkDir, "./vue3/lib/@egjs/vue3-flicking")),
     fs.copy(path.resolve(__dirname, "../../../packages/ngx-flicking/projects/ngx-flicking/src/"), path.resolve(frameworkDir, "./angular/lib/@egjs/ngx-flicking")),
