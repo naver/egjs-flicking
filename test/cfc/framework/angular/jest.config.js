@@ -7,6 +7,10 @@ const commonOptions = require("../../common/jest.config");
 /** @type {import('@jest/types').Config.InitialOptions} */
 module.exports = {
   ...commonOptions,
+  displayName: {
+    name: "Angular",
+    color: "redBright"
+  },
   preset: "jest-preset-angular",
   rootDir: path.resolve(__dirname),
   moduleNameMapper: {

@@ -7,6 +7,10 @@ const commonOptions = require("../../common/jest.config");
 /** @type {import('@jest/types').Config.InitialOptions} */
 module.exports = {
   ...commonOptions,
+  displayName: {
+    name: "Svelte",
+    color: "magentaBright"
+  },
   rootDir: path.resolve(__dirname),
   moduleNameMapper: {
     ...pathsToModuleNameMapper(compilerOptions.paths || {}, {
@@ -16,7 +20,7 @@ module.exports = {
   moduleFileExtensions: [...commonOptions.moduleFileExtensions, "svelte"],
   transform: {
     ...commonOptions.transform,
-    "^.+\\.js$": "babel-jest",
+    "^.+\\.js$": path.resolve(__dirname, "babel.js"),
     "^.+\\.svelte$": [
       "svelte-jester",
       {

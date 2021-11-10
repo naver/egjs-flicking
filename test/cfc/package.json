@@ -11,7 +11,7 @@
     "install:vue3": "npm install --prefix framework/vue3",
     "install:svelte": "npm install --prefix framework/svelte",
     "test": "npm run test:all",
-    "test:all": "npm-run-all test:vanilla test:angular test:react test:preact test:vue test:vue3 test:svelte",
+    "test:all": "jest --config=\"./jest.config.js\"",
     "test:vanilla": "npm test --prefix framework/vanilla",
     "test:angular": "npm test --prefix framework/angular",
     "test:react": "npm test --prefix framework/react",
@@ -21,6 +21,11 @@
     "test:svelte": "npm test --prefix framework/svelte"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.16.0",
+    "@babel/plugin-proposal-decorators": "^7.16.0",
+    "@babel/plugin-transform-react-jsx": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-typescript": "^7.16.0",
     "@testing-library/jest-dom": "^5.15.0",
     "@types/jest": "^27.0.2",
     "@types/node": "^12.11.1",

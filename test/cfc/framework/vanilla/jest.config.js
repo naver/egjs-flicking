@@ -7,6 +7,7 @@ const commonOptions = require("../../common/jest.config");
 /** @type {import('@jest/types').Config.InitialOptions} */
 module.exports = {
   ...commonOptions,
+  displayName: "Vanilla",
   rootDir: path.resolve(__dirname),
   moduleNameMapper: {
     ...pathsToModuleNameMapper(compilerOptions.paths || {}, {
