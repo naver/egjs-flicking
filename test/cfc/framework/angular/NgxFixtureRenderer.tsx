@@ -6,7 +6,7 @@ import VanillaFlicking from "@egjs/flicking";
 import { NgxFlickingComponent, NgxFlickingPanel, NgxFlickingService } from "@egjs/ngx-flicking";
 
 import DummyFlicking from "../../fixture/DummyFlicking";
-import { createSandbox, cleanup, resolveFlickingWhenReady, findFlickingJSX } from "../../common/utils";
+import { createSandbox, cleanup, resolveFlickingWhenReady, findFlickingJSX, flattenAttrs } from "../../common/utils";
 
 const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
   const sandbox = createSandbox("angular-ui");
@@ -37,39 +37,41 @@ const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
   return resolveFlickingWhenReady(fixture.componentInstance.flicking);
 };
 
+const flattenOptions = {
+  formatProp: (name: string, val: any) => {
+    if (name === "style") {
+      return `[ngStyle]="${JSON.stringify(val).replace(/"/g, "'")}"`;
+    } else if (typeof val === "string") {
+      return `${name}="${val}"`;
+    } else {
+      return `${name}={${val}}`;
+    }
+  }
+};
+
 const parseFlickingJSX = (el: JSX.Element, isPanel = false): string => {
   const childs = Children.toArray(el.props?.children ?? []) as JSX.Element[];
 
   if (el.type === DummyFlicking) {
+    const attrs = flattenAttrs(el, flattenOptions);
     const replacedChildren = childs.map(child => parseFlickingJSX(child, true)).join("");
     const events = el.props.events;
     const eventHandlers = Object.keys(events).map(eventName => {
       return `(${eventName})="events.${eventName}($event)"`;
     });
 
-    return `<ngx-flicking #flicking [options]="options" ${ eventHandlers.join(" ") }>${ replacedChildren }</ngx-flicking>`;
+    return `<ngx-flicking #flicking [options]="options" ${attrs.join(" ")} ${ eventHandlers.join(" ") }>${ replacedChildren }</ngx-flicking>`;
   } else if (!isValidElement(el)) {
     return el as unknown as string;
   } else {
-    const dom = el as ReactElement;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { className, children, ...otherProps } = dom.props;
-    const attrs = [];
+    const attrs = flattenAttrs(el, flattenOptions);
     const replacedChildren = childs.map(child => parseFlickingJSX(child)).join("");
 
     if (isPanel) {
       attrs.push("flicking-panel");
     }
 
-    if (className) {
-      attrs.push(`class="${className}"`);
-    }
-
-    for (const key in otherProps) {
-      attrs.push(`${key}="${otherProps[key]}"`);
-    }
-
-    return `<${dom.type} ${attrs.join(" ")}>${ replacedChildren }</${dom.type}>`;
+    return `<${el.type} ${attrs.join(" ")}>${ replacedChildren }</${el.type}>`;
   }
 };
 

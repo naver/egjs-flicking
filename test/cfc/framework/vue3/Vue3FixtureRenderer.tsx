@@ -1,4 +1,4 @@
-import { defineComponent } from "vue";
+import { defineComponent, h, resolveComponent } from "vue";
 import { Children, isValidElement } from "react";
 import { mount } from "@vue/test-utils";
 import VanillaFlicking from "@egjs/flicking";
@@ -9,24 +9,26 @@ import { resolveFlickingWhenReady } from "../../common/utils";
 
 const renderedComponents = [];
 
-const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
-  const flickingJSX = findFlickingJSX(el);
 
+const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
   const elAsVueComponent = defineComponent({
     name: "vue-flicking-test-component",
     components: {
       Flicking
     },
-    data() {
-      return {
-        options: flickingJSX.props.options,
-        events: flickingJSX.props.events
-      };
-    },
-    template: parseJSX(el)
+    render() {
+      return parseJSX(el);
+    }
   });
 
-  const mounted = mount(elAsVueComponent, { attachTo: document.body });
+  const mounted = mount(elAsVueComponent, {
+    attachTo: document.body,
+    global: {
+      config: {
+        warnHandler: () => void 0
+      }
+    }
+  });
   const flicking = mounted.findComponent({ ref: "flicking" });
 
   renderedComponents.push(mounted);
@@ -34,53 +36,35 @@ const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
   return resolveFlickingWhenReady(flicking.vm as unknown as VanillaFlicking);
 };
 
-const findFlickingJSX = (el: JSX.Element): DummyFlicking | null => {
-  const children = Children.toArray(el.props?.children ?? []) as JSX.Element[];
-
-  if (el.type === DummyFlicking) {
-    return el as unknown as DummyFlicking;
-  }
-
-  for (const child of children) {
-    const found = findFlickingJSX(child);
-    if (found) {
-      return found;
-    }
-  }
-
-  return null;
-};
-
 const parseJSX = (el: JSX.Element) => {
   const childs = Children.toArray(el.props?.children ?? []) as JSX.Element[];
+  const parsedChildren = childs.map(child => parseJSX(child));
 
   if (el.type === DummyFlicking) {
-    const replacedChildren = childs.map(child => parseJSX(child)).join("");
-    const events = el.props.events;
-    const eventHandlers = Object.keys(events).map(eventName => {
-      return `@${eventName.replace(/([A-Z])/g, "-$1").toLowerCase()}="events.${eventName}"`;
-    });
+    const { events, children, options, tag, cameraTag, style = {}, className = "", ...otherAttrs } = el.props;
+    const eventHandlers = Object.keys(events).reduce((eventsMap, eventName) => {
+      eventsMap[`on${eventName.charAt(0).toUpperCase() + eventName.slice(1)}`] = events[eventName];
 
-    return `<Flicking ref="flicking" :options="options" ${ eventHandlers.join(" ") }>${ replacedChildren }</Flicking>`;
+      return eventsMap;
+    }, {});
+
+    const Vue3Flicking = resolveComponent("Flicking") as any;
+
+    const flicking = h(Vue3Flicking, {
+      style,
+      options,
+      ...eventHandlers,
+      ref: "flicking"
+    }, parsedChildren);
+
+    return flicking;
   } else if (!isValidElement(el)) {
     return el;
   } else {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { className, children, ...otherProps } = el.props;
-    const attrs = [];
-    const replacedChildren = childs.map(child => parseJSX(child)).join("");
+    const dom = el as JSX.Element;
+    const { style = {}, className = "", children, ...otherAttrs } = dom.props;
 
-    if (className) {
-      attrs.push(`class="${className}"`);
-    }
-
-    for (const key in otherProps) {
-      attrs.push(`${key}="${otherProps[key]}"`);
-    }
-
-    const type = el.type as string;
-
-    return `<${type} ${attrs.join(" ")}>${ replacedChildren }</${type}>`;
+    return h(dom.type as any, { style, ...otherAttrs, class: className }, parsedChildren);
   }
 };
 

@@ -1,4 +1,4 @@
-import Flicking from "@egjs/flicking";
+import Flicking, { FlickingEvents } from "@egjs/flicking";
 import { Children } from "react";
 
 import DummyFlicking from "../fixture/DummyFlicking";
@@ -50,4 +50,33 @@ export const resolveFlickingWhenReady = async (flicking: Flicking): Promise<Flic
   } else {
     return Promise.resolve(flicking);
   }
+};
+
+export const waitEvent = async (flicking: Flicking, eventName: keyof FlickingEvents) => {
+  return new Promise(resolve => {
+    flicking.once(eventName, resolve);
+  });
+};
+
+export const flattenAttrs = (el: JSX.Element, {
+  formatProp = (name: string, val: any) => `${name}="${val}"`
+}: Partial<{
+  formatProp: (name: string, val: any) => string;
+}> = {}): string[] => {
+  const { className, children, ...otherProps } = el.props;
+  const attrs = [];
+
+  for (const propName in DummyFlicking.defaultProps) {
+    delete otherProps[propName];
+  }
+
+  if (className) {
+    attrs.push(formatProp("class", className));
+  }
+
+  for (const key in otherProps) {
+    attrs.push(formatProp(key, otherProps[key]));
+  }
+
+  return attrs;
 };

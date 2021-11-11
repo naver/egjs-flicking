@@ -23,6 +23,26 @@ Object.defineProperty(document.body.style, "transform", {
   }
 });
 
+const returnSizeByStyle = (name: string) => function() {
+  if (!this.style) return 0;
+
+  // This ignores units (px, em, ...)
+  return this.style[name] ? parseFloat(this.style[name]) : 0;
+};
+
+Object.defineProperty(window.HTMLElement.prototype, "clientWidth", {
+  get: returnSizeByStyle("width")
+});
+Object.defineProperty(window.HTMLElement.prototype, "clientHeight", {
+  get: returnSizeByStyle("height")
+});
+Object.defineProperty(window.HTMLElement.prototype, "offsetWidth", {
+  get: returnSizeByStyle("width")
+});
+Object.defineProperty(window.HTMLElement.prototype, "offsetHeight", {
+  get: returnSizeByStyle("height")
+});
+
 beforeEach(() => {
   cleanup();
 });

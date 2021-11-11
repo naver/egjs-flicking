@@ -15,19 +15,28 @@ const render = async (el: JSX.Element) => {
 };
 
 const replaceFlickingJSX = (el: JSX.Element, flickingRef: RefObject<Flicking>): JSX.Element => {
-  const children = toChildArray(el.props?.children ?? []) as JSX.Element[];
-  const replacedChildren = children.map(child => replaceFlickingJSX(child, flickingRef));
+  const childs = toChildArray(el.props?.children ?? []) as JSX.Element[];
+  const replacedChildren = childs.map(child => replaceFlickingJSX(child, flickingRef));
 
   if (el.type === DummyFlicking) {
+    const { events, children, options, tag, cameraTag, ...otherProps } = el.props;
+
     const PreactFlicking = Flicking as any;
-    const events = (el as unknown as DummyFlicking).props.events;
     const eventHandlers = Object.keys(events).reduce((eventsMap, eventName) => {
       eventsMap[`on${eventName.charAt(0).toUpperCase() + eventName.slice(1)}`] = events[eventName];
 
       return eventsMap;
     }, {});
 
-    return <PreactFlicking ref={flickingRef} key="flicking" viewportTag={el.props.tag} cameraTag={el.props.cameraTag} {...el.props.options} {...eventHandlers}>{ replacedChildren }</PreactFlicking>;
+    return <PreactFlicking
+      key="flicking"
+      ref={flickingRef}
+      viewportTag={tag}
+      cameraTag={cameraTag}
+      {...options}
+      {...eventHandlers}
+      {...otherProps}
+    >{ replacedChildren }</PreactFlicking>;
   } else if (!isValidElement(el)) {
     return el;
   } else {

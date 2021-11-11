@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { Children } from "react";
+import { Children, isValidElement } from "react";
 import { mount } from "@vue/test-utils";
 import VanillaFlicking from "@egjs/flicking";
 import { Flicking } from "@egjs/vue-flicking";
@@ -18,6 +18,7 @@ const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
       return parseJSX(h, el);
     }
   });
+
   const mounted = mount(elAsVueComponent, { attachTo: document.body });
   const flicking = mounted.findComponent<Flicking>(Flicking);
 
@@ -27,26 +28,34 @@ const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
 };
 
 const parseJSX = (h: Vue.CreateElement, el: JSX.Element) => {
-  const children = Children.toArray(el.props?.children ?? []) as JSX.Element[];
-  const parsedChildren = children.map(child => parseJSX(h, child));
+  const childs = Children.toArray(el.props?.children ?? []) as JSX.Element[];
+  const parsedChildren = childs.map(child => parseJSX(h, child));
 
   if (el.type === DummyFlicking) {
-    const events = el.props.events;
+    const { events, children, options, tag, cameraTag, style = {}, className = "", ...otherAttrs } = el.props;
     const eventHandlers = Object.keys(events).reduce((eventsMap, eventName) => {
       eventsMap[`${eventName.replace(/([A-Z])/g, "-$1").toLowerCase()}`] = events[eventName];
 
       return eventsMap;
     }, {});
 
-    return h("flicking", {
-      props: { viewportTag: el.props.tag, cameraTag: el.props.cameraTag, options: el.props.options },
-      // "on" not works for some reason
+    const flicking = h("flicking", {
+      style,
+      staticClass: className,
+      attrs: { ...otherAttrs },
+      props: { viewportTag: tag, cameraTag, options },
       on: { ...eventHandlers }
     }, parsedChildren);
-  } else {
-    const className = el.props?.className ?? "";
 
-    return h(el.type, { attrs: { ...el.props, class: className } }, parsedChildren);
+    return flicking;
+  } else if (!isValidElement(el)) {
+    return el;
+  } else {
+    const dom = el as JSX.Element;
+    const { style = {}, className = "", ...otherAttrs } = dom.props;
+
+
+    return h(dom.type, { style, staticClass: className, attrs: { ...otherAttrs } }, parsedChildren);
   }
 };
 
