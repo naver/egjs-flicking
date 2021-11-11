@@ -26,7 +26,8 @@
   },
   "include": [
     "suite/**/*",
-    "common/**/*"
+    "common/**/*",
+    "fixture/**/*"
   ],
   "exclude": [
     "**/node_modules"

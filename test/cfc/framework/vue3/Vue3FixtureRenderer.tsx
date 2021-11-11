@@ -1,10 +1,11 @@
-import { defineComponent, h, resolveComponent } from "vue";
+import { defineComponent } from "vue";
 import { Children, isValidElement } from "react";
 import { mount } from "@vue/test-utils";
 import VanillaFlicking from "@egjs/flicking";
 import Flicking from "@egjs/vue3-flicking";
 
 import DummyFlicking from "../../fixture/DummyFlicking";
+import { resolveFlickingWhenReady } from "../../common/utils";
 
 const renderedComponents = [];
 
@@ -18,17 +19,19 @@ const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
     },
     data() {
       return {
-        options: flickingJSX.props.options as any
+        options: flickingJSX.props.options,
+        events: flickingJSX.props.events
       };
     },
     template: parseJSX(el)
   });
+
   const mounted = mount(elAsVueComponent, { attachTo: document.body });
-  const flickingInst = mounted.findComponent({ ref: "flicking" });
+  const flicking = mounted.findComponent({ ref: "flicking" });
 
   renderedComponents.push(mounted);
 
-  return flickingInst.vm as unknown as VanillaFlicking;
+  return resolveFlickingWhenReady(flicking.vm as unknown as VanillaFlicking);
 };
 
 const findFlickingJSX = (el: JSX.Element): DummyFlicking | null => {
@@ -53,7 +56,12 @@ const parseJSX = (el: JSX.Element) => {
 
   if (el.type === DummyFlicking) {
     const replacedChildren = childs.map(child => parseJSX(child)).join("");
-    return `<Flicking ref="flicking" :options="options">${ replacedChildren }</Flicking>`;
+    const events = el.props.events;
+    const eventHandlers = Object.keys(events).map(eventName => {
+      return `@${eventName.replace(/([A-Z])/g, "-$1").toLowerCase()}="events.${eventName}"`;
+    });
+
+    return `<Flicking ref="flicking" :options="options" ${ eventHandlers.join(" ") }>${ replacedChildren }</Flicking>`;
   } else if (!isValidElement(el)) {
     return el;
   } else {

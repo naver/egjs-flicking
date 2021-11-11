@@ -1,12 +1,16 @@
-import { FlickingOptions } from "@egjs/flicking";
 import Flicking from "./DummyFlicking";
+import Fixture from "./Fixture";
 
 const panels = [0, 1, 2];
 
-export default (options: Partial<FlickingOptions> = {}) => <div id="test">
-  <div className="flicking-wrapper">
-    <Flicking options={options}>
-      { panels.map(panel => <div className="panel" key={panel}>Panel {panel}</div>) }
-    </Flicking>
+const Basic: Fixture = (options, events) => (
+  <div id="test">
+    <div className="flicking-wrapper">
+      <Flicking options={options} events={events}>
+        { panels.map(panel => <div className="panel" key={panel}>Panel {panel}</div>) }
+      </Flicking>
+    </div>
   </div>
-</div>;
+);
+
+export default Basic;

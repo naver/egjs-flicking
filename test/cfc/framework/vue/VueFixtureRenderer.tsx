@@ -5,6 +5,7 @@ import VanillaFlicking from "@egjs/flicking";
 import { Flicking } from "@egjs/vue-flicking";
 
 import DummyFlicking from "../../fixture/DummyFlicking";
+import { resolveFlickingWhenReady } from "../../common/utils";
 
 const renderedComponents = [];
 
@@ -18,11 +19,11 @@ const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
     }
   });
   const mounted = mount(elAsVueComponent, { attachTo: document.body });
-  const flickingInst = mounted.findComponent<Flicking>(Flicking);
+  const flicking = mounted.findComponent<Flicking>(Flicking);
 
   renderedComponents.push(mounted);
 
-  return flickingInst.vm as unknown as VanillaFlicking;
+  return resolveFlickingWhenReady(flicking.vm);
 };
 
 const parseJSX = (h: Vue.CreateElement, el: JSX.Element) => {
@@ -30,7 +31,18 @@ const parseJSX = (h: Vue.CreateElement, el: JSX.Element) => {
   const parsedChildren = children.map(child => parseJSX(h, child));
 
   if (el.type === DummyFlicking) {
-    return h("flicking", { props: { viewportTag: el.props.tag, cameraTag: el.props.cameraTag, options: el.props.options }, ref: "flicking" }, parsedChildren);
+    const events = el.props.events;
+    const eventHandlers = Object.keys(events).reduce((eventsMap, eventName) => {
+      eventsMap[`${eventName.replace(/([A-Z])/g, "-$1").toLowerCase()}`] = events[eventName];
+
+      return eventsMap;
+    }, {});
+
+    return h("flicking", {
+      props: { viewportTag: el.props.tag, cameraTag: el.props.cameraTag, options: el.props.options },
+      // "on" not works for some reason
+      on: { ...eventHandlers }
+    }, parsedChildren);
   } else {
     const className = el.props?.className ?? "";
 

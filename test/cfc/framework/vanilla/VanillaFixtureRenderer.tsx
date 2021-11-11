@@ -4,7 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import Flicking from "@egjs/flicking";
 
 import DummyFlicking from "../../fixture/DummyFlicking";
-import { createSandbox, cleanup } from "../../common/utils";
+import { createSandbox, cleanup, findFlickingJSX, resolveFlickingWhenReady } from "../../common/utils";
 
 const render = async (el: JSX.Element): Promise<Flicking> => {
   const sandbox = createSandbox("vanilla-ui");
@@ -14,39 +14,30 @@ const render = async (el: JSX.Element): Promise<Flicking> => {
 
   sandbox.innerHTML = html;
 
-  return Promise.resolve(new Flicking(".flicking-viewport", flickingJSX.props.options));
-};
+  const flicking = new Flicking(".flicking-viewport", flickingJSX.props.options);
 
-const findFlickingJSX = (el: JSX.Element): DummyFlicking => {
-  const children = Children.toArray(el.props?.children ?? []) as JSX.Element[];
+  flicking.on(flickingJSX.props.events);
 
-  if (el.type === DummyFlicking) {
-    return el as unknown as DummyFlicking;
-  }
-
-  for (const child of children) {
-    const found = findFlickingJSX(child);
-    if (found) {
-      return found;
-    }
-  }
+  return resolveFlickingWhenReady(flicking);
 };
 
 const parseJSX = (el: JSX.Element): JSX.Element => {
-  const children = Children.toArray(el.props?.children ?? []);
-  const parsedChildren = children.map(child => parseJSX(child as JSX.Element));
+  const childs = Children.toArray(el.props?.children ?? []);
+  const parsedChildren = childs.map(child => parseJSX(child as JSX.Element));
 
   if (!isValidElement(el)) {
     return el;
   } else if (el.type === DummyFlicking) {
     const flickingEl = el as unknown as DummyFlicking;
-    const cameraEl = createElement<Partial<HTMLElement>>(flickingEl.props.cameraTag, {
+    const { options, events, children, cameraTag, tag, ...jsxProps } = flickingEl.props;
+    const cameraEl = createElement<Partial<HTMLElement>>(cameraTag, {
       className: "flicking-camera",
       key: "camera"
     }, parsedChildren);
-    const viewportEl = createElement<Partial<HTMLElement>>(flickingEl.props.tag, {
+    const viewportEl = createElement<Partial<HTMLElement>>(tag, {
       className: "flicking-viewport",
-      key: "viewport"
+      key: "viewport",
+      ...jsxProps as any
     }, cameraEl);
 
     return viewportEl;

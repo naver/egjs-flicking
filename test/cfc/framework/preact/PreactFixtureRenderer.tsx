@@ -1,9 +1,9 @@
 import { toChildArray, cloneElement, createRef, isValidElement, RefObject } from "preact";
 import { render as renderPreactComponent, cleanup } from "@testing-library/preact";
-import VanillaFlicking from "@egjs/flicking";
 import Flicking from "@egjs/preact-flicking";
 
 import DummyFlicking from "../../fixture/DummyFlicking";
+import { resolveFlickingWhenReady } from "../../common/utils";
 
 const render = async (el: JSX.Element) => {
   const flickingRef = createRef<Flicking>();
@@ -11,7 +11,7 @@ const render = async (el: JSX.Element) => {
 
   renderPreactComponent(replaced);
 
-  return Promise.resolve(flickingRef.current as unknown as VanillaFlicking);
+  return resolveFlickingWhenReady(flickingRef.current);
 };
 
 const replaceFlickingJSX = (el: JSX.Element, flickingRef: RefObject<Flicking>): JSX.Element => {
@@ -20,8 +20,14 @@ const replaceFlickingJSX = (el: JSX.Element, flickingRef: RefObject<Flicking>): 
 
   if (el.type === DummyFlicking) {
     const PreactFlicking = Flicking as any;
+    const events = (el as unknown as DummyFlicking).props.events;
+    const eventHandlers = Object.keys(events).reduce((eventsMap, eventName) => {
+      eventsMap[`on${eventName.charAt(0).toUpperCase() + eventName.slice(1)}`] = events[eventName];
 
-    return <PreactFlicking ref={flickingRef} key="flicking" viewportTag={el.props.tag} cameraTag={el.props.cameraTag} {...el.props.options}>{ replacedChildren }</PreactFlicking>;
+      return eventsMap;
+    }, {});
+
+    return <PreactFlicking ref={flickingRef} key="flicking" viewportTag={el.props.tag} cameraTag={el.props.cameraTag} {...el.props.options} {...eventHandlers}>{ replacedChildren }</PreactFlicking>;
   } else if (!isValidElement(el)) {
     return el;
   } else {

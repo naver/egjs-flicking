@@ -1,9 +1,9 @@
 import { Children, cloneElement, createRef, isValidElement, RefObject } from "react";
 import { render as renderReactComponent, cleanup } from "@testing-library/react";
-import VanillaFlicking from "@egjs/flicking";
 import Flicking from "@egjs/react-flicking";
 
 import DummyFlicking from "../../fixture/DummyFlicking";
+import { resolveFlickingWhenReady } from "../../common/utils";
 
 const render = async (el: JSX.Element) => {
   const flickingRef = createRef<Flicking>();
@@ -11,7 +11,7 @@ const render = async (el: JSX.Element) => {
 
   renderReactComponent(replaced);
 
-  return Promise.resolve(flickingRef.current as unknown as VanillaFlicking);
+  return resolveFlickingWhenReady(flickingRef.current);
 };
 
 const replaceFlickingJSX = (el: JSX.Element, flickingRef: RefObject<Flicking>): JSX.Element => {
@@ -19,7 +19,14 @@ const replaceFlickingJSX = (el: JSX.Element, flickingRef: RefObject<Flicking>): 
   const replacedChildren = children.map(child => replaceFlickingJSX(child, flickingRef));
 
   if (el.type === DummyFlicking) {
-    return <Flicking ref={flickingRef} key="flicking" viewportTag={el.props.tag} cameraTag={el.props.cameraTag} {...el.props.options}>{ replacedChildren }</Flicking>;
+    const events = (el as unknown as DummyFlicking).props.events;
+    const eventHandlers = Object.keys(events).reduce((eventsMap, eventName) => {
+      eventsMap[`on${eventName.charAt(0).toUpperCase() + eventName.slice(1)}`] = events[eventName];
+
+      return eventsMap;
+    }, {});
+
+    return <Flicking ref={flickingRef} key="flicking" viewportTag={el.props.tag} cameraTag={el.props.cameraTag} {...el.props.options} {...eventHandlers}>{ replacedChildren }</Flicking>;
   } else if (!isValidElement(el)) {
     return el;
   } else {

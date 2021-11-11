@@ -1,5 +1,6 @@
 import Basic from "../fixture/Basic";
 import { render, cleanup } from "@common/renderer";
+import { simulate } from "../common/simulator";
 
 describe("Initial Rendering State", () => {
   afterEach(() => {
@@ -27,5 +28,23 @@ describe("Initial Rendering State", () => {
 
     expect(flicking.circular).toBeTruthy();
     expect(flicking.moveType).toEqual("freeScroll");
+  });
+
+  it("should trigger select event with mouse click", async () => {
+    const selectSpy = jest.fn();
+    const holdStartSpy = jest.fn();
+    const holdEndSpy = jest.fn();
+
+    const flicking = await render(Basic({}, {
+      holdStart: holdStartSpy,
+      holdEnd: holdEndSpy,
+      select: selectSpy
+    }));
+
+    simulate(flicking);
+
+    expect(holdStartSpy).toHaveBeenCalledTimes(1);
+    expect(holdEndSpy).toHaveBeenCalledTimes(1);
+    expect(selectSpy).toHaveBeenCalledTimes(1);
   });
 });

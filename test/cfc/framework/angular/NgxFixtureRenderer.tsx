@@ -6,14 +6,15 @@ import VanillaFlicking from "@egjs/flicking";
 import { NgxFlickingComponent, NgxFlickingPanel, NgxFlickingService } from "@egjs/ngx-flicking";
 
 import DummyFlicking from "../../fixture/DummyFlicking";
-import { createSandbox, cleanup } from "../../common/utils";
+import { createSandbox, cleanup, resolveFlickingWhenReady, findFlickingJSX } from "../../common/utils";
 
 const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
   const sandbox = createSandbox("angular-ui");
   const replaced = parseFlickingJSX(el);
   const flickingJSX = findFlickingJSX(el);
 
-  const options = flickingJSX ? flickingJSX.props.options : null;
+  const options = flickingJSX ? flickingJSX.props.options : {};
+  const events = flickingJSX ? flickingJSX.props.events : {};
 
   @Component({
     template: replaced
@@ -21,6 +22,7 @@ const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
   class NgxFlickingTestComp {
     @ViewChild(NgxFlickingComponent) public flicking!: NgxFlickingComponent;
     public options = options;
+    public events = events;
   }
 
   await TestBed.configureTestingModule({
@@ -32,24 +34,7 @@ const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
   fixture.detectChanges();
   sandbox.appendChild(fixture.nativeElement);
 
-  return fixture.componentInstance.flicking as unknown as VanillaFlicking;
-};
-
-const findFlickingJSX = (el: JSX.Element): DummyFlicking | null => {
-  const children = Children.toArray(el.props?.children ?? []) as JSX.Element[];
-
-  if (el.type === DummyFlicking) {
-    return el as unknown as DummyFlicking;
-  }
-
-  for (const child of children) {
-    const found = findFlickingJSX(child);
-    if (found) {
-      return found;
-    }
-  }
-
-  return null;
+  return resolveFlickingWhenReady(fixture.componentInstance.flicking);
 };
 
 const parseFlickingJSX = (el: JSX.Element, isPanel = false): string => {
@@ -57,7 +42,12 @@ const parseFlickingJSX = (el: JSX.Element, isPanel = false): string => {
 
   if (el.type === DummyFlicking) {
     const replacedChildren = childs.map(child => parseFlickingJSX(child, true)).join("");
-    return `<ngx-flicking #flicking [options]="options">${ replacedChildren }</ngx-flicking>`;
+    const events = el.props.events;
+    const eventHandlers = Object.keys(events).map(eventName => {
+      return `(${eventName})="events.${eventName}($event)"`;
+    });
+
+    return `<ngx-flicking #flicking [options]="options" ${ eventHandlers.join(" ") }>${ replacedChildren }</ngx-flicking>`;
   } else if (!isValidElement(el)) {
     return el as unknown as string;
   } else {
