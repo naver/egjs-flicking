@@ -14,13 +14,11 @@ class VueElementProvider implements ExternalElementProvider {
   public get element() {
     const el = this._el.$el.nextSibling as HTMLElement;
 
-    if (!el || el.nodeType !== Node.ELEMENT_NODE) {
-      return this._cachedElement;
-    } else {
+    if (el && el.nodeType === Node.ELEMENT_NODE) {
       this._cachedElement = el;
-
-      return el;
     }
+
+    return this._cachedElement;
   }
 
   public constructor(el: VuePanel) {
