@@ -19,7 +19,7 @@ const replaceFlickingJSX = (el: JSX.Element, flickingRef: RefObject<Flicking>): 
   const replacedChildren = childs.map(child => replaceFlickingJSX(child, flickingRef));
 
   if (el.type === DummyFlicking) {
-    const { events, children, options, tag, cameraTag, ...otherProps } = el.props;
+    const { events, children, options, tag, cameraTag, plugins, ...otherProps } = el.props;
 
     const eventHandlers = Object.keys(events).reduce((eventsMap, eventName) => {
       eventsMap[`on${eventName.charAt(0).toUpperCase() + eventName.slice(1)}`] = events[eventName];
@@ -32,6 +32,7 @@ const replaceFlickingJSX = (el: JSX.Element, flickingRef: RefObject<Flicking>): 
       ref={flickingRef}
       viewportTag={tag}
       cameraTag={cameraTag}
+      plugins={plugins}
       {...options}
       {...eventHandlers}
       {...otherProps}

@@ -14,9 +14,12 @@ const render = async (el: JSX.Element): Promise<Flicking> => {
 
   sandbox.innerHTML = html;
 
-  const flicking = new Flicking(".flicking-viewport", flickingJSX.props.options);
+  const { options, events, plugins } = flickingJSX.props;
 
-  flicking.on(flickingJSX.props.events);
+  const flicking = new Flicking(".flicking-viewport", options);
+
+  flicking.on(events);
+  flicking.addPlugins(...plugins);
 
   return resolveFlickingWhenReady(flicking);
 };

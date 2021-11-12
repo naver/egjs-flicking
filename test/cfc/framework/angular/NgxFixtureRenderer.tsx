@@ -14,6 +14,7 @@ const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
   const flickingJSX = findFlickingJSX(el);
 
   const options = flickingJSX ? flickingJSX.props.options : {};
+  const plugins = flickingJSX ? flickingJSX.props.plugins : [];
   const events = flickingJSX ? flickingJSX.props.events : {};
 
   @Component({
@@ -22,6 +23,7 @@ const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
   class NgxFlickingTestComp {
     @ViewChild(NgxFlickingComponent) public flicking!: NgxFlickingComponent;
     public options = options;
+    public plugins = plugins;
     public events = events;
   }
 
@@ -60,7 +62,7 @@ const parseFlickingJSX = (el: JSX.Element, isPanel = false): string => {
       return `(${eventName})="events.${eventName}($event)"`;
     });
 
-    return `<ngx-flicking #flicking [options]="options" ${attrs.join(" ")} ${ eventHandlers.join(" ") }>${ replacedChildren }</ngx-flicking>`;
+    return `<ngx-flicking #flicking [options]="options" [plugins]="plugins" ${attrs.join(" ")} ${ eventHandlers.join(" ") }>${ replacedChildren }</ngx-flicking>`;
   } else if (!isValidElement(el)) {
     return el as unknown as string;
   } else {

@@ -1,4 +1,4 @@
-import Basic from "../fixture/Basic";
+import Wrapped from "../fixture/Wrapped";
 import { render, cleanup } from "@common/renderer";
 import simulate from "../common/simulate";
 import { waitEvent } from "../common/utils";
@@ -9,7 +9,7 @@ describe("Initial Rendering State", () => {
   });
 
   it("should render viewport & camera element", async () => {
-    await render(Basic());
+    await render(Wrapped());
 
     expect(document.querySelectorAll("#test").length).toEqual(1);
     expect(document.querySelectorAll(".flicking-wrapper").length).toEqual(1);
@@ -18,21 +18,21 @@ describe("Initial Rendering State", () => {
   });
 
   it("should render panel elements inside it", async () => {
-    const flicking = await render(Basic());
+    const flicking = await render(Wrapped());
 
     expect(document.querySelectorAll(".panel").length).toEqual(3);
     expect(flicking.panels.length).toEqual(3);
   });
 
   it("should have options defined in it", async () => {
-    const flicking = await render(Basic({ circular: true, moveType: "freeScroll" }));
+    const flicking = await render(Wrapped({ options: { circular: true, moveType: "freeScroll" } }));
 
     expect(flicking.circular).toBeTruthy();
     expect(flicking.moveType).toEqual("freeScroll");
   });
 
   it("should have correct size", async () => {
-    const flicking = await render(Basic());
+    const flicking = await render(Wrapped());
 
     expect(flicking.viewport.width).toEqual(1000);
     expect(flicking.viewport.height).toEqual(300);
@@ -44,10 +44,12 @@ describe("Initial Rendering State", () => {
     const holdStartSpy = jest.fn();
     const holdEndSpy = jest.fn();
 
-    const flicking = await render(Basic({}, {
-      holdStart: holdStartSpy,
-      holdEnd: holdEndSpy,
-      select: selectSpy
+    const flicking = await render(Wrapped({
+      events: {
+        holdStart: holdStartSpy,
+        holdEnd: holdEndSpy,
+        select: selectSpy
+      }
     }));
 
     simulate(flicking, { deltaX: 0, deltaY: 0 });
@@ -60,7 +62,7 @@ describe("Initial Rendering State", () => {
   });
 
   it("should move to the next panel when moving above threshold", async () => {
-    const flicking = await render(Basic({ threshold: 40 }));
+    const flicking = await render(Wrapped({ options: { threshold: 40 } }));
 
     const prevIndex = flicking.index;
     simulate(flicking, { deltaX: -50, deltaY: 0, duration: 3000 });

@@ -1,0 +1,33 @@
+name: Run tests
+on: [push, pull_request]
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14.15.4
+      - name: install
+        run: npm install
+      - name: install-unit
+        working-directory: ./test/unit
+        run: npm install
+      - name: run unit test
+        working-directory: ./test/unit
+        run: npm run test
+  cfc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14.15.4
+      - name: install
+        run: npm install
+      - name: install-cfc
+        working-directory: ./test/cfc
+        run: npm install
+      - name: run cfc test
+        working-directory: ./test/cfc
+        run: npm run test

@@ -41,7 +41,7 @@ const parseJSX = (el: JSX.Element) => {
   const parsedChildren = childs.map(child => parseJSX(child));
 
   if (el.type === DummyFlicking) {
-    const { events, children, options, tag, cameraTag, style = {}, className = "", ...otherAttrs } = el.props;
+    const { events, children, options, plugins, tag, cameraTag, style = {}, className = "", ...otherAttrs } = el.props;
     const eventHandlers = Object.keys(events).reduce((eventsMap, eventName) => {
       eventsMap[`on${eventName.charAt(0).toUpperCase() + eventName.slice(1)}`] = events[eventName];
 
@@ -53,6 +53,7 @@ const parseJSX = (el: JSX.Element) => {
     const flicking = h(Vue3Flicking, {
       style,
       options,
+      plugins,
       ...eventHandlers,
       ref: "flicking"
     }, parsedChildren);

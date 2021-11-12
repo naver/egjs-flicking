@@ -32,7 +32,7 @@ const parseJSX = (h: Vue.CreateElement, el: JSX.Element) => {
   const parsedChildren = childs.map(child => parseJSX(h, child));
 
   if (el.type === DummyFlicking) {
-    const { events, children, options, tag, cameraTag, style = {}, className = "", ...otherAttrs } = el.props;
+    const { events, children, options, plugins, tag, cameraTag, style = {}, className = "", ...otherAttrs } = el.props;
     const eventHandlers = Object.keys(events).reduce((eventsMap, eventName) => {
       eventsMap[`${eventName.replace(/([A-Z])/g, "-$1").toLowerCase()}`] = events[eventName];
 
@@ -43,7 +43,7 @@ const parseJSX = (h: Vue.CreateElement, el: JSX.Element) => {
       style,
       staticClass: className,
       attrs: { ...otherAttrs },
-      props: { viewportTag: tag, cameraTag, options },
+      props: { viewportTag: tag, cameraTag, options, plugins },
       on: { ...eventHandlers }
     }, parsedChildren);
 

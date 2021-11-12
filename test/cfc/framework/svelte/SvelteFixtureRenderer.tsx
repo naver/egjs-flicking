@@ -19,6 +19,7 @@ const render = async (el: JSX.Element) => {
 import Flicking, {FlickingPanel} from "@egjs/svelte-flicking";
 export let options;
 export let events;
+export let plugins;
 export let flicking;
 </script>
 <svelte:options accessors={true} />
@@ -33,7 +34,8 @@ ${replaced}
     testSvelteComp,
     {
       options: flickingJSX?.props.options ?? {},
-      events: flickingJSX?.props.events ?? {}
+      events: flickingJSX?.props.events ?? {},
+      plugins: flickingJSX?.props.plugins ?? []
     },
     { container: sandbox }
   );
@@ -64,7 +66,7 @@ const parseFlickingJSX = (el: JSX.Element, isPanel = false): string => {
       return `on:${eventName}={events.${eventName}}`;
     });
 
-    return `<Flicking bind:this={flicking} options={options} ${eventHandlers.join(" ")} ${attrs.join(" ")}>${ replacedChildren }</Flicking>`;
+    return `<Flicking bind:this={flicking} options={options} plugins={plugins} ${eventHandlers.join(" ")} ${attrs.join(" ")}>${ replacedChildren }</Flicking>`;
   } else if (!isValidElement(el)) {
     return el as unknown as string;
   } else {
