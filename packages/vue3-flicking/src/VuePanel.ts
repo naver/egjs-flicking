@@ -7,11 +7,10 @@ import { Vue } from "vue-class-component";
 class VuePanel extends Vue {
   public hide: boolean = false;
 
-  public get nativeElement() { return this.$.subTree.children![0].el as HTMLElement; }
-
   public render() {
     if (this.hide || !this.$slots.default) return;
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     return this.$slots.default() as any;
   }
 }

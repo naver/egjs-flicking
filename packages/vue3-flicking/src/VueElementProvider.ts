@@ -8,9 +8,20 @@ import VuePanel from "./VuePanel";
 
 class VueElementProvider implements ExternalElementProvider {
   private _el: VuePanel;
+  private _cachedElement: HTMLElement;
 
-  public get element() { return this._el.nativeElement; }
   public get rendered() { return !this._el.hide; }
+  public get element() {
+    const el = this._el.$el.nextSibling as HTMLElement;
+
+    if (!el || el.nodeType !== Node.ELEMENT_NODE) {
+      return this._cachedElement;
+    } else {
+      this._cachedElement = el;
+
+      return el;
+    }
+  }
 
   public constructor(el: VuePanel) {
     this._el = el;

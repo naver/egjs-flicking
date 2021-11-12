@@ -71,16 +71,12 @@
           <span class="flicking-arrow-next"></span>
         </template>
       </Flicking>
-      <Flicking :plugins="arrow">
+      <Flicking :plugins="fade" :options="{ renderOnlyVisible: true }">
         <div class="panel">0</div>
         <div class="panel">1</div>
         <div class="panel">2</div>
         <div class="panel">3</div>
         <div class="panel">4</div>
-        <template #viewport>
-          <span class="flicking-arrow-prev"></span>
-          <span class="flicking-arrow-next"></span>
-        </template>
       </Flicking>
       <Flicking class="flicking flicking0" ref="vFlick" :options="{
         panelsPerView: 5,
@@ -101,7 +97,7 @@
 import Flicking from "../src/Flicking";
 import Test from "./components/Test.vue";
 import Test2 from "./components/Test2.vue";
-import { Arrow } from "@egjs/flicking-plugins";
+import { Arrow, Fade } from "@egjs/flicking-plugins";
 
 export default {
   components: {
@@ -113,7 +109,8 @@ export default {
     return {
       panels: [0, 1, 2, 3, 4, 5, 6],
       list0: [0, 1, 2],
-      arrow: [new Arrow()]
+      arrow: [new Arrow()],
+      fade: [new Fade()]
     }
   },
   methods: {
