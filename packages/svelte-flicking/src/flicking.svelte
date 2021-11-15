@@ -7,7 +7,6 @@
     setContext
   } from "svelte";
   import VanillaFlicking, {
-    ExternalPanel,
     VirtualRenderingStrategy,
     NormalRenderingStrategy,
     sync,
@@ -67,20 +66,17 @@
       getSlots,
       renderEmitter,
       forceUpdate,
+      align: options.align,
       strategy: options.virtual && options.panelsPerView > 0
         ? new VirtualRenderingStrategy()
         : new NormalRenderingStrategy({
-          providerCtor: SvelteElementProvider,
-          panelCtor: ExternalPanel
+          providerCtor: SvelteElementProvider
         })
     };
 
     const flicking = new VanillaFlicking(viewportEl, {
       ...options,
-      renderExternal: {
-        renderer: SvelteRenderer,
-        rendererOptions
-      }
+      externalRenderer: new SvelteRenderer(rendererOptions)
     });
 
     vanillaFlicking = flicking;

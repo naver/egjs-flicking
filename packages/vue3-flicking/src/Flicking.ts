@@ -17,8 +17,7 @@ import VanillaFlicking, {
   getDefaultCameraTransform,
   range,
   VirtualRenderingStrategy,
-  NormalRenderingStrategy,
-  ExternalPanel
+  NormalRenderingStrategy
 } from "@egjs/flicking";
 
 import FlickingProps from "./FlickingProps";
@@ -34,7 +33,7 @@ import VueElementProvider from "./VueElementProvider";
 class Flicking extends Vue.with(FlickingProps) {
   public readonly renderEmitter = new Component<{ render: void }>();
 
-  @withFlickingMethods private vanillaFlicking: VanillaFlicking | null = null;
+  private vanillaFlicking: VanillaFlicking | null = null;
   private pluginsDiffer!: ListDiffer<Plugin>;
   private slotDiffer!: ListDiffer<VNode>;
   private diffResult?: DiffResult<VNode> = undefined;
@@ -44,20 +43,17 @@ class Flicking extends Vue.with(FlickingProps) {
     const viewportEl = this.$el as HTMLElement;
     const rendererOptions: VueRendererOptions = {
       vueFlicking: this,
+      align: options.align,
       strategy: options.virtual && (options.panelsPerView ?? -1) > 0
         ? new VirtualRenderingStrategy()
         : new NormalRenderingStrategy({
-          providerCtor: VueElementProvider,
-          panelCtor: ExternalPanel
+          providerCtor: VueElementProvider
         })
     };
 
     const flicking = new VanillaFlicking(viewportEl, {
-      ...this.options,
-      ...{ renderExternal: {
-        renderer: VueRenderer,
-        rendererOptions
-      }}
+      ...options,
+      externalRenderer: new VueRenderer(rendererOptions)
     });
     this.vanillaFlicking = flicking;
 
@@ -256,6 +252,8 @@ class Flicking extends Vue.with(FlickingProps) {
     }));
   };
 }
+
+withFlickingMethods (Flicking.prototype, "vanillaFlicking");
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Flicking extends VanillaFlicking, VueConstructor<Vue & FlickingProps> {}

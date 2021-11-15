@@ -46,7 +46,6 @@ import VanillaFlicking, {
   PanelChangeEvent,
   VirtualRenderingStrategy,
   NormalRenderingStrategy,
-  ExternalPanel,
   range,
   CLASS
 } from "@egjs/flicking";
@@ -145,12 +144,12 @@ export class NgxFlickingComponent extends FlickingInterface
     const virtual = options.virtual && options.panelsPerView > 0;
     const rendererOptions: NgxRendererOptions = {
       ngxFlicking: this,
+      align: options.align,
       ngxRenderer: this._ngxRenderer,
       strategy: virtual
         ? new VirtualRenderingStrategy()
         : new NormalRenderingStrategy({
-          providerCtor: NgxElementProvider,
-          panelCtor: ExternalPanel
+          providerCtor: NgxElementProvider
         })
     };
 
@@ -161,10 +160,7 @@ export class NgxFlickingComponent extends FlickingInterface
     // This prevents mousemove to call ngDoCheck & noAfterContentChecked everytime
     const flicking = new VanillaFlicking(viewportEl, {
       ...this.options,
-      renderExternal: {
-        renderer: NgxRenderer,
-        rendererOptions
-      }
+      externalRenderer: new NgxRenderer(rendererOptions)
     });
     this._vanillaFlicking = flicking;
 

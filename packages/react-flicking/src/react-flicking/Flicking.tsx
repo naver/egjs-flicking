@@ -15,8 +15,7 @@ import VanillaFlicking, {
   getDefaultCameraTransform,
   Plugin,
   range,
-  NormalRenderingStrategy,
-  ExternalPanel
+  NormalRenderingStrategy
 } from "@egjs/flicking";
 import { isFragment } from "react-is";
 
@@ -59,11 +58,11 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const props = this.props as Required<FlickingProps & FlickingOptions>;
     const rendererOptions: ReactRendererOptions = {
       reactFlicking: this,
+      align: props.align,
       strategy: props.virtual && props.panelsPerView > 0
         ? new VirtualRenderingStrategy()
         : new NormalRenderingStrategy({
-          providerCtor: ReactElementProvider,
-          panelCtor: ExternalPanel
+          providerCtor: ReactElementProvider
         })
     };
 
@@ -71,10 +70,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       this._viewportElement,
       {
         ...props,
-        ...{ renderExternal: {
-          renderer: ReactRenderer,
-          rendererOptions
-        }}
+        externalRenderer: new ReactRenderer(rendererOptions)
       },
     );
 
