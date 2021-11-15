@@ -11,7 +11,7 @@ export const EASING = {
   expo: function(p: number) { return Math.pow(p, 6); }
 };
 
-export default (flicking: Flicking, {
+export default async (flicking: Flicking, {
   pos = [0, 0],
   deltaX = 0,
   deltaY = 0,
@@ -28,14 +28,16 @@ export default (flicking: Flicking, {
   const interval = 1000 / 60; // 60fps
   const loops = Math.ceil(duration / interval);
 
-  loop({
-    element,
-    pos,
-    deltaX,
-    deltaY,
-    loopCnt: 0,
-    loops,
-    easing
+  return new Promise<void>(resolve => {
+    loop({
+      element,
+      pos,
+      deltaX,
+      deltaY,
+      loopCnt: 0,
+      loops,
+      easing
+    }, resolve);
   });
 };
 
@@ -47,7 +49,7 @@ const loop = (ctx: {
   loopCnt: number;
   loops: number;
   easing: (p: number) => number;
-}) => {
+}, done: () => void) => {
   const {
     element,
     pos,
@@ -97,7 +99,9 @@ const loop = (ctx: {
       loop({
         ...ctx,
         loopCnt: loopCnt + 1
-      });
+      }, done);
     }, 16);
+  } else {
+    done();
   }
 };

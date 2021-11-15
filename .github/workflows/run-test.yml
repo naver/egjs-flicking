@@ -5,11 +5,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.1.5
+      - uses: actions/setup-node@v2
         with:
-          node-version: 14.15.4
-      - name: install
-        run: npm install
+          node-version: 16
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+      - run: npm install
       - name: install-unit
         working-directory: ./test/unit
         run: npm install
@@ -20,11 +21,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.1.5
+      - uses: actions/setup-node@v2
         with:
-          node-version: 14.15.4
-      - name: install
-        run: npm install
+          node-version: 16
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+      - run: npm install
       - name: install-cfc
         working-directory: ./test/cfc
         run: npm install

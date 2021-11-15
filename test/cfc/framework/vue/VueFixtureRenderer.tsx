@@ -1,7 +1,7 @@
 import Vue from "vue";
 import { Children, isValidElement } from "react";
 import { mount } from "@vue/test-utils";
-import VanillaFlicking from "@egjs/flicking";
+import VanillaFlicking, { withFlickingMethods } from "@egjs/flicking";
 import { Flicking } from "@egjs/vue-flicking";
 
 import DummyFlicking from "../../fixture/DummyFlicking";
@@ -20,11 +20,11 @@ const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
   });
 
   const mounted = mount(elAsVueComponent, { attachTo: document.body });
-  const flicking = mounted.findComponent<Flicking>(Flicking);
+  const flicking = mounted.findComponent<Flicking>(Flicking).vm;
 
   renderedComponents.push(mounted);
 
-  return resolveFlickingWhenReady(flicking.vm);
+  return resolveFlickingWhenReady(flicking);
 };
 
 const parseJSX = (h: Vue.CreateElement, el: JSX.Element) => {
@@ -53,7 +53,6 @@ const parseJSX = (h: Vue.CreateElement, el: JSX.Element) => {
   } else {
     const dom = el as JSX.Element;
     const { style = {}, className = "", ...otherAttrs } = dom.props;
-
 
     return h(dom.type, { style, staticClass: className, attrs: { ...otherAttrs } }, parsedChildren);
   }

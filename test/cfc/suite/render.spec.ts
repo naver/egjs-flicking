@@ -1,13 +1,7 @@
 import Wrapped from "../fixture/Wrapped";
-import { render, cleanup } from "@common/renderer";
-import simulate from "../common/simulate";
-import { waitEvent } from "../common/utils";
+import { render } from "@common/renderer";
 
-describe("Initial Rendering State", () => {
-  afterEach(() => {
-    cleanup();
-  });
-
+describe("Rendering", () => {
   it("should render viewport & camera element", async () => {
     await render(Wrapped());
 
@@ -37,42 +31,5 @@ describe("Initial Rendering State", () => {
     expect(flicking.viewport.width).toEqual(1000);
     expect(flicking.viewport.height).toEqual(300);
     expect(flicking.panels.every(panel => panel.size === 1000 && panel.height === 300)).toBeTruthy();
-  });
-
-  it("should trigger select event with mouse click", async () => {
-    const selectSpy = jest.fn();
-    const holdStartSpy = jest.fn();
-    const holdEndSpy = jest.fn();
-
-    const flicking = await render(Wrapped({
-      events: {
-        holdStart: holdStartSpy,
-        holdEnd: holdEndSpy,
-        select: selectSpy
-      }
-    }));
-
-    simulate(flicking, { deltaX: 0, deltaY: 0 });
-
-    await waitEvent(flicking, "select");
-
-    expect(holdStartSpy).toHaveBeenCalledTimes(1);
-    expect(holdEndSpy).toHaveBeenCalledTimes(1);
-    expect(selectSpy).toHaveBeenCalledTimes(1);
-  });
-
-  it("should move to the next panel when moving above threshold", async () => {
-    const flicking = await render(Wrapped({ options: { threshold: 40 } }));
-
-    const prevIndex = flicking.index;
-    simulate(flicking, { deltaX: -50, deltaY: 0, duration: 3000 });
-
-    void waitEvent(flicking, "changed")
-      .then(() => {
-        const newIndex = flicking.index;
-
-        expect(prevIndex).toEqual(0);
-        expect(newIndex).toEqual(1);
-      });
   });
 });

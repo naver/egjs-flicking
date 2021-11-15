@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom/extend-expect";
-import { cleanup } from "./utils";
+import { cleanup } from "@common/renderer";
 
 Object.defineProperty(window, "CSS", {value: null});
 Object.defineProperty(window, "getComputedStyle", {
@@ -43,6 +43,6 @@ Object.defineProperty(window.HTMLElement.prototype, "offsetHeight", {
   get: returnSizeByStyle("height")
 });
 
-beforeEach(() => {
+afterEach(() => {
   cleanup();
 });

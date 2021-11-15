@@ -10,5 +10,6 @@
       "@egjs/flicking": ["../../../../src/index.ts"],
       "@egjs/vue3-flicking": ["./lib/@egjs/vue3-flicking/index.ts"]
     }
-  }
+  },
+  "include": ["./index.d.ts"]
 }

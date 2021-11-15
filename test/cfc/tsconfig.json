@@ -11,7 +11,7 @@
     "jsx": "react-jsx",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "types": ["jest"],
+    "types": ["node", "jest", "react"],
     "baseUrl": ".",
     "paths": {
       "@common/renderer": ["./common/FixtureRenderer.tsx"],
