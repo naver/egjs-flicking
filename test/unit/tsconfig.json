@@ -19,22 +19,11 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "~/*": ["../../src/*"],
-      "@egjs/flicking": ["../../src/index.ts"],
-      "~egjs/react-flicking": ["../../packages/react-flicking/src/react-flicking/index.ts"],
-      "~egjs/react-flicking/*": ["../../packages/react-flicking/src/react-flicking/*"],
-      "~egjs/vue-flicking": ["../../packages/vue-flicking/src/index.ts"],
-      "~egjs/vue-flicking/*": ["../../packages/vue-flicking/src/*"],
-      "~egjs/svelte-flicking": ["../../packages/svelte-flicking/src/index.js"],
-      "~egjs/svelte-flicking/*": ["../../packages/svelte-flicking/src/*"]
+      "~/*": ["../../src/*"]
     }
   },
   "include": [
     "../../src/**/*.ts",
-    "../../packages/react-flicking/src/react-flicking/**/*.ts",
-    "../../packages/react-flicking/src/react-flicking/**/*.tsx",
-    "../../packages/vue-flicking/src/**/*.ts",
-    "./dist/**/*",
     "./**/*.ts",
     "./**/*.tsx"
   ],

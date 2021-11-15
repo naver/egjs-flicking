@@ -4,6 +4,7 @@ import Flicking from "@egjs/react-flicking";
 
 import DummyFlicking from "../../fixture/DummyFlicking";
 import { resolveFlickingWhenReady } from "../../common/utils";
+import DummyFlickingProps from "../../fixture/DummyFlickingProps";
 
 const render = async (el: JSX.Element) => {
   const flickingRef = createRef<Flicking>();
@@ -27,7 +28,9 @@ const replaceFlickingJSX = (el: JSX.Element, flickingRef: RefObject<Flicking>): 
       return eventsMap;
     }, {});
 
-    return <Flicking
+    const ReactFlicking = Flicking as any;
+
+    return <ReactFlicking
       key="flicking"
       ref={flickingRef}
       viewportTag={tag}
@@ -36,7 +39,7 @@ const replaceFlickingJSX = (el: JSX.Element, flickingRef: RefObject<Flicking>): 
       {...options}
       {...eventHandlers}
       {...otherProps}
-    >{ replacedChildren }</Flicking>;
+    >{ replacedChildren }</ReactFlicking>;
   } else if (!isValidElement(el)) {
     return el;
   } else {

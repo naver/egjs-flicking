@@ -17,5 +17,10 @@ module.exports = {
   moduleFileExtensions: ["ts", "html", "js", "json", "tsx"],
   transform: {
     "^.+\\.tsx?$": "ts-jest"
+  },
+  globals: {
+    "ts-jest": {
+      tsconfig: "<rootDir>/tsconfig.spec.json"
+    }
   }
 };

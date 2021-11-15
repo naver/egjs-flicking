@@ -1,7 +1,7 @@
 import Vue from "vue";
 import { Children, isValidElement } from "react";
 import { mount } from "@vue/test-utils";
-import VanillaFlicking, { withFlickingMethods } from "@egjs/flicking";
+import VanillaFlicking from "@egjs/flicking";
 import { Flicking } from "@egjs/vue-flicking";
 
 import DummyFlicking from "../../fixture/DummyFlicking";

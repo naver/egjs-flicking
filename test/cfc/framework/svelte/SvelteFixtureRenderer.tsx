@@ -1,9 +1,10 @@
 import fs from "fs-extra";
 import path from "path";
-import { Children, ReactElement, isValidElement } from "react";
+import { Children, isValidElement } from "react";
 import { render as renderSvelteComponent } from "@testing-library/svelte";
 
 import DummyFlicking from "../../fixture/DummyFlicking";
+import DummyFlickingProps from "../../fixture/DummyFlickingProps";
 import { createSandbox, cleanup, findFlickingJSX, resolveFlickingWhenReady, flattenAttrs } from "../../common/utils";
 
 let testIndex = 0;
@@ -61,7 +62,7 @@ const parseFlickingJSX = (el: JSX.Element, isPanel = false): string => {
   if (el.type === DummyFlicking) {
     const attrs = flattenAttrs(el, flattenOptions);
     const replacedChildren = childs.map(child => parseFlickingJSX(child, true)).join("");
-    const events = (el as unknown as DummyFlicking).props.events;
+    const events = (el as React.ReactElement<DummyFlickingProps>).props.events;
     const eventHandlers = Object.keys(events).map(eventName => {
       return `on:${eventName}={events.${eventName}}`;
     });

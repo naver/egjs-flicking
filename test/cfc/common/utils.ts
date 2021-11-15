@@ -1,7 +1,7 @@
 import Flicking, { FlickingEvents } from "@egjs/flicking";
 import { Children } from "react";
 
-import DummyFlicking from "../fixture/DummyFlicking";
+import DummyFlicking, { DEFAULT_PROPS } from "../fixture/DummyFlicking";
 
 export const createSandbox = (id: string) => {
   const tmp = document.createElement("div");
@@ -21,11 +21,11 @@ export const cleanup = () => {
   });
 };
 
-export const findFlickingJSX = (el: JSX.Element): DummyFlicking | null => {
+export const findFlickingJSX = (el: JSX.Element): JSX.Element | null => {
   const children = Children.toArray(el.props?.children ?? []) as JSX.Element[];
 
   if (el.type === DummyFlicking) {
-    return el as unknown as DummyFlicking;
+    return el as unknown as JSX.Element;
   }
 
   for (const child of children) {
@@ -66,7 +66,7 @@ export const flattenAttrs = (el: JSX.Element, {
   const { className, children, ...otherProps } = el.props;
   const attrs = [];
 
-  for (const propName in DummyFlicking.defaultProps) {
+  for (const propName in DEFAULT_PROPS) {
     delete otherProps[propName];
   }
 

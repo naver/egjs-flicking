@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import Flicking from "@egjs/flicking";
 
 import DummyFlicking from "../../fixture/DummyFlicking";
+import DummyFlickingProps from "../../fixture/DummyFlickingProps";
 import { createSandbox, cleanup, findFlickingJSX, resolveFlickingWhenReady } from "../../common/utils";
 
 const render = async (el: JSX.Element): Promise<Flicking> => {
@@ -31,7 +32,7 @@ const parseJSX = (el: JSX.Element): JSX.Element => {
   if (!isValidElement(el)) {
     return el;
   } else if (el.type === DummyFlicking) {
-    const flickingEl = el as unknown as DummyFlicking;
+    const flickingEl = el as React.ReactElement<DummyFlickingProps>;
     const { options, events, children, cameraTag, tag, ...jsxProps } = flickingEl.props;
     const cameraEl = createElement<Partial<HTMLElement>>(cameraTag, {
       className: "flicking-camera",

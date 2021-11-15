@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "target": "ES6",
     "baseUrl": "./",
     "outDir": "./out-tsc/spec",
     "skipLibCheck": true,

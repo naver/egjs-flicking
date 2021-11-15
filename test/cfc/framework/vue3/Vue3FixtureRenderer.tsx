@@ -1,4 +1,5 @@
-import { defineComponent, h, resolveComponent } from "vue";
+/* eslint-disable @typescript-eslint/no-var-requires */
+const { defineComponent, h, resolveComponent } = require("vue");
 import { Children, isValidElement } from "react";
 import { mount } from "@vue/test-utils";
 import VanillaFlicking from "@egjs/flicking";
@@ -54,6 +55,7 @@ const parseJSX = (el: JSX.Element) => {
       style,
       options,
       plugins,
+      ...otherAttrs,
       ...eventHandlers,
       ref: "flicking"
     }, parsedChildren);

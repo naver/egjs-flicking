@@ -16,7 +16,7 @@ jobs:
         run: npm install
       - name: run unit test
         working-directory: ./test/unit
-        run: npm run test
+        run: npm run coverage
   cfc:
     runs-on: ubuntu-latest
     steps:
