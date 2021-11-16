@@ -12,6 +12,10 @@ module.exports = {
   setupFilesAfterEnv: ["<rootDir>/setup.ts"],
   collectCoverage: true,
   coverageReporters: ["lcov"],
+  collectCoverageFrom: [
+    "<rootDir>/lib/@egjs/**/*",
+    "!**/node_modules/**"
+  ],
   testEnvironment: "jsdom",
   moduleFileExtensions: ["ts", "html", "js", "json", "tsx"],
   transform: {

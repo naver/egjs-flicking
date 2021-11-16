@@ -22,8 +22,9 @@ jobs:
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          flag-name: run-unit
+          flag-name: unit
           base-path: ./test/unit
+          path-to-lcov: ./test/unit/coverage/lcov.info
           parallel: true
   cfc:
     runs-on: ubuntu-latest
@@ -46,8 +47,9 @@ jobs:
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          flag-name: run-cfc
-          base-path: ./test/cfc
+          flag-name: cfc
+          base-path: .
+          path-to-lcov: ./test/cfc/coverage/lcov.info
           parallel: true
   teardown:
     needs: [unit, cfc]

@@ -7,7 +7,7 @@
     "strict": false,
     "paths": {
       "@common/renderer": ["./VanillaFixtureRenderer"],
-      "@egjs/flicking": ["../../../../src/index.ts"]
+      "@egjs/flicking": ["./lib/@egjs/flicking/index.ts"]
     }
   },
   "include": []
