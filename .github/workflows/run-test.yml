@@ -10,13 +10,21 @@ jobs:
           node-version: 16
           cache: "npm"
           cache-dependency-path: "**/package-lock.json"
-      - run: npm install
+      - name: install-root
+        run: npm install
       - name: install-unit
         working-directory: ./test/unit
         run: npm install
       - name: run unit test
         working-directory: ./test/unit
         run: npm run coverage
+      - name: send coverage
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: run-unit
+          base-path: ./test/unit
+          parallel: true
   cfc:
     runs-on: ubuntu-latest
     steps:
@@ -26,10 +34,27 @@ jobs:
           node-version: 16
           cache: "npm"
           cache-dependency-path: "**/package-lock.json"
-      - run: npm install
+      - name: install-root
+        run: npm install
       - name: install-cfc
         working-directory: ./test/cfc
         run: npm install
       - name: run cfc test
         working-directory: ./test/cfc
-        run: npm run test
+        run: npm run coverage
+      - name: send coverage
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: run-cfc
+          base-path: ./test/cfc
+          parallel: true
+  teardown:
+    needs: [unit, cfc]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel-finished: true

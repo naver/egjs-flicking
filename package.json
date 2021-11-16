@@ -15,7 +15,7 @@
 		"printsizes": "print-sizes ./dist --exclude=\\.map",
 		"test": "npm run test --prefix test/unit",
 		"test:chrome": "npm run test:chrome --prefix test/unit",
-		"coverage": "npm run coverage --prefix test/unit",
+    "test:cfc": "npm run test --prefix test/cfc",
 		"lint": "eslint 'src/**/*.ts'",
 		"lint:test": "eslint 'test/unit/**/*.ts'",
 		"jsdoc": "jsdoc -c jsdoc.json",

@@ -11,6 +11,7 @@
     "install:vue3": "npm install --prefix framework/vue3",
     "install:svelte": "npm install --prefix framework/svelte",
     "test": "npm run test:all",
+    "coverage": "jest --coverage --config=\"./jest.config.js\"",
     "test:all": "jest --config=\"./jest.config.js\"",
     "test:vanilla": "npm test --prefix framework/vanilla",
     "test:angular": "npm test --prefix framework/angular",

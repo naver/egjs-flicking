@@ -11,8 +11,7 @@ module.exports = {
   globalTeardown:  path.resolve(__dirname, "./global-teardown.ts"),
   setupFilesAfterEnv: ["<rootDir>/setup.ts"],
   collectCoverage: true,
-  coverageReporters: ["html"],
-  coverageDirectory: "coverage",
+  coverageReporters: ["lcov"],
   testEnvironment: "jsdom",
   moduleFileExtensions: ["ts", "html", "js", "json", "tsx"],
   transform: {

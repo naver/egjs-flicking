@@ -17,6 +17,8 @@ module.exports = {
       prefix: "<rootDir>"
     })
   },
+  testTimeout: 10000,
+  coveragePathIgnorePatterns: ["/node_modules/", "/lib/svelte-fixture/"],
   moduleFileExtensions: [...commonOptions.moduleFileExtensions, "svelte"],
   transform: {
     ...commonOptions.transform,

@@ -30,10 +30,6 @@ module.exports = config => {
     karmaTypescriptConfig: {
       tsconfig: "./tsconfig.json",
       reports: {
-        html: {
-          "directory": "coverage",
-          "subdirectory": "./"
-        },
         lcovonly: {
           "directory": "coverage",
           "filename": "lcov.info",
