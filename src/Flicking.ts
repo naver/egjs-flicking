@@ -1374,12 +1374,26 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   private _createRenderer(): Renderer {
+    const externalRenderer = this._externalRenderer;
     if (this._virtual && this._panelsPerView <= 0) {
       // eslint-disable-next-line no-console
       console.warn("\"virtual\" and \"panelsPerView\" option should be used together, ignoring virtual.");
     }
 
-    return this._externalRenderer || this._createVanillaRenderer();
+    return externalRenderer
+      ? externalRenderer
+      : this._renderExternal
+        ? this._createExternalRenderer()
+        : this._createVanillaRenderer();
+  }
+
+  private _createExternalRenderer(): ExternalRenderer {
+    const {
+      renderer,
+      rendererOptions
+    } = this._renderExternal!;
+
+    return new (renderer)({ align: this._align, ...rendererOptions });
   }
 
   private _createVanillaRenderer(): VanillaRenderer {
