@@ -10,6 +10,8 @@ import { createSandbox, cleanup, findFlickingJSX, resolveFlickingWhenReady, flat
 let testIndex = 0;
 
 const render = async (el: JSX.Element) => {
+  jest.setTimeout(15000);
+
   const sandbox = createSandbox("svelte-ui");
   const replaced = parseFlickingJSX(el);
   const flickingJSX = findFlickingJSX(el);

@@ -39,4 +39,18 @@ describe("Gestures", () => {
       expect(newIndex).toEqual(1);
     });
   });
+
+  it("should return to the previous panel when moving below threshold", async () => {
+    const flicking = await render(Wrapped({ options: { threshold: 40 } }));
+
+    const prevIndex = flicking.index;
+    void simulate(flicking, { deltaX: -30, deltaY: 0, duration: 3000 });
+
+    await waitEvent(flicking, "restored");
+
+    const newIndex = flicking.index;
+
+    expect(prevIndex).toEqual(0);
+    expect(newIndex).toEqual(0);
+  });
 });

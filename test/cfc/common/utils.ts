@@ -52,6 +52,12 @@ export const resolveFlickingWhenReady = async (flicking: Flicking): Promise<Flic
   }
 };
 
+export const wait = async (milisec: number) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, milisec);
+  });
+};
+
 export const waitEvent = async (flicking: Flicking, eventName: keyof FlickingEvents) => {
   return new Promise(resolve => {
     flicking.once(eventName, resolve);
