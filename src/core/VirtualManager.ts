@@ -87,7 +87,7 @@ class VirtualManager {
 
     if (!flicking.virtualEnabled) return;
 
-    if (!flicking.renderExternal) {
+    if (!flicking.externalRenderer && !flicking.renderExternal) {
       this._initVirtualElements();
     }
 

@@ -2,22 +2,41 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-/* eslint-disable @typescript-eslint/explicit-member-accessibility */
-import { prop } from "vue-class-component";
-import {
-  FlickingOptions,
-  Plugin,
-  Status
-} from "@egjs/flicking";
+import { PropType } from "vue";
+import { FlickingOptions, Plugin, Status } from "@egjs/flicking";
 
-class FlickingProps {
-  viewportTag = prop<string>({ required: false, default: "div" });
-  cameraTag = prop<string>({ required: false, default: "div" });
-  hideBeforeInit = prop<boolean>({ required: false, default: false });
-  firstPanelSize = prop<string>({ required: false, default: null });
-  options = prop<Partial<FlickingOptions>>({ required: false, default: {} });
-  plugins = prop<Plugin[]>({ required: false, default: [] });
-  status = prop<Status>({ required: false, default: null });
-}
-
-export default FlickingProps;
+export default {
+  viewportTag: {
+    type: String,
+    default: "div",
+    required: false
+  },
+  cameraTag: {
+    type: String,
+    default: "div",
+    required: false
+  },
+  hideBeforeInit: {
+    type: Boolean,
+    default: false,
+    required: false
+  },
+  firstPanelSize: {
+    type: String,
+    required: false
+  },
+  options: {
+    type: Object as unknown as () => Partial<FlickingOptions>,
+    default: () => ({}),
+    required: false
+  },
+  plugins: {
+    type: Array as PropType<Plugin[]>,
+    default: () => ([]),
+    required: false
+  },
+  status: {
+    type: Object as PropType<Status>,
+    required: false
+  }
+};
