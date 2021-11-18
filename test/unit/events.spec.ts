@@ -1161,4 +1161,46 @@ describe("Events", () => {
       expect(selectEvent.element).to.be.an.instanceOf(HTMLElement);
     });
   });
+
+  describe("moveEnd event", () => {
+    it("should set property direction not to null after disabling & enabling input", async () => {
+      // Given
+      const { element, instance: flicking } = createFlicking(horizontal.full);
+      const moveEndSpy = sinon.spy();
+      flicking.on("moveEnd", moveEndSpy);
+
+      // When
+      void simulate(element, { deltaX: -500, deltaY: 0, duration: 1000 }, 0);
+      tick(500);
+      expect((flicking as any).viewport.stateMachine.getState().holding).to.be.true
+      flicking.disableInput(); // call it before release
+      flicking.enableInput(); // Then, re-enable
+      tick(5000); // Flush previous input
+      await simulate(element, { deltaX: -500, deltaY: 0, duration: 1000 });
+
+      // Then
+      expect(moveEndSpy.calledOnce).to.be.true;
+      expect(moveEndSpy.firstCall.args[0].direction).not.to.be.null;
+    });
+
+    it("should set property direction not to null after disabling & enabling input (Idle case)", async () => {
+      // Given
+      const { element, instance: flicking } = createFlicking(horizontal.full);
+      const moveEndSpy = sinon.spy();
+      flicking.on("moveEnd", moveEndSpy);
+
+      // When
+      void simulate(element, { deltaX: 0, deltaY: 0, duration: 1000 }, 0);
+      tick(500);
+      expect((flicking as any).viewport.stateMachine.getState().holding).to.be.true
+      flicking.disableInput(); // call it before release
+      flicking.enableInput(); // Then, re-enable
+      tick(5000); // Flush previous input
+      await simulate(element, { deltaX: -500, deltaY: 0, duration: 1000 });
+
+      // Then
+      expect(moveEndSpy.calledOnce).to.be.true;
+      expect(moveEndSpy.firstCall.args[0].direction).not.to.be.null;
+    });
+  });
 });
