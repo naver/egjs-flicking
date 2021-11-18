@@ -3,8 +3,9 @@
  * egjs projects are licensed under the MIT license
  */
 import Flicking from "./Flicking";
-import FlickingPanel from "./flicking-panel.svelte";
-
-Flicking.FlickingPanel = FlickingPanel;
+import FlickingPanel from "./FlickingPanel";
 
 export default Flicking;
+export {
+  FlickingPanel
+};

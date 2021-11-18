@@ -9,7 +9,8 @@ const defaultOptions = {
 	external: {
 		svelte: "svelte",
     "@egjs/flicking": "Flicking",
-    "@egjs/list-differ": "ListDiffer"
+    "@egjs/list-differ": "eg.ListDiffer",
+    "@egjs/component": "Component"
 	},
 	plugins: [
 		svelte({ preprocess: sveltePreprocess() }),
@@ -26,14 +27,14 @@ const defaultOptions = {
 export default buildHelper([
 	{
 		...defaultOptions,
-		input: "./src/index.umd.js",
+		input: "./src/index.umd.ts",
 		output: "dist/flicking.cjs.js",
 		format: "cjs",
     resolve: false
 	},
 	{
 		...defaultOptions,
-		input: "./src/index.js",
+		input: "./src/index.ts",
 		output: "dist/flicking.esm.js",
 		format: "es",
 		exports: "named",

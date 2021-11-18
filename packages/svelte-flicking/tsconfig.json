@@ -1,6 +1,4 @@
 {
-  "include": ["src/**/*"],
-  "exclude": ["node_modules/*"],
   "compilerOptions": {
     "target": "ESNEXT",
     "module": "ESNEXT",
@@ -11,5 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "experimentalDecorators": true
-  }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules/*"]
 }
