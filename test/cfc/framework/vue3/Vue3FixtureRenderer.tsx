@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { defineComponent, h, resolveComponent } = require("vue");
+import { defineComponent, h, resolveComponent } from "vue";
 import { Children, isValidElement } from "react";
 import { mount } from "@vue/test-utils";
 import VanillaFlicking from "@egjs/flicking";

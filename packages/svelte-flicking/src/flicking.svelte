@@ -16,8 +16,8 @@
     getDefaultCameraTransform,
     EVENTS
   } from "@egjs/flicking";
-  import * as Component from "@egjs/component";
-  import * as ListDiffer from "@egjs/list-differ";
+  import Component from "@egjs/component";
+  import ListDiffer from "@egjs/list-differ";
 
   import PanelManager from "./PanelManager";
   import SvelteRenderer from "./SvelteRenderer";
