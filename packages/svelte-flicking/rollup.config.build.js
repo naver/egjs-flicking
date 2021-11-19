@@ -13,7 +13,12 @@ const defaultOptions = {
     "@egjs/component": "Component"
 	},
 	plugins: [
-		svelte({ preprocess: sveltePreprocess() }),
+		svelte({
+      preprocess: sveltePreprocess(),
+      compilerOptions: {
+        dev: false
+      }
+    }),
     nodeResolve({
       browser: true
     }),

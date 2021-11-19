@@ -41,6 +41,7 @@
   let viewportEl: HTMLElement;
   let cameraEl: HTMLElement;
 
+  let panelsPerView: number;
   let isHorizontal: boolean;
   let isHiddenBeforeInit: boolean;
   let cameraTransform: { style?: string };
@@ -51,6 +52,7 @@
   setContext("panels", panelManager);
 
   $: {
+    panelsPerView = options.panelsPerView ?? -1;
     isHorizontal = options.horizontal != null ? options.horizontal : true;
     isHiddenBeforeInit = hideBeforeInit && !(vanillaFlicking && vanillaFlicking.initialized);
     cameraTransform = !(vanillaFlicking && vanillaFlicking.initialized) && firstPanelSize
@@ -159,8 +161,8 @@
 <svelte:options accessors={true} />
 <div class:flicking-viewport={true} bind:this={viewportEl} class:vertical={!isHorizontal} class:flicking-hidden={isHiddenBeforeInit} {...$$restProps}>
   <div class:flicking-camera={true} bind:this={cameraEl} {...cameraTransform}>
-    {#if (options.panelsPerView ?? -1) > 0 && !!options.virtual}
-      {#each range((options.panelsPerView ?? - 1) + 1) as _idx}
+    {#if panelsPerView > 0 && !!options.virtual}
+      {#each range(panelsPerView + 1) as _idx}
         <div class={options.virtual.panelClass}></div>
       {/each}
     {:else}
