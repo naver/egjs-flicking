@@ -127,7 +127,7 @@ const Flicking = defineComponent({
       flicking.setStatus(this.status);
     }
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.vanillaFlicking?.destroy();
   },
   beforeMount() {
