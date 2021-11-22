@@ -40,7 +40,7 @@ npm install --save @egjs/ngx-flicking
 ## 🏃 Quick Start
 ### Module definition
 ```diff
-+import { NgxFlickingModule } from '@egjs/ngx-flicking'; // import
++import { NgxFlickingModule } from '@egjs/ngx-flicking';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
  
@@ -60,75 +60,53 @@ export class AppModule { } /* Your app */
 
 ### Template & Script
 ```ts
+import { Fade, AutoPlay } from "@egjs/flicking-plugins";
+
 @Component({
-  selector: 'autoplay-plugin-demo',
+  selector: 'flicking-demo',
   template: `
   <ngx-flicking
-    [options]="{ circular: true, gap: 10, duration: 500 }"
+    [options]="{ circular: true, duration: 500 }"
     [plugins]="plugins"
     (needPanel)="onNeedPanel($event)"
-    (moveEnd)="onMoveEnd($event)"
   >
-    <ng-template>
-      <div class="panel">
-        <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
-      </div>
-      <div class="panel">
-        <img src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
-      </div>
-      <div class="panel">
-        <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
-      </div>
-    </ng-template>
+    <div class="panel">
+      <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
+    </div>
+    <div class="panel">
+      <img src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
+    </div>
+    <div class="panel">
+      <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
+    </div>
   </ngx-flicking>
-  `,
-  styleUrls: ['./autoplay.component.css']
+  `
 })
-export class AutoplayComponent implements OnInit {
+export class FlickingDemo implements OnInit {
   plugins: Plugin[] = [new Fade(), new AutoPlay(2000, 'NEXT')];
-
-  constructor() { }
-
-  ngOnInit() {
-  }
 
   onNeedPanel(e) {
     // ADD PANELS
-  }
-
-  onMoveEnd(e) {
-    // HANDLE INDEX CHANGE
   }
 }
 ```
 
 ## Guide
-  - \[v3.4\] [Applying renderOnlyVisible option on ngx flicking](https://github.com/naver/egjs-flicking/wiki/Applying-renderOnlyVisible-option-on-ngx-flicking) (Performance)
-
-## Collect statistics
-
-Flicking applies Google Analytics (GA) to collect which features are useful to users. For example, the use of the `freeScroll` option, or the value of the `gap` option, and so on. Statistics also DO NOT contain any information that can identify an individual. Statistics on the usage will serve as basis for making better products. To disable GA, set the `collectStatistics` option to `false` as follows:
-
-```html
-<ngx-flicking [options]="{ collectStatistics: false }"/>
-```
-
-### 🔍 SSR(Server Side Rendering)
-> TODO
-
-## 📖 More Examples
-See our code sandbox [examples](https://codesandbox.io/s/egjsngx-flicking-examples-czb2g).
+  - \[v3.4+\] [Applying renderOnlyVisible option on ngx flicking](https://github.com/naver/egjs-flicking/wiki/Applying-renderOnlyVisible-option-on-ngx-flicking) (Performance)
 
 ## 📦 Packages
 You can use all plugins just like native @egjs/flicking.
 
 Check [**@egjs/flicking-plugins**](https://github.com/naver/egjs-flicking-plugins) for readymade effects we're providing.
 
-## 📝 Feedback
-Please file an [Issue](https://github.com/naver/egjs-flicking/issues) with label "Angular".
+## 📖 More Options & Examples
+[Options](https://naver.github.io/egjs-flicking/Options) / [Demos](https://naver.github.io/egjs-flicking/Demos)
 
 ## 🙌 Contributing
 See [CONTRIBUTING.md](https://github.com/naver/egjs-flicking/blob/master/CONTRIBUTING.md)
+
+## 📝 Feedback
+Please file an [Issue](https://github.com/naver/egjs-flicking/issues) with label "Angular".
 
 ## Local development
 ### Project setup
