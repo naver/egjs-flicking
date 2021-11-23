@@ -1,6 +1,6 @@
 {
   "name": "@egjs/preact-flicking",
-  "version": "3.2.3",
+  "version": "3.3.0",
   "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
   "main": "./dist/flicking.cjs.js",
   "module": "./dist/flicking.esm.js",
@@ -50,6 +50,6 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "@egjs/react-flicking": "^3.7.3"
+    "@egjs/react-flicking": "^3.8.0"
   }
 }
