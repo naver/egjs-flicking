@@ -12,17 +12,14 @@ import RenderingStrategy from "./RenderingStrategy";
 
 export interface NormalRenderingStrategyOptions {
   providerCtor: new (...args: any) => ElementProvider;
-  panelCtor: new (options: PanelOptions) => Panel;
 }
 
 
 class NormalRenderingStrategy implements RenderingStrategy {
   private _providerCtor: NormalRenderingStrategyOptions["providerCtor"];
-  private _panelCtor: NormalRenderingStrategyOptions["panelCtor"];
 
-  public constructor({ providerCtor, panelCtor }: NormalRenderingStrategyOptions) {
+  public constructor({ providerCtor }: NormalRenderingStrategyOptions) {
     this._providerCtor = providerCtor;
-    this._panelCtor = panelCtor;
   }
 
   public renderPanels() {
@@ -58,7 +55,7 @@ class NormalRenderingStrategy implements RenderingStrategy {
   ) {
     const align = parsePanelAlign(flicking.renderer.align);
 
-    return elements.map((el, index) => new this._panelCtor({
+    return elements.map((el, index) => new Panel({
       index,
       elementProvider: new this._providerCtor(el),
       align,
@@ -70,7 +67,7 @@ class NormalRenderingStrategy implements RenderingStrategy {
     element: any,
     options: Omit<PanelOptions, "elementProvider">
   ) {
-    return new this._panelCtor({
+    return new Panel({
       ...options,
       elementProvider: new this._providerCtor(element)
     });

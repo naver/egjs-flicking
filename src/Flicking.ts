@@ -80,6 +80,8 @@ export interface FlickingOptions {
   autoInit: boolean;
   autoResize: boolean;
   useResizeObserver: boolean;
+  externalRenderer: ExternalRenderer | null;
+  // @deprecated
   renderExternal: {
     renderer: new (options: RendererOptions) => ExternalRenderer;
     rendererOptions: RendererOptions;
@@ -146,6 +148,7 @@ class Flicking extends Component<FlickingEvents> {
   private _autoInit: FlickingOptions["autoInit"];
   private _autoResize: FlickingOptions["autoResize"];
   private _useResizeObserver: FlickingOptions["useResizeObserver"];
+  private _externalRenderer: FlickingOptions["externalRenderer"];
   private _renderExternal: FlickingOptions["renderExternal"];
 
   // Internal State
@@ -599,10 +602,18 @@ class Flicking extends Component<FlickingEvents> {
   /**
    * This is an option for the frameworks(React, Vue, Angular, ...). Don't set it as it's automatically managed by Flicking.
    * @ko 프레임워크(React, Vue, Angular, ...)에서만 사용하는 옵션으로, 자동으로 설정되므로 따로 사용하실 필요 없습니다!
-   * @type {boolean}
-   * @default false
+   * @default null
    * @internal
    * @readonly
+   */
+  public get externalRenderer() { return this._externalRenderer; }
+  /**
+   * This is an option for the frameworks(React, Vue, Angular, ...). Don't set it as it's automatically managed by Flicking.
+   * @ko 프레임워크(React, Vue, Angular, ...)에서만 사용하는 옵션으로, 자동으로 설정되므로 따로 사용하실 필요 없습니다!
+   * @default null
+   * @internal
+   * @readonly
+   * @deprecated
    */
   public get renderExternal() { return this._renderExternal; }
 
@@ -730,6 +741,7 @@ class Flicking extends Component<FlickingEvents> {
     autoInit = true,
     autoResize = true,
     useResizeObserver = true,
+    externalRenderer = null,
     renderExternal = null
   }: Partial<FlickingOptions> = {}) {
     super();
@@ -766,6 +778,7 @@ class Flicking extends Component<FlickingEvents> {
     this._autoInit = autoInit;
     this._autoResize = autoResize;
     this._useResizeObserver = useResizeObserver;
+    this._externalRenderer = externalRenderer;
     this._renderExternal = renderExternal;
 
     // Create core components
@@ -1361,16 +1374,26 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   private _createRenderer(): Renderer {
-    const renderExternal = this._renderExternal;
-
+    const externalRenderer = this._externalRenderer;
     if (this._virtual && this._panelsPerView <= 0) {
       // eslint-disable-next-line no-console
       console.warn("\"virtual\" and \"panelsPerView\" option should be used together, ignoring virtual.");
     }
 
-    return renderExternal
-      ? this._createExternalRenderer()
-      : this._createVanillaRenderer();
+    return externalRenderer
+      ? externalRenderer
+      : this._renderExternal
+        ? this._createExternalRenderer()
+        : this._createVanillaRenderer();
+  }
+
+  private _createExternalRenderer(): ExternalRenderer {
+    const {
+      renderer,
+      rendererOptions
+    } = this._renderExternal!;
+
+    return new (renderer)({ align: this._align, ...rendererOptions });
   }
 
   private _createVanillaRenderer(): VanillaRenderer {
@@ -1381,19 +1404,9 @@ class Flicking extends Component<FlickingEvents> {
       strategy: virtual
         ? new VirtualRenderingStrategy()
         : new NormalRenderingStrategy({
-          providerCtor: VanillaElementProvider,
-          panelCtor: Panel
+          providerCtor: VanillaElementProvider
         })
     });
-  }
-
-  private _createExternalRenderer(): ExternalRenderer {
-    const {
-      renderer,
-      rendererOptions
-    } = this._renderExternal!;
-
-    return new (renderer)({ align: this._align, ...rendererOptions });
   }
 
   private async _moveToInitialPanel(): Promise<void> {

@@ -15,12 +15,15 @@ class VirtualElementProvider implements ElementProvider {
   private _flicking: Flicking;
   private _panel: VirtualPanel;
 
-  public get element() {
+  public get element() { return this._virtualElement.nativeElement; }
+  public get rendered() { return this._virtualElement.visible; }
+
+  private get _virtualElement() {
     const flicking = this._flicking;
     const elIndex = this._panel.elementIndex;
     const virtualElements = flicking.virtual.elements;
 
-    return virtualElements[elIndex].nativeElement;
+    return virtualElements[elIndex];
   }
 
   public constructor(flicking: Flicking) {

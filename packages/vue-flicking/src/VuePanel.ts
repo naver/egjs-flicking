@@ -2,19 +2,28 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { Component, Vue } from "vue-property-decorator";
+import Vue from "vue";
 
-@Component({})
-class VuePanel extends Vue {
-  public hide = false;
-
-  public get nativeElement() { return this.$el as HTMLElement; }
-
-  public render() {
-    return this.hide
+const VuePanel = Vue.extend<{ hide: boolean }, {}, { nativeElement: HTMLElement }>({
+  data() {
+    return {
+      hide: false
+    };
+  },
+  render() {
+    const children = this.hide
       ? undefined
       : this.$slots.default ?? [];
-  }
-}
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+    return children as any;
+  },
+  computed: {
+    nativeElement(): HTMLElement { return this.$el as HTMLElement; }
+  }
+});
+
+type VuePanelType = InstanceType<typeof VuePanel>;
+
+interface VuePanel extends VuePanelType {}
 export default VuePanel;

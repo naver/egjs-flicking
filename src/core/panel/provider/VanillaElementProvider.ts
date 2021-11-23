@@ -11,11 +11,14 @@ import ElementProvider from "./ElementProvider";
  */
 class VanillaElementProvider implements ElementProvider {
   private _element: HTMLElement;
+  private _rendered: boolean;
 
   public get element() { return this._element; }
+  public get rendered() { return this._rendered; }
 
   public constructor(element: HTMLElement) {
     this._element = element;
+    this._rendered = true;
   }
 
   public show(flicking: Flicking): void {
@@ -24,6 +27,7 @@ class VanillaElementProvider implements ElementProvider {
 
     if (el.parentElement !== cameraEl) {
       cameraEl.appendChild(el);
+      this._rendered = true;
     }
   }
 
@@ -33,6 +37,7 @@ class VanillaElementProvider implements ElementProvider {
 
     if (el.parentElement === cameraEl) {
       cameraEl.removeChild(el);
+      this._rendered = false;
     }
   }
 }

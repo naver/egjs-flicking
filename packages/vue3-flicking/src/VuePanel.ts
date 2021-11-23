@@ -2,17 +2,23 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { Vue } from "vue-class-component";
 
-class VuePanel extends Vue {
-  public hide: boolean = false;
+import { defineComponent } from "vue";
 
-  public render() {
+const VuePanel = defineComponent({
+  data() {
+    return {
+      hide: false
+    };
+  },
+  render() {
     if (this.hide || !this.$slots.default) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    return this.$slots.default() as any;
+    return this.$slots.default();
   }
-}
+});
 
+type VuePanelType = InstanceType<typeof VuePanel>;
+
+interface VuePanel extends VuePanelType {}
 export default VuePanel;

@@ -10,10 +10,7 @@
     "start": "vue-cli-service demo",
     "build": "rm -rf dist && rollup -c && npm run declaration",
     "postbuild": "cpx 'node_modules/@egjs/flicking/dist/*.css' dist/",
-    "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
-    "test": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint --no-fix",
-    "demo": "vue-cli-service demo"
+    "declaration": "rm -rf declaration && tsc -p ./tsconfig.declaration.json"
   },
   "repository": {
     "type": "git",
@@ -37,8 +34,7 @@
   ],
   "dependencies": {
     "@egjs/flicking": "^4.4.0",
-    "@egjs/list-differ": "^1.0.0",
-    "vue-property-decorator": "^8.1.0"
+    "@egjs/list-differ": "^1.0.0"
   },
   "devDependencies": {
     "@egjs/build-helper": "0.0.5",
@@ -53,11 +49,11 @@
     "chai": "^4.1.2",
     "cpx": "^1.5.0",
     "rollup-plugin-vue": "^5.0.0",
-    "tslib": "^2.1.0",
+    "tslib": "^2.3.1",
     "typescript": "^4.2.3",
     "vue": "^2.6.10",
-    "vue-class-component": "^7.0.2",
     "vue-cli-plugin-p11n": "^0.3.0",
+    "vue-property-decorator": "^9.1.2",
     "vue-router": "^3.0.6",
     "vue-template-compiler": "^2.5.21"
   }

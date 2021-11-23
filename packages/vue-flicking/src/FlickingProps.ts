@@ -1,8 +1,5 @@
-/*
- * Copyright (c) 2015 NAVER Corp.
- * egjs projects are licensed under the MIT license
- */
 import { PropType } from "vue";
+import { RecordPropsDefinition } from "vue/types/options";
 import { FlickingOptions, Plugin, Status } from "@egjs/flicking";
 
 export default {
@@ -26,7 +23,7 @@ export default {
     required: false
   },
   options: {
-    type: Object as unknown as () => Partial<FlickingOptions>,
+    type: Object as PropType<Partial<FlickingOptions>>,
     default: () => ({}),
     required: false
   },
@@ -39,4 +36,13 @@ export default {
     type: Object as PropType<Status>,
     required: false
   }
-};
+} as RecordPropsDefinition<{
+  readonly viewportTag: string;
+  readonly cameraTag: string;
+  readonly hideBeforeInit: boolean;
+  readonly firstPanelSize: string;
+  readonly options: Partial<FlickingOptions>;
+  readonly plugins: Plugin[];
+  readonly status: Status;
+}>;
+
