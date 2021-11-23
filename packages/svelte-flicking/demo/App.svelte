@@ -99,8 +99,10 @@
     <FlickingPanel><div class="panel">2</div></FlickingPanel>
     <FlickingPanel><div class="panel">3</div></FlickingPanel>
     <FlickingPanel><div class="panel">4</div></FlickingPanel>
-    <span class="flicking-arrow-prev" slot="viewport"></span>
-    <span class="flicking-arrow-next" slot="viewport"></span>
+    <div slot="viewport">
+      <span class="flicking-arrow-prev"></span>
+      <span class="flicking-arrow-next"></span>
+    </div>
   </Flicking>
   <h1>Virtual</h1>
   <Flicking bind:this={vFlick} options={{

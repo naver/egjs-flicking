@@ -7,3 +7,4 @@ public/
 rollup.config.js
 rollup.config.build.js
 tsconfig.json
+tsconfig.declaration.json

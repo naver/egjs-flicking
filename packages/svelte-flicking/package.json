@@ -13,7 +13,7 @@
     "postbuild": "cpx 'node_modules/@egjs/flicking/dist/*.{css,css.map}' dist/",
     "build:lib": "rm -rf lib && node ./build",
     "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
-    "postdeclaration": "cpx './types/**.d.ts' 'declaration'",
+    "postdeclaration": "cpx './src/**.d.ts' 'declaration'",
     "dev": "rollup -c -w",
     "start": "sirv public --no-clear",
     "check": "svelte-check --tsconfig ./tsconfig.json"
