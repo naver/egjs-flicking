@@ -25,7 +25,7 @@ const commonjsPlugin = require("@rollup/plugin-commonjs")();
 const typescriptPlugin = require("rollup-plugin-typescript2");
 const minifyPlugin = require("rollup-plugin-prototype-minify")({ sourcemap: true })
 const resolvePlugin = require("@rollup/plugin-node-resolve")();
-const uglifyPlugin = require("rollup-plugin-uglify").uglify;
+const uglifyPlugin = require("rollup-plugin-terser").terser;
 const visualizerPlugin = require("rollup-plugin-visualizer");
 
 module.exports = function config(options) {
@@ -88,7 +88,6 @@ module.exports = function config(options) {
       }
       })();`);
     nextPlugins.push(uglifyPlugin({
-      sourcemap: true,
       output: {
         comments: uglifyFunction,
       },

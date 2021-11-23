@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ES6",
+    "baseUrl": "./",
+    "outDir": "./out-tsc/spec",
+    "skipLibCheck": true,
+    "strict": false,
+    "paths": {
+      "@common/renderer": ["./Vue3FixtureRenderer"],
+      "@egjs/flicking": ["../../../../src/index.ts"],
+      "@egjs/vue3-flicking": ["./lib/@egjs/vue3-flicking/index.ts"]
+    }
+  },
+  "include": ["./index.d.ts"]
+}

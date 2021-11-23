@@ -124,10 +124,10 @@ class Viewport {
     this._width = el.clientWidth;
     this._height = el.clientHeight;
     this._padding = {
-      left: parseFloat(elStyle.paddingLeft),
-      right: parseFloat(elStyle.paddingRight),
-      top: parseFloat(elStyle.paddingTop),
-      bottom: parseFloat(elStyle.paddingBottom)
+      left: elStyle.paddingLeft ? parseFloat(elStyle.paddingLeft) : 0,
+      right: elStyle.paddingRight ? parseFloat(elStyle.paddingRight) : 0,
+      top: elStyle.paddingTop ? parseFloat(elStyle.paddingTop) : 0,
+      bottom: elStyle.paddingBottom ? parseFloat(elStyle.paddingBottom) : 0
     };
     this._isBorderBoxSizing = elStyle.boxSizing === "border-box";
   }

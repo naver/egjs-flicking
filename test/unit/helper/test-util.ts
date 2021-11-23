@@ -2,9 +2,9 @@ import Flicking, { FlickingOptions } from "~/Flicking";
 import Panel, { PanelOptions } from "~/core/panel/Panel";
 import VanillaElementProvider from "~/core/panel/provider/VanillaElementProvider";
 import { ALIGN, EVENTS } from "~/const/external";
+import { merge } from "~/utils";
 
 import El from "./El";
-import { merge } from "~/utils";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 declare let Simulator: any;

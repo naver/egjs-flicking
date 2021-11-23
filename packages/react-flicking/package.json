@@ -17,8 +17,7 @@
   },
   "dependencies": {
     "@egjs/flicking": "^4.4.0",
-    "@egjs/list-differ": "^1.0.0",
-    "react-is": "^17.0.2"
+    "@egjs/list-differ": "^1.0.0"
   },
   "devDependencies": {
     "@egjs/build-helper": "0.0.5",

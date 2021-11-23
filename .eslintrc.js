@@ -146,10 +146,6 @@ module.exports = {
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/restrict-template-expressions": "off",
         "@typescript-eslint/unbound-method": "off",
-        "@typescript-eslint/quotes": [
-          "error",
-          "double"
-        ],
         "@typescript-eslint/semi": [
           "error",
           "always"
@@ -351,6 +347,7 @@ module.exports = {
     ],
     "use-isnan": "error",
     "valid-typeof": "off",
-    "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }]
+    "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
+    "quotes": ["error", "double"]
   }
 };

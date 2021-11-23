@@ -1,0 +1,24 @@
+{
+  "name": "angular",
+  "version": "0.0.0",
+  "scripts": {
+    "test": "jest --config=\"./jest.config.js\""
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~12.2.13",
+		"@angular/animations": "~12.2.13",
+		"@angular/cli": "~12.2.13",
+		"@angular/common": "~12.2.13",
+		"@angular/compiler": "~12.2.13",
+		"@angular/compiler-cli": "~12.2.13",
+		"@angular/core": "~12.2.13",
+		"@angular/forms": "~12.2.13",
+		"@angular/platform-browser": "~12.2.13",
+		"@angular/platform-browser-dynamic": "~12.2.13",
+		"@angular/router": "~12.2.13",
+    "jest-preset-angular": "^10.1.0",
+    "rxjs": "~6.6.0",
+		"tslib": "^2.3.1",
+		"zone.js": "~0.11.4"
+  }
+}

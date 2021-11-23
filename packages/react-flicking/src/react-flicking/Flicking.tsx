@@ -18,7 +18,6 @@ import VanillaFlicking, {
   NormalRenderingStrategy,
   ExternalPanel
 } from "@egjs/flicking";
-import { isFragment } from "react-is";
 
 import { DEFAULT_PROPS } from "./consts";
 import { FlickingProps } from "./types";
@@ -238,7 +237,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   }
 
   private _unpackFragment(child: React.ReactElement) {
-    return isFragment(child)
+    return this._isFragment(child)
       ? React.Children.toArray(child.props.children)
         .reduce((allChilds, fragChild) => [...allChilds, ...this._unpackFragment(fragChild)], [])
       : [child];
@@ -287,6 +286,13 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     return this.props.useFindDOMNode
       ? children.map((child, idx) => <NonStrictPanel key={child.key!} ref={this._panels[idx] as any}>{child}</NonStrictPanel>)
       : children.map((child, idx) => <StrictPanel key={child.key!} ref={this._panels[idx] as any}>{child}</StrictPanel>)
+  }
+
+  private _isFragment(child: NonNullable<React.ReactNode>) {
+    if ((child as React.ReactElement).type) {
+      return (child as React.ReactElement).type === React.Fragment;
+    }
+    return child === React.Fragment;
   }
 }
 

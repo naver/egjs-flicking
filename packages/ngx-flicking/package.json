@@ -28,7 +28,7 @@
     "@angular-devkit/build-ng-packagr": "~0.1000.8",
     "@angular/cli": "~10.0.0",
     "@angular/compiler-cli": "~10.0.0",
-    "@egjs/flicking": "^4.2.3",
+    "@egjs/flicking": "^4.4.0",
     "@egjs/flicking-plugins": "^4.2.2",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",

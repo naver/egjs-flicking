@@ -1,0 +1,13 @@
+{
+  "name": "svelte",
+  "version": "0.0.0",
+  "scripts": {
+    "test": "jest --config=\"./jest.config.js\""
+  },
+  "devDependencies": {
+    "@testing-library/svelte": "^3.0.3",
+		"svelte": "^3.44.1",
+		"svelte-jester": "^2.1.5",
+		"svelte-preprocess": "^4.9.8"
+  }
+}

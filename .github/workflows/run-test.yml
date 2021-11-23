@@ -1,0 +1,62 @@
+name: Run tests
+on: [push, pull_request]
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+      - name: install-root
+        run: npm install
+      - name: install-unit
+        working-directory: ./test/unit
+        run: npm install
+      - name: run unit test
+        working-directory: ./test/unit
+        run: npm run coverage
+      - name: send coverage
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: unit
+          base-path: ./test/unit
+          path-to-lcov: ./test/unit/coverage/lcov.info
+          parallel: true
+  cfc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+      - name: install-root
+        run: npm install
+      - name: install-cfc
+        working-directory: ./test/cfc
+        run: npm install
+      - name: run cfc test
+        working-directory: ./test/cfc
+        run: npm run coverage
+      - name: send coverage
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: cfc
+          base-path: .
+          path-to-lcov: ./test/cfc/coverage/lcov.info
+          parallel: true
+  teardown:
+    needs: [unit, cfc]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel-finished: true

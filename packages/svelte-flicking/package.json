@@ -29,7 +29,7 @@
   "license": "MIT",
   "dependencies": {
     "@egjs/flicking": "^4.4.0",
-    "uuid-browser": "^3.1.0"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@egjs/build-helper": "^0.1.2",
@@ -38,6 +38,7 @@
     "@rollup/plugin-node-resolve": "^11.0.0",
     "@rollup/plugin-typescript": "^8.0.0",
     "@tsconfig/svelte": "^2.0.0",
+    "@types/uuid": "^8.3.1",
     "bulma": "^0.9.3",
     "cpx": "^1.5.0",
     "rollup": "^2.3.4",

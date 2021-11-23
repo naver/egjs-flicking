@@ -3,8 +3,10 @@
  * egjs projects are licensed under the MIT license
  */
 class PanelManager {
-  panels = {};
-  dirty = false;
+  constructor() {
+    this.panels = {};
+    this.dirty = false;
+  }
 
   add(panel) {
     this.panels[panel.id] = panel;

@@ -1,26 +1,34 @@
 {
-  "extends": "../../tsconfig",
   "compilerOptions": {
     "module": "commonjs",
     "lib": ["es2020", "dom"],
+    "target": "ES5",
     "noImplicitAny": false,
     "strictNullChecks": false,
     "noUnusedLocals": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "types": [
       "karma-chai",
-      "mocha"
+      "mocha",
+      "react",
+      "vue"
     ],
     "baseUrl": ".",
     "paths": {
       "~/*": ["../../src/*"]
-    },
+    }
   },
   "include": [
     "../../src/**/*.ts",
-    "./**/*.ts"
+    "./**/*.ts",
+    "./**/*.tsx"
   ],
   "exclude": [
-    "../../node_modules/**/*.ts"
+    "libs",
+    "node_modules/**/*"
   ]
 }

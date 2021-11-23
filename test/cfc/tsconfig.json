@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "lib": ["es2020", "dom"],
+    "target": "ES5",
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "noUnusedLocals": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "types": ["node", "jest", "react"],
+    "baseUrl": ".",
+    "paths": {
+      "@common/renderer": ["./common/FixtureRenderer.tsx"],
+      "@egjs/flicking": ["../../src/index.ts"],
+      "@egjs/react-flicking": ["../../packages/react-flicking/src/react-flicking/index.ts"],
+      "@egjs/preact-flicking": ["../../packages/preact-flicking/src/preact-flicking/index.ts"],
+      "@egjs/vue-flicking": ["../../packages/vue-flicking/src/index.ts"],
+      "@egjs/vue3-flicking": ["../../packages/vue3-flicking/src/index.ts"],
+      "@egjs/ngx-flicking": ["../../packages/ngx-flicking/projects/ngx-flicking/src/public-api.ts"],
+      "@egjs/svelte-flicking": ["../../packages/svelte-flicking/src/index.js"]
+    }
+  },
+  "include": [
+    "suite/**/*",
+    "common/**/*",
+    "fixture/**/*"
+  ],
+  "exclude": [
+    "**/node_modules"
+  ]
+}
