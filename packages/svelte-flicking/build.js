@@ -39,7 +39,7 @@ svelteFiles.forEach(async fileName => {
 
   const { code } = await svelte.preprocess(file.toString(), [
     typescript({
-      tsconfigDirectory: ".",
+      tsconfigDirectory: __dirname,
       tsconfigFile: "./tsconfig.json",
       handleMixedImports: true
     })

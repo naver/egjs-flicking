@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require("fs-extra");
 const lcovPath = path.resolve(__dirname, "./coverage/lcov.info");
 
 const replace = require("replace-in-file");
@@ -23,5 +24,23 @@ replace.sync({
     const actualPath = path.join(alias[package], file);
 
     return actualPath;
+  }
+});
+
+replace.sync({
+  files: lcovPath,
+  from: /svelte-flicking\/lib\/(.+)/g,
+  to: match => {
+    const expectedPath = path.join(alias["@egjs/svelte-flicking"], path.basename(match));
+    const packagePath = path.resolve(__dirname, "../../", expectedPath);
+
+    if (fs.existsSync(packagePath)) {
+      return expectedPath;
+    } else if (path.extname(match) === ".js") {
+      const tsPath = path.resolve(__dirname, "../../", path.join(alias["@egjs/svelte-flicking"], `${path.basename(match, ".js")}.ts`));
+      return tsPath;
+    }
+
+    throw new Error("Unexpected area reached");
   }
 });

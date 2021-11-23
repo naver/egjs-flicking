@@ -72,7 +72,7 @@
       renderEmitter,
       forceUpdate,
       align: options.align,
-      strategy: options.virtual && options.panelsPerView > 0
+      strategy: options.virtual && panelsPerView > 0
         ? new VirtualRenderingStrategy()
         : new NormalRenderingStrategy({
           providerCtor: SvelteElementProvider

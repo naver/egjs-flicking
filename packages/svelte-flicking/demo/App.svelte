@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Arrow } from "@egjs/flicking-plugins";
-  import Flicking from "../src/Flicking";
-  import { FlickingPanel } from "../src";
+  import Flicking, { FlickingPanel } from "../src";
   import "@egjs/flicking/dist/flicking.css";
   import "@egjs/flicking-plugins/dist/flicking-plugins.css";
   import Test from "./Test.svelte";

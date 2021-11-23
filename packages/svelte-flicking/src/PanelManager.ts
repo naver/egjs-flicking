@@ -5,7 +5,7 @@
 import SvelteFlickingPanel from "./SvelteFlickingPanel";
 
 class PanelManager {
-  public panels: { [key: string]: any };
+  public panels: Record<string, any>;
   public dirty: boolean;
 
   public constructor() {

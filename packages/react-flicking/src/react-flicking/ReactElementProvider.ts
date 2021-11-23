@@ -2,11 +2,11 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { ExternalElementProvider } from "@egjs/flicking";
+import { ElementProvider } from "@egjs/flicking";
 import StrictPanel from "./StrictPanel";
 import NonStrictPanel from "./NonStrictPanel";
 
-class ReactElementProvider implements ExternalElementProvider {
+class ReactElementProvider implements ElementProvider {
   private _el: StrictPanel | NonStrictPanel;
 
   public get element() { return this._el.nativeElement; }

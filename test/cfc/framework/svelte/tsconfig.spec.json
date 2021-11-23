@@ -1,15 +1,19 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "target": "ES2017",
+    "module": "ESNEXT",
     "baseUrl": "./",
-    "outDir": "./out-tsc/spec",
-    "skipLibCheck": true,
+    "noImplicitAny": false,
     "strict": false,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
     "paths": {
       "@common/renderer": ["./SvelteFixtureRenderer"],
       "@egjs/flicking": ["../../../../src/index.ts"],
-      "@egjs/svelte-flicking": ["./lib/@egjs/svelte-flicking/index.js"]
+      "@egjs/svelte-flicking": ["./lib/@egjs/svelte-flicking/lib/index.js"]
     }
-  },
-  "include": []
+  }
 }

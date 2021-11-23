@@ -2,11 +2,11 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Flicking, { ExternalElementProvider } from "@egjs/flicking";
+import Flicking, { ElementProvider } from "@egjs/flicking";
 
 import { NgxFlickingPanel } from "./ngx-flicking-panel.directive";
 
-class NgxElementProvider implements ExternalElementProvider {
+class NgxElementProvider implements ElementProvider {
   private _el: NgxFlickingPanel;
 
   public get element() { return this._el.nativeElement; }
