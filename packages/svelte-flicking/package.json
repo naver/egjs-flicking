@@ -34,9 +34,6 @@
     "@egjs/flicking": "^4.4.0",
     "uuid": "^8.3.2"
   },
-  "peerDependencies": {
-    "svelte": "^3.39.0"
-  },
   "devDependencies": {
     "@egjs/build-helper": "^0.1.2",
     "@egjs/flicking-plugins": "^4.2.2",
