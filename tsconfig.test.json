@@ -9,6 +9,7 @@
     "types": [
       "karma-chai",
       "mocha",
+      "resize-observer-browser"
     ]
   },
   "include": [

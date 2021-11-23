@@ -51,6 +51,7 @@
 		"@types/karma-chai": "^0.1.1",
 		"@types/mocha": "^5.2.5",
 		"@types/node": "^14.0.27",
+		"@types/resize-observer-browser": "^0.1.6",
 		"@types/sinon": "^7.0.3",
 		"chai": "^4.2.0",
 		"chalk": "^2.4.2",

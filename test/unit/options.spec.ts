@@ -1702,4 +1702,36 @@ describe("Initialization", () => {
       });
     });
   });
+
+  describe("useResizeObserver", () => {
+    it("should receive window resize event and emit resize event if set to false", async () => {
+      // Given
+      const { instance: flicking } = createFlicking(horizontal.full, {
+        autoResize: true,
+        useResizeObserver: false
+      });
+      const resizeSpy = sinon.spy(flicking, "resize");
+
+      // When
+      window.dispatchEvent(new Event("resize"));
+
+      // Then
+      expect(resizeSpy.calledOnce).to.be.true;
+    });
+
+    it("should not call resize on window resize event when set to true", async () => {
+      // Given
+      const { instance: flicking } = createFlicking(horizontal.full, {
+        autoResize: true,
+        useResizeObserver: true
+      });
+      const resizeSpy = sinon.spy(flicking, "resize");
+
+      // When
+      window.dispatchEvent(new Event("resize"));
+
+      // Then
+      expect(resizeSpy.called).to.be.false;
+    });
+  });
 });

@@ -65,6 +65,7 @@ export const DEFAULT_OPTIONS: Readonly<FlickingOptions> = {
   resizeOnContentsReady: false,
   iOSEdgeSwipeThreshold: 30,
   collectStatistics: true,
+  useResizeObserver: true,
 };
 
 export const DEFAULT_VIEWPORT_CSS = {
