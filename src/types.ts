@@ -87,6 +87,7 @@ export interface FlickingOptions {
   iOSEdgeSwipeThreshold: number;
   resizeOnContentsReady: boolean;
   collectStatistics: boolean;
+  useResizeObserver: boolean;
 }
 
 export type MoveTypeObjectOption = MoveTypeSnapOption | MoveTypeFreeScrollOption;

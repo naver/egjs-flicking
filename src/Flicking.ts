@@ -5,8 +5,10 @@
 
 import Component from "@egjs/component";
 import ImReady from "@egjs/imready";
+import { DiffResult } from "@egjs/list-differ";
 import Viewport from "./components/Viewport";
 import Panel from "./components/Panel";
+import AutoResizer from "./components/AutoResizer";
 
 import { merge, getProgress, parseElement, isString, counter, findIndex } from "./utils";
 import { DEFAULT_OPTIONS, EVENTS, DIRECTION, AXES_EVENTS, STATE_TYPE, DEFAULT_MOVE_TYPE_OPTIONS } from "./consts";
@@ -32,8 +34,6 @@ import {
   MoveTypeStringOption,
   ValueOf,
 } from "./types";
-// import { sendEvent } from "./ga/ga";
-import { DiffResult } from "@egjs/list-differ";
 
 /**
  * @memberof eg
@@ -98,6 +98,7 @@ class Flicking extends Component<{
 
   private wrapper: HTMLElement;
   private viewport: Viewport;
+  private autoResizer: AutoResizer;
   private contentsReadyChecker: ImReady | null = null;
 
   private eventContext: FlickingContext;
@@ -135,6 +136,7 @@ class Flicking extends Component<{
    * @param {boolean} [options.isConstantSize=false] Whether all panels have a constant size that won't be changed after resize. Enabling this option can increase performance while recalculating panel size.<ko>모든 패널의 크기가 불변인지의 여부. 이 옵션을 'true'로 설정하면 패널 크기 재설정시에 성능을 높일 수 있다.</ko>
    * @param {boolean} [options.renderExternal=false] Whether to use external rendering. It will delegate DOM manipulation and can synchronize the rendered state by calling `sync()` method. You can use this option to use in frameworks like React, Vue, Angular, which has its states and rendering methods.<ko>외부 렌더링을 사용할 지의 여부. 이 옵션을 사용시 렌더링을 외부에 위임할 수 있고, `sync()`를 호출하여 그 상태를 동기화할 수 있다. 이 옵션을 사용하여, React, Vue, Angular 등 자체적인 상태와 렌더링 방법을 갖는 프레임워크에 대응할 수 있다.</ko>
    * @param {boolean} [options.resizeOnContentsReady=false] Whether to resize the Flicking after the image/video elements inside viewport are ready.<br/>Use this property to prevent wrong Flicking layout caused by dynamic image / video sizes.<ko>Flicking 내부의 이미지 / 비디오 엘리먼트들이 전부 로드되었을 때 Flicking의 크기를 재계산하기 위한 옵션.<br/>이미지 / 비디오 크기가 고정 크기가 아닐 경우 사용하여 레이아웃이 잘못되는 것을 방지할 수 있다.</ko>
+   * @param {boolean} [options.useResizeObserver=true] Whether to listen {@link https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver ResizeObserver}'s event instead of Window's {@link https://developer.mozilla.org/ko/docs/Web/API/Window/resize_event resize} event when using the `autoResize` option<ko>autoResize 옵션 사용시 {@link https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver ResizeObserver}의 이벤트를 Window객체의 {@link https://developer.mozilla.org/ko/docs/Web/API/Window/resize_event resize} 이벤트 대신 수신할지 여부를 설정합니다</ko>
    * @param {boolean} [options.collectStatistics=true] Whether to collect statistics on how you are using `Flicking`. These statistical data do not contain any personal information and are used only as a basis for the development of a user-friendly product.<ko>어떻게 `Flicking`을 사용하고 있는지에 대한 통계 수집 여부를 나타낸다. 이 통계자료는 개인정보를 포함하고 있지 않으며 오직 사용자 친화적인 제품으로 발전시키기 위한 근거자료로서 활용한다.</ko>
    */
   constructor(
@@ -169,16 +171,10 @@ class Flicking extends Component<{
 
     // Make viewport instance with panel container element
     this.viewport = new Viewport(this, this.options, this.triggerEvent);
+    this.autoResizer = new AutoResizer(this);
+
     this.listenInput();
     this.listenResize();
-
-    // if (this.options.collectStatistics) {
-    //   sendEvent(
-    //     "usage",
-    //     "options",
-    //     options,
-    //   );
-    // }
   }
 
   /**
@@ -506,10 +502,7 @@ class Flicking extends Component<{
   public destroy(option: Partial<DestroyOption> = {}): void {
     this.off();
 
-    if (this.options.autoResize) {
-      window.removeEventListener("resize", this.resize);
-    }
-
+    this.autoResizer.disable();
     this.viewport.destroy(option);
     this.contentsReadyChecker?.destroy();
 
@@ -872,7 +865,7 @@ class Flicking extends Component<{
     const options = this.options;
 
     if (options.autoResize) {
-      window.addEventListener("resize", this.resize);
+      this.autoResizer.enable();
     }
 
     if (options.resizeOnContentsReady) {
