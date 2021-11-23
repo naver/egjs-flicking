@@ -394,6 +394,12 @@ export default class Viewport {
       this.panInput.destroy();
       this.panInput = null;
 
+      // Refresh Axes instance
+      this.axes.destroy();
+      this.setAxesInstance();
+      this.updateScrollArea();
+      this.updateAxesPosition(this.state.position);
+
       this.stateMachine.transitTo(STATE_TYPE.IDLE);
     }
   }
@@ -1089,6 +1095,7 @@ export default class Viewport {
     this.applyCSSValue();
     this.setMoveType();
     this.setAxesInstance();
+    this.createPanInput();
     this.refreshPanels();
     this.setDefaultPanel();
     this.resize();
@@ -1215,8 +1222,6 @@ export default class Viewport {
       deceleration: options.deceleration,
       interruptable: true,
     });
-
-    this.createPanInput();
   }
 
   private refreshPanels(): void {

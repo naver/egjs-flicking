@@ -8,7 +8,7 @@
 	"es2015": "dist/flicking.esm.js",
 	"types": "declaration/index.d.ts",
 	"scripts": {
-		"start": "rollup -c -w",
+		"start": "rollup -w -c rollup.config.development.js",
 		"build": "rm -rf ./dist ./declaration && rollup -c && npm run declaration && npm run printsizes",
 		"declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
 		"printsizes": "print-sizes ./dist --exclude=\\.map",
@@ -73,6 +73,8 @@
 		"print-coveralls": "^1.2.2",
 		"print-sizes": "0.0.3",
 		"pvu": "^0.4.1",
+		"rollup-plugin-livereload": "^2.0.5",
+		"rollup-plugin-serve": "^1.1.0",
 		"sinon": "^7.2.3",
 		"sync-exec": "^0.6.2",
 		"ts-mock-imports": "^1.2.2",
