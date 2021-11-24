@@ -2,6 +2,8 @@
 custom_edit_url: null
 ---
 
+<div className="notification is-warning my-2">⚠️ This class is for <strong>internal</strong> use only.</div>
+
 ```ts
 class ExternalRenderer extends Renderer
 ```
@@ -20,7 +22,7 @@ class ExternalRenderer extends Renderer
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-전체 패널들의 배열
+Array of panels
 
 **Type**: Array&lt;[Panel](Panel)&gt;
 
@@ -34,7 +36,7 @@ class ExternalRenderer extends Renderer
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-전체 패널의 개수
+Count of panels
 
 **Type**: number
 
@@ -52,7 +54,7 @@ class ExternalRenderer extends Renderer
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-[Panel](Panel)에 공통적으로 적용할 [align](Panel#align) 값
+A [Panel](Panel)'s [align](Panel#align) value that applied to all panels
 
 **Type**: Constants.ALIGN \| string \| number
 
@@ -64,7 +66,7 @@ class ExternalRenderer extends Renderer
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-패널 엘리먼트들을 카메라 엘리먼트 내부에 렌더링합니다
+Render panel elements inside the camera element
 
 **Returns**: this
 
@@ -74,13 +76,13 @@ class ExternalRenderer extends Renderer
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-Renderer를 초기화합니다
+Initialize Renderer
 
 **Returns**: this
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|flicking|[Flicking](Flicking)|||Flicking의 인스턴스|
+|flicking|[Flicking](Flicking)|||An instance of [Flicking](Flicking)|
 
 ### destroy {#destroy}
 
@@ -88,7 +90,7 @@ Renderer를 초기화합니다
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-Renderer를 초기 상태로 되돌립니다
+Destroy Renderer and return to initial state
 
 **Returns**: void
 
@@ -98,10 +100,10 @@ Renderer를 초기 상태로 되돌립니다
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-주어진 인덱스에 해당하는 [Panel](Panel)을 반환합니다. 주어진 인덱스에 해당하는 패널이 존재하지 않을 경우 `null`을 반환합니다.
+Return the [Panel](Panel) at the given index. `null` if it doesn't exists.
 
 **Returns**: [Panel](Panel) \| null
-- 주어진 인덱스에 해당하는 패널
+- Panel at the given index
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
@@ -116,7 +118,7 @@ Renderer를 초기 상태로 되돌립니다
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-모든 패널의 크기를 업데이트합니다
+Update all panel sizes
 
 **Returns**: this
 
@@ -126,18 +128,18 @@ Renderer를 초기 상태로 되돌립니다
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-주어진 인덱스에 새로운 패널들을 추가합니다
-해당 인덱스보다 같거나 큰 인덱스를 가진 기존 패널들은 추가한 패널의 개수만큼 인덱스가 증가합니다.
+Insert new panels at given index
+This will increase index of panels after by the number of panels added
 
 **Returns**: Array&lt;[Panel](Panel)&gt;
-- 추가된 패널들의 배열
+- An array of prepended panels
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|items|Array&lt;object&gt;|||추가할 아이템들의 배열|
-|items.index|number|✔️||새로 패널들을 추가할 인덱스|
-|items.elements|Array&lt;any&gt;|✔️||엘리먼트의 배열 혹은 프레임워크에서 엘리먼트를 포함한 컴포넌트들의 배열|
-|items.hasDOMInElements|boolean|✔️||내부에 실제 DOM 엘리먼트들을 포함하고 있는지 여부. true로 설정할 경우, 렌더러는 해당 엘리먼트들을 카메라 엘리먼트 내부에 추가합니다|
+|items|Array&lt;object&gt;|||An array of items to insert|
+|items.index|number|✔️||Index to insert new panels at|
+|items.elements|Array&lt;any&gt;|✔️||An array of element or framework component with element in it|
+|items.hasDOMInElements|boolean|✔️||Whether it contains actual DOM elements. If set to true, renderer will add them to the camera element|
 
 ### batchRemove {#batchRemove}
 
@@ -145,18 +147,18 @@ Renderer를 초기 상태로 되돌립니다
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-주어진 인덱스의 패널을 제거합니다
-해당 인덱스보다 큰 인덱스를 가진 기존 패널들은 제거한 패널의 개수만큼 인덱스가 감소합니다
+Remove the panel at the given index
+This will decrease index of panels after by the number of panels removed
 
 **Returns**: [Panel](Panel)[]
-- 제거된 패널들의 배열
+- An array of removed panels
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|items|Array&lt;object&gt;|||제거할 아이템들의 배열|
-|items.index|number|✔️||제거할 패널의 인덱스|
-|items.deleteCount|number|✔️|1|`index` 이후로 제거할 패널의 개수|
-|items.hasDOMInElements|boolean|✔️|1|내부에 실제 DOM 엘리먼트들을 포함하고 있는지 여부. true로 설정할 경우, 렌더러는 해당 엘리먼트들을 카메라 엘리먼트 내부에서 제거합니다|
+|items|Array&lt;object&gt;|||An array of items to remove|
+|items.index|number|✔️||Index of panel to remove|
+|items.deleteCount|number|✔️|1|Number of panels to remove from index|
+|items.hasDOMInElements|boolean|✔️|1|Whether it contains actual DOM elements. If set to true, renderer will remove them from the camera element|
 
 ### checkPanelContentsReady {#checkPanelContentsReady}
 
