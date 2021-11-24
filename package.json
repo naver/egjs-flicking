@@ -1,6 +1,6 @@
 {
 	"name": "@egjs/flicking",
-	"version": "4.4.0-snapshot",
+	"version": "4.4.1",
 	"description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
 	"main": "dist/flicking.js",
 	"module": "dist/flicking.esm.js",
@@ -15,7 +15,7 @@
 		"printsizes": "print-sizes ./dist --exclude=\\.map",
 		"test": "npm run test --prefix test/unit",
 		"test:chrome": "npm run test:chrome --prefix test/unit",
-    "test:cfc": "npm run test --prefix test/cfc",
+		"test:cfc": "npm run test --prefix test/cfc",
 		"lint": "eslint 'src/**/*.ts'",
 		"lint:test": "eslint 'test/unit/**/*.ts'",
 		"jsdoc": "jsdoc -c jsdoc.json",
