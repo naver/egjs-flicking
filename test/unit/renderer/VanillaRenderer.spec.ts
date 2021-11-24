@@ -14,8 +14,7 @@ describe("NativeRenderer", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const renderer = new VanillaRenderer({
           strategy: new NormalRenderingStrategy({
-            providerCtor: VanillaElementProvider,
-            panelCtor: Panel
+            providerCtor: VanillaElementProvider
           })
         });
 
@@ -47,8 +46,7 @@ describe("NativeRenderer", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const renderer = new VanillaRenderer({
           strategy: new NormalRenderingStrategy({
-            providerCtor: VanillaElementProvider,
-            panelCtor: Panel
+            providerCtor: VanillaElementProvider
           })
         }).init(flicking);
 

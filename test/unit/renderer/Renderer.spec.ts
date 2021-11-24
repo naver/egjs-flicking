@@ -12,8 +12,7 @@ class RendererImpl extends Renderer {
   public constructor(options = {}) {
     super({
       strategy: new NormalRenderingStrategy({
-        providerCtor: VanillaElementProvider,
-        panelCtor: Panel
+        providerCtor: VanillaElementProvider
       }),
       ...options
     });
