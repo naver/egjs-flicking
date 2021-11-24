@@ -6,11 +6,14 @@
   "module": "dist/flicking.esm.js",
   "sideEffects": false,
   "es2015": "dist/flicking.esm.js",
-  "types": "types/index.d.ts",
-  "svelte": "src/index.js",
+  "types": "declaration/index.d.ts",
+  "svelte": "lib/index.js",
   "scripts": {
-    "build": "rollup -c ./rollup.config.build.js",
+    "build": "rm -rf dist && rollup -c ./rollup.config.build.js && npm run build:lib && npm run declaration",
     "postbuild": "cpx 'node_modules/@egjs/flicking/dist/*.{css,css.map}' dist/",
+    "build:lib": "rm -rf lib && node ./build",
+    "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
+    "postdeclaration": "cpx './src/**.d.ts' 'declaration'",
     "dev": "rollup -c -w",
     "start": "sirv public --no-clear",
     "check": "svelte-check --tsconfig ./tsconfig.json"
@@ -47,8 +50,8 @@
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-terser": "^7.0.0",
     "sirv-cli": "^1.0.0",
-    "svelte": "^3.0.0",
-    "svelte-check": "^2.0.0",
+    "svelte": "^3.39.0",
+    "svelte-check": "^2.2.10",
     "svelte-preprocess": "^4.7.4",
     "tslib": "^2.0.0",
     "typescript": "^4.0.0"

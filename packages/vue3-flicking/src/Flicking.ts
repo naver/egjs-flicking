@@ -25,7 +25,6 @@ import { VueFlicking } from "./types";
 
 const Flicking = defineComponent({
   props: FlickingProps,
-  emits: Object.keys(EVENTS).map((evtKey: keyof typeof EVENTS) => EVENTS[evtKey]),
   components: {
     Panel: VuePanel
   },

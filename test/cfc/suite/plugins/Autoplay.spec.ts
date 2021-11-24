@@ -22,8 +22,8 @@ describe("Plugins:AutoPlay", () => {
 
     expect(flicking.animating).toBeFalsy();
 
-    void wait(100).then(() => {
-      expect(flicking.animating).toBeTruthy();
-    });
+    await wait(100);
+
+    expect(flicking.animating).toBeTruthy();
   });
 });

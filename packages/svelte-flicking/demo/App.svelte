@@ -1,12 +1,9 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { Arrow, Sync } from "@egjs/flicking-plugins";
-  import Flicking from "../src";
+  import { Arrow } from "@egjs/flicking-plugins";
+  import Flicking, { FlickingPanel } from "../src";
   import "@egjs/flicking/dist/flicking.css";
   import "@egjs/flicking-plugins/dist/flicking-plugins.css";
-  import FlickingPanel from "../src/flicking-panel.svelte";
   import Test from "./Test.svelte";
-  import Test2 from "./Test2.svelte";
 
   let flick: Flicking;
   let vFlick: Flicking;
@@ -101,10 +98,10 @@
     <FlickingPanel><div class="panel">2</div></FlickingPanel>
     <FlickingPanel><div class="panel">3</div></FlickingPanel>
     <FlickingPanel><div class="panel">4</div></FlickingPanel>
-    <svelte:fragment slot="viewport">
+    <div slot="viewport">
       <span class="flicking-arrow-prev"></span>
       <span class="flicking-arrow-next"></span>
-    </svelte:fragment>
+    </div>
   </Flicking>
   <h1>Virtual</h1>
   <Flicking bind:this={vFlick} options={{

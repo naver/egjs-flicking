@@ -1,22 +1,24 @@
-<script>
+<script lang="ts">
   import {
     onDestroy,
     getContext
   } from "svelte";
   import { v4 } from "uuid";
 
+  import PanelManager from "./PanelManager";
+
   const id = v4();
-  const sveltePanels = getContext("panels");
+  const sveltePanels = getContext("panels") as PanelManager;
 
   let hidden = false;
   let order = Number.MAX_SAFE_INTEGER;
-  let element;
+  let element: HTMLElement;
 
   sveltePanels.add({
     show,
     hide,
     id,
-    setOrder(newOrder) {
+    setOrder(newOrder: number) {
       order = newOrder;
     },
     rendered() {

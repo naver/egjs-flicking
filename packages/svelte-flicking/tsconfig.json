@@ -1,15 +1,16 @@
 {
-  "include": ["src/**/*"],
-  "exclude": ["node_modules/*"],
   "compilerOptions": {
-    "target": "ESNEXT",
+    "target": "ES2017",
     "module": "ESNEXT",
     "noImplicitAny": false,
     "strict": true,
+    "allowJs": true,
+    "outDir": "lib",
     "moduleResolution": "node",
     "types": ["svelte"],
-    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "experimentalDecorators": true
-  }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules/*"]
 }

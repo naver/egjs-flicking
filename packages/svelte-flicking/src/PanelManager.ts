@@ -2,23 +2,28 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import SvelteFlickingPanel from "./SvelteFlickingPanel";
+
 class PanelManager {
-  constructor() {
+  public panels: Record<string, any>;
+  public dirty: boolean;
+
+  public constructor() {
     this.panels = {};
     this.dirty = false;
   }
 
-  add(panel) {
+  public add(panel: SvelteFlickingPanel) {
     this.panels[panel.id] = panel;
     this.dirty = true;
   }
 
-  remove(id) {
+  public remove(id: string) {
     delete this.panels[id];
     this.dirty = true;
   }
 
-  get(id) {
+  public get(id: string) {
     return this.panels[id];
   }
 }

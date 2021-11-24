@@ -38,6 +38,8 @@ const Flicking = Vue.extend({
   },
   created() {
     this.diffResult = null;
+
+    withFlickingMethods(this, "vanillaFlicking");
   },
   mounted() {
     const options = this.options;
@@ -204,8 +206,6 @@ const Flicking = Vue.extend({
     }
   }
 });
-
-withFlickingMethods(Flicking.prototype, "vanillaFlicking");
 
 type VueFlicking = InstanceType<typeof Flicking>;
 

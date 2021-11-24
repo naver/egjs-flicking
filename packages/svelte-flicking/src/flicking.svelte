@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import {
     onMount,
     onDestroy,
@@ -13,45 +13,50 @@
     range,
     toArray,
     getDefaultCameraTransform,
-    EVENTS
+    Plugin,
+    Status,
+    EVENTS,
+    FlickingOptions
   } from "@egjs/flicking";
   import Component from "@egjs/component";
-  import ListDiffer from "@egjs/list-differ";
+  import ListDiffer, { DiffResult } from "@egjs/list-differ";
 
   import PanelManager from "./PanelManager";
-  import SvelteRenderer from "./SvelteRenderer";
+  import SvelteRenderer, { SvelteRendererOptions } from "./SvelteRenderer";
   import SvelteElementProvider from "./SvelteElementProvider";
 
-  export let hideBeforeInit = false;
-  export let firstPanelSize = undefined;
-  export let options = {};
-  export let plugins = [];
-  export let status = undefined;
-  export let vanillaFlicking = null;
+  export let hideBeforeInit: boolean = false;
+  export let firstPanelSize: string | undefined = undefined;
+  export let options: Partial<FlickingOptions> = {};
+  export let plugins: Plugin[] = [];
+  export let status: Status | undefined = undefined;
+  export let vanillaFlicking: VanillaFlicking | null = null;
 
   const dispatch = createEventDispatcher();
   const panelManager = new PanelManager();
-  const pluginsDiffer = new ListDiffer([]);
-  const slotDiffer = new ListDiffer([], el => el.dataset.key);
-  const renderEmitter = new Component();
+  const pluginsDiffer = new ListDiffer<Plugin>([]);
+  const slotDiffer = new ListDiffer<HTMLElement>([], el => el.dataset.key!);
+  const renderEmitter = new Component<{ render: void }>();
 
-  let viewportEl;
-  let cameraEl;
+  let viewportEl: HTMLElement;
+  let cameraEl: HTMLElement;
 
-  let isHorizontal;
-  let isHiddenBeforeInit;
-  let cameraTransform;
+  let panelsPerView: number;
+  let isHorizontal: boolean;
+  let isHiddenBeforeInit: boolean;
+  let cameraTransform: { style?: string };
 
-  let diffResult = null;
+  let diffResult: DiffResult<HTMLElement> | null = null;
   let renderCounter = 0;
 
   setContext("panels", panelManager);
 
   $: {
+    panelsPerView = options.panelsPerView ?? -1;
     isHorizontal = options.horizontal != null ? options.horizontal : true;
     isHiddenBeforeInit = hideBeforeInit && !(vanillaFlicking && vanillaFlicking.initialized);
     cameraTransform = !(vanillaFlicking && vanillaFlicking.initialized) && firstPanelSize
-      ? { style: { transform: `${getDefaultCameraTransform(options.align, options.horizontal, firstPanelSize)}` } }
+      ? { style: `transform: ${getDefaultCameraTransform(options.align, options.horizontal, firstPanelSize)}` }
       : {};
   }
 
@@ -60,14 +65,14 @@
   });
 
   onMount(() => {
-    slotDiffer.update(toArray(cameraEl.children));
+    slotDiffer.update(toArray(cameraEl.children) as HTMLElement[]);
 
-    const rendererOptions = {
+    const rendererOptions: SvelteRendererOptions = {
       getSlots,
       renderEmitter,
       forceUpdate,
       align: options.align,
-      strategy: options.virtual && options.panelsPerView > 0
+      strategy: options.virtual && panelsPerView > 0
         ? new VirtualRenderingStrategy()
         : new NormalRenderingStrategy({
           providerCtor: SvelteElementProvider
@@ -106,21 +111,21 @@
       vanillaFlicking.renderer.forceRenderAllPanels();
       panelManager.dirty = false;
       renderEmitter.once("render", () => {
-        diffResult = slotDiffer.update(toArray(cameraEl.children));
+        diffResult = slotDiffer.update(toArray(cameraEl.children) as HTMLElement[]);
 
         // As added elements should always back in the slots list
-        sync(vanillaFlicking, diffResult, [
-          ...diffResult.prevList.map(el => panelManager.get(el.dataset.key)),
-          ...diffResult.added.map(idx => panelManager.get(diffResult.list[idx].dataset.key)),
+        sync(vanillaFlicking!, diffResult, [
+          ...diffResult.prevList.map(el => panelManager.get(el.dataset.key!)),
+          ...diffResult.added.map(idx => panelManager.get(diffResult!.list[idx].dataset.key!)),
         ]);
-        vanillaFlicking.renderer.render();
+        vanillaFlicking!.renderer.render();
       });
     }
   });
 
-  function getSlots(children) {
+  function getSlots(children: HTMLElement[]) {
     return children.map(el => {
-      return panelManager.get(el.dataset.key);
+      return panelManager.get(el.dataset.key!);
     })
   }
 
@@ -128,12 +133,12 @@
     Object.keys(EVENTS).forEach(key => {
       const eventName = EVENTS[key];
 
-      vanillaFlicking.on(eventName, e => {
+      vanillaFlicking!.on(eventName, e => {
         dispatch(eventName, e);
       });
     });
 
-    vanillaFlicking.once(EVENTS.READY, e => {
+    vanillaFlicking!.once(EVENTS.READY, e => {
       // Update reference to update computed properties
       vanillaFlicking = e.currentTarget;
     });
@@ -156,8 +161,8 @@
 <svelte:options accessors={true} />
 <div class:flicking-viewport={true} bind:this={viewportEl} class:vertical={!isHorizontal} class:flicking-hidden={isHiddenBeforeInit} {...$$restProps}>
   <div class:flicking-camera={true} bind:this={cameraEl} {...cameraTransform}>
-    {#if options.panelsPerView > 0 && !!options.virtual}
-      {#each range(options.panelsPerView + 1) as _idx}
+    {#if panelsPerView > 0 && !!options.virtual}
+      {#each range(panelsPerView + 1) as _idx}
         <div class={options.virtual.panelClass}></div>
       {/each}
     {:else}
