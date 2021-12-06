@@ -17,6 +17,10 @@ module.exports = {
       prefix: "<rootDir>"
     })
   },
+  coveragePathIgnorePatterns: [
+    "/node_modules/",
+    "\.d\.ts$"
+  ],
   transform: {
     "^.+\\.(mjs|js|jsx|ts|tsx)$": path.resolve(__dirname, "babel.js")
   }

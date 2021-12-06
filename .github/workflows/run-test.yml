@@ -48,7 +48,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: cfc
-          base-path: .
+          base-path: ./test/cfc
           path-to-lcov: ./test/cfc/coverage/lcov.info
           parallel: true
   teardown:
