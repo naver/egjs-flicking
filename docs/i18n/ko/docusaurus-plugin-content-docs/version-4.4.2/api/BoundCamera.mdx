@@ -3,9 +3,9 @@ custom_edit_url: null
 ---
 
 ```ts
-class CircularCamera extends Camera
+class BoundCamera extends Camera
 ```
-첫번째 패널과 마지막 패널이 이어진 상태로, 무한히 회전할 수 있는 종류의 [Camera](Camera)
+첫번째와 마지막 패널 밖으로 넘어가지 못하도록 범위를 설정하여, 첫번째/마지막 패널 전/후의 빈 공간을 보이지 않도록 하는 종류의 [Camera](Camera)
 
 <div className="container">
   <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
@@ -85,7 +85,7 @@ Camera의 [position](Camera#position)이 도달 가능한 범위
 |PROPERTY|TYPE|DESCRIPTION|
 |:---:|:---:|:---:|
 |min|number|최소 위치|
-|min|number|최대 위치|
+|max|number|최대 위치|
 
 ### rangeDiff {#rangeDiff}
 
