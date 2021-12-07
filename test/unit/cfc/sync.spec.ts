@@ -1,4 +1,4 @@
-import { DiffResult } from "@egjs/list-differ";
+import { diff, DiffResult } from "@egjs/list-differ";
 import sync from "~/cfc/sync";
 
 import El from "../helper/El";
@@ -147,5 +147,20 @@ describe("sync", () => {
     sync(flicking, diffResult, []);
 
     expect(flicking.panels.every((panel, idx) => panel.index === idx)).to.be.true;
+  });
+
+  it("should bind new elements to new panels correctly when previous panels are all removed", async () => {
+    const flicking = await createFlicking(El.DEFAULT_HORIZONTAL_WITH_PANELS(3));
+
+    const prevElements = flicking.panels.map(panel => panel.element);
+    const newElements = [El.panel().el, El.panel().el];
+
+    const diffResult = diff(prevElements, newElements);
+
+    sync(flicking, diffResult, newElements);
+
+    const newPanels = flicking.panels;
+
+    expect(newPanels.every((panel, idx) => panel.element === newElements[idx])).to.be.true;
   });
 });

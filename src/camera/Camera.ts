@@ -78,7 +78,7 @@ abstract class Camera {
    * @ko Camera의 {@link Camera#position position}이 도달 가능한 범위
    * @type {object}
    * @property {number} min A minimum position<ko>최소 위치</ko>
-   * @property {number} min A maximum position<ko>최대 위치</ko>
+   * @property {number} max A maximum position<ko>최대 위치</ko>
    * @readonly
    */
   public get range() { return this._range; }

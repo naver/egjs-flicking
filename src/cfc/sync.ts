@@ -6,6 +6,7 @@ import Renderer from "../renderer/Renderer";
 export default (flicking: Flicking, diffResult: DiffResult<any>, rendered: any[]) => {
   const renderer = flicking.renderer;
   const panels = renderer.panels;
+  const prevList = [...diffResult.prevList];
 
   if (diffResult.removed.length > 0) {
     let endIdx = -1;
@@ -24,6 +25,8 @@ export default (flicking: Flicking, diffResult: DiffResult<any>, rendered: any[]
       } else {
         prevIdx = removedIdx;
       }
+
+      prevList.splice(removedIdx, 1);
     });
 
     batchRemove(renderer, prevIdx, endIdx + 1);
@@ -56,13 +59,15 @@ export default (flicking: Flicking, diffResult: DiffResult<any>, rendered: any[]
     let startIdx = -1;
     let prevIdx = -1;
 
+    const addedElements = rendered.slice(prevList.length);
+
     diffResult.added.forEach((addedIdx, idx) => {
       if (startIdx < 0) {
         startIdx = idx;
       }
 
       if (prevIdx >= 0 && addedIdx !== prevIdx + 1) {
-        batchInsert(renderer, diffResult, rendered, startIdx, idx + 1);
+        batchInsert(renderer, diffResult, addedElements, startIdx, idx + 1);
 
         startIdx = -1;
         prevIdx = -1;
@@ -72,14 +77,14 @@ export default (flicking: Flicking, diffResult: DiffResult<any>, rendered: any[]
     });
 
     if (startIdx >= 0) {
-      batchInsert(renderer, diffResult, rendered, startIdx);
+      batchInsert(renderer, diffResult, addedElements, startIdx);
     }
   }
 };
 
-const batchInsert = (renderer: Renderer, diffResult: DiffResult<any>, rendered: any[], startIdx: number, endIdx?: number) => {
+const batchInsert = (renderer: Renderer, diffResult: DiffResult<any>, addedElements: any[], startIdx: number, endIdx?: number) => {
   renderer.batchInsert(
-    ...diffResult.added.slice(startIdx, endIdx).map((index, elIdx) => ({ index, elements: [rendered[elIdx + diffResult.prevList.length]], hasDOMInElements: false }))
+    ...diffResult.added.slice(startIdx, endIdx).map((index, elIdx) => ({ index, elements: [addedElements[elIdx]], hasDOMInElements: false }))
   );
 };
 
