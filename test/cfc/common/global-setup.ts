@@ -13,7 +13,13 @@ export default async () => {
     fs.copy(path.resolve(__dirname, "../../../packages/preact-flicking/src/preact-flicking/"), path.resolve(frameworkDir, "./preact/lib/@egjs/preact-flicking")),
     fs.copy(path.resolve(__dirname, "../../../packages/vue-flicking/src/"), path.resolve(frameworkDir, "./vue/lib/@egjs/vue-flicking")),
     fs.copy(path.resolve(__dirname, "../../../packages/vue3-flicking/src/"), path.resolve(frameworkDir, "./vue3/lib/@egjs/vue3-flicking")),
-    fs.copy(path.resolve(__dirname, "../../../packages/ngx-flicking/projects/ngx-flicking/src/"), path.resolve(frameworkDir, "./angular/lib/@egjs/ngx-flicking")),
+    fs.copy(path.resolve(__dirname, "../../../packages/ngx-flicking/projects/ngx-flicking/src/"), path.resolve(frameworkDir, "./angular/lib/@egjs/ngx-flicking")).then(() => {
+      return replaceInFile({
+        files: path.resolve(frameworkDir, "./angular/lib/@egjs/ngx-flicking/lib/ngx-flicking.component.ts"),
+        from: "../../node_modules/@egjs/flicking/dist/flicking.css",
+        to: ""
+      });
+    }),
     Promise.all([
       fs.copy(path.resolve(__dirname, "../../../packages/svelte-flicking/src/"), path.resolve(frameworkDir, "./svelte/lib/@egjs/svelte-flicking/src")),
       fs.copy(path.resolve(__dirname, "../../../packages/svelte-flicking/build.js"), path.resolve(frameworkDir, "./svelte/lib/@egjs/svelte-flicking/build.js")),

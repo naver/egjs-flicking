@@ -9,9 +9,9 @@ import Flicking from "@egjs/flicking";
   selector: "[flicking-panel], [FlickingPanel]"
 })
 export class NgxFlickingPanel {
-  public get nativeElement() { return this._elementref.nativeElement; }
   private _rendered: boolean;
 
+  public get nativeElement() { return this._elementref.nativeElement; }
   public get rendered() { return this._rendered; }
 
   public constructor(private _elementref: ElementRef, private _renderer: Renderer2) {

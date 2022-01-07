@@ -10,6 +10,10 @@
     "@egjs/flicking": "^4.4.2",
     "@egjs/list-differ": "^1.0.0"
   },
+  "devDependencies": {
+    "@angular/common": "~10.0.0",
+    "@angular/core": "~10.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/naver/egjs-flicking/tree/master/packages/ngx-flicking"
