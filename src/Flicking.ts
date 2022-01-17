@@ -351,7 +351,9 @@ class Flicking extends Component<FlickingEvents> {
    */
   public get circular() { return this._circular; }
   /**
-   *
+   * Set panel control mode for the case when circular cannot be enabled.
+   * "default" will set the view's range from the top of the first panel to the top of the last panel.
+   * "bound" will prevent the view from going out of the first/last panel, so it won't show empty spaces before/after the first/last panel.
    * @ko 순환 모드 사용 불가능시 사용할 패널 조작 범위 설정 방식을 변경합니다.
    * "default" 사용시 시점이 첫번째 엘리먼트 위에서부터 마지막 엘리먼트 위까지 움직일 수 있도록 설정합니다.
    * "bound" 사용시 시점이 첫번째 엘리먼트와 마지막 엘리먼트의 끝과 끝 사이에서 움직일 수 있도록 설정합니다.
