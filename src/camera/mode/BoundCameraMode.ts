@@ -2,40 +2,46 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Panel from "../core/panel/Panel";
-import AnchorPoint from "../core/AnchorPoint";
-import { getFlickingAttached, parseAlign } from "../utils";
+import AnchorPoint from "../../core/AnchorPoint";
+import Panel from "../../core/panel/Panel";
+import { parseAlign } from "../../utils";
 
-import Camera from "./Camera";
+import CameraMode from "./CameraMode";
 
-/**
- * A {@link Camera} that set range not to go out of the first/last panel, so it won't show empty spaces before/after the first/last panel
- * @ko 첫번째와 마지막 패널 밖으로 넘어가지 못하도록 범위를 설정하여, 첫번째/마지막 패널 전/후의 빈 공간을 보이지 않도록 하는 종류의 {@link Camera}
- */
-class BoundCamera extends Camera {
-  /**
-   * Update {@link Camera#range range} of Camera
-   * @ko Camera의 {@link Camera#range range}를 업데이트합니다
-   * @chainable
-   * @throws {FlickingError}
-   * {@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
-   * <ko>{@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
-   * @return {this}
-   */
-  public updateRange() {
-    const flicking = getFlickingAttached(this._flicking);
+class BoundCameraMode extends CameraMode {
+  public checkAvailability(): boolean {
+    const flicking = this._flicking;
     const renderer = flicking.renderer;
-    const alignPos = this._alignPos;
 
     const firstPanel = renderer.getPanel(0);
     const lastPanel = renderer.getPanel(renderer.panelCount - 1);
 
     if (!firstPanel || !lastPanel) {
-      this._range = { min: 0, max: 0 };
-      return this;
+      return false;
     }
 
-    const viewportSize = this.size;
+    const viewportSize = flicking.camera.size;
+    const firstPanelPrev = firstPanel.range.min;
+    const lastPanelNext = lastPanel.range.max;
+    const panelAreaSize = lastPanelNext - firstPanelPrev;
+    const isBiggerThanViewport = viewportSize < panelAreaSize;
+
+    return isBiggerThanViewport;
+  }
+
+  public getRange(): { min: number; max: number } {
+    const flicking = this._flicking;
+    const renderer = flicking.renderer;
+    const alignPos = flicking.camera.alignPosition;
+
+    const firstPanel = renderer.getPanel(0);
+    const lastPanel = renderer.getPanel(renderer.panelCount - 1);
+
+    if (!firstPanel || !lastPanel) {
+      return { min: 0, max: 0 };
+    }
+
+    const viewportSize = flicking.camera.size;
     const firstPanelPrev = firstPanel.range.min;
     const lastPanelNext = lastPanel.range.max;
     const panelAreaSize = lastPanelNext - firstPanelPrev;
@@ -45,32 +51,30 @@ class BoundCamera extends Camera {
     const lastPos = lastPanelNext - viewportSize + alignPos;
 
     if (isBiggerThanViewport) {
-      this._range = { min: firstPos, max: lastPos };
+      return { min: firstPos, max: lastPos };
     } else {
-      const align = this._align;
+      const align = flicking.camera.align;
       const alignVal = typeof align === "object"
         ? (align as { camera: string | number }).camera
         : align;
 
       const pos = firstPos + parseAlign(alignVal, lastPos - firstPos);
 
-      this._range = { min: pos, max: pos };
+      return { min: pos, max: pos };
     }
-
-    return this;
   }
 
-  public updateAnchors(): this {
-    const flicking = getFlickingAttached(this._flicking);
+  public getAnchors(): AnchorPoint[] {
+    const flicking = this._flicking;
+    const camera = flicking.camera;
     const panels = flicking.renderer.panels;
 
     if (panels.length <= 0) {
-      this._anchors = [];
-      return this;
+      return [];
     }
 
-    const range = this._range;
-    const reachablePanels = panels.filter(panel => this.canReach(panel));
+    const range = flicking.camera.range;
+    const reachablePanels = panels.filter(panel => camera.canReach(panel));
 
     if (reachablePanels.length > 0) {
       const shouldPrependBoundAnchor = reachablePanels[0].position !== range.min;
@@ -99,7 +103,7 @@ class BoundCamera extends Camera {
         }));
       }
 
-      this._anchors = newAnchors;
+      return newAnchors;
     } else if (range.min !== range.max) {
       // There're more than 2 panels
       const nearestPanelAtMin = this._findNearestPanel(range.min, panels);
@@ -108,7 +112,7 @@ class BoundCamera extends Camera {
         : nearestPanelAtMin;
       const panelAtMax = panelAtMin.next()!;
 
-      this._anchors = [
+      return [
         new AnchorPoint({
           index: 0,
           position: range.min,
@@ -121,19 +125,18 @@ class BoundCamera extends Camera {
         })
       ];
     } else {
-      this._anchors = [new AnchorPoint({
+      return [new AnchorPoint({
         index: 0,
         position: range.min,
         panel: this._findNearestPanel(range.min, panels)
       })];
     }
-
-    return this;
   }
 
   public findAnchorIncludePosition(position: number): AnchorPoint | null {
-    const range = this._range;
-    const anchors = this._anchors;
+    const camera = this._flicking.camera;
+    const range = camera.range;
+    const anchors = camera.anchorPoints;
 
     if (anchors.length <= 0) return null;
 
@@ -165,4 +168,4 @@ class BoundCamera extends Camera {
   }
 }
 
-export default BoundCamera;
+export default BoundCameraMode;

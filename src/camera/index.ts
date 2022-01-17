@@ -3,17 +3,13 @@
  * egjs projects are licensed under the MIT license
  */
 import Camera, { CameraOptions } from "./Camera";
-import LinearCamera from "./LinearCamera";
-import CircularCamera from "./CircularCamera";
-import BoundCamera from "./BoundCamera";
 
 export {
-  Camera,
-  LinearCamera,
-  CircularCamera,
-  BoundCamera
+  Camera
 };
 
 export type {
   CameraOptions
 };
+
+export * from "./mode";

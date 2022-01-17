@@ -9,8 +9,10 @@ import FlickingError from "../core/FlickingError";
 import Panel from "../core/panel/Panel";
 import AnchorPoint from "../core/AnchorPoint";
 import * as ERROR from "../const/error";
-import { ALIGN, DIRECTION, EVENTS } from "../const/external";
-import { checkExistence, clamp, find, getFlickingAttached, getProgress, includes, parseAlign, toArray } from "../utils";
+import { ALIGN, CIRCULAR_FALLBACK, DIRECTION, EVENTS } from "../const/external";
+import { checkExistence, find, getFlickingAttached, getProgress, includes, parseAlign, toArray } from "../utils";
+
+import { CameraMode, BoundCameraMode, CircularCameraMode, LinearCameraMode } from "./mode";
 
 export interface CameraOptions {
   align: FlickingOptions["align"];
@@ -20,21 +22,24 @@ export interface CameraOptions {
  * A component that manages actual movement inside the viewport
  * @ko 뷰포트 내에서의 실제 움직임을 담당하는 컴포넌트
  */
-abstract class Camera {
+class Camera {
   // Options
-  protected _align: FlickingOptions["align"];
+  private _align: FlickingOptions["align"];
 
   // Internal states
-  protected _flicking: Flicking | null;
-  protected _el: HTMLElement;
-  protected _transform: string;
-  protected _position: number;
-  protected _alignPos: number;
-  protected _offset: number;
-  protected _range: { min: number; max: number };
-  protected _visiblePanels: Panel[];
-  protected _anchors: AnchorPoint[];
-  protected _needPanelTriggered: { prev: boolean; next: boolean };
+  private _flicking: Flicking | null;
+  private _mode: CameraMode;
+  private _el: HTMLElement;
+  private _transform: string;
+  private _position: number;
+  private _alignPos: number;
+  private _offset: number;
+  private _circularOffset: number;
+  private _circularEnabled: boolean;
+  private _range: { min: number; max: number };
+  private _visiblePanels: Panel[];
+  private _anchors: AnchorPoint[];
+  private _needPanelTriggered: { prev: boolean; next: boolean };
 
   // Internal states getter
   /**
@@ -72,7 +77,23 @@ abstract class Camera {
    * @default 0
    * @readonly
    */
-  public get offset() { return this._offset; }
+  public get offset() { return this._offset - this._circularOffset; }
+  /**
+   * Whether the `circular` option is enabled.
+   * The {@link Flicking#circular circular} option can't be enabled when sum of the panel sizes are too small.
+   * @ko {@link Flicking#circular circular} 옵션이 활성화되었는지 여부를 나타내는 멤버 변수.
+   * {@link Flicking#circular circular} 옵션은 패널의 크기의 합이 충분하지 않을 경우 비활성화됩니다.
+   * @type {boolean}
+   * @default false
+   * @readonly
+   */
+  public get circularEnabled() { return this._circularEnabled; }
+  /**
+   * A current camera mode
+   * @type {CameraMode}
+   * @readonly
+   */
+  public get mode() { return this._mode; }
   /**
    * A range that Camera's {@link Camera#position position} can reach
    * @ko Camera의 {@link Camera#position position}이 도달 가능한 범위
@@ -118,7 +139,7 @@ abstract class Camera {
    * @type {ControlParams}
    * @readonly
    */
-  public get controlParams() { return { range: this._range, position: this._position, circular: false }; }
+  public get controlParams() { return { range: this._range, position: this._position, circular: this._circularEnabled }; }
   /**
    * A Boolean value indicating whether Camera's over the minimum or maximum position reachable
    * @ko 현재 카메라가 도달 가능한 범위의 최소 혹은 최대점을 넘어섰는지를 나타냅니다
@@ -221,22 +242,6 @@ abstract class Camera {
   }
 
   /**
-   * Update {@link Camera#range range} of Camera
-   * @ko Camera의 {@link Camera#range range}를 업데이트합니다
-   * @method
-   * @abstract
-   * @memberof Camera
-   * @instance
-   * @name updateRange
-   * @chainable
-   * @throws {FlickingError}
-   * {@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
-   * <ko>{@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
-   * @return {this}
-   */
-  public abstract updateRange(): this;
-
-  /**
    * Initialize Camera
    * @ko Camera를 초기화합니다
    * @param {Flicking} flicking An instance of {@link Flicking}<ko>Flicking의 인스턴스</ko>
@@ -254,6 +259,8 @@ abstract class Camera {
     checkExistence(viewportEl.firstElementChild, "First element child of the viewport element");
     this._el = viewportEl.firstElementChild as HTMLElement;
     this._checkTranslateSupport();
+
+    this._updateMode();
 
     return this;
   }
@@ -279,13 +286,21 @@ abstract class Camera {
    * @return {this}
    */
   public lookAt(pos: number): void {
+    const flicking = getFlickingAttached(this._flicking);
     const prevPos = this._position;
 
     this._position = pos;
+    const toggled = this._togglePanels(prevPos, pos);
     this._refreshVisiblePanels();
     this._checkNeedPanel();
     this._checkReachEnd(prevPos, pos);
     this.applyTransform();
+
+    if (toggled) {
+      void flicking.renderer.render().then(() => {
+        this.updateOffset();
+      });
+    }
   }
 
   /**
@@ -297,7 +312,19 @@ abstract class Camera {
    * @return {AnchorPoint | null} The previous {@link AnchorPoint}<ko>이전 {@link AnchorPoint}</ko>
    */
   public getPrevAnchor(anchor: AnchorPoint): AnchorPoint | null {
-    return this._anchors[anchor.index - 1] || null;
+    if (!this._circularEnabled || anchor.index !== 0) {
+      return this._anchors[anchor.index - 1] || null;
+    } else {
+      const anchors = this._anchors;
+      const rangeDiff = this.rangeDiff;
+      const lastAnchor = anchors[anchors.length - 1];
+
+      return new AnchorPoint({
+        index: lastAnchor.index,
+        position: lastAnchor.position - rangeDiff,
+        panel: lastAnchor.panel
+      });
+    }
   }
 
   /**
@@ -309,7 +336,20 @@ abstract class Camera {
    * @return {AnchorPoint | null} The next {@link AnchorPoint}<ko>다음 {@link AnchorPoint}</ko>
    */
   public getNextAnchor(anchor: AnchorPoint): AnchorPoint | null {
-    return this._anchors[anchor.index + 1] || null;
+    const anchors = this._anchors;
+
+    if (!this._circularEnabled || anchor.index !== anchors.length - 1) {
+      return anchors[anchor.index + 1] || null;
+    } else {
+      const rangeDiff = this.rangeDiff;
+      const firstAnchor = anchors[0];
+
+      return new AnchorPoint({
+        index: firstAnchor.index,
+        position: firstAnchor.position + rangeDiff,
+        panel: firstAnchor.panel
+      });
+    }
   }
 
   /**
@@ -335,16 +375,7 @@ abstract class Camera {
    * @return {AnchorPoint | null} The {@link AnchorPoint} that includes the given position<ko>해당 좌표를 포함하는 {@link AnchorPoint}</ko>
    */
   public findAnchorIncludePosition(position: number): AnchorPoint | null {
-    const anchors = this._anchors;
-    const anchorsIncludingPosition = anchors.filter(anchor => anchor.panel.includePosition(position, true));
-
-    return anchorsIncludingPosition.reduce((nearest: AnchorPoint | null, anchor) => {
-      if (!nearest) return anchor;
-
-      return Math.abs(nearest.position - position) < Math.abs(anchor.position - position)
-        ? nearest
-        : anchor;
-    }, null);
+    return this._mode.findAnchorIncludePosition(position);
   }
 
   /**
@@ -396,8 +427,7 @@ abstract class Camera {
    * @return {number} A clamped position<ko>범위 제한된 좌표</ko>
    */
   public clampToReachablePosition(position: number): number {
-    const range = this._range;
-    return clamp(position, range.min, range.max);
+    return this._mode.clampToReachablePosition(position);
   }
 
   /**
@@ -407,13 +437,7 @@ abstract class Camera {
    * @return {boolean} Whether the panel's inside Camera's range<ko>도달 가능한 범위 내에 해당 패널이 존재하는지 여부</ko>
    */
   public canReach(panel: Panel): boolean {
-    const range = this._range;
-
-    if (panel.removed) return false;
-
-    const panelPos = panel.position;
-
-    return panelPos >= range.min && panelPos <= range.max;
+    return this._mode.canReach(panel);
   }
 
   /**
@@ -423,9 +447,38 @@ abstract class Camera {
    * @return Whether the panel element is visible at the current position<ko>현재 위치에서 해당 패널 엘리먼트가 보이는지 여부</ko>
    */
   public canSee(panel: Panel): boolean {
-    const visibleRange = this.visibleRange;
-    // Should not include margin, as we don't declare what the margin is visible as what the panel is visible.
-    return panel.isVisibleOnRange(visibleRange.min, visibleRange.max);
+    return this._mode.canSee(panel);
+  }
+
+  /**
+   * Update {@link Camera#range range} of Camera
+   * @ko Camera의 {@link Camera#range range}를 업데이트합니다
+   * @method
+   * @abstract
+   * @memberof Camera
+   * @instance
+   * @name updateRange
+   * @chainable
+   * @throws {FlickingError}
+   * {@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
+   * <ko>{@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
+   * @return {this}
+   */
+  public updateRange() {
+    const flicking = getFlickingAttached(this._flicking);
+    const renderer = flicking.renderer;
+    const panels = renderer.panels;
+
+    this._updateMode();
+    this._range = this._mode.getRange();
+
+    if (this._circularEnabled) {
+      panels.forEach(panel => panel.updateCircularToggleDirection());
+    }
+
+    this.updateOffset();
+
+    return this;
   }
 
   /**
@@ -456,14 +509,7 @@ abstract class Camera {
    * @return {this}
    */
   public updateAnchors(): this {
-    const flicking = getFlickingAttached(this._flicking);
-    const panels = flicking.renderer.panels;
-
-    this._anchors = panels.map((panel, index) => new AnchorPoint({
-      index,
-      position: panel.position,
-      panel
-    }));
+    this._anchors = this._mode.getAnchors();
 
     return this;
   }
@@ -503,6 +549,8 @@ abstract class Camera {
       .filter(panel => panel.position + panel.offset < position)
       .reduce((offset, panel) => offset + panel.sizeIncludingMargin, 0);
 
+    this._circularOffset = this._mode.getCircularOffset();
+
     this.applyTransform();
 
     return this;
@@ -529,7 +577,7 @@ abstract class Camera {
     const el = this._el;
     const flicking = getFlickingAttached(this._flicking);
 
-    const actualPosition = this._position - this._alignPos - this._offset;
+    const actualPosition = this._position - this._alignPos - this._offset + this._circularOffset;
 
     el.style[this._transform] = flicking.horizontal
       ? `translate(${-actualPosition}px)`
@@ -538,17 +586,19 @@ abstract class Camera {
     return this;
   }
 
-  protected _resetInternalValues() {
+  private _resetInternalValues() {
     this._position = 0;
     this._alignPos = 0;
     this._offset = 0;
+    this._circularOffset = 0;
+    this._circularEnabled = false;
     this._range = { min: 0, max: 0 };
     this._visiblePanels = [];
     this._anchors = [];
     this._needPanelTriggered = { prev: false, next: false };
   }
 
-  protected _refreshVisiblePanels() {
+  private _refreshVisiblePanels() {
     const flicking = getFlickingAttached(this._flicking);
     const panels = flicking.renderer.panels;
 
@@ -570,7 +620,7 @@ abstract class Camera {
     }
   }
 
-  protected _checkNeedPanel(): void {
+  private _checkNeedPanel(): void {
     const needPanelTriggered = this._needPanelTriggered;
 
     if (needPanelTriggered.prev && needPanelTriggered.next) return;
@@ -621,7 +671,7 @@ abstract class Camera {
     }
   }
 
-  protected _checkReachEnd(prevPos: number, newPos: number): void {
+  private _checkReachEnd(prevPos: number, newPos: number): void {
     const flicking = getFlickingAttached(this._flicking);
     const range = this._range;
 
@@ -637,7 +687,7 @@ abstract class Camera {
     }));
   }
 
-  protected _checkTranslateSupport = () => {
+  private _checkTranslateSupport = () => {
     const transforms = ["webkitTransform", "msTransform", "MozTransform", "OTransform", "transform"];
 
     const supportedStyle = document.documentElement.style;
@@ -654,6 +704,41 @@ abstract class Camera {
 
     this._transform = transformName;
   };
+
+  private _updateMode() {
+    const flicking = getFlickingAttached(this._flicking);
+
+    if (flicking.circular) {
+      const circularMode = new CircularCameraMode(flicking);
+      const canSetCircularMode = circularMode.checkAvailability();
+
+      if (canSetCircularMode) {
+        this._mode = circularMode;
+      } else {
+        const fallbackMode = flicking.circularFallback;
+
+        this._mode = fallbackMode === CIRCULAR_FALLBACK.BOUND
+          ? new BoundCameraMode(flicking)
+          : new LinearCameraMode(flicking);
+      }
+
+      this._circularEnabled = canSetCircularMode;
+    } else {
+      this._mode = flicking.bound
+        ? new BoundCameraMode(flicking)
+        : new LinearCameraMode(flicking);
+    }
+  }
+
+  private _togglePanels(prevPos: number, pos: number): boolean {
+    if (pos === prevPos) return false;
+
+    const flicking = getFlickingAttached(this._flicking);
+    const panels = flicking.renderer.panels;
+    const toggled = panels.map(panel => panel.toggle(prevPos, pos));
+
+    return toggled.some(isToggled => isToggled);
+  }
 }
 
 export default Camera;
