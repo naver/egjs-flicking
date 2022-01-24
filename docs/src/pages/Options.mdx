@@ -220,21 +220,21 @@ To enable circular mode, all panels should pass the below condition
 
 ### circularFallback
 Set panel control mode for the case when circular cannot be enabled.
-"default" will set the view's range from the top of the first panel to the top of the last panel.
+"linear" will set the view's range from the top of the first panel to the top of the last panel.
 "bound" will prevent the view from going out of the first/last panel, so it won't show empty spaces before/after the first/last panel.
 
 <Columns>
   <ColumnItem is={6}>
 
   ```js
-  circularFallback: "default",
+  circularFallback: "linear",
   circular: true,
   align: "prev"
   ```
 
   </ColumnItem>
   <ColumnItem is={6}>
-    <Flicking circular={true} circularFallback="default" align="prev">
+    <Flicking circular={true} circularFallback="linear" align="prev">
       { Panels(2) }
     </Flicking>
   </ColumnItem>
