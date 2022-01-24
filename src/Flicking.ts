@@ -11,9 +11,9 @@ import { Panel } from "./core/panel";
 import { VanillaElementProvider } from "./core/panel/provider";
 import VirtualManager, { VirtualOptions } from "./core/VirtualManager";
 import { Control, SnapControl, SnapControlOptions, FreeControl, StrictControl, FreeControlOptions, StrictControlOptions } from "./control";
-import { BoundCamera, Camera, CircularCamera, LinearCamera } from "./camera";
+import { Camera } from "./camera";
 import { Renderer, VanillaRenderer, ExternalRenderer, RendererOptions, NormalRenderingStrategy, VirtualRenderingStrategy } from "./renderer";
-import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION } from "./const/external";
+import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION, CIRCULAR_FALLBACK } from "./const/external";
 import * as ERROR from "./const/error";
 import { findIndex, getElement, includes, parseElement } from "./utils";
 import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, WillChangeEvent, WillRestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent, ChangedEvent, RestoredEvent, PanelChangeEvent } from "./type/event";
@@ -52,6 +52,7 @@ export interface FlickingOptions {
   defaultIndex: number;
   horizontal: boolean;
   circular: boolean;
+  circularFallback: LiteralUnion<ValueOf<typeof CIRCULAR_FALLBACK>>;
   bound: boolean;
   adaptive: boolean;
   panelsPerView: number;
@@ -120,6 +121,7 @@ class Flicking extends Component<FlickingEvents> {
   private _defaultIndex: FlickingOptions["defaultIndex"];
   private _horizontal: FlickingOptions["horizontal"];
   private _circular: FlickingOptions["circular"];
+  private _circularFallback: FlickingOptions["circularFallback"];
   private _bound: FlickingOptions["bound"];
   private _adaptive: FlickingOptions["adaptive"];
   private _panelsPerView: FlickingOptions["panelsPerView"];
@@ -218,7 +220,7 @@ class Flicking extends Component<FlickingEvents> {
    * @default false
    * @readonly
    */
-  public get circularEnabled() { return this._camera.controlParams.circular; }
+  public get circularEnabled() { return this._camera.circularEnabled; }
   /**
    * Whether the `virtual` option is enabled.
    * The {@link Flicking#virtual virtual} option can't be enabled when  {@link Flicking#panelsPerView panelsPerView} is less or equal than zero.
@@ -348,6 +350,18 @@ class Flicking extends Component<FlickingEvents> {
    * @default false
    */
   public get circular() { return this._circular; }
+  /**
+   * Set panel control mode for the case when circular cannot be enabled.
+   * "linear" will set the view's range from the top of the first panel to the top of the last panel.
+   * "bound" will prevent the view from going out of the first/last panel, so it won't show empty spaces before/after the first/last panel.
+   * @ko 순환 모드 사용 불가능시 사용할 패널 조작 범위 설정 방식을 변경합니다.
+   * "linear" 사용시 시점이 첫번째 엘리먼트 위에서부터 마지막 엘리먼트 위까지 움직일 수 있도록 설정합니다.
+   * "bound" 사용시 시점이 첫번째 엘리먼트와 마지막 엘리먼트의 끝과 끝 사이에서 움직일 수 있도록 설정합니다.
+   * @see CIRCULAR_FALLBACK
+   * @type {string}
+   * @default "linear"
+   */
+  public get circularFallback() { return this._circularFallback; }
   /**
    * Prevent the view(camera element) from going out of the first/last panel, so it won't show empty spaces before/after the first/last panel
    * Only can be enabled when `circular=false`
@@ -718,6 +732,7 @@ class Flicking extends Component<FlickingEvents> {
     defaultIndex = 0,
     horizontal = true,
     circular = false,
+    circularFallback = CIRCULAR_FALLBACK.LINEAR,
     bound = false,
     adaptive = false,
     panelsPerView = -1,
@@ -755,6 +770,7 @@ class Flicking extends Component<FlickingEvents> {
     this._defaultIndex = defaultIndex;
     this._horizontal = horizontal;
     this._circular = circular;
+    this._circularFallback = circularFallback;
     this._bound = bound;
     this._adaptive = adaptive;
     this._panelsPerView = panelsPerView;
@@ -1358,19 +1374,14 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   private _createCamera(): Camera {
-    const cameraOption = { align: this._align };
-
-    if (this._circular) {
-      if (this._bound) {
-        // eslint-disable-next-line no-console
-        console.warn("\"circular\" and \"bound\" option cannot be used together, ignoring bound.");
-      }
-      return new CircularCamera(cameraOption);
-    } else if (this._bound) {
-      return new BoundCamera(cameraOption);
-    } else {
-      return new LinearCamera(cameraOption);
+    if (this._circular && this._bound) {
+      // eslint-disable-next-line no-console
+      console.warn("\"circular\" and \"bound\" option cannot be used together, ignoring bound.");
     }
+
+    return new Camera({
+      align: this._align
+    });
   }
 
   private _createRenderer(): Renderer {

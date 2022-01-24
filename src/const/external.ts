@@ -98,3 +98,15 @@ export const CLASS = {
   HIDDEN: "flicking-hidden",
   DEFAULT_VIRTUAL: "flicking-panel"
 };
+
+/**
+ * An object with all possible {@link Flicking#circularFallback circularFallback}s
+ * @ko Flicking의 {@link Flicking#circularFallback circularFallback}에 설정 가능한 값들을 담고 있는 객체
+ * @type {object}
+ * @property {string} LINEAR "linear"
+ * @property {string} BOUND "bound"
+ */
+export const CIRCULAR_FALLBACK = {
+  LINEAR: "linear",
+  BOUND: "bound"
+} as const;

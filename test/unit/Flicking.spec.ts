@@ -194,6 +194,14 @@ describe("Flicking", () => {
       });
     });
 
+    describe("circularFallback", () => {
+      it("is 'linear' by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.circularFallback).to.equal("linear");
+      });
+    });
+
     describe("bound", () => {
       it("is false by default", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
