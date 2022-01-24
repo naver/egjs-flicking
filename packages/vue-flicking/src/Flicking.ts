@@ -66,7 +66,7 @@ const Flicking = Vue.extend({
     });
 
     const slots = getSlots(this);
-    this.slotDiffer = new ListDiffer<VNode>(slots, vnode => vnode.key!);
+    this.slotDiffer = new ListDiffer<VNode>(slots, vnode => (vnode.key as string));
     this.pluginsDiffer = new ListDiffer<Plugin>();
 
     this._bindEvents();
@@ -174,7 +174,7 @@ const Flicking = Vue.extend({
       const slots = initialized
         ? getRenderingPanels(this.vanillaFlicking, this.diffResult!)
         : this._getSlots();
-      return slots.map(slot => h("Panel", { key: slot.key }, [slot]));
+      return slots.map(slot => h("Panel", { key: slot.key as string }, [slot]));
     },
     _getVirtualPanels(h: CreateElement, initialized: boolean) {
       const options = this.options;
