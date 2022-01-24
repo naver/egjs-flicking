@@ -46,28 +46,6 @@ html[data-theme='dark'] .navbar__logo {
   background-color: #45444f !important;
 }
 
-.alert {
-  color: #fff;
-  --ra-admonition-icon-color: #fff;
-}
-
-.alert a {
-  color: #fff;
-}
-
-.alert--warning {
-  color: rgba(0, 0, 0, .7);
-  --ra-admonition-icon-color: rgba(0, 0, 0, .7);
-}
-.alert--warning a {
-  color: #3e8ed0;
-}
-.alert--warning blockquote {
-  color: rgba(255, 255, 255, 0.7);
-  background-color: rgba(0, 0, 0, 0.7);
-  border-left: 6px solid #3e8ed0;
-}
-
 .admonition h5 {
   font-weight: bold;
 }

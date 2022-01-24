@@ -30,7 +30,7 @@ export default ({ options, panels, events = {}, methods = {}, plugins, siblings,
 
   const eventStatement = Object.keys(events).map(evt => ` on${evt[0].toUpperCase() + evt.slice(1)}={${events[evt]}}`).join("");
 
-  return <CodeBlock className="jsx" title="DemoComponent.jsx">
+  return <CodeBlock className="language-jsx" title="DemoComponent.jsx">
     {`${getImports(defaultImports, { includeFlicking: false })}
 ${declareVars}
 export default class DemoComponent extends Component {${declarePlugins}

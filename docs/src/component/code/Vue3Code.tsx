@@ -30,12 +30,12 @@ export default ({ options, panels, events = {}, methods = {}, plugins, siblings 
     : "";
   const eventStatement = Object.keys(events).map(evt => ` @${evt.replace(/([A-Z])/g, "-$1").toLowerCase()}="${events[evt]}"`).join("");
 
-  return <><CodeBlock className="html" title="template">
+  return <><CodeBlock className="language-html" title="template">
     {`<Flicking${options ? ` :options="{ ${optionsObject} }"` : ""}${plugins ? " :plugins=\"plugins\"" : ""}${eventStatement}>
   ${panels.filter(panel => !panel.isSlot).map(panel => `<${panel.tag}${getClass(panel)}${getStyle(panel)}>${panel.content}</${panel.tag}>`).join("\n  ")}${slotsTemplate}
 </Flicking>${siblings ? `\n${siblings.map(el => `<${el.tag}${getClass(el)}${getStyle(el)}>${el.content}</${el.tag}>`).join("\n")}` : ""}`}
   </CodeBlock>
-  <CodeBlock className="js" title="script">
+  <CodeBlock className="language-js" title="script">
     {`${getImports(allImports, { prefix: "vue3" })}
 
 export default {

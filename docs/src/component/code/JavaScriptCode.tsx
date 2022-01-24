@@ -25,14 +25,14 @@ export default ({ options, panels, events = {}, methods = {}, plugins = [], sibl
 
   const slots = panels.filter(panel => panel.isSlot);
 
-  return <><CodeBlock className="html" title="html">
+  return <><CodeBlock className="language-html" title="html">
     {`<div id="flick" class="flicking-viewport${options.horizontal === false ? " vertical" : "" }">
   <div class="flicking-camera">
     ${panels.filter(panel => !panel.isSlot).map(panel => `<${panel.tag}${getClass(panel)}${getStyle(panel)}>${panel.content}</${panel.tag}>`).join("\n    ")}
   </div>${slots.length ? `\n  ${slots.map(slot => `<${slot.tag}${getClass(slot)}${getStyle(slot)}>${slot.content}</${slot.tag}>`).join("\n  ")}` : ""}
 </div>${siblings ? "\n" + siblings.map(el => `<${el.tag}${getClass(el)}${getStyle(el)}>${el.content}</${el.tag}>`).join("\n") : ""}`}
   </CodeBlock>
-  <CodeBlock className="js" title="js">
+  <CodeBlock className="language-js" title="js">
     {`${getImports(allImports)}\n\n${declareVars}${createVanillaFlicking}${addPlugins}${addEvents}`.trim()}
   </CodeBlock></>;
 };

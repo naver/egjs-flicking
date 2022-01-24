@@ -32,12 +32,12 @@ export default ({ options, panels, events = {}, methods = {}, plugins, siblings 
 
   const eventStatement = Object.keys(events).map(evt => ` (${evt})="${events[evt]}($event)"`).join("");
 
-  return <><CodeBlock className="html" title="demo.component.html">
+  return <><CodeBlock className="language-html" title="demo.component.html">
     {`<ngx-flicking${options ? ` [options]="{ ${optionsObject} }"` : ""}${plugins ? " [plugins]=\"plugins\"" : ""}${eventStatement}>
   ${panels.map(panel => `<${panel.tag} ${panel.isSlot ? "in-viewport" : "flicking-panel"}${getClass(panel)}${getStyle(panel)}>${panel.content}</${panel.tag}>`).join("\n  ")}
 </ngx-flicking>${siblings ? `\n${siblings.map(el => `<${el.tag}${getClass(el)}${getStyle(el)}>${el.content}</${el.tag}>`).join("\n")}` : ""}`}
   </CodeBlock>
-  <CodeBlock className="ts" title="demo.component.ts">
+  <CodeBlock className="language-ts" title="demo.component.ts">
     {`${getImports(defaultImports, { includeFlicking: false })}
 
 @Component({

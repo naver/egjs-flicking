@@ -29,7 +29,7 @@ export default ({ options, panels, events = {}, methods = {}, plugins, siblings,
   </svelte:fragment>`
     : "";
 
-  return <CodeBlock className="jsx" title="DemoComponent.jsx">
+  return <CodeBlock className="language-jsx" title="DemoComponent.jsx">
     {`<script lang="ts">
 ${getImports(defaultImports, { includeFlicking: false })}${declarePlugins}${declareMethods}
 </script>

@@ -14,7 +14,6 @@ module.exports = {
   projectName: 'naver.github.io',
   organizationName: 'naver',
   plugins: ['docusaurus-plugin-sass'],
-  themes: ['@docusaurus/theme-live-codeblock'],
   themeConfig: {
     hideableSidebar: false,
     navbar: {
