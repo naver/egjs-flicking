@@ -6,6 +6,8 @@ import { withFlickingMethods } from "@egjs/flicking";
 
 import SvelteFlicking from "./flicking.svelte";
 
-withFlickingMethods(SvelteFlicking.prototype, "vanillaFlicking");
+if (SvelteFlicking.prototype) {
+  withFlickingMethods(SvelteFlicking.prototype, "vanillaFlicking");
+}
 
 export default SvelteFlicking;
