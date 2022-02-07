@@ -6,7 +6,7 @@ module.exports = babelJest.default.createTransformer({
       "@babel/preset-typescript",
       {
         jsxPragma: "h",
-        jsxPragmaFrag: "Fragment"
+        jsxPragmaFrag: "React.Fragment"
       }
     ],
     ["@babel/preset-env", { loose: true }]
@@ -16,7 +16,7 @@ module.exports = babelJest.default.createTransformer({
       "@babel/plugin-transform-react-jsx",
       {
         pragma: "h",
-        pragmaFrag: "Fragment"
+        pragmaFrag: "React.Fragment"
       }
     ],
     ["@babel/plugin-proposal-decorators", { legacy: true }],

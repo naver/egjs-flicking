@@ -9,6 +9,6 @@ export default () => {
     .map(dir => path.resolve(frameworkDir, `./${dir.name}/lib`));
 
   allDirs.forEach(dir => {
-    fs.removeSync(dir);
+    // fs.removeSync(dir);
   });
 };
