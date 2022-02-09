@@ -207,6 +207,15 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     });
 
     flicking.once(EVENTS.READY, () => {
+      const children = this._getChildren();
+      const diffResult = this._jsxDiffer.update(children);
+
+      // children is changed before init
+      if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
+        this._panels = this._createPanelRefs(this.props, children);
+        this._diffResult = diffResult;
+      }
+
       this.forceUpdate();
     });
   }
