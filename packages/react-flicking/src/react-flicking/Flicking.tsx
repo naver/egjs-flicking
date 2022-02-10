@@ -93,7 +93,11 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   }
 
   public shouldComponentUpdate(nextProps: this["props"]) {
+    const vanillaFlicking = this._vanillaFlicking;
     const props = this.props;
+
+    // Ignore updates before init, they will be updated after "ready" event's force update
+    if (!vanillaFlicking || !vanillaFlicking.initialized) return false;
 
     if (this._currentState !== LifeCycleState.BEFORE_UPDATE && props.children !== nextProps.children) {
       const nextChildren = this._getChildren(nextProps.children);
