@@ -1272,7 +1272,7 @@ export default class Viewport {
 
     const areaPrev = (relativeHangerPosition - relativeAnchorPosition) % sumOriginalPanelSize;
     let sizeSum = 0;
-    let panelAtLeftBoundary!: Panel;
+    let panelAtLeftBoundary: Panel | null = null;
     for (const panel of reversedPanels) {
       if (!panel) {
         continue;
@@ -1286,7 +1286,7 @@ export default class Viewport {
 
     const areaNext = (viewportSize - relativeHangerPosition + relativeAnchorPosition) % sumOriginalPanelSize;
     sizeSum = 0;
-    let panelAtRightBoundary!: Panel;
+    let panelAtRightBoundary: Panel | null = null;
     for (const panel of panels) {
       if (!panel) {
         continue;
@@ -1299,7 +1299,8 @@ export default class Viewport {
     }
 
     // Need one more set of clones on prev area of original panel 0
-    const needCloneOnPrev = panelAtLeftBoundary.getIndex() !== 0
+    const needCloneOnPrev = (panelAtLeftBoundary && panelAtRightBoundary)
+      && panelAtLeftBoundary.getIndex() !== 0
       && panelAtLeftBoundary.getIndex() <= panelAtRightBoundary.getIndex();
 
     // Visible count of panel 0 on first screen
