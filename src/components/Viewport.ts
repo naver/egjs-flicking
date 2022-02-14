@@ -1267,7 +1267,9 @@ export default class Viewport {
     const reversedPanels = panels.concat().reverse();
     const sumOriginalPanelSize = lastPanel.getPosition() + lastPanel.getSize() - firstPanel.getPosition() + gap;
 
-    if (sumOriginalPanelSize <= 0) return;
+    if (sumOriginalPanelSize <= 0) {
+      return;
+    }
 
     const relativeAnchorPosition = firstPanel.getRelativeAnchorPosition();
     const relativeHangerPosition = this.getRelativeHangerPosition();

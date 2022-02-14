@@ -197,6 +197,18 @@ describe("Initialization", () => {
       expect(flicking.getPanelCount()).equals(2);
       expect(flicking.getCloneCount()).equals(2); // It will create 4 panels (2 * 2)
     });
+
+    it("should not clone panels when all panels have size 0", () => {
+      // Given & When
+      flickingInfo = createFlicking(horizontal.hasZeroWidth, {
+        circular: true,
+      });
+      const flicking = flickingInfo.instance;
+
+      // Then
+      expect(flicking.getPanelCount()).equals(3);
+      expect(flicking.getCloneCount()).equals(0);
+    });
   });
 
   describe("bounce", () => {
