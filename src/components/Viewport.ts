@@ -1265,8 +1265,10 @@ export default class Viewport {
     // For each panels, clone itself while last panel's position + size is below viewport size
     const panels = panelManager.originalPanels();
     const reversedPanels = panels.concat().reverse();
-
     const sumOriginalPanelSize = lastPanel.getPosition() + lastPanel.getSize() - firstPanel.getPosition() + gap;
+
+    if (sumOriginalPanelSize <= 0) return;
+
     const relativeAnchorPosition = firstPanel.getRelativeAnchorPosition();
     const relativeHangerPosition = this.getRelativeHangerPosition();
 
