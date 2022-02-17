@@ -6,6 +6,7 @@ import Progress from "./features/Progress.vue";
 import Snap from "./features/Snap.vue";
 import VariableSize from "./features/VariableSize.vue";
 import Infinite from "./features/Infinite.vue";
+import ImageLoadDemo from "./features/Image.vue";
 
 import AutoPlay from "./plugins/Autoplay.vue";
 import Fade from "./plugins/Fade.vue";
@@ -52,6 +53,11 @@ export default {
       path: "/infinite",
       name: "Infinite",
       component: Infinite,
+    },
+    {
+      path: "/image",
+      name: "Image",
+      component: ImageLoadDemo,
     },
     {
       path: "/autoplay",

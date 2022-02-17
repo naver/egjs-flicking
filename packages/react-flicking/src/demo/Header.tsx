@@ -1,20 +1,22 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 
 export default class Header extends React.Component {
   public render() {
     return (
       <ul className="header">
-        <li><a href="#infinite">Infinite Flicking</a></li>
-        <li><a href="#free-scroll">Free Scroll</a></li>
-        <li><a href="#variable-size">Variable Size</a></li>
-        <li><a href="#align">Align</a></li>
-        <li><a href="#snap">Snap</a></li>
-        <li><a href="#gap">Gap</a></li>
-        <li><a href="#progress">Progress</a></li>
-        <li><a href="#bound">Bound</a></li>
-        <li><a href="#parallax">Parallax Plugin</a></li>
-        <li><a href="#fade">Fade Plugin</a></li>
-        <li><a href="#autoplay">AutoPlay Plugin</a></li>
+        <li><Link to="/infinite">Infinite Flicking</Link></li>
+        <li><Link to="/free-scroll">Free Scroll</Link></li>
+        <li><Link to="/variable-size">Variable Size</Link></li>
+        <li><Link to="/align">Align</Link></li>
+        <li><Link to="/snap">Snap</Link></li>
+        <li><Link to="/gap">Gap</Link></li>
+        <li><Link to="/progress">Progress</Link></li>
+        <li><Link to="/bound">Bound</Link></li>
+        <li><Link to="/image">Image</Link></li>
+        <li><Link to="/parallax">Parallax Plugin</Link></li>
+        <li><Link to="/fade">Fade Plugin</Link></li>
+        <li><Link to="/autoplay">AutoPlay Plugin</Link></li>
       </ul>
     );
   }

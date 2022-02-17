@@ -1,4 +1,4 @@
-import { ChangeEvent, FlickingEvent, SelectEvent, NeedPanelEvent, VisibleChangeEvent } from "@egjs/flicking";
+import { ChangeEvent, FlickingEvent, SelectEvent, NeedPanelEvent, VisibleChangeEvent, ContentLoadEvent, ContentErrorEvent } from "@egjs/flicking";
 import { FlickingProps } from "./types";
 
 export const FLICKING_PROPS: FlickingProps = {
@@ -16,5 +16,7 @@ export const FLICKING_PROPS: FlickingProps = {
   onRestore: (e: FlickingEvent) => {},
   onSelect: (e: SelectEvent) => {},
   onChange: (e: ChangeEvent) => {},
+  onContentLoad: (e: ContentLoadEvent) => {},
+  onContentError: (e: ContentErrorEvent) => {},
   onVisibleChange: (e: VisibleChangeEvent) => {},
 };

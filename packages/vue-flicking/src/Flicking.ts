@@ -115,19 +115,27 @@ class Flicking extends Vue {
   }
 
   private $_bindEvents() {
+    const options = this.options;
+    const flicking = this.$_nativeFlicking;
     const events = Object.keys(NativeFlicking.EVENTS)
       .map(key => NativeFlicking.EVENTS[key]);
 
     events.forEach(eventName => {
-      this.$_nativeFlicking.on(eventName, (e: any) => {
+      flicking.on(eventName, (e: any) => {
         e.currentTarget = this;
         // Make events from camelCase to kebab-case
         this.$emit(eventName.replace(/([A-Z])/g, "-$1").toLowerCase(), e);
       });
     });
 
-    if (this.options.renderOnlyVisible) {
-      this.$_nativeFlicking.on(NativeFlicking.EVENTS.VISIBLE_CHANGE, e => {
+    if (options.renderOnlyVisible) {
+      flicking.on(NativeFlicking.EVENTS.VISIBLE_CHANGE, e => {
+        this.$forceUpdate();
+      });
+    }
+
+    if (options.resizeOnContentsReady) {
+      flicking.on(NativeFlicking.EVENTS.CONTENT_LOAD, () => {
         this.$forceUpdate();
       });
     }
