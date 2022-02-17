@@ -9,7 +9,7 @@ import VuePanel from "./VuePanel";
 class VueElementProvider implements ElementProvider {
   private _el: VuePanel;
 
-  public get element() { return this._el.nativeElement; }
+  public get element() { return this._el.getElement(); }
   public get rendered() { return !this._el.hide; }
 
   public constructor(el: VuePanel) {

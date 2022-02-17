@@ -4,7 +4,7 @@
  */
 import Vue from "vue";
 
-const VuePanel = Vue.extend<{ hide: boolean }, {}, { nativeElement: HTMLElement }>({
+const VuePanel = Vue.extend<{ hide: boolean }, { getElement: () => HTMLElement }, {}>({
   data() {
     return {
       hide: false
@@ -18,8 +18,8 @@ const VuePanel = Vue.extend<{ hide: boolean }, {}, { nativeElement: HTMLElement 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     return children as any;
   },
-  computed: {
-    nativeElement(): HTMLElement { return this.$el as HTMLElement; }
+  methods: {
+    getElement(): HTMLElement { return this.$el as HTMLElement; }
   }
 });
 

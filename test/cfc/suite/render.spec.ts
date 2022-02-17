@@ -32,4 +32,18 @@ describe("Rendering", () => {
     expect(flicking.viewport.height).toEqual(300);
     expect(flicking.panels.every(panel => panel.size === 1000 && panel.height === 300)).toBeTruthy();
   });
+
+  describe("rendering with renderOnlyVisible", () => {
+    it("should set panel elements reference to the elements that currently rendered", async () => {
+      const flicking = await render(Wrapped({ options: { renderOnlyVisible: true } }));
+      const visiblePanelEls = flicking.visiblePanels.map(panel => panel.element);
+
+      expect(visiblePanelEls.length).toBeGreaterThan(0);
+
+      visiblePanelEls.forEach(el => {
+        expect(el.parentElement).not.toBeNull();
+        expect(document.body.contains(el)).toBeTruthy();
+      });
+    });
+  });
 });
