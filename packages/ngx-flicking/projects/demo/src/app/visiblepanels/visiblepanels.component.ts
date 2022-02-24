@@ -1,4 +1,3 @@
-import { EVENTS } from '../../../../../../../src/consts';
 import { Component, OnInit, Input, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
 import { RenderPanelChangeEvent } from 'projects/ngx-flicking/src/lib/ngx-flicking.component';
 

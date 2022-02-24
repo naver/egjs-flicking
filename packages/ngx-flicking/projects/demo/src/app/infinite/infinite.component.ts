@@ -1,4 +1,3 @@
-import { EVENTS } from './../../../../../../../src/consts';
 import { Component, OnInit, Input, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 
@@ -30,13 +29,13 @@ export class InfiniteComponent implements OnInit {
   }
 
   onNeedPanel1(e) {
-    if (e.type === EVENTS.NEED_PANEL) {
+    if (e.type === "needPanel") {
       const end = this.list1[this.list1.length - 1] || 0;
       this.list1.push(end + 1, end + 2);
     }
   }
   onNeedPanel2(e) {
-    if (e.type === EVENTS.NEED_PANEL) {
+    if (e.type === "needPanel") {
       const end = this.list2[this.list2.length - 1] || 0;
       this.list2.push(end + 1, end + 2);
     }

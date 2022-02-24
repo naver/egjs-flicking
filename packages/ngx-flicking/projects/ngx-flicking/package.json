@@ -1,13 +1,13 @@
 {
   "name": "@egjs/ngx-flicking",
-  "version": "3.7.1",
+  "version": "3.7.2",
   "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
   "peerDependencies": {
     "@angular/common": "~9.1.13",
     "@angular/core": "~9.1.13"
   },
   "dependencies": {
-    "@egjs/flicking": "~3.9.1",
+    "@egjs/flicking": "~3.9.2",
     "@egjs/ngx-children-differ": "^1.0.0"
   },
   "repository": {
