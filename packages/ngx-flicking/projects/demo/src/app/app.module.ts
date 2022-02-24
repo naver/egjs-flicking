@@ -13,6 +13,7 @@ import { InfiniteComponent, PlaceHolderItemComponent } from './infinite/infinite
 import { ProgressComponent } from './progress/progress.component';
 import { SnapComponent } from './snap/snap.component';
 import { VariablesizeComponent } from './variablesize/variablesize.component';
+import { ImageComponent } from "./image/image.component";
 import { AutoplayComponent } from './autoplay/autoplay.component';
 import { FadeComponent } from './fade/fade.component';
 import { ParallaxComponent } from './parallax/parallax.component';
@@ -28,6 +29,7 @@ const appRoutes: Routes = [
   { path: 'progress', component: ProgressComponent },
   { path: 'snap', component: SnapComponent },
   { path: 'variable-size', component: VariablesizeComponent },
+  { path: 'image', component: ImageComponent },
   { path: 'autoplay', component: AutoplayComponent },
   { path: 'fade', component: FadeComponent },
   { path: 'parallax', component: ParallaxComponent },
@@ -48,6 +50,7 @@ const appRoutes: Routes = [
     ProgressComponent,
     SnapComponent,
     VariablesizeComponent,
+    ImageComponent,
     AutoplayComponent,
     FadeComponent,
     ParallaxComponent,

@@ -1,4 +1,16 @@
-import NativeFlicking, { FlickingOptions, Plugin, FlickingEvent, NeedPanelEvent, withFlickingMethods, DEFAULT_OPTIONS, VisibleChangeEvent, SelectEvent, ChangeEvent } from "@egjs/flicking";
+import NativeFlicking, {
+  FlickingOptions,
+  Plugin,
+  FlickingEvent,
+  NeedPanelEvent,
+  withFlickingMethods,
+  DEFAULT_OPTIONS,
+  VisibleChangeEvent,
+  SelectEvent,
+  ChangeEvent,
+  ContentLoadEvent,
+  ContentErrorEvent
+} from "@egjs/flicking";
 import * as React from "react";
 import { CloneComponent } from "./Clone";
 import { FLICKING_PROPS } from "./consts";
@@ -98,6 +110,11 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
         this.props.onVisibleChange!(e);
         this.forceUpdate();
       },
+      contentLoad: (e: ContentLoadEvent) => {
+        this.props.onContentLoad!(e);
+        this.forceUpdate();
+      },
+      contentError: (e: ContentErrorEvent) => this.props.onContentError!(e)
     });
     const children = this.getChildren();
     this.jsxDiffer = new ListDiffer<string>(children.map(child => `${child.key}`));

@@ -1,0 +1,10 @@
+<div id="image" class="container">
+  <button (click)="onClick()">Click me</button>
+  <ngx-flicking *ngIf="show" class="flicking flicking0" [options]="{ circular: true, duration: 300, resizeOnContentsReady: true }">
+    <ng-template>
+      <img src="https://picsum.photos/seed/1/200/300" />
+      <img src="https://picsum.photos/seed/2/200/300" />
+      <img src="https://picsum.photos/seed/3/200/300" />
+    </ng-template>
+  </ngx-flicking>
+</div>

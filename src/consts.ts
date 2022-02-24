@@ -95,6 +95,7 @@ export const EVENTS: EventType = {
   SELECT: "select",
   NEED_PANEL: "needPanel",
   VISIBLE_CHANGE: "visibleChange",
+  CONTENT_LOAD: "contentLoad",
   CONTENT_ERROR: "contentError",
 };
 

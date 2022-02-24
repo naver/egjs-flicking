@@ -30,6 +30,7 @@ import {
   SelectEvent,
   NeedPanelEvent,
   VisibleChangeEvent,
+  ContentLoadEvent,
   ContentErrorEvent,
   MoveTypeStringOption,
   ValueOf,
@@ -54,6 +55,7 @@ class Flicking extends Component<{
   select: SelectEvent;
   needPanel: NeedPanelEvent;
   visibleChange: VisibleChangeEvent;
+  contentLoad: ContentLoadEvent;
   contentError: ContentErrorEvent;
 }> {
   /**
@@ -871,12 +873,17 @@ class Flicking extends Component<{
     if (options.resizeOnContentsReady) {
       const contentsReadyChecker = new ImReady();
 
-      contentsReadyChecker.on("preReady", () => {
+      const onContentLoad = () => {
         this.resize();
-      });
+        this.trigger(EVENTS.CONTENT_LOAD, {
+          type: EVENTS.CONTENT_LOAD,
+        });
+      };
+
+      contentsReadyChecker.on("preReady", onContentLoad);
       contentsReadyChecker.on("readyElement", e => {
         if (e.hasLoading && e.isPreReadyOver) {
-          this.resize();
+          onContentLoad();
         }
       });
       contentsReadyChecker.on("error", e => {

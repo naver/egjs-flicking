@@ -12,6 +12,8 @@ import NativeFlicking, {
   SelectEvent,
   ChangeEvent,
   VisibleChangeEvent,
+  ContentLoadEvent,
+  ContentErrorEvent,
 } from '@egjs/flicking';
 import {
   Component,
@@ -77,6 +79,8 @@ export class NgxFlickingComponent extends FlickingInterface
   @Output() select = new EventEmitter<SelectEvent>();
   @Output() needPanel = new EventEmitter<NeedPanelEvent>();
   @Output() visibleChange = new EventEmitter<VisibleChangeEvent>();
+  @Output() contentLoad = new EventEmitter<ContentLoadEvent>();
+  @Output() contentError = new EventEmitter<ContentErrorEvent>();
   @Output() renderPanelChange = new EventEmitter<RenderPanelChangeEvent>();
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
@@ -236,7 +240,7 @@ export class NgxFlickingComponent extends FlickingInterface
         if (emitter) {
           emitter.emit(e);
 
-          if (eventName === 'visibleChange') {
+          if (eventName === NativeFlicking.EVENTS.VISIBLE_CHANGE) {
             const list = this.counter(this.panels.length * (this.flicking.getCloneCount() + 1));
             const min = e.range.min;
             const max = e.range.max;
@@ -246,6 +250,10 @@ export class NgxFlickingComponent extends FlickingInterface
               : list.slice(0, max + 1).concat(list.slice(min));
 
             this.triggerRenderChange(visibles);
+          }
+
+          if (eventName === NativeFlicking.EVENTS.CONTENT_LOAD) {
+            this.checkCloneCount();
           }
         }
       });

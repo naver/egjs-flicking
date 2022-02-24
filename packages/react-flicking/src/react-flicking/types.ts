@@ -1,4 +1,15 @@
-import { ChangeEvent, FlickingEvent, SelectEvent, Plugin, NeedPanelEvent, FlickingStatus, FlickingMethods, VisibleChangeEvent } from "@egjs/flicking";
+import {
+  ChangeEvent,
+  FlickingEvent,
+  SelectEvent,
+  Plugin,
+  NeedPanelEvent,
+  FlickingStatus,
+  FlickingMethods,
+  VisibleChangeEvent,
+  ContentErrorEvent,
+  ContentLoadEvent
+} from "@egjs/flicking";
 import NativeFlicking from "@egjs/flicking";
 
 export type ParametersType<T, R> = T extends (...params: infer U) => any ? (...params: U) => R : never;
@@ -19,10 +30,12 @@ export interface FlickingProps {
   onMoveStart: (e: FlickingEvent) => any;
   onMove: (e: FlickingEvent) => any;
   onMoveEnd: (e: FlickingEvent) => any;
+  onChange: (e: ChangeEvent) => any;
   onRestore: (e: FlickingEvent) => any;
   onSelect: (e: SelectEvent) => any;
-  onChange: (e: ChangeEvent) => any;
   onNeedPanel: (e: NeedPanelEvent) => any;
   onVisibleChange: (e: VisibleChangeEvent) => any;
+  onContentLoad: (e: ContentLoadEvent) => any;
+  onContentError: (e: ContentErrorEvent) => any;
   [key: string]: any;
 }
