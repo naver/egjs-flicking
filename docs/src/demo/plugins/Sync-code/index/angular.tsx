@@ -2,7 +2,7 @@
 import React from "react";
 import CodeBlock from "@theme/CodeBlock";
 
-export default <><CodeBlock className="html" title="app.component.html">
+export default <><CodeBlock className="language-html" title="app.component.html">
 {`<ngx-flicking #flicking0 [options]="{ bounce: 30 }" [plugins]="plugins">
   <div class="flicking-panel full has-background-primary">
     <img class="panel-image" src="/img/demo/bg01.jpg" />
@@ -44,7 +44,7 @@ export default <><CodeBlock className="html" title="app.component.html">
   </div>
 </ngx-flicking>`}
 </CodeBlock>
-<CodeBlock className="js" title="app.component.ts">
+<CodeBlock className="language-js" title="app.component.ts">
 {`import { Component, OnInit, ViewChild } from "@angular/core";
 import Flicking, { Plugin } from "@egjs/ngx-flicking";
 import { Sync } from "@egjs/flicking-plugins";

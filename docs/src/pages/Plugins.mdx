@@ -12,6 +12,7 @@ import FadeDemo from "@site/src/demo/plugins/Fade";
 import ArrowDemo from "@site/src/demo/plugins/Arrow";
 import PaginationDemo from "@site/src/demo/plugins/Pagination";
 import SyncDemo from "@site/src/demo/plugins/Sync";
+import PerspectiveDemo from "@site/src/demo/plugins/Perspective";
 import "@site/src/css/demo/plugins.css";
 
 # Plugins
@@ -256,3 +257,14 @@ These are the available CSS files:
 |synchronizedFlickingOptions[].isClickable|boolean|✔️|false|By enabling this option, clicking the given Flicking's panel will change the given & other Flicking's index|
 |synchronizedFlickingOptions[].isSlidable|boolean|✔️|false|By enabling this option, the given Flicking's scroll with mouse/touch input will change other Flicking's index. Only available for the `index` type|
 |synchronizedFlickingOptions[].activeClass|string|✔️||An extra class for the panels when selected|
+
+## Perspective
+<PerspectiveDemo />
+
+### Options
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|selector|string|✔️|""|The selector of the element to which the perspective effect is to be applied. If the selector is blank, it applies to panel element.|
+|scale|number|✔️|1|Effect amplication scale.|
+|rotate|number|✔️|1|Effect amplication rotate.|
+|perspective|number|✔️|1000|The value of perspective CSS property.|

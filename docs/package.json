@@ -16,7 +16,7 @@
   "dependencies": {
     "@docusaurus/core": "^2.0.0-beta.14",
     "@docusaurus/preset-classic": "^2.0.0-beta.14",
-    "@egjs/flicking-plugins": "^4.2.3",
+    "@egjs/flicking-plugins": "^4.3.0",
     "@egjs/react-flicking": "^4.5.1",
     "@egjs/react-grid": "^1.1.2",
     "@mdx-js/react": "^1.6.21",

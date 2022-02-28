@@ -2,7 +2,7 @@
 import React from "react";
 import CodeBlock from "@theme/CodeBlock";
 
-export default <CodeBlock className="jsx">
+export default <CodeBlock className="language-jsx">
 {`export default () => {
   const flicking0 = useRef();
   const flicking1 = useRef();

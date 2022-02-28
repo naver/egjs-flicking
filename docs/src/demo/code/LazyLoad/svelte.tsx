@@ -2,7 +2,7 @@
 import React from "react";
 import CodeBlock from "@theme/CodeBlock";
 
-export default <CodeBlock className="jsx">
+export default <CodeBlock className="language-jsx">
 {`<script>
   import Flicking, { FlickingPanel } from "@egjs/svelte-flicking";
   import "@egjs/svelte-flicking/dist/flicking.css";
