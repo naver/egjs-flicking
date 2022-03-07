@@ -34,7 +34,8 @@ const withFlickingMethods = (prototype: any, flickingName: string) => {
           const getterDescriptor: { get?: () => any; set?: (val: any) => void } = {};
           if (descriptor.get) {
             getterDescriptor.get = function() {
-              return descriptor.get?.call(this[flickingName]);
+              const flicking = this[flickingName];
+              return flicking && descriptor.get?.call(flicking);
             };
           }
           if (descriptor.set) {
