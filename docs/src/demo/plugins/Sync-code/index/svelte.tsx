@@ -2,7 +2,7 @@
 import React from "react";
 import CodeBlock from "@theme/CodeBlock";
 
-export default <CodeBlock className="jsx">
+export default <CodeBlock className="language-jsx">
 {`<script>
   import { onMount } from "svelte";
   import Flicking, { FlickingPanel } from "@egjs/svelte-flicking";

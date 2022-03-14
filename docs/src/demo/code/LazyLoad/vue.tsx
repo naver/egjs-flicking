@@ -2,7 +2,7 @@
 import React from "react";
 import CodeBlock from "@theme/CodeBlock";
 
-export default <CodeBlock className="html">
+export default <CodeBlock className="language-html">
 {`<template>
   <div class="wrapper">
     <flicking

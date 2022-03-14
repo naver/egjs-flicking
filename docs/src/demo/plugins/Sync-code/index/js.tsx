@@ -5,7 +5,7 @@ import ColumnItem from "@site/src/component/ColumnItem";
 
 export default <Columns>
   <ColumnItem is={6}>
-    <CodeBlock className="html" title="html">
+    <CodeBlock className="language-html" title="html">
       {`<div id="flick0" class="flicking-viewport">
   <div class="flicking-camera">
     <div class="flicking-panel full has-background-primary">
@@ -53,7 +53,7 @@ export default <Columns>
     </CodeBlock>
   </ColumnItem>
   <ColumnItem is={6}>
-    <CodeBlock className="js" title="js">
+    <CodeBlock className="language-js" title="js">
       {`import Flicking, { MOVE_TYPE } from "@egjs/flicking";
 import { Sync } from "@egjs/flicking-plugins";
 

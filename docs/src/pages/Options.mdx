@@ -689,6 +689,7 @@ If an array is given, second value of the array will be used as the options obje
 |---|---|---|
 |"snap" (MOVE_TYPE.SNAP)|**[SnapControl](docs/api/SnapControl)**||
 |"freeScroll" (MOVE_TYPE.FREE_SCROLL)|**[FreeControl](docs/api/FreeControl)**|**[FreeControlOptions](docs/api/FreeControlOptions)**|
+|"strict" (MOVE_TYPE.STRICT)|**[StrictControl](docs/api/StrictControl)**|**[StrictControlOptions](docs/api/StrictControlOptions)**|
 
 <Columns>
   <ColumnItem is={6}>
@@ -716,6 +717,22 @@ If an array is given, second value of the array will be used as the options obje
   </ColumnItem>
   <ColumnItem is={6}>
     <Flicking moveType="freeScroll">
+      { Panels(5) }
+    </Flicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  moveType: "strict"
+  // Or..
+  moveType: ["strict", { count: 1 }]
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking moveType="strict">
       { Panels(5) }
     </Flicking>
   </ColumnItem>

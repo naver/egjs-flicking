@@ -41,3 +41,6 @@
   align-items: flex-start;
   border: 2px solid rgba(0, 0, 0, 0.1);
 }
+.card-panel.is-small {
+  width: 33%;
+}

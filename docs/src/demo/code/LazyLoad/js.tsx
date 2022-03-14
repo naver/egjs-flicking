@@ -5,7 +5,7 @@ import ColumnItem from "@site/src/component/ColumnItem";
 
 export default <><Columns>
   <ColumnItem is={12}>
-    <CodeBlock className="html" title="html">
+    <CodeBlock className="language-html" title="html">
       {`<div id="flick" class="flicking-viewport">
   <div class="flicking-camera"></div>
 </div>`}
@@ -14,7 +14,7 @@ export default <><Columns>
 </Columns>
 <Columns>
   <ColumnItem is={12}>
-    <CodeBlock className="js" title="js">
+    <CodeBlock className="language-js" title="js">
       {`import Flicking, { ALIGN, EVENTS } from "@egjs/flicking";
 
 // Add panel elements
