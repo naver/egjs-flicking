@@ -38,6 +38,7 @@ header {
   border: 10px solid transparent;
   box-sizing: border-box;
   /* margin-right: 10px; */
+  width: 33%;
   max-width: 100%;
   height: 200px;
   background-color: #423789;

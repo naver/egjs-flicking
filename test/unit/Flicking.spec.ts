@@ -1398,27 +1398,37 @@ describe("Flicking", () => {
     });
 
     describe("moveTo", () => {
-      const prev = async (flicking: Flicking) => {
-        const nextPromise = flicking.prev();
+      const moveTo = async (flicking: Flicking, index: number, duration?: number) => {
+        const nextPromise = flicking.moveTo(index, duration);
         tick(10000);
         return nextPromise;
       };
 
-      it("should move to the previous panel that has index - 1", async () => {
+      it("should move to the panel with the given index", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
 
         const prevIndex = flicking.index;
-        await prev(flicking);
+        await moveTo(flicking, 0);
         const nextIndex = flicking.index;
 
         expect(prevIndex).to.equal(2);
-        expect(nextIndex).to.equal(1);
+        expect(nextIndex).to.equal(0);
       });
 
-      it("should throw FlickingError with code INDEX_OUT_OF_RANGE if called on the first index", async () => {
-        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 0 });
+      it("should throw FlickingError with code INDEX_OUT_OF_RANGE if moving to negative index", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
-        const err = await prev(flicking).catch(e => e);
+        const err = await moveTo(flicking, -1).catch(e => e);
+
+        expect(err)
+          .to.be.instanceOf(FlickingError)
+          .with.property("code", ERROR.CODE.INDEX_OUT_OF_RANGE);
+      });
+
+      it("should throw FlickingError with code INDEX_OUT_OF_RANGE if moving to index >= panel count", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        const err = await moveTo(flicking, 3).catch(e => e);
 
         expect(err)
           .to.be.instanceOf(FlickingError)
@@ -1426,14 +1436,23 @@ describe("Flicking", () => {
       });
 
       it("should throw FlickingError with code ANIMATION_ALREADY_PLAYING if it is animating", async () => {
-        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
-        void flicking.prev(1000);
-        const err = await prev(flicking).catch(e => e);
+        void flicking.moveTo(1, 1000);
+        const err = await moveTo(flicking, 2).catch(e => e);
 
         expect(err)
           .to.be.instanceOf(FlickingError)
           .with.property("code", ERROR.CODE.ANIMATION_ALREADY_PLAYING);
+      });
+
+      it("can move to the panel more than count limit when using strict move type", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { moveType: "strict" });
+
+        await moveTo(flicking, 2);
+
+        expect(flicking.index).to.equal(2);
+        expect(flicking.camera.position).to.equal(flicking.panels[2].position);
       });
     });
 
