@@ -141,6 +141,16 @@ class StrictControl extends Control {
     return this;
   }
 
+  public async moveToPanel(panel: Panel, options: Parameters<Control["moveToPanel"]>[1]): Promise<void> {
+    const flicking = getFlickingAttached(this._flicking);
+    const camera = flicking.camera;
+    const controller = this._controller;
+
+    controller.update(camera.controlParams);
+
+    return super.moveToPanel(panel, options);
+  }
+
   /**
    * Move {@link Camera} to the given position
    * @ko {@link Camera}를 주어진 좌표로 이동합니다
