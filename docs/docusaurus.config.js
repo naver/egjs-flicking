@@ -1,32 +1,33 @@
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 
-const packageInfo = require("../package.json");
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = process.env.NODE_ENV === "development";
 
+/** @type {import('@docusaurus/types').Config} */
 module.exports = {
-  title: 'Flicking',
+  title: "Flicking",
   tagline: "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
-  onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
-  url: 'https://naver.github.io',
-  baseUrl: isDev ? '/' : '/egjs-flicking/',
-  projectName: 'naver.github.io',
-  organizationName: 'naver',
-  plugins: ['docusaurus-plugin-sass'],
+  onBrokenLinks: "throw",
+  onBrokenMarkdownLinks: "warn",
+  favicon: "img/favicon.ico",
+  url: "https://naver.github.io",
+  baseUrl: "/egjs-flicking/",
+  projectName: "naver.github.io",
+  trailingSlash: false,
+  organizationName: "naver",
+  plugins: ["docusaurus-plugin-sass"],
   themeConfig: {
     hideableSidebar: false,
     navbar: {
       logo: {
-        alt: 'egjs',
-        src: 'img/flicking_textonly.svg'
+        alt: "egjs",
+        src: "img/flicking_textonly.svg"
       },
       items: [
         {
-          type: 'doc',
-          docId: 'installation',
-          label: 'Docs',
-          position: 'left'
+          type: "doc",
+          docId: "installation",
+          label: "Docs",
+          position: "left"
         },
         {
           type: "doc",
@@ -55,107 +56,103 @@ module.exports = {
           position: "left"
         },
         {
-          type: 'docsVersionDropdown',
-          position: 'right',
+          type: "docsVersionDropdown",
+          position: "right",
           dropdownActiveClassDisabled: true,
           dropdownItemsAfter: [
             {
-              to: 'https://naver.github.io/egjs-flicking/release/3.8.2/doc/index.html',
-              label: '3.x.x'
+              to: "https://naver.github.io/egjs-flicking/release/3.8.2/doc/index.html",
+              label: "3.x.x"
             }
           ]
         },
         {
-          type: 'localeDropdown',
-          position: 'right'
+          type: "localeDropdown",
+          position: "right"
         },
         {
-          href: 'https://github.com/naver/egjs-flicking',
-          label: 'GitHub',
-          position: 'right'
+          href: "https://github.com/naver/egjs-flicking",
+          label: "GitHub",
+          position: "right"
         }
       ]
     },
     footer: {
-      style: 'dark',
+      style: "dark",
       links: [
         {
-          title: 'Docs',
+          title: "Docs",
           items: [
             {
-              label: 'Getting Started',
-              to: 'docs/'
+              label: "Getting Started",
+              to: "docs/"
             },
             {
-              label: 'API',
-              to: 'docs/api/Flicking'
+              label: "API",
+              to: "docs/api/Flicking"
             },
             {
-              label: 'Options',
-              to: 'Options/'
+              label: "Options",
+              to: "Options/"
             }
           ]
         },
         {
-          title: 'Demo',
+          title: "Demo",
           items: [
             {
-              label: 'Demos',
-              to: 'Demos/'
+              label: "Demos",
+              to: "Demos/"
             },
             {
-              label: 'Showcases',
-              to: 'Showcases/'
+              label: "Showcases",
+              to: "Showcases/"
             }
           ]
         },
         {
-          title: 'More',
+          title: "More",
           items: [
             {
-              label: 'GitHub',
-              href: 'https://github.com/naver/egjs-flicking'
+              label: "GitHub",
+              href: "https://github.com/naver/egjs-flicking"
             },
             {
-              label: 'Issues',
-              href: 'https://github.com/naver/egjs-flicking/issues'
+              label: "Issues",
+              href: "https://github.com/naver/egjs-flicking/issues"
             },
             {
-              label: 'Naver Open Source',
-              href: 'https://naver.github.io/'
+              label: "Naver Open Source",
+              href: "https://naver.github.io/"
             }
           ]
         }
       ],
       logo: {
-        alt: 'egjs',
-        src: 'img/egjs_white.svg',
-        href: 'https://naver.github.io/egjs/'
+        alt: "egjs",
+        src: "img/egjs_white.svg",
+        href: "https://naver.github.io/egjs/"
       },
       copyright: `Copyright © ${new Date().getFullYear()} NAVER, Inc. Built with Docusaurus & Bulma.`
     },
     prism: {
-      theme: require('prism-react-renderer/themes/oceanicNext'),
+      theme: require("prism-react-renderer/themes/oceanicNext"),
       darkTheme: require("prism-react-renderer/themes/palenight")
-    },
-    googleAnalytics: {
-      trackingID: 'UA-70842526-17',
-      anonymizeIP: true
     }
   },
   presets: [
     [
-      '@docusaurus/preset-classic',
+      "@docusaurus/preset-classic",
       {
         docs: {
-          sidebarPath: require.resolve('./sidebars.js'),
+          sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           editUrl: "https://github.com/naver/egjs-flicking/edit/master/docs/",
           remarkPlugins: [require("remark-breaks")],
           lastVersion: isDev ? "current" : undefined,
           versions: {
             current: {
-              label: `Next`
+              label: "Next"
             }
           },
           editCurrentVersion: true
@@ -170,11 +167,15 @@ module.exports = {
         },
         theme: {
           customCss: [
-            require.resolve('./src/css/custom.css'),
-            require.resolve('./node_modules/@egjs/react-flicking/dist/flicking.css'),
-            require.resolve('./node_modules/@egjs/flicking-plugins/dist/flicking-plugins.css'),
-            require.resolve('./src/css/bulma-override.sass')
+            require.resolve("./src/css/custom.css"),
+            require.resolve("./node_modules/@egjs/react-flicking/dist/flicking.css"),
+            require.resolve("./node_modules/@egjs/flicking-plugins/dist/flicking-plugins.css"),
+            require.resolve("./src/css/bulma-override.sass")
           ]
+        },
+        googleAnalytics: {
+          trackingID: "UA-70842526-17",
+          anonymizeIP: true
         }
       }
     ]
