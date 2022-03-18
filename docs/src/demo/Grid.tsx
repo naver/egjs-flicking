@@ -13,7 +13,7 @@ export default () => {
     { gap: 10, frame: `[[1, 1, 2, 2], [3, 3, 2, 2], [4, 4, 4, 5]]`},
     { gap: 10, frame: `[[1, 1, 1, 1], [2, 2, 3, 3], [4, 5, 5, 6]]`}
   ];
-  const reactSourceCode = <CodeBlock className="jsx">{`<Flicking circular={true}>
+  const reactSourceCode = <CodeBlock className="language-jsx">{`<Flicking circular={true}>
   <div className="grid-panel">1</div>
   <FrameGrid className="grid-panel">
     <div className="has-background-warning has-text-dark">2</div>
@@ -74,7 +74,7 @@ export default () => {
     ]} js={
       <Columns>
         <ColumnItem is={6}>
-          <CodeBlock className="html" title="html">
+          <CodeBlock className="language-html" title="html">
             {`<div id="flick" class="flicking-viewport">
   <div class="flicking-camera">
     <div className="grid-panel has-background-primary has-text-white">1</div>
@@ -99,7 +99,7 @@ export default () => {
           </CodeBlock>
         </ColumnItem>
         <ColumnItem is={6}>
-          <CodeBlock className="js" title="js">
+          <CodeBlock className="language-js" title="js">
             {`import { FrameGrid } from "@egjs/grid";
 
 const flicking = new Flicking("#flick", {
