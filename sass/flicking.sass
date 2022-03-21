@@ -1,0 +1,23 @@
+.flicking-viewport
+  position: relative
+  overflow: hidden
+  &.vertical
+    display: inline-flex
+    >.flicking-camera
+      display: inline-flex
+      flex-direction: column
+  &.flicking-hidden
+    >.flicking-camera
+      >*
+        visibility: hidden
+
+.flicking-camera
+  width: 100%
+  height: 100%
+  display: flex
+  position: relative
+  flex-direction: row
+  z-index: 1
+  will-change: transform
+  >*
+    flex-shrink: 0

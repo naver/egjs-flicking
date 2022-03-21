@@ -1,0 +1,30 @@
+.flicking-viewport
+  position: relative
+  overflow: hidden
+  &:not(.vertical)
+    width: 100%
+    height: 100%
+  &.vertical,
+  &.vertical>.flicking-camera
+    display: inline-block
+  &.vertical
+    &.middle>.flicking-camera>*
+      vertical-align: middle
+    &.bottom>.flicking-camera>*
+      vertical-align: bottom
+    >.flicking-camera>*
+      display: block
+  &.flicking-hidden>.flicking-camera>*
+    visibility: hidden
+
+.flicking-camera
+  width: 100%
+  height: 100%
+  position: relative
+  z-index: 1
+  white-space: nowrap
+  will-change: transform
+  >*
+    display: inline-block
+    white-space: normal
+    vertical-align: top
