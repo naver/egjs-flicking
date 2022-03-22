@@ -67,7 +67,7 @@ export default () => <>
         </Link>
         <Link
           className="button is-link m-1"
-          to={useBaseUrl("options/")}>
+          to={useBaseUrl("docs/api/Flicking/")}>
             📄 API
         </Link>
         <Link
