@@ -1,3 +1,4 @@
+import { diff } from "@egjs/list-differ";
 import { SinonStatic, SinonFakeTimers, SinonSpy } from "sinon";
 
 import Viewport from "../../src/components/Viewport";
@@ -401,6 +402,25 @@ describe("Viewport", () => {
         expect(scrollArea.prev).equals(clampedAnchorPos - relHangerPos);
         expect(scrollArea.next).equals(clampedAnchorPos - relHangerPos);
       });
+    });
+  });
+
+  describe("updateVisiblePanels", () => {
+    it("should not include removed panel after beforeSync", () => {
+      // Given
+      createViewport(horizontal.panel30N(2), {
+        renderOnlyVisible: true
+      });
+
+      // When
+      const result = diff([0, 1], [0]);
+      const removedPanel = flicking.getPanel(1);
+      flicking.beforeSync(result);
+
+      (viewport as any).updateVisiblePanels();
+
+      // Then
+      expect(viewport.getVisiblePanels()).not.includes(removedPanel);
     });
   });
 });
