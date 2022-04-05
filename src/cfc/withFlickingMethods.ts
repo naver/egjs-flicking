@@ -19,7 +19,7 @@ import Flicking from "../Flicking";
  */
 const withFlickingMethods = (prototype: any, flickingName: string) => {
   [Component.prototype, Flicking.prototype].forEach(proto => {
-    Object.getOwnPropertyNames(proto).filter(name => !prototype[name] && !name.startsWith("_") && name !== "constructor")
+    Object.getOwnPropertyNames(proto).filter(name => !prototype[name] && name.indexOf("_") && name !== "constructor")
       .forEach((name: string) => {
         const descriptor = Object.getOwnPropertyDescriptor(proto, name)!;
 
