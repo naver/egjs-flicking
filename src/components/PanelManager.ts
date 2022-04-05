@@ -70,6 +70,7 @@ class PanelManager {
       max: newPanels.length - 1,
     };
     this.length = newPanels.filter(panel => Boolean(panel)).length;
+    this.chainAllPanels();
   }
 
   public has(index: number): boolean {
@@ -328,6 +329,10 @@ class PanelManager {
     const allPanelsCount = allPanels.length;
 
     if (allPanelsCount <= 1) {
+      if (allPanelsCount === 1) {
+        allPanels[0].prevSibling = null;
+        allPanels[0].nextSibling = null;
+      }
       return;
     }
 
