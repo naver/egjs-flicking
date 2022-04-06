@@ -853,10 +853,9 @@ class Flicking extends Component<FlickingEvents> {
     }
     renderer.checkPanelContentsReady(renderer.panels);
 
-    this._plugins.forEach(plugin => plugin.init(this));
-
     return renderer.render().then(() => {
       // Done initializing & emit ready event
+      this._plugins.forEach(plugin => plugin.init(this));
       this._initialized = true;
       if (preventEventsBeforeInit) {
         this.trigger = originalTrigger;
