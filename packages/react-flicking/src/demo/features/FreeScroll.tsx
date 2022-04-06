@@ -11,7 +11,7 @@ export default class FreeScroll extends React.Component<{}> {
         <li>The panels are freely scrollable.</li>
       </ul>
       <h2>moveType: "freeScroll", deceleration: 0.0075(default)</h2>
-      <Flicking className="flicking flicking0" gap={10} circular={true} moveType="freeScroll">
+      <Flicking className="flicking flicking0" gap={10} circular={true} moveType="freeScroll" renderOnlyVisible>
         <div className="panel panel0"></div>
         <div className="panel panel1"></div>
         <div className="panel panel2"></div>

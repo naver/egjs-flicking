@@ -28,11 +28,16 @@ class ReactRenderer extends ExternalRenderer {
     const reactFlicking = this._reactFlicking;
     const strategy = this._strategy;
 
+    this._rendering = true;
+
     strategy.updateRenderingPanels(flicking);
     strategy.renderPanels(flicking);
 
     return new Promise<void>(resolve => {
-      reactFlicking.renderEmitter.once("render", resolve);
+      reactFlicking.renderEmitter.once("render", () => {
+        this._rendering = false;
+        resolve()
+      });
       reactFlicking.forceUpdate();
     });
   }
@@ -40,10 +45,14 @@ class ReactRenderer extends ExternalRenderer {
   public async forceRenderAllPanels() {
     const reactFlicking = this._reactFlicking;
 
+    this._rendering = true;
     await super.forceRenderAllPanels();
 
     return new Promise<void>(resolve => {
-      reactFlicking.renderEmitter.once("render", resolve);
+      reactFlicking.renderEmitter.once("render", () => {
+        this._rendering = false;
+        resolve();
+      });
       reactFlicking.forceUpdate();
     });
   }
