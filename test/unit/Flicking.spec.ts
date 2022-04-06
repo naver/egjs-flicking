@@ -1172,15 +1172,6 @@ describe("Flicking", () => {
         expect(rendererSpy.calledOnce).to.be.true;
       });
 
-      it("should call resize of it", async () => {
-        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false });
-        const resizeSpy = sinon.spy(flicking, "resize");
-
-        await flicking.init();
-
-        expect(resizeSpy.calledOnce).to.be.true;
-      });
-
       it("should move to default index", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false, defaultIndex: 1 });
 

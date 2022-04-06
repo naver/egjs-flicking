@@ -1,6 +1,6 @@
 const flicking = new Flicking("#flicking", {
-  circular: true,
-  moveType: "strict"
+  moveType: "strict",
+  renderOnlyVisible: true
 });
 
 new Array(6).fill(0).map((_, idx) => {
