@@ -1152,6 +1152,76 @@ Change window size or change orientation(on mobile) to see its effect.
   </ColumnItem>
 </Columns>
 
+### resizeDebounce
+Delays size recalculation from `autoResize` by the given time in milisecond.
+If the size is changed again while being delayed, it cancels the previous one and delays from the beginning again.
+This can increase performance by preventing `resize` being called too often.
+
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  resizeDebounce: 0 // default
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking resizeDebounce={0}>
+      { Panels(5) }
+    </Flicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  resizeDebounce: 100
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking resizeDebounce={100}>
+      { Panels(5) }
+    </Flicking>
+  </ColumnItem>
+</Columns>
+
+### maxResizeDebounce
+The maximum time for size recalculation delay when using `resizeDebounce`, in milisecond.
+This guarantees that size recalculation is performed at least once every (n)ms.
+Value should be greater than `resizeDebounce`
+
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  resizeDebounce: 16
+  maxResizeDebounce: 100 // default
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking resizeDebounce={16} maxResizeDebounce={100}>
+      { Panels(5) }
+    </Flicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  resizeDebounce: 300
+  maxResizeDebounce: 1000
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking resizeDebounce={300} maxResizeDebounce={1000}>
+      { Panels(5) }
+    </Flicking>
+  </ColumnItem>
+</Columns>
+
 ### useResizeObserver
 Whether to listen **[ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)**'s event instead of Window's **[resize](https://developer.mozilla.org/ko/docs/Web/API/Window/resize_event)** event when using the `autoResize` option.
 Enabling this option will make Flicking to resize only when the viewport element(`.flicking-viewport`)'s size changes.
