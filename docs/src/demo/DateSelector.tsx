@@ -73,7 +73,10 @@ export default () => <>
     { tag: "div", class: "date-panel", content: "SEP" },
     { tag: "div", class: "date-panel", content: "OCT" },
     { tag: "div", class: "date-panel", content: "NVM" },
-    { tag: "div", class: "date-panel", content: "DEC" }
+    { tag: "div", class: "date-panel", content: "DEC" },
+    { tag: "div", class: "date-panel-border", content: "", isSlot: true },
+    { tag: "div", class: "shadow-top", content: "", isSlot: true },
+    { tag: "div", class: "shadow-bottom", content: "", isSlot: true }
   ]} methods={{ updateTransform: `e => {
   e.currentTarget.panels.forEach(panel => {
     const rotateVal = -panel.progress * 20;
