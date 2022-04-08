@@ -1,5 +1,7 @@
 const flicking = new Flicking("#flicking", {
   circular: true,
+  resizeDebounce: 16,
+  maxResizeDebounce: 100,
   moveType: "strict"
 });
 
