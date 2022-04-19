@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { h, defineComponent, VNode, resolveComponent, Fragment, getCurrentInstance } from "vue";
+import { h, defineComponent, VNode, resolveComponent, Fragment, getCurrentInstance, Comment, Text } from "vue";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
 import Component from "@egjs/component";
 import VanillaFlicking, {
@@ -198,7 +198,9 @@ const Flicking = defineComponent({
         ? this.$slots.default()
         : [];
 
-      return slots.reduce((elementSlots, slot) => [...elementSlots, ...this.getElementVNodes(slot)], [] as VNode[]);
+      return slots
+        .reduce((elementSlots, slot) => [...elementSlots, ...this.getElementVNodes(slot)], [] as VNode[])
+        .filter(slot => slot.type !== Comment && slot.type !== Text);
     },
     getElementVNodes(slot: VNode, childSlots: VNode[] = []): VNode[] {
       if (slot.type === Fragment && Array.isArray(slot.children)) {
