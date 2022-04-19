@@ -27,6 +27,7 @@ abstract class Renderer {
   // Internal States
   protected _flicking: Flicking | null;
   protected _panels: Panel[];
+  protected _rendering: boolean;
 
   // Options
   protected _align: NonNullable<RendererOptions["align"]>;
@@ -41,6 +42,14 @@ abstract class Renderer {
    * @see Panel
    */
   public get panels() { return this._panels; }
+  /**
+   * A boolean value indicating whether rendering is in progress
+   * @ko 현재 렌더링이 시작되어 끝나기 전까지의 상태인지의 여부
+   * @type {boolean}
+   * @readonly
+   * @internal
+   */
+  public get rendering() { return this._rendering; }
   /**
    * Count of panels
    * @ko 전체 패널의 개수
@@ -80,6 +89,7 @@ abstract class Renderer {
   }: RendererOptions) {
     this._flicking = null;
     this._panels = [];
+    this._rendering = false;
 
     // Bind options
     this._align = align;
@@ -367,6 +377,7 @@ abstract class Renderer {
       if (!flicking.initialized) return;
 
       camera.updateRange();
+      camera.updateOffset();
       camera.updateAnchors();
 
       if (control.animating) {
@@ -402,6 +413,7 @@ abstract class Renderer {
     const { camera, control } = flicking;
 
     camera.updateRange();
+    camera.updateOffset();
     camera.updateAnchors();
     camera.resetNeedPanelHistory();
     control.updateInput();

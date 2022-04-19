@@ -816,10 +816,10 @@ class Flicking extends Component<FlickingEvents> {
    * @ko Flicking을 초기화하고, 디폴트 인덱스로 이동합니다
    * 이 메소드는 `autoInit` 옵션이 true(default)일 경우 Flicking이 생성될 때 자동으로 호출됩니다
    * @fires Flicking#ready
-   * @return {this}
+   * @return {Promise<void>}
    */
-  public async init(): Promise<void> {
-    if (this._initialized) return;
+  public init(): Promise<void> {
+    if (this._initialized) return Promise.resolve();
 
     const camera = this._camera;
     const renderer = this._renderer;
@@ -828,7 +828,7 @@ class Flicking extends Component<FlickingEvents> {
     const originalTrigger = this.trigger;
     const preventEventsBeforeInit = this._preventEventsBeforeInit;
 
-    camera.init(this);
+    camera.init();
     virtualManager.init();
     renderer.init(this);
     control.init(this);
@@ -837,10 +837,10 @@ class Flicking extends Component<FlickingEvents> {
       this.trigger = () => this;
     }
 
-    await this.resize();
+    this._initialResize();
 
     // Look at initial panel
-    await this._moveToInitialPanel();
+    this._moveToInitialPanel();
 
     if (this._autoResize) {
       this._autoResizer.enable();
@@ -853,16 +853,15 @@ class Flicking extends Component<FlickingEvents> {
     }
     renderer.checkPanelContentsReady(renderer.panels);
 
-    this._plugins.forEach(plugin => plugin.init(this));
-
-    // Done initializing & emit ready event
-    this._initialized = true;
-    if (preventEventsBeforeInit) {
-      this.trigger = originalTrigger;
-    }
-    this.trigger(new ComponentEvent(EVENTS.READY));
-
-    return;
+    return renderer.render().then(() => {
+      // Done initializing & emit ready event
+      this._plugins.forEach(plugin => plugin.init(this));
+      this._initialized = true;
+      if (preventEventsBeforeInit) {
+        this.trigger = originalTrigger;
+      }
+      this.trigger(new ComponentEvent(EVENTS.READY));
+    });
   }
 
   /**
@@ -1379,7 +1378,7 @@ class Flicking extends Component<FlickingEvents> {
       console.warn("\"circular\" and \"bound\" option cannot be used together, ignoring bound.");
     }
 
-    return new Camera({
+    return new Camera(this, {
       align: this._align
     });
   }
@@ -1420,18 +1419,66 @@ class Flicking extends Component<FlickingEvents> {
     });
   }
 
-  private async _moveToInitialPanel(): Promise<void> {
+  private _moveToInitialPanel(): void {
     const renderer = this._renderer;
     const control = this._control;
+    const camera = this._camera;
     const initialPanel = renderer.getPanel(this._defaultIndex) || renderer.getPanel(0);
 
     if (!initialPanel) return;
 
+    const nearestAnchor = camera.findNearestAnchor(initialPanel.position);
     control.setActive(initialPanel, null, false);
 
-    return control.moveToPanel(initialPanel, {
-      duration: 0
-    });
+    if (!nearestAnchor) {
+      throw new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(initialPanel.position), ERROR.CODE.POSITION_NOT_REACHABLE);
+    }
+
+    let position = initialPanel.position;
+
+    if (!camera.canReach(initialPanel)) {
+      position = nearestAnchor.position;
+    }
+
+    camera.lookAt(position);
+    control.updateInput();
+    camera.updateOffset();
+  }
+
+  private _initialResize() {
+    const viewport = this._viewport;
+    const renderer = this._renderer;
+    const camera = this._camera;
+    const control = this._control;
+
+    this.trigger(new ComponentEvent(EVENTS.BEFORE_RESIZE, {
+      width: 0,
+      height: 0,
+      element: viewport.element
+    }));
+
+    viewport.resize();
+    renderer.updatePanelSize();
+    camera.updateAlignPos();
+    camera.updateRange();
+    camera.updateAnchors();
+    camera.updateOffset();
+    control.updateInput();
+
+    const newWidth = viewport.width;
+    const newHeight = viewport.height;
+    const sizeChanged = newWidth !== 0 || newHeight !== 0;
+
+    this.trigger(new ComponentEvent(EVENTS.AFTER_RESIZE, {
+      width: viewport.width,
+      height: viewport.height,
+      prev: {
+        width: 0,
+        height: 0
+      },
+      sizeChanged,
+      element: viewport.element
+    }));
   }
 }
 

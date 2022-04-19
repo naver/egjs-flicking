@@ -27,7 +27,7 @@ class Camera {
   private _align: FlickingOptions["align"];
 
   // Internal states
-  private _flicking: Flicking | null;
+  private _flicking: Flicking;
   private _mode: CameraMode;
   private _el: HTMLElement;
   private _transform: string;
@@ -231,10 +231,10 @@ class Camera {
   }
 
   /** */
-  public constructor({
+  public constructor(flicking: Flicking, {
     align = ALIGN.CENTER
   }: Partial<CameraOptions> = {}) {
-    this._flicking = null;
+    this._flicking = flicking;
     this._resetInternalValues();
 
     // Options
@@ -244,17 +244,13 @@ class Camera {
   /**
    * Initialize Camera
    * @ko Camera를 초기화합니다
-   * @param {Flicking} flicking An instance of {@link Flicking}<ko>Flicking의 인스턴스</ko>
-   * @chainable
    * @throws {FlickingError}
    * {@link ERROR_CODE VAL_MUST_NOT_NULL} If the camera element(`.flicking-camera`) does not exist inside viewport element
    * <ko>{@link ERROR_CODE VAL_MUST_NOT_NULL} 뷰포트 엘리먼트 내부에 카메라 엘리먼트(`.flicking-camera`)가 존재하지 않을 경우</ko>
    * @return {this}
    */
-  public init(flicking: Flicking): this {
-    this._flicking = flicking;
-
-    const viewportEl = flicking.viewport.element;
+  public init(): this {
+    const viewportEl = this._flicking.viewport.element;
 
     checkExistence(viewportEl.firstElementChild, "First element child of the viewport element");
     this._el = viewportEl.firstElementChild as HTMLElement;
@@ -271,7 +267,6 @@ class Camera {
    * @return {void}
    */
   public destroy(): this {
-    this._flicking = null;
     this._resetInternalValues();
     return this;
   }
@@ -294,12 +289,13 @@ class Camera {
     this._refreshVisiblePanels();
     this._checkNeedPanel();
     this._checkReachEnd(prevPos, pos);
-    this.applyTransform();
 
     if (toggled) {
       void flicking.renderer.render().then(() => {
         this.updateOffset();
       });
+    } else {
+      this.applyTransform();
     }
   }
 
@@ -476,8 +472,6 @@ class Camera {
       panels.forEach(panel => panel.updateCircularToggleDirection());
     }
 
-    this.updateOffset();
-
     return this;
   }
 
@@ -570,12 +564,14 @@ class Camera {
   /**
    * Apply "transform" style with the current position to camera element
    * @ko 현재 위치를 기준으로한 transform 스타일을 카메라 엘리먼트에 적용합니다.
-   * @chainable
    * @return {this}
    */
   public applyTransform(): this {
     const el = this._el;
     const flicking = getFlickingAttached(this._flicking);
+    const renderer = flicking.renderer;
+
+    if (renderer.rendering) return this;
 
     const actualPosition = this._position - this._alignPos - this._offset + this._circularOffset;
 

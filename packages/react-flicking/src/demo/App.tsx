@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import {
   BrowserRouter as Router,
-  Switch,
+  Routes,
   Route
 } from "react-router-dom";
 import "./css/common.css";
@@ -29,52 +29,24 @@ import Header from "./Header";
 export default class App extends Component<{}> {
   public render() {
     return (
-    <React.StrictMode>
       <Router>
         <Header/>
-        <Switch>
-          <Route path="/infinite">
-            <InfiniteFlicking />
-          </Route>
-          <Route path="/free-scroll">
-            <FreeScroll />
-          </Route>
-          <Route path="/variable-size">
-            <VariableSize />
-          </Route>
-          <Route path="/align">
-            <Align />
-          </Route>
-          <Route path="/snap">
-            <Snap />
-          </Route>
-          <Route path="/gap">
-            <Gap />
-          </Route>
-          <Route path="/progress">
-            <Progress />
-          </Route>
-          <Route path="/bound">
-            <Bound />
-          </Route>
-          <Route path="/virtual">
-            <Virtual />
-          </Route>
-          <Route path="/parallax">
-            <Parallax />
-          </Route>
-          <Route path="/fade">
-            <Fade />
-          </Route>
-          <Route path="/autoplay">
-            <AutoPlay />
-          </Route>
-          <Route path="/arrow">
-            <Arrow />
-          </Route>
-        </Switch>
-      </Router>
-    </React.StrictMode>);
+        <Routes>
+          <Route path="/infinite" element={<InfiniteFlicking />} />
+          <Route path="/free-scroll" element={<FreeScroll />} />
+          <Route path="/variable-size" element={<VariableSize />} />
+          <Route path="/align" element={<Align />} />
+          <Route path="/snap" element={<Snap />} />
+          <Route path="/gap" element={<Gap />} />
+          <Route path="/progress" element={<Progress />} />
+          <Route path="/bound" element={<Bound />} />
+          <Route path="/virtual" element={<Virtual />} />
+          <Route path="/parallax" element={<Parallax />} />
+          <Route path="/fade" element={<Fade />} />
+          <Route path="/autoplay" element={<AutoPlay />} />
+          <Route path="/arrow" element={<Arrow />} />
+        </Routes>
+      </Router>);
   }
   public componentDidMount() {
     hljs.initHighlighting();
