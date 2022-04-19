@@ -25,7 +25,7 @@ module.exports = {
       items: [
         {
           type: "doc",
-          docId: "installation",
+          docId: "tutorials/installation",
           label: "Docs",
           position: "left"
         },
@@ -150,6 +150,7 @@ module.exports = {
           editUrl: "https://github.com/naver/egjs-flicking/edit/master/docs/",
           remarkPlugins: [require("remark-breaks")],
           lastVersion: isDev ? "current" : undefined,
+          breadcrumbs: false,
           versions: {
             current: {
               label: "Next"

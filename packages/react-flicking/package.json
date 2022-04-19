@@ -8,7 +8,7 @@
   "es2015": "dist/flicking.esm.js",
   "types": "declaration/index.d.ts",
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "react-scripts start",
     "build": "rollup -c && npm run declaration",
     "postbuild": "cpx 'node_modules/@egjs/flicking/dist/*.{css,css.map}' dist/",
     "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",

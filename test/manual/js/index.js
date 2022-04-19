@@ -1,9 +1,7 @@
-const flicking = new Flicking("#flicking", {
-  circular: true,
-  resizeDebounce: 16,
-  maxResizeDebounce: 100,
-  moveType: "strict"
-});
+const flicking = new Flicking("#flicking");
+
+const plugin = new Flicking.Plugins.AutoPlay({ duration: 2000 });
+flicking.addPlugins(plugin);
 
 new Array(6).fill(0).map((_, idx) => {
   document.querySelector(`#btn-${idx}`).addEventListener("click", () => {

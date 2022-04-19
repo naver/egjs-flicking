@@ -203,17 +203,17 @@ describe("Panel", () => {
         const panel = await createPanel(El.panel().setWidth(1000).setHeight(1000));
         panel.resize();
 
-        expect(panel.includePosition(panel.element.offsetLeft)).to.be.true;
-        expect(panel.includePosition(panel.element.offsetLeft + 500)).to.be.true;
-        expect(panel.includePosition(panel.element.offsetLeft + 1000)).to.be.true;
+        expect(panel.includePosition(panel.range.min)).to.be.true;
+        expect(panel.includePosition(panel.range.min + 500)).to.be.true;
+        expect(panel.includePosition(panel.range.min + 1000)).to.be.true;
       });
 
       it("should return false when given position is outside of panel", async () => {
         const panel = await createPanel(El.panel().setWidth(1000).setHeight(1000));
         panel.resize();
 
-        expect(panel.includePosition(panel.element.offsetLeft - 0.1)).to.be.false;
-        expect(panel.includePosition(panel.element.offsetLeft + 1000 + 0.1)).to.be.false;
+        expect(panel.includePosition(panel.range.min - 0.1)).to.be.false;
+        expect(panel.includePosition(panel.range.max + 0.1)).to.be.false;
       });
 
       it("should return false when given position is inside panel margin left/right area when not including margin", async () => {
@@ -222,8 +222,8 @@ describe("Panel", () => {
         );
         panel.resize();
 
-        expect(panel.includePosition(panel.element.offsetLeft - 50, false)).to.be.false;
-        expect(panel.includePosition(panel.element.offsetLeft + 1000 + 50, false)).to.be.false;
+        expect(panel.includePosition(panel.range.min - 50, false)).to.be.false;
+        expect(panel.includePosition(panel.range.max + 50, false)).to.be.false;
       });
 
       it("should return false when given position is inside panel margin top/bottom area when not including margin", async () => {
@@ -232,8 +232,8 @@ describe("Panel", () => {
         );
         panel.resize();
 
-        expect(panel.includePosition(panel.element.offsetTop - 50, false)).to.be.false;
-        expect(panel.includePosition(panel.element.offsetTop + 1000 + 50, false)).to.be.false;
+        expect(panel.includePosition(panel.range.min - 50, false)).to.be.false;
+        expect(panel.includePosition(panel.range.max + 50, false)).to.be.false;
       });
 
       it("should return true when given position is inside panel margin left/right area", async () => {
@@ -242,8 +242,8 @@ describe("Panel", () => {
         );
         panel.resize();
 
-        expect(panel.includePosition(panel.element.offsetLeft - 50, true)).to.be.true;
-        expect(panel.includePosition(panel.element.offsetLeft + 1000 + 50, true)).to.be.true;
+        expect(panel.includePosition(panel.range.min - 50, true)).to.be.true;
+        expect(panel.includePosition(panel.range.max + 50, true)).to.be.true;
       });
 
       it("should return true when given position is inside panel margin top/bottom area", async () => {
@@ -252,8 +252,8 @@ describe("Panel", () => {
         );
         panel.resize();
 
-        expect(panel.includePosition(panel.element.offsetTop - 50, true)).to.be.true;
-        expect(panel.includePosition(panel.element.offsetTop + 1000 + 50, true)).to.be.true;
+        expect(panel.includePosition(panel.range.min - 50, true)).to.be.true;
+        expect(panel.includePosition(panel.range.max + 50, true)).to.be.true;
       });
 
       it("should return false when given position is outside of panel margin left/right area", async () => {
@@ -262,8 +262,8 @@ describe("Panel", () => {
         );
         panel.resize();
 
-        expect(panel.includePosition(panel.element.offsetLeft - 50.1, true)).to.be.false;
-        expect(panel.includePosition(panel.element.offsetLeft + 1000 + 50.1, true)).to.be.false;
+        expect(panel.includePosition(panel.range.min - 50.1, true)).to.be.false;
+        expect(panel.includePosition(panel.range.max + 50.1, true)).to.be.false;
       });
 
       it("should return false when given position is outside of panel margin top/bottom area", async () => {
@@ -272,8 +272,8 @@ describe("Panel", () => {
         );
         panel.resize();
 
-        expect(panel.includePosition(panel.element.offsetTop - 50.1, true)).to.be.false;
-        expect(panel.includePosition(panel.element.offsetTop + 1000 + 50.1, true)).to.be.false;
+        expect(panel.includePosition(panel.range.min - 50.1, true)).to.be.false;
+        expect(panel.includePosition(panel.range.max + 50.1, true)).to.be.false;
       });
     });
 

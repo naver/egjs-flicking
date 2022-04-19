@@ -5,9 +5,6 @@ import Flicking, { ViewportSlot } from "@egjs/react-flicking";
 import SourceCode from "@site/src/component/SourceCode";
 import "../css/demo/date-selector.css";
 
-const days = [...new Array(31).keys()].map((_, idx) => idx);
-const years = [...new Array(100).keys()].map((_, idx) => 1970 + idx);
-
 const updateTransform = e => {
   e.currentTarget.panels.forEach(panel => {
     const rotateVal = -panel.progress * 20;
@@ -16,6 +13,8 @@ const updateTransform = e => {
     panel.element.style.transform = `translateZ(-${depth}px) rotateX(${rotateVal}deg)`;
   });
 };
+
+export const dates = (start: number, count: number) => (Array.apply(0, Array(count)) as number[]).map((_, idx) => <div key={idx} className="date-panel is-size-4 has-text-weight-bold">{start + idx}</div>);
 
 export default () => <>
   <div className="date-demo-wrapper p-4 has-background-black has-text-white">
@@ -43,7 +42,7 @@ export default () => <>
     <Flicking className="date-flicking" horizontal={false}
       onReady={updateTransform}
       onMove={updateTransform}>
-      { days.map(day => <div key={day} className="date-panel is-size-4 has-text-weight-bold">{day + 1}</div>) }
+      { dates(1, 31) }
       <ViewportSlot>
         <div className="date-panel-border"></div>
         <div className="shadow-top"></div>
@@ -53,7 +52,7 @@ export default () => <>
     <Flicking className="date-flicking" horizontal={false}
       onReady={updateTransform}
       onMove={updateTransform}>
-      { years.map(year => <div key={year} className="date-panel is-size-4 has-text-weight-bold">{year}</div>) }
+      { dates(1970, 100) }
       <ViewportSlot>
         <div className="date-panel-border"></div>
         <div className="shadow-top"></div>
@@ -73,7 +72,10 @@ export default () => <>
     { tag: "div", class: "date-panel", content: "SEP" },
     { tag: "div", class: "date-panel", content: "OCT" },
     { tag: "div", class: "date-panel", content: "NVM" },
-    { tag: "div", class: "date-panel", content: "DEC" }
+    { tag: "div", class: "date-panel", content: "DEC" },
+    { tag: "div", class: "date-panel-border", content: "", isSlot: true },
+    { tag: "div", class: "shadow-top", content: "", isSlot: true },
+    { tag: "div", class: "shadow-bottom", content: "", isSlot: true }
   ]} methods={{ updateTransform: `e => {
   e.currentTarget.panels.forEach(panel => {
     const rotateVal = -panel.progress * 20;
