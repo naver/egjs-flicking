@@ -192,10 +192,28 @@ abstract class Renderer {
     elements: any[];
     hasDOMInElements: boolean;
   }>): Panel[] {
+    const allPanelsInserted = this.batchInsertDefer(...items);
+
+    if (allPanelsInserted.length <= 0) return [];
+
+    this.updateAfterPanelChange(allPanelsInserted, []);
+
+    return allPanelsInserted;
+  }
+
+  /**
+   * Defers update
+   * camera position & others will be updated after calling updateAfterPanelChange
+   * @internal
+   */
+  public batchInsertDefer(...items: Array<{
+    index: number;
+    elements: any[];
+    hasDOMInElements: boolean;
+  }>) {
     const panels = this._panels;
     const flicking = getFlickingAttached(this._flicking);
 
-    const { control } = flicking;
     const prevFirstPanel = panels[0];
     const align = parsePanelAlign(this._align);
 
@@ -229,30 +247,6 @@ abstract class Renderer {
       return [...addedPanels, ...panelsInserted];
     }, []);
 
-    if (allPanelsInserted.length <= 0) return [];
-
-    // Update camera & control
-    this._updateCameraAndControl();
-
-    void this.render();
-
-    // Move to the first panel added if no panels existed
-    // FIXME: fix for animating case
-    if (allPanelsInserted.length > 0 && !control.animating) {
-      void control.moveToPanel(control.activePanel || allPanelsInserted[0], {
-        duration: 0
-      }).catch(() => void 0);
-    }
-
-    flicking.camera.updateOffset();
-
-    flicking.trigger(new ComponentEvent(EVENTS.PANEL_CHANGE, {
-      added: allPanelsInserted,
-      removed: []
-    }));
-
-    this.checkPanelContentsReady(allPanelsInserted);
-
     return allPanelsInserted;
   }
 
@@ -267,13 +261,35 @@ abstract class Renderer {
    * @param {boolean} [items.hasDOMInElements=1] Whether it contains actual DOM elements. If set to true, renderer will remove them from the camera element<ko>내부에 실제 DOM 엘리먼트들을 포함하고 있는지 여부. true로 설정할 경우, 렌더러는 해당 엘리먼트들을 카메라 엘리먼트 내부에서 제거합니다</ko>
    * @return An array of removed panels<ko>제거된 패널들의 배열</ko>
    */
-  public batchRemove(...items: Array<{ index: number; deleteCount: number; hasDOMInElements: boolean }>): Panel[] {
+  public batchRemove(...items: Array<{
+    index: number;
+    deleteCount: number;
+    hasDOMInElements: boolean;
+  }>): Panel[] {
+    const allPanelsRemoved = this.batchRemoveDefer(...items);
+
+    if (allPanelsRemoved.length <= 0) return [];
+
+    this.updateAfterPanelChange([], allPanelsRemoved);
+
+    return allPanelsRemoved;
+  }
+
+  /**
+   * Defers update
+   * camera position & others will be updated after calling updateAfterPanelChange
+   * @internal
+   */
+  public batchRemoveDefer(...items: Array<{
+    index: number;
+    deleteCount: number;
+    hasDOMInElements: boolean;
+  }>) {
     const panels = this._panels;
     const flicking = getFlickingAttached(this._flicking);
 
-    const { camera, control } = flicking;
+    const { control } = flicking;
     const activePanel = control.activePanel;
-    const activeIndex = control.activeIndex;
 
     const allPanelsRemoved = items.reduce((removed, item) => {
       const { index, deleteCount } = item;
@@ -304,35 +320,56 @@ abstract class Renderer {
       return [...removed, ...panelsRemoved];
     }, []);
 
+    return allPanelsRemoved;
+  }
+
+  /**
+   * @internal
+   */
+  public updateAfterPanelChange(panelsAdded: Panel[], panelsRemoved: Panel[]) {
+    const flicking = getFlickingAttached(this._flicking);
+    const { camera, control } = flicking;
+    const panels = this._panels;
+    const activePanel = control.activePanel;
+
     // Update camera & control
     this._updateCameraAndControl();
 
     void this.render();
 
-    // FIXME: fix for animating case
-    if (allPanelsRemoved.length > 0 && !control.animating) {
-      const targetPanel = includes(allPanelsRemoved, activePanel)
-        ? (panels[activeIndex] || panels[panels.length - 1])
-        : activePanel;
-
-      if (targetPanel) {
-        void control.moveToPanel(targetPanel, {
-          duration: 0
-        }).catch(() => void 0);
-      } else {
+    if (!activePanel || activePanel.removed) {
+      if (panels.length <= 0) {
         // All panels removed
         camera.lookAt(0);
+      } else {
+        let targetIndex = activePanel?.index ?? 0;
+        if (targetIndex > panels.length - 1) {
+          targetIndex = panels.length - 1;
+        }
+
+        void control.moveToPanel(panels[targetIndex], {
+          duration: 0
+        }).catch(() => void 0);
       }
+    } else {
+      void control.moveToPanel(control.activePanel!, {
+        duration: 0
+      }).catch(() => void 0);
     }
 
     flicking.camera.updateOffset();
 
-    flicking.trigger(new ComponentEvent(EVENTS.PANEL_CHANGE, {
-      added: [],
-      removed: allPanelsRemoved
-    }));
+    if (panelsAdded.length > 0 || panelsRemoved.length > 0) {
+      flicking.trigger(new ComponentEvent(EVENTS.PANEL_CHANGE, {
+        added: panelsAdded,
+        removed: panelsRemoved
+      }));
 
-    return allPanelsRemoved;
+      this.checkPanelContentsReady([
+        ...panelsAdded,
+        ...panelsRemoved
+      ]);
+    }
   }
 
   /**
