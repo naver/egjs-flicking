@@ -4,7 +4,7 @@ name: @egjs/flicking
 license: MIT
 author: NAVER Corp.
 repository: https://github.com/naver/egjs-flicking
-version: 4.6.0
+version: 4.6.1
 */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -15896,7 +15896,7 @@ version: 4.6.0
        */
 
 
-      Flicking.VERSION = "4.6.0";
+      Flicking.VERSION = "4.6.1";
       return Flicking;
     }(Component$1);
 

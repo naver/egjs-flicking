@@ -4,7 +4,7 @@ name: @egjs/flicking
 license: MIT
 author: NAVER Corp.
 repository: https://github.com/naver/egjs-flicking
-version: 4.6.0
+version: 4.6.1
 */
 import Component, { ComponentEvent } from '@egjs/component';
 import Axes, { PanInput } from '@egjs/axes';
@@ -8384,7 +8384,7 @@ function (_super) {
    */
 
 
-  Flicking.VERSION = "4.6.0";
+  Flicking.VERSION = "4.6.1";
   return Flicking;
 }(Component);
 
