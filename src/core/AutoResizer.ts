@@ -8,6 +8,8 @@ class AutoResizer {
   private _flicking: Flicking;
   private _enabled: boolean;
   private _resizeObserver: ResizeObserver | null;
+  private _resizeTimer: number;
+  private _maxResizeDebounceTimer: number;
 
   public get enabled() { return this._enabled; }
 
@@ -15,6 +17,8 @@ class AutoResizer {
     this._flicking = flicking;
     this._enabled = false;
     this._resizeObserver = null;
+    this._resizeTimer = -1;
+    this._maxResizeDebounceTimer = -1;
   }
 
   public enable(): this {
@@ -61,6 +65,35 @@ class AutoResizer {
   }
 
   private _onResize = () => {
+    const flicking = this._flicking;
+    const resizeDebounce = flicking.resizeDebounce;
+    const maxResizeDebounce = flicking.maxResizeDebounce;
+
+    if (resizeDebounce <= 0) {
+      void flicking.resize();
+    } else {
+      if (this._maxResizeDebounceTimer <= 0) {
+        if (maxResizeDebounce > 0 && maxResizeDebounce >= resizeDebounce) {
+          this._maxResizeDebounceTimer = window.setTimeout(this._doScheduledResize, maxResizeDebounce);
+        }
+      }
+
+      if (this._resizeTimer > 0) {
+        clearTimeout(this._resizeTimer);
+        this._resizeTimer = 0;
+      }
+
+      this._resizeTimer = window.setTimeout(this._doScheduledResize, resizeDebounce);
+    }
+  };
+
+  private _doScheduledResize = () => {
+    clearTimeout(this._resizeTimer);
+    clearTimeout(this._maxResizeDebounceTimer);
+
+    this._maxResizeDebounceTimer = -1;
+    this._resizeTimer = -1;
+
     void this._flicking.resize();
   };
 

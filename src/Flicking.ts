@@ -58,13 +58,16 @@ export interface FlickingOptions {
   panelsPerView: number;
   noPanelStyleOverride: boolean;
   resizeOnContentsReady: boolean;
+
   // EVENT
   needPanelThreshold: number;
   preventEventsBeforeInit: boolean;
+
   // ANIMATION
   deceleration: number;
   duration: number;
   easing: (x: number) => number;
+
   // INPUT
   inputType: string[];
   moveType: ValueOf<typeof MOVE_TYPE> | MoveTypeOptions<ValueOf<typeof MOVE_TYPE>>;
@@ -74,14 +77,19 @@ export interface FlickingOptions {
   iOSEdgeSwipeThreshold: number;
   preventClickOnDrag: boolean;
   disableOnInit: boolean;
+
   // PERFORMANCE
   renderOnlyVisible: boolean;
   virtual: VirtualOptions | null;
+
   // OTHERS
   autoInit: boolean;
   autoResize: boolean;
   useResizeObserver: boolean;
+  resizeDebounce: number;
+  maxResizeDebounce: number;
   externalRenderer: ExternalRenderer | null;
+
   // @deprecated
   renderExternal: {
     renderer: new (options: RendererOptions) => ExternalRenderer;
@@ -150,6 +158,8 @@ class Flicking extends Component<FlickingEvents> {
   private _autoInit: FlickingOptions["autoInit"];
   private _autoResize: FlickingOptions["autoResize"];
   private _useResizeObserver: FlickingOptions["useResizeObserver"];
+  private _resizeDebounce: FlickingOptions["resizeDebounce"];
+  private _maxResizeDebounce: FlickingOptions["maxResizeDebounce"];
   private _externalRenderer: FlickingOptions["externalRenderer"];
   private _renderExternal: FlickingOptions["renderExternal"];
 
@@ -614,6 +624,26 @@ class Flicking extends Component<FlickingEvents> {
    */
   public get useResizeObserver() { return this._useResizeObserver; }
   /**
+   * Delays size recalculation from `autoResize` by the given time in milisecond.
+   * If the size is changed again while being delayed, it cancels the previous one and delays from the beginning again.
+   * This can increase performance by preventing `resize` being called too often.
+   * @ko `autoResize` 설정시에 호출되는 크기 재계산을 주어진 시간(단위: ms)만큼 지연시킵니다.
+   * 지연시키는 도중 크기가 다시 변경되었을 경우, 이전 것을 취소하고 주어진 시간만큼 다시 지연시킵니다.
+   * 이를 통해 `resize`가 너무 많이 호출되는 것을 방지하여 성능을 향상시킬 수 있습니다.
+   * @type {number}
+   * @default 0
+   */
+  public get resizeDebounce() { return this._resizeDebounce; }
+  /**
+   * The maximum time for size recalculation delay when using `resizeDebounce`, in milisecond.
+   * This guarantees that size recalculation is performed at least once every (n)ms.
+   * @ko `resizeDebounce` 사용시에 크기 재계산이 지연되는 최대 시간을 지정합니다. (단위: ms)
+   * 이를 통해, 적어도 (n)ms에 한번은 크기 재계산을 수행하는 것을 보장할 수 있습니다.
+   * @type {number}
+   * @default 100
+   */
+  public get maxResizeDebounce() { return this._maxResizeDebounce; }
+  /**
    * This is an option for the frameworks(React, Vue, Angular, ...). Don't set it as it's automatically managed by Flicking.
    * @ko 프레임워크(React, Vue, Angular, ...)에서만 사용하는 옵션으로, 자동으로 설정되므로 따로 사용하실 필요 없습니다!
    * @default null
@@ -756,6 +786,8 @@ class Flicking extends Component<FlickingEvents> {
     autoInit = true,
     autoResize = true,
     useResizeObserver = true,
+    resizeDebounce = 0,
+    maxResizeDebounce = 100,
     externalRenderer = null,
     renderExternal = null
   }: Partial<FlickingOptions> = {}) {
@@ -794,6 +826,8 @@ class Flicking extends Component<FlickingEvents> {
     this._autoInit = autoInit;
     this._autoResize = autoResize;
     this._useResizeObserver = useResizeObserver;
+    this._resizeDebounce = resizeDebounce;
+    this._maxResizeDebounce = maxResizeDebounce;
     this._externalRenderer = externalRenderer;
     this._renderExternal = renderExternal;
 

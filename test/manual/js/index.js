@@ -1,9 +1,4 @@
-const flicking = new Flicking("#flicking", {
-  moveType: "strict",
-  renderOnlyVisible: true
-}).on("ready", () => {
-  console.log("ready");
-});
+const flicking = new Flicking("#flicking");
 
 const plugin = new Flicking.Plugins.AutoPlay({ duration: 2000 });
 flicking.addPlugins(plugin);

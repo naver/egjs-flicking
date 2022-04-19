@@ -26,12 +26,12 @@ header {
 }
 
 #flicking {
+  width: 100%;
   box-sizing: border-box;
 }
 
 .flicking-viewport {
   transition: height 500ms;
-  width: 500px;
 }
 
 .flicking-panel {
