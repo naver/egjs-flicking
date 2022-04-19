@@ -4,7 +4,7 @@
  */
 import * as React from "react";
 
-class StrictPanel extends React.Component {
+class StrictPanel extends React.Component<{ children?: React.ReactElement }> {
   private _hide: boolean = false;
 
   private _elRef: React.RefObject<HTMLElement> = React.createRef();

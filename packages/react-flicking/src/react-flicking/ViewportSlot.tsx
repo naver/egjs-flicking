@@ -4,6 +4,6 @@
  */
 import React from "react";
 
-const ViewportSlot = React.memo(({ children }) => <>{children}</>);
+const ViewportSlot = React.memo((props: { children?: React.ReactElement[] }) => <>{props.children}</>);
 
 export default ViewportSlot;

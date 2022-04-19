@@ -337,24 +337,26 @@ abstract class Renderer {
 
     void this.render();
 
-    if (!activePanel || activePanel.removed) {
-      if (panels.length <= 0) {
-        // All panels removed
-        camera.lookAt(0);
-      } else {
-        let targetIndex = activePanel?.index ?? 0;
-        if (targetIndex > panels.length - 1) {
-          targetIndex = panels.length - 1;
-        }
+    if (!flicking.animating) {
+      if (!activePanel || activePanel.removed) {
+        if (panels.length <= 0) {
+          // All panels removed
+          camera.lookAt(0);
+        } else {
+          let targetIndex = activePanel?.index ?? 0;
+          if (targetIndex > panels.length - 1) {
+            targetIndex = panels.length - 1;
+          }
 
-        void control.moveToPanel(panels[targetIndex], {
+          void control.moveToPanel(panels[targetIndex], {
+            duration: 0
+          }).catch(() => void 0);
+        }
+      } else {
+        void control.moveToPanel(control.activePanel!, {
           duration: 0
         }).catch(() => void 0);
       }
-    } else {
-      void control.moveToPanel(control.activePanel!, {
-        duration: 0
-      }).catch(() => void 0);
     }
 
     flicking.camera.updateOffset();
