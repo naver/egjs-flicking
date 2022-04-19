@@ -61,7 +61,7 @@ export default {
       js={
 <Columns>
   <ColumnItem is={6}>
-    <CodeBlock className="html" title="html">
+    <CodeBlock className="language-html" title="html">
       {`<div id="flick" class="flicking-viewport">
   <div class="flicking-camera">
     <div class="flicking-panel">1</div>
@@ -78,7 +78,7 @@ export default {
     </CodeBlock>
   </ColumnItem>
   <ColumnItem is={6}>
-    <CodeBlock className="js" title="js">
+    <CodeBlock className="language-js" title="js">
           {`const flicking = new Flicking("#flick", {
   renderOnlyVisible: true
 });
@@ -99,22 +99,22 @@ appendBtn.addEventListener("click", () => {
   </ColumnItem>
 </Columns>}
   react={
-    <CodeBlock className="jsx">
+    <CodeBlock className="language-jsx">
 { reactSourceCode }
     </CodeBlock>
   }
   vue={
-    <CodeBlock className="html">
+    <CodeBlock className="language-html">
 { vueSourceCode }
     </CodeBlock>
   }
   vue3={
-    <CodeBlock className="html">
+    <CodeBlock className="language-html">
 { vueSourceCode }
     </CodeBlock>
   }
   angular={
-    <><CodeBlock className="html" title="app.component.html">
+    <><CodeBlock className="language-html" title="app.component.html">
 {`<ngx-flicking [options]="{ renderOnlyVisible: true }">
   <div flicking-panel *ngFor="let idx of list" class="flicking-panel">{{ idx }}</div>
 </ngx-flicking>
@@ -123,7 +123,7 @@ appendBtn.addEventListener("click", () => {
   <span class="button mr-2 is-info is-outlined" (click)="onAppend()">Append</span>
 </div>`}
   </CodeBlock>
-  <CodeBlock className="js" title="app.component.ts">
+  <CodeBlock className="language-js" title="app.component.ts">
   {`@Component({})
 export class DemoFlickingComponent {
   list = [0, 1, 2, 3, 4];
@@ -139,12 +139,12 @@ export class DemoFlickingComponent {
   </CodeBlock></>
   }
   preact={
-    <CodeBlock className="jsx">
+    <CodeBlock className="language-jsx">
       { reactSourceCode }
     </CodeBlock>
   }
   svelte={
-    <CodeBlock className="jsx">
+    <CodeBlock className="language-jsx">
     {`<script>
   import Flicking, { FlickingPanel } from "@egjs/svelte-flicking";
   import "@egjs/svelte-flicking/dist/flicking.css";
