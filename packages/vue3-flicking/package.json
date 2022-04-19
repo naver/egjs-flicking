@@ -30,7 +30,7 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "@egjs/flicking": "~4.6.0"
+    "@egjs/flicking": "~4.6.1"
   },
   "peerDependencies": {
     "vue": "^3.0.0"

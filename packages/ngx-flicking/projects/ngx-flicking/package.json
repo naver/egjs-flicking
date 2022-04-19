@@ -7,7 +7,7 @@
     "@angular/core": ">=10.0.0"
   },
   "dependencies": {
-    "@egjs/flicking": "~4.6.0",
+    "@egjs/flicking": "~4.6.1",
     "@egjs/list-differ": "^1.0.0"
   },
   "devDependencies": {
