@@ -171,7 +171,7 @@ abstract class Control {
    * @chainable
    * @return {Promise<void>}
    */
-  public updatePosition(_progressInPanel: number): void { // eslint-disable-line @typescript-eslint/no-unused-vars
+  public updatePosition(progressInPanel: number): void { // eslint-disable-line @typescript-eslint/no-unused-vars
     const flicking = getFlickingAttached(this._flicking);
     const camera = flicking.camera;
     const activePanel = this._activePanel;
@@ -321,7 +321,7 @@ abstract class Control {
     }
   }
 
-  protected _triggerIndexChangeEvent(panel: Panel, position: number, axesEvent?: OnRelease): void {
+  protected _triggerIndexChangeEvent(panel: Panel, position: number, axesEvent?: OnRelease) {
     const flicking = getFlickingAttached(this._flicking);
     const triggeringEvent = panel !== this._activePanel ? EVENTS.WILL_CHANGE : EVENTS.WILL_RESTORE;
     const camera = flicking.camera;

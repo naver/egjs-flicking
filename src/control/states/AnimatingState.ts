@@ -65,7 +65,10 @@ class AnimatingState extends State {
       axesEvent
     }));
 
-    control.setActive(this._targetPanel!, control.activePanel, axesEvent.isTrusted);
+    const targetPanel = this._targetPanel;
+    if (targetPanel) {
+      control.setActive(targetPanel, control.activePanel, axesEvent.isTrusted);
+    }
   }
 }
 

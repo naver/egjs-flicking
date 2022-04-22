@@ -34,7 +34,7 @@ class DraggingState extends State {
     this._moveToChangedPosition(ctx);
   }
 
-  public onRelease(ctx: Parameters<State["onRelease"]>[0]): void {
+  public onRelease(ctx: Parameters<State["onRelease"]>[0]) {
     const { flicking, axesEvent, transitTo } = ctx;
 
     // Update last position to cope with Axes's animating behavior
@@ -55,7 +55,12 @@ class DraggingState extends State {
     const position = axesEvent.destPos[AXES.POSITION_KEY];
     const duration = Math.max(axesEvent.duration, flicking.duration);
 
-    void control.moveToPosition(position, duration, axesEvent);
+    try {
+      void control.moveToPosition(position, duration, axesEvent);
+    } catch (err) {
+      transitTo(STATE_TYPE.IDLE);
+      axesEvent.setTo({ [AXES.POSITION_KEY]: flicking.camera.position }, 0);
+    }
   }
 }
 
