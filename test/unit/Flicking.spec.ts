@@ -941,18 +941,50 @@ describe("Flicking", () => {
 
       it("should not trigger another needPanel event when panel is appended by it", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
-        const needPanelSpy = sinon.spy();
+        let callCount = 0;
 
-        flicking.on(EVENTS.NEED_PANEL, needPanelSpy);
         flicking.on(EVENTS.NEED_PANEL, e => {
           if (e.direction === DIRECTION.PREV) return;
 
+          callCount += 1;
           flicking.append(El.panel("100%").el);
         });
 
         await simulate(flicking.element, { deltaX: -2000 });
 
-        expect(needPanelSpy.calledOnce).to.be.true;
+        expect(callCount).to.equal(1);
+      });
+    });
+
+    describe(EVENTS.WILL_CHANGE, () => {
+      it("can be stopped", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        let willChangePosition = 0;
+
+        flicking.on(EVENTS.WILL_CHANGE, evt => {
+          willChangePosition = flicking.camera.position;
+          evt.stop();
+        });
+        await simulate(flicking.element, { deltaX: -300 });
+
+        expect(willChangePosition).not.to.equal(0);
+        expect(flicking.control.controller.position).to.equal(willChangePosition);
+      });
+    });
+
+    describe(EVENTS.WILL_RESTORE, () => {
+      it("can be stopped", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        let willChangePosition = 0;
+
+        flicking.on(EVENTS.WILL_RESTORE, evt => {
+          willChangePosition = flicking.camera.position;
+          evt.stop();
+        });
+        await simulate(flicking.element, { deltaX: -10 });
+
+        expect(willChangePosition).not.to.equal(0);
+        expect(flicking.control.controller.position).to.equal(willChangePosition);
       });
     });
 
