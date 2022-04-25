@@ -353,7 +353,7 @@ abstract class Renderer {
           }).catch(() => void 0);
         }
       } else {
-        void control.moveToPanel(control.activePanel!, {
+        void control.moveToPanel(activePanel, {
           duration: 0
         }).catch(() => void 0);
       }
