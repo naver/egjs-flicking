@@ -200,9 +200,8 @@ describe("StrictControl", () => {
       it("should be rejected returning FlickingError with code NOT_ATTACHED_TO_FLICKING if control is not initialized", async () => {
         const control = new StrictControl();
 
-        const err = await control.moveToPosition(0, 0).catch(e => e);
-        expect(err)
-          .to.be.instanceOf(FlickingError)
+        expect(() => control.moveToPosition(0, 0))
+          .to.throw(FlickingError)
           .with.property("code", ERROR.CODE.NOT_ATTACHED_TO_FLICKING);
       });
 

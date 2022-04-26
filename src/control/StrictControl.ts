@@ -187,7 +187,7 @@ class StrictControl extends Control {
    * </ko>
    * @return {Promise<void>} A Promise which will be resolved after reaching the target position<ko>해당 좌표 도달시에 resolve되는 Promise</ko>
    */
-  public async moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
+  public moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
     const flicking = getFlickingAttached(this._flicking);
     const camera = flicking.camera;
     const activePanel = this._activePanel;
