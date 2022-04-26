@@ -5,7 +5,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 
-class NonStrictPanel extends React.Component {
+class NonStrictPanel extends React.Component<{ children?: React.ReactElement }> {
   private _hide: boolean = false;
 
   public get nativeElement() { return findDOMNode(this) as HTMLElement; }

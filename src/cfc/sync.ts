@@ -85,7 +85,9 @@ export default (flicking: Flicking, diffResult: DiffResult<any>, rendered: any[]
     }
   }
 
-  renderer.updateAfterPanelChange(added, removed);
+  if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
+    renderer.updateAfterPanelChange(added, removed);
+  }
 };
 
 const batchInsert = (renderer: Renderer, diffResult: DiffResult<any>, addedElements: any[], startIdx: number, endIdx?: number) => {

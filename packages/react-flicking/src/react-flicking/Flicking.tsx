@@ -249,7 +249,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   private _unpackFragment(child: React.ReactElement) {
     return this._isFragment(child)
       ? React.Children.toArray(child.props.children)
-        .reduce((allChilds, fragChild) => [...allChilds, ...this._unpackFragment(fragChild)], [])
+        .reduce((allChilds: React.ReactElement[], fragChild: React.ReactElement) => [...allChilds, ...this._unpackFragment(fragChild)], [] as React.ReactElement[])
       : [child];
   }
 
@@ -287,7 +287,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const vanillaFlicking = this._vanillaFlicking;
     const diffResult = this._diffResult;
 
-    const children = vanillaFlicking && vanillaFlicking.initialized
+    const children: React.ReactElement[] = vanillaFlicking && vanillaFlicking.initialized
       ? diffResult
         ? getRenderingPanels(vanillaFlicking, diffResult)
         : getRenderingPanels(vanillaFlicking, diff(origChildren, origChildren))
@@ -298,11 +298,12 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       : children.map((child, idx) => <StrictPanel key={child.key!} ref={this._panels[idx] as any}>{child}</StrictPanel>)
   }
 
-  private _isFragment(child: NonNullable<React.ReactNode>) {
-    if ((child as React.ReactElement).type) {
-      return (child as React.ReactElement).type === React.Fragment;
+  private _isFragment(child: React.ReactElement) {
+    if (child.type) {
+      return child.type === React.Fragment;
     }
-    return child === React.Fragment;
+
+    return (child as any) === React.Fragment;
   }
 }
 
