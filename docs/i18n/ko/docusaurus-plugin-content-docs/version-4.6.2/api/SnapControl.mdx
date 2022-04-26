@@ -3,36 +3,36 @@ custom_edit_url: null
 ---
 
 ```ts
-class FreeControl extends Control
+class SnapControl extends Control
 ```
-A [Control](Control) that can be scrolled freely without alignment
+입력을 중단한 시점의 가속도에 영향받아 도달할 패널을 계산하는 이동 방식을 사용하는 [Control](Control)
 
 <div className="container">
   <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
-  <div className="row"><div className="col col--6"><a href="#stopAtEdge">stopAtEdge</a><br/><a href="#controller">controller</a><br/><a href="#activeIndex">activeIndex</a><br/><a href="#activePanel">activePanel</a><br/><a href="#animating">animating</a><br/><a href="#holding">holding</a></div><div className="col col--6"><a href="#updatePosition">updatePosition</a><br/><a href="#moveToPosition">moveToPosition</a><br/><a href="#init">init</a><br/><a href="#destroy">destroy</a><br/><a href="#enable">enable</a><br/><a href="#disable">disable</a><br/><a href="#updateInput">updateInput</a><br/><a href="#resetActive">resetActive</a><br/><a href="#moveToPanel">moveToPanel</a><br/><a href="#setActive">setActive</a></div></div>
+  <div className="row"><div className="col col--6"><a href="#count">count</a><br/><a href="#controller">controller</a><br/><a href="#activeIndex">activeIndex</a><br/><a href="#activePanel">activePanel</a><br/><a href="#animating">animating</a><br/><a href="#holding">holding</a></div><div className="col col--6"><a href="#moveToPosition">moveToPosition</a><br/><a href="#init">init</a><br/><a href="#destroy">destroy</a><br/><a href="#enable">enable</a><br/><a href="#disable">disable</a><br/><a href="#updatePosition">updatePosition</a><br/><a href="#updateInput">updateInput</a><br/><a href="#resetActive">resetActive</a><br/><a href="#moveToPanel">moveToPanel</a><br/><a href="#setActive">setActive</a></div></div>
 </div>
 
 ## Constructor
 ```ts
-new FreeControl()
+new SnapControl()
 ```
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-||Partial&lt;[FreeControlOptions](FreeControlOptions)&gt;|✔️|{}||
+||Partial&lt;[SnapControlOptions](SnapControlOptions)&gt;|✔️|{}||
 
 ## Properties
 
-### stopAtEdge {#stopAtEdge}
+### count {#count}
 
 <div className="bulma-tags">
 
 </div>
 
-Make scroll animation to stop at the start/end of the scroll area, not going out the bounce area
+입력 중단 이후 통과하여 이동할 수 있는 패널의 최대 갯수
 
-**Type**: boolean
+**Type**: number
 
-**Default**: true
+**Default**: Infinity
 
 ### controller {#controller}
 
@@ -41,7 +41,7 @@ Make scroll animation to stop at the start/end of the scroll area, not going out
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-A controller that handles the [@egjs/axes](https://naver#github#io/egjs-axes/) events
+[@egjs/axes](https://naver#github#io/egjs-axes/)의 이벤트를 처리하는 컨트롤러 컴포넌트
 
 **Type**: [AxesController](AxesController)
 
@@ -52,7 +52,7 @@ A controller that handles the [@egjs/axes](https://naver#github#io/egjs-axes/) e
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-Index number of the [currentPanel](Flicking#currentPanel)
+[currentPanel](Flicking#currentPanel)의 인덱스 번호
 
 **Type**: number
 
@@ -65,7 +65,7 @@ Index number of the [currentPanel](Flicking#currentPanel)
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-An active panel
+현재 선택된 패널
 
 **Type**: [Panel](Panel) \| null
 
@@ -76,7 +76,7 @@ An active panel
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-Whether Flicking's animating
+현재 애니메이션 동작 여부
 
 **Type**: boolean
 
@@ -87,57 +87,39 @@ Whether Flicking's animating
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-Whether user is clicking or touching
+현재 사용자가 클릭/터치중인지 여부
 
 **Type**: boolean
 
 ## Methods
 
-### updatePosition {#updatePosition}
-
-<div className="bulma-tags">
-
-</div>
-
-Update position after resizing
-
-**Returns**: Promise&lt;void&gt;
-
-|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
-|:---:|:---:|:---:|:---:|:---:|
-|progressInPanel|number|||Previous camera's progress in active panel before resize|
-
-**Throws**: [FlickingError](FlickingError)
-
-[NOT_ATTACHED_TO_FLICKING](ERROR_CODE) When [init](Camera#init) is not called before
-
 ### moveToPosition {#moveToPosition}
 
 <div className="bulma-tags">
-  <span className="bulma-tag is-success">async</span>
+
 </div>
 
-Move [Camera](Camera) to the given position
+[Camera](Camera)를 주어진 좌표로 이동합니다
 
 **Returns**: Promise&lt;void&gt;
-- A Promise which will be resolved after reaching the target position
+- 해당 좌표 도달시에 resolve되는 Promise
 
 **Emits**: [Flicking#event:moveStart](Flicking#event-moveStart), [Flicking#event:move](Flicking#event-move), [Flicking#event:moveEnd](Flicking#event-moveEnd), [Flicking#event:willChange](Flicking#event-willChange), [Flicking#event:changed](Flicking#event-changed), [Flicking#event:willRestore](Flicking#event-willRestore), [Flicking#event:restored](Flicking#event-restored), [Flicking#event:needPanel](Flicking#event-needPanel), [Flicking#event:visibleChange](Flicking#event-visibleChange), [Flicking#event:reachEdge](Flicking#event-reachEdge)
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|position|number|||The target position to move|
-|duration|number|||Duration of the panel movement animation (unit: ms).|
-|axesEvent|object|✔️||[release](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-release) event of [Axes](https://naver#github#io/egjs-axes/)|
+|position|number|||이동할 좌표|
+|duration|number|||패널 이동 애니메이션 진행 시간 (단위: ms)|
+|axesEvent|object|✔️||[Axes](https://naver#github#io/egjs-axes/)의 [release](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-release) 이벤트|
 
 **Throws**: [FlickingError](FlickingError)
 
 |code|condition|
 |---|---|
-|[POSITION_NOT_REACHABLE](ERROR_CODE)|When the given panel is already removed or not in the Camera's [range](Camera#range)|
-|[NOT_ATTACHED_TO_FLICKING](ERROR_CODE)|When [init](Control#init) is not called before|
-|[ANIMATION_INTERRUPTED](ERROR_CODE)|When the animation is interrupted by user input|
-|[STOP_CALLED_BY_USER](ERROR_CODE)|When the animation is interrupted by user input|
+|[POSITION_NOT_REACHABLE](ERROR_CODE)|주어진 패널이 제거되었거나, Camera의 [range](Camera#range) 밖에 있을 경우|
+|[NOT_ATTACHED_TO_FLICKING](ERROR_CODE)|[init](Control#init)이 이전에 호출되지 않은 경우|
+|[ANIMATION_INTERRUPTED](ERROR_CODE)|사용자 입력에 의해 애니메이션이 중단된 경우|
+|[STOP_CALLED_BY_USER](ERROR_CODE)|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|
 
 ### init {#init}
 
@@ -145,13 +127,13 @@ Move [Camera](Camera) to the given position
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-Initialize Control
+Control을 초기화합니다
 
 **Returns**: this
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|flicking|[Flicking](Flicking)|||An instance of [Flicking](Flicking)|
+|flicking|[Flicking](Flicking)|||Flicking의 인스턴스|
 
 ### destroy {#destroy}
 
@@ -159,7 +141,7 @@ Initialize Control
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-Destroy Control and return to initial state
+Control을 초기 상태로 되돌립니다
 
 **Returns**: void
 
@@ -169,7 +151,7 @@ Destroy Control and return to initial state
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-Enable input from the user (mouse/touch)
+사용자의 입력(마우스/터치)를 활성화합니다
 
 **Returns**: this
 
@@ -179,9 +161,27 @@ Enable input from the user (mouse/touch)
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-Disable input from the user (mouse/touch)
+사용자의 입력(마우스/터치)를 막습니다
 
 **Returns**: this
+
+### updatePosition {#updatePosition}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-danger">inherited</span>
+</div>
+
+resize 이후에 position을 업데이트합니다
+
+**Returns**: Promise&lt;void&gt;
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|progressInPanel|number|||Resize 이전 현재 선택된 패널 내에서의 카메라 progress 값|
+
+**Throws**: [FlickingError](FlickingError)
+
+[NOT_ATTACHED_TO_FLICKING](ERROR_CODE) [init](Camera#init)이 이전에 호출되지 않은 경우
 
 ### updateInput {#updateInput}
 
@@ -189,7 +189,7 @@ Disable input from the user (mouse/touch)
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-Update [controller](Control#controller)'s state
+[controller](Control#controller)의 내부 상태를 갱신합니다
 
 **Returns**: this
 
@@ -199,7 +199,7 @@ Update [controller](Control#controller)'s state
   <span className="bulma-tag is-danger">inherited</span>
 </div>
 
-Reset [activePanel](Control#activePanel) to `null`
+[activePanel](Control#activePanel)을 `null`로 초기화합니다
 
 **Returns**: this
 
@@ -210,29 +210,29 @@ Reset [activePanel](Control#activePanel) to `null`
   <span className="bulma-tag is-success">async</span>
 </div>
 
-Move [Camera](Camera) to the given panel
+[Camera](Camera)를 해당 패널 위로 이동합니다
 
 **Returns**: Promise&lt;void&gt;
-- A Promise which will be resolved after reaching the target panel
+- 해당 패널 도달시에 resolve되는 Promise
 
 **Emits**: [Flicking#event:moveStart](Flicking#event-moveStart), [Flicking#event:move](Flicking#event-move), [Flicking#event:moveEnd](Flicking#event-moveEnd), [Flicking#event:willChange](Flicking#event-willChange), [Flicking#event:changed](Flicking#event-changed), [Flicking#event:willRestore](Flicking#event-willRestore), [Flicking#event:restored](Flicking#event-restored), [Flicking#event:needPanel](Flicking#event-needPanel), [Flicking#event:visibleChange](Flicking#event-visibleChange), [Flicking#event:reachEdge](Flicking#event-reachEdge)
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|panel|[Panel](Panel)|||The target panel to move|
-|options|object|||An options object|
-|duration|number|||Duration of the animation (unit: ms)|
-|axesEvent|object|✔️||[release](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-release) event of [Axes](https://naver#github#io/egjs-axes/)|
-|direction|[DIRECTION](DIRECTION)|✔️|DIRECTION.NONE|Direction to move, only available in the [circular](Flicking#circular) mode|
+|panel|[Panel](Panel)|||이동할 패널|
+|options|object|||옵션 오브젝트|
+|duration|number|||애니메이션 진행 시간 (단위: ms)|
+|axesEvent|object|✔️||[Axes](https://naver#github#io/egjs-axes/)의 [release](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#event-release) 이벤트|
+|direction|[DIRECTION](DIRECTION)|✔️|DIRECTION.NONE|이동할 방향. [circular](Flicking#circular) 옵션 활성화시에만 사용 가능합니다|
 
 **Throws**: [FlickingError](FlickingError)
 
 |code|condition|
 |---|---|
-|[POSITION_NOT_REACHABLE](ERROR_CODE)|When the given panel is already removed or not in the Camera's [range](Camera#range)|
-|[NOT_ATTACHED_TO_FLICKING](ERROR_CODE)|When [init](Control#init) is not called before|
-|[ANIMATION_INTERRUPTED](ERROR_CODE)|When the animation is interrupted by user input|
-|[STOP_CALLED_BY_USER](ERROR_CODE)|When the animation is interrupted by user input|
+|[POSITION_NOT_REACHABLE](ERROR_CODE)|주어진 패널이 제거되었거나, Camera의 [range](Camera#range) 밖에 있을 경우|
+|[NOT_ATTACHED_TO_FLICKING](ERROR_CODE)|[init](Control#init)이 이전에 호출되지 않은 경우|
+|[ANIMATION_INTERRUPTED](ERROR_CODE)|사용자 입력에 의해 애니메이션이 중단된 경우|
+|[STOP_CALLED_BY_USER](ERROR_CODE)|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|
 
 ### setActive {#setActive}
 

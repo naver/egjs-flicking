@@ -3,22 +3,22 @@ custom_edit_url: null
 ---
 
 ```ts
-class SnapControl extends Control
+class StrictControl extends Control
 ```
-입력을 중단한 시점의 가속도에 영향받아 도달할 패널을 계산하는 이동 방식을 사용하는 [Control](Control)
+한번에 최대로 이동할 패널의 개수를 선택 가능한 [Control](Control)
 
 <div className="container">
   <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
-  <div className="row"><div className="col col--6"><a href="#count">count</a><br/><a href="#controller">controller</a><br/><a href="#activeIndex">activeIndex</a><br/><a href="#activePanel">activePanel</a><br/><a href="#animating">animating</a><br/><a href="#holding">holding</a></div><div className="col col--6"><a href="#moveToPosition">moveToPosition</a><br/><a href="#init">init</a><br/><a href="#destroy">destroy</a><br/><a href="#enable">enable</a><br/><a href="#disable">disable</a><br/><a href="#updatePosition">updatePosition</a><br/><a href="#updateInput">updateInput</a><br/><a href="#resetActive">resetActive</a><br/><a href="#moveToPanel">moveToPanel</a><br/><a href="#setActive">setActive</a></div></div>
+  <div className="row"><div className="col col--6"><a href="#count">count</a><br/><a href="#controller">controller</a><br/><a href="#activeIndex">activeIndex</a><br/><a href="#activePanel">activePanel</a><br/><a href="#animating">animating</a><br/><a href="#holding">holding</a></div><div className="col col--6"><a href="#destroy">destroy</a><br/><a href="#updateInput">updateInput</a><br/><a href="#moveToPosition">moveToPosition</a><br/><a href="#init">init</a><br/><a href="#enable">enable</a><br/><a href="#disable">disable</a><br/><a href="#updatePosition">updatePosition</a><br/><a href="#resetActive">resetActive</a><br/><a href="#moveToPanel">moveToPanel</a><br/><a href="#setActive">setActive</a></div></div>
 </div>
 
 ## Constructor
 ```ts
-new SnapControl()
+new StrictControl()
 ```
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-||Partial&lt;[SnapControlOptions](SnapControlOptions)&gt;|✔️|{}||
+||Partial&lt;[StrictControlOptions](StrictControlOptions)&gt;|✔️|{}||
 
 ## Properties
 
@@ -28,11 +28,11 @@ new SnapControl()
 
 </div>
 
-입력 중단 이후 통과하여 이동할 수 있는 패널의 최대 갯수
+최대로 움직일 수 있는 패널의 개수
 
 **Type**: number
 
-**Default**: Infinity
+**Default**: 1
 
 ### controller {#controller}
 
@@ -93,10 +93,30 @@ new SnapControl()
 
 ## Methods
 
+### destroy {#destroy}
+
+<div className="bulma-tags">
+
+</div>
+
+Control을 초기 상태로 되돌립니다
+
+**Returns**: void
+
+### updateInput {#updateInput}
+
+<div className="bulma-tags">
+
+</div>
+
+[controller](Control#controller)의 내부 상태를 갱신합니다
+
+**Returns**: this
+
 ### moveToPosition {#moveToPosition}
 
 <div className="bulma-tags">
-  <span className="bulma-tag is-success">async</span>
+
 </div>
 
 [Camera](Camera)를 주어진 좌표로 이동합니다
@@ -135,16 +155,6 @@ Control을 초기화합니다
 |:---:|:---:|:---:|:---:|:---:|
 |flicking|[Flicking](Flicking)|||Flicking의 인스턴스|
 
-### destroy {#destroy}
-
-<div className="bulma-tags">
-  <span className="bulma-tag is-danger">inherited</span>
-</div>
-
-Control을 초기 상태로 되돌립니다
-
-**Returns**: void
-
 ### enable {#enable}
 
 <div className="bulma-tags">
@@ -182,16 +192,6 @@ resize 이후에 position을 업데이트합니다
 **Throws**: [FlickingError](FlickingError)
 
 [NOT_ATTACHED_TO_FLICKING](ERROR_CODE) [init](Camera#init)이 이전에 호출되지 않은 경우
-
-### updateInput {#updateInput}
-
-<div className="bulma-tags">
-  <span className="bulma-tag is-danger">inherited</span>
-</div>
-
-[controller](Control#controller)의 내부 상태를 갱신합니다
-
-**Returns**: this
 
 ### resetActive {#resetActive}
 

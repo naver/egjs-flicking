@@ -3,36 +3,36 @@ custom_edit_url: null
 ---
 
 ```ts
-class SnapControl extends Control
+class FreeControl extends Control
 ```
-A [Control](Control) that uses a release momentum to choose destination panel
+A [Control](Control) that can be scrolled freely without alignment
 
 <div className="container">
   <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
-  <div className="row"><div className="col col--6"><a href="#count">count</a><br/><a href="#controller">controller</a><br/><a href="#activeIndex">activeIndex</a><br/><a href="#activePanel">activePanel</a><br/><a href="#animating">animating</a><br/><a href="#holding">holding</a></div><div className="col col--6"><a href="#moveToPosition">moveToPosition</a><br/><a href="#init">init</a><br/><a href="#destroy">destroy</a><br/><a href="#enable">enable</a><br/><a href="#disable">disable</a><br/><a href="#updatePosition">updatePosition</a><br/><a href="#updateInput">updateInput</a><br/><a href="#resetActive">resetActive</a><br/><a href="#moveToPanel">moveToPanel</a><br/><a href="#setActive">setActive</a></div></div>
+  <div className="row"><div className="col col--6"><a href="#stopAtEdge">stopAtEdge</a><br/><a href="#controller">controller</a><br/><a href="#activeIndex">activeIndex</a><br/><a href="#activePanel">activePanel</a><br/><a href="#animating">animating</a><br/><a href="#holding">holding</a></div><div className="col col--6"><a href="#updatePosition">updatePosition</a><br/><a href="#moveToPosition">moveToPosition</a><br/><a href="#init">init</a><br/><a href="#destroy">destroy</a><br/><a href="#enable">enable</a><br/><a href="#disable">disable</a><br/><a href="#updateInput">updateInput</a><br/><a href="#resetActive">resetActive</a><br/><a href="#moveToPanel">moveToPanel</a><br/><a href="#setActive">setActive</a></div></div>
 </div>
 
 ## Constructor
 ```ts
-new SnapControl()
+new FreeControl()
 ```
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-||Partial&lt;[SnapControlOptions](SnapControlOptions)&gt;|✔️|{}||
+||Partial&lt;[FreeControlOptions](FreeControlOptions)&gt;|✔️|{}||
 
 ## Properties
 
-### count {#count}
+### stopAtEdge {#stopAtEdge}
 
 <div className="bulma-tags">
 
 </div>
 
-Maximum number of panels can go after release
+Make scroll animation to stop at the start/end of the scroll area, not going out the bounce area
 
-**Type**: number
+**Type**: boolean
 
-**Default**: Infinity
+**Default**: true
 
 ### controller {#controller}
 
@@ -93,10 +93,28 @@ Whether user is clicking or touching
 
 ## Methods
 
+### updatePosition {#updatePosition}
+
+<div className="bulma-tags">
+
+</div>
+
+Update position after resizing
+
+**Returns**: Promise&lt;void&gt;
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|progressInPanel|number|||Previous camera's progress in active panel before resize|
+
+**Throws**: [FlickingError](FlickingError)
+
+[NOT_ATTACHED_TO_FLICKING](ERROR_CODE) When [init](Camera#init) is not called before
+
 ### moveToPosition {#moveToPosition}
 
 <div className="bulma-tags">
-  <span className="bulma-tag is-success">async</span>
+
 </div>
 
 Move [Camera](Camera) to the given position
@@ -164,24 +182,6 @@ Enable input from the user (mouse/touch)
 Disable input from the user (mouse/touch)
 
 **Returns**: this
-
-### updatePosition {#updatePosition}
-
-<div className="bulma-tags">
-  <span className="bulma-tag is-danger">inherited</span>
-</div>
-
-Update position after resizing
-
-**Returns**: Promise&lt;void&gt;
-
-|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
-|:---:|:---:|:---:|:---:|:---:|
-|progressInPanel|number|||Previous camera's progress in active panel before resize|
-
-**Throws**: [FlickingError](FlickingError)
-
-[NOT_ATTACHED_TO_FLICKING](ERROR_CODE) When [init](Camera#init) is not called before
 
 ### updateInput {#updateInput}
 
