@@ -219,6 +219,10 @@ class StrictControl extends Control {
     const shouldBounceToFirst = position <= cameraRange.min && isBetween(firstAnchor.panel.index, indexRange.min, indexRange.max);
     const shouldBounceToLast = position >= cameraRange.max && isBetween(lastAnchor.panel.index, indexRange.min, indexRange.max);
 
+    const isAdjacent = adjacentAnchor && (indexRange.min <= indexRange.max
+      ? isBetween(adjacentAnchor.index, indexRange.min, indexRange.max)
+      : adjacentAnchor.index >= indexRange.min || adjacentAnchor.index <= indexRange.max);
+
     if (shouldBounceToFirst || shouldBounceToLast) {
       // In bounce area
       const targetAnchor = position < cameraRange.min ? firstAnchor : lastAnchor;
@@ -229,10 +233,10 @@ class StrictControl extends Control {
       // Move to anchor at position
       targetPanel = anchorAtPosition.panel;
       targetPos = anchorAtPosition.position;
-    } else if (isOverThreshold && adjacentAnchor && isBetween(adjacentAnchor.index, indexRange.min, indexRange.max)) {
+    } else if (isOverThreshold && isAdjacent) {
       // Move to adjacent anchor
-      targetPanel = adjacentAnchor.panel;
-      targetPos = adjacentAnchor.position;
+      targetPanel = adjacentAnchor!.panel;
+      targetPos = adjacentAnchor!.position;
     } else {
       // Restore to active panel
       targetPos = camera.clampToReachablePosition(activePanel.position);
