@@ -1,5 +1,4 @@
 import CircularCameraMode from "~/camera/mode/CircularCameraMode";
-import LinearCameraMode from "~/camera/mode/LinearCameraMode";
 
 import { createFlicking, createPanel } from "../../helper/test-util";
 import El from "../../helper/El";
@@ -132,6 +131,26 @@ describe("CircularCamera", () => {
           min: panels[0].range.min,
           max: panels[2].range.max
         });
+      });
+    });
+
+    describe("findNearestAnchor", () => {
+      it("should return the first anchor when position is 0", async () => {
+        const { camera } = await createFlicking(El.DEFAULT_HORIZONTAL, { circular: true });
+        const anchors = camera.anchorPoints;
+
+        expect(camera.mode).to.be.an.instanceOf(CircularCameraMode);
+        expect(camera.mode.checkAvailability()).to.be.true;
+        expect(camera.mode.findNearestAnchor(0)).to.equal(anchors[0]);
+      });
+
+      it("should return the last anchor when position is below 0", async () => {
+        const { camera } = await createFlicking(El.DEFAULT_HORIZONTAL, { circular: true });
+        const anchors = camera.anchorPoints;
+
+        expect(camera.mode).to.be.an.instanceOf(CircularCameraMode);
+        expect(camera.mode.checkAvailability()).to.be.true;
+        expect(camera.mode.findNearestAnchor(-500)).to.equal(anchors[2]);
       });
     });
   });
