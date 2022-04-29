@@ -58,6 +58,7 @@ export interface FlickingOptions {
   panelsPerView: number;
   noPanelStyleOverride: boolean;
   resizeOnContentsReady: boolean;
+  nested: boolean;
 
   // EVENT
   needPanelThreshold: number;
@@ -136,6 +137,7 @@ class Flicking extends Component<FlickingEvents> {
   private _noPanelStyleOverride: FlickingOptions["noPanelStyleOverride"];
   private _resizeOnContentsReady: FlickingOptions["resizeOnContentsReady"];
   private _virtual: FlickingOptions["virtual"];
+  private _nested: FlickingOptions["nested"];
 
   private _needPanelThreshold: FlickingOptions["needPanelThreshold"];
   private _preventEventsBeforeInit: FlickingOptions["preventEventsBeforeInit"];
@@ -413,6 +415,15 @@ class Flicking extends Component<FlickingEvents> {
    * @default false
    */
   public get resizeOnContentsReady() { return this._resizeOnContentsReady; }
+  /**
+   * If you enable this option on child Flicking when the Flicking is placed inside the Flicking, the parent Flicking will move in the same direction after the child Flicking reaches the first/last panel.
+   * If the parent Flicking and child Flicking have different horizontal option, you do not need to set this option.
+   * @ko Flicking 내부에 Flicking이 배치될 때 하위 Flicking에서 이 옵션을 활성화하면 하위 Flicking이 첫/마지막 패널에 도달한 뒤부터 같은 방향으로 상위 Flicking이 움직입니다.
+   * 만약 상위 Flicking과 하위 Flicking이 서로 다른 horizontal 옵션을 가지고 있다면 이 옵션을 설정할 필요가 없습니다.
+   * @type {boolean}
+   * @default false
+   */
+  public get nested() { return this._nested; }
   // EVENTS
   /**
    * A Threshold from viewport edge before triggering `needPanel` event
@@ -677,6 +688,7 @@ class Flicking extends Component<FlickingEvents> {
   public set panelsPerView(val: FlickingOptions["panelsPerView"]) { this._panelsPerView = val; }
   public set noPanelStyleOverride(val: FlickingOptions["noPanelStyleOverride"]) { this._noPanelStyleOverride = val; }
   public set resizeOnContentsReady(val: FlickingOptions["resizeOnContentsReady"]) { this._resizeOnContentsReady = val; }
+  public set nested(val: FlickingOptions["nested"]) { this._nested = val; }
   // EVENTS
   public set needPanelThreshold(val: FlickingOptions["needPanelThreshold"]) { this._needPanelThreshold = val; }
   public set preventEventsBeforeInit(val: FlickingOptions["preventEventsBeforeInit"]) { this._preventEventsBeforeInit = val; }
@@ -768,6 +780,7 @@ class Flicking extends Component<FlickingEvents> {
     panelsPerView = -1,
     noPanelStyleOverride = false,
     resizeOnContentsReady = false,
+    nested = false,
     needPanelThreshold = 0,
     preventEventsBeforeInit = true,
     deceleration = 0.0075,
@@ -808,6 +821,7 @@ class Flicking extends Component<FlickingEvents> {
     this._panelsPerView = panelsPerView;
     this._noPanelStyleOverride = noPanelStyleOverride;
     this._resizeOnContentsReady = resizeOnContentsReady;
+    this._nested = nested;
     this._virtual = virtual;
     this._needPanelThreshold = needPanelThreshold;
     this._preventEventsBeforeInit = preventEventsBeforeInit;
