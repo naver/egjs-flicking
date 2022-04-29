@@ -64,6 +64,33 @@ class CircularCameraMode extends CameraMode {
     }));
   }
 
+  public findNearestAnchor(position: number): AnchorPoint | null {
+    const camera = this._flicking.camera;
+    const anchors = camera.anchorPoints;
+
+    if (anchors.length <= 0) return null;
+
+    const camRange = camera.range;
+    let minDist = Infinity;
+    let minDistIndex = -1;
+    for (let anchorIdx = 0; anchorIdx < anchors.length; anchorIdx++) {
+      const anchor = anchors[anchorIdx];
+      const dist = Math.min(
+        Math.abs(anchor.position - position),
+        Math.abs(anchor.position - camRange.min + camRange.max - position),
+        Math.abs(position - camRange.min + camRange.max - anchor.position)
+      );
+
+      if (dist < minDist) {
+        minDist = dist;
+        minDistIndex = anchorIdx;
+      }
+    }
+
+    // Return last anchor
+    return anchors[minDistIndex];
+  }
+
   public findAnchorIncludePosition(position: number): AnchorPoint | null {
     const camera = this._flicking.camera;
     const range = camera.range;

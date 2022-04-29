@@ -383,25 +383,7 @@ class Camera {
    * @return {AnchorPoint | null} The {@link AnchorPoint} nearest to the given position<ko>해당 좌표에 가장 인접한 {@link AnchorPoint}</ko>
    */
   public findNearestAnchor(position: number): AnchorPoint | null {
-    const anchors = this._anchors;
-
-    if (anchors.length <= 0) return null;
-
-    let prevDist = Infinity;
-    for (let anchorIdx = 0; anchorIdx < anchors.length; anchorIdx++) {
-      const anchor = anchors[anchorIdx];
-      const dist = Math.abs(anchor.position - position);
-
-      if (dist > prevDist) {
-        // Return previous anchor
-        return anchors[anchorIdx - 1];
-      }
-
-      prevDist = dist;
-    }
-
-    // Return last anchor
-    return anchors[anchors.length - 1];
+    return this._mode.findNearestAnchor(position);
   }
 
   /**

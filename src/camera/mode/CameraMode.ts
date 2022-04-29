@@ -44,6 +44,28 @@ abstract class CameraMode {
     }, null);
   }
 
+  public findNearestAnchor(position: number): AnchorPoint | null {
+    const anchors = this._flicking.camera.anchorPoints;
+
+    if (anchors.length <= 0) return null;
+
+    let prevDist = Infinity;
+    for (let anchorIdx = 0; anchorIdx < anchors.length; anchorIdx++) {
+      const anchor = anchors[anchorIdx];
+      const dist = Math.abs(anchor.position - position);
+
+      if (dist > prevDist) {
+        // Return previous anchor
+        return anchors[anchorIdx - 1];
+      }
+
+      prevDist = dist;
+    }
+
+    // Return last anchor
+    return anchors[anchors.length - 1];
+  }
+
   public clampToReachablePosition(position: number): number {
     const camera = this._flicking.camera;
     const range = camera.range;
