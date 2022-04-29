@@ -163,3 +163,8 @@ article a {
   width: 100%;
   margin: 0;
 }
+
+.nested .flicking-panel {
+  width: auto;
+  height: 100px;
+}
