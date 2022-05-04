@@ -168,3 +168,21 @@ article a {
   width: auto;
   height: 100px;
 }
+
+.nested-wide .flicking-panel {
+  width: 100%;
+  height: 100%;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.nested-wide .nested-wide {
+  padding: 0;
+}
+
+.nested-wide .vertical .flicking-panel {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 0px;
+  margin-left: 0px;
+}
