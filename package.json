@@ -33,6 +33,7 @@
 		"demo:prebuild-version": "cpx 'dist/**/*' docs/build/release/$npm_package_version/dist --clean",
 		"demo:prebuild-latest": "cpx 'dist/**/*' docs/build/release/latest/dist --clean",
 		"demo:deploy": "npm run docs:release && npm run build && npm run demo:prebuild-version && npm run demo:prebuild-latest && gh-pages -d docs/build/ --add --remote upstream",
+		"demo:deploy-origin": "npm run docs:release && npm run build && npm run demo:prebuild-version && npm run demo:prebuild-latest && gh-pages -d docs/build/ --add --remote origin",
 		"release": "release-helper upstream",
 		"changelog": "node ./config/changelog.js",
 		"coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
@@ -135,7 +136,7 @@
 		"typescript-transform-paths": "^2.2.3"
 	},
 	"dependencies": {
-		"@egjs/axes": "^3.1.1",
+		"@egjs/axes": "^3.1.2",
 		"@egjs/component": "^3.0.1",
 		"@egjs/imready": "^1.1.3",
 		"@egjs/list-differ": "^1.0.0"
