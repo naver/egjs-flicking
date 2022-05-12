@@ -7,7 +7,7 @@
   <a href="https://www.npmjs.com/package/@egjs/flicking" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/flicking.svg?style=flat-square&color=007acc&label=version&logo=NPM" alt="version" /></a>
   <a href="https://www.npmjs.com/package/@egjs/flicking" target="_blank"><img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@egjs/flicking.svg?style=flat-square&label=%F0%9F%92%BE%20gzipped&color=007acc" /></a>
   <a href="https://coveralls.io/github/naver/egjs-flicking?branch=master&style=flat-square" target="_blank"><img alt="Coveralls github" src="https://img.shields.io/coveralls/github/naver/egjs-flicking.svg?style=flat-square&label=%E2%9C%85%20coverage" /></a>
-  <a href="https://deepscan.io/dashboard#view=project&tid=3998&pid=5802&bid=46086"><img src="https://deepscan.io/api/teams/3998/projects/5802/branches/46086/badge/grade.svg" alt="DeepScan grade" /></a>
+  <a href="https://deepscan.io/dashboard#view=project&tid=3998&pid=5802&bid=46086"><img src="https://flat.badgen.net/deepscan/grade/team/3998/project/5802/branch/46086" alt="DeepScan grade" /></a>
 </p>
 <p align="center" style="line-height: 2;">
   <a href="https://github.com/naver/egjs-flicking/graphs/commit-activity">
