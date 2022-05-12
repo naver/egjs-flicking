@@ -22,6 +22,7 @@ module.exports = {
     "^.+\\.tsx?$": "ts-jest"
   },
   globals: {
+    "ontouchstart": null,
     "ts-jest": {
       tsconfig: "<rootDir>/tsconfig.spec.json"
     }
