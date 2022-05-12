@@ -254,6 +254,39 @@ describe("Flicking", () => {
       });
     });
 
+    describe("nested", () => {
+      it("is false by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_VERTICAL);
+
+        expect(flicking.nested).to.be.false;
+      });
+
+      [true, false].forEach(nested => {
+        it("should check index of two flickings when nested option is " + nested, async () => {
+          const nestedPanel = El.panel().setWidth("100%").setHeight(300).add(
+            El.camera().add(
+              El.panel().setWidth("100%").setHeight(300),
+              El.panel().setWidth("100%").setHeight(300),
+              El.panel().setWidth("100%").setHeight(300),
+            )
+          );
+          const parentFlicking = await createFlicking(El.viewport("500px", "100%").add(
+            El.camera().add(
+              El.panel().setWidth("100%").setHeight(300),
+              nestedPanel,
+              El.panel().setWidth("100%").setHeight(300),
+            ),
+          ));
+          const childFlicking = new Flicking(nestedPanel.el, { nested });
+
+          await simulate(nestedPanel.el, { deltaX: -2500 });
+
+          expect(childFlicking.index).equals(2);
+          expect(parentFlicking.index).equals(nested ? 2 : 0);
+        });
+      });
+    });
+
     describe("needPanelThreshold", () => {
       it("is 0 by default", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);

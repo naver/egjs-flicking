@@ -86,7 +86,7 @@ class AxesController {
    * @type {boolean}
    * @readonly
    */
-  public get enabled() { return this._panInput?.isEnable() ?? false; }
+  public get enabled() { return this._panInput?.isEnabled() ?? false; }
   /**
    * Current position value in {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html Axes} instance
    * @ko {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html Axes} 인스턴스 내부의 현재 좌표 값
@@ -134,6 +134,7 @@ class AxesController {
     }, {
       deceleration: flicking.deceleration,
       interruptable: flicking.interruptable,
+      nested: flicking.nested,
       easing: flicking.easing
     });
     this._panInput = new PanInput(flicking.viewport.element, {
@@ -220,7 +221,7 @@ class AxesController {
     axis.range = [controlParams.range.min, controlParams.range.max];
     axis.bounce = parseBounce(flicking.bounce, camera.size);
 
-    axes.axm.set({ [AXES.POSITION_KEY]: controlParams.position });
+    axes.axisManager.set({ [AXES.POSITION_KEY]: controlParams.position });
 
     return this;
   }
@@ -331,7 +332,7 @@ class AxesController {
         ? circulatePosition(position, camera.range.min, camera.range.max)
         : position;
 
-      axes.axm.set({ [AXES.POSITION_KEY]: newPos });
+      axes.axisManager.set({ [AXES.POSITION_KEY]: newPos });
 
       return Promise.resolve();
     } else {

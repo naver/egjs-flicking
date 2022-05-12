@@ -69,29 +69,21 @@ const loop = (ctx: {
   const isFirst = (loopCnt === 0);
   const isLast = (loopCnt === loops - 1);
 
-  const eventProps: Partial<MouseEvent> = {
-    x,
-    y,
+  const touches: Array<Partial<Touch>> = [{
     clientX: x,
     clientY: y,
-    offsetX: x,
-    offsetY: y,
     pageX: x,
     pageY: y,
     screenX: x,
-    screenY: y,
-    button: 0,
-    buttons: 1,
-    which: 1,
-    isTrusted: true
-  };
+    screenY: y
+  }];
 
   if (isFirst) {
-    fireEvent.mouseDown(element, eventProps);
+    fireEvent.touchStart(element, { touches });
   } else if (isLast) {
-    fireEvent.mouseUp(element, eventProps);
+    fireEvent.touchEnd(element);
   } else {
-    fireEvent.mouseMove(element, eventProps);
+    fireEvent.touchMove(element, { touches });
   }
 
   if (!isLast) {
