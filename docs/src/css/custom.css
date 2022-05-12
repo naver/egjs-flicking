@@ -171,6 +171,7 @@ article a {
 
 .nested-wide .flicking-panel {
   width: 75%;
+  min-width: 110px;
   height: 140px;
   margin-top: 0;
   margin-bottom: 0;
