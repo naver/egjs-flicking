@@ -18,4 +18,18 @@ export default buildHelper([
     format: "cjs",
     output: "./dist/flicking.cjs.js"
   },
+  {
+    ...defaultOptions,
+    name: "ReactFlicking",
+    input: "./src/react-flicking/index.umd.ts",
+    format: "umd",
+    output: "./dist/flicking.umd.js",
+    external: {
+      "react": "React",
+      "react-dom": "ReactDOM",
+      "@egjs/flicking": "Flicking",
+      "@egjs/component": "Component",
+      "@egjs/list-differ": "eg.ListDiffer"
+    }
+  }
 ]);

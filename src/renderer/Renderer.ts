@@ -384,7 +384,7 @@ abstract class Renderer {
 
     if (!resizeOnContentsReady || flicking.virtualEnabled) return;
 
-    const hasContents = (panel: Panel) => !!panel.element.querySelector("img, video");
+    const hasContents = (panel: Panel) => panel.element && !!panel.element.querySelector("img, video");
     checkingPanels = checkingPanels.filter(panel => hasContents(panel));
 
     if (checkingPanels.length <= 0) return;
