@@ -1,6 +1,6 @@
 {
 	"name": "@egjs/flicking",
-	"version": "4.7.3",
+	"version": "4.7.3-snapshot",
 	"description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
 	"main": "dist/flicking.js",
 	"module": "dist/flicking.esm.js",
