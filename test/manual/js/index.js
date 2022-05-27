@@ -1,5 +1,11 @@
 const flicking = new Flicking("#flicking", {
-  moveType: "strict",
   circular: true,
-  align: "prev"
+  adaptive: true,
+  moveType: "strict"
 });
+
+// window.addEventListener("touchstart", () => {
+//   window.addEventListener("touchmove", evt => {
+//     console.log("touchmove", evt.cancelable);
+//   });
+// });
