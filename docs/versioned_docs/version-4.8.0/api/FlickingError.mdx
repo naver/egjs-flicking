@@ -1,0 +1,47 @@
+---
+custom_edit_url: null
+---
+
+```ts
+class FlickingError extends Error
+```
+
+<div>
+
+</div>
+
+Special type of known error that [Flicking](Flicking) throws.
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|code|number|Error code|
+|message|string|Error message|
+
+**See**:
+- [ERROR_CODE](Constants#ERROR_CODE)
+
+## constructor
+```ts
+new FlickingError(message, code)
+```
+
+<div>
+
+</div>
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|message|string|||Error message|
+|code|number|||Error code|
+
+```ts
+import Flicking, { FlickingError, ERROR_CODES } from "@egjs/flicking";
+try {
+  const flicking = new Flicking(".flicking-viewport")
+} catch (e) {
+  if (e instanceof FlickingError && e.code === ERROR_CODES.ELEMENT_NOT_FOUND) {
+    console.error("Element not found")
+  }
+}
+```
+
