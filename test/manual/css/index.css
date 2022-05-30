@@ -32,17 +32,24 @@ header {
 
 .flicking-viewport {
   transition: height 500ms;
+  background-color: #423789;
 }
 
 .flicking-panel {
   border: 10px solid transparent;
   box-sizing: border-box;
   /* margin-right: 10px; */
-  width: 33%;
+  width: 100%;
   max-width: 100%;
   height: 200px;
   background-color: #423789;
   color: white;
+}
+
+@media screen and (max-width: 1024px) {
+  .flicking-panel {
+    height: 400px;
+  }
 }
 
 .flicking-panel img {

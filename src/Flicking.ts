@@ -1275,6 +1275,8 @@ class Flicking extends Component<FlickingEvents> {
     camera.updateAlignPos();
     camera.updateRange();
     camera.updateAnchors();
+    camera.updateAdaptiveHeight();
+    camera.updateOffset();
     await renderer.render();
 
     if (control.animating) {
