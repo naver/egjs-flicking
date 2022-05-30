@@ -194,6 +194,7 @@ class StrictControl extends Control {
     const axesRange = this._controller.range;
     const indexRange = this._indexRange;
     const cameraRange = camera.range;
+    const state = this._controller.state;
 
     const clampedPosition = clamp(camera.clampToReachablePosition(position), axesRange[0], axesRange[1]);
     const anchorAtPosition = camera.findAnchorIncludePosition(clampedPosition);
@@ -203,8 +204,11 @@ class StrictControl extends Control {
     }
 
     const prevPos = activePanel.position;
+    const posDelta = flicking.animating
+      ? state.delta
+      : position - camera.position;
 
-    const isOverThreshold = Math.abs(position - prevPos) >= flicking.threshold;
+    const isOverThreshold = Math.abs(posDelta) >= flicking.threshold;
     const adjacentAnchor = (position > prevPos)
       ? camera.getNextAnchor(anchorAtPosition)
       : camera.getPrevAnchor(anchorAtPosition);
