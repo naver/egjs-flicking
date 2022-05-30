@@ -644,6 +644,37 @@ describe("Flicking", () => {
         expect(clickSpy.called).to.be.true;
       });
     });
+
+    describe("changeOnHold", () => {
+      it("should be false by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        expect(flicking.changeOnHold).to.be.false;
+      });
+
+      it("should trigger changed with the same index of willChange", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: "strict",
+          changeOnHold: true
+        });
+        const willChangeSpy = sinon.spy();
+        const changedSpy = sinon.spy();
+
+        flicking.on("willChange", willChangeSpy);
+        flicking.on("changed", changedSpy);
+
+        flicking.moveTo(1, 500);
+        tick(250);
+        await simulate(flicking.element, { deltaX: -5000 });
+
+        const willChangeIndex = willChangeSpy.firstCall.args[0].index;
+        const changedIndex = changedSpy.firstCall.args[0].index;
+
+        expect(willChangeSpy.callCount).to.equal(2);
+        expect(changedSpy.callCount).to.equal(2);
+        expect(willChangeIndex).to.equal(changedIndex);
+        expect(flicking.index).to.equal(2);
+      });
+    });
   });
 
   describe("Initial rendering", () => {

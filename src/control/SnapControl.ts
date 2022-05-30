@@ -89,7 +89,7 @@ class SnapControl extends Control {
     const camera = flicking.camera;
     const activeAnchor = camera.findActiveAnchor();
     const anchorAtCamera = camera.findNearestAnchor(camera.position);
-    const state = flicking.control.controller.state;
+    const state = this._controller.state;
 
     if (!activeAnchor || !anchorAtCamera) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE));

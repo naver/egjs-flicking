@@ -32,9 +32,15 @@ class AnimatingState extends State {
 
   public onHold(ctx: Parameters<State["onHold"]>[0]): void {
     const { flicking, axesEvent, transitTo } = ctx;
+    const targetPanel = this._targetPanel;
+    const control = flicking.control;
 
     this._delta = 0;
     flicking.control.updateInput();
+
+    if (flicking.changeOnHold && targetPanel) {
+      control.setActive(targetPanel, control.activePanel, axesEvent.isTrusted);
+    }
 
     const holdStartEvent = new ComponentEvent(EVENTS.HOLD_START, { axesEvent });
     flicking.trigger(holdStartEvent);

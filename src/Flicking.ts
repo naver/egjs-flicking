@@ -78,6 +78,7 @@ export interface FlickingOptions {
   iOSEdgeSwipeThreshold: number;
   preventClickOnDrag: boolean;
   disableOnInit: boolean;
+  changeOnHold: boolean;
 
   // PERFORMANCE
   renderOnlyVisible: boolean;
@@ -154,6 +155,7 @@ class Flicking extends Component<FlickingEvents> {
   private _iOSEdgeSwipeThreshold: FlickingOptions["iOSEdgeSwipeThreshold"];
   private _preventClickOnDrag: FlickingOptions["preventClickOnDrag"];
   private _disableOnInit: FlickingOptions["disableOnInit"];
+  private _changeOnHold: FlickingOptions["changeOnHold"];
 
   private _renderOnlyVisible: FlickingOptions["renderOnlyVisible"];
 
@@ -570,6 +572,15 @@ class Flicking extends Component<FlickingEvents> {
    * @default false
    */
   public get disableOnInit() { return this._disableOnInit; }
+  /**
+   * Change active panel index on mouse/touch hold while animating.
+   * `index` of the `willChange`/`willRestore` event will be used as new index.
+   * @ko 애니메이션 도중 마우스/터치 입력시 현재 활성화된 패널의 인덱스를 변경합니다.
+   * `willChange`/`willRestore` 이벤트의 `index`값이 새로운 인덱스로 사용될 것입니다.
+   * @type {boolean}
+   * @default false
+   */
+  public get changeOnHold() { return this._changeOnHold; }
   // PERFORMANCE
   /**
    * Whether to render visible panels only. This can dramatically increase performance when there're many panels
@@ -720,6 +731,7 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   public set disableOnInit(val: FlickingOptions["disableOnInit"]) { this._disableOnInit = val; }
+  public set changeOnHold(val: FlickingOptions["changeOnHold"]) { this._changeOnHold = val; }
   // PERFORMANCE
   public set renderOnlyVisible(val: FlickingOptions["renderOnlyVisible"]) { this._renderOnlyVisible = val; }
   // OTHERS
@@ -794,6 +806,7 @@ class Flicking extends Component<FlickingEvents> {
     iOSEdgeSwipeThreshold = 30,
     preventClickOnDrag = true,
     disableOnInit = false,
+    changeOnHold = false,
     renderOnlyVisible = false,
     virtual = null,
     autoInit = true,
@@ -836,6 +849,7 @@ class Flicking extends Component<FlickingEvents> {
     this._iOSEdgeSwipeThreshold = iOSEdgeSwipeThreshold;
     this._preventClickOnDrag = preventClickOnDrag;
     this._disableOnInit = disableOnInit;
+    this._changeOnHold = changeOnHold;
     this._renderOnlyVisible = renderOnlyVisible;
     this._autoInit = autoInit;
     this._autoResize = autoResize;

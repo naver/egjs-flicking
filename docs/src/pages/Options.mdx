@@ -1050,6 +1050,45 @@ Automatically call **[disableInput()](docs/api/Flicking#disableInput)** on initi
   </ColumnItem>
 </Columns>
 
+### changeOnHold
+Change active panel index on mouse/touch hold while animating.
+`index` of the `willChange`/`willRestore` event will be used as new index.
+This can prevent `willRestore` from being called on continuous swipe when using `circular: true`.
+It can also create more smooth swipe experience when using `moveType: "strict"`
+
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  changeOnHold: false,
+  circular: true,
+  moveType: "strict"
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <EventFlicking changeOnHold={false} circular={true} moveType="strict" events={["changed", "willChange", "restored", "willRestore"]}>
+      { Panels(5) }
+    </EventFlicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  changeOnHold: true,
+  circular: true,
+  moveType: "strict"
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <EventFlicking changeOnHold={true} circular={true} moveType="strict" events={["changed", "willChange", "restored", "willRestore"]}>
+      { Panels(5) }
+    </EventFlicking>
+  </ColumnItem>
+</Columns>
+
 ## Performance
 ### renderOnlyVisible
 Whether to render visible panels only. This can dramatically increase performance when there're many panels
