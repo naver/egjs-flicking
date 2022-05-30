@@ -1861,6 +1861,25 @@ describe("Flicking", () => {
       });
     });
 
+    describe("resize()", () => {
+      it("should update camera offset", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          adaptive: true,
+          circular: true
+        });
+        const offsetBefore = flicking.camera.offset;
+        const toggled = flicking.panels.map(panel => panel.toggled);
+
+        await flicking.resize();
+
+        const offsetAfter = flicking.camera.offset;
+        const toggledAfter = flicking.panels.map(panel => panel.toggled);
+
+        expect(toggled).not.deep.equals(toggledAfter);
+        expect(offsetBefore).not.equals(offsetAfter);
+      });
+    });
+
     describe("plugin-related methods", () => {
       class TestPlugin implements Plugin {
         public init = sinon.spy();

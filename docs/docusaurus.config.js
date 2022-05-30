@@ -16,7 +16,6 @@ module.exports = {
   organizationName: "naver",
   plugins: ["docusaurus-plugin-sass"],
   themeConfig: {
-    hideableSidebar: false,
     navbar: {
       logo: {
         alt: "egjs",

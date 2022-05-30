@@ -1,5 +1,4 @@
 const flicking = new Flicking("#flicking", {
-  moveType: "strict",
   circular: true,
   adaptive: true,
   changeOnHold: true,
