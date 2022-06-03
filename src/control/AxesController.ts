@@ -368,7 +368,7 @@ class AxesController {
   };
 
   private _onAxesChange = () => {
-    this._dragged = !!this._panInput?.isEnabled() && true;
+    this._dragged = !!this._panInput?.isEnabled();
   };
 
   private _preventClickWhenDragged = (e: MouseEvent) => {
