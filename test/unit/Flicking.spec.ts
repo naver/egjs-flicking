@@ -643,6 +643,20 @@ describe("Flicking", () => {
 
         expect(clickSpy.called).to.be.true;
       });
+
+      it("shouldn't bother click event when input is disabled", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventClickOnDrag: true });
+        const clickSpy = sinon.spy();
+        const testPanel = flicking.panels[0];
+
+        flicking.disableInput();
+        testPanel.element.addEventListener("click", clickSpy);
+
+        await simulate(flicking.element, { deltaX: -50, deltaY: 0 });
+        testPanel.element.click();
+
+        expect(clickSpy.called).to.be.true;
+      });
     });
 
     describe("changeOnHold", () => {
