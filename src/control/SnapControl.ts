@@ -111,10 +111,13 @@ class SnapControl extends Control {
       targetAnchor = this._findSnappedAnchor(position, anchorAtCamera);
     } else if (absPosDelta >= flicking.threshold && absPosDelta > 0) {
       // Move to the adjacent panel
-      targetAnchor = this._findAdjacentAnchor(posDelta, anchorAtCamera);
+      targetAnchor = this._findAdjacentAnchor(position, posDelta, anchorAtCamera);
     } else {
       // Restore to active panel
-      targetAnchor = anchorAtCamera;
+      return this.moveToPanel(activeAnchor.panel, {
+        duration,
+        axesEvent
+      });
     }
 
     this._triggerIndexChangeEvent(targetAnchor.panel, position, axesEvent);
@@ -190,9 +193,18 @@ class SnapControl extends Control {
     }
   }
 
-  private _findAdjacentAnchor(posDelta: number, anchorAtCamera: AnchorPoint): AnchorPoint {
+  private _findAdjacentAnchor(position: number, posDelta: number, anchorAtCamera: AnchorPoint): AnchorPoint {
     const flicking = getFlickingAttached(this._flicking);
     const camera = flicking.camera;
+
+    if (camera.circularEnabled) {
+      const anchorIncludePosition = camera.findAnchorIncludePosition(position);
+
+      if (anchorIncludePosition && anchorIncludePosition.position !== anchorAtCamera.position) {
+        return anchorIncludePosition;
+      }
+    }
+
     const adjacentAnchor = (posDelta > 0 ? camera.getNextAnchor(anchorAtCamera) : camera.getPrevAnchor(anchorAtCamera)) ?? anchorAtCamera;
 
     return adjacentAnchor;
