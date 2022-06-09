@@ -300,6 +300,48 @@ export const range = (end: number): number[] => {
   return arr;
 };
 
+export const getElementSize = ({
+  el,
+  horizontal,
+  useFractionalSize,
+  useOffset,
+  style
+}: {
+  el: HTMLElement;
+  horizontal: boolean;
+  useFractionalSize: boolean;
+  useOffset: boolean;
+  style: CSSStyleDeclaration;
+}): number => {
+  if (useFractionalSize) {
+    const baseSize = parseFloat(horizontal ? style.width : style.height);
+    const isBorderBoxSizing = style.boxSizing === "border-box";
+    const border = horizontal
+      ? parseFloat(style.borderLeftWidth || "0") + parseFloat(style.borderRightWidth || "0")
+      : parseFloat(style.borderTopWidth || "0") + parseFloat(style.borderBottomWidth || "0");
+
+    if (isBorderBoxSizing) {
+      return useOffset
+        ? baseSize
+        : baseSize - border;
+    } else {
+      const padding = horizontal
+        ? parseFloat(style.paddingLeft || "0") + parseFloat(style.paddingRight || "0")
+        : parseFloat(style.paddingTop || "0") + parseFloat(style.paddingBottom || "0");
+
+      return useOffset
+        ? baseSize + padding + border
+        : baseSize + padding;
+    }
+  } else {
+    const sizeStr = horizontal ? "Width" : "Height";
+
+    return useOffset
+      ? el[`offset${sizeStr}`]
+      : el[`client${sizeStr}`];
+  }
+};
+
 export const setPrototypeOf = Object.setPrototypeOf || ((obj, proto) => {
   obj.__proto__ = proto;
   return obj;

@@ -2,13 +2,15 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { getStyle, isString } from "../utils";
+import Flicking from "../Flicking";
+import { getElementSize, getStyle, isString } from "../utils";
 
 /**
  * A component that manages viewport size
  * @ko 뷰포트 크기 정보를 담당하는 컴포넌트
  */
 class Viewport {
+  private _flicking: Flicking;
   private _el: HTMLElement;
   private _width: number;
   private _height: number;
@@ -57,7 +59,8 @@ class Viewport {
   /**
    * @param el A viewport element<ko>뷰포트 엘리먼트</ko>
    */
-  public constructor(el: HTMLElement) {
+  public constructor(flicking: Flicking, el: HTMLElement) {
+    this._flicking = flicking;
     this._el = el;
     this._width = 0;
     this._height = 0;
@@ -120,9 +123,25 @@ class Viewport {
   public resize() {
     const el = this._el;
     const elStyle = getStyle(el);
+    const {
+      useFractionalSize
+    } = this._flicking;
 
-    this._width = el.clientWidth;
-    this._height = el.clientHeight;
+    this._width = getElementSize({
+      el,
+      horizontal: true,
+      useFractionalSize,
+      useOffset: false,
+      style: elStyle
+    });
+    this._height = getElementSize({
+      el,
+      horizontal: false,
+      useFractionalSize,
+      useOffset: false,
+      style: elStyle
+    });
+
     this._padding = {
       left: elStyle.paddingLeft ? parseFloat(elStyle.paddingLeft) : 0,
       right: elStyle.paddingRight ? parseFloat(elStyle.paddingRight) : 0,
