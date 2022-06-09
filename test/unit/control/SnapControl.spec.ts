@@ -221,6 +221,67 @@ describe("SnapControl", () => {
 
         expect(flicking.index).to.equal(4);
       });
+
+      it("should restore to the current panel with the nearest position", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: MOVE_TYPE.SNAP,
+          circular: true,
+          align: "prev"
+        });
+
+        const control = flicking.control;
+        const controller = control.controller;
+        const animateSpy = sinon.spy(controller, "animateTo");
+
+        // Drag with enough duration to prevent acceleration
+        await simulate(flicking.element, { deltaX: 20, duration: 10000 }, 15000);
+
+        const position = animateSpy.firstCall.args[0];
+
+        expect(position).to.be.greaterThan(0);
+        expect(position).to.equal(flicking.panels[0].position + flicking.camera.rangeDiff);
+      });
+
+      it("should move to the adjacent panel with the nearest position, from first to last panel", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: MOVE_TYPE.SNAP,
+          circular: true,
+          align: "prev"
+        });
+
+        const control = flicking.control;
+        const controller = control.controller;
+        const animateSpy = sinon.spy(controller, "animateTo");
+
+        // Drag with enough duration to prevent acceleration
+        await simulate(flicking.element, { deltaX: 60, duration: 10000 }, 15000);
+
+        const position = animateSpy.firstCall.args[0];
+
+        expect(position).to.be.greaterThan(0);
+        expect(position).to.equal(flicking.panels[flicking.panelCount - 1].position);
+      });
+
+      it("should move to the adjacent panel with the nearest position, from last to first panel", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: MOVE_TYPE.SNAP,
+          defaultIndex: 2,
+          circular: true,
+          align: "next"
+        });
+
+        const control = flicking.control;
+        const controller = control.controller;
+        const animateSpy = sinon.spy(controller, "animateTo");
+
+        // Drag with enough duration to prevent acceleration
+        await simulate(flicking.element, { deltaX: -60, duration: 10000 }, 15000);
+
+        const position = animateSpy.firstCall.args[0];
+
+        expect(position).to.be.lessThan(flicking.panels[flicking.panelCount - 1].position);
+        expect(position).to.equal(flicking.panels[0].position);
+      });
     });
   });
 });
