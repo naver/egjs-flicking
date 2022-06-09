@@ -670,7 +670,7 @@ class Flicking extends Component<FlickingEvents> {
   /**
    * By enabling this, Flicking will calculate all internal size with CSS width computed with getComputedStyle.
    * This can prevent 1px offset issue in some cases where panel size has the fractional part.
-   * All sizes will have the original size before {@link https://developer.mozilla.org/en-US/docs/Web/CSS/transform transform} is applied on the element.
+   * All sizes will have the original size before CSS {@link https://developer.mozilla.org/en-US/docs/Web/CSS/transform transform} is applied on the element.
    * @ko 이 옵션을 활성화할 경우, Flicking은 내부의 모든 크기를 {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect getBoundingClientRect}를 이용하여 계산합니다.
    * 이를 통해, 패널 크기에 소수점을 포함할 경우에 발생할 수 있는 일부 1px 오프셋 이슈를 해결 가능합니다.
    * 모든 크기는 CSS {@link https://developer.mozilla.org/en-US/docs/Web/CSS/transform transform}이 엘리먼트에 적용되기 이전의 크기를 사용할 것입니다.
