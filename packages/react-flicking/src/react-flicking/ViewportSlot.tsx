@@ -2,8 +2,8 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import React from "react";
+import React, { ReactNode } from "react";
 
-const ViewportSlot = React.memo((props: { children?: React.ReactElement[] }) => <>{props.children}</>);
+const ViewportSlot = React.memo((props: { children?: ReactNode }) => <>{props.children}</>);
 
 export default ViewportSlot;
