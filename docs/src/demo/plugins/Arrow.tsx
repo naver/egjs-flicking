@@ -79,5 +79,25 @@ export default () => {
       { tag: "span", class: "flicking-arrow-next is-outside", content: "" }
     ]} plugins={[["Arrow", { parentEl: { toString() { return "document.body"; } } }]]}
     imports={["@egjs/flicking-plugins/dist/arrow.css"]} />
+
+    <div id="arrow-4" className="relative-container">
+      <Flicking className="mb-6" plugins={plugins3} circular={true}>
+        <Panel index={0} color="white" className="card m-2 card-panel" />
+        <Panel index={1} color="white" className="card m-2 card-panel" />
+        <Panel index={2} color="white" className="card m-2 card-panel" />
+      </Flicking>
+      <span className="flicking-arrow-prev is-thin"></span>
+      <span className="flicking-arrow-next is-thin"></span>
+    </div>
+
+    <SourceCode options={{ circular: true }} panels={[
+      { tag: "div", class: "card-panel", content: "1" },
+      { tag: "div", class: "card-panel", content: "2" },
+      { tag: "div", class: "card-panel", content: "3" }
+    ]} siblings={[
+      { tag: "span", class: "flicking-arrow-prev is-thin", content: "" },
+      { tag: "span", class: "flicking-arrow-next is-thin", content: "" }
+    ]} plugins={[["Arrow", { parentEl: { toString() { return "document.body"; } } }]]}
+    imports={["@egjs/flicking-plugins/dist/arrow.css"]} />
   </div>);
 };
