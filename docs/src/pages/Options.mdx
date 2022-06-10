@@ -1263,6 +1263,42 @@ Change window size or change orientation(on mobile) to see its effect.
   </ColumnItem>
 </Columns>
 
+### useResizeObserver
+Whether to listen **[ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)**'s event instead of Window's **[resize](https://developer.mozilla.org/ko/docs/Web/API/Window/resize_event)** event when using the `autoResize` option.
+Enabling this option will make Flicking to resize only when the viewport element(`.flicking-viewport`)'s size changes.
+
+<Columns>
+  <ColumnItem is={12}>
+
+  ```js
+  useResizeObserver: true
+  ```
+
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={12}>
+    <EventFlicking useResizeObserver={true} events={["afterResize"]}>
+      { Panels(5) }
+    </EventFlicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={12}>
+
+  ```js
+  useResizeObserver: false
+  ```
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={12}>
+    <EventFlicking useResizeObserver={false} events={["afterResize"]}>
+      { Panels(5) }
+    </EventFlicking>
+  </ColumnItem>
+</Columns>
+
 ### resizeDebounce
 Delays size recalculation from `autoResize` by the given time in milisecond.
 If the size is changed again while being delayed, it cancels the previous one and delays from the beginning again.
@@ -1333,38 +1369,47 @@ Value should be greater than `resizeDebounce`
   </ColumnItem>
 </Columns>
 
-### useResizeObserver
-Whether to listen **[ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)**'s event instead of Window's **[resize](https://developer.mozilla.org/ko/docs/Web/API/Window/resize_event)** event when using the `autoResize` option.
-Enabling this option will make Flicking to resize only when the viewport element(`.flicking-viewport`)'s size changes.
+### useFractionalSize
+By enabling this, Flicking will calculate all internal size with CSS width computed with getComputedStyle.
+This can prevent 1px offset issue in some cases where panel size has the fractional part.
+All sizes will have the original size before CSS [transform](https://developer.mozilla.org/en-US/docs/Web/CSS/transform) is applied on the element.
 
 <Columns>
   <ColumnItem is={12}>
 
   ```js
-  useResizeObserver: true
+  useFractionalSize: false // default
   ```
 
   </ColumnItem>
 </Columns>
 <Columns>
   <ColumnItem is={12}>
-    <EventFlicking useResizeObserver={true} events={["afterResize"]}>
-      { Panels(5) }
-    </EventFlicking>
+    <Flicking useFractionalSize={false} defaultIndex={2} style={{ width: "200px" }}>
+      <div className="has-background-primary" style={{ width: "199.5px", height: "200px" }}></div>
+      <div className="has-background-info" style={{ width: "199.5px", height: "200px" }}></div>
+      <div className="has-background-success" style={{ width: "199.5px", height: "200px" }}></div>
+      <div className="has-background-danger" style={{ width: "199.5px", height: "200px" }}></div>
+      <div className="has-background-warning" style={{ width: "199.5px", height: "200px" }}></div>
+    </Flicking>
   </ColumnItem>
 </Columns>
 <Columns>
   <ColumnItem is={12}>
 
   ```js
-  useResizeObserver: false
+  useFractionalSize: true
   ```
   </ColumnItem>
 </Columns>
 <Columns>
   <ColumnItem is={12}>
-    <EventFlicking useResizeObserver={false} events={["afterResize"]}>
-      { Panels(5) }
-    </EventFlicking>
+    <Flicking useFractionalSize={true} defaultIndex={2} style={{ width: "200px" }}>
+      <div className="has-background-primary" style={{ width: "199.5px", height: "200px" }}></div>
+      <div className="has-background-info" style={{ width: "199.5px", height: "200px" }}></div>
+      <div className="has-background-success" style={{ width: "199.5px", height: "200px" }}></div>
+      <div className="has-background-danger" style={{ width: "199.5px", height: "200px" }}></div>
+      <div className="has-background-warning" style={{ width: "199.5px", height: "200px" }}></div>
+    </Flicking>
   </ColumnItem>
 </Columns>

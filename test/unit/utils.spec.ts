@@ -12,7 +12,9 @@ import {
   parseElement,
   getMinusCompensatedIndex,
   includes,
-  parseArithmeticSize
+  parseArithmeticSize,
+  getElementSize,
+  getStyle
 } from "~/utils";
 import Flicking from "~/Flicking";
 import FlickingError from "~/core/FlickingError";
@@ -517,6 +519,195 @@ describe("Util Functions", () => {
       expect(includes([instance, array, object, func], [0, 1, 2, "1", "2", "3"])).to.be.false;
       expect(includes([instance, array, object, func], { a: 1, b: "2" })).to.be.false;
       expect(includes([instance, array, object, func], (a: number) => true)).to.be.false;
+    });
+  });
+
+  describe("getElementSize", () => {
+    let wrapper: HTMLElement;
+    let el: HTMLElement;
+
+    beforeEach(() => {
+      wrapper = createSandbox("#wrapper");
+      el = document.createElement("div");
+
+      wrapper.appendChild(el);
+    });
+
+    afterEach(() => {
+      cleanup();
+    });
+
+    it("should return offsetWidth when useOffset: true and horizontal: true", () => {
+      el.style.width = "20px";
+      el.style.height = "1000px";
+      el.style.border = "20px solid #ffffff";
+
+      const style = getStyle(el);
+      const size = getElementSize({
+        el,
+        horizontal: true,
+        useOffset: true,
+        useFractionalSize: false,
+        style
+      });
+
+      expect(size).to.equal(el.offsetWidth);
+      expect(el.offsetWidth).to.not.equal(el.clientWidth);
+      expect(el.offsetWidth).to.not.equal(el.offsetHeight);
+    });
+
+    it("should return offsetHeight when useOffset: true and horizontal: false", () => {
+      el.style.width = "20px";
+      el.style.height = "1000px";
+      el.style.border = "20px solid #ffffff";
+
+      const style = getStyle(el);
+      const size = getElementSize({
+        el,
+        horizontal: false,
+        useOffset: true,
+        useFractionalSize: false,
+        style
+      });
+
+      expect(size).to.equal(el.offsetHeight);
+      expect(el.offsetHeight).to.not.equal(el.clientHeight);
+      expect(el.offsetHeight).to.not.equal(el.offsetWidth);
+    });
+
+    it("should return clientWidth when useOffset: false and horizontal: true", () => {
+      el.style.width = "20px";
+      el.style.height = "1000px";
+      el.style.border = "20px solid #ffffff";
+
+      const style = getStyle(el);
+      const size = getElementSize({
+        el,
+        horizontal: true,
+        useOffset: false,
+        useFractionalSize: false,
+        style
+      });
+
+      expect(size).to.equal(el.clientWidth);
+      expect(el.clientWidth).to.not.equal(el.offsetWidth);
+      expect(el.clientWidth).to.not.equal(el.clientHeight);
+    });
+
+    it("should return clientHeight when useOffset: false and horizontal: false", () => {
+      el.style.width = "20px";
+      el.style.height = "1000px";
+      el.style.border = "20px solid #ffffff";
+
+      const style = getStyle(el);
+      const size = getElementSize({
+        el,
+        horizontal: false,
+        useOffset: false,
+        useFractionalSize: false,
+        style
+      });
+
+      expect(size).to.equal(el.clientHeight);
+      expect(el.clientHeight).to.not.equal(el.clientWidth);
+      expect(el.clientHeight).to.not.equal(el.offsetHeight);
+    });
+
+    it("should return size that has fractional part in it when useFractionalSize: true", () => {
+      el.style.width = "20.5px";
+      el.style.height = "1000px";
+      el.style.border = "20px solid #ffffff";
+
+      const style = getStyle(el);
+      const size = getElementSize({
+        el,
+        horizontal: true,
+        useOffset: true,
+        useFractionalSize: true,
+        style
+      });
+
+      expect(size).to.equal(el.offsetWidth - 0.5);
+      expect(el.offsetWidth).to.not.equal(el.clientWidth);
+      expect(el.offsetWidth).to.not.equal(el.offsetHeight);
+    });
+
+    it("should return size that is near to offsetWidth and has fractional part in it when useFractionalSize: true & useOffset: true", () => {
+      el.style.width = "20.5px";
+      el.style.height = "1000px";
+      el.style.border = "20px solid #ffffff";
+
+      const style = getStyle(el);
+      const size = getElementSize({
+        el,
+        horizontal: true,
+        useOffset: true,
+        useFractionalSize: true,
+        style
+      });
+
+      expect(size).to.equal(el.offsetWidth - 0.5);
+      expect(el.offsetWidth).to.not.equal(el.clientWidth);
+      expect(el.offsetWidth).to.not.equal(el.offsetHeight);
+    });
+
+    it("should return size that near to clientWidth and has fractional part in it when useFractionalSize: true & useOffset: false", () => {
+      el.style.width = "20.5px";
+      el.style.height = "1000px";
+      el.style.border = "20px solid #ffffff";
+
+      const style = getStyle(el);
+      const size = getElementSize({
+        el,
+        horizontal: true,
+        useOffset: false,
+        useFractionalSize: true,
+        style
+      });
+
+      expect(size).to.equal(el.clientWidth - 0.5);
+      expect(el.clientWidth).to.not.equal(el.offsetWidth);
+      expect(el.clientWidth).to.not.equal(el.clientHeight);
+    });
+
+    it("should return size that is near to offsetWidth and has fractional part in it when useFractionalSize: true & useOffset: true, and box-sizing is border-box", () => {
+      el.style.width = "100.5px";
+      el.style.height = "1000px";
+      el.style.border = "20px solid #ffffff";
+      el.style.boxSizing = "border-box";
+
+      const style = getStyle(el);
+      const size = getElementSize({
+        el,
+        horizontal: true,
+        useOffset: true,
+        useFractionalSize: true,
+        style
+      });
+
+      expect(size).to.equal(el.offsetWidth - 0.5);
+      expect(el.offsetWidth).to.not.equal(el.clientWidth);
+      expect(el.offsetWidth).to.not.equal(el.offsetHeight);
+    });
+
+    it("should return size that near to clientWidth and has fractional part in it when useFractionalSize: true & useOffset: false, and box-sizing is border-box", () => {
+      el.style.width = "100.5px";
+      el.style.height = "1000px";
+      el.style.border = "20px solid #ffffff";
+      el.style.boxSizing = "border-box";
+
+      const style = getStyle(el);
+      const size = getElementSize({
+        el,
+        horizontal: true,
+        useOffset: false,
+        useFractionalSize: true,
+        style
+      });
+
+      expect(size).to.equal(el.clientWidth - 0.5);
+      expect(el.clientWidth).to.not.equal(el.offsetWidth);
+      expect(el.clientWidth).to.not.equal(el.clientHeight);
     });
   });
 });

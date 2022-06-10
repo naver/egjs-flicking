@@ -3,7 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 import Flicking from "../../Flicking";
-import { getProgress, getStyle, parseAlign, setSize } from "../../utils";
+import { getElementSize, getProgress, getStyle, parseAlign, setSize } from "../../utils";
 import { ALIGN, DIRECTION } from "../../const/external";
 import { LiteralUnion, ValueOf } from "../../type/internal";
 
@@ -313,7 +313,10 @@ class Panel {
   }): this {
     const el = this.element;
     const flicking = this._flicking;
-    const horizontal = flicking.horizontal;
+    const {
+      horizontal,
+      useFractionalSize
+    } = flicking;
 
     if (cached) {
       this._size = cached.size;
@@ -322,7 +325,14 @@ class Panel {
     } else {
       const elStyle = getStyle(el);
 
-      this._size = horizontal ? el.offsetWidth : el.offsetHeight;
+      this._size = getElementSize({
+        el,
+        horizontal,
+        useFractionalSize,
+        useOffset: true,
+        style: elStyle
+      });
+
       this._margin = horizontal
         ? {
           prev: parseFloat(elStyle.marginLeft || "0"),
@@ -331,7 +341,16 @@ class Panel {
           prev: parseFloat(elStyle.marginTop || "0"),
           next: parseFloat(elStyle.marginBottom || "0")
         };
-      this._height = horizontal ? el.offsetHeight : this._size;
+
+      this._height = horizontal
+        ? getElementSize({
+          el,
+          horizontal: false,
+          useFractionalSize,
+          useOffset: true,
+          style: elStyle
+        })
+        : this._size;
     }
 
     this.updatePosition();

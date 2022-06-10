@@ -90,6 +90,7 @@ export interface FlickingOptions {
   useResizeObserver: boolean;
   resizeDebounce: number;
   maxResizeDebounce: number;
+  useFractionalSize: boolean;
   externalRenderer: ExternalRenderer | null;
 
   // @deprecated
@@ -164,6 +165,7 @@ class Flicking extends Component<FlickingEvents> {
   private _useResizeObserver: FlickingOptions["useResizeObserver"];
   private _resizeDebounce: FlickingOptions["resizeDebounce"];
   private _maxResizeDebounce: FlickingOptions["maxResizeDebounce"];
+  private _useFractionalSize: FlickingOptions["useFractionalSize"];
   private _externalRenderer: FlickingOptions["externalRenderer"];
   private _renderExternal: FlickingOptions["renderExternal"];
 
@@ -666,6 +668,17 @@ class Flicking extends Component<FlickingEvents> {
    */
   public get maxResizeDebounce() { return this._maxResizeDebounce; }
   /**
+   * By enabling this, Flicking will calculate all internal size with CSS width computed with getComputedStyle.
+   * This can prevent 1px offset issue in some cases where panel size has the fractional part.
+   * All sizes will have the original size before CSS {@link https://developer.mozilla.org/en-US/docs/Web/CSS/transform transform} is applied on the element.
+   * @ko 이 옵션을 활성화할 경우, Flicking은 내부의 모든 크기를 {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect getBoundingClientRect}를 이용하여 계산합니다.
+   * 이를 통해, 패널 크기에 소수점을 포함할 경우에 발생할 수 있는 일부 1px 오프셋 이슈를 해결 가능합니다.
+   * 모든 크기는 CSS {@link https://developer.mozilla.org/en-US/docs/Web/CSS/transform transform}이 엘리먼트에 적용되기 이전의 크기를 사용할 것입니다.
+   * @type {boolean}
+   * @default false
+   */
+  public get useFractionalSize() { return this._useFractionalSize; }
+  /**
    * This is an option for the frameworks(React, Vue, Angular, ...). Don't set it as it's automatically managed by Flicking.
    * @ko 프레임워크(React, Vue, Angular, ...)에서만 사용하는 옵션으로, 자동으로 설정되므로 따로 사용하실 필요 없습니다!
    * @default null
@@ -814,6 +827,7 @@ class Flicking extends Component<FlickingEvents> {
     useResizeObserver = true,
     resizeDebounce = 0,
     maxResizeDebounce = 100,
+    useFractionalSize = false,
     externalRenderer = null,
     renderExternal = null
   }: Partial<FlickingOptions> = {}) {
@@ -856,11 +870,12 @@ class Flicking extends Component<FlickingEvents> {
     this._useResizeObserver = useResizeObserver;
     this._resizeDebounce = resizeDebounce;
     this._maxResizeDebounce = maxResizeDebounce;
+    this._useFractionalSize = useFractionalSize;
     this._externalRenderer = externalRenderer;
     this._renderExternal = renderExternal;
 
     // Create core components
-    this._viewport = new Viewport(getElement(root));
+    this._viewport = new Viewport(this, getElement(root));
     this._autoResizer = new AutoResizer(this);
     this._renderer = this._createRenderer();
     this._camera = this._createCamera();
