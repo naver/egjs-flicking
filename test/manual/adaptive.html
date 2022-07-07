@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  #app {
+    font-family: "Avenir", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+    background: #F2F4F7;
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .flicking-viewport {
+  transition: height 500ms;
+}
+  .panel {
+    background: #D7E6FF;
+    padding: 40px;
+    margin-right: 20px;
+  }
+
+.long {
+  height: 300px;
+}
+
+.short {
+  height: 150px;
+}
+
+.flicking-container {
+  padding: 10px 0;
+}
+
+</style>
+
+<head>
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <script type="text/javascript" src="../../dist/flicking.pkgd.js"></script>
+  <link rel="stylesheet" href="../../dist/flicking.css">
+  <title>Adaptive Flicking Test</title>
+</head>
+
+<body>
+  <div id="app">
+    <div class="flicking-container">
+      <div id="flicking" class="flicking-viewport">
+        <div class="flicking-camera">
+          <div class="panel short">Short</div>
+          <div class="panel short">Short</div>
+          <div class="panel short">Short</div>
+          <div class="panel short">Short</div>
+          <div class="panel short">Short</div>
+          <div class="panel long">Long</div>
+          <div class="panel short">Short</div>
+          <div class="panel short">Short</div>
+          <div class="panel short">Short</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+const flicking = new Flicking("#flicking", {
+  bound: true,
+  panelsPerView: 3,
+  adaptive: true,
+});
+</script>
+</html>

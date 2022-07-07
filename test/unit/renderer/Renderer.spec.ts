@@ -316,6 +316,17 @@ describe("Renderer", () => {
         expect(panels.every(panel => panel.size === viewportSize)).to.be.true;
         expect(panels.every(panel => panel.element.style.width === "100px")).to.be.true;
       });
+
+      it("should not update the height of the horizontal panel by panelsPerView.", async () => {
+        const flicking = await createFlicking(El.VARIOUS_HORIZONTAL, { panelsPerView: 2 });
+        const renderer = new RendererImpl().init(flicking);
+        const panels = flicking.panels;
+        const expectedHeight = parseInt(flicking.panels[2].element.style.height, 10);
+
+        renderer.updatePanelSize();
+
+        expect(panels[2].height === expectedHeight).to.be.true;
+      });
     });
   });
 

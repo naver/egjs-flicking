@@ -308,7 +308,7 @@ class Panel {
    */
   public resize(cached?: {
     size: number;
-    height: number;
+    height?: number;
     margin: { prev: number; next: number };
   }): this {
     const el = this.element;
@@ -321,7 +321,13 @@ class Panel {
     if (cached) {
       this._size = cached.size;
       this._margin = { ...cached.margin };
-      this._height = cached.height;
+      this._height = cached.height ?? getElementSize({
+        el,
+        horizontal: false,
+        useFractionalSize,
+        useOffset: true,
+        style: getStyle(el)
+      });
     } else {
       const elStyle = getStyle(el);
 
