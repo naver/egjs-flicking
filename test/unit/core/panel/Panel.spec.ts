@@ -186,7 +186,7 @@ describe("Panel", () => {
         const panel = await createPanel(
           El.panel()
             .setWidth(300).setHeight(300)
-            .setMargin({ left: 10, right: 10 }), {}, { horizontal: true }
+            .setMargin({ left: 10, right: 10 }), {}, { horizontal: false }
         );
 
         panel.resize({ size: 500, height: 400, margin: { prev: 20, next: 25 }});
