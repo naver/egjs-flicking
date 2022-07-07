@@ -31,6 +31,29 @@ class El {
   }
 
   /**
+   * Horizontal Flicking using Panels with various heights
+   * @example
+   * - Viewport (width: 1000px, height: 100%)
+   *   - Camera
+   *     - Panel (width: 100%, height: 300px)
+   *     - Panel (width: 100%, height: 400px)
+   *     - Panel (width: 100%, height: 500px)
+   *     - Panel (width: 100%, height: 600px)
+   *     - Panel (width: 100%, height: 300px)
+   */
+  public static get VARIOUS_HORIZONTAL() {
+    return El.viewport("1000px", "100%").add(
+      El.camera().add(
+        El.panel().setWidth("100%").setHeight(300),
+        El.panel().setWidth("100%").setHeight(400),
+        El.panel().setWidth("100%").setHeight(500),
+        El.panel().setWidth("100%").setHeight(600),
+        El.panel().setWidth("100%").setHeight(300),
+      ),
+    );
+  }
+
+  /**
    * Very basic structure of the horizontal Flicking with n panels
    * @example
    * - Viewport (width: 1000px, height: 100%)
