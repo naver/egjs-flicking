@@ -321,7 +321,7 @@ class Panel {
     if (cached) {
       this._size = cached.size;
       this._margin = { ...cached.margin };
-      this._height = cached.height ? cached.height : getElementSize({
+      this._height = cached.height ?? getElementSize({
         el,
         horizontal: false,
         useFractionalSize,

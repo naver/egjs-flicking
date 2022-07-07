@@ -497,7 +497,7 @@ abstract class Renderer {
     const firstPanelSizeObj = {
       size: panelSize,
       margin: referencePanel.margin,
-      ...(!flicking.horizontal && { height: referencePanel.height} )
+      ...(!flicking.horizontal && { height: referencePanel.height})
     };
 
     if (!flicking.noPanelStyleOverride) {
