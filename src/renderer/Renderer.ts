@@ -494,19 +494,17 @@ abstract class Renderer {
     const panelSizeObj = flicking.horizontal
       ? { width: panelSize }
       : { height: panelSize };
+    const firstPanelSizeObj = {
+      size: panelSize,
+      height: referencePanel.height,
+      margin: referencePanel.margin
+    };
 
-    if (flicking.noPanelStyleOverride) {
-      const firstPanelSizeObj = {
-        size: panelSize,
-        height: referencePanel.height,
-        margin: referencePanel.margin
-      };
-      flicking.panels.forEach(panel => panel.resize(firstPanelSizeObj));
-    } else {
+    if (!flicking.noPanelStyleOverride) {
       this._strategy.updatePanelSizes(flicking, panelSizeObj);
-      flicking.panels.forEach(panel => panel.resize());
     }
 
+    flicking.panels.forEach(panel => panel.resize(firstPanelSizeObj));
   }
 
   protected _removeAllChildsFromCamera() {
