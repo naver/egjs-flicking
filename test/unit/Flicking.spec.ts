@@ -71,7 +71,29 @@ describe("Flicking", () => {
       );
 
       expect(flicking.currentPanel).not.to.be.null;
-      expect(flicking.currentPanel).to.equal(flicking.getPanel(0));
+      expect(flicking.currentPanel).to.equal(flicking.camera.findNearestAnchor(0).panel);
+    });
+
+    [15, 30, 50, 100].forEach((width) => {
+      it(`should set current panel same as the panel at the initial anchor point (each panel width: ${width}%)`, async () => {
+        const flicking = await createFlicking(
+          El.viewport().add(
+            El.camera()
+              .add(El.panel(`${width}%`))
+              .add(El.panel(`${width}%`))
+              .add(El.panel(`${width}%`))
+              .add(El.panel(`${width}%`))
+              .add(El.panel(`${width}%`))
+              .add(El.panel(`${width}%`))
+              .add(El.panel(`${width}%`))
+          ), {
+            bound: true // when bound is true, the number of anchors may be less than the number of panels
+          }
+        );
+
+        expect(flicking.currentPanel).to.equal(flicking.camera.findNearestAnchor(0).panel);
+        expect(flicking.currentPanel).to.equal(flicking.camera.anchorPoints[0].panel);
+      });
     });
   });
 
