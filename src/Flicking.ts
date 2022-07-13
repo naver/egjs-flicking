@@ -1507,7 +1507,7 @@ class Flicking extends Component<FlickingEvents> {
     if (!defaultPanel) return;
 
     const nearestAnchor = camera.findNearestAnchor(defaultPanel.position);
-    const initialPanel = (nearestAnchor && defaultPanel.index !== nearestAnchor?.panel.index) ? nearestAnchor.panel : defaultPanel;
+    const initialPanel = (nearestAnchor && defaultPanel.index !== nearestAnchor.panel.index) ? nearestAnchor.panel : defaultPanel;
     control.setActive(initialPanel, null, false);
 
     if (!nearestAnchor) {
