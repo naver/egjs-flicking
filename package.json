@@ -23,7 +23,7 @@
 		"test": "npm run test --prefix test/unit",
 		"test:chrome": "npm run test:chrome --prefix test/unit",
 		"test:cfc": "npm run test --prefix test/cfc",
-		"lint": "eslint 'src/**/*.ts'",
+		"lint": "eslint src/**/*.ts",
 		"lint:test": "eslint 'test/unit/**/*.ts'",
 		"jsdoc": "jsdoc -c jsdoc.json",
 		"jsdoc:watch": "npm-watch jsdoc",
@@ -136,7 +136,7 @@
 		"typescript-transform-paths": "^2.2.3"
 	},
 	"dependencies": {
-		"@egjs/axes": "^3.2.2",
+		"@egjs/axes": "^3.4.0",
 		"@egjs/component": "^3.0.1",
 		"@egjs/imready": "^1.1.3",
 		"@egjs/list-differ": "^1.0.0"
