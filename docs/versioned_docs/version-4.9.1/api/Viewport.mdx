@@ -1,0 +1,97 @@
+---
+custom_edit_url: null
+---
+
+```ts
+class Viewport
+```
+A component that manages viewport size
+
+<div className="container">
+  <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
+  <div className="row"><div className="col col--6"><a href="#element">element</a><br/><a href="#width">width</a><br/><a href="#height">height</a><br/><a href="#padding">padding</a></div><div className="col col--6"><a href="#setSize">setSize</a><br/><a href="#resize">resize</a></div></div>
+</div>
+
+## Constructor
+```ts
+new Viewport(el, el)
+```
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|el|[Flicking](Flicking)|||A viewport element|
+|el|HTMLElement||||
+
+## Properties
+
+### element {#element}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+</div>
+
+A viewport(root) element
+
+**Type**: HTMLElement
+
+### width {#width}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+</div>
+
+Viewport width, without paddings
+
+**Type**: number
+
+### height {#height}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+</div>
+
+Viewport height, without paddings
+
+**Type**: number
+
+### padding {#padding}
+
+<div className="bulma-tags">
+  <span className="bulma-tag is-warning">readonly</span>
+</div>
+
+Viewport paddings
+
+**Type**: object
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|left|number|CSS `padding-left`|
+|right|number|CSS `padding-right`|
+|top|number|CSS `padding-top`|
+|bottom|number|CSS `padding-bottom`|
+
+## Methods
+
+### setSize {#setSize}
+
+<div className="bulma-tags">
+
+</div>
+
+Change viewport's size.
+This will change the actual size of `.flicking-viewport` element by changing its CSS width/height property
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|size|object|✔️||New viewport size|
+|size.width|number \| string|✔️||CSS string or number(in px)|
+|size.height|number \| string|✔️||CSS string or number(in px)|
+
+### resize {#resize}
+
+<div className="bulma-tags">
+
+</div>
+
+Update width/height to the current viewport element's size
+
