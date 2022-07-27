@@ -1669,6 +1669,29 @@ describe("Flicking", () => {
         expect(flicking.index).to.equal(2);
         expect(flicking.camera.position).to.equal(flicking.panels[2].position);
       });
+
+      it("should determine direction with the animatingContext instead of the native event when onChange occurs by moveTo while holding", async () => {
+        const flicking = await createFlicking(El.VARIOUS_HORIZONTAL, { moveType: "strict" });
+
+        flicking.element.dispatchEvent(new TouchEvent("touchstart", {
+          touches: [
+            new Touch({
+              target: flicking.element,
+              identifier: Date.now()
+            })
+          ],
+          cancelable: true
+        }));
+        const directions = [];
+
+        flicking.on(EVENTS.MOVE_START, evt => {
+          directions.push(evt.direction);
+        });
+
+        await moveTo(flicking, 3);
+
+        expect(directions[0]).to.equal(DIRECTION.NEXT);
+      });
     });
 
     describe("getStatus()", () => {
