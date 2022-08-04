@@ -1084,6 +1084,10 @@ class Flicking extends Component<FlickingEvents> {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.ANIMATION_ALREADY_PLAYING, ERROR.CODE.ANIMATION_ALREADY_PLAYING));
     }
 
+    if (this._control.holding) {
+      this._control.controller.release();
+    }
+
     return this._control.moveToPanel(panel, {
       duration,
       direction

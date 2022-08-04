@@ -162,6 +162,18 @@ abstract class Control {
   }
 
   /**
+   * Releases ongoing user input (mouse/touch)
+   * @ko 사용자의 현재 입력(마우스/터치)를 중단시킵니다
+   * @chainable
+   * @return {this}
+   */
+  public release(): this {
+    this._controller.release();
+
+    return this;
+  }
+
+  /**
    * Update position after resizing
    * @ko resize 이후에 position을 업데이트합니다
    * @param {number} progressInPanel Previous camera's progress in active panel before resize<ko>Resize 이전 현재 선택된 패널 내에서의 카메라 progress 값</ko>

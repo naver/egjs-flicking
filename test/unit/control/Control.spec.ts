@@ -102,6 +102,18 @@ describe("Control", () => {
       });
     });
 
+    describe("release", () => {
+      it("should call release of the controller", () => {
+        const control = new ControlImpl();
+        const releaseSpy = sinon.spy();
+
+        control.controller.release = releaseSpy;
+        control.release();
+
+        expect(releaseSpy.calledOnce).to.be.true;
+      });
+    });
+
     describe("updateInput", () => {
       it("should call update of the controller", async () => {
         const control = new ControlImpl();

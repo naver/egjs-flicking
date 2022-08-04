@@ -36,14 +36,17 @@ class HoldingState extends State {
 
   public onChange(ctx: Parameters<State["onChange"]>[0]): void {
     const { flicking, axesEvent, transitTo } = ctx;
-    const animatingContext = flicking.control.controller.animatingContext;
+
     const inputEvent = axesEvent.inputEvent as { offsetX: number; offsetY: number };
-    const offset = flicking.horizontal ? inputEvent?.offsetX : inputEvent?.offsetY;
+
+    const offset = flicking.horizontal
+      ? inputEvent.offsetX
+      : inputEvent.offsetY;
 
     const moveStartEvent = new ComponentEvent(EVENTS.MOVE_START, {
       isTrusted: axesEvent.isTrusted,
       holding: this.holding,
-      direction: inputEvent ? getDirection(0, -offset) : getDirection(animatingContext.start, animatingContext.end),
+      direction: getDirection(0, -offset),
       axesEvent
     });
     flicking.trigger(moveStartEvent);

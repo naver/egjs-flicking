@@ -203,6 +203,18 @@ class AxesController {
   }
 
   /**
+   * Releases ongoing user input (mouse/touch)
+   * @ko 사용자의 현재 입력(마우스/터치)를 중단시킵니다
+   * @chainable
+   * @return {this}
+   */
+  public release(): this {
+    this._panInput?.release();
+
+    return this;
+  }
+
+  /**
    * Update {@link https://naver.github.io/egjs-axes/ @egjs/axes}'s state
    * @ko {@link https://naver.github.io/egjs-axes/ @egjs/axes}의 상태를 갱신합니다
    * @chainable
