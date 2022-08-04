@@ -1672,6 +1672,10 @@ describe("Flicking", () => {
 
       it("can move to the panel when user input is holding", async () => {
         const flicking = await createFlicking(El.VARIOUS_HORIZONTAL, { moveType: "strict" });
+        const holdStartSpy = sinon.spy();
+        const holdEndSpy = sinon.spy();
+        flicking.on(EVENTS.HOLD_START, holdStartSpy);
+        flicking.on(EVENTS.HOLD_END, holdEndSpy);
 
         flicking.element.dispatchEvent(new TouchEvent("touchstart", {
           touches: [
@@ -1685,6 +1689,8 @@ describe("Flicking", () => {
 
         await moveTo(flicking, 3);
 
+        expect(holdStartSpy.calledOnce).to.be.true;
+        expect(holdEndSpy.calledOnce).to.be.true;
         expect(flicking.index).to.equal(3);
       });
     });
