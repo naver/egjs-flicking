@@ -1670,7 +1670,7 @@ describe("Flicking", () => {
         expect(flicking.camera.position).to.equal(flicking.panels[2].position);
       });
 
-      it("should determine direction with the animatingContext instead of the native event when onChange occurs by moveTo while holding", async () => {
+      it("can move to the panel when user input is holding", async () => {
         const flicking = await createFlicking(El.VARIOUS_HORIZONTAL, { moveType: "strict" });
 
         flicking.element.dispatchEvent(new TouchEvent("touchstart", {
@@ -1682,15 +1682,10 @@ describe("Flicking", () => {
           ],
           cancelable: true
         }));
-        const directions = [];
-
-        flicking.on(EVENTS.MOVE_START, evt => {
-          directions.push(evt.direction);
-        });
 
         await moveTo(flicking, 3);
 
-        expect(directions[0]).to.equal(DIRECTION.NEXT);
+        expect(flicking.index).to.equal(3);
       });
     });
 
