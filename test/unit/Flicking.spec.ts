@@ -9,7 +9,7 @@ import { Plugin } from "~/type/external";
 import { AfterResizeEvent, BeforeResizeEvent } from "~/type/event";
 
 import El from "./helper/El";
-import { cleanup, createFlicking, range, simulate, tick } from "./helper/test-util";
+import { cleanup, createFlicking, dispatchTouchStart, range, simulate, tick } from "./helper/test-util";
 
 describe("Flicking", () => {
   afterEach(() => {
@@ -1335,6 +1335,21 @@ describe("Flicking", () => {
           expect(eventsFired).not.to.be.empty;
           expect(eventsFired.filter(e => e.direction).every(e => e.direction === DIRECTION.PREV)).to.be.true;
         });
+
+        it("should determine direction with the animatingContext when change occur with no native event while holding", async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+            defaultIndex: 2
+          });
+          collectEvents(flicking);
+          dispatchTouchStart(flicking.element);
+
+          // Using axes.setTo leaves no native event
+          flicking.control.controller.axes.setTo({ flick: 500 }, 500);
+          tick(1000);
+
+          expect(eventsFired).not.to.be.empty;
+          expect(eventsFired.filter(e => e.direction).every(e => e.direction === DIRECTION.PREV)).to.be.true;
+        });
       });
 
       describe("isTrusted", () => {
@@ -1677,15 +1692,7 @@ describe("Flicking", () => {
         flicking.on(EVENTS.HOLD_START, holdStartSpy);
         flicking.on(EVENTS.HOLD_END, holdEndSpy);
 
-        flicking.element.dispatchEvent(new TouchEvent("touchstart", {
-          touches: [
-            new Touch({
-              target: flicking.element,
-              identifier: Date.now()
-            })
-          ],
-          cancelable: true
-        }));
+        dispatchTouchStart(flicking.element);
 
         await moveTo(flicking, 3);
 

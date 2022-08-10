@@ -85,6 +85,18 @@ export const simulate = (el: HTMLElement, option: Partial<{
   })
 );
 
+export const dispatchTouchStart = (el: HTMLElement) => {
+  el.dispatchEvent(new TouchEvent("touchstart", {
+    touches: [
+      new Touch({
+        target: el,
+        identifier: Date.now()
+      })
+    ],
+    cancelable: true
+  }));
+};
+
 export const waitEvent = (emitter: any, eventName: string) => {
   if (emitter.once) {
     return new Promise(res => {
