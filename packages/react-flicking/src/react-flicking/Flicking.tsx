@@ -207,9 +207,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
         e.currentTarget = this;
 
         const evtHandler = this.props[propName];
-        if (evtHandler) {
-          evtHandler(e);
-        }
+        evtHandler(e);
       });
     });
 
