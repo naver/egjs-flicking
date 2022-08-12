@@ -198,7 +198,6 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
 
   private _bindEvents() {
     const flicking = this._vanillaFlicking!;
-    const props = this.props as Required<FlickingProps>;
 
     Object.keys(EVENTS).forEach((eventKey: keyof typeof EVENTS) => {
       const eventName = EVENTS[eventKey];
@@ -207,7 +206,8 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       flicking.on(eventName, e => {
         e.currentTarget = this;
 
-        props[propName](e);
+        const evtHandler = this.props[propName];
+        evtHandler(e);
       });
     });
 
