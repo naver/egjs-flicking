@@ -121,7 +121,8 @@ const Flicking = Vue.extend({
     };
     const cameraData: VNodeData = {
       class: {
-        "flicking-camera": true
+        "flicking-camera": true,
+        [this.cameraClass]: !!this.cameraClass
       },
       style: !initialized && this.firstPanelSize
         ? { transform: getDefaultCameraTransform(options.align, options.horizontal, this.firstPanelSize) }

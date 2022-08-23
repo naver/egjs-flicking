@@ -13,6 +13,11 @@ export default {
     default: "div",
     required: false
   },
+  cameraClass: {
+    type: String,
+    default: "",
+    required: false
+  },
   hideBeforeInit: {
     type: Boolean,
     default: false,
@@ -39,6 +44,7 @@ export default {
 } as RecordPropsDefinition<{
   readonly viewportTag: string;
   readonly cameraTag: string;
+  readonly cameraClass: string;
   readonly hideBeforeInit: boolean;
   readonly firstPanelSize: string;
   readonly options: Partial<FlickingOptions>;

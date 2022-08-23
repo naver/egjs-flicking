@@ -44,6 +44,7 @@ import Flicking, { MoveEvent, WillChangeEvent } from "@egjs/preact-flicking";
 <Flicking
   viewportTag = "div"
   cameraTag = "div"
+  cameraClass = ""
   align = "center"
   onMove = {(e: MoveEvent) => {}}
   onWillChange = {(e: WillChangeEvent) => {}}

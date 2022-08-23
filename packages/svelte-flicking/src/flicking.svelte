@@ -25,6 +25,7 @@
   import SvelteRenderer, { SvelteRendererOptions } from "./SvelteRenderer";
   import SvelteElementProvider from "./SvelteElementProvider";
 
+  export let cameraClass: string = "";
   export let hideBeforeInit: boolean = false;
   export let firstPanelSize: string | undefined = undefined;
   export let options: Partial<FlickingOptions> = {};
@@ -54,6 +55,7 @@
   $: {
     panelsPerView = options.panelsPerView ?? -1;
     isHorizontal = options.horizontal != null ? options.horizontal : true;
+    cameraClass = `flicking-camera ${$$props.cameraClass ?? ""}`.trim();
     isHiddenBeforeInit = hideBeforeInit && !(vanillaFlicking && vanillaFlicking.initialized);
     cameraTransform = !(vanillaFlicking && vanillaFlicking.initialized) && firstPanelSize
       ? { style: `transform: ${getDefaultCameraTransform(options.align, options.horizontal, firstPanelSize)}` }
@@ -160,7 +162,7 @@
 
 <svelte:options accessors={true} />
 <div class:flicking-viewport={true} bind:this={viewportEl} class:vertical={!isHorizontal} class:flicking-hidden={isHiddenBeforeInit} {...$$restProps}>
-  <div class:flicking-camera={true} bind:this={cameraEl} {...cameraTransform}>
+  <div class={cameraClass} bind:this={cameraEl} {...cameraTransform}>
     {#if panelsPerView > 0 && !!options.virtual}
       {#each range(panelsPerView + 1) as _idx}
         <div class={options.virtual.panelClass}></div>

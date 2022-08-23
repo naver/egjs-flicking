@@ -16,6 +16,11 @@ export default {
     default: "div",
     required: false
   },
+  cameraClass: {
+    type: String,
+    default: "",
+    required: false
+  },
   hideBeforeInit: {
     type: Boolean,
     default: false,

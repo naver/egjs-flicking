@@ -173,7 +173,8 @@ const Flicking = defineComponent({
     };
     const cameraData = {
       class: {
-        "flicking-camera": true
+        "flicking-camera": true,
+        [this.cameraClass]: !!this.cameraClass
       },
       style: !initialized && this.firstPanelSize
         ? { transform: getDefaultCameraTransform(this.options.align, this.options.horizontal, this.firstPanelSize) }
