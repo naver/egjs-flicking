@@ -60,7 +60,7 @@ import NgxElementProvider from "./NgxElementProvider";
 @Component({
   selector: "ngx-flicking, [NgxFlicking]",
   template: `
-    <div class="flicking-camera" [ngStyle]="cameraStyleBeforeInit">
+    <div [ngClass]="_cameraElClass" [ngStyle]="cameraStyleBeforeInit">
       <ng-content></ng-content>
     </div>
     <ng-content select="[in-viewport]"></ng-content>`,
@@ -78,6 +78,7 @@ export class NgxFlickingComponent extends FlickingInterface
   @Input() public options: Partial<FlickingOptions> = {};
   @Input() public plugins: Plugin[] = [];
   @Input() public status: Status;
+  @Input() public cameraClass: string;
   @Input() public hideBeforeInit: boolean = false;
   @Input() public firstPanelSize: string;
   @Output() public ready: EventEmitter<ReadyEvent<NgxFlickingComponent>>;
@@ -122,6 +123,7 @@ export class NgxFlickingComponent extends FlickingInterface
   private _elementDiffer: ListDiffer<NgxFlickingPanel> | null = null;
 
   public get ngxPanels() { return this._ngxPanels; }
+  private get _cameraElClass() { return `flicking-camera ${this.cameraClass ?? ""}`.trim(); }
 
   public constructor(elRef: ElementRef<HTMLElement>, renderer: Renderer2, @Inject(PLATFORM_ID) platformId) {
     super();

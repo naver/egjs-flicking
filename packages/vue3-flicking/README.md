@@ -83,6 +83,7 @@ And in the \<style\> tag
     :options="{ circular: true, moveType: 'freeScroll' }"
     :viewportTag="'div'"
     :cameraTag="'div'"
+    :cameraClass="''"
     :plugins="plugins"
     @need-panel="e => {
       // ADD PANELS

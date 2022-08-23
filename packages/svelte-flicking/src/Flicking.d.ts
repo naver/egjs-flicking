@@ -3,6 +3,7 @@ import { SvelteComponentTyped } from "svelte";
 import VanillaFlicking, { FlickingOptions, FlickingEvents, Plugin, Status } from "@egjs/flicking";
 
 interface FlickingProps {
+  cameraClass: string;
   hideBeforeInit: boolean;
   firstPanelSize: string;
   plugins: Plugin[];

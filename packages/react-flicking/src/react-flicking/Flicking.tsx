@@ -152,6 +152,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
 
     const initialized = flicking && flicking.initialized;
     const viewportClasses: string[] = ["flicking-viewport"];
+    const cameraClasses: string[] = ["flicking-camera"];
     const isHorizontal = flicking
       ? flicking.horizontal
       : props.horizontal ?? true;
@@ -164,6 +165,9 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     }
     if (attributes.className) {
       viewportClasses.push(attributes.className);
+    }
+    if (props.cameraClass) {
+      cameraClasses.push(props.cameraClass);
     }
 
     const cameraProps = !initialized && props.firstPanelSize
@@ -180,7 +184,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       <Viewport {...attributes} className={viewportClasses.join(" ")} ref={(e?: HTMLElement) => {
         e && (this._viewportElement = e);
       }}>
-        <Camera className="flicking-camera" {...cameraProps}>
+        <Camera className={cameraClasses.join(" ")} {...cameraProps}>
           { panels }
         </Camera>
         { this._getViewportSlot() }

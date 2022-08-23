@@ -27,6 +27,7 @@ import { FlickingProps } from "./types";
 export const DEFAULT_PROPS: FlickingProps = {
   viewportTag: "div",
   cameraTag: "div",
+  cameraClass: "",
   plugins: [],
   useFindDOMNode: false,
   hideBeforeInit: false,

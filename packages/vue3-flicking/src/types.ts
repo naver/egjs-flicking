@@ -46,6 +46,7 @@ export type VueFlicking = DefineComponent<
   Readonly<{
     viewportTag?: unknown;
     cameraTag?: unknown;
+    cameraClass?: unknown;
     hideBeforeInit?: unknown;
     firstPanelSize?: unknown;
     options?: unknown;
@@ -54,6 +55,7 @@ export type VueFlicking = DefineComponent<
   } & {
     viewportTag: string;
     cameraTag: string;
+    cameraClass: string;
     hideBeforeInit: boolean;
     options: Partial<FlickingOptions>;
     plugins: Plugin[];
@@ -67,6 +69,7 @@ export type VueFlicking = DefineComponent<
   {
     viewportTag: string;
     cameraTag: string;
+    cameraClass: string;
     hideBeforeInit: boolean;
     options: Partial<FlickingOptions>;
     plugins: Plugin[];

@@ -28,6 +28,7 @@ import {
 export interface FlickingProps {
   viewportTag: keyof JSX.IntrinsicElements;
   cameraTag: keyof JSX.IntrinsicElements;
+  cameraClass: string;
   plugins: Plugin[];
   status?: Status;
   useFindDOMNode: boolean;
