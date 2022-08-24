@@ -304,7 +304,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
 
   private _isFragment(child: React.ReactElement) {
     if (child.type) {
-      return child.type === React.Fragment;
+      return child.type === typeof React.Fragment;
     }
 
     return (child as any) === React.Fragment;
