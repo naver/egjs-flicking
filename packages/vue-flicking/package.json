@@ -5,7 +5,10 @@
   "main": "dist/flicking.cjs.js",
   "module": "dist/flicking.esm.js",
   "types": "declaration/index.d.ts",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css",
+    "**/*.sass"
+  ],
   "scripts": {
     "start": "vue-cli-service demo",
     "build": "rm -rf dist && rollup -c && npm run declaration",
