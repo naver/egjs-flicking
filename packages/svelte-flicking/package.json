@@ -4,7 +4,10 @@
   "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
   "main": "dist/flicking.cjs.js",
   "module": "dist/flicking.esm.js",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css",
+    "**/*.sass"
+  ],
   "es2015": "dist/flicking.esm.js",
   "types": "declaration/index.d.ts",
   "svelte": "lib/index.js",
