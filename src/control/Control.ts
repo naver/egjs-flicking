@@ -174,6 +174,43 @@ abstract class Control {
   }
 
   /**
+   * Change the destination and duration of the animation currently playing
+   * @ko 재생 중인 애니메이션의 목적지와 재생 시간을 변경합니다
+   * @param {Panel} panel The target panel to move<ko>이동할 패널</ko>
+   * @param {number} duration Duration of the animation (unit: ms)<ko>애니메이션 진행 시간 (단위: ms)</ko>
+   * @param {DIRECTION} direction Direction to move, only available in the {@link Flicking#circular circular} mode<ko>이동할 방향. {@link Flicking#circular circular} 옵션 활성화시에만 사용 가능합니다</ko>
+   * @chainable
+   * @throws {FlickingError}
+   * {@link ERROR_CODE POSITION_NOT_REACHABLE} When the given panel is already removed or not in the Camera's {@link Camera#range range}
+   * <ko>{@link ERROR_CODE POSITION_NOT_REACHABLE} 주어진 패널이 제거되었거나, Camera의 {@link Camera#range range} 밖에 있을 경우</ko>
+   * @return {this}
+   */
+  public updateAnimation(panel: Panel, duration?: number, direction?: ValueOf<typeof DIRECTION>): this {
+    const state = this._controller.state;
+    const position = this._getPosition(panel, direction ?? DIRECTION.NONE);
+
+    state.targetPanel = panel;
+    this._controller.updateAnimation(position, duration);
+
+    return this;
+  }
+
+  /**
+   * Stops the animation currently playing
+   * @ko 재생 중인 애니메이션을 중단시킵니다
+   * @chainable
+   * @return {this}
+   */
+  public stopAnimation(): this {
+    const state = this._controller.state;
+
+    state.targetPanel = null;
+    this._controller.stopAnimation();
+
+    return this;
+  }
+
+  /**
    * Update position after resizing
    * @ko resize 이후에 position을 업데이트합니다
    * @param {number} progressInPanel Previous camera's progress in active panel before resize<ko>Resize 이전 현재 선택된 패널 내에서의 카메라 progress 값</ko>
@@ -267,41 +304,7 @@ abstract class Control {
     direction?: ValueOf<typeof DIRECTION>;
     axesEvent?: OnRelease;
   }) {
-    const flicking = getFlickingAttached(this._flicking);
-    const camera = flicking.camera;
-
-    let position = panel.position;
-    const nearestAnchor = camera.findNearestAnchor(position);
-
-    if (panel.removed || !nearestAnchor) {
-      return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(panel.position), ERROR.CODE.POSITION_NOT_REACHABLE));
-    }
-    if (!camera.canReach(panel)) {
-      // Override position & panel if that panel is not reachable
-      position = nearestAnchor.position;
-      panel = nearestAnchor.panel;
-    } else if (flicking.circularEnabled) {
-      // Circular mode is enabled, find nearest distance to panel
-      const camPos = this._controller.position; // Actual position of the Axes
-      const camRangeDiff = camera.rangeDiff;
-      const possiblePositions = [position, position + camRangeDiff, position - camRangeDiff]
-        .filter(pos => {
-          if (direction === DIRECTION.NONE) return true;
-
-          return direction === DIRECTION.PREV
-            ? pos <= camPos
-            : pos >= camPos;
-        });
-
-      position = possiblePositions.reduce((nearestPosition, pos) => {
-        if (Math.abs(camPos - pos) < Math.abs(camPos - nearestPosition)) {
-          return pos;
-        } else {
-          return nearestPosition;
-        }
-      }, Infinity);
-    }
-
+    const position = this._getPosition(panel, direction);
     this._triggerIndexChangeEvent(panel, panel.position, axesEvent);
 
     return this._animateToPosition({ position, duration, newActivePanel: panel, axesEvent });
@@ -379,6 +382,45 @@ abstract class Control {
         throw err;
       });
     }
+  }
+
+  private _getPosition(panel: Panel, direction: ValueOf<typeof DIRECTION> = DIRECTION.NONE) {
+    const flicking = getFlickingAttached(this._flicking);
+    const camera = flicking.camera;
+
+    let position = panel.position;
+    const nearestAnchor = camera.findNearestAnchor(position);
+
+    if (panel.removed || !nearestAnchor) {
+      throw new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(panel.position), ERROR.CODE.POSITION_NOT_REACHABLE);
+    }
+    if (!camera.canReach(panel)) {
+      // Override position & panel if that panel is not reachable
+      position = nearestAnchor.position;
+      panel = nearestAnchor.panel;
+    } else if (flicking.circularEnabled) {
+      // Circular mode is enabled, find nearest distance to panel
+      const camPos = this._controller.position; // Actual position of the Axes
+      const camRangeDiff = camera.rangeDiff;
+      const possiblePositions = [position, position + camRangeDiff, position - camRangeDiff]
+        .filter(pos => {
+          if (direction === DIRECTION.NONE) return true;
+
+          return direction === DIRECTION.PREV
+            ? pos <= camPos
+            : pos >= camPos;
+        });
+
+      position = possiblePositions.reduce((nearestPosition, pos) => {
+        if (Math.abs(camPos - pos) < Math.abs(camPos - nearestPosition)) {
+          return pos;
+        } else {
+          return nearestPosition;
+        }
+      }, Infinity);
+    }
+
+    return position;
   }
 }
 

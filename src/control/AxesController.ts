@@ -215,6 +215,39 @@ class AxesController {
   }
 
   /**
+   * Change the destination and duration of the animation currently playing
+   * @ko 재생 중인 애니메이션의 목적지와 재생 시간을 변경합니다
+   * @param {number} position A position to move<ko>이동할 좌표</ko>
+   * @param {number} duration Duration of the animation (unit: ms)<ko>애니메이션 진행 시간 (단위: ms)</ko>
+   * @chainable
+   * @return {this}
+   */
+  public updateAnimation(position: number, duration?: number): this {
+    this._animatingContext = {
+      ...this._animatingContext,
+      end: position
+    };
+    this._axes?.updateAnimation({
+      destPos: { [AXES.POSITION_KEY]: position },
+      duration
+    });
+
+    return this;
+  }
+
+  /**
+   * Stops the animation currently playing
+   * @ko 재생 중인 애니메이션을 중단시킵니다
+   * @chainable
+   * @return {this}
+   */
+  public stopAnimation(): this {
+    this._axes?.stopAnimation();
+
+    return this;
+  }
+
+  /**
    * Update {@link https://naver.github.io/egjs-axes/ @egjs/axes}'s state
    * @ko {@link https://naver.github.io/egjs-axes/ @egjs/axes}의 상태를 갱신합니다
    * @chainable
