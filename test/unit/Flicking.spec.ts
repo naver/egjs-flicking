@@ -1695,6 +1695,58 @@ describe("Flicking", () => {
       });
     });
 
+    describe("updateAnimation", () => {
+      it("should change the destination of the animation being played", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const changedSpy = sinon.spy();
+        const moveEndSpy = sinon.spy();
+        flicking.on(EVENTS.CHANGED, changedSpy);
+        flicking.on(EVENTS.MOVE_END, moveEndSpy);
+
+        void flicking.moveTo(1, 3000);
+        tick(1000);
+
+        flicking.updateAnimation(2);
+        tick(2500);
+
+        const status = flicking.getStatus();
+
+        expect(changedSpy.calledOnce).to.be.true;
+        expect(moveEndSpy.calledOnce).to.be.true;
+        expect(status.position.panel).to.equal(2);
+        expect(status.index).to.equal(2);
+      });
+
+      it("should throw FlickingError with code INDEX_OUT_OF_RANGE if updating to index >= panel count", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        void flicking.moveTo(1, 3000);
+        tick(1000);
+
+        expect(() => flicking.updateAnimation(3))
+          .to.throw(FlickingError)
+          .with.property("code", ERROR.CODE.INDEX_OUT_OF_RANGE);
+      });
+    });
+
+    describe("stopAnimation", () => {
+      it("should stop the animation being played with the moveEnd event", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const moveEndSpy = sinon.spy();
+        flicking.on(EVENTS.MOVE_END, moveEndSpy);
+
+        void flicking.moveTo(2, 3000);
+        tick(500);
+
+        flicking.stopAnimation();
+        const status = flicking.getStatus();
+
+        expect(moveEndSpy.calledOnce).to.be.true;
+        expect(status.position.panel).to.not.equal(2);
+        expect(status.index).to.not.equal(2);
+      });
+    });
+
     describe("getStatus()", () => {
       it("should return correct index", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
