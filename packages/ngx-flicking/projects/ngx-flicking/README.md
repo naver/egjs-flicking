@@ -34,7 +34,9 @@
 
 ## ⚙️ Installation
 ```sh
-npm install --save @egjs/ngx-flicking
+npm install @egjs/ngx-flicking
+# Or if you're using yarn
+yarn add @egjs/ngx-flicking
 ```
 
 ## 🏃 Quick Start
@@ -60,6 +62,7 @@ export class AppModule { } /* Your app */
 
 ### Template & Script
 ```ts
+import { Plugin } from '@egjs/ngx-flicking';
 import { Fade, AutoPlay } from "@egjs/flicking-plugins";
 
 @Component({
@@ -83,7 +86,13 @@ import { Fade, AutoPlay } from "@egjs/flicking-plugins";
   `
 })
 export class FlickingDemo implements OnInit {
-  plugins: Plugin[] = [new Fade(), new AutoPlay(2000, 'NEXT')];
+  plugins: Plugin[] = [
+    new Fade(),
+    new AutoPlay({
+      duration: 2000,
+      direction: 'NEXT',
+    }),
+  ];
 
   onNeedPanel(e) {
     // ADD PANELS

@@ -17,7 +17,8 @@ import {
   Renderer2,
   HostBinding,
   Inject,
-  PLATFORM_ID
+  PLATFORM_ID,
+  NgZone
 } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import VanillaFlicking, {
@@ -116,21 +117,19 @@ export class NgxFlickingComponent extends FlickingInterface
   }
 
   @ContentChildren(NgxFlickingPanel) private _ngxPanels: QueryList<NgxFlickingPanel>;
-  private _elRef: ElementRef<HTMLElement>;
-  private _ngxRenderer: Renderer2;
-  private _platformId: any;
   private _pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
-  private _elementDiffer: ListDiffer<NgxFlickingPanel> | null = null;
 
   public get ngxPanels() { return this._ngxPanels; }
-  private get _cameraElClass() { return `flicking-camera ${this.cameraClass ?? ""}`.trim(); }
+  public get _cameraElClass() { return `flicking-camera ${this.cameraClass ?? ""}`.trim(); }
 
-  public constructor(elRef: ElementRef<HTMLElement>, renderer: Renderer2, @Inject(PLATFORM_ID) platformId) {
+  public constructor(
+    private _elRef: ElementRef<HTMLElement>,
+    private _ngxRenderer: Renderer2,
+    @Inject(PLATFORM_ID) private _platformId: string,
+    private _ngZone: NgZone,
+  ) {
     super();
 
-    this._elRef = elRef;
-    this._ngxRenderer = renderer;
-    this._platformId = platformId;
     this._vanillaFlicking = null;
 
     EVENT_NAMES.forEach(evtName => {
@@ -167,7 +166,6 @@ export class NgxFlickingComponent extends FlickingInterface
     this._vanillaFlicking = flicking;
 
     const elementDiffer = new ListDiffer(this._ngxPanels.toArray());
-    this._elementDiffer = elementDiffer;
 
     this._bindEvents();
     this._checkPlugins();
@@ -195,7 +193,9 @@ export class NgxFlickingComponent extends FlickingInterface
     const flicking = this._vanillaFlicking;
     if (!flicking) return;
 
-    void flicking.renderer.forceRenderAllPanels();
+    this._ngZone.runOutsideAngular(() =>
+      flicking.renderer.forceRenderAllPanels()
+    );
     this._checkPlugins();
   }
 
