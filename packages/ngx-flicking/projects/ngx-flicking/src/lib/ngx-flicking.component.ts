@@ -21,6 +21,8 @@ import {
   NgZone
 } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
+import { fromEvent, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import VanillaFlicking, {
   FlickingOptions,
   FlickingEvents,
@@ -51,6 +53,7 @@ import VanillaFlicking, {
   CLASS
 } from "@egjs/flicking";
 import ListDiffer from "@egjs/list-differ";
+import { ComponentEvent } from "@egjs/component";
 
 import { EVENT_NAMES } from "./consts";
 import FlickingInterface from "./FlickingInterface";
@@ -121,6 +124,8 @@ export class NgxFlickingComponent extends FlickingInterface
 
   public get ngxPanels() { return this._ngxPanels; }
   public get _cameraElClass() { return `flicking-camera ${this.cameraClass ?? ""}`.trim(); }
+  
+  private _destroy$ = new Subject<void>();
 
   public constructor(
     private _elRef: ElementRef<HTMLElement>,
@@ -158,11 +163,13 @@ export class NgxFlickingComponent extends FlickingInterface
       this._initVirtualElements();
     }
 
-    // This prevents mousemove to call ngDoCheck & noAfterContentChecked everytime
-    const flicking = new VanillaFlicking(viewportEl, {
+    // Initialize `VanillaFlicking` outside of the Angular zone so it will set up `mousedown`
+    // and `mousemove` event listeners within the root zone, and it won't trigger change detection
+    // every time the user moves the mouse.
+    const flicking = this._ngZone.runOutsideAngular(() => new VanillaFlicking(viewportEl, {
       ...this.options,
       externalRenderer: new NgxRenderer(rendererOptions)
-    });
+    }));
     this._vanillaFlicking = flicking;
 
     const elementDiffer = new ListDiffer(this._ngxPanels.toArray());
@@ -184,8 +191,8 @@ export class NgxFlickingComponent extends FlickingInterface
   }
 
   public ngOnDestroy() {
+    this._destroy$.next();
     if (!this._vanillaFlicking) return;
-
     this._vanillaFlicking.destroy();
   }
 
@@ -203,16 +210,23 @@ export class NgxFlickingComponent extends FlickingInterface
     const flicking = this._vanillaFlicking!;
 
     EVENT_NAMES.forEach(evtName => {
-      flicking.on(evtName, e => {
-        // Style guide: Event - https://angular.io/guide/styleguide#dont-prefix-output-properties
-        const emitter = this[evtName] as EventEmitter<FlickingEvents[typeof evtName]>;
+      // `fromEvent` supports passing `JQueryStyleEventEmitter`
+      // (an object with `on` and `off` methods). `flicking` acts as a
+      // jQuery event emitter since it has both methods.
+      fromEvent<ComponentEvent>(flicking, evtName)
+        .pipe(takeUntil(this._destroy$))
+        .subscribe((e) => {
+          // Style guide: Event - https://angular.io/guide/styleguide#dont-prefix-output-properties
+          const emitter = this[evtName] as EventEmitter<
+            FlickingEvents[typeof evtName]
+          >;
 
-        e.currentTarget = this;
+          e.currentTarget = this;
 
-        if (emitter) {
-          emitter.emit(e);
-        }
-      });
+          if (emitter && emitter.observers.length > 0) {
+            this._ngZone.run(() => emitter.emit(e as FlickingEvents[typeof evtName]));
+          }
+        });
     });
   }
 
