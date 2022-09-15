@@ -1095,6 +1095,48 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   /**
+   * Change the destination and duration of the animation currently playing
+   * @ko 재생 중인 애니메이션의 목적지와 재생 시간을 변경합니다
+   * @param {number} index The index of the panel to move<ko>이동할 패널의 인덱스</ko>
+   * @param {number} duration Duration of the animation (unit: ms)<ko>애니메이션 진행 시간 (단위: ms)</ko>
+   * @param {DIRECTION} direction Direction to move, only available in the {@link Flicking#circular circular} mode<ko>이동할 방향. {@link Flicking#circular circular} 옵션 활성화시에만 사용 가능합니다</ko>
+   * @throws {FlickingError}
+   * {@link ERROR_CODE INDEX_OUT_OF_RANGE} When the root is not either string or HTMLElement
+   * <ko>{@link ERROR_CODE INDEX_OUT_OF_RANGE} 해당 인덱스를 가진 패널이 존재하지 않을 경우</ko>
+   * @return {void}
+   */
+  public updateAnimation(index: number, duration?: number, direction?: ValueOf<typeof DIRECTION>): void {
+    if (!this._control.animating) {
+      return;
+    }
+
+    const renderer = this._renderer;
+    const panelCount = renderer.panelCount;
+
+    const panel = renderer.getPanel(index);
+
+    if (!panel) {
+      throw new FlickingError(ERROR.MESSAGE.INDEX_OUT_OF_RANGE(index, 0, panelCount - 1), ERROR.CODE.INDEX_OUT_OF_RANGE);
+    }
+
+    this._control.updateAnimation(panel, duration, direction);
+  }
+
+  /**
+   * Stops the animation currently playing
+   * @ko 재생 중인 애니메이션을 중단시킵니다
+   * @fires Flicking#moveEnd
+   * @return {void}
+   */
+  public stopAnimation(): void {
+    if (!this._control.animating) {
+      return;
+    }
+
+    this._control.stopAnimation();
+  }
+
+  /**
    * Return the {@link Panel} at the given index. `null` if it doesn't exists.
    * @ko 주어진 인덱스에 해당하는 {@link Panel}을 반환합니다. 주어진 인덱스에 해당하는 패널이 존재하지 않을 경우 `null`을 반환합니다.
    * @return {Panel | null} Panel at the given index<ko>주어진 인덱스에 해당하는 패널</ko>
