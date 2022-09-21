@@ -3,7 +3,7 @@ import { TestBed } from "@angular/core/testing";
 import { Children, isValidElement, ReactElement } from "react";
 import VanillaFlicking from "@egjs/flicking";
 
-import { NgxFlickingComponent, NgxFlickingPanel, NgxFlickingService } from "@egjs/ngx-flicking";
+import { NgxFlickingComponent, NgxFlickingPanel } from "@egjs/ngx-flicking";
 
 import DummyFlicking from "../../fixture/DummyFlicking";
 import { createSandbox, cleanup, resolveFlickingWhenReady, findFlickingJSX, flattenAttrs } from "../../common/utils";
@@ -28,8 +28,7 @@ const render = async (el: JSX.Element): Promise<VanillaFlicking> => {
   }
 
   await TestBed.configureTestingModule({
-    declarations: [NgxFlickingComponent, NgxFlickingPanel, NgxFlickingTestComp],
-    providers: [NgxFlickingService]
+    declarations: [NgxFlickingComponent, NgxFlickingPanel, NgxFlickingTestComp]
   }).compileComponents();
 
   const fixture = TestBed.createComponent(NgxFlickingTestComp);
