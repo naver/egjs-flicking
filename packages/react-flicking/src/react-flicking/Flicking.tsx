@@ -26,12 +26,6 @@ import NonStrictPanel from "./NonStrictPanel";
 import ViewportSlot from "./ViewportSlot";
 import ReactElementProvider from "./ReactElementProvider";
 
-enum LifeCycleState {
-  BEFORE_UPDATE,
-  RENDER,
-  UPDATED
-}
-
 class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = DEFAULT_PROPS;
 
@@ -42,7 +36,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   private _viewportElement: HTMLElement;
   private _diffResult: DiffResult<React.ReactElement> | null;
   private _renderEmitter = new Component<{ render: void }>();
-  private _currentState: LifeCycleState = LifeCycleState.BEFORE_UPDATE;
+  private _prevProps: Partial<FlickingProps & FlickingOptions>;
 
   public get reactPanels() { return this._panels.map(panel => panel.current!); }
   public get renderEmitter() { return this._renderEmitter; }
@@ -51,6 +45,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     super(props);
 
     this._panels = this._createPanelRefs(props, this._getChildren());
+    this._prevProps = this.props;
   }
 
   public componentDidMount() {
@@ -74,11 +69,11 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     );
 
     this._vanillaFlicking = flicking;
-    this._currentState = LifeCycleState.UPDATED;
 
     const children = this._getChildren();
     this._jsxDiffer = new ListDiffer(children, panel => panel.key!);
     this._pluginsDiffer = new ListDiffer<any>();
+    this._prevProps = this.props;
 
     this._bindEvents();
     this._checkPlugins();
@@ -92,29 +87,38 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     this._vanillaFlicking?.destroy();
   }
 
-  public shouldComponentUpdate(nextProps: this["props"]) {
+  public shouldComponentUpdate(nextProps: Readonly<Partial<FlickingProps & FlickingOptions>>): boolean {
     const vanillaFlicking = this._vanillaFlicking;
-    const props = this.props;
+    const prevProps = this.props;
 
-    // Ignore updates before init, they will be updated after "ready" event's force update
     if (!vanillaFlicking || !vanillaFlicking.initialized) return false;
+    if (!this._hasSameChildren(prevProps, nextProps)) return true;
 
-    if (this._currentState !== LifeCycleState.BEFORE_UPDATE && props.children !== nextProps.children) {
-      const nextChildren = this._getChildren(nextProps.children);
+    const { children, ...restProps } = nextProps;
 
-      this._panels = this._createPanelRefs(nextProps, nextChildren);
-      this._diffResult = this._jsxDiffer.update(nextChildren);
-    }
-
-    this._currentState = LifeCycleState.BEFORE_UPDATE;
-
-    for (const key in nextProps) {
-      if (props[key] !== nextProps[key]) {
+    for (const key in restProps) {
+      if (prevProps[key] !== nextProps[key]) {
         return true;
       }
     }
 
     return false;
+  }
+
+  public beforeRender() {
+    const vanillaFlicking = this._vanillaFlicking;
+    const nextProps = this.props;
+    const prevProps = this._prevProps;
+
+    // Ignore updates before init, they will be updated after "ready" event's force update
+    if (!vanillaFlicking || !vanillaFlicking.initialized) return;
+
+    if (!this._hasSameChildren(prevProps, nextProps)) {
+      const nextChildren = this._getChildren(nextProps.children);
+
+      this._panels = this._createPanelRefs(nextProps, nextChildren);
+      this._diffResult = this._jsxDiffer.update(nextChildren);
+    }
   }
 
   public componentDidUpdate() {
@@ -125,8 +129,6 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     this._checkPlugins();
     renderEmitter.trigger("render");
     flicking.camera.updateOffset();
-
-    this._currentState = LifeCycleState.UPDATED;
 
     if (!diffResult || !flicking.initialized) return;
 
@@ -142,7 +144,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const attributes: { [key: string]: any } = {};
     const flicking = this._vanillaFlicking;
 
-    this._currentState = LifeCycleState.RENDER;
+    this.beforeRender();
 
     for (const name in props) {
       if (!(name in DEFAULT_PROPS) && !(name in VanillaFlicking.prototype)) {
@@ -179,6 +181,8 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const panels = !!props.virtual && (props.panelsPerView ?? -1) > 0
       ? this._getVirtualPanels()
       : this._getPanels();
+
+    this._prevProps = props;
 
     return (
       <Viewport {...attributes} className={viewportClasses.join(" ")} ref={(e?: HTMLElement) => {
@@ -235,6 +239,24 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
 
     flicking.addPlugins(...added.map(index => list[index]));
     flicking.removePlugins(...removed.map(index => prevList[index]));
+  }
+
+  private _hasSameChildren(prevProps: this["props"], nextProps: this["props"]) {
+    const prevChildren = this._getChildren(prevProps.children);
+    const nextChildren = this._getChildren(nextProps.children);
+
+    if (prevChildren.length !== nextChildren.length) return false;
+
+    const same = prevChildren.every((child, idx) => {
+      const nextChild = nextChildren[idx];
+      if ((child as React.ReactElement).key && (nextChild as React.ReactElement).key) {
+        return (child as React.ReactElement).key === (nextChild as React.ReactElement).key;
+      } else {
+        return child === nextChild;
+      }
+    });
+
+    return same;
   }
 
   private _getChildren(children: React.ReactNode = this.props.children) {
