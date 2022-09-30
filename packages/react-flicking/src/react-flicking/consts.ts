@@ -28,6 +28,7 @@ export const DEFAULT_PROPS: FlickingProps = {
   viewportTag: "div",
   cameraTag: "div",
   cameraClass: "",
+  renderOnSameKey: false,
   plugins: [],
   useFindDOMNode: false,
   hideBeforeInit: false,
