@@ -103,7 +103,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     }
 
     const prevChildren = this._prevChildren;
-    const nextChildren = this._getChildren(nextProps.children);
+    const nextChildren = this._getChildren(children);
     if (nextProps.renderOnSameKey || !this._hasSameChildren(prevChildren, nextChildren)) return true;
 
     return false;

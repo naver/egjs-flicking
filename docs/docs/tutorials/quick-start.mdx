@@ -91,6 +91,15 @@ export default () => (
 )
 ```
 
+<h3>React exclusive options</h3>
+
+- viewportTag: HTML tag for `.flicking-viewport` element. (default: **"div"**)
+- cameraTag: HTML tag for `.flicking-camera` element. (default: **"div"**)
+- cameraClass: `className` for `.flicking-camera` element. (default: **""**)
+- renderOnSameKey: Whether to always render children even they have the same keys (default: **false**)
+  - Flicking doesn't rerender when children have same length & keys for performance by default.
+  - If you have to bypass this behavior, like when you have to update panel's innerHTML without changing the list of child elements, you can either set this option to `true`, or you can call Flicking component's `forceUpdate()`.
+
 <h3>Using the components as a panel</h3>
 
 If you're using the React Component as a panel, it should use a [ref forwarding](https://reactjs.org/docs/forwarding-refs.html)
