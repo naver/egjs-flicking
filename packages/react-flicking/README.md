@@ -42,20 +42,29 @@ npm install --save @egjs/react-flicking
 import Flicking, { MoveEvent, WillChangeEvent } from "@egjs/react-flicking";
 
 <Flicking
-  viewportTag = "div"
-  cameraTag = "div"
-  cameraClass = ""
-  align = "center"
-  onMove = {(e: MoveEvent) => {}}
-  onWillChange = {(e: WillChangeEvent) => {}}
-  horizontal = {true}
-  circular = {true}
+  viewportTag="div"
+  cameraTag="div"
+  cameraClass=""
+  renderOnSameKey={false}
+  align="center"
+  onMove={(e: MoveEvent) => {}}
+  onWillChange={(e: WillChangeEvent) => {}}
+  horizontal={true}
+  circular={true}
 >
   <div>panel 0</div>
   <div>panel 1</div>
   <div>panel 2</div>
 </Flicking>
 ```
+
+## ✨ React exclusive options
+- viewportTag: HTML tag for `.flicking-viewport` element. (default: **"div"**)
+- cameraTag: HTML tag for `.flicking-camera` element. (default: **"div"**)
+- cameraClass: `className` for `.flicking-camera` element. (default: **""**)
+- renderOnSameKey: Whether to always render children even they have the same keys (default: **false**)
+  - Flicking doesn't rerender when children have same length & keys for performance by default.
+  - If you have to bypass this behavior, like when you have to update panel's innerHTML without changing the list of child elements, you can either set this option to `true`, or you can call Flicking component's `forceUpdate()`.
 
 ## 📦 Packages
 You can use all plugins just like native @egjs/flicking.
