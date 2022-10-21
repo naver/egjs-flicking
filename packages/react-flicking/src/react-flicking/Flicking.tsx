@@ -147,12 +147,12 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     this._checkPlugins();
     renderEmitter.trigger("render");
     flicking.camera.updateOffset();
+    this._renderingState = RenderingState.UPDATED;
 
     if (!diffResult || !flicking.initialized) return;
 
     sync(flicking, diffResult, this.reactPanels);
 
-    this._renderingState = RenderingState.UPDATED;
     this._diffResult = null;
   }
 
