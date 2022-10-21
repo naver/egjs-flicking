@@ -26,12 +26,6 @@ import NonStrictPanel from "./NonStrictPanel";
 import ViewportSlot from "./ViewportSlot";
 import ReactElementProvider from "./ReactElementProvider";
 
-enum RenderingState {
-  NONE,
-  RENDERED,
-  UPDATED
-}
-
 class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = DEFAULT_PROPS;
 
@@ -43,12 +37,6 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   private _diffResult: DiffResult<React.ReactElement> | null;
   private _renderEmitter = new Component<{ render: void }>();
   private _prevChildren: React.ReactElement[];
-  /**
-   * The Purpose of "Rendering State" is:
-   * In some cases, like in <StrictMode>, React attempts to render twice without calling `componentDidUpdate`.
-   * We ignore the diff update between the two rendering calls, using this rendering state.
-   */
-  private _renderingState: RenderingState;
 
   public get reactPanels() { return this._panels.map(panel => panel.current!); }
   public get renderEmitter() { return this._renderEmitter; }
@@ -59,7 +47,6 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const children = this._getChildren();
     this._panels = this._createPanelRefs(props, children);
     this._prevChildren = children;
-    this._renderingState = RenderingState.NONE;
   }
 
   public componentDidMount() {
@@ -128,8 +115,9 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const prevChildren = this._prevChildren;
 
     // Ignore updates before init, they will be updated after "ready" event's force update
-    // Also, ignore update between two successive rendering calls
-    if (!vanillaFlicking || !vanillaFlicking.initialized || this._renderingState === RenderingState.RENDERED) return;
+    // Also, prevent updates when another update is already queued.
+    // This usually happens when render() called twice without calling componentDidMount, like in the case of React.StrictMode.
+    if (!vanillaFlicking || !vanillaFlicking.initialized || this._diffResult) return;
 
     const nextChildren = this._getChildren(props.children);
     if (props.renderOnSameKey || !this._hasSameChildren(prevChildren, nextChildren)) {
@@ -147,7 +135,6 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     this._checkPlugins();
     renderEmitter.trigger("render");
     flicking.camera.updateOffset();
-    this._renderingState = RenderingState.UPDATED;
 
     if (!diffResult || !flicking.initialized) return;
 
@@ -201,8 +188,6 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       ? this._getVirtualPanels()
       : this._getPanels();
 
-    this._renderingState = RenderingState.RENDERED;
-
     return (
       <Viewport {...attributes} className={viewportClasses.join(" ")} ref={(e?: HTMLElement) => {
         e && (this._viewportElement = e);
@@ -239,15 +224,6 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     });
 
     flicking.once(EVENTS.READY, () => {
-      const children = this._getChildren();
-      const diffResult = this._jsxDiffer.update(children);
-
-      // children is changed before init
-      if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
-        this._panels = this._createPanelRefs(this.props, children);
-        this._diffResult = diffResult;
-      }
-
       this.forceUpdate();
     });
   }
