@@ -26,6 +26,12 @@ import NonStrictPanel from "./NonStrictPanel";
 import ViewportSlot from "./ViewportSlot";
 import ReactElementProvider from "./ReactElementProvider";
 
+enum RenderingState {
+  NONE,
+  RENDERED,
+  UPDATED
+}
+
 class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = DEFAULT_PROPS;
 
@@ -37,6 +43,12 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
   private _diffResult: DiffResult<React.ReactElement> | null;
   private _renderEmitter = new Component<{ render: void }>();
   private _prevChildren: React.ReactElement[];
+  /**
+   * The Purpose of "Rendering State" is:
+   * In some cases, like in <StrictMode>, React attempts to render twice without calling `componentDidUpdate`.
+   * We ignore the diff update between the two rendering calls, using this rendering state.
+   */
+  private _renderingState: RenderingState;
 
   public get reactPanels() { return this._panels.map(panel => panel.current!); }
   public get renderEmitter() { return this._renderEmitter; }
@@ -47,6 +59,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const children = this._getChildren();
     this._panels = this._createPanelRefs(props, children);
     this._prevChildren = children;
+    this._renderingState = RenderingState.NONE;
   }
 
   public componentDidMount() {
@@ -115,7 +128,8 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const prevChildren = this._prevChildren;
 
     // Ignore updates before init, they will be updated after "ready" event's force update
-    if (!vanillaFlicking || !vanillaFlicking.initialized) return;
+    // Also, ignore update between two successive rendering calls
+    if (!vanillaFlicking || !vanillaFlicking.initialized || this._renderingState === RenderingState.RENDERED) return;
 
     const nextChildren = this._getChildren(props.children);
     if (props.renderOnSameKey || !this._hasSameChildren(prevChildren, nextChildren)) {
@@ -138,6 +152,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
 
     sync(flicking, diffResult, this.reactPanels);
 
+    this._renderingState = RenderingState.UPDATED;
     this._diffResult = null;
   }
 
@@ -185,6 +200,8 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const panels = !!props.virtual && (props.panelsPerView ?? -1) > 0
       ? this._getVirtualPanels()
       : this._getPanels();
+
+    this._renderingState = RenderingState.RENDERED;
 
     return (
       <Viewport {...attributes} className={viewportClasses.join(" ")} ref={(e?: HTMLElement) => {
