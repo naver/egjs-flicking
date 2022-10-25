@@ -115,7 +115,9 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const prevChildren = this._prevChildren;
 
     // Ignore updates before init, they will be updated after "ready" event's force update
-    if (!vanillaFlicking || !vanillaFlicking.initialized) return;
+    // Also, prevent updates when another update is already queued.
+    // This usually happens when render() called twice without calling componentDidMount, like in the case of React.StrictMode.
+    if (!vanillaFlicking || !vanillaFlicking.initialized || this._diffResult) return;
 
     const nextChildren = this._getChildren(props.children);
     if (props.renderOnSameKey || !this._hasSameChildren(prevChildren, nextChildren)) {
@@ -222,15 +224,6 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     });
 
     flicking.once(EVENTS.READY, () => {
-      const children = this._getChildren();
-      const diffResult = this._jsxDiffer.update(children);
-
-      // children is changed before init
-      if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
-        this._panels = this._createPanelRefs(this.props, children);
-        this._diffResult = diffResult;
-      }
-
       this.forceUpdate();
     });
   }
@@ -248,8 +241,6 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
 
     const same = prevChildren.every((child, idx) => {
       const nextChild = nextChildren[idx];
-
-      console.log(child, nextChild);
 
       if (child.key && nextChild.key) {
         return child.key === nextChild.key;
