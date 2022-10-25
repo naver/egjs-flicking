@@ -638,6 +638,42 @@ describe("Flicking", () => {
         expect(clickSpy.calledOnce).to.be.true;
       });
 
+      it("should trigger click event when Flicking's dragged under 1px", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventClickOnDrag: true, inputType: ["pointer"] });
+        const clickSpy = sinon.spy();
+        const holdStartSpy = sinon.spy();
+        const moveSpy = sinon.spy();
+        const testPanel = flicking.panels[0];
+        flicking.on(EVENTS.HOLD_START, holdStartSpy);
+        flicking.on(EVENTS.MOVE, moveSpy);
+
+        testPanel.element.addEventListener("click", clickSpy);
+
+        flicking.element.dispatchEvent(new PointerEvent("pointerdown", {
+          pointerId: 1,
+          buttons: 1,
+          clientX: 0,
+          clientY: 0,
+          cancelable: true,
+        }));
+
+        window.dispatchEvent(new PointerEvent("pointermove", {
+          pointerId: 1,
+          buttons: 1,
+          clientX: 0.5,
+          clientY: 0,
+          movementX: 0,
+          movementY: 0,
+          cancelable: true,
+        }));
+
+        testPanel.element.click();
+
+        expect(holdStartSpy.calledOnce).to.be.true;
+        expect(moveSpy.called).to.be.false;
+        expect(clickSpy.calledOnce).to.be.true;
+      });
+
       it("shouldn't trigger click event when Flicking's dragged a little", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventClickOnDrag: true });
         const clickSpy = sinon.spy();

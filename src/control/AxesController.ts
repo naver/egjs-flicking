@@ -139,6 +139,7 @@ class AxesController {
     });
     this._panInput = new PanInput(flicking.viewport.element, {
       inputType: flicking.inputType,
+      threshold: 1,
       iOSEdgeSwipeThreshold: flicking.iOSEdgeSwipeThreshold,
       scale: flicking.horizontal ? [-1, 0] : [0, -1],
       releaseOnScroll: true
