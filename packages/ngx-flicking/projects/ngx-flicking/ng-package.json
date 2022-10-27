@@ -11,6 +11,7 @@
   },
   "whitelistedNonPeerDependencies": [
     "@egjs/flicking",
-    "@egjs/list-differ"
+    "@egjs/list-differ",
+    "@egjs/component"
   ]
 }
