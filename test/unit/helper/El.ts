@@ -31,6 +31,25 @@ class El {
   }
 
   /**
+   * Basic structure of the horizontal Flicking with 50% width panels
+   * @example
+   * - Viewport (width: 1000px, height: 100%)
+   *   - Camera
+   *     - Panel (width: 50%, height: 300px)
+   *     - Panel (width: 50%, height: 300px)
+   *     - Panel (width: 50%, height: 300px)
+   */
+  public static get HALF_HORIZONTAL() {
+    return El.viewport("1000px", "100%").add(
+      El.camera().add(
+        El.panel().setWidth("50%").setHeight(300),
+        El.panel().setWidth("50%").setHeight(300),
+        El.panel().setWidth("50%").setHeight(300),
+      ),
+    );
+  }
+
+  /**
    * Horizontal Flicking using Panels with various heights
    * @example
    * - Viewport (width: 1000px, height: 100%)
