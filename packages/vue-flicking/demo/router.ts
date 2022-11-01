@@ -7,7 +7,7 @@ import Snap from "./features/Snap.vue";
 import VariableSize from "./features/VariableSize.vue";
 import Infinite from "./features/Infinite.vue";
 import Virtual from "./features/Virtual.vue";
-
+import PropChange from "./features/PropChange.vue";
 import AutoPlay from "./plugins/Autoplay.vue";
 import Fade from "./plugins/Fade.vue";
 import Parallax from "./plugins/Parallax.vue";
@@ -62,6 +62,11 @@ export default {
       component: Virtual,
     },
     {
+      path: "/prop",
+      name: "PropChange",
+      component: PropChange
+    },
+    {
       path: "/autoplay",
       name: "AutoPlay",
       component: AutoPlay,
@@ -85,6 +90,6 @@ export default {
       path: "/sync",
       name: "Sync",
       component: Sync,
-    },
+    }
   ],
 };

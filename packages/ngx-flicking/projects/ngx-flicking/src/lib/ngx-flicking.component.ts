@@ -123,8 +123,9 @@ export class NgxFlickingComponent extends FlickingInterface
   private _pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
 
   public get ngxPanels() { return this._ngxPanels; }
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   public get _cameraElClass() { return `flicking-camera ${this.cameraClass ?? ""}`.trim(); }
-  
+
   private _destroy$ = new Subject<void>();
 
   public constructor(
@@ -200,9 +201,20 @@ export class NgxFlickingComponent extends FlickingInterface
     const flicking = this._vanillaFlicking;
     if (!flicking) return;
 
-    this._ngZone.runOutsideAngular(() =>
-      flicking.renderer.forceRenderAllPanels()
-    );
+    this._ngZone.runOutsideAngular(() => {
+      void flicking.renderer.forceRenderAllPanels();
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { virtual, ...newOptions } = this.options;
+
+    // Omit 'virtual', as it can't have any setter
+    for (const key in newOptions) {
+      if (key in flicking && flicking[key] !== newOptions[key]) {
+        flicking[key] = newOptions[key];
+      }
+    }
+
     this._checkPlugins();
   }
 
@@ -217,9 +229,7 @@ export class NgxFlickingComponent extends FlickingInterface
         .pipe(takeUntil(this._destroy$))
         .subscribe((e) => {
           // Style guide: Event - https://angular.io/guide/styleguide#dont-prefix-output-properties
-          const emitter = this[evtName] as EventEmitter<
-            FlickingEvents[typeof evtName]
-          >;
+          const emitter = this[evtName] as EventEmitter<FlickingEvents[typeof evtName]>;
 
           e.currentTarget = this;
 

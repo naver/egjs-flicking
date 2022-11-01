@@ -52,6 +52,7 @@
 
   setContext("panels", panelManager);
 
+  $: renderCounterComputed = renderCounter;
   $: {
     panelsPerView = options.panelsPerView ?? -1;
     isHorizontal = options.horizontal != null ? options.horizontal : true;
@@ -60,6 +61,18 @@
     cameraTransform = !(vanillaFlicking && vanillaFlicking.initialized) && firstPanelSize
       ? { style: `transform: ${getDefaultCameraTransform(options.align, options.horizontal, firstPanelSize)}` }
       : {};
+
+    // On props change
+    if (vanillaFlicking) {
+      const { virtual, ...newOptions } = options;
+
+      // Omit 'virtual', as it can't have any setter
+      for (const key in newOptions) {
+        if (key in vanillaFlicking && vanillaFlicking[key] !== newOptions[key]) {
+          vanillaFlicking[key] = newOptions[key];
+        }
+      }
+    }
   }
 
   onDestroy(() => {
@@ -101,6 +114,18 @@
 
     if (!vanillaFlicking.camera.element.style.transform) {
       vanillaFlicking.camera.applyTransform();
+    }
+
+    if (options.panelsPerView != null) {
+      const firstPanel = vanillaFlicking.panels[0];
+      const styleToCheck = vanillaFlicking.horizontal
+         ? firstPanel.element.style.width
+         : firstPanel.element.style.height;
+
+      if (!styleToCheck) {
+        // Style not applied on first render
+        vanillaFlicking.renderer.updatePanelSize();
+      }
     }
 
     checkPlugins();
@@ -172,5 +197,5 @@
     {/if}
   </div>
   <!-- Putting counter here to hide it from where it renderes -->
-  <slot data-render-count={renderCounter} name="viewport" />
+  <slot data-render-count={renderCounterComputed} name="viewport" />
 </div>

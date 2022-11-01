@@ -12,7 +12,7 @@ export default class Snap extends React.Component<{}> {
           <li>You can decide how many panels can be passed on a single snap.</li>
         </ul>
         <h2>Default (count: 1)</h2>
-        <Flicking className="flicking flicking0" gap={10} circular={true}>
+        <Flicking className="flicking flicking0" gap={10} circular={true} moveType={["snap", { count: 1 }]}>
           <div className="panel panel0"></div>
           <div className="panel panel1"></div>
           <div className="panel panel2"></div>
@@ -22,7 +22,7 @@ export default class Snap extends React.Component<{}> {
         <div className="pagination pagination0"></div>
         <pre><code className="hljs html" data-script="flicking0"></code></pre>
         <h2>count: 3</h2>
-        <Flicking className="flicking flicking1" gap={10} circular={true} moveType="snap">
+        <Flicking className="flicking flicking1" gap={10} circular={true} moveType={["snap", { count: 3 }]}>
           <div className="panel panel0"></div>
           <div className="panel panel1"></div>
           <div className="panel panel2"></div>
@@ -32,7 +32,7 @@ export default class Snap extends React.Component<{}> {
         <div className="pagination pagination1"></div>
         <pre><code className="hljs html" data-script="flicking1"></code></pre>
         <h2>count: Infinity</h2>
-        <Flicking className="flicking flicking2" gap={10} circular={true} moveType="snap">
+        <Flicking className="flicking flicking2" gap={10} circular={true} moveType={["snap", { count: Infinity }]}>
           <div className="panel panel0"></div>
           <div className="panel panel1"></div>
           <div className="panel panel2"></div>

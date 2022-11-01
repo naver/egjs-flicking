@@ -450,9 +450,7 @@ class Camera {
     this._updateMode();
     this._range = this._mode.getRange();
 
-    if (this._circularEnabled) {
-      panels.forEach(panel => panel.updateCircularToggleDirection());
-    }
+    panels.forEach(panel => panel.updateCircularToggleDirection());
 
     return this;
   }
@@ -705,6 +703,7 @@ class Camera {
       this._mode = flicking.bound
         ? new BoundCameraMode(flicking)
         : new LinearCameraMode(flicking);
+      this._circularEnabled = false;
     }
   }
 

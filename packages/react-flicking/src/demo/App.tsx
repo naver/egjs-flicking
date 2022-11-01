@@ -16,10 +16,10 @@ import FreeScroll from "./features/FreeScroll";
 import VariableSize from "./features/VariableSize";
 import Align from "./features/Align";
 import Snap from "./features/Snap";
-import Gap from "./features/Gap";
 import Progress from "./features/Progress";
 import Bound from "./features/Bound";
 import Virtual from "./features/Virtual";
+import PropChange from "./features/PropChange";
 import Parallax from "./plugins/Parallax";
 import Fade from "./plugins/Fade";
 import AutoPlay from "./plugins/AutoPlay";
@@ -37,7 +37,6 @@ export default class App extends Component<{}> {
           <Route path="/variable-size" element={<VariableSize />} />
           <Route path="/align" element={<Align />} />
           <Route path="/snap" element={<Snap />} />
-          <Route path="/gap" element={<Gap />} />
           <Route path="/progress" element={<Progress />} />
           <Route path="/bound" element={<Bound />} />
           <Route path="/virtual" element={<Virtual />} />
@@ -45,6 +44,7 @@ export default class App extends Component<{}> {
           <Route path="/fade" element={<Fade />} />
           <Route path="/autoplay" element={<AutoPlay />} />
           <Route path="/arrow" element={<Arrow />} />
+          <Route path="/prop" element={<PropChange />} />
         </Routes>
       </Router>);
   }

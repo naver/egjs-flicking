@@ -20,6 +20,7 @@ export default class ParallaxDemo extends React.Component<{}> {
           className="flicking"
           gap={10}
           circular={true}
+          plugins={this.plugins}
         >
           <div className="panel">
             <img alt="img" src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />

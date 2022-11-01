@@ -9,6 +9,7 @@
   let vFlick: Flicking;
   let panels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   let list0 = [0, 1, 2];
+  let panelsPerView = 5;
   const plugins = [new Arrow()];
 
   function prepend() {
@@ -34,6 +35,10 @@
 
   function vAppend() {
     vFlick.virtual.append(100);
+  }
+
+  function changeProp() {
+    panelsPerView -= 1;
   }
 </script>
 
@@ -109,7 +114,7 @@
     circular: true,
     virtual: {
       cache: true,
-      panelClass: 'panel',
+      panelClass: 'flicking-panel',
       renderPanel: (panel) => `<span>Panel ${panel.index}</span>`,
       initialPanelCount: 100
     }
@@ -122,16 +127,38 @@
       vAppend();
     }}>Append</span>
   </div>
+
+  <h1>Prop Change</h1>
+  <Flicking options={{
+    panelsPerView: panelsPerView
+  }}>
+    <FlickingPanel><div class="panel">0</div></FlickingPanel>
+    <FlickingPanel><div class="panel">1</div></FlickingPanel>
+    <FlickingPanel><div class="panel">2</div></FlickingPanel>
+    <FlickingPanel><div class="panel">3</div></FlickingPanel>
+    <FlickingPanel><div class="panel">4</div></FlickingPanel>
+  </Flicking>
+  <div>
+    <span class="button" on:click={() => {
+      changeProp();
+    }}>Change</span>
+  </div>
 </div>
 
 <style>
-  :global(.panel) {
-    display: flex;
+  :global(.flicking-panel) {
     width: 200px;
     height: 200px;
+    margin-right: 20px;
+    position: relative;
+  }
+
+  :global(.panel) {
+    width: 100%;
+    height: 100%;
+    display: flex;
     justify-content: center;
     align-items: center;
-    margin-right: 20px;
   }
 
   :global(.panel0) {

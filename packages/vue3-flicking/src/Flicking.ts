@@ -247,6 +247,25 @@ const Flicking = defineComponent({
 
       return Object.keys(childRefs).map(refKey => childRefs[refKey]);
     }
+  },
+  watch: {
+    options: {
+      handler(newOptions) {
+        const flicking = this.vanillaFlicking;
+        if (!flicking) return;
+
+        // Omit 'virtual', as it can't have any setter
+        const { virtual, ...options } = newOptions; // eslint-disable-line @typescript-eslint/no-unused-vars
+
+        for (const key in options) {
+          if (key in flicking && flicking[key] !== options[key]) {
+            flicking[key] = options[key];
+          }
+        }
+      },
+      deep: true,
+      immediate: true
+    }
   }
 }) as unknown as VueFlicking;
 

@@ -336,6 +336,15 @@ abstract class Control {
     }
   }
 
+  /**
+   * @internal
+   */
+  public copy(control: Control) {
+    this._flicking = control._flicking;
+    this._activePanel = control._activePanel;
+    this._controller = control._controller;
+  }
+
   protected _triggerIndexChangeEvent(panel: Panel, position: number, axesEvent?: OnRelease) {
     const flicking = getFlickingAttached(this._flicking);
     const triggeringEvent = panel !== this._activePanel ? EVENTS.WILL_CHANGE : EVENTS.WILL_RESTORE;

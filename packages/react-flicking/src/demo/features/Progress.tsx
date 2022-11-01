@@ -20,7 +20,9 @@ export default class Progress extends React.Component<{}> {
           circular={true}
           moveType="snap"
           onMove={e => {
-            // this.thumb.style.width = (e.progress * 100) + "%";
+            const progress = Math.min(Math.max(-e.currentTarget.panels[0].progress, 0), e.currentTarget.panelCount - 1) / (e.currentTarget.panelCount - 1);
+
+            this.thumb.style.width = (progress * 100) + "%";
           }}>
           <div className="panel panel0"></div>
           <div className="panel panel1"></div>
@@ -42,11 +44,11 @@ export default class Progress extends React.Component<{}> {
           moveType="snap"
           ref={e => { this.flicking1 = e as Flicking; }}
           onMove={e => {
-            // const flicking = e.currentTarget;
+            const flicking = e.currentTarget;
 
-            // flicking.getAllPanels(true).forEach(panel => {
-            //   panel.getElement().innerHTML = panel.getProgress().toFixed(2);
-            // });
+            flicking.panels.forEach(panel => {
+              panel.element.innerHTML = panel.progress.toFixed(2);
+            });
           }}>
         <div className="panel panel0"></div>
         <div className="panel panel1"></div>
@@ -67,11 +69,11 @@ export default class Progress extends React.Component<{}> {
           moveType="snap"
           ref={e => { this.flicking2 = e as Flicking; }}
           onMove={e => {
-            // const flicking = e.currentTarget;
+            const flicking = e.currentTarget;
 
-            // flicking.getAllPanels(true).forEach(panel => {
-            //   panel.getElement().innerHTML = panel.getOutsetProgress().toFixed(2);
-            // });
+            flicking.panels.forEach(panel => {
+              panel.element.innerHTML = panel.outsetProgress.toFixed(2);
+            });
           }}>
         <div className="panel panel0"></div>
         <div className="panel panel1"></div>
@@ -92,11 +94,11 @@ export default class Progress extends React.Component<{}> {
           moveType="snap"
           ref={e => { this.flicking3 = e as Flicking; }}
           onMove={e => {
-            // const flicking = e.currentTarget;
+            const flicking = e.currentTarget;
 
-            // flicking.getAllPanels(true).forEach(panel => {
-            //   panel.getElement().innerHTML = panel.getVisibleRatio().toFixed(2);
-            // });
+            flicking.panels.forEach(panel => {
+              panel.element.innerHTML = panel.visibleRatio.toFixed(2);
+            });
           }}>
         <div className="panel panel0"></div>
         <div className="panel panel1"></div>

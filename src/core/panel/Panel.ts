@@ -254,7 +254,10 @@ class Panel {
   public get align() { return this._align; }
 
   // Options Setter
-  public set align(val: PanelOptions["align"]) { this._align = val; }
+  public set align(val: PanelOptions["align"]) {
+    this._align = val;
+    this._updateAlignPos();
+  }
 
   /**
    * @param {object} options An options object<ko>옵션 오브젝트</ko>
@@ -569,6 +572,7 @@ class Panel {
 
     if (!flicking.circularEnabled) {
       this._toggleDirection = DIRECTION.NONE;
+      this._togglePosition = 0;
       this._toggled = false;
       return this;
     }
