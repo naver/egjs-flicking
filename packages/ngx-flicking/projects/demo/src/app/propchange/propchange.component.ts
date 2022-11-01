@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'demo-propchange',
   templateUrl: './propchange.component.html',
   styleUrls: ['../app.component.css']
 })
-export class PropChangeComponent implements OnInit {
+export class PropChangeComponent {
   options = { panelsPerView: 5 };
 
   onClick() {
