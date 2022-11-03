@@ -136,6 +136,14 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     renderEmitter.trigger("render");
     flicking.camera.updateOffset();
 
+    // Omit 'virtual', as it can't have any setter
+    const { virtual, ...props } = this.props;
+    for (const key in props) {
+      if (key in flicking && flicking[key] !== props[key]) {
+        flicking[key] = props[key];
+      }
+    }
+
     if (!diffResult || !flicking.initialized) return;
 
     sync(flicking, diffResult, this.reactPanels);

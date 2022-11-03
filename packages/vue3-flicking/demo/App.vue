@@ -89,6 +89,14 @@
       }"></Flicking>
       <button @click="this.vPrepend">Prepend</button>
       <button @click="this.vAppend">Append</button>
+      <Flicking :options="{ panelsPerView: this.panelsPerView }">
+        <div class="panel">0</div>
+        <div class="panel">1</div>
+        <div class="panel">2</div>
+        <div class="panel">3</div>
+        <div class="panel">4</div>
+      </Flicking>
+      <button @click="this.changeProp">Change</button>
     </div>
   </article>
 </template>
@@ -110,7 +118,8 @@ export default {
       panels: [0, 1, 2, 3, 4, 5, 6],
       list0: [0, 1, 2],
       arrow: [new Arrow()],
-      fade: [new Fade()]
+      fade: [new Fade()],
+      panelsPerView: 5
     }
   },
   methods: {
@@ -132,6 +141,9 @@ export default {
     },
     vAppend() {
       this.$refs.vFlick.virtual.append(100);
+    },
+    changeProp() {
+      this.panelsPerView -= 1;
     }
   }
 }

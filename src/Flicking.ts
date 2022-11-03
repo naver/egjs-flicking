@@ -702,31 +702,132 @@ class Flicking extends Component<FlickingEvents> {
     this._align = val;
     this._renderer.align = val;
     this._camera.align = val;
+    void this.resize();
   }
 
   public set defaultIndex(val: FlickingOptions["defaultIndex"]) { this._defaultIndex = val; }
-  public set horizontal(val: FlickingOptions["horizontal"]) { this._horizontal = val; }
-  public set circular(val: FlickingOptions["circular"]) { this._circular = val; }
-  public set bound(val: FlickingOptions["bound"]) { this._bound = val; }
-  public set adaptive(val: FlickingOptions["adaptive"]) { this._adaptive = val; }
-  public set panelsPerView(val: FlickingOptions["panelsPerView"]) { this._panelsPerView = val; }
-  public set noPanelStyleOverride(val: FlickingOptions["noPanelStyleOverride"]) { this._noPanelStyleOverride = val; }
-  public set resizeOnContentsReady(val: FlickingOptions["resizeOnContentsReady"]) { this._resizeOnContentsReady = val; }
-  public set nested(val: FlickingOptions["nested"]) { this._nested = val; }
+  public set horizontal(val: FlickingOptions["horizontal"]) {
+    this._horizontal = val;
+    this._control.controller.updateDirection();
+    void this.resize();
+  }
+
+  public set circular(val: FlickingOptions["circular"]) {
+    this._circular = val;
+    void this.resize();
+  }
+
+  public set bound(val: FlickingOptions["bound"]) {
+    this._bound = val;
+    void this.resize();
+  }
+
+  public set adaptive(val: FlickingOptions["adaptive"]) {
+    this._adaptive = val;
+    void this.resize();
+  }
+
+  public set panelsPerView(val: FlickingOptions["panelsPerView"]) {
+    this._panelsPerView = val;
+    void this.resize();
+  }
+
+  public set noPanelStyleOverride(val: FlickingOptions["noPanelStyleOverride"]) {
+    this._noPanelStyleOverride = val;
+    void this.resize();
+  }
+
+  public set resizeOnContentsReady(val: FlickingOptions["resizeOnContentsReady"]) {
+    this._resizeOnContentsReady = val;
+    if (val) {
+      this._renderer.checkPanelContentsReady(this._renderer.panels);
+    }
+  }
+
+  public set nested(val: FlickingOptions["nested"]) {
+    this._nested = val;
+    const axes = this._control.controller.axes;
+
+    if (axes) {
+      axes.options.nested = val;
+    }
+  }
+
   // EVENTS
   public set needPanelThreshold(val: FlickingOptions["needPanelThreshold"]) { this._needPanelThreshold = val; }
   public set preventEventsBeforeInit(val: FlickingOptions["preventEventsBeforeInit"]) { this._preventEventsBeforeInit = val; }
   // ANIMATION
-  public set deceleration(val: FlickingOptions["deceleration"]) { this._deceleration = val; }
-  public set easing(val: FlickingOptions["easing"]) { this._easing = val; }
+  public set deceleration(val: FlickingOptions["deceleration"]) {
+    this._deceleration = val;
+    const axes = this._control.controller.axes;
+
+    if (axes) {
+      axes.options.deceleration = val;
+    }
+  }
+
+  public set easing(val: FlickingOptions["easing"]) {
+    this._easing = val;
+    const axes = this._control.controller.axes;
+
+    if (axes) {
+      axes.options.easing = val;
+    }
+  }
+
   public set duration(val: FlickingOptions["duration"]) { this._duration = val; }
   // INPUT
-  public set inputType(val: FlickingOptions["inputType"]) { this._inputType = val; }
-  public set moveType(val: FlickingOptions["moveType"]) { this._moveType = val; }
+  public set inputType(val: FlickingOptions["inputType"]) {
+    this._inputType = val;
+    const panInput = this._control.controller.panInput;
+
+    if (panInput) {
+      panInput.options.inputType = val;
+    }
+  }
+
+  public set moveType(val: FlickingOptions["moveType"]) {
+    this._moveType = val;
+
+    const prevControl = this._control;
+    const newControl = this._createControl();
+    const activePanel = prevControl.activePanel;
+    newControl.copy(prevControl);
+
+    const prevProgressInPanel = activePanel
+      ? this._camera.getProgressInPanel(activePanel)
+      : 0;
+
+    this._control = newControl;
+    this._control.updatePosition(prevProgressInPanel);
+    this._control.updateInput();
+  }
+
   public set threshold(val: FlickingOptions["threshold"]) { this._threshold = val; }
-  public set interruptable(val: FlickingOptions["interruptable"]) { this._interruptable = val; }
-  public set bounce(val: FlickingOptions["bounce"]) { this._bounce = val; }
-  public set iOSEdgeSwipeThreshold(val: FlickingOptions["iOSEdgeSwipeThreshold"]) { this._iOSEdgeSwipeThreshold = val; }
+  public set interruptable(val: FlickingOptions["interruptable"]) {
+    this._interruptable = val;
+
+    const axes = this._control.controller.axes;
+
+    if (axes) {
+      axes.options.interruptable = val;
+    }
+  }
+
+  public set bounce(val: FlickingOptions["bounce"]) {
+    this._bounce = val;
+    this._control.updateInput();
+  }
+
+  public set iOSEdgeSwipeThreshold(val: FlickingOptions["iOSEdgeSwipeThreshold"]) {
+    this._iOSEdgeSwipeThreshold = val;
+    const panInput = this._control.controller.panInput;
+
+    if (panInput) {
+      panInput.options.iOSEdgeSwipeThreshold = val;
+    }
+  }
+
   public set preventClickOnDrag(val: FlickingOptions["preventClickOnDrag"]) {
     const prevVal = this._preventClickOnDrag;
 
@@ -746,7 +847,11 @@ class Flicking extends Component<FlickingEvents> {
   public set disableOnInit(val: FlickingOptions["disableOnInit"]) { this._disableOnInit = val; }
   public set changeOnHold(val: FlickingOptions["changeOnHold"]) { this._changeOnHold = val; }
   // PERFORMANCE
-  public set renderOnlyVisible(val: FlickingOptions["renderOnlyVisible"]) { this._renderOnlyVisible = val; }
+  public set renderOnlyVisible(val: FlickingOptions["renderOnlyVisible"]) {
+    this._renderOnlyVisible = val;
+    void this._renderer.render();
+  }
+
   // OTHERS
   public set autoResize(val: FlickingOptions["autoResize"]) {
     this._autoResize = val;

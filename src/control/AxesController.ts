@@ -28,13 +28,21 @@ class AxesController {
   private _dragged: boolean;
 
   /**
-   * An {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html Axes} instance
-   * @ko {@link https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html Axes}의 인스턴스
-   * @type {Axes}
-   * @see https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html
+   * An {@link https://naver.github.io/egjs-axes/docs/api/Axes Axes} instance
+   * @ko {@link https://naver.github.io/egjs-axes/docs/api/Axes Axes}의 인스턴스
+   * @type {Axes | null}
+   * @see https://naver.github.io/egjs-axes/docs/api/Axes
    * @readonly
    */
   public get axes() { return this._axes; }
+  /**
+   * An {@link https://naver.github.io/egjs-axes/docs/api/PanInput PanInput} instance
+   * @ko {@link https://naver.github.io/egjs-axes/docs/api/PanInput PanInput}의 인스턴스
+   * @type {PanInput | null}
+   * @see https://naver.github.io/egjs-axes/docs/api/PanInput
+   * @readonly
+   */
+  public get panInput() { return this._panInput; }
   /**
    * @internal
    */
@@ -399,6 +407,17 @@ class AxesController {
         animate();
       });
     }
+  }
+
+  public updateDirection() {
+    const flicking = getFlickingAttached(this._flicking);
+    const axes = this._axes!;
+    const panInput = this._panInput!;
+
+    axes.disconnect(panInput);
+    axes.connect(flicking.horizontal ? [AXES.POSITION_KEY, ""] : ["", AXES.POSITION_KEY], panInput);
+
+    panInput.options.scale = flicking.horizontal ? [-1, 0] : [0, -1];
   }
 
   private _resetInternalValues() {

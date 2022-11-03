@@ -2,6 +2,7 @@ import FlickingError from "~/core/FlickingError";
 import Viewport from "~/core/Viewport";
 import Flicking from "~/Flicking";
 import { SnapControl, FreeControl, StrictControl } from "~/control";
+import { BoundCameraMode, CircularCameraMode, LinearCameraMode } from "~/camera";
 import VirtualManager from "~/core/VirtualManager";
 import * as ERROR from "~/const/error";
 import { ALIGN, DIRECTION, EVENTS, MOVE_TYPE } from "~/const/external";
@@ -9,7 +10,7 @@ import { Plugin } from "~/type/external";
 import { AfterResizeEvent, BeforeResizeEvent } from "~/type/event";
 
 import El from "./helper/El";
-import { cleanup, createFlicking, range, simulate, tick } from "./helper/test-util";
+import { cleanup, createFlicking, range, simulate, tick, waitEvent } from "./helper/test-util";
 
 describe("Flicking", () => {
   afterEach(() => {
@@ -155,6 +156,21 @@ describe("Flicking", () => {
         expect(flicking.renderer.align).equals(ALIGN.PREV);
         expect(flicking.camera.align).equals(ALIGN.PREV);
       });
+
+      it("should update camera position when changed", async () => {
+        const flicking = await createFlicking(El.HALF_HORIZONTAL, {
+          align: ALIGN.CENTER
+        });
+
+        const prevPos = flicking.camera.position;
+        flicking.align = ALIGN.PREV;
+
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        const newPos = flicking.camera.position;
+        expect(newPos).not.equals(prevPos);
+        expect(newPos).equals(0);
+      });
     });
 
     describe("defaultIndex", () => {
@@ -179,6 +195,15 @@ describe("Flicking", () => {
       it("should locate camera at first panel's position instead if index is out of range", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 99999 });
         expect(flicking.camera.position).to.equal(flicking.renderer.getPanel(0).position);
+      });
+
+      it("can be changed before init", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1, autoInit: false });
+
+        flicking.defaultIndex = 0;
+        await flicking.init();
+
+        expect(flicking.index).to.equal(0);
       });
     });
 
@@ -206,6 +231,36 @@ describe("Flicking", () => {
 
         expect(flicking.horizontal).to.be.false;
       });
+
+      it("should set scroll direction to vertical when changed to vertical", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          horizontal: true
+        });
+
+        flicking.horizontal = false;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        const prevIndex = flicking.index;
+        await simulate(flicking.element, { deltaY: -500 });
+
+        expect(flicking.index).not.equals(prevIndex);
+        expect(flicking.index).not.equals(0);
+      });
+
+      it("should set scroll direction to horizontal when changed to horizontal", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          horizontal: false
+        });
+
+        flicking.horizontal = true;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        const prevIndex = flicking.index;
+        await simulate(flicking.element, { deltaX: -500 });
+
+        expect(flicking.index).not.equals(prevIndex);
+        expect(flicking.index).not.equals(0);
+      });
     });
 
     describe("circular", () => {
@@ -213,6 +268,29 @@ describe("Flicking", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         expect(flicking.circular).to.be.false;
+      });
+
+      it("should change camera mode to linear(by default) when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { circular: true });
+
+        expect(flicking.camera.mode).to.be.instanceOf(CircularCameraMode);
+
+        flicking.circular = false;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(flicking.camera.mode).to.be.instanceOf(LinearCameraMode);
+      });
+
+      it("should untoggle every panel when changed", async () => {
+        const flicking = await createFlicking(El.HALF_HORIZONTAL, { circular: true });
+        const wasToggled = flicking.panels.some(panel => panel.toggled);
+
+        flicking.circular = false;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        const isToggled = flicking.panels.some(panel => panel.toggled);
+        expect(wasToggled).to.be.true;
+        expect(isToggled).to.be.false;
       });
     });
 
@@ -230,6 +308,51 @@ describe("Flicking", () => {
 
         expect(flicking.bound).to.be.false;
       });
+
+      it("should change camera mode to linear(by default) when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { bound: true });
+
+        expect(flicking.camera.mode).to.be.instanceOf(BoundCameraMode);
+
+        flicking.bound = false;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(flicking.camera.mode).to.be.instanceOf(LinearCameraMode);
+      });
+
+      it("should update camera position to panel pos when changed to false", async () => {
+        const flicking = await createFlicking(El.HALF_HORIZONTAL, { bound: true });
+
+        expect(flicking.camera.position).not.equals(flicking.panels[0].position);
+
+        flicking.bound = false;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(flicking.camera.position).equals(flicking.panels[0].position);
+      });
+
+      it("should update camera position to bounded pos when changed to true", async () => {
+        const flicking = await createFlicking(El.HALF_HORIZONTAL, { bound: false });
+
+        expect(flicking.camera.position).equals(flicking.panels[0].position);
+
+        flicking.bound = true;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(flicking.camera.position).not.equals(flicking.panels[0].position);
+        expect(flicking.camera.position).equals(flicking.camera.anchorPoints[0].position);
+      });
+
+      it("should maintain camera position when changed to true if camera is not in bound pos", async () => {
+        const flicking = await createFlicking(El.HALF_HORIZONTAL, { bound: false, defaultIndex: 1 });
+
+        expect(flicking.camera.position).equals(flicking.panels[1].position);
+
+        flicking.bound = true;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(flicking.camera.position).equals(flicking.panels[1].position);
+      });
     });
 
     describe("adaptive", () => {
@@ -237,6 +360,17 @@ describe("Flicking", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         expect(flicking.adaptive).to.be.false;
+      });
+
+      it("update height to current panel when changed to true", async () => {
+        // 400px height
+        const flicking = await createFlicking(El.VARIOUS_HORIZONTAL, { defaultIndex: 1, adaptive: false });
+        expect(flicking.viewport.height).not.equals(400);
+
+        flicking.adaptive = true;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(flicking.viewport.height).equals(400);
       });
     });
 
@@ -246,6 +380,17 @@ describe("Flicking", () => {
 
         expect(flicking.panelsPerView).to.equal(-1);
       });
+
+      it("should update panel width when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { panelsPerView: 5 });
+
+        flicking.panelsPerView -= 1;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(flicking.panelsPerView).to.equal(4);
+        expect(flicking.panels[0].element.style.width).to.equal(`${flicking.viewport.width / 4}px`);
+        expect(flicking.panels[0].size).to.equal(flicking.viewport.width / 4);
+      });
     });
 
     describe("noPanelStyleOverride", () => {
@@ -253,6 +398,24 @@ describe("Flicking", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         expect(flicking.noPanelStyleOverride).to.be.false;
+      });
+
+      it("should not update panel style if true", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          panelsPerView: 5,
+          noPanelStyleOverride: true
+        });
+
+        expect(flicking.panels[0].element.style.width).to.equal("100%");
+      });
+
+      it("should update panel style if false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          panelsPerView: 5,
+          noPanelStyleOverride: false
+        });
+
+        expect(flicking.panels[0].element.style.width).to.equal(`${flicking.viewport.width / 5}px`);
       });
     });
 
@@ -307,6 +470,17 @@ describe("Flicking", () => {
           expect(parentFlicking.index).equals(nested ? 2 : 0);
         });
       });
+
+      it("should update axes option when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { nested: false });
+        const axesOptions = flicking.control.controller.axes.options;
+        const prevVal = axesOptions.nested;
+
+        flicking.nested = true;
+
+        expect(prevVal).to.be.false;
+        expect(axesOptions.nested).to.be.true;
+      });
     });
 
     describe("needPanelThreshold", () => {
@@ -355,6 +529,17 @@ describe("Flicking", () => {
 
         expect(flicking.deceleration).to.equal(0.0075);
       });
+
+      it("should update axes option when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { deceleration: 0.1 });
+        const axesOptions = flicking.control.controller.axes.options;
+        const prevVal = axesOptions.deceleration;
+
+        flicking.deceleration = 0.2;
+
+        expect(prevVal).to.equal(0.1);
+        expect(axesOptions.deceleration).to.equal(0.2);
+      });
     });
 
     describe("duration", () => {
@@ -375,6 +560,19 @@ describe("Flicking", () => {
         expect(defaultEasing(0.5)).to.equal(1 - Math.pow(0.5, 3));
         expect(defaultEasing(1)).to.equal(1);
       });
+
+      it("should update axes easing when changed", async () => {
+        const prevEasing = sinon.fake();
+        const nextEasing = sinon.fake();
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { easing: prevEasing });
+        const axesOptions = flicking.control.controller.axes.options;
+        const prevVal = axesOptions.easing;
+
+        flicking.easing = nextEasing;
+
+        expect(prevVal).to.equal(prevEasing);
+        expect(axesOptions.easing).to.equal(nextEasing);
+      });
     });
 
     describe("inputType", () => {
@@ -382,6 +580,19 @@ describe("Flicking", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         expect(flicking.inputType).to.deep.equal(["mouse", "touch"]);
+      });
+
+      it("should update axes inputType when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          inputType: ["mouse"]
+        });
+        const panOptions = flicking.control.controller.panInput.options;
+        const prevVal = panOptions.inputType;
+
+        flicking.inputType = ["touch"];
+
+        expect(prevVal).to.deep.equal(["mouse"]);
+        expect(panOptions.inputType).to.deep.equal(["touch"]);
       });
     });
 
@@ -406,6 +617,20 @@ describe("Flicking", () => {
 
       it("should change control to StrictControl when 'strict' is given", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.STRICT });
+
+        expect(flicking.control).to.be.instanceOf(StrictControl);
+      });
+
+      it("should change internal control instance when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.SNAP });
+
+        expect(flicking.control).to.be.instanceOf(SnapControl);
+
+        flicking.moveType = MOVE_TYPE.FREE_SCROLL;
+
+        expect(flicking.control).to.be.instanceOf(FreeControl);
+
+        flicking.moveType = MOVE_TYPE.STRICT;
 
         expect(flicking.control).to.be.instanceOf(StrictControl);
       });
@@ -451,6 +676,19 @@ describe("Flicking", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         expect(flicking.interruptable).to.be.true;
+      });
+
+      it("should update axes option when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          interruptable: false
+        });
+        const axesOptions = flicking.control.controller.axes.options;
+        const prevVal = axesOptions.interruptable;
+
+        flicking.interruptable = true;
+
+        expect(prevVal).to.be.false;
+        expect(axesOptions.interruptable).to.be.true;
       });
     });
 
@@ -520,6 +758,23 @@ describe("Flicking", () => {
 
         expect(cameraPositionOnHoldEnd - cameraPositionOnDefaultPanel).equals(25);
       });
+
+      it("should update axes bounce value when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { bounce: 25, defaultIndex: 2 });
+        flicking.bounce = 50;
+
+        const cameraPositionOnDefaultPanel = flicking.camera.position;
+        let cameraPositionOnHoldEnd = 0;
+        flicking.on(EVENTS.HOLD_END, () => {
+          cameraPositionOnHoldEnd = flicking.camera.position;
+        });
+
+        await simulate(flicking.element, {
+          deltaX: -999999999
+        });
+
+        expect(cameraPositionOnHoldEnd - cameraPositionOnDefaultPanel).equals(50);
+      });
     });
 
     describe("iOSEdgeSwipeThreshold", () => {
@@ -527,6 +782,19 @@ describe("Flicking", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
         expect(flicking.iOSEdgeSwipeThreshold).to.equal(30);
+      });
+
+      it("should update axes option when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          iOSEdgeSwipeThreshold: 30
+        });
+        const panOptions = flicking.control.controller.panInput.options;
+        const prevVal = panOptions.iOSEdgeSwipeThreshold;
+
+        flicking.iOSEdgeSwipeThreshold = 60;
+
+        expect(prevVal).to.equal(30);
+        expect(panOptions.iOSEdgeSwipeThreshold).to.equal(60);
       });
     });
 
@@ -654,7 +922,7 @@ describe("Flicking", () => {
           buttons: 1,
           clientX: 0,
           clientY: 0,
-          cancelable: true,
+          cancelable: true
         }));
 
         window.dispatchEvent(new PointerEvent("pointermove", {
@@ -664,7 +932,7 @@ describe("Flicking", () => {
           clientY: 0,
           movementX: 0,
           movementY: 0,
-          cancelable: true,
+          cancelable: true
         }));
 
         testPanel.element.click();

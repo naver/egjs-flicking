@@ -12,6 +12,7 @@
         <router-link to="/variable">VariableSize</router-link>
         <router-link to="/infinite">Infinite</router-link>
         <router-link to="/virtual">Virtual</router-link>
+        <router-link to="/prop">PropChange</router-link>
       </div>
       <div>
         <span>Plugins:</span>
