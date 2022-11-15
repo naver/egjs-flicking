@@ -2,6 +2,16 @@
 
 This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern static website generator.
 
+
+## Prerequisites
+```console
+npm install
+npm run docs:build
+```
+
+Before you start a local development, Make sure the required command in the root package to generate an api file. If not, You may encounter "Not Found Error" regarding an api file.
+
+
 ## Installation
 
 ```console
