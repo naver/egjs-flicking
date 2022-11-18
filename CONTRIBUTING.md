@@ -42,7 +42,7 @@ Steps to submit your pull request:
 
 1. Fork `egjs-flicking` on your repository
 2. Create new branch from your egjs master branch (and be sure always to be up-to-date)
-3. Before starting a local development, run `docs:build` in the root directory to generate API documents.
+3. Before starting a local development, `npm run docs:build` in the root directory to generate API documents.
 4. Do your work
 5. Create test code for your work (when is possible)
 6. Run `npm run lint` for linting and Code Conventions (update until without any error or warnings)
