@@ -87,7 +87,7 @@ article a {
   margin-right: 10px;
   margin-bottom: 10px;
   align-items: flex-end;
-  justify-content: start;
+  justify-content: flex-start;
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 30px;

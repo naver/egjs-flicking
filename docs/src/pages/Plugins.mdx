@@ -194,8 +194,10 @@ These are the available CSS files:
 |:---:|:---:|:---:|:---:|:---:|
 |options|object|✔️|{}|Options for the AutoPlay instance|
 |options.duration|number|✔️|2000|Time to wait before moving on to the next panel|
+|options.animationDuration|number \| undefined|✔️|undefined|Duration of animation of moving to the next panel. If undefined, the duration option of the Flicking instance is used instead|
 |options.direction|"PREV" \| "NEXT"|✔️|"NEXT"|The direction in which the panel moves|
 |options.stopOnHover|boolean|✔️|false|Whether to stop when mouse hover upon the element|
+|options.delayAfterHover|number|✔️|options.duration|If stopOnHover is true, the amount of time to wait before moving on to the next panel when mouse leaves the element|
 
 ## Parallax
 <ParallaxDemo />
