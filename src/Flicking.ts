@@ -324,6 +324,7 @@ class Flicking extends Component<FlickingEvents> {
    * @property {ALIGN | string | number} panel The align value for each {@link Panel}s<ko>개개의 {@link Panel}에 적용할 값</ko>
    * @property {ALIGN | string | number} camera The align value for {@link Camera}<ko>{@link Camera}에 적용할 값</ko>
    * @default "center"
+   * @see {@link https://naver.github.io/egjs-flicking/Options#align align ( Options )}
    * @example
    * ```ts
    * const possibleOptions = [
@@ -350,6 +351,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko Flicking의 {@link Flicking#init init()}이 호출될 때 이동할 디폴트 패널의 인덱스로, 0부터 시작하는 정수입니다
    * @type {number}
    * @default 0
+   * @see {@link https://naver.github.io/egjs-flicking/Options#defaultindex defaultIndex ( Options )}
    */
   public get defaultIndex() { return this._defaultIndex; }
   /**
@@ -357,6 +359,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 패널 이동 방향 (true: 가로방향, false: 세로방향)
    * @type {boolean}
    * @default true
+   * @see {@link https://naver.github.io/egjs-flicking/Options#horizontal horizontal ( Options )}
    */
   public get horizontal() { return this._horizontal; }
   /**
@@ -364,6 +367,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 순환 모드를 활성화합니다. 순환 모드에서는 양 끝의 패널이 서로 연결되어 끊김없는 스크롤이 가능합니다.
    * @type {boolean}
    * @default false
+   * @see {@link https://naver.github.io/egjs-flicking/Options#circular circular ( Options )}
    */
   public get circular() { return this._circular; }
   /**
@@ -376,6 +380,7 @@ class Flicking extends Component<FlickingEvents> {
    * @see CIRCULAR_FALLBACK
    * @type {string}
    * @default "linear"
+   * @see {@link https://naver.github.io/egjs-flicking/Options#circularfallback circularFallback ( Options )}
    */
   public get circularFallback() { return this._circularFallback; }
   /**
@@ -385,6 +390,7 @@ class Flicking extends Component<FlickingEvents> {
    * `circular=false`인 경우에만 사용할 수 있습니다
    * @type {boolean}
    * @default false
+   * @see {@link https://naver.github.io/egjs-flicking/Options#bound bound ( Options )}
    */
   public get bound() { return this._bound; }
   /**
@@ -392,6 +398,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 이동한 후 뷰포트 엘리먼트의 크기를 현재 패널의 높이와 동일하게 설정합니다. `horizontal=true`인 경우에만 사용할 수 있습니다.
    * @type {boolean}
    * @default false
+   * @see {@link https://naver.github.io/egjs-flicking/Options#adaptive adaptive ( Options )}
    */
   public get adaptive() { return this._adaptive; }
   /**
@@ -399,6 +406,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 한 화면에 보이는 패널의 개수. 이 옵션을 활성화할 경우 패널의 크기를 강제로 재조정합니다
    * @type {number}
    * @default -1
+   * @see {@link https://naver.github.io/egjs-flicking/Options#panelsperview panelsPerView ( Options )}
    */
   public get panelsPerView() { return this._panelsPerView; }
   /**
@@ -417,6 +425,7 @@ class Flicking extends Component<FlickingEvents> {
    * 이 동작은 Flicking 내부에 로드 전/후로 크기가 변하는 콘텐츠를 포함하고 있을 때 유용하게 사용하실 수 있습니다.
    * @type {boolean}
    * @default false
+   * @see {@link https://naver.github.io/egjs-flicking/Options#resizeOnContentsReady resizeOnContentsReady ( Options )}
    */
   public get resizeOnContentsReady() { return this._resizeOnContentsReady; }
   /**
@@ -426,6 +435,7 @@ class Flicking extends Component<FlickingEvents> {
    * 만약 상위 Flicking과 하위 Flicking이 서로 다른 horizontal 옵션을 가지고 있다면 이 옵션을 설정할 필요가 없습니다.
    * @type {boolean}
    * @default false
+   * @see {@link https://naver.github.io/egjs-flicking/Options#nested nested ( Options )}
    */
   public get nested() { return this._nested; }
   // EVENTS
@@ -434,6 +444,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko `needPanel`이벤트가 발생하기 위한 뷰포트 끝으로부터의 최대 거리
    * @type {number}
    * @default 0
+   * @see {@link https://naver.github.io/egjs-flicking/Options#needpanelthreshold needPanelThreshold ( Options )}
    */
   public get needPanelThreshold() { return this._needPanelThreshold; }
   /**
@@ -441,6 +452,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 활성화할 경우 초기화시 `ready` 이벤트 이전의 이벤트가 발생하지 않습니다.
    * @type {boolean}
    * @default true
+   * @see {@link https://naver.github.io/egjs-flicking/Options#preventeventsbeforeinit preventEventsBeforeInit ( Options )}
    */
   public get preventEventsBeforeInit() { return this._preventEventsBeforeInit; }
   // ANIMATION
@@ -449,6 +461,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 사용자의 동작으로 가속도가 적용된 패널 이동 애니메이션의 감속도. 값이 높을수록 애니메이션 실행 시간이 짧아집니다
    * @type {number}
    * @default 0.0075
+   * @see {@link https://naver.github.io/egjs-flicking/Options#deceleration deceleration ( Options )}
    */
   public get deceleration() { return this._deceleration; }
   /**
@@ -457,6 +470,7 @@ class Flicking extends Component<FlickingEvents> {
    * @type {function}
    * @default x => 1 - Math.pow(1 - x, 3)
    * @see Easing Functions Cheat Sheet {@link http://easings.net/} <ko>이징 함수 Cheat Sheet {@link http://easings.net/}</ko>
+   * @see {@link https://naver.github.io/egjs-flicking/Options#easing Easing ( Options )}
    */
   public get easing() { return this._easing; }
   /**
@@ -464,6 +478,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 디폴트 애니메이션 재생 시간 (ms)
    * @type {number}
    * @default 500
+   * @see {@link https://naver.github.io/egjs-flicking/Options#duration duration ( Options )}
    */
   public get duration() { return this._duration; }
   // INPUT
@@ -472,8 +487,9 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 활성화할 입력 장치 종류
    * @type {string[]}
    * @default ["touch", "mouse"]
-   * @see {@link https://naver.github.io/egjs-axes/release/latest/doc/global.html#PanInputOption Possible values (PanInputOption#inputType)}
-   * <ko>{@link https://naver.github.io/egjs-axes/release/latest/doc/global.html#PanInputOption 가능한 값들 (PanInputOption#inputType)}</ko>
+   * @see {@link https://naver.github.io/egjs-axes/Options#paninput-options Possible values (PanInputOption#inputType)}
+   * <ko>{@link https://naver.github.io/egjs-axes/Options#paninput-options 가능한 값들 (PanInputOption#inputType)}</ko>
+   * @see {@link https://naver.github.io/egjs-flicking/Options#inputtype inputType ( Options )}
    */
   public get inputType() { return this._inputType; }
   /**
@@ -483,6 +499,7 @@ class Flicking extends Component<FlickingEvents> {
    * 상수 {@link MOVE_TYPE}에 정의된 값들을 이용할 수 있습니다
    * @type {MOVE_TYPE | Pair<string, object>}
    * @default "snap"
+   * @see {@link https://naver.github.io/egjs-flicking/Options#movetype moveType ( Options )}
    * @example
    * |moveType|control|options|
    * |:---:|:---:|:---:|
@@ -512,6 +529,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 패널 변경을 위한 이동 임계값 (단위: px). 주어진 값 이상으로 스크롤해야만 패널 변경이 가능하다.
    * @type {number}
    * @default 40
+   * @see {@link https://naver.github.io/egjs-flicking/Options#threshold Threshold ( Options )}
    */
   public get threshold() { return this._threshold; }
   /**
@@ -519,6 +537,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 사용자의 클릭/터치로 인해 애니메이션을 도중에 멈출 수 있도록 설정합니다.
    * @type {boolean}
    * @default true
+   * @see {@link https://naver.github.io/egjs-flicking/Options#interruptable Interruptable ( Options )}
    */
   public get interruptable() { return this._interruptable; }
   /**
@@ -532,6 +551,7 @@ class Flicking extends Component<FlickingEvents> {
    * 이 값을 변경시 {@link Control#updateInput}를 호출해야 합니다.
    * @type {string | number | Array<string | number>}
    * @default "20%"
+   * @see {@link https://naver.github.io/egjs-flicking/Options#bounce bounce ( Options )}
    * @example
    * ```ts
    * const possibleOptions = [
@@ -558,6 +578,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko iOS Safari에서 swipe를 통한 뒤로가기/앞으로가기를 활성화하는 오른쪽 끝으로부터의 영역의 크기 (px)
    * @type {number}
    * @default 30
+   * @see {@link https://naver.github.io/egjs-flicking/Options#iosedgeswipethreshold iOSEdgeSwipeThreshold ( Options )}
    */
   public get iOSEdgeSwipeThreshold() { return this._iOSEdgeSwipeThreshold; }
   /**
@@ -565,6 +586,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 사용자가 뷰포트 영역을 1픽셀이라도 드래그했을 경우 자동으로 {@link https://developer.mozilla.org/ko/docs/Web/API/Element/click_event click} 이벤트를 취소합니다
    * @type {boolean}
    * @default true
+   * @see {@link https://naver.github.io/egjs-flicking/Options#preventclickondrag preventClickOnDrag ( Options )}
    */
   public get preventClickOnDrag() { return this._preventClickOnDrag; }
   /**
@@ -572,6 +594,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko Flicking init시에 {@link Flicking#disableInput disableInput()}을 바로 호출합니다
    * @type {boolean}
    * @default false
+   * @see {@link https://naver.github.io/egjs-flicking/Options#disableoninit disableOnInit ( Options )}
    */
   public get disableOnInit() { return this._disableOnInit; }
   /**
@@ -581,6 +604,7 @@ class Flicking extends Component<FlickingEvents> {
    * `willChange`/`willRestore` 이벤트의 `index`값이 새로운 인덱스로 사용될 것입니다.
    * @type {boolean}
    * @default false
+   * @see {@link https://naver.github.io/egjs-flicking/Options#changeonhold changeOnHold ( Options )}
    */
   public get changeOnHold() { return this._changeOnHold; }
   // PERFORMANCE
@@ -589,6 +613,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko 보이는 패널만 렌더링할지 여부를 설정합니다. 패널이 많을 경우에 퍼포먼스를 크게 향상시킬 수 있습니다
    * @type {boolean}
    * @default false
+   * @see {@link https://naver.github.io/egjs-flicking/Options#renderonlyvisible renderOnlyVisible ( Options )}
    */
   public get renderOnlyVisible() { return this._renderOnlyVisible; }
   /**
@@ -603,6 +628,7 @@ class Flicking extends Component<FlickingEvents> {
    * @property {number} initialPanelCount Initial panel count to render<ko>최초로 렌더링할 패널의 개수</ko>
    * @property {boolean} [cache=false] Whether to cache rendered panel's innerHTML<ko>렌더링된 패널의 innerHTML 정보를 캐시할지 여부</ko>
    * @property {string} [panelClass="flicking-panel"] The class name that will be applied to rendered panel elements<ko>렌더링되는 패널 엘리먼트에 적용될 클래스 이름</ko>
+   * @see {@link https://naver.github.io/egjs-flicking/Options#virtual virtual ( Options )}
    * @example
    * ```ts
    * import Flicking, { VirtualPanel } from "@egjs/flicking";
@@ -630,6 +656,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko Flicking 인스턴스를 생성할 때 자동으로 {@link Flicking#init init()}를 호출합니다
    * @type {boolean}
    * @default true
+   * @see {@link https://naver.github.io/egjs-flicking/Options#autoinit autoInit ( Options )}
    * @readonly
    */
   public get autoInit() { return this._autoInit; }
@@ -645,6 +672,7 @@ class Flicking extends Component<FlickingEvents> {
    * @ko autoResize 옵션 사용시 {@link https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver ResizeObserver}의 이벤트를 Window객체의 {@link https://developer.mozilla.org/ko/docs/Web/API/Window/resize_event resize} 이벤트 대신 수신할지 여부를 설정합니다
    * @type {boolean}
    * @default true
+   * @see {@link https://naver.github.io/egjs-flicking/Options#useresizeobserver useResizeObserver ( Options )}
    */
   public get useResizeObserver() { return this._useResizeObserver; }
   /**
@@ -656,6 +684,7 @@ class Flicking extends Component<FlickingEvents> {
    * 이를 통해 `resize`가 너무 많이 호출되는 것을 방지하여 성능을 향상시킬 수 있습니다.
    * @type {number}
    * @default 0
+   * @see {@link https://naver.github.io/egjs-flicking/Options#resizedebounce resizeDebounce ( Options )}
    */
   public get resizeDebounce() { return this._resizeDebounce; }
   /**
@@ -665,6 +694,7 @@ class Flicking extends Component<FlickingEvents> {
    * 이를 통해, 적어도 (n)ms에 한번은 크기 재계산을 수행하는 것을 보장할 수 있습니다.
    * @type {number}
    * @default 100
+   * @see {@link https://naver.github.io/egjs-flicking/Options#maxresizedebounce maxResizeDebounce ( Options )}
    */
   public get maxResizeDebounce() { return this._maxResizeDebounce; }
   /**
@@ -676,6 +706,7 @@ class Flicking extends Component<FlickingEvents> {
    * 모든 크기는 CSS {@link https://developer.mozilla.org/en-US/docs/Web/CSS/transform transform}이 엘리먼트에 적용되기 이전의 크기를 사용할 것입니다.
    * @type {boolean}
    * @default false
+   * @see {@link https://naver.github.io/egjs-flicking/Options#usefractionalsize useFractionalSize ( Options )}
    */
   public get useFractionalSize() { return this._useFractionalSize; }
   /**
