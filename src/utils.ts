@@ -214,7 +214,7 @@ export const circulatePosition = (pos: number, min: number, max: number) => {
   if (pos < min) {
     const offset = (min - pos) % size;
     pos = max - offset;
-  } else if (pos > max) {
+  } else if (pos >= max) {
     const offset = (pos - max) % size;
     pos = min + offset;
   }
