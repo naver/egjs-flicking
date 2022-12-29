@@ -137,6 +137,11 @@ module.exports = {
     prism: {
       theme: require("prism-react-renderer/themes/oceanicNext"),
       darkTheme: require("prism-react-renderer/themes/palenight")
+    },
+    algolia: {
+      appId: "W8GGTHANE5",
+      apiKey: "09861571e55f3970cffd575869f607d6",
+      indexName: "egjs-flicking"
     }
   },
   presets: [
