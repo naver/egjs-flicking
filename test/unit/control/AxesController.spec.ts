@@ -123,10 +123,11 @@ describe("AxesController", () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         controller.init(flicking);
 
-        // No tick() is involved, so passing this test means that promise is resolved immediately
-        await controller.animateTo(1000, 0);
-
-        expect(controller.position).to.equal(1000);
+        flicking.once("ready", async () => {
+          await controller.animateTo(1000, 0);
+          // No tick() is involved, so passing this test means that promise is resolved immediately
+          expect(controller.position).to.equal(1000);
+        });
       });
 
       it("should be resolved immediately if given position is same to current position", async () => {
