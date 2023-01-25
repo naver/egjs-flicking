@@ -291,6 +291,7 @@ describe("SnapControl", () => {
 
         const control = flicking.control;
         const camera = flicking.camera;
+        const moveSpy = sinon.spy(control, "moveToPanel");
 
         // Suppress animation interrupt error
         const promise = flicking.moveTo(2, 1500).catch(error => error);
@@ -301,6 +302,7 @@ describe("SnapControl", () => {
         tick(1000);
         await promise;
 
+        expect(moveSpy.calledTwice).to.be.true;
         expect(control.activePanel.index).to.equal(camera.findNearestAnchor(position).panel.index);
       });
     });
