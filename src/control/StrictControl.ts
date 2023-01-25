@@ -242,8 +242,8 @@ class StrictControl extends Control {
       targetPanel = adjacentAnchor!.panel;
       targetPos = adjacentAnchor!.position;
     } else {
-      // Restore to active panel
-      targetPos = camera.clampToReachablePosition(activePanel.position);
+      // Fallback to nearest panel from current camera
+      targetPos = camera.clampToReachablePosition(anchorAtPosition.position);
       targetPanel = activePanel;
     }
 
