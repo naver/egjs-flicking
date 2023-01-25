@@ -282,6 +282,27 @@ describe("SnapControl", () => {
         expect(position).to.be.lessThan(flicking.panels[flicking.panelCount - 1].position);
         expect(position).to.equal(flicking.panels[0].position);
       });
+
+      it("Should move to the nearest panel from the camera, when animation is interrupted by user input", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: MOVE_TYPE.SNAP,
+          align: "prev",
+        });
+
+        const control = flicking.control;
+        const camera = flicking.camera;
+
+        // Suppress animation interrupt error
+        const promise = flicking.moveTo(2, 1500).catch(error => error);
+        tick(500);
+        const position = camera.position;
+        // Simulate interrupt
+        await simulate(flicking.element, { deltaX: 0, duration: 100 }, 1000);
+        tick(1000);
+        await promise;
+
+        expect(control.activePanel.index).to.equal(camera.findNearestAnchor(position).panel.index);
+      });
     });
   });
 });
