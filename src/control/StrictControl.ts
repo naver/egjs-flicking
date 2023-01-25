@@ -243,8 +243,14 @@ class StrictControl extends Control {
       targetPos = adjacentAnchor!.position;
     } else {
       // Fallback to nearest panel from current camera
-      targetPos = camera.clampToReachablePosition(anchorAtPosition.position);
-      targetPanel = activePanel;
+      const anchorAtCamera = camera.findNearestAnchor(camera.position);
+      if (!anchorAtCamera) {
+        return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE));
+      }
+      return this.moveToPanel(anchorAtCamera.panel, {
+        duration,
+        axesEvent
+      });
     }
 
     this._triggerIndexChangeEvent(targetPanel, position, axesEvent);
