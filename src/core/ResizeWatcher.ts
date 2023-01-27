@@ -67,7 +67,7 @@ class ResizeWatcher {
   public destroy() {
     this._observer?.disconnect();
     if (this._options.useWindowResize) {
-      window.removeEventListener("reisze", this._onResize);
+      window.removeEventListener("resize", this._onResize);
     }
   }
 
