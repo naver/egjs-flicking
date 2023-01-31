@@ -93,9 +93,8 @@ describe("AxesController", () => {
       });
 
       it("should call `setTo` of the axes instance", async () => {
-        const controller = new AxesController();
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
-        controller.init(flicking);
+        const controller = flicking.control.controller;
         const setToSpy = sinon.spy(controller.axes, "setTo");
 
         void controller.animateTo(1000, 1000);
@@ -106,9 +105,8 @@ describe("AxesController", () => {
       });
 
       it("should call `setTo` of the axes onRelease event if given", async () => {
-        const controller = new AxesController();
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
-        controller.init(flicking);
+        const controller = flicking.control.controller;
         const onReleaseMock = { setTo: sinon.spy() };
 
         void controller.animateTo(1000, 1000, onReleaseMock as any);
@@ -119,21 +117,17 @@ describe("AxesController", () => {
       });
 
       it("should be resolved immediately if duration is 0", async () => {
-        const controller = new AxesController();
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
-        controller.init(flicking);
+        const controller = flicking.control.controller;
 
-        flicking.once("ready", async () => {
-          await controller.animateTo(1000, 0);
-          // No tick() is involved, so passing this test means that promise is resolved immediately
-          expect(controller.position).to.equal(1000);
-        });
+        await controller.animateTo(1000, 0);
+        // No tick() is involved, so passing this test means that promise is resolved immediately
+        expect(controller.position).to.equal(1000);
       });
 
       it("should be resolved immediately if given position is same to current position", async () => {
-        const controller = new AxesController();
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
-        controller.init(flicking);
+        const controller = flicking.control.controller;
 
         const prevPos = controller.position;
 
