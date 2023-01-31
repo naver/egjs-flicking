@@ -113,8 +113,8 @@ class SnapControl extends Control {
       // Move to the adjacent panel
       targetAnchor = this._findAdjacentAnchor(position, posDelta, anchorAtCamera);
     } else {
-      // Restore to active panel
-      return this.moveToPanel(activeAnchor.panel, {
+      // Fallback to nearest panel from current camera
+      return this.moveToPanel(anchorAtCamera.panel, {
         duration,
         axesEvent
       });
