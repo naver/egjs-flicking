@@ -242,6 +242,7 @@ These are the available CSS files:
 |classPrefix|string|✔️|"flicking-pagination"|A class prefix for automatically generated elements|
 |bulletCount|number|✔️|5|A number of visual bullets when "scroll" type is chosen|
 |renderBullet|function|✔️|(className: string) => \`&lt;span class="${className}">&lt;/span>\`|A render function for bullets, effective for "bullet" and "scroll" type|
+|renderActiveBullet|function \| null|✔️|null|A render function for the active(selected) bullet, effective for "bullet" and "scroll" type.<br/>If `null` is given, `renderBullet` will be used instead.|
 |renderFraction|function|✔️|(currentClass: string, totalClass: string) => \`&lt;span class="${currentClass}">&lt;/span>/&lt;span class="${totalClass}">&lt;/span>\`|A render function for fraction, effective for "fration" type|
 |fractionCurrentFormat|function|✔️|(index: number) => index.toString()|A format to display a current index inside `fraction-current` class|
 |fractionTotalFormat|function|✔️|(index: number) => index.toString()|A format to display a total panels count inside `fraction-total` class|
