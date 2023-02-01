@@ -278,6 +278,8 @@ Align position of the panels within viewport. You can set different values each 
 |panel|[ALIGN](ALIGN) \| string \| number|The align value for each [Panel](Panel)s|
 |camera|[ALIGN](ALIGN) \| string \| number|The align value for [Camera](Camera)|
 
+**See**:
+- [align ( Options )](https://naver.github.io/egjs-flicking/Options#align)
 ```ts
 const possibleOptions = [
   // Literal strings
@@ -309,6 +311,9 @@ Index of the panel to move when Flicking's [init()](Flicking#init) is called. A 
 
 **Default**: 0
 
+**See**:
+- [defaultIndex ( Options )](https://naver.github.io/egjs-flicking/Options#defaultindex)
+
 ### horizontal {#horizontal}
 
 <div>
@@ -321,6 +326,9 @@ Direction of panel movement (true: horizontal, false: vertical)
 
 **Default**: true
 
+**See**:
+- [horizontal ( Options )](https://naver.github.io/egjs-flicking/Options#horizontal)
+
 ### circular {#circular}
 
 <div>
@@ -332,6 +340,9 @@ Enables circular(continuous loop) mode, which connects first/last panel for cont
 **Type**: boolean
 
 **Default**: false
+
+**See**:
+- [circular ( Options )](https://naver.github.io/egjs-flicking/Options#circular)
 
 ### circularFallback {#circularFallback}
 
@@ -347,6 +358,7 @@ Set panel control mode for the case when circular cannot be enabled.<br />"linea
 
 **See**:
 - [CIRCULAR_FALLBACK](CIRCULAR_FALLBACK)
+- [circularFallback ( Options )](https://naver.github.io/egjs-flicking/Options#circularfallback)
 
 ### bound {#bound}
 
@@ -360,6 +372,9 @@ Prevent the view(camera element) from going out of the first/last panel, so it w
 
 **Default**: false
 
+**See**:
+- [bound ( Options )](https://naver.github.io/egjs-flicking/Options#bound)
+
 ### adaptive {#adaptive}
 
 <div>
@@ -372,6 +387,9 @@ Update height of the viewport element after movement same to the height of the p
 
 **Default**: false
 
+**See**:
+- [adaptive ( Options )](https://naver.github.io/egjs-flicking/Options#adaptive)
+
 ### panelsPerView {#panelsPerView}
 
 <div>
@@ -383,6 +401,9 @@ A visible number of panels on viewport. Enabling this option will automatically 
 **Type**: number
 
 **Default**: -1
+
+**See**:
+- [panelsPerView ( Options )](https://naver.github.io/egjs-flicking/Options#panelsperview)
 
 ### noPanelStyleOverride {#noPanelStyleOverride}
 
@@ -408,6 +429,9 @@ Enabling this option will automatically call [Flicking#resize](Flicking#resize) 
 
 **Default**: false
 
+**See**:
+- [resizeOnContentsReady ( Options )](https://naver.github.io/egjs-flicking/Options#resizeOnContentsReady)
+
 ### nested {#nested}
 
 <div>
@@ -419,6 +443,9 @@ If you enable this option on child Flicking when the Flicking is placed inside t
 **Type**: boolean
 
 **Default**: false
+
+**See**:
+- [nested ( Options )](https://naver.github.io/egjs-flicking/Options#nested)
 
 ### needPanelThreshold {#needPanelThreshold}
 
@@ -432,6 +459,9 @@ A Threshold from viewport edge before triggering `needPanel` event
 
 **Default**: 0
 
+**See**:
+- [needPanelThreshold ( Options )](https://naver.github.io/egjs-flicking/Options#needpanelthreshold)
+
 ### preventEventsBeforeInit {#preventEventsBeforeInit}
 
 <div>
@@ -444,6 +474,9 @@ When enabled, events are not triggered before `ready` when initializing
 
 **Default**: true
 
+**See**:
+- [preventEventsBeforeInit ( Options )](https://naver.github.io/egjs-flicking/Options#preventeventsbeforeinit)
+
 ### deceleration {#deceleration}
 
 <div>
@@ -455,6 +488,9 @@ Deceleration value for panel movement animation which is triggered by user input
 **Type**: number
 
 **Default**: 0.0075
+
+**See**:
+- [deceleration ( Options )](https://naver.github.io/egjs-flicking/Options#deceleration)
 
 ### easing {#easing}
 
@@ -470,6 +506,7 @@ An easing function applied to the panel movement animation. Default value is `ea
 
 **See**:
 - Easing Functions Cheat Sheet [http://easings.net/](http://easings.net/)
+- [Easing ( Options )](https://naver.github.io/egjs-flicking/Options#easing)
 
 ### duration {#duration}
 
@@ -482,6 +519,9 @@ Default duration of the animation (ms)
 **Type**: number
 
 **Default**: 500
+
+**See**:
+- [duration ( Options )](https://naver.github.io/egjs-flicking/Options#duration)
 
 ### inputType {#inputType}
 
@@ -496,7 +536,8 @@ Types of input devices to enable
 **Default**: ["touch", "mouse"]
 
 **See**:
-- [Possible values (PanInputOption#inputType)](https://naver.github.io/egjs-axes/release/latest/doc/global.html#PanInputOption)
+- [Possible values (PanInputOption#inputType)](https://naver.github.io/egjs-axes/Options#paninput-options)
+- [inputType ( Options )](https://naver.github.io/egjs-flicking/Options#inputtype)
 
 ### moveType {#moveType}
 
@@ -510,6 +551,8 @@ Movement style by user input. This will change instance type of [Flicking#contro
 
 **Default**: "snap"
 
+**See**:
+- [moveType ( Options )](https://naver.github.io/egjs-flicking/Options#movetype)
 |moveType|control|options|
 |:---:|:---:|:---:|
 |"snap"|[SnapControl](SnapControl)||
@@ -544,6 +587,9 @@ Movement threshold to change panel (unit: px). It should be dragged above the th
 
 **Default**: 40
 
+**See**:
+- [Threshold ( Options )](https://naver.github.io/egjs-flicking/Options#threshold)
+
 ### interruptable {#interruptable}
 
 <div>
@@ -555,6 +601,9 @@ Set animation to be interruptable by click/touch.
 **Type**: boolean
 
 **Default**: true
+
+**See**:
+- [Interruptable ( Options )](https://naver.github.io/egjs-flicking/Options#interruptable)
 
 ### bounce {#bounce}
 
@@ -568,6 +617,8 @@ The size value of the bounce area. Only can be enabled when `circular=false`.<br
 
 **Default**: "20%"
 
+**See**:
+- [bounce ( Options )](https://naver.github.io/egjs-flicking/Options#bounce)
 ```ts
 const possibleOptions = [
   // % values, relative to viewport element(".flicking-viewport")'s size
@@ -598,6 +649,9 @@ Size of the area from the right edge in iOS safari (in px) which enables swipe-b
 
 **Default**: 30
 
+**See**:
+- [iOSEdgeSwipeThreshold ( Options )](https://naver.github.io/egjs-flicking/Options#iosedgeswipethreshold)
+
 ### preventClickOnDrag {#preventClickOnDrag}
 
 <div>
@@ -609,6 +663,9 @@ Automatically prevent `click` event if the user has dragged at least a single pi
 **Type**: boolean
 
 **Default**: true
+
+**See**:
+- [preventClickOnDrag ( Options )](https://naver.github.io/egjs-flicking/Options#preventclickondrag)
 
 ### disableOnInit {#disableOnInit}
 
@@ -622,6 +679,9 @@ Automatically call [disableInput()](Flicking#disableInput) on initialization
 
 **Default**: false
 
+**See**:
+- [disableOnInit ( Options )](https://naver.github.io/egjs-flicking/Options#disableoninit)
+
 ### changeOnHold {#changeOnHold}
 
 <div>
@@ -634,6 +694,9 @@ Change active panel index on mouse/touch hold while animating.<br />`index` of t
 
 **Default**: false
 
+**See**:
+- [changeOnHold ( Options )](https://naver.github.io/egjs-flicking/Options#changeonhold)
+
 ### renderOnlyVisible {#renderOnlyVisible}
 
 <div>
@@ -645,6 +708,9 @@ Whether to render visible panels only. This can dramatically increase performanc
 **Type**: boolean
 
 **Default**: false
+
+**See**:
+- [renderOnlyVisible ( Options )](https://naver.github.io/egjs-flicking/Options#renderonlyvisible)
 
 ### virtual {#virtual}
 
@@ -663,6 +729,8 @@ By enabling this option, it will reduce memory consumption by restricting the nu
 |cache|boolean|Whether to cache rendered panel's innerHTML|
 |panelClass|string|The class name that will be applied to rendered panel elements|
 
+**See**:
+- [virtual ( Options )](https://naver.github.io/egjs-flicking/Options#virtual)
 ```ts
 import Flicking, { VirtualPanel } from "@egjs/flicking";
 
@@ -693,6 +761,9 @@ Call [init()](Flicking#init) automatically when creating Flicking's instance
 
 **Default**: true
 
+**See**:
+- [autoInit ( Options )](https://naver.github.io/egjs-flicking/Options#autoinit)
+
 ### autoResize {#autoResize}
 
 <div>
@@ -717,6 +788,9 @@ Whether to listen [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/
 
 **Default**: true
 
+**See**:
+- [useResizeObserver ( Options )](https://naver.github.io/egjs-flicking/Options#useresizeobserver)
+
 ### resizeDebounce {#resizeDebounce}
 
 <div>
@@ -728,6 +802,9 @@ Delays size recalculation from `autoResize` by the given time in milisecond.<br 
 **Type**: number
 
 **Default**: 0
+
+**See**:
+- [resizeDebounce ( Options )](https://naver.github.io/egjs-flicking/Options#resizedebounce)
 
 ### maxResizeDebounce {#maxResizeDebounce}
 
@@ -741,6 +818,9 @@ The maximum time for size recalculation delay when using `resizeDebounce`, in mi
 
 **Default**: 100
 
+**See**:
+- [maxResizeDebounce ( Options )](https://naver.github.io/egjs-flicking/Options#maxresizedebounce)
+
 ### useFractionalSize {#useFractionalSize}
 
 <div>
@@ -752,6 +832,9 @@ By enabling this, Flicking will calculate all internal size with CSS width compu
 **Type**: boolean
 
 **Default**: false
+
+**See**:
+- [useFractionalSize ( Options )](https://naver.github.io/egjs-flicking/Options#usefractionalsize)
 
 ### externalRenderer {#externalRenderer}
 

@@ -278,6 +278,8 @@ root(`.flicking-viewport`) 엘리먼트
 |panel|[ALIGN](ALIGN) \| string \| number|개개의 [Panel](Panel)에 적용할 값|
 |camera|[ALIGN](ALIGN) \| string \| number|[Camera](Camera)에 적용할 값|
 
+**See**:
+- [align ( Options )](https://naver.github.io/egjs-flicking/Options#align)
 ```ts
 const possibleOptions = [
   // Literal strings
@@ -309,6 +311,9 @@ Flicking의 [init()](Flicking#init)이 호출될 때 이동할 디폴트 패널�
 
 **Default**: 0
 
+**See**:
+- [defaultIndex ( Options )](https://naver.github.io/egjs-flicking/Options#defaultindex)
+
 ### horizontal {#horizontal}
 
 <div>
@@ -321,6 +326,9 @@ Flicking의 [init()](Flicking#init)이 호출될 때 이동할 디폴트 패널�
 
 **Default**: true
 
+**See**:
+- [horizontal ( Options )](https://naver.github.io/egjs-flicking/Options#horizontal)
+
 ### circular {#circular}
 
 <div>
@@ -332,6 +340,9 @@ Flicking의 [init()](Flicking#init)이 호출될 때 이동할 디폴트 패널�
 **Type**: boolean
 
 **Default**: false
+
+**See**:
+- [circular ( Options )](https://naver.github.io/egjs-flicking/Options#circular)
 
 ### circularFallback {#circularFallback}
 
@@ -347,6 +358,7 @@ Flicking의 [init()](Flicking#init)이 호출될 때 이동할 디폴트 패널�
 
 **See**:
 - [CIRCULAR_FALLBACK](CIRCULAR_FALLBACK)
+- [circularFallback ( Options )](https://naver.github.io/egjs-flicking/Options#circularfallback)
 
 ### bound {#bound}
 
@@ -360,6 +372,9 @@ Flicking의 [init()](Flicking#init)이 호출될 때 이동할 디폴트 패널�
 
 **Default**: false
 
+**See**:
+- [bound ( Options )](https://naver.github.io/egjs-flicking/Options#bound)
+
 ### adaptive {#adaptive}
 
 <div>
@@ -372,6 +387,9 @@ Flicking의 [init()](Flicking#init)이 호출될 때 이동할 디폴트 패널�
 
 **Default**: false
 
+**See**:
+- [adaptive ( Options )](https://naver.github.io/egjs-flicking/Options#adaptive)
+
 ### panelsPerView {#panelsPerView}
 
 <div>
@@ -383,6 +401,9 @@ Flicking의 [init()](Flicking#init)이 호출될 때 이동할 디폴트 패널�
 **Type**: number
 
 **Default**: -1
+
+**See**:
+- [panelsPerView ( Options )](https://naver.github.io/egjs-flicking/Options#panelsperview)
 
 ### noPanelStyleOverride {#noPanelStyleOverride}
 
@@ -408,6 +429,9 @@ Flicking의 [init()](Flicking#init)이 호출될 때 이동할 디폴트 패널�
 
 **Default**: false
 
+**See**:
+- [resizeOnContentsReady ( Options )](https://naver.github.io/egjs-flicking/Options#resizeOnContentsReady)
+
 ### nested {#nested}
 
 <div>
@@ -419,6 +443,9 @@ Flicking 내부에 Flicking이 배치될 때 하위 Flicking에서 이 옵션을
 **Type**: boolean
 
 **Default**: false
+
+**See**:
+- [nested ( Options )](https://naver.github.io/egjs-flicking/Options#nested)
 
 ### needPanelThreshold {#needPanelThreshold}
 
@@ -432,6 +459,9 @@ Flicking 내부에 Flicking이 배치될 때 하위 Flicking에서 이 옵션을
 
 **Default**: 0
 
+**See**:
+- [needPanelThreshold ( Options )](https://naver.github.io/egjs-flicking/Options#needpanelthreshold)
+
 ### preventEventsBeforeInit {#preventEventsBeforeInit}
 
 <div>
@@ -444,6 +474,9 @@ Flicking 내부에 Flicking이 배치될 때 하위 Flicking에서 이 옵션을
 
 **Default**: true
 
+**See**:
+- [preventEventsBeforeInit ( Options )](https://naver.github.io/egjs-flicking/Options#preventeventsbeforeinit)
+
 ### deceleration {#deceleration}
 
 <div>
@@ -455,6 +488,9 @@ Flicking 내부에 Flicking이 배치될 때 하위 Flicking에서 이 옵션을
 **Type**: number
 
 **Default**: 0.0075
+
+**See**:
+- [deceleration ( Options )](https://naver.github.io/egjs-flicking/Options#deceleration)
 
 ### easing {#easing}
 
@@ -470,6 +506,7 @@ Flicking 내부에 Flicking이 배치될 때 하위 Flicking에서 이 옵션을
 
 **See**:
 - 이징 함수 Cheat Sheet [http://easings.net/](http://easings.net/)
+- [Easing ( Options )](https://naver.github.io/egjs-flicking/Options#easing)
 
 ### duration {#duration}
 
@@ -482,6 +519,9 @@ Flicking 내부에 Flicking이 배치될 때 하위 Flicking에서 이 옵션을
 **Type**: number
 
 **Default**: 500
+
+**See**:
+- [duration ( Options )](https://naver.github.io/egjs-flicking/Options#duration)
 
 ### inputType {#inputType}
 
@@ -496,7 +536,8 @@ Flicking 내부에 Flicking이 배치될 때 하위 Flicking에서 이 옵션을
 **Default**: ["touch", "mouse"]
 
 **See**:
-- [가능한 값들 (PanInputOption#inputType)](https://naver.github.io/egjs-axes/release/latest/doc/global.html#PanInputOption)
+- [가능한 값들 (PanInputOption#inputType)](https://naver.github.io/egjs-axes/Options#paninput-options)
+- [inputType ( Options )](https://naver.github.io/egjs-flicking/Options#inputtype)
 
 ### moveType {#moveType}
 
@@ -510,6 +551,8 @@ Flicking 내부에 Flicking이 배치될 때 하위 Flicking에서 이 옵션을
 
 **Default**: "snap"
 
+**See**:
+- [moveType ( Options )](https://naver.github.io/egjs-flicking/Options#movetype)
 |moveType|control|options|
 |:---:|:---:|:---:|
 |"snap"|[SnapControl](SnapControl)||
@@ -544,6 +587,9 @@ const flicking = new Flicking({
 
 **Default**: 40
 
+**See**:
+- [Threshold ( Options )](https://naver.github.io/egjs-flicking/Options#threshold)
+
 ### interruptable {#interruptable}
 
 <div>
@@ -555,6 +601,9 @@ const flicking = new Flicking({
 **Type**: boolean
 
 **Default**: true
+
+**See**:
+- [Interruptable ( Options )](https://naver.github.io/egjs-flicking/Options#interruptable)
 
 ### bounce {#bounce}
 
@@ -568,6 +617,8 @@ Flicking이 최대 영역을 넘어서 갈 수 있는 최대 크기. `circular=f
 
 **Default**: "20%"
 
+**See**:
+- [bounce ( Options )](https://naver.github.io/egjs-flicking/Options#bounce)
 ```ts
 const possibleOptions = [
   // % values, relative to viewport element(".flicking-viewport")'s size
@@ -598,6 +649,9 @@ iOS Safari에서 swipe를 통한 뒤로가기/앞으로가기를 활성화하는
 
 **Default**: 30
 
+**See**:
+- [iOSEdgeSwipeThreshold ( Options )](https://naver.github.io/egjs-flicking/Options#iosedgeswipethreshold)
+
 ### preventClickOnDrag {#preventClickOnDrag}
 
 <div>
@@ -609,6 +663,9 @@ iOS Safari에서 swipe를 통한 뒤로가기/앞으로가기를 활성화하는
 **Type**: boolean
 
 **Default**: true
+
+**See**:
+- [preventClickOnDrag ( Options )](https://naver.github.io/egjs-flicking/Options#preventclickondrag)
 
 ### disableOnInit {#disableOnInit}
 
@@ -622,6 +679,9 @@ Flicking init시에 [disableInput()](Flicking#disableInput)을 바로 호출합�
 
 **Default**: false
 
+**See**:
+- [disableOnInit ( Options )](https://naver.github.io/egjs-flicking/Options#disableoninit)
+
 ### changeOnHold {#changeOnHold}
 
 <div>
@@ -634,6 +694,9 @@ Flicking init시에 [disableInput()](Flicking#disableInput)을 바로 호출합�
 
 **Default**: false
 
+**See**:
+- [changeOnHold ( Options )](https://naver.github.io/egjs-flicking/Options#changeonhold)
+
 ### renderOnlyVisible {#renderOnlyVisible}
 
 <div>
@@ -645,6 +708,9 @@ Flicking init시에 [disableInput()](Flicking#disableInput)을 바로 호출합�
 **Type**: boolean
 
 **Default**: false
+
+**See**:
+- [renderOnlyVisible ( Options )](https://naver.github.io/egjs-flicking/Options#renderonlyvisible)
 
 ### virtual {#virtual}
 
@@ -663,6 +729,8 @@ Flicking init시에 [disableInput()](Flicking#disableInput)을 바로 호출합�
 |cache|boolean|렌더링된 패널의 innerHTML 정보를 캐시할지 여부|
 |panelClass|string|렌더링되는 패널 엘리먼트에 적용될 클래스 이름|
 
+**See**:
+- [virtual ( Options )](https://naver.github.io/egjs-flicking/Options#virtual)
 ```ts
 import Flicking, { VirtualPanel } from "@egjs/flicking";
 
@@ -693,6 +761,9 @@ Flicking 인스턴스를 생성할 때 자동으로 [init()](Flicking#init)를 �
 
 **Default**: true
 
+**See**:
+- [autoInit ( Options )](https://naver.github.io/egjs-flicking/Options#autoinit)
+
 ### autoResize {#autoResize}
 
 <div>
@@ -717,6 +788,9 @@ autoResize 옵션 사용시 [ResizeObserver](https://developer.mozilla.org/en-US
 
 **Default**: true
 
+**See**:
+- [useResizeObserver ( Options )](https://naver.github.io/egjs-flicking/Options#useresizeobserver)
+
 ### resizeDebounce {#resizeDebounce}
 
 <div>
@@ -728,6 +802,9 @@ autoResize 옵션 사용시 [ResizeObserver](https://developer.mozilla.org/en-US
 **Type**: number
 
 **Default**: 0
+
+**See**:
+- [resizeDebounce ( Options )](https://naver.github.io/egjs-flicking/Options#resizedebounce)
 
 ### maxResizeDebounce {#maxResizeDebounce}
 
@@ -741,6 +818,9 @@ autoResize 옵션 사용시 [ResizeObserver](https://developer.mozilla.org/en-US
 
 **Default**: 100
 
+**See**:
+- [maxResizeDebounce ( Options )](https://naver.github.io/egjs-flicking/Options#maxresizedebounce)
+
 ### useFractionalSize {#useFractionalSize}
 
 <div>
@@ -752,6 +832,9 @@ autoResize 옵션 사용시 [ResizeObserver](https://developer.mozilla.org/en-US
 **Type**: boolean
 
 **Default**: false
+
+**See**:
+- [useFractionalSize ( Options )](https://naver.github.io/egjs-flicking/Options#usefractionalsize)
 
 ### externalRenderer {#externalRenderer}
 

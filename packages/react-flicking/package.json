@@ -1,6 +1,6 @@
 {
   "name": "@egjs/react-flicking",
-  "version": "4.10.5",
+  "version": "4.10.6",
   "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
   "main": "dist/flicking.cjs.js",
   "module": "dist/flicking.esm.js",
@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@egjs/component": "^3.0.2",
-    "@egjs/flicking": "~4.10.4",
+    "@egjs/flicking": "~4.10.5",
     "@egjs/list-differ": "^1.0.0"
   },
   "devDependencies": {
