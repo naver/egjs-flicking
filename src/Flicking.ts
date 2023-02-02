@@ -1070,7 +1070,7 @@ class Flicking extends Component<FlickingEvents> {
     return renderer.render().then(() => {
       // Done initializing & emit ready event
       this._plugins.forEach(plugin => plugin.init(this));
-      camera.applyTransform();
+
       if (preventEventsBeforeInit) {
         this.trigger = originalTrigger;
       }

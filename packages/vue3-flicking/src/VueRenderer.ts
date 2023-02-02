@@ -35,7 +35,10 @@ class VueRenderer extends ExternalRenderer {
     strategy.renderPanels(flicking);
 
     return new Promise<void>((resolve) => {
-      vueFlicking.renderEmitter.once("render", resolve);
+      vueFlicking.renderEmitter.once("render", () => {
+        flicking.camera.applyTransform();
+        resolve();
+      });
       vueFlicking.$forceUpdate();
     });
   }

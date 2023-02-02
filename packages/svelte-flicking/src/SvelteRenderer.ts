@@ -35,7 +35,10 @@ class SvelteRenderer extends ExternalRenderer {
     strategy.renderPanels(flicking);
 
     return new Promise<void>(resolve => {
-      this._renderEmitter.once("render", resolve);
+      this._renderEmitter.once("render", () => {
+        flicking.camera.applyTransform();
+        resolve();
+      });
       this._applyPanelOrder();
       this._forceUpdate();
     });
