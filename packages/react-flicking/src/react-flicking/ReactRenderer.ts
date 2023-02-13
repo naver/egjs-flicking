@@ -36,7 +36,8 @@ class ReactRenderer extends ExternalRenderer {
     return new Promise<void>(resolve => {
       reactFlicking.renderEmitter.once("render", () => {
         this._rendering = false;
-        resolve()
+        this._afterRender();
+        resolve();
       });
       reactFlicking.forceUpdate();
     });

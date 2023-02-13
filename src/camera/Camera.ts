@@ -551,7 +551,7 @@ class Camera {
     const flicking = getFlickingAttached(this._flicking);
     const renderer = flicking.renderer;
 
-    if (renderer.rendering) return this;
+    if (renderer.rendering || !flicking.initialized) return this;
 
     const actualPosition = this._position - this._alignPos - this._offset + this._circularOffset;
 

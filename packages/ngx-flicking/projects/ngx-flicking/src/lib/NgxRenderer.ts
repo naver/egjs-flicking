@@ -36,6 +36,7 @@ class NgxRenderer extends ExternalRenderer {
     strategy.renderPanels(flicking);
 
     this._resetPanelElementOrder();
+    this._afterRender();
   }
 
   protected _collectPanels() {
