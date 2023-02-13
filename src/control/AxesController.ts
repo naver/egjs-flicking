@@ -8,7 +8,7 @@ import Flicking from "../Flicking";
 import FlickingError from "../core/FlickingError";
 import * as AXES from "../const/axes";
 import * as ERROR from "../const/error";
-import { circulatePosition, getFlickingAttached, parseBounce } from "../utils";
+import { getFlickingAttached, parseBounce } from "../utils";
 import { ControlParams } from "../type/external";
 
 import StateMachine from "./StateMachine";
@@ -376,37 +376,22 @@ class AxesController {
       }
     };
 
-    if (duration === 0) {
-      const flicking = getFlickingAttached(this._flicking);
-      const camera = flicking.camera;
+    return new Promise((resolve, reject) => {
+      const animationFinishHandler = () => {
+        axes.off(AXES.EVENT.HOLD, interruptionHandler);
+        resolve();
+      };
+
+      const interruptionHandler = () => {
+        axes.off(AXES.EVENT.FINISH, animationFinishHandler);
+        reject(new FlickingError(ERROR.MESSAGE.ANIMATION_INTERRUPTED, ERROR.CODE.ANIMATION_INTERRUPTED));
+      };
+
+      axes.once(AXES.EVENT.FINISH, animationFinishHandler);
+      axes.once(AXES.EVENT.HOLD, interruptionHandler);
 
       animate();
-
-      const newPos = flicking.circularEnabled
-        ? circulatePosition(position, camera.range.min, camera.range.max)
-        : position;
-
-      axes.axisManager.set({ [AXES.POSITION_KEY]: newPos });
-
-      return Promise.resolve();
-    } else {
-      return new Promise((resolve, reject) => {
-        const animationFinishHandler = () => {
-          axes.off(AXES.EVENT.HOLD, interruptionHandler);
-          resolve();
-        };
-
-        const interruptionHandler = () => {
-          axes.off(AXES.EVENT.FINISH, animationFinishHandler);
-          reject(new FlickingError(ERROR.MESSAGE.ANIMATION_INTERRUPTED, ERROR.CODE.ANIMATION_INTERRUPTED));
-        };
-
-        axes.once(AXES.EVENT.FINISH, animationFinishHandler);
-        axes.once(AXES.EVENT.HOLD, interruptionHandler);
-
-        animate();
-      });
-    }
+    });
   }
 
   public updateDirection() {
