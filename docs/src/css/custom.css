@@ -38,6 +38,9 @@ html[data-theme='dark'] {
 .navbar__brand {
   padding: var(--ifm-navbar-item-padding-vertical) 1rem;
 }
+.navbar--fixed-top {
+  z-index: 2002;
+}
 html[data-theme='dark'] .navbar__logo {
   content: url("@site/static/img/flicking_textonly_white.svg");
 }
