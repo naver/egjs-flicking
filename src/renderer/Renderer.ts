@@ -536,6 +536,12 @@ abstract class Renderer {
       cameraElement.removeChild(panel.element);
     });
   }
+
+  protected _afterRender() {
+    const flicking = getFlickingAttached(this._flicking);
+
+    flicking.camera.applyTransform();
+  }
 }
 
 export default Renderer;

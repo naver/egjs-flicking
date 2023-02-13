@@ -20,7 +20,7 @@ class VanillaRenderer extends Renderer {
     strategy.renderPanels(flicking);
 
     this._resetPanelElementOrder();
-    flicking.camera.applyTransform();
+    this._afterRender();
   }
 
   protected _collectPanels() {

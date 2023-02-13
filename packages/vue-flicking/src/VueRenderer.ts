@@ -36,7 +36,7 @@ class VueRenderer extends ExternalRenderer {
 
     return new Promise<void>((resolve) => {
       vueFlicking.$once("render", () => {
-        flicking.camera.applyTransform();
+        this._afterRender();
         resolve();
       });
       vueFlicking.$forceUpdate();
