@@ -538,11 +538,9 @@ abstract class Renderer {
   }
 
   protected _afterRender() {
-    if (this._flicking) {
-      const flicking = getFlickingAttached(this._flicking);
+    const flicking = getFlickingAttached(this._flicking);
 
-      flicking.camera.applyTransform();
-    }
+    flicking.camera.applyTransform();
   }
 }
 
