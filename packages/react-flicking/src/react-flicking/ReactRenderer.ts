@@ -58,6 +58,11 @@ class ReactRenderer extends ExternalRenderer {
     });
   }
 
+  public destroy() {
+    super.destroy();
+    this._reactFlicking.renderEmitter.off("render");
+  }
+
   protected _collectPanels() {
     const flicking = getFlickingAttached(this._flicking);
     const reactFlicking = this._reactFlicking;
