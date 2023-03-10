@@ -2,19 +2,28 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { Directive, ElementRef, Renderer2 } from "@angular/core";
-import Flicking from "@egjs/flicking";
+import { Directive, ElementRef, Renderer2 } from '@angular/core';
+import Flicking from '@egjs/flicking';
 
 @Directive({
-  selector: "[flicking-panel], [FlickingPanel]"
+  selector: '[flicking-panel], [FlickingPanel]',
+  standalone: true,
 })
 export class NgxFlickingPanel {
   private _rendered: boolean;
 
-  public get nativeElement() { return this._elementref.nativeElement; }
-  public get rendered() { return this._rendered; }
+  public get nativeElement() {
+    return this._host.nativeElement;
+  }
 
-  public constructor(private _elementref: ElementRef, private _renderer: Renderer2) {
+  public get rendered() {
+    return this._rendered;
+  }
+
+  public constructor(
+    private _host: ElementRef<HTMLElement>,
+    private _renderer: Renderer2
+  ) {
     this._rendered = true;
   }
 

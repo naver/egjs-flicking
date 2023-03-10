@@ -1,5 +1,5 @@
 const path = require("path");
-const { pathsToModuleNameMapper } = require("ts-jest/utils");
+const { pathsToModuleNameMapper } = require("ts-jest");
 
 const { compilerOptions } = require("./tsconfig.spec");
 const commonOptions = require("../../common/jest.config");
@@ -9,19 +9,19 @@ module.exports = {
   ...commonOptions,
   displayName: {
     name: "Svelte",
-    color: "magentaBright"
+    color: "magentaBright",
   },
   rootDir: path.resolve(__dirname),
   moduleNameMapper: {
     ...pathsToModuleNameMapper(compilerOptions.paths || {}, {
-      prefix: "<rootDir>"
-    })
+      prefix: "<rootDir>",
+    }),
   },
   coveragePathIgnorePatterns: [
     "/node_modules/",
     "svelte-fixture",
-    "src/.+\.svelte",
-    "\.json$"
+    "src/.+.svelte",
+    ".json$",
   ],
   moduleFileExtensions: [...commonOptions.moduleFileExtensions, "svelte"],
   transform: {
@@ -30,8 +30,8 @@ module.exports = {
     "^.+\\.svelte$": [
       "svelte-jester",
       {
-        preprocess: path.resolve(__dirname, "./svelte.config.js")
-      }
-    ]
-  }
+        preprocess: path.resolve(__dirname, "./svelte.config.js"),
+      },
+    ],
+  },
 };

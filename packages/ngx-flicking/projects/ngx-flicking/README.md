@@ -33,19 +33,24 @@
 </p>
 
 ## ⚙️ Installation
+
 ```sh
 npm install @egjs/ngx-flicking
 # Or if you're using yarn
 yarn add @egjs/ngx-flicking
+# Or if you're using pnpm
+pnpm install @egjs/ngx-flicking
 ```
 
 ## 🏃 Quick Start
+
 ### Module definition
+
 ```diff
 +import { NgxFlickingModule } from '@egjs/ngx-flicking';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
- 
+
 @NgModule({
   declarations: [
     AppComponent
@@ -60,30 +65,38 @@ import { NgModule } from '@angular/core';
 export class AppModule { } /* Your app */
 ```
 
+Then we have to bundle `flicking.css`. The file may be imported into the `styles.scss` or defined in the `angular.json` configuration in the `options.build.styles` list:
+
+```scss
+// styles.scss
+@import '@egjs/flicking/dist/flicking.css';
+```
+
 ### Template & Script
+
 ```ts
 import { Plugin } from '@egjs/ngx-flicking';
-import { Fade, AutoPlay } from "@egjs/flicking-plugins";
+import { Fade, AutoPlay } from '@egjs/flicking-plugins';
 
 @Component({
   selector: 'flicking-demo',
   template: `
-  <ngx-flicking
-    [options]="{ circular: true, duration: 500 }"
-    [plugins]="plugins"
-    (needPanel)="onNeedPanel($event)"
-  >
-    <div class="panel">
-      <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
-    </div>
-    <div class="panel">
-      <img src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
-    </div>
-    <div class="panel">
-      <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
-    </div>
-  </ngx-flicking>
-  `
+    <ngx-flicking
+      [options]="{ circular: true, duration: 500 }"
+      [plugins]="plugins"
+      (needPanel)="onNeedPanel($event)"
+    >
+      <div class="panel">
+        <img src="https://naver.github.io/egjs-flicking/images/bg01.jpg" />
+      </div>
+      <div class="panel">
+        <img src="https://naver.github.io/egjs-flicking/images/bg02.jpg" />
+      </div>
+      <div class="panel">
+        <img src="https://naver.github.io/egjs-flicking/images/bg03.jpg" />
+      </div>
+    </ngx-flicking>
+  `,
 })
 export class FlickingDemo implements OnInit {
   plugins: Plugin[] = [
@@ -101,49 +114,61 @@ export class FlickingDemo implements OnInit {
 ```
 
 ## Guide
-  - \[v3.4+\] [Applying renderOnlyVisible option on ngx flicking](https://github.com/naver/egjs-flicking/wiki/Applying-renderOnlyVisible-option-on-ngx-flicking) (Performance)
+
+- \[v3.4+\] [Applying renderOnlyVisible option on ngx flicking](https://github.com/naver/egjs-flicking/wiki/Applying-renderOnlyVisible-option-on-ngx-flicking) (Performance)
 
 ## 📦 Packages
+
 You can use all plugins just like native @egjs/flicking.
 
 Check [**@egjs/flicking-plugins**](https://github.com/naver/egjs-flicking-plugins) for readymade effects we're providing.
 
 ## 📖 More Options & Examples
+
 [Options](https://naver.github.io/egjs-flicking/Options) / [Demos](https://naver.github.io/egjs-flicking/Demos)
 
 ## 🙌 Contributing
+
 See [CONTRIBUTING.md](https://github.com/naver/egjs-flicking/blob/master/CONTRIBUTING.md)
 
 ## 📝 Feedback
+
 Please file an [Issue](https://github.com/naver/egjs-flicking/issues) with label "Angular".
 
 ## Local development
+
 ### Project setup
+
 ```
 npm install
 ```
 
 ### Compiles and hot-reloads demo
+
 ```sh
 npm run start
 ```
 
 ### Compiles and minifies for production
+
 ```
 npm run build
 ```
 
 ### Run your tests
+
 ```
 npm run test
 ```
 
 ### Lints and fixes files
+
 ```
 npm run lint
 ```
 
 ## 📜 License
+
 egjs-flicking is released under the [MIT license](http://naver.github.io/egjs/license.txt).
 
 ```
@@ -168,4 +193,3 @@ THE SOFTWARE.
 <p align=center>
   <a href="https://naver.github.io/egjs/"><img height="50" src="https://naver.github.io/egjs/img/logotype1_black.svg" ></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/naver"><img height="50" src="https://naver.github.io/OpenSourceGuide/book/assets/naver_logo.png" /></a>
 </p>
-

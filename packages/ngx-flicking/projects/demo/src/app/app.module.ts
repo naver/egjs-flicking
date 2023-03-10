@@ -71,7 +71,7 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     NgxFlickingModule,
-    RouterModule.forRoot(appRoutes, { enableTracing: false })
+    RouterModule.forRoot(appRoutes, { enableTracing: false, relativeLinkResolution: 'legacy' })
   ],
   providers: [],
   bootstrap: [AppComponent]
