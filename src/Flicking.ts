@@ -1397,7 +1397,7 @@ class Flicking extends Component<FlickingEvents> {
       renderer.batchInsert({ index: 0, elements: parseElement(panels.map(panel => panel.html!)), hasDOMInElements: true });
     }
 
-    if (index !== undefined) {
+    if (index != null) {
       const panelIndex = visibleOffset
         ? index - visibleOffset
         : index;
