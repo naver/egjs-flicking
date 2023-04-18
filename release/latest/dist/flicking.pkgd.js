@@ -171,7 +171,7 @@ version: 4.10.7
         };
       }
     }
-    function __values$1(o) {
+    function __values$4(o) {
       var s = typeof Symbol === "function" && Symbol.iterator,
         m = s && o[s],
         i = 0;
@@ -187,7 +187,7 @@ version: 4.10.7
       };
       throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
     }
-    function __read$1(o, n) {
+    function __read$4(o, n) {
       var m = typeof Symbol === "function" && o[Symbol.iterator];
       if (!m) return o;
       var i = m.call(o),
@@ -211,8 +211,8 @@ version: 4.10.7
     }
 
     /** @deprecated */
-    function __spread$1() {
-      for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read$1(arguments[i]));
+    function __spread$3() {
+      for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read$4(arguments[i]));
       return ar;
     }
 
@@ -222,9 +222,9 @@ version: 4.10.7
     license: MIT
     author: NAVER Corp.
     repository: https://github.com/naver/egjs-component
-    version: 3.0.4
+    version: 3.0.2-snapshot
     */
-    /*! *****************************************************************************
+    /******************************************************************************
     Copyright (c) Microsoft Corporation.
 
     Permission to use, copy, modify, and/or distribute this software for any
@@ -238,7 +238,7 @@ version: 4.10.7
     OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
     PERFORMANCE OF THIS SOFTWARE.
     ***************************************************************************** */
-    function __values(o) {
+    function __values$3(o) {
       var s = typeof Symbol === "function" && Symbol.iterator,
         m = s && o[s],
         i = 0;
@@ -254,7 +254,7 @@ version: 4.10.7
       };
       throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
     }
-    function __read(o, n) {
+    function __read$3(o, n) {
       var m = typeof Symbol === "function" && o[Symbol.iterator];
       if (!m) return o;
       var i = m.call(o),
@@ -276,16 +276,21 @@ version: 4.10.7
       }
       return ar;
     }
-    function __spread() {
-      for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
-      return ar;
+    function __spreadArray(to, from, pack) {
+      if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+          if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+          ar[i] = from[i];
+        }
+      }
+      return to.concat(ar || Array.prototype.slice.call(from));
     }
 
     /*
      * Copyright (c) 2015 NAVER Corp.
      * egjs projects are licensed under the MIT license
      */
-    var isUndefined = function (value) {
+    var isUndefined$3 = function (value) {
       return typeof value === "undefined";
     };
 
@@ -294,7 +299,7 @@ version: 4.10.7
      * Event class to provide additional properties
      * @ko Component에서 추가적인 프로퍼티를 제공하는 이벤트 클래스
      */
-    var ComponentEvent = /*#__PURE__*/function () {
+    var ComponentEvent$4 = /*#__PURE__*/function () {
       /**
        * Create a new instance of ComponentEvent.
        * @ko ComponentEvent의 새로운 인스턴스를 생성한다.
@@ -306,7 +311,7 @@ version: 4.10.7
         this._canceled = false;
         if (props) {
           try {
-            for (var _b = __values(Object.keys(props)), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values$3(Object.keys(props)), _c = _b.next(); !_c.done; _c = _b.next()) {
               var key = _c.value;
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               this[key] = props[key];
@@ -348,7 +353,7 @@ version: 4.10.7
      * A class used to manage events in a component
      * @ko 컴포넌트의 이벤트을 관리할 수 있게 하는 클래스
      */
-    var Component = /*#__PURE__*/function () {
+    var Component$3 = /*#__PURE__*/function () {
       /**
        * @support {"ie": "7+", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "2.1+ (except 3.x)"}
        */
@@ -402,12 +407,12 @@ version: 4.10.7
         for (var _i = 1; _i < arguments.length; _i++) {
           params[_i - 1] = arguments[_i];
         }
-        var eventName = event instanceof ComponentEvent ? event.eventType : event;
-        var handlers = __spread(this._eventHandler[eventName] || []);
+        var eventName = event instanceof ComponentEvent$4 ? event.eventType : event;
+        var handlers = __spreadArray([], __read$3(this._eventHandler[eventName] || []), false);
         if (handlers.length <= 0) {
           return this;
         }
-        if (event instanceof ComponentEvent) {
+        if (event instanceof ComponentEvent$4) {
           event.currentTarget = this;
           handlers.forEach(function (handler) {
             handler(event);
@@ -415,7 +420,7 @@ version: 4.10.7
         } else {
           handlers.forEach(function (handler) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            handler.apply(void 0, __spread(params));
+            handler.apply(void 0, __spreadArray([], __read$3(params), false));
           });
         }
         return this;
@@ -451,7 +456,7 @@ version: 4.10.7
        */
       __proto.once = function (eventName, handlerToAttach) {
         var _this = this;
-        if (typeof eventName === "object" && isUndefined(handlerToAttach)) {
+        if (typeof eventName === "object" && isUndefined$3(handlerToAttach)) {
           var eventHash = eventName;
           for (var key in eventHash) {
             this.once(key, eventHash[key]);
@@ -464,7 +469,7 @@ version: 4.10.7
               args[_i] = arguments[_i];
             }
             // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            handlerToAttach.apply(void 0, __spread(args));
+            handlerToAttach.apply(void 0, __spreadArray([], __read$3(args), false));
             _this.off(eventName, listener_1);
           };
           this.on(eventName, listener_1);
@@ -515,7 +520,7 @@ version: 4.10.7
        * ```
        */
       __proto.on = function (eventName, handlerToAttach) {
-        if (typeof eventName === "object" && isUndefined(handlerToAttach)) {
+        if (typeof eventName === "object" && isUndefined$3(handlerToAttach)) {
           var eventHash = eventName;
           for (var name in eventHash) {
             this.on(name, eventHash[name]);
@@ -523,7 +528,7 @@ version: 4.10.7
           return this;
         } else if (typeof eventName === "string" && typeof handlerToAttach === "function") {
           var handlerList = this._eventHandler[eventName];
-          if (isUndefined(handlerList)) {
+          if (isUndefined$3(handlerList)) {
             this._eventHandler[eventName] = [];
             handlerList = this._eventHandler[eventName];
           }
@@ -556,12 +561,12 @@ version: 4.10.7
       __proto.off = function (eventName, handlerToDetach) {
         var e_1, _a;
         // Detach all event handlers.
-        if (isUndefined(eventName)) {
+        if (isUndefined$3(eventName)) {
           this._eventHandler = {};
           return this;
         }
         // Detach all handlers for eventname or detach event handlers by object.
-        if (isUndefined(handlerToDetach)) {
+        if (isUndefined$3(handlerToDetach)) {
           if (typeof eventName === "string") {
             delete this._eventHandler[eventName];
             return this;
@@ -578,7 +583,7 @@ version: 4.10.7
         if (handlerList) {
           var idx = 0;
           try {
-            for (var handlerList_1 = __values(handlerList), handlerList_1_1 = handlerList_1.next(); !handlerList_1_1.done; handlerList_1_1 = handlerList_1.next()) {
+            for (var handlerList_1 = __values$3(handlerList), handlerList_1_1 = handlerList_1.next(); !handlerList_1_1.done; handlerList_1_1 = handlerList_1.next()) {
               var handlerFunction = handlerList_1_1.value;
               if (handlerFunction === handlerToDetach) {
                 handlerList.splice(idx, 1);
@@ -612,7 +617,7 @@ version: 4.10.7
        * Component.VERSION;  // ex) 3.0.0
        * @memberof Component
        */
-      Component.VERSION = "3.0.4";
+      Component.VERSION = "3.0.2-snapshot";
       return Component;
     }();
 
@@ -621,7 +626,7 @@ version: 4.10.7
      * egjs projects are licensed under the MIT license
      */
     // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unsafe-assignment
-    var ComponentEvent$1 = ComponentEvent;
+    var ComponentEvent$1$2 = ComponentEvent$4;
 
     /*
      * Copyright (c) 2015 NAVER Corp.
@@ -971,7 +976,7 @@ version: 4.10.7
         if (isString(el)) {
           var tempDiv = document.createElement("div");
           tempDiv.innerHTML = el;
-          elements.push.apply(elements, __spread$1(toArray$2(tempDiv.children)));
+          elements.push.apply(elements, __spread$3(toArray$2(tempDiv.children)));
           while (tempDiv.firstChild) {
             tempDiv.removeChild(tempDiv.firstChild);
           }
@@ -989,7 +994,7 @@ version: 4.10.7
     var includes = function (array, target) {
       var e_1, _a;
       try {
-        for (var array_1 = __values$1(array), array_1_1 = array_1.next(); !array_1_1.done; array_1_1 = array_1.next()) {
+        for (var array_1 = __values$4(array), array_1_1 = array_1.next(); !array_1_1.done; array_1_1 = array_1.next()) {
           var val = array_1_1.value;
           if (val === target) return true;
         }
@@ -1023,7 +1028,7 @@ version: 4.10.7
     var find$1 = function (array, checker) {
       var e_2, _a;
       try {
-        for (var array_2 = __values$1(array), array_2_1 = array_2.next(); !array_2_1.done; array_2_1 = array_2.next()) {
+        for (var array_2 = __values$4(array), array_2_1 = array_2.next(); !array_2_1.done; array_2_1 = array_2.next()) {
           var val = array_2_1.value;
           if (checker(val)) {
             return val;
@@ -2094,6 +2099,813 @@ version: 4.10.7
     }
 
     /*
+    Copyright (c) NAVER Corp.
+    name: @egjs/component
+    license: MIT
+    author: NAVER Corp.
+    repository: https://github.com/naver/egjs-component
+    version: 3.0.4
+    */
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+    function __values$2(o) {
+      var s = typeof Symbol === "function" && Symbol.iterator,
+        m = s && o[s],
+        i = 0;
+      if (m) return m.call(o);
+      if (o && typeof o.length === "number") return {
+        next: function () {
+          if (o && i >= o.length) o = void 0;
+          return {
+            value: o && o[i++],
+            done: !o
+          };
+        }
+      };
+      throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+    }
+    function __read$2(o, n) {
+      var m = typeof Symbol === "function" && o[Symbol.iterator];
+      if (!m) return o;
+      var i = m.call(o),
+        r,
+        ar = [],
+        e;
+      try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+      } catch (error) {
+        e = {
+          error: error
+        };
+      } finally {
+        try {
+          if (r && !r.done && (m = i["return"])) m.call(i);
+        } finally {
+          if (e) throw e.error;
+        }
+      }
+      return ar;
+    }
+    function __spread$2() {
+      for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read$2(arguments[i]));
+      return ar;
+    }
+
+    /*
+     * Copyright (c) 2015 NAVER Corp.
+     * egjs projects are licensed under the MIT license
+     */
+    var isUndefined$2 = function (value) {
+      return typeof value === "undefined";
+    };
+
+    // This class name is not matched to file name intentionally
+    /**
+     * Event class to provide additional properties
+     * @ko Component에서 추가적인 프로퍼티를 제공하는 이벤트 클래스
+     */
+    var ComponentEvent$3 = /*#__PURE__*/function () {
+      /**
+       * Create a new instance of ComponentEvent.
+       * @ko ComponentEvent의 새로운 인스턴스를 생성한다.
+       * @param eventType The name of the event.<ko>이벤트 이름.</ko>
+       * @param props An object that contains additional event properties.<ko>추가적인 이벤트 프로퍼티 오브젝트.</ko>
+       */
+      function ComponentEvent(eventType, props) {
+        var e_1, _a;
+        this._canceled = false;
+        if (props) {
+          try {
+            for (var _b = __values$2(Object.keys(props)), _c = _b.next(); !_c.done; _c = _b.next()) {
+              var key = _c.value;
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              this[key] = props[key];
+            }
+          } catch (e_1_1) {
+            e_1 = {
+              error: e_1_1
+            };
+          } finally {
+            try {
+              if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+            } finally {
+              if (e_1) throw e_1.error;
+            }
+          }
+        }
+        this.eventType = eventType;
+      }
+      /**
+       * Stop the event. {@link ComponentEvent#isCanceled} will return `true` after.
+       * @ko 이벤트를 중단한다. 이후 {@link ComponentEvent#isCanceled}가 `true`를 반환한다.
+       */
+      var __proto = ComponentEvent.prototype;
+      __proto.stop = function () {
+        this._canceled = true;
+      };
+      /**
+       * Returns a boolean value that indicates whether {@link ComponentEvent#stop} is called before.
+       * @ko {@link ComponentEvent#stop}이 호출되었는지 여부를 반환한다.
+       * @return {boolean} A boolean value that indicates whether {@link ComponentEvent#stop} is called before.<ko>이전에 {@link ComponentEvent#stop}이 불려졌는지 여부를 반환한다.</ko>
+       */
+      __proto.isCanceled = function () {
+        return this._canceled;
+      };
+      return ComponentEvent;
+    }();
+
+    /**
+     * A class used to manage events in a component
+     * @ko 컴포넌트의 이벤트을 관리할 수 있게 하는 클래스
+     */
+    var Component$2 = /*#__PURE__*/function () {
+      /**
+       * @support {"ie": "7+", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "2.1+ (except 3.x)"}
+       */
+      function Component() {
+        this._eventHandler = {};
+      }
+      /**
+       * Trigger a custom event.
+       * @ko 커스텀 이벤트를 발생시킨다
+       * @param {string | ComponentEvent} event The name of the custom event to be triggered or an instance of the ComponentEvent<ko>발생할 커스텀 이벤트의 이름 또는 ComponentEvent의 인스턴스</ko>
+       * @param {any[]} params Event data to be sent when triggering a custom event <ko>커스텀 이벤트가 발생할 때 전달할 데이터</ko>
+       * @return An instance of the component itself<ko>컴포넌트 자신의 인스턴스</ko>
+       * @example
+       * ```ts
+       * import Component, { ComponentEvent } from "@egjs/component";
+       *
+       * class Some extends Component<{
+       *   beforeHi: ComponentEvent<{ foo: number; bar: string }>;
+       *   hi: { foo: { a: number; b: boolean } };
+       *   someEvent: (foo: number, bar: string) => void;
+       *   someOtherEvent: void; // When there's no event argument
+       * }> {
+       *   some(){
+       *     if(this.trigger("beforeHi")){ // When event call to stop return false.
+       *       this.trigger("hi");// fire hi event.
+       *     }
+       *   }
+       * }
+       *
+       * const some = new Some();
+       * some.on("beforeHi", e => {
+       *   if(condition){
+       *     e.stop(); // When event call to stop, `hi` event not call.
+       *   }
+       *   // `currentTarget` is component instance.
+       *   console.log(some === e.currentTarget); // true
+       *
+       *   typeof e.foo; // number
+       *   typeof e.bar; // string
+       * });
+       * some.on("hi", e => {
+       *   typeof e.foo.b; // boolean
+       * });
+       * // If you want to more know event design. You can see article.
+       * // https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F
+       * ```
+       */
+      var __proto = Component.prototype;
+      __proto.trigger = function (event) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+          params[_i - 1] = arguments[_i];
+        }
+        var eventName = event instanceof ComponentEvent$3 ? event.eventType : event;
+        var handlers = __spread$2(this._eventHandler[eventName] || []);
+        if (handlers.length <= 0) {
+          return this;
+        }
+        if (event instanceof ComponentEvent$3) {
+          event.currentTarget = this;
+          handlers.forEach(function (handler) {
+            handler(event);
+          });
+        } else {
+          handlers.forEach(function (handler) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            handler.apply(void 0, __spread$2(params));
+          });
+        }
+        return this;
+      };
+      /**
+       * Executed event just one time.
+       * @ko 이벤트가 한번만 실행된다.
+       * @param {string} eventName The name of the event to be attached or an event name - event handler mapped object.<ko>등록할 이벤트의 이름 또는 이벤트 이름-핸들러 오브젝트</ko>
+       * @param {function} handlerToAttach The handler function of the event to be attached <ko>등록할 이벤트의 핸들러 함수</ko>
+       * @return An instance of the component itself<ko>컴포넌트 자신의 인스턴스</ko>
+       * @example
+       * ```ts
+       * import Component, { ComponentEvent } from "@egjs/component";
+       *
+       * class Some extends Component<{
+       *   hi: ComponentEvent;
+       * }> {
+       *   hi() {
+       *     alert("hi");
+       *   }
+       *   thing() {
+       *     this.once("hi", this.hi);
+       *   }
+       * }
+       *
+       * var some = new Some();
+       * some.thing();
+       * some.trigger(new ComponentEvent("hi"));
+       * // fire alert("hi");
+       * some.trigger(new ComponentEvent("hi"));
+       * // Nothing happens
+       * ```
+       */
+      __proto.once = function (eventName, handlerToAttach) {
+        var _this = this;
+        if (typeof eventName === "object" && isUndefined$2(handlerToAttach)) {
+          var eventHash = eventName;
+          for (var key in eventHash) {
+            this.once(key, eventHash[key]);
+          }
+          return this;
+        } else if (typeof eventName === "string" && typeof handlerToAttach === "function") {
+          var listener_1 = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+              args[_i] = arguments[_i];
+            }
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            handlerToAttach.apply(void 0, __spread$2(args));
+            _this.off(eventName, listener_1);
+          };
+          this.on(eventName, listener_1);
+        }
+        return this;
+      };
+      /**
+       * Checks whether an event has been attached to a component.
+       * @ko 컴포넌트에 이벤트가 등록됐는지 확인한다.
+       * @param {string} eventName The name of the event to be attached <ko>등록 여부를 확인할 이벤트의 이름</ko>
+       * @return {boolean} Indicates whether the event is attached. <ko>이벤트 등록 여부</ko>
+       * @example
+       * ```ts
+       * import Component from "@egjs/component";
+       *
+       * class Some extends Component<{
+       *   hi: void;
+       * }> {
+       *   some() {
+       *     this.hasOn("hi");// check hi event.
+       *   }
+       * }
+       * ```
+       */
+      __proto.hasOn = function (eventName) {
+        return !!this._eventHandler[eventName];
+      };
+      /**
+       * Attaches an event to a component.
+       * @ko 컴포넌트에 이벤트를 등록한다.
+       * @param {string} eventName The name of the event to be attached or an event name - event handler mapped object.<ko>등록할 이벤트의 이름 또는 이벤트 이름-핸들러 오브젝트</ko>
+       * @param {function} handlerToAttach The handler function of the event to be attached <ko>등록할 이벤트의 핸들러 함수</ko>
+       * @return An instance of a component itself<ko>컴포넌트 자신의 인스턴스</ko>
+       * @example
+       * ```ts
+       * import Component, { ComponentEvent } from "@egjs/component";
+       *
+       * class Some extends Component<{
+       *   hi: void;
+       * }> {
+       *   hi() {
+       *     console.log("hi");
+       *   }
+       *   some() {
+       *     this.on("hi",this.hi); //attach event
+       *   }
+       * }
+       * ```
+       */
+      __proto.on = function (eventName, handlerToAttach) {
+        if (typeof eventName === "object" && isUndefined$2(handlerToAttach)) {
+          var eventHash = eventName;
+          for (var name in eventHash) {
+            this.on(name, eventHash[name]);
+          }
+          return this;
+        } else if (typeof eventName === "string" && typeof handlerToAttach === "function") {
+          var handlerList = this._eventHandler[eventName];
+          if (isUndefined$2(handlerList)) {
+            this._eventHandler[eventName] = [];
+            handlerList = this._eventHandler[eventName];
+          }
+          handlerList.push(handlerToAttach);
+        }
+        return this;
+      };
+      /**
+       * Detaches an event from the component.<br/>If the `eventName` is not given this will detach all event handlers attached.<br/>If the `handlerToDetach` is not given, this will detach all event handlers for `eventName`.
+       * @ko 컴포넌트에 등록된 이벤트를 해제한다.<br/>`eventName`이 주어지지 않았을 경우 모든 이벤트 핸들러를 제거한다.<br/>`handlerToAttach`가 주어지지 않았을 경우 `eventName`에 해당하는 모든 이벤트 핸들러를 제거한다.
+       * @param {string?} eventName The name of the event to be detached <ko>해제할 이벤트의 이름</ko>
+       * @param {function?} handlerToDetach The handler function of the event to be detached <ko>해제할 이벤트의 핸들러 함수</ko>
+       * @return An instance of a component itself <ko>컴포넌트 자신의 인스턴스</ko>
+       * @example
+       * ```ts
+       * import Component, { ComponentEvent } from "@egjs/component";
+       *
+       * class Some extends Component<{
+       *   hi: void;
+       * }> {
+       *   hi() {
+       *     console.log("hi");
+       *   }
+       *   some() {
+       *     this.off("hi",this.hi); //detach event
+       *   }
+       * }
+       * ```
+       */
+      __proto.off = function (eventName, handlerToDetach) {
+        var e_1, _a;
+        // Detach all event handlers.
+        if (isUndefined$2(eventName)) {
+          this._eventHandler = {};
+          return this;
+        }
+        // Detach all handlers for eventname or detach event handlers by object.
+        if (isUndefined$2(handlerToDetach)) {
+          if (typeof eventName === "string") {
+            delete this._eventHandler[eventName];
+            return this;
+          } else {
+            var eventHash = eventName;
+            for (var name in eventHash) {
+              this.off(name, eventHash[name]);
+            }
+            return this;
+          }
+        }
+        // Detach single event handler
+        var handlerList = this._eventHandler[eventName];
+        if (handlerList) {
+          var idx = 0;
+          try {
+            for (var handlerList_1 = __values$2(handlerList), handlerList_1_1 = handlerList_1.next(); !handlerList_1_1.done; handlerList_1_1 = handlerList_1.next()) {
+              var handlerFunction = handlerList_1_1.value;
+              if (handlerFunction === handlerToDetach) {
+                handlerList.splice(idx, 1);
+                if (handlerList.length <= 0) {
+                  delete this._eventHandler[eventName];
+                }
+                break;
+              }
+              idx++;
+            }
+          } catch (e_1_1) {
+            e_1 = {
+              error: e_1_1
+            };
+          } finally {
+            try {
+              if (handlerList_1_1 && !handlerList_1_1.done && (_a = handlerList_1.return)) _a.call(handlerList_1);
+            } finally {
+              if (e_1) throw e_1.error;
+            }
+          }
+        }
+        return this;
+      };
+      /**
+       * Version info string
+       * @ko 버전정보 문자열
+       * @name VERSION
+       * @static
+       * @example
+       * Component.VERSION;  // ex) 3.0.0
+       * @memberof Component
+       */
+      Component.VERSION = "3.0.4";
+      return Component;
+    }();
+
+    /*
+     * Copyright (c) 2015 NAVER Corp.
+     * egjs projects are licensed under the MIT license
+     */
+    // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unsafe-assignment
+    var ComponentEvent$1$1 = ComponentEvent$3;
+
+    /*
+    Copyright (c) NAVER Corp.
+    name: @egjs/component
+    license: MIT
+    author: NAVER Corp.
+    repository: https://github.com/naver/egjs-component
+    version: 3.0.4
+    */
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+    function __values$1(o) {
+      var s = typeof Symbol === "function" && Symbol.iterator,
+        m = s && o[s],
+        i = 0;
+      if (m) return m.call(o);
+      if (o && typeof o.length === "number") return {
+        next: function () {
+          if (o && i >= o.length) o = void 0;
+          return {
+            value: o && o[i++],
+            done: !o
+          };
+        }
+      };
+      throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+    }
+    function __read$1(o, n) {
+      var m = typeof Symbol === "function" && o[Symbol.iterator];
+      if (!m) return o;
+      var i = m.call(o),
+        r,
+        ar = [],
+        e;
+      try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+      } catch (error) {
+        e = {
+          error: error
+        };
+      } finally {
+        try {
+          if (r && !r.done && (m = i["return"])) m.call(i);
+        } finally {
+          if (e) throw e.error;
+        }
+      }
+      return ar;
+    }
+    function __spread$1() {
+      for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read$1(arguments[i]));
+      return ar;
+    }
+
+    /*
+     * Copyright (c) 2015 NAVER Corp.
+     * egjs projects are licensed under the MIT license
+     */
+    var isUndefined$1 = function (value) {
+      return typeof value === "undefined";
+    };
+
+    // This class name is not matched to file name intentionally
+    /**
+     * Event class to provide additional properties
+     * @ko Component에서 추가적인 프로퍼티를 제공하는 이벤트 클래스
+     */
+    var ComponentEvent$2 = /*#__PURE__*/function () {
+      /**
+       * Create a new instance of ComponentEvent.
+       * @ko ComponentEvent의 새로운 인스턴스를 생성한다.
+       * @param eventType The name of the event.<ko>이벤트 이름.</ko>
+       * @param props An object that contains additional event properties.<ko>추가적인 이벤트 프로퍼티 오브젝트.</ko>
+       */
+      function ComponentEvent(eventType, props) {
+        var e_1, _a;
+        this._canceled = false;
+        if (props) {
+          try {
+            for (var _b = __values$1(Object.keys(props)), _c = _b.next(); !_c.done; _c = _b.next()) {
+              var key = _c.value;
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              this[key] = props[key];
+            }
+          } catch (e_1_1) {
+            e_1 = {
+              error: e_1_1
+            };
+          } finally {
+            try {
+              if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+            } finally {
+              if (e_1) throw e_1.error;
+            }
+          }
+        }
+        this.eventType = eventType;
+      }
+      /**
+       * Stop the event. {@link ComponentEvent#isCanceled} will return `true` after.
+       * @ko 이벤트를 중단한다. 이후 {@link ComponentEvent#isCanceled}가 `true`를 반환한다.
+       */
+      var __proto = ComponentEvent.prototype;
+      __proto.stop = function () {
+        this._canceled = true;
+      };
+      /**
+       * Returns a boolean value that indicates whether {@link ComponentEvent#stop} is called before.
+       * @ko {@link ComponentEvent#stop}이 호출되었는지 여부를 반환한다.
+       * @return {boolean} A boolean value that indicates whether {@link ComponentEvent#stop} is called before.<ko>이전에 {@link ComponentEvent#stop}이 불려졌는지 여부를 반환한다.</ko>
+       */
+      __proto.isCanceled = function () {
+        return this._canceled;
+      };
+      return ComponentEvent;
+    }();
+
+    /**
+     * A class used to manage events in a component
+     * @ko 컴포넌트의 이벤트을 관리할 수 있게 하는 클래스
+     */
+    var Component$1 = /*#__PURE__*/function () {
+      /**
+       * @support {"ie": "7+", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "2.1+ (except 3.x)"}
+       */
+      function Component() {
+        this._eventHandler = {};
+      }
+      /**
+       * Trigger a custom event.
+       * @ko 커스텀 이벤트를 발생시킨다
+       * @param {string | ComponentEvent} event The name of the custom event to be triggered or an instance of the ComponentEvent<ko>발생할 커스텀 이벤트의 이름 또는 ComponentEvent의 인스턴스</ko>
+       * @param {any[]} params Event data to be sent when triggering a custom event <ko>커스텀 이벤트가 발생할 때 전달할 데이터</ko>
+       * @return An instance of the component itself<ko>컴포넌트 자신의 인스턴스</ko>
+       * @example
+       * ```ts
+       * import Component, { ComponentEvent } from "@egjs/component";
+       *
+       * class Some extends Component<{
+       *   beforeHi: ComponentEvent<{ foo: number; bar: string }>;
+       *   hi: { foo: { a: number; b: boolean } };
+       *   someEvent: (foo: number, bar: string) => void;
+       *   someOtherEvent: void; // When there's no event argument
+       * }> {
+       *   some(){
+       *     if(this.trigger("beforeHi")){ // When event call to stop return false.
+       *       this.trigger("hi");// fire hi event.
+       *     }
+       *   }
+       * }
+       *
+       * const some = new Some();
+       * some.on("beforeHi", e => {
+       *   if(condition){
+       *     e.stop(); // When event call to stop, `hi` event not call.
+       *   }
+       *   // `currentTarget` is component instance.
+       *   console.log(some === e.currentTarget); // true
+       *
+       *   typeof e.foo; // number
+       *   typeof e.bar; // string
+       * });
+       * some.on("hi", e => {
+       *   typeof e.foo.b; // boolean
+       * });
+       * // If you want to more know event design. You can see article.
+       * // https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F
+       * ```
+       */
+      var __proto = Component.prototype;
+      __proto.trigger = function (event) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+          params[_i - 1] = arguments[_i];
+        }
+        var eventName = event instanceof ComponentEvent$2 ? event.eventType : event;
+        var handlers = __spread$1(this._eventHandler[eventName] || []);
+        if (handlers.length <= 0) {
+          return this;
+        }
+        if (event instanceof ComponentEvent$2) {
+          event.currentTarget = this;
+          handlers.forEach(function (handler) {
+            handler(event);
+          });
+        } else {
+          handlers.forEach(function (handler) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            handler.apply(void 0, __spread$1(params));
+          });
+        }
+        return this;
+      };
+      /**
+       * Executed event just one time.
+       * @ko 이벤트가 한번만 실행된다.
+       * @param {string} eventName The name of the event to be attached or an event name - event handler mapped object.<ko>등록할 이벤트의 이름 또는 이벤트 이름-핸들러 오브젝트</ko>
+       * @param {function} handlerToAttach The handler function of the event to be attached <ko>등록할 이벤트의 핸들러 함수</ko>
+       * @return An instance of the component itself<ko>컴포넌트 자신의 인스턴스</ko>
+       * @example
+       * ```ts
+       * import Component, { ComponentEvent } from "@egjs/component";
+       *
+       * class Some extends Component<{
+       *   hi: ComponentEvent;
+       * }> {
+       *   hi() {
+       *     alert("hi");
+       *   }
+       *   thing() {
+       *     this.once("hi", this.hi);
+       *   }
+       * }
+       *
+       * var some = new Some();
+       * some.thing();
+       * some.trigger(new ComponentEvent("hi"));
+       * // fire alert("hi");
+       * some.trigger(new ComponentEvent("hi"));
+       * // Nothing happens
+       * ```
+       */
+      __proto.once = function (eventName, handlerToAttach) {
+        var _this = this;
+        if (typeof eventName === "object" && isUndefined$1(handlerToAttach)) {
+          var eventHash = eventName;
+          for (var key in eventHash) {
+            this.once(key, eventHash[key]);
+          }
+          return this;
+        } else if (typeof eventName === "string" && typeof handlerToAttach === "function") {
+          var listener_1 = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+              args[_i] = arguments[_i];
+            }
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            handlerToAttach.apply(void 0, __spread$1(args));
+            _this.off(eventName, listener_1);
+          };
+          this.on(eventName, listener_1);
+        }
+        return this;
+      };
+      /**
+       * Checks whether an event has been attached to a component.
+       * @ko 컴포넌트에 이벤트가 등록됐는지 확인한다.
+       * @param {string} eventName The name of the event to be attached <ko>등록 여부를 확인할 이벤트의 이름</ko>
+       * @return {boolean} Indicates whether the event is attached. <ko>이벤트 등록 여부</ko>
+       * @example
+       * ```ts
+       * import Component from "@egjs/component";
+       *
+       * class Some extends Component<{
+       *   hi: void;
+       * }> {
+       *   some() {
+       *     this.hasOn("hi");// check hi event.
+       *   }
+       * }
+       * ```
+       */
+      __proto.hasOn = function (eventName) {
+        return !!this._eventHandler[eventName];
+      };
+      /**
+       * Attaches an event to a component.
+       * @ko 컴포넌트에 이벤트를 등록한다.
+       * @param {string} eventName The name of the event to be attached or an event name - event handler mapped object.<ko>등록할 이벤트의 이름 또는 이벤트 이름-핸들러 오브젝트</ko>
+       * @param {function} handlerToAttach The handler function of the event to be attached <ko>등록할 이벤트의 핸들러 함수</ko>
+       * @return An instance of a component itself<ko>컴포넌트 자신의 인스턴스</ko>
+       * @example
+       * ```ts
+       * import Component, { ComponentEvent } from "@egjs/component";
+       *
+       * class Some extends Component<{
+       *   hi: void;
+       * }> {
+       *   hi() {
+       *     console.log("hi");
+       *   }
+       *   some() {
+       *     this.on("hi",this.hi); //attach event
+       *   }
+       * }
+       * ```
+       */
+      __proto.on = function (eventName, handlerToAttach) {
+        if (typeof eventName === "object" && isUndefined$1(handlerToAttach)) {
+          var eventHash = eventName;
+          for (var name in eventHash) {
+            this.on(name, eventHash[name]);
+          }
+          return this;
+        } else if (typeof eventName === "string" && typeof handlerToAttach === "function") {
+          var handlerList = this._eventHandler[eventName];
+          if (isUndefined$1(handlerList)) {
+            this._eventHandler[eventName] = [];
+            handlerList = this._eventHandler[eventName];
+          }
+          handlerList.push(handlerToAttach);
+        }
+        return this;
+      };
+      /**
+       * Detaches an event from the component.<br/>If the `eventName` is not given this will detach all event handlers attached.<br/>If the `handlerToDetach` is not given, this will detach all event handlers for `eventName`.
+       * @ko 컴포넌트에 등록된 이벤트를 해제한다.<br/>`eventName`이 주어지지 않았을 경우 모든 이벤트 핸들러를 제거한다.<br/>`handlerToAttach`가 주어지지 않았을 경우 `eventName`에 해당하는 모든 이벤트 핸들러를 제거한다.
+       * @param {string?} eventName The name of the event to be detached <ko>해제할 이벤트의 이름</ko>
+       * @param {function?} handlerToDetach The handler function of the event to be detached <ko>해제할 이벤트의 핸들러 함수</ko>
+       * @return An instance of a component itself <ko>컴포넌트 자신의 인스턴스</ko>
+       * @example
+       * ```ts
+       * import Component, { ComponentEvent } from "@egjs/component";
+       *
+       * class Some extends Component<{
+       *   hi: void;
+       * }> {
+       *   hi() {
+       *     console.log("hi");
+       *   }
+       *   some() {
+       *     this.off("hi",this.hi); //detach event
+       *   }
+       * }
+       * ```
+       */
+      __proto.off = function (eventName, handlerToDetach) {
+        var e_1, _a;
+        // Detach all event handlers.
+        if (isUndefined$1(eventName)) {
+          this._eventHandler = {};
+          return this;
+        }
+        // Detach all handlers for eventname or detach event handlers by object.
+        if (isUndefined$1(handlerToDetach)) {
+          if (typeof eventName === "string") {
+            delete this._eventHandler[eventName];
+            return this;
+          } else {
+            var eventHash = eventName;
+            for (var name in eventHash) {
+              this.off(name, eventHash[name]);
+            }
+            return this;
+          }
+        }
+        // Detach single event handler
+        var handlerList = this._eventHandler[eventName];
+        if (handlerList) {
+          var idx = 0;
+          try {
+            for (var handlerList_1 = __values$1(handlerList), handlerList_1_1 = handlerList_1.next(); !handlerList_1_1.done; handlerList_1_1 = handlerList_1.next()) {
+              var handlerFunction = handlerList_1_1.value;
+              if (handlerFunction === handlerToDetach) {
+                handlerList.splice(idx, 1);
+                if (handlerList.length <= 0) {
+                  delete this._eventHandler[eventName];
+                }
+                break;
+              }
+              idx++;
+            }
+          } catch (e_1_1) {
+            e_1 = {
+              error: e_1_1
+            };
+          } finally {
+            try {
+              if (handlerList_1_1 && !handlerList_1_1.done && (_a = handlerList_1.return)) _a.call(handlerList_1);
+            } finally {
+              if (e_1) throw e_1.error;
+            }
+          }
+        }
+        return this;
+      };
+      /**
+       * Version info string
+       * @ko 버전정보 문자열
+       * @name VERSION
+       * @static
+       * @example
+       * Component.VERSION;  // ex) 3.0.0
+       * @memberof Component
+       */
+      Component.VERSION = "3.0.4";
+      return Component;
+    }();
+
+    /*
     Copyright (c) NAVER Crop.
     name: @cfcs/core
     license: MIT
@@ -2117,7 +2929,7 @@ version: 4.10.7
     /*#__PURE__*/
     function () {
       function Observer(value) {
-        this._emitter = new Component();
+        this._emitter = new Component$1();
         this._current = value;
       }
 
@@ -2634,7 +3446,7 @@ version: 4.10.7
       __proto.hold = function (pos, option) {
         var roundPos = this._getRoundPos(pos).roundPos;
 
-        this._axes.trigger(new ComponentEvent$1("hold", {
+        this._axes.trigger(new ComponentEvent$1$1("hold", {
           pos: roundPos,
           input: option.input || null,
           inputEvent: option.event || null,
@@ -2727,7 +3539,7 @@ version: 4.10.7
         param.depaPos = roundDepa;
         param.setTo = this._createUserControll(param.destPos, param.duration);
 
-        this._axes.trigger(new ComponentEvent$1("release", __assign$1(__assign$1({}, param), {
+        this._axes.trigger(new ComponentEvent$1$1("release", __assign$1(__assign$1({}, param), {
           bounceRatio: this._getBounceRatio(roundPos)
         })));
       };
@@ -2799,7 +3611,7 @@ version: 4.10.7
           set: inputEvent ? this._createUserControll(moveTo.pos) : function () {} // eslint-disable-line @typescript-eslint/no-empty-function
 
         };
-        var event = new ComponentEvent$1("change", param);
+        var event = new ComponentEvent$1$1("change", param);
 
         this._axes.trigger(event);
 
@@ -2861,7 +3673,7 @@ version: 4.10.7
         param.destPos = roundPos;
         param.depaPos = roundDepa;
         param.setTo = this._createUserControll(param.destPos, param.duration);
-        var event = new ComponentEvent$1("animationStart", param);
+        var event = new ComponentEvent$1$1("animationStart", param);
 
         this._axes.trigger(event);
 
@@ -2895,7 +3707,7 @@ version: 4.10.7
           isTrusted = false;
         }
 
-        this._axes.trigger(new ComponentEvent$1("animationEnd", {
+        this._axes.trigger(new ComponentEvent$1$1("animationEnd", {
           isTrusted: isTrusted
         }));
       };
@@ -2927,7 +3739,7 @@ version: 4.10.7
           isTrusted = false;
         }
 
-        this._axes.trigger(new ComponentEvent$1("finish", {
+        this._axes.trigger(new ComponentEvent$1$1("finish", {
           isTrusted: isTrusted
         }));
       };
@@ -5065,7 +5877,7 @@ version: 4.10.7
       Axes.DIRECTION_ALL = DIRECTION_ALL;
       Axes = __decorate([ReactiveSubscribe], Axes);
       return Axes;
-    }(Component);
+    }(Component$2);
 
     /*
      * Copyright (c) 2015 NAVER Corp.
@@ -5651,7 +6463,7 @@ version: 4.10.7
         var position = axesEvent.pos[POSITION_KEY];
         var newPosition = flicking.circularEnabled ? circulatePosition(position, camera.range.min, camera.range.max) : position;
         camera.lookAt(newPosition);
-        var moveEvent = new ComponentEvent$1(EVENTS.MOVE, {
+        var moveEvent = new ComponentEvent$1$2(EVENTS.MOVE, {
           isTrusted: axesEvent.isTrusted,
           holding: this.holding,
           direction: getDirection$1(0, axesEvent.delta[POSITION_KEY]),
@@ -5706,7 +6518,7 @@ version: 4.10.7
           transitTo(STATE_TYPE.DISABLED);
           return;
         }
-        var holdStartEvent = new ComponentEvent$1(EVENTS.HOLD_START, {
+        var holdStartEvent = new ComponentEvent$1$2(EVENTS.HOLD_START, {
           axesEvent: axesEvent
         });
         flicking.trigger(holdStartEvent);
@@ -5723,7 +6535,7 @@ version: 4.10.7
           transitTo = ctx.transitTo;
         var controller = flicking.control.controller;
         var animatingContext = controller.animatingContext;
-        var moveStartEvent = new ComponentEvent$1(EVENTS.MOVE_START, {
+        var moveStartEvent = new ComponentEvent$1$2(EVENTS.MOVE_START, {
           isTrusted: axesEvent.isTrusted,
           holding: this.holding,
           direction: getDirection$1(animatingContext.start, animatingContext.end),
@@ -5773,7 +6585,7 @@ version: 4.10.7
           transitTo = ctx.transitTo;
         var inputEvent = axesEvent.inputEvent;
         var offset = flicking.horizontal ? inputEvent.offsetX : inputEvent.offsetY;
-        var moveStartEvent = new ComponentEvent$1(EVENTS.MOVE_START, {
+        var moveStartEvent = new ComponentEvent$1$2(EVENTS.MOVE_START, {
           isTrusted: axesEvent.isTrusted,
           holding: this.holding,
           direction: getDirection$1(0, -offset),
@@ -5791,7 +6603,7 @@ version: 4.10.7
         var flicking = ctx.flicking,
           axesEvent = ctx.axesEvent,
           transitTo = ctx.transitTo;
-        flicking.trigger(new ComponentEvent$1(EVENTS.HOLD_END, {
+        flicking.trigger(new ComponentEvent$1$2(EVENTS.HOLD_END, {
           axesEvent: axesEvent
         }));
         if (axesEvent.delta.flick !== 0) {
@@ -5838,7 +6650,7 @@ version: 4.10.7
         var panels = flicking.renderer.panels;
         var clickedPanel = null;
         try {
-          for (var panels_1 = __values$1(panels), panels_1_1 = panels_1.next(); !panels_1_1.done; panels_1_1 = panels_1.next()) {
+          for (var panels_1 = __values$4(panels), panels_1_1 = panels_1.next(); !panels_1_1.done; panels_1_1 = panels_1.next()) {
             var panel = panels_1_1.value;
             if (panel.contains(clickedElement)) {
               clickedPanel = panel;
@@ -5859,7 +6671,7 @@ version: 4.10.7
         if (clickedPanel) {
           var cameraPosition = flicking.camera.position;
           var clickedPanelPosition = clickedPanel.position;
-          flicking.trigger(new ComponentEvent$1(EVENTS.SELECT, {
+          flicking.trigger(new ComponentEvent$1$2(EVENTS.SELECT, {
             index: clickedPanel.index,
             panel: clickedPanel,
             // Direction to the clicked panel
@@ -5906,7 +6718,7 @@ version: 4.10.7
           transitTo = ctx.transitTo;
         // Update last position to cope with Axes's animating behavior
         // Axes uses start position when animation start
-        flicking.trigger(new ComponentEvent$1(EVENTS.HOLD_END, {
+        flicking.trigger(new ComponentEvent$1$2(EVENTS.HOLD_END, {
           axesEvent: axesEvent
         }));
         if (flicking.renderer.panelCount <= 0) {
@@ -5965,7 +6777,7 @@ version: 4.10.7
         if (flicking.changeOnHold && targetPanel) {
           control.setActive(targetPanel, control.activePanel, axesEvent.isTrusted);
         }
-        var holdStartEvent = new ComponentEvent$1(EVENTS.HOLD_START, {
+        var holdStartEvent = new ComponentEvent$1$2(EVENTS.HOLD_START, {
           axesEvent: axesEvent
         });
         flicking.trigger(holdStartEvent);
@@ -5986,7 +6798,7 @@ version: 4.10.7
         var controller = control.controller;
         var animatingContext = controller.animatingContext;
         transitTo(STATE_TYPE.IDLE);
-        flicking.trigger(new ComponentEvent$1(EVENTS.MOVE_END, {
+        flicking.trigger(new ComponentEvent$1$2(EVENTS.MOVE_END, {
           isTrusted: axesEvent.isTrusted,
           direction: getDirection$1(animatingContext.start, animatingContext.end),
           axesEvent: axesEvent
@@ -6826,7 +7638,7 @@ version: 4.10.7
         this._activePanel = newActivePanel;
         flicking.camera.updateAdaptiveHeight();
         if (newActivePanel !== prevActivePanel) {
-          flicking.trigger(new ComponentEvent$1(EVENTS.CHANGED, {
+          flicking.trigger(new ComponentEvent$1$2(EVENTS.CHANGED, {
             index: newActivePanel.index,
             panel: newActivePanel,
             prevIndex: (_a = prevActivePanel === null || prevActivePanel === void 0 ? void 0 : prevActivePanel.index) !== null && _a !== void 0 ? _a : -1,
@@ -6835,7 +7647,7 @@ version: 4.10.7
             direction: prevActivePanel ? getDirection$1(prevActivePanel.position, newActivePanel.position) : DIRECTION.NONE
           }));
         } else {
-          flicking.trigger(new ComponentEvent$1(EVENTS.RESTORED, {
+          flicking.trigger(new ComponentEvent$1$2(EVENTS.RESTORED, {
             isTrusted: isTrusted
           }));
         }
@@ -6854,7 +7666,7 @@ version: 4.10.7
         var triggeringEvent = panel !== this._activePanel ? EVENTS.WILL_CHANGE : EVENTS.WILL_RESTORE;
         var camera = flicking.camera;
         var activePanel = this._activePanel;
-        var event = new ComponentEvent$1(triggeringEvent, {
+        var event = new ComponentEvent$1$2(triggeringEvent, {
           index: panel.index,
           panel: panel,
           isTrusted: (axesEvent === null || axesEvent === void 0 ? void 0 : axesEvent.isTrusted) || false,
@@ -7949,7 +8761,7 @@ version: 4.10.7
           var supportedStyle = document.documentElement.style;
           var transformName = "";
           try {
-            for (var transforms_1 = __values$1(transforms), transforms_1_1 = transforms_1.next(); !transforms_1_1.done; transforms_1_1 = transforms_1.next()) {
+            for (var transforms_1 = __values$4(transforms), transforms_1_1 = transforms_1.next(); !transforms_1_1.done; transforms_1_1 = transforms_1.next()) {
               var prefixedTransform = transforms_1_1.value;
               if (prefixedTransform in supportedStyle) {
                 transformName = prefixedTransform;
@@ -8569,7 +9381,7 @@ version: 4.10.7
         });
         if (added.length > 0 || removed.length > 0) {
           void flicking.renderer.render().then(function () {
-            flicking.trigger(new ComponentEvent$1(EVENTS.VISIBLE_CHANGE, {
+            flicking.trigger(new ComponentEvent$1$2(EVENTS.VISIBLE_CHANGE, {
               added: added,
               removed: removed,
               visiblePanels: newVisiblePanels
@@ -8584,13 +9396,13 @@ version: 4.10.7
         var panels = flicking.renderer.panels;
         if (panels.length <= 0) {
           if (!needPanelTriggered.prev) {
-            flicking.trigger(new ComponentEvent$1(EVENTS.NEED_PANEL, {
+            flicking.trigger(new ComponentEvent$1$2(EVENTS.NEED_PANEL, {
               direction: DIRECTION.PREV
             }));
             needPanelTriggered.prev = true;
           }
           if (!needPanelTriggered.next) {
-            flicking.trigger(new ComponentEvent$1(EVENTS.NEED_PANEL, {
+            flicking.trigger(new ComponentEvent$1$2(EVENTS.NEED_PANEL, {
               direction: DIRECTION.NEXT
             }));
             needPanelTriggered.next = true;
@@ -8608,7 +9420,7 @@ version: 4.10.7
         if (!needPanelTriggered.prev) {
           var firstPanelPrev = firstPanel.range.min;
           if (cameraPrev <= firstPanelPrev + needPanelThreshold || cameraPosition <= cameraRange.min + needPanelThreshold) {
-            flicking.trigger(new ComponentEvent$1(EVENTS.NEED_PANEL, {
+            flicking.trigger(new ComponentEvent$1$2(EVENTS.NEED_PANEL, {
               direction: DIRECTION.PREV
             }));
             needPanelTriggered.prev = true;
@@ -8617,7 +9429,7 @@ version: 4.10.7
         if (!needPanelTriggered.next) {
           var lastPanelNext = lastPanel.range.max;
           if (cameraNext >= lastPanelNext - needPanelThreshold || cameraPosition >= cameraRange.max - needPanelThreshold) {
-            flicking.trigger(new ComponentEvent$1(EVENTS.NEED_PANEL, {
+            flicking.trigger(new ComponentEvent$1$2(EVENTS.NEED_PANEL, {
               direction: DIRECTION.NEXT
             }));
             needPanelTriggered.next = true;
@@ -8631,7 +9443,7 @@ version: 4.10.7
         var isBetweenRange = newPos > range.min && newPos < range.max;
         if (!wasBetweenRange || isBetweenRange) return;
         var direction = newPos <= range.min ? DIRECTION.PREV : DIRECTION.NEXT;
-        flicking.trigger(new ComponentEvent$1(EVENTS.REACH_EDGE, {
+        flicking.trigger(new ComponentEvent$1$2(EVENTS.REACH_EDGE, {
           direction: direction
         }));
       };
@@ -8678,6 +9490,413 @@ version: 4.10.7
         CircularCameraMode: CircularCameraMode,
         BoundCameraMode: BoundCameraMode
     };
+
+    /*
+    Copyright (c) NAVER Corp.
+    name: @egjs/component
+    license: MIT
+    author: NAVER Corp.
+    repository: https://github.com/naver/egjs-component
+    version: 3.0.4
+    */
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+    function __values(o) {
+      var s = typeof Symbol === "function" && Symbol.iterator,
+        m = s && o[s],
+        i = 0;
+      if (m) return m.call(o);
+      if (o && typeof o.length === "number") return {
+        next: function () {
+          if (o && i >= o.length) o = void 0;
+          return {
+            value: o && o[i++],
+            done: !o
+          };
+        }
+      };
+      throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+    }
+    function __read(o, n) {
+      var m = typeof Symbol === "function" && o[Symbol.iterator];
+      if (!m) return o;
+      var i = m.call(o),
+        r,
+        ar = [],
+        e;
+      try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+      } catch (error) {
+        e = {
+          error: error
+        };
+      } finally {
+        try {
+          if (r && !r.done && (m = i["return"])) m.call(i);
+        } finally {
+          if (e) throw e.error;
+        }
+      }
+      return ar;
+    }
+    function __spread() {
+      for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+      return ar;
+    }
+
+    /*
+     * Copyright (c) 2015 NAVER Corp.
+     * egjs projects are licensed under the MIT license
+     */
+    var isUndefined = function (value) {
+      return typeof value === "undefined";
+    };
+
+    // This class name is not matched to file name intentionally
+    /**
+     * Event class to provide additional properties
+     * @ko Component에서 추가적인 프로퍼티를 제공하는 이벤트 클래스
+     */
+    var ComponentEvent = /*#__PURE__*/function () {
+      /**
+       * Create a new instance of ComponentEvent.
+       * @ko ComponentEvent의 새로운 인스턴스를 생성한다.
+       * @param eventType The name of the event.<ko>이벤트 이름.</ko>
+       * @param props An object that contains additional event properties.<ko>추가적인 이벤트 프로퍼티 오브젝트.</ko>
+       */
+      function ComponentEvent(eventType, props) {
+        var e_1, _a;
+        this._canceled = false;
+        if (props) {
+          try {
+            for (var _b = __values(Object.keys(props)), _c = _b.next(); !_c.done; _c = _b.next()) {
+              var key = _c.value;
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              this[key] = props[key];
+            }
+          } catch (e_1_1) {
+            e_1 = {
+              error: e_1_1
+            };
+          } finally {
+            try {
+              if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+            } finally {
+              if (e_1) throw e_1.error;
+            }
+          }
+        }
+        this.eventType = eventType;
+      }
+      /**
+       * Stop the event. {@link ComponentEvent#isCanceled} will return `true` after.
+       * @ko 이벤트를 중단한다. 이후 {@link ComponentEvent#isCanceled}가 `true`를 반환한다.
+       */
+      var __proto = ComponentEvent.prototype;
+      __proto.stop = function () {
+        this._canceled = true;
+      };
+      /**
+       * Returns a boolean value that indicates whether {@link ComponentEvent#stop} is called before.
+       * @ko {@link ComponentEvent#stop}이 호출되었는지 여부를 반환한다.
+       * @return {boolean} A boolean value that indicates whether {@link ComponentEvent#stop} is called before.<ko>이전에 {@link ComponentEvent#stop}이 불려졌는지 여부를 반환한다.</ko>
+       */
+      __proto.isCanceled = function () {
+        return this._canceled;
+      };
+      return ComponentEvent;
+    }();
+
+    /**
+     * A class used to manage events in a component
+     * @ko 컴포넌트의 이벤트을 관리할 수 있게 하는 클래스
+     */
+    var Component = /*#__PURE__*/function () {
+      /**
+       * @support {"ie": "7+", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "2.1+ (except 3.x)"}
+       */
+      function Component() {
+        this._eventHandler = {};
+      }
+      /**
+       * Trigger a custom event.
+       * @ko 커스텀 이벤트를 발생시킨다
+       * @param {string | ComponentEvent} event The name of the custom event to be triggered or an instance of the ComponentEvent<ko>발생할 커스텀 이벤트의 이름 또는 ComponentEvent의 인스턴스</ko>
+       * @param {any[]} params Event data to be sent when triggering a custom event <ko>커스텀 이벤트가 발생할 때 전달할 데이터</ko>
+       * @return An instance of the component itself<ko>컴포넌트 자신의 인스턴스</ko>
+       * @example
+       * ```ts
+       * import Component, { ComponentEvent } from "@egjs/component";
+       *
+       * class Some extends Component<{
+       *   beforeHi: ComponentEvent<{ foo: number; bar: string }>;
+       *   hi: { foo: { a: number; b: boolean } };
+       *   someEvent: (foo: number, bar: string) => void;
+       *   someOtherEvent: void; // When there's no event argument
+       * }> {
+       *   some(){
+       *     if(this.trigger("beforeHi")){ // When event call to stop return false.
+       *       this.trigger("hi");// fire hi event.
+       *     }
+       *   }
+       * }
+       *
+       * const some = new Some();
+       * some.on("beforeHi", e => {
+       *   if(condition){
+       *     e.stop(); // When event call to stop, `hi` event not call.
+       *   }
+       *   // `currentTarget` is component instance.
+       *   console.log(some === e.currentTarget); // true
+       *
+       *   typeof e.foo; // number
+       *   typeof e.bar; // string
+       * });
+       * some.on("hi", e => {
+       *   typeof e.foo.b; // boolean
+       * });
+       * // If you want to more know event design. You can see article.
+       * // https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F
+       * ```
+       */
+      var __proto = Component.prototype;
+      __proto.trigger = function (event) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+          params[_i - 1] = arguments[_i];
+        }
+        var eventName = event instanceof ComponentEvent ? event.eventType : event;
+        var handlers = __spread(this._eventHandler[eventName] || []);
+        if (handlers.length <= 0) {
+          return this;
+        }
+        if (event instanceof ComponentEvent) {
+          event.currentTarget = this;
+          handlers.forEach(function (handler) {
+            handler(event);
+          });
+        } else {
+          handlers.forEach(function (handler) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            handler.apply(void 0, __spread(params));
+          });
+        }
+        return this;
+      };
+      /**
+       * Executed event just one time.
+       * @ko 이벤트가 한번만 실행된다.
+       * @param {string} eventName The name of the event to be attached or an event name - event handler mapped object.<ko>등록할 이벤트의 이름 또는 이벤트 이름-핸들러 오브젝트</ko>
+       * @param {function} handlerToAttach The handler function of the event to be attached <ko>등록할 이벤트의 핸들러 함수</ko>
+       * @return An instance of the component itself<ko>컴포넌트 자신의 인스턴스</ko>
+       * @example
+       * ```ts
+       * import Component, { ComponentEvent } from "@egjs/component";
+       *
+       * class Some extends Component<{
+       *   hi: ComponentEvent;
+       * }> {
+       *   hi() {
+       *     alert("hi");
+       *   }
+       *   thing() {
+       *     this.once("hi", this.hi);
+       *   }
+       * }
+       *
+       * var some = new Some();
+       * some.thing();
+       * some.trigger(new ComponentEvent("hi"));
+       * // fire alert("hi");
+       * some.trigger(new ComponentEvent("hi"));
+       * // Nothing happens
+       * ```
+       */
+      __proto.once = function (eventName, handlerToAttach) {
+        var _this = this;
+        if (typeof eventName === "object" && isUndefined(handlerToAttach)) {
+          var eventHash = eventName;
+          for (var key in eventHash) {
+            this.once(key, eventHash[key]);
+          }
+          return this;
+        } else if (typeof eventName === "string" && typeof handlerToAttach === "function") {
+          var listener_1 = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+              args[_i] = arguments[_i];
+            }
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            handlerToAttach.apply(void 0, __spread(args));
+            _this.off(eventName, listener_1);
+          };
+          this.on(eventName, listener_1);
+        }
+        return this;
+      };
+      /**
+       * Checks whether an event has been attached to a component.
+       * @ko 컴포넌트에 이벤트가 등록됐는지 확인한다.
+       * @param {string} eventName The name of the event to be attached <ko>등록 여부를 확인할 이벤트의 이름</ko>
+       * @return {boolean} Indicates whether the event is attached. <ko>이벤트 등록 여부</ko>
+       * @example
+       * ```ts
+       * import Component from "@egjs/component";
+       *
+       * class Some extends Component<{
+       *   hi: void;
+       * }> {
+       *   some() {
+       *     this.hasOn("hi");// check hi event.
+       *   }
+       * }
+       * ```
+       */
+      __proto.hasOn = function (eventName) {
+        return !!this._eventHandler[eventName];
+      };
+      /**
+       * Attaches an event to a component.
+       * @ko 컴포넌트에 이벤트를 등록한다.
+       * @param {string} eventName The name of the event to be attached or an event name - event handler mapped object.<ko>등록할 이벤트의 이름 또는 이벤트 이름-핸들러 오브젝트</ko>
+       * @param {function} handlerToAttach The handler function of the event to be attached <ko>등록할 이벤트의 핸들러 함수</ko>
+       * @return An instance of a component itself<ko>컴포넌트 자신의 인스턴스</ko>
+       * @example
+       * ```ts
+       * import Component, { ComponentEvent } from "@egjs/component";
+       *
+       * class Some extends Component<{
+       *   hi: void;
+       * }> {
+       *   hi() {
+       *     console.log("hi");
+       *   }
+       *   some() {
+       *     this.on("hi",this.hi); //attach event
+       *   }
+       * }
+       * ```
+       */
+      __proto.on = function (eventName, handlerToAttach) {
+        if (typeof eventName === "object" && isUndefined(handlerToAttach)) {
+          var eventHash = eventName;
+          for (var name in eventHash) {
+            this.on(name, eventHash[name]);
+          }
+          return this;
+        } else if (typeof eventName === "string" && typeof handlerToAttach === "function") {
+          var handlerList = this._eventHandler[eventName];
+          if (isUndefined(handlerList)) {
+            this._eventHandler[eventName] = [];
+            handlerList = this._eventHandler[eventName];
+          }
+          handlerList.push(handlerToAttach);
+        }
+        return this;
+      };
+      /**
+       * Detaches an event from the component.<br/>If the `eventName` is not given this will detach all event handlers attached.<br/>If the `handlerToDetach` is not given, this will detach all event handlers for `eventName`.
+       * @ko 컴포넌트에 등록된 이벤트를 해제한다.<br/>`eventName`이 주어지지 않았을 경우 모든 이벤트 핸들러를 제거한다.<br/>`handlerToAttach`가 주어지지 않았을 경우 `eventName`에 해당하는 모든 이벤트 핸들러를 제거한다.
+       * @param {string?} eventName The name of the event to be detached <ko>해제할 이벤트의 이름</ko>
+       * @param {function?} handlerToDetach The handler function of the event to be detached <ko>해제할 이벤트의 핸들러 함수</ko>
+       * @return An instance of a component itself <ko>컴포넌트 자신의 인스턴스</ko>
+       * @example
+       * ```ts
+       * import Component, { ComponentEvent } from "@egjs/component";
+       *
+       * class Some extends Component<{
+       *   hi: void;
+       * }> {
+       *   hi() {
+       *     console.log("hi");
+       *   }
+       *   some() {
+       *     this.off("hi",this.hi); //detach event
+       *   }
+       * }
+       * ```
+       */
+      __proto.off = function (eventName, handlerToDetach) {
+        var e_1, _a;
+        // Detach all event handlers.
+        if (isUndefined(eventName)) {
+          this._eventHandler = {};
+          return this;
+        }
+        // Detach all handlers for eventname or detach event handlers by object.
+        if (isUndefined(handlerToDetach)) {
+          if (typeof eventName === "string") {
+            delete this._eventHandler[eventName];
+            return this;
+          } else {
+            var eventHash = eventName;
+            for (var name in eventHash) {
+              this.off(name, eventHash[name]);
+            }
+            return this;
+          }
+        }
+        // Detach single event handler
+        var handlerList = this._eventHandler[eventName];
+        if (handlerList) {
+          var idx = 0;
+          try {
+            for (var handlerList_1 = __values(handlerList), handlerList_1_1 = handlerList_1.next(); !handlerList_1_1.done; handlerList_1_1 = handlerList_1.next()) {
+              var handlerFunction = handlerList_1_1.value;
+              if (handlerFunction === handlerToDetach) {
+                handlerList.splice(idx, 1);
+                if (handlerList.length <= 0) {
+                  delete this._eventHandler[eventName];
+                }
+                break;
+              }
+              idx++;
+            }
+          } catch (e_1_1) {
+            e_1 = {
+              error: e_1_1
+            };
+          } finally {
+            try {
+              if (handlerList_1_1 && !handlerList_1_1.done && (_a = handlerList_1.return)) _a.call(handlerList_1);
+            } finally {
+              if (e_1) throw e_1.error;
+            }
+          }
+        }
+        return this;
+      };
+      /**
+       * Version info string
+       * @ko 버전정보 문자열
+       * @name VERSION
+       * @static
+       * @example
+       * Component.VERSION;  // ex) 3.0.0
+       * @memberof Component
+       */
+      Component.VERSION = "3.0.4";
+      return Component;
+    }();
+
+    /*
+     * Copyright (c) 2015 NAVER Corp.
+     * egjs projects are licensed under the MIT license
+     */
+    // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unsafe-assignment
+    var ComponentEvent$1 = ComponentEvent;
 
     /*
     Copyright (c) NAVER Corp.
@@ -9717,7 +10936,7 @@ version: 4.10.7
         for (var _i = 0; _i < arguments.length; _i++) {
           items[_i] = arguments[_i];
         }
-        var allPanelsInserted = this.batchInsertDefer.apply(this, __spread$1(items));
+        var allPanelsInserted = this.batchInsertDefer.apply(this, __spread$3(items));
         if (allPanelsInserted.length <= 0) return [];
         this.updateAfterPanelChange(allPanelsInserted, []);
         return allPanelsInserted;
@@ -9748,7 +10967,7 @@ version: 4.10.7
               flicking: flicking
             });
           });
-          panels.splice.apply(panels, __spread$1([insertingIdx, 0], panelsInserted));
+          panels.splice.apply(panels, __spread$3([insertingIdx, 0], panelsInserted));
           if (item.hasDOMInElements) {
             // Insert the actual elements as camera element's children
             _this._insertPanelElements(panelsInserted, (_a = panelsPushed[0]) !== null && _a !== void 0 ? _a : null);
@@ -9767,7 +10986,7 @@ version: 4.10.7
             panel.increaseIndex(panelsInserted.length);
             panel.updatePosition();
           });
-          return __spread$1(addedPanels, panelsInserted);
+          return __spread$3(addedPanels, panelsInserted);
         }, []);
         return allPanelsInserted;
       };
@@ -9787,7 +11006,7 @@ version: 4.10.7
         for (var _i = 0; _i < arguments.length; _i++) {
           items[_i] = arguments[_i];
         }
-        var allPanelsRemoved = this.batchRemoveDefer.apply(this, __spread$1(items));
+        var allPanelsRemoved = this.batchRemoveDefer.apply(this, __spread$3(items));
         if (allPanelsRemoved.length <= 0) return [];
         this.updateAfterPanelChange([], allPanelsRemoved);
         return allPanelsRemoved;
@@ -9829,7 +11048,7 @@ version: 4.10.7
           if (includes(panelsRemoved, activePanel)) {
             control.resetActive();
           }
-          return __spread$1(removed, panelsRemoved);
+          return __spread$3(removed, panelsRemoved);
         }, []);
         return allPanelsRemoved;
       };
@@ -9872,11 +11091,11 @@ version: 4.10.7
         }
         flicking.camera.updateOffset();
         if (panelsAdded.length > 0 || panelsRemoved.length > 0) {
-          flicking.trigger(new ComponentEvent$1(EVENTS.PANEL_CHANGE, {
+          flicking.trigger(new ComponentEvent$1$2(EVENTS.PANEL_CHANGE, {
             added: panelsAdded,
             removed: panelsRemoved
           }));
-          this.checkPanelContentsReady(__spread$1(panelsAdded, panelsRemoved));
+          this.checkPanelContentsReady(__spread$3(panelsAdded, panelsRemoved));
         }
       };
       /**
@@ -10761,7 +11980,7 @@ version: 4.10.7
         var notToggled = renderedPanels.filter(function (panel) {
           return !panel.toggled;
         });
-        return __spread$1(toggledPrev, notToggled, toggledNext).map(function (panel) {
+        return __spread$3(toggledPrev, notToggled, toggledNext).map(function (panel) {
           return panel.index;
         });
       };
@@ -10941,7 +12160,7 @@ version: 4.10.7
       };
       __proto.getRenderingIndexesByOrder = function (flicking) {
         var virtualManager = flicking.virtual;
-        var visiblePanels = __spread$1(flicking.visiblePanels).filter(function (panel) {
+        var visiblePanels = __spread$3(flicking.visiblePanels).filter(function (panel) {
           return panel.rendered;
         }).sort(function (panel1, panel2) {
           return panel1.position + panel1.offset - (panel2.position + panel2.offset);
@@ -10961,7 +12180,7 @@ version: 4.10.7
         }).map(function (el) {
           return el.idx;
         });
-        return __spread$1(visibleIndexes, invisibleIndexes);
+        return __spread$3(visibleIndexes, invisibleIndexes);
       };
       __proto.getRenderingElementsByOrder = function (flicking) {
         var virtualManager = flicking.virtual;
@@ -12246,7 +13465,7 @@ version: 4.10.7
           if (preventEventsBeforeInit) {
             _this.trigger = originalTrigger;
           }
-          _this.trigger(new ComponentEvent$1(EVENTS.READY));
+          _this.trigger(new ComponentEvent$1$2(EVENTS.READY));
         });
       };
       /**
@@ -12595,7 +13814,7 @@ version: 4.10.7
             return item.init(_this);
           });
         }
-        (_a = this._plugins).push.apply(_a, __spread$1(plugins));
+        (_a = this._plugins).push.apply(_a, __spread$3(plugins));
         return this;
       };
       /**
@@ -12644,7 +13863,7 @@ version: 4.10.7
                 prevWidth = viewport.width;
                 prevHeight = viewport.height;
                 prevProgressInPanel = activePanel ? camera.getProgressInPanel(activePanel) : 0;
-                this.trigger(new ComponentEvent$1(EVENTS.BEFORE_RESIZE, {
+                this.trigger(new ComponentEvent$1$2(EVENTS.BEFORE_RESIZE, {
                   width: prevWidth,
                   height: prevHeight,
                   element: viewport.element
@@ -12669,7 +13888,7 @@ version: 4.10.7
                 newWidth = viewport.width;
                 newHeight = viewport.height;
                 sizeChanged = newWidth !== prevWidth || newHeight !== prevHeight;
-                this.trigger(new ComponentEvent$1(EVENTS.AFTER_RESIZE, {
+                this.trigger(new ComponentEvent$1$2(EVENTS.AFTER_RESIZE, {
                   width: viewport.width,
                   height: viewport.height,
                   prev: {
@@ -12862,7 +14081,7 @@ version: 4.10.7
         var renderer = this._renderer;
         var camera = this._camera;
         var control = this._control;
-        this.trigger(new ComponentEvent$1(EVENTS.BEFORE_RESIZE, {
+        this.trigger(new ComponentEvent$1$2(EVENTS.BEFORE_RESIZE, {
           width: 0,
           height: 0,
           element: viewport.element
@@ -12877,7 +14096,7 @@ version: 4.10.7
         var newWidth = viewport.width;
         var newHeight = viewport.height;
         var sizeChanged = newWidth !== 0 || newHeight !== 0;
-        this.trigger(new ComponentEvent$1(EVENTS.AFTER_RESIZE, {
+        this.trigger(new ComponentEvent$1$2(EVENTS.AFTER_RESIZE, {
           width: viewport.width,
           height: viewport.height,
           prev: {
@@ -12900,7 +14119,7 @@ version: 4.10.7
        */
       Flicking.VERSION = "4.10.7";
       return Flicking;
-    }(Component);
+    }(Component$3);
 
     /*
      * Copyright (c) 2015 NAVER Corp.
@@ -12935,7 +14154,7 @@ version: 4.10.7
      * ```
      */
     var withFlickingMethods = function (prototype, flickingName) {
-      [Component.prototype, Flicking.prototype].forEach(function (proto) {
+      [Component$3.prototype, Flicking.prototype].forEach(function (proto) {
         Object.getOwnPropertyNames(proto).filter(function (name) {
           return !prototype[name] && name.indexOf("_") !== 0 && name !== "constructor";
         }).forEach(function (name) {
@@ -12949,7 +14168,7 @@ version: 4.10.7
                 for (var _i = 0; _i < arguments.length; _i++) {
                   args[_i] = arguments[_i];
                 }
-                return (_a = descriptor.value).call.apply(_a, __spread$1([this[flickingName]], args));
+                return (_a = descriptor.value).call.apply(_a, __spread$3([this[flickingName]], args));
               }
             });
           } else {
@@ -12968,7 +14187,7 @@ version: 4.10.7
                 for (var _i = 0; _i < arguments.length; _i++) {
                   args[_i] = arguments[_i];
                 }
-                return (_a = descriptor.set) === null || _a === void 0 ? void 0 : _a.call.apply(_a, __spread$1([this[flickingName]], args));
+                return (_a = descriptor.set) === null || _a === void 0 ? void 0 : _a.call.apply(_a, __spread$3([this[flickingName]], args));
               };
             }
             Object.defineProperty(prototype, name, getterDescriptor);
@@ -12980,7 +14199,7 @@ version: 4.10.7
     var sync = (function (flicking, diffResult, rendered) {
       var renderer = flicking.renderer;
       var panels = renderer.panels;
-      var prevList = __spread$1(diffResult.prevList);
+      var prevList = __spread$3(diffResult.prevList);
       var added = [];
       var removed = [];
       if (diffResult.removed.length > 0) {
@@ -12991,7 +14210,7 @@ version: 4.10.7
             endIdx_1 = removedIdx;
           }
           if (prevIdx_1 >= 0 && removedIdx !== prevIdx_1 - 1) {
-            removed.push.apply(removed, __spread$1(batchRemove(renderer, prevIdx_1, endIdx_1 + 1)));
+            removed.push.apply(removed, __spread$3(batchRemove(renderer, prevIdx_1, endIdx_1 + 1)));
             endIdx_1 = removedIdx;
             prevIdx_1 = removedIdx;
           } else {
@@ -12999,10 +14218,10 @@ version: 4.10.7
           }
           prevList.splice(removedIdx, 1);
         });
-        removed.push.apply(removed, __spread$1(batchRemove(renderer, prevIdx_1, endIdx_1 + 1)));
+        removed.push.apply(removed, __spread$3(batchRemove(renderer, prevIdx_1, endIdx_1 + 1)));
       }
       diffResult.ordered.forEach(function (_a) {
-        var _b = __read$1(_a, 2),
+        var _b = __read$4(_a, 2),
           from = _b[0],
           to = _b[1];
         var prevPanel = panels.splice(from, 1)[0];
@@ -13033,7 +14252,7 @@ version: 4.10.7
             startIdx_1 = idx;
           }
           if (prevIdx_2 >= 0 && addedIdx !== prevIdx_2 + 1) {
-            added.push.apply(added, __spread$1(batchInsert(renderer, diffResult, addedElements_1, startIdx_1, idx + 1)));
+            added.push.apply(added, __spread$3(batchInsert(renderer, diffResult, addedElements_1, startIdx_1, idx + 1)));
             startIdx_1 = -1;
             prevIdx_2 = -1;
           } else {
@@ -13041,7 +14260,7 @@ version: 4.10.7
           }
         });
         if (startIdx_1 >= 0) {
-          added.push.apply(added, __spread$1(batchInsert(renderer, diffResult, addedElements_1, startIdx_1)));
+          added.push.apply(added, __spread$3(batchInsert(renderer, diffResult, addedElements_1, startIdx_1)));
         }
       }
       if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
@@ -13049,7 +14268,7 @@ version: 4.10.7
       }
     });
     var batchInsert = function (renderer, diffResult, addedElements, startIdx, endIdx) {
-      return renderer.batchInsertDefer.apply(renderer, __spread$1(diffResult.added.slice(startIdx, endIdx).map(function (index, elIdx) {
+      return renderer.batchInsertDefer.apply(renderer, __spread$3(diffResult.added.slice(startIdx, endIdx).map(function (index, elIdx) {
         return {
           index: index,
           elements: [addedElements[elIdx]],
@@ -13072,13 +14291,13 @@ version: 4.10.7
         return map;
       }, {});
       var maintainedMap = diffResult.maintained.reduce(function (map, _a) {
-        var _b = __read$1(_a, 2),
+        var _b = __read$4(_a, 2),
           prev = _b[0],
           current = _b[1];
         map[prev] = current;
         return map;
       }, {});
-      return __spread$1(flicking.panels.filter(function (panel) {
+      return __spread$3(flicking.panels.filter(function (panel) {
         return !removedPanels[panel.index];
       })
       // Sort panels by position
