@@ -1,16 +1,18 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/lib",
-    "target": "es2015",
+    "declarationMap": true,
+    "target": "ES2022",
     "declaration": true,
     "inlineSources": true,
     "types": [],
     "lib": [
       "dom",
       "es2018"
-    ]
+    ],
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "skipTemplateCodegen": true,

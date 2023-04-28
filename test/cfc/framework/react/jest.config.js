@@ -1,5 +1,5 @@
 const path = require("path");
-const { pathsToModuleNameMapper } = require("ts-jest/utils");
+const { pathsToModuleNameMapper } = require("ts-jest");
 
 const { compilerOptions } = require("./tsconfig.spec");
 const commonOptions = require("../../common/jest.config");
@@ -9,12 +9,12 @@ module.exports = {
   ...commonOptions,
   displayName: {
     name: "React",
-    color: "blueBright"
+    color: "blueBright",
   },
   rootDir: path.resolve(__dirname),
   moduleNameMapper: {
     ...pathsToModuleNameMapper(compilerOptions.paths || {}, {
-      prefix: "<rootDir>"
-    })
-  }
+      prefix: "<rootDir>",
+    }),
+  },
 };

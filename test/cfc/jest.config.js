@@ -9,6 +9,6 @@ module.exports = {
     path.resolve(__dirname, "./framework/vue/jest.config.js"),
     path.resolve(__dirname, "./framework/vue3/jest.config.js"),
     path.resolve(__dirname, "./framework/preact/jest.config.js"),
-    path.resolve(__dirname, "./framework/svelte/jest.config.js")
-  ]
+    path.resolve(__dirname, "./framework/svelte/jest.config.js"),
+  ],
 };

@@ -18,11 +18,11 @@ import {
   HostBinding,
   Inject,
   PLATFORM_ID,
-  NgZone
-} from "@angular/core";
-import { isPlatformBrowser } from "@angular/common";
-import { fromEvent, Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+  NgZone,
+} from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { fromEvent, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import VanillaFlicking, {
   FlickingOptions,
   FlickingEvents,
@@ -50,35 +50,36 @@ import VanillaFlicking, {
   VirtualRenderingStrategy,
   NormalRenderingStrategy,
   range,
-  CLASS
-} from "@egjs/flicking";
-import ListDiffer from "@egjs/list-differ";
-import { ComponentEvent } from "@egjs/component";
+  CLASS,
+} from '@egjs/flicking';
+import ListDiffer from '@egjs/list-differ';
+import { ComponentEvent } from '@egjs/component';
 
-import { EVENT_NAMES } from "./consts";
-import FlickingInterface from "./FlickingInterface";
-import { NgxFlickingPanel } from "./ngx-flicking-panel.directive";
-import NgxRenderer, { NgxRendererOptions } from "./NgxRenderer";
-import NgxElementProvider from "./NgxElementProvider";
+import { EVENT_NAMES } from './consts';
+import FlickingInterface from './FlickingInterface';
+import { NgxFlickingPanel } from './ngx-flicking-panel.directive';
+import NgxRenderer, { NgxRendererOptions } from './NgxRenderer';
+import NgxElementProvider from './NgxElementProvider';
 
 @Component({
-  selector: "ngx-flicking, [NgxFlicking]",
+  selector: 'ngx-flicking, [NgxFlicking]',
   template: `
     <div [ngClass]="_cameraElClass" [ngStyle]="cameraStyleBeforeInit">
       <ng-content></ng-content>
     </div>
     <ng-content select="[in-viewport]"></ng-content>`,
   host: {
-    class: "flicking-viewport",
-    style: "display: block;"
+    class: 'flicking-viewport',
+    style: 'display: block;',
   },
-  styleUrls: [
-    "../../node_modules/@egjs/flicking/dist/flicking.css"
-  ],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [CommonModule],
 })
-export class NgxFlickingComponent extends FlickingInterface
-  implements AfterViewInit, OnDestroy, OnChanges {
+export class NgxFlickingComponent
+  extends FlickingInterface
+  implements AfterViewInit, OnDestroy, OnChanges
+{
   @Input() public options: Partial<FlickingOptions> = {};
   @Input() public plugins: Plugin[] = [];
   @Input() public status: Status;
@@ -182,6 +183,8 @@ export class NgxFlickingComponent extends FlickingInterface
       flicking.setStatus(this.status);
     }
 
+    // Note: doesn't need to unsubscribe, because `changes`
+    // gets completed by Angular when the view is destroyed.
     this._ngxPanels.changes.subscribe(() => {
       const panels = this._ngxPanels.toArray();
       const diffResult = elementDiffer.update(panels);
@@ -193,8 +196,7 @@ export class NgxFlickingComponent extends FlickingInterface
 
   public ngOnDestroy() {
     this._destroy$.next();
-    if (!this._vanillaFlicking) return;
-    this._vanillaFlicking.destroy();
+    this._vanillaFlicking?.destroy();
   }
 
   public ngOnChanges() {
