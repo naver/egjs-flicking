@@ -141,7 +141,7 @@ var flicking = new Flicking("#my-flicking", { circular: true });
 Check our [Demos](https://naver.github.io/egjs-flicking/).
 
 ## 📖 Documentation
-See [Documentation](https://naver.github.io/egjs-flicking/release/latest/doc/index.html) page.
+See [Documentation](https://naver.github.io/egjs-flicking/docs/api/Flicking) page.
 
 ## 🙌 Contributing
 See [CONTRIBUTING.md](https://github.com/naver/egjs-flicking/blob/master/CONTRIBUTING.md).
