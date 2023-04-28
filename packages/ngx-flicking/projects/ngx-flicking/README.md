@@ -29,7 +29,7 @@
 </p>
 
 <p align=center>
-  <a href="https://codesandbox.io/s/egjsngx-flicking-examples-czb2g">Demo</a> / <a href="https://naver.github.io/egjs-flicking/release/latest/doc/index.html">Documentation</a> / <a href="https://naver.github.io/egjs/" />Other components</a>
+  <a href="https://codesandbox.io/s/egjsngx-flicking-examples-czb2g">Demo</a> / <a href="https://naver.github.io/egjs-flicking/docs/api/Flicking">Documentation</a> / <a href="https://naver.github.io/egjs/" />Other components</a>
 </p>
 
 ## ⚙️ Installation

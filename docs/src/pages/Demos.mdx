@@ -12,6 +12,8 @@ import WeatherDisplay from "@site/src/demo/WeatherDisplay";
 import DateSelector from "@site/src/demo/DateSelector";
 import LazyLoad from "@site/src/demo/LazyLoad";
 import Nested from "@site/src/demo/Nested";
+import Link from "@docusaurus/Link";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 
 # Demos
 ## Panel add / remove
@@ -22,6 +24,9 @@ import Nested from "@site/src/demo/Nested";
 
 ## Variable Size Panels
 Flicking uses panel element's real size, and doesn't modify them.
+:::info
+Check out the <Link to={useBaseUrl("Options#circular")}>circular</Link> option, which provides a continuous loop depending on the Panel's size
+:::
 <Flicking className="my-4" circular={true}>
   <Panel color="primary" style={{ width: "120px" }} index={0} />
   <Panel color="danger" style={{ width: "20%" }} index={1} />

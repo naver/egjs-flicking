@@ -32,7 +32,8 @@
         "api/VirtualPanel",
         "api/ExternalRenderer",
         "api/Renderer",
-        "api/VanillaRenderer"
+        "api/VanillaRenderer",
+        "api/Component"
       ]
     },
     {
