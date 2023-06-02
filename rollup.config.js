@@ -46,6 +46,12 @@ export default buildHelper([
     format: "esm",
     external,
     exports: "named"
+  },
+  {
+    input: "./src/index.cjs.ts",
+    output: "./dist/flicking.cjs.js",
+    format: "cjs",
+    exports: "named",
   }
 ]);
 
