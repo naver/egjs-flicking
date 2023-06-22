@@ -1,6 +1,6 @@
 {
   "name": "@egjs/ngx-flicking",
-  "version": "4.10.7",
+  "version": "4.10.9",
   "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
   "dependencies": {
     "@egjs/flicking": "~4.10.7",
