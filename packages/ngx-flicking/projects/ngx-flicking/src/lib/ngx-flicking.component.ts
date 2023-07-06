@@ -72,6 +72,9 @@ import NgxElementProvider from './NgxElementProvider';
     class: 'flicking-viewport',
     style: 'display: block;',
   },
+  styleUrls: [
+    "../../node_modules/@egjs/flicking/dist/flicking.css"
+  ],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [CommonModule],
