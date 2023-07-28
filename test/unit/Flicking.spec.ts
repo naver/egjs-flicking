@@ -986,18 +986,32 @@ describe("Flicking", () => {
     });
 
     describe("preventDefaultOnDrag", () => {
-      it("shouldn't bother click event when input is disabled", async () => {
-        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventDefaultOnDrag: true, inputType: ["mouse"] });
-        const testPanel = flicking.panels[0];
+      it("should check preventDefault is applied if preventDefaultOnDrag is true", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventDefaultOnDrag: true });
+        const viewport = flicking.viewport;
 
         // Given
         const mouseDown = new MouseEvent("mousedown", { buttons: 1, cancelable: true });
 
         // When
-        testPanel.element.dispatchEvent(mouseDown);
+        viewport.element.dispatchEvent(mouseDown);
 
         // Then
         expect(mouseDown.defaultPrevented).to.be.true;
+      });
+
+      it("should check preventDefault is not applied if preventDefaultOnDrag is false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventDefaultOnDrag: false });
+        const viewport = flicking.viewport;
+
+        // Given
+        const mouseDown = new MouseEvent("mousedown", { buttons: 1, cancelable: true });
+
+        // When
+        viewport.element.dispatchEvent(mouseDown);
+
+        // Then
+        expect(mouseDown.defaultPrevented).to.be.false;
       });
     });
 
