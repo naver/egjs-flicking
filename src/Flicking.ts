@@ -77,6 +77,7 @@ export interface FlickingOptions {
   bounce: number | string | [number | string, number | string];
   iOSEdgeSwipeThreshold: number;
   preventClickOnDrag: boolean;
+  preventDefaultOnDrag: boolean;
   disableOnInit: boolean;
   changeOnHold: boolean;
 
@@ -155,6 +156,7 @@ class Flicking extends Component<FlickingEvents> {
   private _bounce: FlickingOptions["bounce"];
   private _iOSEdgeSwipeThreshold: FlickingOptions["iOSEdgeSwipeThreshold"];
   private _preventClickOnDrag: FlickingOptions["preventClickOnDrag"];
+  private _preventDefaultOnDrag: FlickingOptions["preventDefaultOnDrag"];
   private _disableOnInit: FlickingOptions["disableOnInit"];
   private _changeOnHold: FlickingOptions["changeOnHold"];
 
@@ -590,6 +592,14 @@ class Flicking extends Component<FlickingEvents> {
    */
   public get preventClickOnDrag() { return this._preventClickOnDrag; }
   /**
+   * Whether to use the {@link https://developer.mozilla.org/ko/docs/Web/API/Event/preventDefault preventDefault} when the user starts dragging
+   * @ko 사용자가 드래그를 시작할 때 {@link https://developer.mozilla.org/ko/docs/Web/API/Event/preventDefault preventDefault} 실행 여부
+   * @type {boolean}
+   * @default false
+   * @see {@link https://naver.github.io/egjs-flicking/Options#preventDefaultOnDrag preventDefaultOnDrag ( Options )}
+   */
+  public get preventDefaultOnDrag() { return this._preventDefaultOnDrag; }
+  /**
    * Automatically call {@link Flicking#disableInput disableInput()} on initialization
    * @ko Flicking init시에 {@link Flicking#disableInput disableInput()}을 바로 호출합니다
    * @type {boolean}
@@ -875,6 +885,15 @@ class Flicking extends Component<FlickingEvents> {
     this._preventClickOnDrag = val;
   }
 
+  public set preventDefaultOnDrag(val: FlickingOptions["preventDefaultOnDrag"]) {
+    this._preventDefaultOnDrag = val;
+    const panInput = this._control.controller.panInput;
+
+    if (panInput) {
+      panInput.options.preventDefaultOnDrag = val;
+    }
+  }
+
   public set disableOnInit(val: FlickingOptions["disableOnInit"]) { this._disableOnInit = val; }
   public set changeOnHold(val: FlickingOptions["changeOnHold"]) { this._changeOnHold = val; }
   // PERFORMANCE
@@ -954,6 +973,7 @@ class Flicking extends Component<FlickingEvents> {
     bounce = "20%",
     iOSEdgeSwipeThreshold = 30,
     preventClickOnDrag = true,
+    preventDefaultOnDrag = false,
     disableOnInit = false,
     changeOnHold = false,
     renderOnlyVisible = false,
@@ -998,6 +1018,7 @@ class Flicking extends Component<FlickingEvents> {
     this._bounce = bounce;
     this._iOSEdgeSwipeThreshold = iOSEdgeSwipeThreshold;
     this._preventClickOnDrag = preventClickOnDrag;
+    this._preventDefaultOnDrag = preventDefaultOnDrag;
     this._disableOnInit = disableOnInit;
     this._changeOnHold = changeOnHold;
     this._renderOnlyVisible = renderOnlyVisible;

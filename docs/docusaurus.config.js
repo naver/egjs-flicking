@@ -179,7 +179,7 @@ module.exports = {
           ]
         },
         googleAnalytics: {
-          trackingID: "UA-70842526-17",
+          trackingID: "G-LWLTCXMENE",
           anonymizeIP: true
         }
       }

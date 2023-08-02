@@ -985,6 +985,36 @@ describe("Flicking", () => {
       });
     });
 
+    describe("preventDefaultOnDrag", () => {
+      it("should check preventDefault is applied if preventDefaultOnDrag is true", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventDefaultOnDrag: true });
+        const viewport = flicking.viewport;
+
+        // Given
+        const mouseDown = new MouseEvent("mousedown", { buttons: 1, cancelable: true });
+
+        // When
+        viewport.element.dispatchEvent(mouseDown);
+
+        // Then
+        expect(mouseDown.defaultPrevented).to.be.true;
+      });
+
+      it("should check preventDefault is not applied if preventDefaultOnDrag is false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventDefaultOnDrag: false });
+        const viewport = flicking.viewport;
+
+        // Given
+        const mouseDown = new MouseEvent("mousedown", { buttons: 1, cancelable: true });
+
+        // When
+        viewport.element.dispatchEvent(mouseDown);
+
+        // Then
+        expect(mouseDown.defaultPrevented).to.be.false;
+      });
+    });
+
     describe("changeOnHold", () => {
       it("should be false by default", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);

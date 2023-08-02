@@ -149,6 +149,7 @@ class AxesController {
       inputType: flicking.inputType,
       threshold: 1,
       iOSEdgeSwipeThreshold: flicking.iOSEdgeSwipeThreshold,
+      preventDefaultOnDrag: flicking.preventDefaultOnDrag,
       scale: flicking.horizontal ? [-1, 0] : [0, -1],
       releaseOnScroll: true
     });
