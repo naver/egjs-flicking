@@ -12,11 +12,13 @@ export default () => {
   const [plugins1, setPlugins1] = useState([]);
   const [plugins2, setPlugins2] = useState([]);
   const [plugins3, setPlugins3] = useState([]);
+  const [plugins4, setPlugins4] = useState([]);
 
   useEffect(() => {
-    setPlugins2([new Fade(), new Arrow({ parentEl: document.querySelector("#arrow-2") })]);
     setPlugins1([new Fade(), new Arrow({ parentEl: document.querySelector("#arrow-1") })]);
+    setPlugins2([new Fade(), new Arrow({ parentEl: document.querySelector("#arrow-2") })]);
     setPlugins3([new Fade(), new Arrow({ parentEl: document.querySelector("#arrow-3") })]);
+    setPlugins4([new Fade(), new Arrow({ parentEl: document.querySelector("#arrow-4") })]);
   }, []);
 
   return (<div className="container">
@@ -77,11 +79,11 @@ export default () => {
     ]} siblings={[
       { tag: "span", class: "flicking-arrow-prev is-outside", content: "" },
       { tag: "span", class: "flicking-arrow-next is-outside", content: "" }
-    ]} plugins={[["Arrow", { parentEl: { toString() { return "document.body"; } } }]]}
+    ]} plugins={[["Arrow"]]}
     imports={["@egjs/flicking-plugins/dist/arrow.css"]} />
 
     <div id="arrow-4" className="relative-container">
-      <Flicking className="mb-6" plugins={plugins3} circular={true}>
+      <Flicking className="mb-6" plugins={plugins4} circular={true}>
         <Panel index={0} color="white" className="card m-2 card-panel" />
         <Panel index={1} color="white" className="card m-2 card-panel" />
         <Panel index={2} color="white" className="card m-2 card-panel" />
@@ -97,7 +99,7 @@ export default () => {
     ]} siblings={[
       { tag: "span", class: "flicking-arrow-prev is-thin", content: "" },
       { tag: "span", class: "flicking-arrow-next is-thin", content: "" }
-    ]} plugins={[["Arrow", { parentEl: { toString() { return "document.body"; } } }]]}
+    ]} plugins={[["Arrow"]]}
     imports={["@egjs/flicking-plugins/dist/arrow.css"]} />
   </div>);
 };
