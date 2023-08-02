@@ -1018,6 +1018,43 @@ Hint: Drag a panel slightly and release it to see its effect
   </ColumnItem>
 </Columns>
 
+
+### preventDefaultOnDrag
+Whether to use the `preventDefault` when the user starts dragging.
+
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  preventDefaultOnDrag: false
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking resizeOnContentsReady={true} preventDefaultOnDrag={false}>
+      <div style={{ maxWidth: "100%" }}><img style={{ maxWidth: "100%" }} src={require("@site/static/img/demo/bg01.jpg").default} /></div>
+      <div style={{ maxWidth: "100%" }}><img style={{ maxWidth: "100%" }} src={require("@site/static/img/demo/bg02.jpg").default} /></div>
+      <div style={{ maxWidth: "100%" }}><img style={{ maxWidth: "100%" }} src={require("@site/static/img/demo/bg03.jpg").default} /></div>
+    </Flicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  preventDefaultOnDrag: true
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking resizeOnContentsReady={true} preventDefaultOnDrag={true}>
+      <div style={{ maxWidth: "100%" }}><img style={{ maxWidth: "100%" }} src={require("@site/static/img/demo/bg01.jpg").default} /></div>
+      <div style={{ maxWidth: "100%" }}><img style={{ maxWidth: "100%" }} src={require("@site/static/img/demo/bg02.jpg").default} /></div>
+      <div style={{ maxWidth: "100%" }}><img style={{ maxWidth: "100%" }} src={require("@site/static/img/demo/bg03.jpg").default} /></div>
+    </Flicking>
+  </ColumnItem>
+</Columns>
+
 ### disableOnInit
 Automatically call **[disableInput()](docs/api/Flicking#disableInput)** on initialization
 
