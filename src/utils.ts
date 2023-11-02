@@ -313,15 +313,16 @@ export const getElementSize = ({
   useOffset: boolean;
   style: CSSStyleDeclaration;
 }): number => {
+  let size = 0;
   if (useFractionalSize) {
-    const baseSize = parseFloat(horizontal ? style.width : style.height);
+    const baseSize = parseFloat(horizontal ? style.width : style.height) || 0;
     const isBorderBoxSizing = style.boxSizing === "border-box";
     const border = horizontal
       ? parseFloat(style.borderLeftWidth || "0") + parseFloat(style.borderRightWidth || "0")
       : parseFloat(style.borderTopWidth || "0") + parseFloat(style.borderBottomWidth || "0");
 
     if (isBorderBoxSizing) {
-      return useOffset
+      size = useOffset
         ? baseSize
         : baseSize - border;
     } else {
@@ -329,17 +330,19 @@ export const getElementSize = ({
         ? parseFloat(style.paddingLeft || "0") + parseFloat(style.paddingRight || "0")
         : parseFloat(style.paddingTop || "0") + parseFloat(style.paddingBottom || "0");
 
-      return useOffset
+      size = useOffset
         ? baseSize + padding + border
         : baseSize + padding;
     }
   } else {
     const sizeStr = horizontal ? "Width" : "Height";
 
-    return useOffset
+    size = useOffset
       ? el[`offset${sizeStr}`]
       : el[`client${sizeStr}`];
   }
+
+  return Math.max(size, 0);
 };
 
 export const setPrototypeOf = Object.setPrototypeOf || ((obj, proto) => {
