@@ -9,7 +9,7 @@ import FlickingError from "../core/FlickingError";
 import Panel from "../core/panel/Panel";
 import AnchorPoint from "../core/AnchorPoint";
 import * as ERROR from "../const/error";
-import { ALIGN, CIRCULAR_FALLBACK, DIRECTION, EVENTS } from "../const/external";
+import { ALIGN, CIRCULAR_FALLBACK, DIRECTION, EVENTS, ORDER } from "../const/external";
 import { checkExistence, find, getFlickingAttached, getProgress, includes, parseAlign, toArray } from "../utils";
 
 import { CameraMode, BoundCameraMode, CircularCameraMode, LinearCameraMode } from "./mode";
@@ -556,7 +556,7 @@ class Camera {
     const actualPosition = this._position - this._alignPos - this._offset + this._circularOffset;
 
     el.style[this._transform] = flicking.horizontal
-      ? `translate(${-actualPosition}px)`
+      ? `translate(${flicking.panelOrder === ORDER.RTL ? actualPosition : -actualPosition}px)`
       : `translate(0, ${-actualPosition}px)`;
 
     return this;
