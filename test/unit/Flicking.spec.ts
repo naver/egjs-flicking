@@ -1057,6 +1057,16 @@ describe("Flicking", () => {
       expect(flicking.camera.position).to.equal(flicking.panels[0].position);
       expect(flicking.camera.element.style.transform).to.equal("translate(0px)");
     });
+    it("should have zero size with not appended elements", async () => {
+      const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false });
+
+      flicking.viewport.element.remove();
+      flicking.init(); // Not awaiting on purpose
+
+      expect(flicking.viewport.width).equal(0);
+      expect(flicking.viewport.height).equal(0);
+      expect(flicking.panels.every(panel => panel.size === 0)).equal(true);
+    });
 
     it("should place camera & panels at correct position on circular rendering", async () => {
       const flicking = await createFlicking(
