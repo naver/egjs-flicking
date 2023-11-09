@@ -222,6 +222,11 @@ class El {
 
     return this;
   }
+
+  public setDirection(direction: string) {
+    this._el.style.direction = direction;
+    return this;
+  }
 }
 
 export default El;
