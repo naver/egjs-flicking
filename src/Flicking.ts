@@ -1074,10 +1074,7 @@ class Flicking extends Component<FlickingEvents> {
     camera.init();
     virtualManager.init();
     renderer.init(this);
-
-    if (getStyle(this.camera.element).direction === ORDER.RTL) {
-      this._panelOrder = ORDER.RTL;
-    }
+    this._updatePanelOrder(camera);
     control.init(this);
 
     if (preventEventsBeforeInit) {
@@ -1523,6 +1520,7 @@ class Flicking extends Component<FlickingEvents> {
     camera.updateAdaptiveHeight();
     camera.updateOffset();
     await renderer.render();
+    this._updatePanelOrder(camera);
 
     if (control.animating) {
       // TODO:
@@ -1775,6 +1773,18 @@ class Flicking extends Component<FlickingEvents> {
       sizeChanged,
       element: viewport.element
     }));
+  }
+
+  private _updatePanelOrder(camera: Camera): void {
+    if (this.horizontal) {
+      const direction = getStyle(camera.element).direction;
+      if (direction !== this._panelOrder) {
+        this._panelOrder = direction === ORDER.RTL ? ORDER.RTL : ORDER.LTR;
+        if (this._initialized) {
+          this._control.controller.updateDirection();
+        }
+      }
+    }
   }
 }
 

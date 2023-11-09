@@ -404,7 +404,7 @@ class AxesController {
     axes.disconnect(panInput);
     axes.connect(flicking.horizontal ? [AXES.POSITION_KEY, ""] : ["", AXES.POSITION_KEY], panInput);
 
-    panInput.options.scale = flicking.horizontal ? [-1, 0] : [0, -1];
+    panInput.options.scale = flicking.horizontal ? [flicking.panelOrder === ORDER.RTL ? 1 : -1, 0] : [0, -1];
   }
 
   private _resetInternalValues() {
