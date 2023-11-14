@@ -13,9 +13,9 @@ import VirtualManager, { VirtualOptions } from "./core/VirtualManager";
 import { Control, SnapControl, SnapControlOptions, FreeControl, StrictControl, FreeControlOptions, StrictControlOptions } from "./control";
 import { Camera } from "./camera";
 import { Renderer, VanillaRenderer, ExternalRenderer, RendererOptions, NormalRenderingStrategy, VirtualRenderingStrategy } from "./renderer";
-import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION, CIRCULAR_FALLBACK, ORDER } from "./const/external";
+import { EVENTS, ALIGN, MOVE_TYPE, DIRECTION, CIRCULAR_FALLBACK } from "./const/external";
 import * as ERROR from "./const/error";
-import { findIndex, getElement, getStyle, includes, parseElement } from "./utils";
+import { findIndex, getElement, includes, parseElement } from "./utils";
 import { HoldStartEvent, HoldEndEvent, MoveStartEvent, SelectEvent, MoveEvent, MoveEndEvent, WillChangeEvent, WillRestoreEvent, NeedPanelEvent, VisibleChangeEvent, ReachEdgeEvent, ReadyEvent, AfterResizeEvent, BeforeResizeEvent, ChangedEvent, RestoredEvent, PanelChangeEvent } from "./type/event";
 import { LiteralUnion, ValueOf } from "./type/internal";
 import { ElementLike, Plugin, Status, MoveTypeOptions } from "./type/external";
@@ -174,7 +174,6 @@ class Flicking extends Component<FlickingEvents> {
   // Internal State
   private _initialized: boolean;
   private _plugins: Plugin[];
-  private _panelOrder: ValueOf<typeof ORDER>;
 
   // Components
   /**
@@ -317,13 +316,6 @@ class Flicking extends Component<FlickingEvents> {
    * @readonly
    */
   public get activePlugins() { return this._plugins; }
-  /**
-   * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/direction direction} CSS property applied to the camera element(`.flicking-camera`)
-   * @ko 카메라 엘리먼트(`.flicking-camera`)에 적용된 {@link https://developer.mozilla.org/en-US/docs/Web/CSS/direction direction} CSS 속성
-   * @type {string}
-   * @readonly
-   */
-  public get panelOrder() { return this._panelOrder; }
 
   // Options Getter
   // UI / LAYOUT
@@ -1000,7 +992,6 @@ class Flicking extends Component<FlickingEvents> {
     // Internal states
     this._initialized = false;
     this._plugins = [];
-    this._panelOrder = ORDER.LTR;
 
     // Bind options
     this._align = align;
@@ -1074,7 +1065,6 @@ class Flicking extends Component<FlickingEvents> {
     camera.init();
     virtualManager.init();
     renderer.init(this);
-    this._updatePanelOrder(camera);
     control.init(this);
 
     if (preventEventsBeforeInit) {
@@ -1520,7 +1510,6 @@ class Flicking extends Component<FlickingEvents> {
     camera.updateAdaptiveHeight();
     camera.updateOffset();
     await renderer.render();
-    this._updatePanelOrder(camera);
 
     if (control.animating) {
       // TODO:
@@ -1773,18 +1762,6 @@ class Flicking extends Component<FlickingEvents> {
       sizeChanged,
       element: viewport.element
     }));
-  }
-
-  private _updatePanelOrder(camera: Camera): void {
-    if (this.horizontal) {
-      const direction = getStyle(camera.element).direction;
-      if (direction !== this._panelOrder) {
-        this._panelOrder = direction === ORDER.RTL ? ORDER.RTL : ORDER.LTR;
-        if (this._initialized) {
-          this._control.controller.updateDirection();
-        }
-      }
-    }
   }
 }
 

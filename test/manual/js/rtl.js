@@ -3,5 +3,5 @@ const flicking = new Flicking(el);
 
 const setDirection = (dir) => {
   el.style.direction = dir.value;
-  flicking.resize();
+  flicking.camera.updatePanelOrder();
 }
