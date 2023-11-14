@@ -579,9 +579,9 @@ class Camera {
    * @return {this}
    */
   public updatePanelOrder(): this {
-    const el = this._el;
     const flicking = getFlickingAttached(this._flicking);
     if (flicking.horizontal) {
+      const el = this._el;
       const direction = getStyle(el).direction;
       if (direction !== this._panelOrder) {
         this._panelOrder = direction === ORDER.RTL ? ORDER.RTL : ORDER.LTR;
