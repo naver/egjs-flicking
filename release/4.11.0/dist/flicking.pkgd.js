@@ -222,7 +222,7 @@ version: 4.11.0
     license: MIT
     author: NAVER Corp.
     repository: https://github.com/naver/egjs-component
-    version: 3.0.4
+    version: 3.0.5
     */
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -554,7 +554,6 @@ version: 4.11.0
        * ```
        */
       __proto.off = function (eventName, handlerToDetach) {
-        var e_1, _a;
         // Detach all event handlers.
         if (isUndefined(eventName)) {
           this._eventHandler = {};
@@ -576,28 +575,14 @@ version: 4.11.0
         // Detach single event handler
         var handlerList = this._eventHandler[eventName];
         if (handlerList) {
-          var idx = 0;
-          try {
-            for (var handlerList_1 = __values(handlerList), handlerList_1_1 = handlerList_1.next(); !handlerList_1_1.done; handlerList_1_1 = handlerList_1.next()) {
-              var handlerFunction = handlerList_1_1.value;
-              if (handlerFunction === handlerToDetach) {
-                handlerList.splice(idx, 1);
-                if (handlerList.length <= 0) {
-                  delete this._eventHandler[eventName];
-                }
-                break;
+          var length = handlerList.length;
+          for (var i = 0; i < length; ++i) {
+            if (handlerList[i] === handlerToDetach) {
+              handlerList.splice(i, 1);
+              if (length <= 1) {
+                delete this._eventHandler[eventName];
               }
-              idx++;
-            }
-          } catch (e_1_1) {
-            e_1 = {
-              error: e_1_1
-            };
-          } finally {
-            try {
-              if (handlerList_1_1 && !handlerList_1_1.done && (_a = handlerList_1.return)) _a.call(handlerList_1);
-            } finally {
-              if (e_1) throw e_1.error;
+              break;
             }
           }
         }
@@ -612,7 +597,7 @@ version: 4.11.0
        * Component.VERSION;  // ex) 3.0.0
        * @memberof Component
        */
-      Component.VERSION = "3.0.4";
+      Component.VERSION = "3.0.5";
       return Component;
     }();
 
