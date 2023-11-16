@@ -407,7 +407,7 @@ describe("Camera", () => {
         expect(flicking.index).to.equal(2);
       });
 
-      it("should update direction of panels", async () => {
+      it("should update direction of panels when resize occurs", async () => {
         const viewportEl = El.viewport().setDirection("ltr").add(
           El.camera()
             .add(El.panel("300px"))
@@ -415,10 +415,9 @@ describe("Camera", () => {
             .add(El.panel("300px"))
         );
         const flicking = await createFlicking(viewportEl);
-        const camera = flicking.camera;
 
         viewportEl.setDirection("rtl");
-        camera.updatePanelOrder();
+        await flicking.resize();
         await simulate(flicking.element, { deltaX: 1000 });
 
         expect(flicking.index).to.equal(2);

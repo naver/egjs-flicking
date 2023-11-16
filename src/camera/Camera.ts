@@ -542,6 +542,28 @@ class Camera {
   }
 
   /**
+   * Update direction to match the {@link https://developer.mozilla.org/en-US/docs/Web/CSS/direction direction} CSS property applied to the camera element
+   * @ko 카메라 엘리먼트에 적용된 {@link https://developer.mozilla.org/en-US/docs/Web/CSS/direction direction} CSS 속성에 맞게 방향을 업데이트합니다
+   * @return {this}
+   */
+  public updatePanelOrder(): this {
+    const flicking = getFlickingAttached(this._flicking);
+
+    if (!flicking.horizontal) return this;
+
+    const el = this._el;
+    const direction = getStyle(el).direction;
+    if (direction !== this._panelOrder) {
+      this._panelOrder = direction === ORDER.RTL ? ORDER.RTL : ORDER.LTR;
+      if (flicking.initialized) {
+        flicking.control.controller.updateDirection();
+      }
+    }
+
+    return this;
+  }
+
+  /**
    * Reset the history of {@link Flicking#event:needPanel needPanel} events so it can be triggered again
    * @ko 발생한 {@link Flicking#event:needPanel needPanel} 이벤트들을 초기화하여 다시 발생할 수 있도록 합니다
    * @chainable
@@ -569,28 +591,6 @@ class Camera {
     el.style[this._transform] = flicking.horizontal
       ? `translate(${this._panelOrder === ORDER.RTL ? actualPosition : -actualPosition}px)`
       : `translate(0, ${-actualPosition}px)`;
-
-    return this;
-  }
-
-  /**
-   * Update direction to match the {@link https://developer.mozilla.org/en-US/docs/Web/CSS/direction direction} CSS property applied to the camera element
-   * @ko 카메라 엘리먼트에 적용된 {@link https://developer.mozilla.org/en-US/docs/Web/CSS/direction direction} CSS 속성에 맞게 방향을 업데이트합니다
-   * @return {this}
-   */
-  public updatePanelOrder(): this {
-    const flicking = getFlickingAttached(this._flicking);
-    if (flicking.horizontal) {
-      const el = this._el;
-      const direction = getStyle(el).direction;
-      if (direction !== this._panelOrder) {
-        this._panelOrder = direction === ORDER.RTL ? ORDER.RTL : ORDER.LTR;
-        if (flicking.initialized) {
-          flicking.control.controller.updateDirection();
-          this.applyTransform();
-        }
-      }
-    }
 
     return this;
   }

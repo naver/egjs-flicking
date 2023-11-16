@@ -1508,6 +1508,7 @@ class Flicking extends Component<FlickingEvents> {
     camera.updateRange();
     camera.updateAnchors();
     camera.updateAdaptiveHeight();
+    camera.updatePanelOrder();
     camera.updateOffset();
     await renderer.render();
 
