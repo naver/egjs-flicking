@@ -14,7 +14,7 @@ A component that manages actual movement inside the viewport
 
 <div className="container">
   <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
-  <div className="row"><div className="col col--6"><a href="#element">element</a><br/><a href="#children">children</a><br/><a href="#position">position</a><br/><a href="#alignPosition">alignPosition</a><br/><a href="#offset">offset</a><br/><a href="#circularEnabled">circularEnabled</a><br/><a href="#mode">mode</a><br/><a href="#range">range</a><br/><a href="#rangeDiff">rangeDiff</a><br/><a href="#visiblePanels">visiblePanels</a><br/><a href="#visibleRange">visibleRange</a><br/><a href="#anchorPoints">anchorPoints</a><br/><a href="#controlParams">controlParams</a><br/><a href="#atEdge">atEdge</a><br/><a href="#size">size</a><br/><a href="#progress">progress</a><br/><a href="#align">align</a></div><div className="col col--6"><a href="#init">init</a><br/><a href="#destroy">destroy</a><br/><a href="#lookAt">lookAt</a><br/><a href="#getPrevAnchor">getPrevAnchor</a><br/><a href="#getNextAnchor">getNextAnchor</a><br/><a href="#getProgressInPanel">getProgressInPanel</a><br/><a href="#findAnchorIncludePosition">findAnchorIncludePosition</a><br/><a href="#findNearestAnchor">findNearestAnchor</a><br/><a href="#findActiveAnchor">findActiveAnchor</a><br/><a href="#clampToReachablePosition">clampToReachablePosition</a><br/><a href="#canReach">canReach</a><br/><a href="#canSee">canSee</a><br/><a href="#updateRange">updateRange</a><br/><a href="#updateAlignPos">updateAlignPos</a><br/><a href="#updateAnchors">updateAnchors</a><br/><a href="#updateAdaptiveHeight">updateAdaptiveHeight</a><br/><a href="#updateOffset">updateOffset</a><br/><a href="#resetNeedPanelHistory">resetNeedPanelHistory</a><br/><a href="#applyTransform">applyTransform</a></div></div>
+  <div className="row"><div className="col col--6"><a href="#element">element</a><br/><a href="#children">children</a><br/><a href="#position">position</a><br/><a href="#alignPosition">alignPosition</a><br/><a href="#offset">offset</a><br/><a href="#circularEnabled">circularEnabled</a><br/><a href="#mode">mode</a><br/><a href="#range">range</a><br/><a href="#rangeDiff">rangeDiff</a><br/><a href="#visiblePanels">visiblePanels</a><br/><a href="#visibleRange">visibleRange</a><br/><a href="#anchorPoints">anchorPoints</a><br/><a href="#controlParams">controlParams</a><br/><a href="#atEdge">atEdge</a><br/><a href="#size">size</a><br/><a href="#progress">progress</a><br/><a href="#panelOrder">panelOrder</a><br/><a href="#align">align</a></div><div className="col col--6"><a href="#init">init</a><br/><a href="#destroy">destroy</a><br/><a href="#lookAt">lookAt</a><br/><a href="#getPrevAnchor">getPrevAnchor</a><br/><a href="#getNextAnchor">getNextAnchor</a><br/><a href="#getProgressInPanel">getProgressInPanel</a><br/><a href="#findAnchorIncludePosition">findAnchorIncludePosition</a><br/><a href="#findNearestAnchor">findNearestAnchor</a><br/><a href="#findActiveAnchor">findActiveAnchor</a><br/><a href="#clampToReachablePosition">clampToReachablePosition</a><br/><a href="#canReach">canReach</a><br/><a href="#canSee">canSee</a><br/><a href="#updateRange">updateRange</a><br/><a href="#updateAlignPos">updateAlignPos</a><br/><a href="#updateAnchors">updateAnchors</a><br/><a href="#updateAdaptiveHeight">updateAdaptiveHeight</a><br/><a href="#updateOffset">updateOffset</a><br/><a href="#updatePanelOrder">updatePanelOrder</a><br/><a href="#resetNeedPanelHistory">resetNeedPanelHistory</a><br/><a href="#applyTransform">applyTransform</a></div></div>
 </div>
 
 ## constructor
@@ -206,6 +206,16 @@ Return the size of the viewport
 Return the camera's position progress from the first panel to last panel<br />Range is from 0 to last panel's index
 
 **Type**: number
+
+### panelOrder {#panelOrder}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+[direction](https://developer.mozilla.org/en-US/docs/Web/CSS/direction) CSS property applied to the camera element(`.flicking-camera`)
+
+**Type**: string
 
 ### align {#align}
 
@@ -447,6 +457,16 @@ Update Viewport's height to active panel's height
 </div>
 
 Update current offset of the camera
+
+**Returns**: this
+
+### updatePanelOrder {#updatePanelOrder}
+
+<div>
+
+</div>
+
+Update direction to match the [direction](https://developer.mozilla.org/en-US/docs/Web/CSS/direction) CSS property applied to the camera element
 
 **Returns**: this
 

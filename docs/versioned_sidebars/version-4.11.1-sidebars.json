@@ -32,7 +32,8 @@
         "api/VirtualPanel",
         "api/ExternalRenderer",
         "api/Renderer",
-        "api/VanillaRenderer"
+        "api/VanillaRenderer",
+        "api/Component"
       ]
     },
     {
@@ -60,7 +61,8 @@
         "api/ALIGN",
         "api/DIRECTION",
         "api/MOVE_TYPE",
-        "api/CIRCULAR_FALLBACK"
+        "api/CIRCULAR_FALLBACK",
+        "api/ORDER"
       ]
     },
     {
