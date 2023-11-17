@@ -4,7 +4,7 @@ import { BoundCameraMode, CircularCameraMode, LinearCameraMode } from "~/camera"
 import FlickingError from "~/core/FlickingError";
 import * as ERROR from "~/const/error";
 
-import { createFlicking } from "../helper/test-util";
+import { createFlicking, simulate } from "../helper/test-util";
 import El from "../helper/El";
 
 describe("Camera", () => {
@@ -390,5 +390,38 @@ describe("Camera", () => {
         expect(camera.alignPosition).to.equal(flicking.viewport.width * 0.7);
       });
     });
+
+    describe("updatePanelOrder", () => {
+      it("should guarantee behavior for panels placed in RTL order by default", async () => {
+        const flicking = await createFlicking(
+          El.viewport().setDirection("rtl").add(
+            El.camera()
+              .add(El.panel("300px"))
+              .add(El.panel("300px"))
+              .add(El.panel("300px"))
+          )
+        );
+
+        await simulate(flicking.element, { deltaX: 1000 });
+
+        expect(flicking.index).to.equal(2);
+      });
+
+      it("should update direction of panels when resize occurs", async () => {
+        const viewportEl = El.viewport().setDirection("ltr").add(
+          El.camera()
+            .add(El.panel("300px"))
+            .add(El.panel("300px"))
+            .add(El.panel("300px"))
+        );
+        const flicking = await createFlicking(viewportEl);
+
+        viewportEl.setDirection("rtl");
+        await flicking.resize();
+        await simulate(flicking.element, { deltaX: 1000 });
+
+        expect(flicking.index).to.equal(2);
+      });
+    })
   });
 });

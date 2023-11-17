@@ -8,6 +8,7 @@ import Flicking from "../Flicking";
 import FlickingError from "../core/FlickingError";
 import * as AXES from "../const/axes";
 import * as ERROR from "../const/error";
+import { ORDER } from "../const/external";
 import { getFlickingAttached, parseBounce } from "../utils";
 import { ControlParams } from "../type/external";
 
@@ -150,7 +151,7 @@ class AxesController {
       threshold: 1,
       iOSEdgeSwipeThreshold: flicking.iOSEdgeSwipeThreshold,
       preventDefaultOnDrag: flicking.preventDefaultOnDrag,
-      scale: flicking.horizontal ? [-1, 0] : [0, -1],
+      scale: flicking.horizontal ? [flicking.camera.panelOrder === ORDER.RTL ? 1 : -1, 0] : [0, -1],
       releaseOnScroll: true
     });
 
@@ -403,7 +404,7 @@ class AxesController {
     axes.disconnect(panInput);
     axes.connect(flicking.horizontal ? [AXES.POSITION_KEY, ""] : ["", AXES.POSITION_KEY], panInput);
 
-    panInput.options.scale = flicking.horizontal ? [-1, 0] : [0, -1];
+    panInput.options.scale = flicking.horizontal ? [flicking.camera.panelOrder === ORDER.RTL ? 1 : -1, 0] : [0, -1];
   }
 
   private _resetInternalValues() {

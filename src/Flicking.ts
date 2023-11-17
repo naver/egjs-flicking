@@ -1075,7 +1075,6 @@ class Flicking extends Component<FlickingEvents> {
 
     // Look at initial panel
     this._moveToInitialPanel();
-
     if (this._autoResize) {
       this._autoResizer.enable();
     }
@@ -1509,6 +1508,7 @@ class Flicking extends Component<FlickingEvents> {
     camera.updateRange();
     camera.updateAnchors();
     camera.updateAdaptiveHeight();
+    camera.updatePanelOrder();
     camera.updateOffset();
     await renderer.render();
 

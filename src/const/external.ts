@@ -110,3 +110,15 @@ export const CIRCULAR_FALLBACK = {
   LINEAR: "linear",
   BOUND: "bound"
 } as const;
+
+/**
+ * An object for identifying {@link https://developer.mozilla.org/en-US/docs/Web/CSS/direction direction} CSS property applied to the camera element(`.flicking-camera`)
+ * @ko 카메라 엘리먼트(`.flicking-camera`)에 적용된 {@link https://developer.mozilla.org/en-US/docs/Web/CSS/direction direction} CSS 속성을 구분하기 위한 객체
+ * @type {object}
+ * @property {string} LTR "ltr"
+ * @property {string} RTL "rtl"
+ */
+export const ORDER = {
+  LTR: "ltr",
+  RTL: "rtl"
+} as const;

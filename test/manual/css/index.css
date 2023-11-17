@@ -58,3 +58,7 @@ header {
   user-select: none;
   -webkit-user-drag: none;
 }
+
+.rtl {
+  direction: rtl;
+}
