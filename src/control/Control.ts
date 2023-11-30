@@ -23,6 +23,7 @@ abstract class Control {
   protected _flicking: Flicking | null;
   protected _controller: AxesController;
   protected _activePanel: Panel | null;
+  protected _nextPanel: Panel | null;
 
   /**
    * A controller that handles the {@link https://naver.github.io/egjs-axes/ @egjs/axes} events
@@ -317,6 +318,7 @@ abstract class Control {
     const flicking = getFlickingAttached(this._flicking);
 
     this._activePanel = newActivePanel;
+    this._nextPanel = null;
 
     flicking.camera.updateAdaptiveHeight();
 
@@ -357,6 +359,8 @@ abstract class Control {
       isTrusted: axesEvent?.isTrusted || false,
       direction: getDirection(activePanel?.position ?? camera.position, position)
     });
+
+    this._nextPanel = panel;
     flicking.trigger(event);
 
     if (event.isCanceled()) {
