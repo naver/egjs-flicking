@@ -286,6 +286,19 @@ describe("StrictControl", () => {
         expect(moveSpy.calledTwice).to.be.true;
         expect(control.activePanel.index).to.equal(camera.findNearestAnchor(position).panel.index);
       });
+
+      it("should determine the next panel based on the target panel of the willChange event", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.STRICT, circular: true, duration: 5000, threshold: 0 });
+
+        await simulate(flicking.element, { deltaX: 900, duration: 100 }, 1000);
+        tick(500);
+        await simulate(flicking.element, { deltaX: 900, duration: 100 }, 1000);
+        tick(500);
+        await simulate(flicking.element, { deltaX: 900, duration: 100 }, 1000);
+        tick(5000);
+
+        expect(flicking.index).to.equal(0);
+      });
     });
   });
 });
