@@ -190,7 +190,7 @@ class StrictControl extends Control {
   public moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
     const flicking = getFlickingAttached(this._flicking);
     const camera = flicking.camera;
-    const activePanel = this._activePanel;
+    const currentPanel = this._nextPanel ?? this._activePanel;
     const axesRange = this._controller.range;
     const indexRange = this._indexRange;
     const cameraRange = camera.range;
@@ -199,11 +199,11 @@ class StrictControl extends Control {
     const clampedPosition = clamp(camera.clampToReachablePosition(position), axesRange[0], axesRange[1]);
     const anchorAtPosition = camera.findAnchorIncludePosition(clampedPosition);
 
-    if (!anchorAtPosition || !activePanel) {
+    if (!anchorAtPosition || !currentPanel) {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE));
     }
 
-    const prevPos = activePanel.position;
+    const prevPos = currentPanel.position;
     const posDelta = flicking.animating
       ? state.delta
       : position - camera.position;
@@ -233,7 +233,7 @@ class StrictControl extends Control {
 
       targetPanel = targetAnchor.panel;
       targetPos = targetAnchor.position;
-    } else if (isOverThreshold && anchorAtPosition.position !== activePanel.position) {
+    } else if (isOverThreshold && anchorAtPosition.position !== currentPanel.position) {
       // Move to anchor at position
       targetPanel = anchorAtPosition.panel;
       targetPos = anchorAtPosition.position;
