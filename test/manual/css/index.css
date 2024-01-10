@@ -35,6 +35,10 @@ header {
   background-color: #423789;
 }
 
+.vertical {
+  height: 200px;
+}
+
 .flicking-panel {
   border: 10px solid transparent;
   box-sizing: border-box;
