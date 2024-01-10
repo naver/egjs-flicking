@@ -95,7 +95,7 @@ class SnapControl extends Control {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE));
     }
 
-    const snapThreshold = this._calcSnapThreshold(position, activeAnchor);
+    const snapThreshold = this._calcSnapThreshold(flicking.threshold, position, activeAnchor);
 
     const posDelta = flicking.animating
       ? state.delta
@@ -210,7 +210,7 @@ class SnapControl extends Control {
     return adjacentAnchor;
   }
 
-  private _calcSnapThreshold(position: number, activeAnchor: AnchorPoint): number {
+  private _calcSnapThreshold(threshold: number, position: number, activeAnchor: AnchorPoint): number {
     const isNextDirection = position > activeAnchor.position;
     const panel = activeAnchor.panel;
     const panelSize = panel.size;
@@ -222,9 +222,9 @@ class SnapControl extends Control {
      * |<------>|<------------>|
      * [        |<-Anchor      ]
      */
-    return isNextDirection
+    return Math.max(threshold, isNextDirection
       ? panelSize - alignPos + panel.margin.next
-      : alignPos + panel.margin.prev;
+      : alignPos + panel.margin.prev);
   }
 }
 

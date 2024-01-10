@@ -92,16 +92,16 @@ class El {
    * @example
    * - Viewport (width: 1000px, height: 1000px)
    *   - Camera
-   *     - Panel (width: 100%, height: 100%)
-   *     - Panel (width: 100%, height: 100%)
-   *     - Panel (width: 100%, height: 100%)
+   *     - Panel (width: 100%, height: 1000px)
+   *     - Panel (width: 100%, height: 1000px)
+   *     - Panel (width: 100%, height: 1000px)
    */
   public static get DEFAULT_VERTICAL() {
     return El.viewport("1000px", "1000px").addClass(EL_CLASS.VERTICAL).add(
       El.camera().add(
-        El.panel("100%", "100%"),
-        El.panel("100%", "100%"),
-        El.panel("100%", "100%"),
+        El.panel().setWidth("100%").setHeight(1000),
+        El.panel().setWidth("100%").setHeight(1000),
+        El.panel().setWidth("100%").setHeight(1000),
       ),
     );
   }
