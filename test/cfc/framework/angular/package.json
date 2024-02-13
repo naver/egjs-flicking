@@ -5,20 +5,20 @@
     "test": "jest --config=\"./jest.config.js\""
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^15.2.2",
-    "@angular/animations": "^15.2.2",
-    "@angular/cli": "^15.2.2",
-    "@angular/common": "^15.2.2",
-    "@angular/compiler": "^15.2.2",
-    "@angular/compiler-cli": "^15.2.2",
-    "@angular/core": "^15.2.2",
-    "@angular/forms": "^15.2.2",
-    "@angular/platform-browser": "^15.2.2",
-    "@angular/platform-browser-dynamic": "^15.2.2",
-    "@angular/router": "^15.2.2",
-    "jest-preset-angular": "^13.0.0",
-    "rxjs": "~6.6.0",
-    "tslib": "^2.3.1",
-    "zone.js": "~0.11.4"
+    "@angular-devkit/build-angular": "file:../../../../packages/ngx-flicking/node_modules/@angular-devkit/build-angular",
+    "@angular/animations": "file:../../../../packages/ngx-flicking/node_modules/@angular/animations",
+    "@angular/cli": "file:../../../../packages/ngx-flicking/node_modules/@angular/cli",
+    "@angular/common": "file:../../../../packages/ngx-flicking/node_modules/@angular/common",
+    "@angular/compiler": "file:../../../../packages/ngx-flicking/node_modules/@angular/compiler",
+    "@angular/compiler-cli": "file:../../../../packages/ngx-flicking/node_modules/@angular/compiler-cli",
+    "@angular/core": "file:../../../../packages/ngx-flicking/node_modules/@angular/core",
+    "@angular/forms": "file:../../../../packages/ngx-flicking/node_modules/@angular/forms",
+    "@angular/platform-browser": "file:../../../../packages/ngx-flicking/node_modules/@angular/platform-browser",
+    "@angular/platform-browser-dynamic": "file:../../../../packages/ngx-flicking/node_modules/@angular/platform-browser-dynamic",
+    "@angular/router": "file:../../../../packages/ngx-flicking/node_modules/@angular/router",
+    "jest-preset-angular": "14.0.2",
+    "rxjs": "file:../../../../packages/ngx-flicking/node_modules/rxjs",
+    "tslib": "file:../../../../packages/ngx-flicking/node_modules/tslib",
+    "zone.js": "file:../../../../packages/ngx-flicking/node_modules/zone.js"
   }
 }

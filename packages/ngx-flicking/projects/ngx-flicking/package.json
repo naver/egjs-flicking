@@ -6,6 +6,9 @@
     "@egjs/flicking": "~4.11.2",
     "@egjs/list-differ": "^1.0.1"
   },
+  "peerDependencies": {
+    "@angular/core": ">=17.1.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/naver/egjs-flicking/tree/master/packages/ngx-flicking"
