@@ -283,7 +283,7 @@ describe("SnapControl", () => {
         expect(position).to.equal(flicking.panels[0].position);
       });
 
-      it("Should move to the nearest panel from the camera, when animation is interrupted by user input", async () => {
+      it("should move to the nearest panel from the camera, when animation is interrupted by user input", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
           moveType: MOVE_TYPE.SNAP,
           align: "prev",
@@ -304,6 +304,29 @@ describe("SnapControl", () => {
 
         expect(moveSpy.calledTwice).to.be.true;
         expect(control.activePanel.index).to.equal(camera.findNearestAnchor(position).panel.index);
+      });
+
+      it("should use the closest anchor even if there is no anchor for the active panel.", async () => {
+        const flicking = await createFlicking(
+          El.viewport().add(
+            El.camera()
+              .add(El.panel(`33%`))
+              .add(El.panel(`33%`))
+              .add(El.panel(`33%`))
+              .add(El.panel(`33%`))
+          ), {
+            moveType: MOVE_TYPE.SNAP,
+            bound: true // when bound is true, there is no anchor for first panel
+          }
+        );
+
+        // Set active panel to first panel
+        void flicking.moveTo(0, 0);
+        await simulate(flicking.element, { deltaX: -1000, duration: 100 });
+
+        const status = flicking.getStatus();
+
+        expect(status.index).equals(2);
       });
     });
   });
