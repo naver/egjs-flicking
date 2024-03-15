@@ -306,7 +306,7 @@ abstract class Control {
     axesEvent?: OnRelease;
   }) {
     const position = this._getPosition(panel, direction);
-    this._triggerIndexChangeEvent(panel, panel.position, axesEvent);
+    this._triggerIndexChangeEvent(panel, panel.position, axesEvent, direction);
 
     return this._animateToPosition({ position, duration, newActivePanel: panel, axesEvent });
   }
@@ -347,7 +347,7 @@ abstract class Control {
     this._controller = control._controller;
   }
 
-  protected _triggerIndexChangeEvent(panel: Panel, position: number, axesEvent?: OnRelease) {
+  protected _triggerIndexChangeEvent(panel: Panel, position: number, axesEvent?: OnRelease, direction?: ValueOf<typeof DIRECTION>) {
     const flicking = getFlickingAttached(this._flicking);
     const triggeringEvent = panel !== this._activePanel ? EVENTS.WILL_CHANGE : EVENTS.WILL_RESTORE;
     const camera = flicking.camera;
@@ -357,7 +357,7 @@ abstract class Control {
       index: panel.index,
       panel,
       isTrusted: axesEvent?.isTrusted || false,
-      direction: getDirection(activePanel?.position ?? camera.position, position)
+      direction: direction ?? getDirection(activePanel?.position ?? camera.position, position)
     });
 
     this._nextPanel = panel;
