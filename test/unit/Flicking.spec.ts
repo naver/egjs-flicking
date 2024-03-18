@@ -1414,6 +1414,25 @@ describe("Flicking", () => {
         expect(willChangePosition).not.to.equal(0);
         expect(flicking.control.controller.position).to.equal(willChangePosition);
       });
+
+      it("should have correct direction", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { circular: true });
+        const directions = [];
+
+        flicking.on(EVENTS.WILL_CHANGE, evt => {
+          directions.push(evt.direction);
+        });
+        void flicking.prev(500);
+        tick(1000);
+        void flicking.next(500);
+        tick(1000);
+        void flicking.next(500);
+        tick(1000);
+
+        expect(directions[0]).to.equal(DIRECTION.PREV);
+        expect(directions[1]).to.equal(DIRECTION.NEXT);
+        expect(directions[2]).to.equal(DIRECTION.NEXT);
+      });
     });
 
     describe(EVENTS.WILL_RESTORE, () => {
