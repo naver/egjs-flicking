@@ -404,9 +404,11 @@ class Camera {
    */
   public findActiveAnchor(): AnchorPoint | null {
     const flicking = getFlickingAttached(this._flicking);
-    const activeIndex = flicking.control.activeIndex;
+    const activePanel = flicking.control.activePanel;
 
-    return find(this._anchors, anchor => anchor.panel.index === activeIndex);
+    if (!activePanel) return null;
+
+    return find(this._anchors, anchor => anchor.panel.index === activePanel.index) ?? this.findNearestAnchor(activePanel.position);
   }
 
   /**
