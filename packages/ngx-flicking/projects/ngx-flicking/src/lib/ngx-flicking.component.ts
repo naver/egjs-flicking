@@ -4,25 +4,27 @@
  */
 import {
   Component,
-  Input,
   AfterViewInit,
   ElementRef,
-  OnChanges,
   Output,
   EventEmitter,
-  OnDestroy,
   ViewEncapsulation,
   QueryList,
   ContentChildren,
   Renderer2,
-  HostBinding,
   Inject,
   PLATFORM_ID,
   NgZone,
+  input,
+  computed,
+  inject,
+  ChangeDetectionStrategy,
+  effect,
+  DestroyRef,
 } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { fromEvent, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { DOCUMENT, NgClass, NgStyle, isPlatformServer } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { fromEvent } from 'rxjs';
 import VanillaFlicking, {
   FlickingOptions,
   FlickingEvents,
@@ -64,73 +66,88 @@ import NgxElementProvider from './NgxElementProvider';
 @Component({
   selector: 'ngx-flicking, [NgxFlicking]',
   template: `
-    <div [ngClass]="_cameraElClass" [ngStyle]="cameraStyleBeforeInit">
+    <div [ngClass]="cameraElClass()" [ngStyle]="cameraStyleBeforeInit()">
       <ng-content></ng-content>
     </div>
     <ng-content select="[in-viewport]"></ng-content>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'flicking-viewport',
     style: 'display: block;',
+    '[class.vertical]': 'isVertical()',
+    '[class.flicking-hidden]': 'isHiddenBeforeInit()'
   },
-  styleUrls: [
-    "../../node_modules/@egjs/flicking/dist/flicking.css"
-  ],
+  styleUrl: "../../../../node_modules/@egjs/flicking/dist/flicking.css",
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [CommonModule],
+  imports: [NgClass, NgStyle],
 })
 export class NgxFlickingComponent
   extends FlickingInterface
-  implements AfterViewInit, OnDestroy, OnChanges
+  implements AfterViewInit
 {
-  @Input() public options: Partial<FlickingOptions> = {};
-  @Input() public plugins: Plugin[] = [];
-  @Input() public status: Status;
-  @Input() public cameraClass: string;
-  @Input() public hideBeforeInit: boolean = false;
-  @Input() public firstPanelSize: string;
-  @Output() public ready: EventEmitter<ReadyEvent<NgxFlickingComponent>>;
-  @Output() public beforeResize: EventEmitter<BeforeResizeEvent<NgxFlickingComponent>>;
-  @Output() public afterResize: EventEmitter<AfterResizeEvent<NgxFlickingComponent>>;
-  @Output() public holdStart: EventEmitter<HoldStartEvent<NgxFlickingComponent>>;
-  @Output() public holdEnd: EventEmitter<HoldEndEvent<NgxFlickingComponent>>;
-  @Output() public moveStart: EventEmitter<MoveStartEvent<NgxFlickingComponent>>;
-  @Output() public move: EventEmitter<MoveEvent<NgxFlickingComponent>>;
-  @Output() public moveEnd: EventEmitter<MoveEndEvent<NgxFlickingComponent>>;
-  @Output() public willChange: EventEmitter<WillChangeEvent<NgxFlickingComponent>>;
-  @Output() public changed: EventEmitter<ChangedEvent<NgxFlickingComponent>>;
-  @Output() public willRestore: EventEmitter<WillRestoreEvent<NgxFlickingComponent>>;
-  @Output() public restored: EventEmitter<RestoredEvent<NgxFlickingComponent>>;
-  @Output() public select: EventEmitter<SelectEvent<NgxFlickingComponent>>;
-  @Output() public needPanel: EventEmitter<NeedPanelEvent<NgxFlickingComponent>>;
-  @Output() public visibleChange: EventEmitter<VisibleChangeEvent<NgxFlickingComponent>>;
-  @Output() public reachEdge: EventEmitter<ReachEdgeEvent<NgxFlickingComponent>>;
-  @Output() public panelChange: EventEmitter<PanelChangeEvent<NgxFlickingComponent>>;
+  public options = input<Partial<FlickingOptions>>({});
+  public plugins = input<Plugin[]>([])
+  public status = input<Status>();
+  public cameraClass = input<string>();
+  public hideBeforeInit = input(false);
+  public firstPanelSize = input<string>();
 
-  @HostBinding("class.vertical") public get isVertical() {
-    return this.options.horizontal === false;
-  }
+  @Output() public ready!: EventEmitter<ReadyEvent<NgxFlickingComponent>>;
+  @Output() public beforeResize!: EventEmitter<BeforeResizeEvent<NgxFlickingComponent>>;
+  @Output() public afterResize!: EventEmitter<AfterResizeEvent<NgxFlickingComponent>>;
+  @Output() public holdStart!: EventEmitter<HoldStartEvent<NgxFlickingComponent>>;
+  @Output() public holdEnd!: EventEmitter<HoldEndEvent<NgxFlickingComponent>>;
+  @Output() public moveStart!: EventEmitter<MoveStartEvent<NgxFlickingComponent>>;
+  @Output() public move!: EventEmitter<MoveEvent<NgxFlickingComponent>>;
+  @Output() public moveEnd!: EventEmitter<MoveEndEvent<NgxFlickingComponent>>;
+  @Output() public willChange!: EventEmitter<WillChangeEvent<NgxFlickingComponent>>;
+  @Output() public changed!: EventEmitter<ChangedEvent<NgxFlickingComponent>>;
+  @Output() public willRestore!: EventEmitter<WillRestoreEvent<NgxFlickingComponent>>;
+  @Output() public restored!: EventEmitter<RestoredEvent<NgxFlickingComponent>>;
+  @Output() public select!: EventEmitter<SelectEvent<NgxFlickingComponent>>;
+  @Output() public needPanel!: EventEmitter<NeedPanelEvent<NgxFlickingComponent>>;
+  @Output() public visibleChange!: EventEmitter<VisibleChangeEvent<NgxFlickingComponent>>;
+  @Output() public reachEdge!: EventEmitter<ReachEdgeEvent<NgxFlickingComponent>>;
+  @Output() public panelChange!: EventEmitter<PanelChangeEvent<NgxFlickingComponent>>;
 
-  @HostBinding("class.flicking-hidden") public get isHiddenBeforeInit() {
-    const initialized = this._vanillaFlicking && this._vanillaFlicking.initialized;
-    return this.hideBeforeInit && !initialized;
-  }
+  readonly isVertical = computed(() => this.options().horizontal === false);
 
-  public get cameraStyleBeforeInit() {
-    const initialized = this._vanillaFlicking && this._vanillaFlicking.initialized;
-    return !initialized && this.firstPanelSize
-      ? { transform: getDefaultCameraTransform(this.options.align, this.options.horizontal, this.firstPanelSize) }
-      : {};
-  }
+  readonly isHiddenBeforeInit = computed(() => {
+    const initialized = this._vanillaFlicking?.initialized;
+    return this.hideBeforeInit() && !initialized;
+  });
 
-  @ContentChildren(NgxFlickingPanel) private _ngxPanels: QueryList<NgxFlickingPanel>;
+  readonly cameraStyleBeforeInit = computed(() => {
+    const initialized = this._vanillaFlicking?.initialized;
+    const { align, horizontal } = this.options();
+    const firstPanelSize = this.firstPanelSize();
+
+    if (!initialized && firstPanelSize) {
+      return {
+        transform: getDefaultCameraTransform(
+          align,
+          horizontal,
+          firstPanelSize
+        ),
+      };
+    } else {
+      return {};
+    }
+  });
+
+  @ContentChildren(NgxFlickingPanel) private _ngxPanels!: QueryList<NgxFlickingPanel>;
   private _pluginsDiffer: ListDiffer<Plugin> = new ListDiffer<Plugin>();
 
   public get ngxPanels() { return this._ngxPanels; }
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  public get _cameraElClass() { return `flicking-camera ${this.cameraClass ?? ""}`.trim(); }
 
-  private _destroy$ = new Subject<void>();
+  readonly cameraElClass = computed(() => {
+    const cameraClass = this.cameraClass();
+    return `flicking-camera ${cameraClass ?? ''}`.trim();
+  });
+
+  private _document = inject(DOCUMENT);
+  private _destroyRef = inject(DestroyRef);
 
   public constructor(
     private _elRef: ElementRef<HTMLElement>,
@@ -145,14 +162,44 @@ export class NgxFlickingComponent
     EVENT_NAMES.forEach(evtName => {
       this[evtName] = new EventEmitter();
     });
+
+    if (isPlatformServer(this._platformId)) return;
+
+    effect(() => {
+      // Read it immediately as thus the effect consumer would be able to
+      // catch the signal producer.
+      const options = this.options();
+
+      const flicking = this._vanillaFlicking;
+      if (!flicking) return;
+
+      this._ngZone.runOutsideAngular(() => {
+        void flicking.renderer.forceRenderAllPanels();
+      });
+
+      // Omit 'virtual', as it can't have any setter
+      const { virtual, ...newOptions } = options;
+      for (const key in newOptions) {
+        const typedKey = key as keyof typeof newOptions;
+        if (typedKey in flicking && flicking[typedKey] !== newOptions[typedKey]) {
+          // Cast to `any` is required because there're readonly keys on the
+          // `VanillaFlicking` interface.
+          (flicking as any)[key] = newOptions[typedKey];
+        }
+      }
+
+      this._checkPlugins();
+    });
+
+    this._destroyRef.onDestroy(() => this._vanillaFlicking?.destroy());
   }
 
   public ngAfterViewInit() {
-    if (!isPlatformBrowser(this._platformId)) return;
+    if (isPlatformServer(this._platformId)) return;
 
-    const options = this.options;
+    const options = this.options();
     const viewportEl = this._elRef.nativeElement;
-    const virtual = options.virtual && options.panelsPerView > 0;
+    const virtual = options.virtual && (options.panelsPerView || 0) > 0;
     const rendererOptions: NgxRendererOptions = {
       ngxFlicking: this,
       align: options.align,
@@ -172,7 +219,7 @@ export class NgxFlickingComponent
     // and `mousemove` event listeners within the root zone, and it won't trigger change detection
     // every time the user moves the mouse.
     const flicking = this._ngZone.runOutsideAngular(() => new VanillaFlicking(viewportEl, {
-      ...this.options,
+      ...options,
       externalRenderer: new NgxRenderer(rendererOptions)
     }));
     this._vanillaFlicking = flicking;
@@ -182,8 +229,9 @@ export class NgxFlickingComponent
     this._bindEvents();
     this._checkPlugins();
 
-    if (this.status) {
-      flicking.setStatus(this.status);
+    const status = this.status();
+    if (status) {
+      flicking.setStatus(status);
     }
 
     // Note: doesn't need to unsubscribe, because `changes`
@@ -197,32 +245,6 @@ export class NgxFlickingComponent
     });
   }
 
-  public ngOnDestroy() {
-    this._destroy$.next();
-    this._vanillaFlicking?.destroy();
-  }
-
-  public ngOnChanges() {
-    const flicking = this._vanillaFlicking;
-    if (!flicking) return;
-
-    this._ngZone.runOutsideAngular(() => {
-      void flicking.renderer.forceRenderAllPanels();
-    });
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { virtual, ...newOptions } = this.options;
-
-    // Omit 'virtual', as it can't have any setter
-    for (const key in newOptions) {
-      if (key in flicking && flicking[key] !== newOptions[key]) {
-        flicking[key] = newOptions[key];
-      }
-    }
-
-    this._checkPlugins();
-  }
-
   private _bindEvents() {
     const flicking = this._vanillaFlicking!;
 
@@ -231,10 +253,10 @@ export class NgxFlickingComponent
       // (an object with `on` and `off` methods). `flicking` acts as a
       // jQuery event emitter since it has both methods.
       fromEvent<ComponentEvent>(flicking, evtName)
-        .pipe(takeUntil(this._destroy$))
+        .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((e) => {
           // Style guide: Event - https://angular.io/guide/styleguide#dont-prefix-output-properties
-          const emitter = this[evtName] as EventEmitter<FlickingEvents[typeof evtName]>;
+          const emitter = this[evtName] as any as EventEmitter<FlickingEvents[typeof evtName]>;
 
           e.currentTarget = this;
 
@@ -249,19 +271,19 @@ export class NgxFlickingComponent
     const flicking = this._vanillaFlicking;
     if (!flicking) return;
 
-    const { list, added, removed, prevList } = this._pluginsDiffer.update(this.plugins);
+    const { list, added, removed, prevList } = this._pluginsDiffer.update(this.plugins());
 
     flicking.addPlugins(...added.map(index => list[index]));
     flicking.removePlugins(...removed.map(index => prevList[index]));
   }
 
   private _initVirtualElements() {
-    const options = this.options;
+    const options = this.options();
     const renderer = this._ngxRenderer;
     const cameraElement = this._elRef.nativeElement.firstElementChild;
     const panelsPerView = options.panelsPerView!;
     const virtual = options.virtual!;
-    const fragment = document.createDocumentFragment();
+    const fragment = this._document.createDocumentFragment();
 
     const newElements = range(panelsPerView + 1).map(idx => {
       const panelEl = renderer.createElement("div");

@@ -2,6 +2,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "strict": true,
     "outDir": "../../out-tsc/lib",
     "declarationMap": true,
     "target": "ES2022",
@@ -15,9 +16,10 @@
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
-    "skipTemplateCodegen": true,
-    "strictMetadataEmit": true,
-    "enableResourceInlining": true
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true,
+    "enableResourceInlining": true,
   },
   "exclude": [
     "src/test.ts",
