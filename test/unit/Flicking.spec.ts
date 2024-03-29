@@ -669,6 +669,24 @@ describe("Flicking", () => {
 
         expect(flicking.index).equals(beforeIndex);
       });
+
+      it("should change panel when moving above threshold (vertical)", async () => {
+        const flicking = await createFlicking(El.DEFAULT_VERTICAL, { threshold: 50, defaultIndex: 2, horizontal: false, align: "prev" });
+        const beforeIndex = flicking.index;
+
+        await simulate(flicking.element, { deltaY: 1000, duration: 3000 });
+
+        expect(flicking.index).not.to.equal(beforeIndex);
+      });
+
+      it("should not change panel when moving below threshold (vertical)", async () => {
+        const flicking = await createFlicking(El.DEFAULT_VERTICAL, { threshold: 50, defaultIndex: 2, horizontal: false, align: "prev" });
+        const beforeIndex = flicking.index;
+
+        await simulate(flicking.element, { deltaY: 49, duration: 3000 });
+
+        expect(flicking.index).equals(beforeIndex);
+      });
     });
 
     describe("interruptable", () => {
