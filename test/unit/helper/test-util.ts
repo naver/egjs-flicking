@@ -97,4 +97,11 @@ export const waitEvent = (emitter: any, eventName: string) => {
   }
 };
 
+
+export const waitTime = (time: number) => {
+  return new Promise(res => {
+    (window as any)._real.setTimeout(res, time);
+  });
+}
+
 export class NullClass {}
