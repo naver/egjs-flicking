@@ -2595,7 +2595,7 @@ var Control = /*#__PURE__*/function () {
       var position;
       return __generator(this, function (_c) {
         position = this._getPosition(panel, direction);
-        this._triggerIndexChangeEvent(panel, panel.position, axesEvent);
+        this._triggerIndexChangeEvent(panel, panel.position, axesEvent, direction);
         return [2 /*return*/, this._animateToPosition({
           position: position,
           duration: duration,
@@ -2637,7 +2637,7 @@ var Control = /*#__PURE__*/function () {
     this._activePanel = control._activePanel;
     this._controller = control._controller;
   };
-  __proto._triggerIndexChangeEvent = function (panel, position, axesEvent) {
+  __proto._triggerIndexChangeEvent = function (panel, position, axesEvent, direction) {
     var _a;
     var flicking = getFlickingAttached(this._flicking);
     var triggeringEvent = panel !== this._activePanel ? EVENTS.WILL_CHANGE : EVENTS.WILL_RESTORE;
@@ -2647,7 +2647,7 @@ var Control = /*#__PURE__*/function () {
       index: panel.index,
       panel: panel,
       isTrusted: (axesEvent === null || axesEvent === void 0 ? void 0 : axesEvent.isTrusted) || false,
-      direction: getDirection((_a = activePanel === null || activePanel === void 0 ? void 0 : activePanel.position) !== null && _a !== void 0 ? _a : camera.position, position)
+      direction: direction !== null && direction !== void 0 ? direction : getDirection((_a = activePanel === null || activePanel === void 0 ? void 0 : activePanel.position) !== null && _a !== void 0 ? _a : camera.position, position)
     });
     this._nextPanel = panel;
     flicking.trigger(event);
@@ -2868,7 +2868,7 @@ var SnapControl = /*#__PURE__*/function (_super) {
     if (!activeAnchor || !anchorAtCamera) {
       return Promise.reject(new FlickingError(MESSAGE.POSITION_NOT_REACHABLE(position), CODE.POSITION_NOT_REACHABLE));
     }
-    var snapThreshold = this._calcSnapThreshold(position, activeAnchor);
+    var snapThreshold = this._calcSnapThreshold(flicking.threshold, position, activeAnchor);
     var posDelta = flicking.animating ? state.delta : position - camera.position;
     var absPosDelta = Math.abs(posDelta);
     var snapDelta = axesEvent && axesEvent.delta[POSITION_KEY] !== 0 ? Math.abs(axesEvent.delta[POSITION_KEY]) : absPosDelta;
@@ -2955,7 +2955,7 @@ var SnapControl = /*#__PURE__*/function (_super) {
     var adjacentAnchor = (_a = posDelta > 0 ? camera.getNextAnchor(anchorAtCamera) : camera.getPrevAnchor(anchorAtCamera)) !== null && _a !== void 0 ? _a : anchorAtCamera;
     return adjacentAnchor;
   };
-  __proto._calcSnapThreshold = function (position, activeAnchor) {
+  __proto._calcSnapThreshold = function (threshold, position, activeAnchor) {
     var isNextDirection = position > activeAnchor.position;
     var panel = activeAnchor.panel;
     var panelSize = panel.size;
@@ -2966,7 +2966,7 @@ var SnapControl = /*#__PURE__*/function (_super) {
      * |<------>|<------------>|
      * [        |<-Anchor      ]
      */
-    return isNextDirection ? panelSize - alignPos + panel.margin.next : alignPos + panel.margin.prev;
+    return Math.max(threshold, isNextDirection ? panelSize - alignPos + panel.margin.next : alignPos + panel.margin.prev);
   };
   return SnapControl;
 }(Control);
@@ -4171,11 +4171,13 @@ var Camera = /*#__PURE__*/function () {
    * @return {AnchorPoint | null}
    */
   __proto.findActiveAnchor = function () {
+    var _a;
     var flicking = getFlickingAttached(this._flicking);
-    var activeIndex = flicking.control.activeIndex;
-    return find(this._anchors, function (anchor) {
-      return anchor.panel.index === activeIndex;
-    });
+    var activePanel = flicking.control.activePanel;
+    if (!activePanel) return null;
+    return (_a = find(this._anchors, function (anchor) {
+      return anchor.panel.index === activePanel.index;
+    })) !== null && _a !== void 0 ? _a : this.findNearestAnchor(activePanel.position);
   };
   /**
    * Clamp the given position between camera's range
@@ -7582,6 +7584,10 @@ var Flicking = /*#__PURE__*/function (_super) {
             return [4 /*yield*/, renderer.forceRenderAllPanels()];
           case 1:
             _a.sent(); // Render all panel elements, to update sizes
+            if (!this._initialized) {
+              return [2 /*return*/];
+            }
+
             renderer.updatePanelSize();
             camera.updateAlignPos();
             camera.updateRange();
@@ -7592,6 +7598,10 @@ var Flicking = /*#__PURE__*/function (_super) {
             return [4 /*yield*/, renderer.render()];
           case 2:
             _a.sent();
+            if (!this._initialized) {
+              return [2 /*return*/];
+            }
+
             if (control.animating) ; else {
               control.updatePosition(prevProgressInPanel);
               control.updateInput();
