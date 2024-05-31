@@ -1,3 +1,7 @@
+(window as any)._real = {
+  setTimeout: (window as any).setTimeout.bind((window as any)),
+};
+
 (window as any).timer = sinon.useFakeTimers();
 (window as any).flickings = [];
 

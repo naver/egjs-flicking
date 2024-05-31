@@ -10,7 +10,7 @@ import { Plugin } from "~/type/external";
 import { AfterResizeEvent, BeforeResizeEvent } from "~/type/event";
 
 import El from "./helper/El";
-import { cleanup, createFlicking, range, simulate, tick, waitEvent } from "./helper/test-util";
+import { cleanup, createFlicking, range, simulate, tick, waitEvent, waitTime } from "./helper/test-util";
 
 describe("Flicking", () => {
   afterEach(() => {
@@ -1831,6 +1831,21 @@ describe("Flicking", () => {
         expect(controlSpy.calledOnce).to.be.true;
         expect(cameraSpy.calledOnce).to.be.true;
         expect(rendererSpy.calledOnce).to.be.true;
+      });
+      it("should call destroy after resize", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        let hasError = false;
+        flicking.resize().catch(() => {
+          // Any remaining resize operations that occur after destroy should not operate.
+          hasError = true;
+        });
+        flicking.destroy();
+
+        await waitTime(1000);
+
+        // Then
+        expect(hasError).to.be.equal(false);
       });
     });
 
