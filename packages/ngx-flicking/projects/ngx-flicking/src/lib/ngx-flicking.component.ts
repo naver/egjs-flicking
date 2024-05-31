@@ -216,7 +216,10 @@ export class NgxFlickingComponent
     // Omit 'virtual', as it can't have any setter
     for (const key in newOptions) {
       if (key in flicking && flicking[key] !== newOptions[key]) {
-        flicking[key] = newOptions[key];
+        try {
+          flicking[key] = newOptions[key];
+        // eslint-disable-next-line no-empty
+        } catch (e) {}
       }
     }
 

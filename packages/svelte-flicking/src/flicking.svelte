@@ -69,7 +69,9 @@
       // Omit 'virtual', as it can't have any setter
       for (const key in newOptions) {
         if (key in vanillaFlicking && vanillaFlicking[key] !== newOptions[key]) {
-          vanillaFlicking[key] = newOptions[key];
+          try {
+            vanillaFlicking[key] = newOptions[key];
+          } catch (e) {}
         }
       }
     }

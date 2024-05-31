@@ -217,7 +217,10 @@ const Flicking = Vue.extend({
 
         for (const key in options) {
           if (key in flicking && flicking[key] !== options[key]) {
-            flicking[key] = options[key];
+            try {
+              flicking[key] = options[key];
+            // eslint-disable-next-line no-empty
+            } catch (e) {}
           }
         }
       },

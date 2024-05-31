@@ -140,7 +140,9 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const { virtual, ...props } = this.props;
     for (const key in props) {
       if (key in flicking && flicking[key] !== props[key]) {
-        flicking[key] = props[key];
+        try {
+          flicking[key] = props[key];
+        } catch (e) {}
       }
     }
 
