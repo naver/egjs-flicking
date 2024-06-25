@@ -857,6 +857,39 @@ It should be dragged above the threshold to change the current panel.
   </ColumnItem>
 </Columns>
 
+### dragThreshold
+Minimal distance of user input before recognizing (unit: px).
+It should be dragged above the dragThreshold to move the panel.
+
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  dragThreshold: 1
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking dragThreshold={1}>
+      { Panels(5) }
+    </Flicking>
+  </ColumnItem>
+</Columns>
+<Columns>
+  <ColumnItem is={6}>
+
+  ```js
+  dragThreshold: 30
+  ```
+
+  </ColumnItem>
+  <ColumnItem is={6}>
+    <Flicking dragThreshold={30}>
+      { Panels(5) }
+    </Flicking>
+  </ColumnItem>
+</Columns>
+
 ### interruptable
 Set animation to be interruptable by click/touch.
 
