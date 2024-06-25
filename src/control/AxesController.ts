@@ -148,7 +148,7 @@ class AxesController {
     });
     this._panInput = new PanInput(flicking.viewport.element, {
       inputType: flicking.inputType,
-      threshold: 1,
+      threshold: flicking.dragThreshold,
       iOSEdgeSwipeThreshold: flicking.iOSEdgeSwipeThreshold,
       preventDefaultOnDrag: flicking.preventDefaultOnDrag,
       scale: flicking.horizontal ? [flicking.camera.panelOrder === ORDER.RTL ? 1 : -1, 0] : [0, -1],
