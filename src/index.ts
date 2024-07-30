@@ -5,6 +5,8 @@
 import Flicking from "./Flicking";
 import type { FlickingOptions, FlickingEvents } from "./Flicking";
 
+export * from "./CrossFlicking";
+
 export * from "./core";
 export * from "./camera";
 export * from "./control";
