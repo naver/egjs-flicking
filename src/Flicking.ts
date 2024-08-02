@@ -73,6 +73,7 @@ export interface FlickingOptions {
   inputType: string[];
   moveType: ValueOf<typeof MOVE_TYPE> | MoveTypeOptions<ValueOf<typeof MOVE_TYPE>>;
   threshold: number;
+  dragThreshold: number;
   interruptable: boolean;
   bounce: number | string | [number | string, number | string];
   iOSEdgeSwipeThreshold: number;
@@ -152,6 +153,7 @@ class Flicking extends Component<FlickingEvents> {
   private _inputType: FlickingOptions["inputType"];
   private _moveType: FlickingOptions["moveType"];
   private _threshold: FlickingOptions["threshold"];
+  private _dragThreshold: FlickingOptions["dragThreshold"];
   private _interruptable: FlickingOptions["interruptable"];
   private _bounce: FlickingOptions["bounce"];
   private _iOSEdgeSwipeThreshold: FlickingOptions["iOSEdgeSwipeThreshold"];
@@ -350,7 +352,7 @@ class Flicking extends Component<FlickingEvents> {
   public get align() { return this._align; }
   /**
    * Index of the panel to move when Flicking's {@link Flicking#init init()} is called. A zero-based integer
-   * @ko Flicking의 {@link Flicking#init init()}이 호출될 때 이동할 디폴트 패널의 인덱스로, 0부터 시작하는 정수입니다
+   * @ko Flicking의 {@link Flicking#init init()}이 호출될 때 이동할 디폴트 패널의 인덱스로, 0부터 시작하는 정수입니다.
    * @type {number}
    * @default 0
    * @see {@link https://naver.github.io/egjs-flicking/Options#defaultindex defaultIndex ( Options )}
@@ -528,12 +530,20 @@ class Flicking extends Component<FlickingEvents> {
   public get moveType() { return this._moveType; }
   /**
    * Movement threshold to change panel (unit: px). It should be dragged above the threshold to change the current panel.
-   * @ko 패널 변경을 위한 이동 임계값 (단위: px). 주어진 값 이상으로 스크롤해야만 패널 변경이 가능하다.
+   * @ko 패널 변경을 위한 이동 임계값 (단위: px). 주어진 값 이상으로 스크롤해야만 패널 변경이 가능합니다.
    * @type {number}
    * @default 40
    * @see {@link https://naver.github.io/egjs-flicking/Options#threshold Threshold ( Options )}
    */
   public get threshold() { return this._threshold; }
+  /**
+   * Minimal distance of user input before recognizing (unit: px). It should be dragged above the dragThreshold to move the panel.
+   * @ko 사용자의 입력을 인식하기 위한 최소한의 거리 (단위: px). 주어진 값 이상으로 스크롤해야만 패널이 움직입니다.
+   * @type {number}
+   * @default 1
+   * @see {@link https://naver.github.io/egjs-flicking/Options#dragThreshold dragThreshold ( Options )}
+   */
+  public get dragThreshold() { return this._dragThreshold; }
   /**
    * Set animation to be interruptable by click/touch.
    * @ko 사용자의 클릭/터치로 인해 애니메이션을 도중에 멈출 수 있도록 설정합니다.
@@ -845,6 +855,16 @@ class Flicking extends Component<FlickingEvents> {
   }
 
   public set threshold(val: FlickingOptions["threshold"]) { this._threshold = val; }
+
+  public set dragThreshold(val: FlickingOptions["dragThreshold"]) {
+    this._dragThreshold = val;
+    const panInput = this._control.controller.panInput;
+
+    if (panInput) {
+      panInput.options.threshold = val;
+    }
+  }
+
   public set interruptable(val: FlickingOptions["interruptable"]) {
     this._interruptable = val;
 
@@ -969,6 +989,7 @@ class Flicking extends Component<FlickingEvents> {
     inputType = ["mouse", "touch"],
     moveType = "snap",
     threshold = 40,
+    dragThreshold = 1,
     interruptable = true,
     bounce = "20%",
     iOSEdgeSwipeThreshold = 30,
@@ -1014,6 +1035,7 @@ class Flicking extends Component<FlickingEvents> {
     this._inputType = inputType;
     this._moveType = moveType;
     this._threshold = threshold;
+    this._dragThreshold = dragThreshold;
     this._interruptable = interruptable;
     this._bounce = bounce;
     this._iOSEdgeSwipeThreshold = iOSEdgeSwipeThreshold;
