@@ -135,7 +135,7 @@ const Flicking = defineComponent({
   beforeUpdate() {
     this.fillKeys();
 
-    this.diffResult = this.slotDiffer.update(this.getSlots());
+    this.diffResult = this.slotDiffer?.update(this.getSlots());
   },
   updated() {
     const flicking = this.vanillaFlicking;
