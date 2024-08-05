@@ -7,7 +7,7 @@ import Flicking, { FlickingOptions } from "./Flicking";
 import { ChangedEvent, MoveEndEvent, MoveEvent } from "./type/event";
 import { LiteralUnion, ValueOf } from "./type/internal";
 import { CLASS, EVENTS, MOVE_DIRECTION } from "./const/external";
-import { getElement, toArray } from "./utils";
+import { getDataAttributes, includes, toArray } from "./utils";
 
 /**
  * @interface
@@ -25,32 +25,13 @@ export interface CrossFlickingOptions {
   // 이전 패널 기억 여부
 }
 
-/**
- * Flicking Status returned by {@link Flicking#getStatus}
- * @ko {@link Flicking#getStatus}에 의해 반환된 Flicking 상태 객체
- * @interface
- * @property {number} index An index of the active panel<ko>활성화된 패널의 인덱스</ko>
- * @property {object} position A info to restore camera {@link Camera#position position}<ko>카메라 {@link Camera#position position}을 설정하기 위한 정보들</ko>
- * @property {number} [position.panel] An index of the panel camera is located at<ko>카메라가 위치한 패널의 인덱스</ko>
- * @property {number} [position.progressInPanel] A progress of the camera position inside the panel<ko>패널 내에서의 카메라 위치의 진행도</ko>
- * @property {number} visibleOffset An offset to visible panel's original index. This value is available only when `visiblePanelsOnly` is `true`
- * <ko>현재 보이는 패널들을 저장했을 때, 원래의 인덱스 대비 offset. `visiblePanelsOnly` 옵션을 사용했을 때만 사용 가능합니다</ko>
- * @property {object[]} panels A data array of panels<ko>패널의 정보를 담은 배열</ko>
- * @property {index} [panels.index] An index of the panel<ko>패널의 인덱스</ko>
- * @property {string | undefined} [panels.html] An `outerHTML` of the panel element<ko>패널 엘리먼트의 `outerHTML`</ko>
- */
 export interface VerticalState {
+  key: string;
   start: number;
   end: number;
   element: HTMLElement;
 }
 
-/**
- * @extends Component
- * @support {"ie": "9+(with polyfill)", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "4.X+"}
- * @requires {@link https://github.com/naver/egjs-component|@egjs/component}
- * @requires {@link https://github.com/naver/egjs-axes|@egjs/axes}
- */
 export class CrossFlicking extends Flicking {
   // Core components
   private _verticalFlicking: Flicking[];
@@ -64,38 +45,16 @@ export class CrossFlicking extends Flicking {
   private _nextIndex: number;
 
   // Components
-  /**
-   * {@link Control} instance of the Flicking
-   * @ko 현재 Flicking에 활성화된 {@link Control} 인스턴스
-   * @type {Control}
-   * @default SnapControl
-   * @readonly
-   * @see Control
-   * @see SnapControl
-   * @see FreeControl
-   */
-  public get verticalFlicking() { return this._verticalFlicking; }
+  public get verticalFlicking() {
+    return this._verticalFlicking;
+  }
+
   // Internal States
-  /**
-   * Whether Flicking's {@link Flicking#init init()} is called.
-   * This is `true` when {@link Flicking#init init()} is called, and is `false` after calling {@link Flicking#destroy destroy()}.
-   * @ko Flicking의 {@link Flicking#init init()}이 호출되었는지를 나타내는 멤버 변수.
-   * 이 값은 {@link Flicking#init init()}이 호출되었으면 `true`로 변하고, {@link Flicking#destroy destroy()}호출 이후에 다시 `false`로 변경됩니다.
-   * @type {boolean}
-   * @default false
-   * @readonly
-   */
-  public get verticalState() { return this._verticalState; }
+  public get verticalState() {
+    return this._verticalState;
+  }
+
   // Options Getter
-  /**
-   * Change active panel index on mouse/touch hold while animating.
-   * `index` of the `willChange`/`willRestore` event will be used as new index.
-   * @ko 애니메이션 도중 마우스/터치 입력시 현재 활성화된 패널의 인덱스를 변경합니다.
-   * `willChange`/`willRestore` 이벤트의 `index`값이 새로운 인덱스로 사용될 것입니다.
-   * @type {FlickingOptions}
-   * @default undefined
-   * @see {@link https://naver.github.io/egjs-flicking/Options#changeonhold changeOnHold ( Options )}
-   */
   public get verticalOptions() {
     return this._verticalOptions;
   }
@@ -111,10 +70,8 @@ export class CrossFlicking extends Flicking {
   ) {
     super(root);
 
-    const horizontalPanels = toArray(getElement(root).children[0].children) as HTMLElement[];
-
     // Internal states
-    this._verticalState = this._createVerticalState(horizontalPanels);
+    this._verticalState = this._createVerticalState();
     this._moveDirection = null;
     this._nextIndex = 0;
 
@@ -122,17 +79,9 @@ export class CrossFlicking extends Flicking {
     this._verticalOptions = verticalOptions;
 
     // Create core components
-    this._verticalFlicking = this._createVerticalFlicking(horizontalPanels);
+    this._verticalFlicking = this._createVerticalFlicking();
   }
 
-  /**
-   * Initialize Flicking and move to the default index
-   * This is automatically called on Flicking's constructor when `autoInit` is true(default)
-   * @ko Flicking을 초기화하고, 디폴트 인덱스로 이동합니다
-   * 이 메소드는 `autoInit` 옵션이 true(default)일 경우 Flicking이 생성될 때 자동으로 호출됩니다
-   * @fires Flicking#ready
-   * @return {Promise<void>}
-   */
   public init(): Promise<void> {
     return super.init().then(() => this._addComponentEvents());
   }
@@ -150,45 +99,100 @@ export class CrossFlicking extends Flicking {
     });
   }
 
-  private _createVerticalState(panels: HTMLElement[]): VerticalState[] {
+  private _createVerticalState(): VerticalState[] {
     // data-index로 분류하기 전에 임시로 모든 children에 대해 vertical flicking으로 해보자.
     // panels에 data-attributes가 붙어있을 때와 안 붙어있을 때를 다르게 처리
     // 붙어있다면 가상의 viewport들을 index 갯수만큼 만들어줘야 한다
-    let verticalPanels = "";
+    const cameraEl = this.camera.element;
+    const panels = toArray(cameraEl.children) as HTMLElement[];
+    let verticalState: VerticalState[];
+    let verticalPanels: string = "";
 
-    const verticalState = panels.reduce(
-      (state: VerticalState[], panel: HTMLElement) => {
-        const start = state.length ? +state[state.length - 1].end + 1 : 0;
-        verticalPanels += panel.innerHTML;
-        return [
-          ...state,
-          {
-            start,
-            end: start + panel.children.length - 1,
-            element: panel
-          }
-        ];
-      },
-      []
-    );
-
+    // check data attribute exists
+    const groupKeys: string[] = [];
+    const groupPanels: Record<string, HTMLElement[]> = {};
     const verticalCamera = document.createElement("div");
     verticalCamera.classList.add(CLASS.CAMERA);
-    verticalCamera.innerHTML = verticalPanels;
+
     panels.forEach((panel) => {
-      [CLASS.VIEWPORT, CLASS.VERTICAL].forEach((className) => {
-        if (!panel.classList.contains(className)) {
-          panel.classList.add(className);
-        }
-      });
-      panel.innerHTML = verticalCamera.outerHTML;
+      const groupKey = getDataAttributes(panel, "data-flicking-").groupkey;
+      if (groupKey && !includes(groupKeys, groupKey)) {
+        groupKeys.push(groupKey);
+        groupPanels[groupKey] = [panel];
+      } else if (groupKey) {
+        groupPanels[groupKey].push(panel);
+      }
+      return groupKey;
     });
+
+    if (groupKeys.length) {
+      panels.forEach(() => this.remove(0));
+      verticalState = groupKeys.reduce(
+        (state: VerticalState[], key: string) => {
+          const start = state.length ? +state[state.length - 1].end + 1 : 0;
+          const element = groupPanels[key].reduce(
+            (el: HTMLElement, panel: HTMLElement) => {
+              verticalPanels += panel.outerHTML;
+              el.appendChild(panel);
+              return el;
+            },
+            document.createElement("div")
+          );
+          return [
+            ...state,
+            {
+              key,
+              start,
+              end: start + groupPanels[key].length - 1,
+              element: element
+            }
+          ];
+        },
+        []
+      );
+
+      verticalCamera.innerHTML = verticalPanels;
+      cameraEl.innerHTML = "";
+      groupKeys.forEach(() => {
+        const panel = document.createElement("div");
+        panel.classList.add(CLASS.VIEWPORT, CLASS.VERTICAL);
+        panel.innerHTML = verticalCamera.outerHTML;
+        this.append(panel);
+      });
+    } else {
+      verticalState = panels.reduce(
+        (state: VerticalState[], panel: HTMLElement, i: number) => {
+          const start = state.length ? +state[state.length - 1].end + 1 : 0;
+          verticalPanels += panel.innerHTML;
+          return [
+            ...state,
+            {
+              key: i.toString(),
+              start,
+              end: start + panel.children.length - 1,
+              element: panel
+            }
+          ];
+        },
+        []
+      );
+
+      verticalCamera.innerHTML = verticalPanels;
+      panels.forEach((panel) => {
+        [CLASS.VIEWPORT, CLASS.VERTICAL].forEach((className) => {
+          if (!panel.classList.contains(className)) {
+            panel.classList.add(className);
+          }
+        });
+        panel.innerHTML = verticalCamera.outerHTML;
+      });
+    }
 
     return verticalState;
   }
 
-  private _createVerticalFlicking(panels: HTMLElement[]): Flicking[] {
-    return panels.map((panel, i) => {
+  private _createVerticalFlicking(): Flicking[] {
+    return this.camera.children.map((panel, i) => {
       return new Flicking(panel, {
         ...this.verticalOptions,
         horizontal: false,
