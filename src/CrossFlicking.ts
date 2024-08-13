@@ -25,6 +25,20 @@ export interface CrossFlickingOptions {
   // 이전 패널 기억 여부
 }
 
+/**
+ * Flicking Status returned by {@link Flicking#getStatus}
+ * @ko {@link Flicking#getStatus}에 의해 반환된 Flicking 상태 객체
+ * @interface
+ * @property {number} index An index of the active panel<ko>활성화된 패널의 인덱스</ko>
+ * @property {object} position A info to restore camera {@link Camera#position position}<ko>카메라 {@link Camera#position position}을 설정하기 위한 정보들</ko>
+ * @property {number} [position.panel] An index of the panel camera is located at<ko>카메라가 위치한 패널의 인덱스</ko>
+ * @property {number} [position.progressInPanel] A progress of the camera position inside the panel<ko>패널 내에서의 카메라 위치의 진행도</ko>
+ * @property {number} visibleOffset An offset to visible panel's original index. This value is available only when `visiblePanelsOnly` is `true`
+ * <ko>현재 보이는 패널들을 저장했을 때, 원래의 인덱스 대비 offset. `visiblePanelsOnly` 옵션을 사용했을 때만 사용 가능합니다</ko>
+ * @property {object[]} panels A data array of panels<ko>패널의 정보를 담은 배열</ko>
+ * @property {index} [panels.index] An index of the panel<ko>패널의 인덱스</ko>
+ * @property {string | undefined} [panels.html] An `outerHTML` of the panel element<ko>패널 엘리먼트의 `outerHTML`</ko>
+ */
 export interface VerticalState {
   key: string;
   start: number;
@@ -32,6 +46,12 @@ export interface VerticalState {
   element: HTMLElement;
 }
 
+/**
+ * @extends Component
+ * @support {"ie": "9+(with polyfill)", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "4.X+"}
+ * @requires {@link https://github.com/naver/egjs-component|@egjs/component}
+ * @requires {@link https://github.com/naver/egjs-axes|@egjs/axes}
+ */
 export class CrossFlicking extends Flicking {
   // Core components
   private _verticalFlicking: Flicking[];
@@ -45,16 +65,44 @@ export class CrossFlicking extends Flicking {
   private _nextIndex: number;
 
   // Components
+  /**
+   * {@link Control} instance of the Flicking
+   * @ko 현재 Flicking에 활성화된 {@link Control} 인스턴스
+   * @type {Control}
+   * @default SnapControl
+   * @readonly
+   * @see Control
+   * @see SnapControl
+   * @see FreeControl
+   */
   public get verticalFlicking() {
     return this._verticalFlicking;
   }
 
   // Internal States
+  /**
+   * Whether Flicking's {@link Flicking#init init()} is called.
+   * This is `true` when {@link Flicking#init init()} is called, and is `false` after calling {@link Flicking#destroy destroy()}.
+   * @ko Flicking의 {@link Flicking#init init()}이 호출되었는지를 나타내는 멤버 변수.
+   * 이 값은 {@link Flicking#init init()}이 호출되었으면 `true`로 변하고, {@link Flicking#destroy destroy()}호출 이후에 다시 `false`로 변경됩니다.
+   * @type {boolean}
+   * @default false
+   * @readonly
+   */
   public get verticalState() {
     return this._verticalState;
   }
 
   // Options Getter
+  /**
+   * Change active panel index on mouse/touch hold while animating.
+   * `index` of the `willChange`/`willRestore` event will be used as new index.
+   * @ko 애니메이션 도중 마우스/터치 입력시 현재 활성화된 패널의 인덱스를 변경합니다.
+   * `willChange`/`willRestore` 이벤트의 `index`값이 새로운 인덱스로 사용될 것입니다.
+   * @type {FlickingOptions}
+   * @default undefined
+   * @see {@link https://naver.github.io/egjs-flicking/Options#changeonhold changeOnHold ( Options )}
+   */
   public get verticalOptions() {
     return this._verticalOptions;
   }
@@ -82,8 +130,26 @@ export class CrossFlicking extends Flicking {
     this._verticalFlicking = this._createVerticalFlicking();
   }
 
+  /**
+   * Initialize Flicking and move to the default index
+   * This is automatically called on Flicking's constructor when `autoInit` is true(default)
+   * @ko Flicking을 초기화하고, 디폴트 인덱스로 이동합니다
+   * 이 메소드는 `autoInit` 옵션이 true(default)일 경우 Flicking이 생성될 때 자동으로 호출됩니다
+   * @fires Flicking#ready
+   * @return {Promise<void>}
+   */
   public init(): Promise<void> {
     return super.init().then(() => this._addComponentEvents());
+  }
+
+  /**
+   * Destroy Flicking and remove all event handlers
+   * @ko Flicking과 하위 컴포넌트들을 초기 상태로 되돌리고, 부착된 모든 이벤트 핸들러를 제거합니다
+   * @return {void}
+   */
+  public destroy(): void {
+    // TODO 모든 child flicking destroy
+    super.destroy();
   }
 
   private _addComponentEvents(): void {
@@ -115,7 +181,7 @@ export class CrossFlicking extends Flicking {
     verticalCamera.classList.add(CLASS.CAMERA);
 
     panels.forEach((panel) => {
-      const groupKey = getDataAttributes(panel, "data-flicking-").groupkey;
+      const groupKey = getDataAttributes(panel, "data-cross-").groupkey;
       if (groupKey && !includes(groupKeys, groupKey)) {
         groupKeys.push(groupKey);
         groupPanels[groupKey] = [panel];
@@ -144,8 +210,8 @@ export class CrossFlicking extends Flicking {
               key,
               start,
               end: start + groupPanels[key].length - 1,
-              element: element
-            }
+              element: element,
+            },
           ];
         },
         []
@@ -170,8 +236,8 @@ export class CrossFlicking extends Flicking {
               key: i.toString(),
               start,
               end: start + panel.children.length - 1,
-              element: panel
-            }
+              element: panel,
+            },
           ];
         },
         []
@@ -197,7 +263,7 @@ export class CrossFlicking extends Flicking {
         ...this.verticalOptions,
         horizontal: false,
         panelsPerView: 1,
-        defaultIndex: this._verticalState[i].start
+        defaultIndex: this._verticalState[i].start,
       });
     });
   }
