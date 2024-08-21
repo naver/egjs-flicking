@@ -218,6 +218,13 @@ class Flicking extends Component<FlickingEvents> {
    * @see Viewport
    */
   public get viewport() { return this._viewport; }
+  /**
+   * {@link AutoResizer} instance of the Flicking
+   * @ko 현재 Flicking에 활성화된 {@link AutoResizer} 인스턴스
+   * @internal
+   * @readonly
+   */
+  public get autoResizer() { return this._autoResizer; }
   // Internal States
   /**
    * Whether Flicking's {@link Flicking#init init()} is called.
@@ -906,6 +913,10 @@ class Flicking extends Component<FlickingEvents> {
   public set autoResize(val: FlickingOptions["autoResize"]) {
     this._autoResize = val;
 
+    if (!this._initialized) {
+      return;
+    }
+
     if (val) {
       this._autoResizer.enable();
     } else {
@@ -916,7 +927,7 @@ class Flicking extends Component<FlickingEvents> {
   public set useResizeObserver(val: FlickingOptions["useResizeObserver"]) {
     this._useResizeObserver = val;
 
-    if (this._autoResize) {
+    if (this._initialized && this._autoResize) {
       this._autoResizer.enable();
     }
   }

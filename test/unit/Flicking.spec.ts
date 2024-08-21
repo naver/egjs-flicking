@@ -908,6 +908,76 @@ describe("Flicking", () => {
 
         expect(resizeSpy.calledOnce).to.be.true;
       });
+
+      ["viewport", "camera", "panel"].forEach(element => {
+        it(`should call resize when size of ${element} is changed`, async () => {
+          const flicking = await createFlicking(
+            El.viewport("1000px", "1000px").add(
+              El.camera("1000px", "1000px").add(
+                El.panel("800px", "1000px"),
+                El.panel("800px", "1000px"),
+                El.panel("800px", "1000px"),
+              )
+            ),
+            { autoResize: true, useResizeObserver: true }
+          );
+          const afterResizeSpy = sinon.spy();
+          const beforeResizeSpy = sinon.spy();
+  
+          // wait for initial resize
+          await waitTime(100);
+
+          flicking.on(EVENTS.AFTER_RESIZE, afterResizeSpy);
+          flicking.on(EVENTS.BEFORE_RESIZE, beforeResizeSpy);
+
+          switch (element) {
+            case "viewport":
+              flicking.element.style.height = "3000px";
+              break;
+            case "camera":
+              flicking.camera.element.style.height = "3000px";
+              break;
+            case "panel":
+              flicking.panels[2].element.style.height = "3000px";
+              break;
+          }
+  
+          await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+  
+          expect(afterResizeSpy.calledOnce).to.be.true;
+          expect(beforeResizeSpy.calledOnce).to.be.true;
+        });
+      });
+
+      it("should observe size of panel element if panel element is added later", async () => {
+        const flicking = await createFlicking(
+          El.viewport("1000px", "1000px").add(
+            El.camera("1000px", "1000px").add(
+              El.panel("800px", "1000px"),
+              El.panel("800px", "1000px"),
+              El.panel("800px", "1000px"),
+            )
+          ),
+          { autoResize: true, useResizeObserver: true }
+        );
+        const afterResizeSpy = sinon.spy();
+        const beforeResizeSpy = sinon.spy();
+
+        // wait for initial resize
+        await waitTime(100);
+
+        flicking.on(EVENTS.AFTER_RESIZE, afterResizeSpy);
+        flicking.on(EVENTS.BEFORE_RESIZE, beforeResizeSpy);
+
+        flicking.append(flicking.panels[0].element.outerHTML);
+
+        flicking.panels[3].element.style.height = "3000px";
+
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(afterResizeSpy.calledOnce).to.be.true;
+        expect(beforeResizeSpy.calledOnce).to.be.true;
+      });
     });
 
     describe("preventClickOnDrag", () => {

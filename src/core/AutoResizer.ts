@@ -4,6 +4,10 @@
  */
 import Flicking from "../Flicking";
 
+/**
+ * A component that detects size change and trigger resize method when the autoResize option is used
+ * @ko autoResize 옵션을 사용할 때 크기 변화를 감지하고 Flicking의 resize를 호출하는 컴포넌트
+ */
 class AutoResizer {
   private _flicking: Flicking;
   private _enabled: boolean;
@@ -36,7 +40,11 @@ class AutoResizer {
         ? new ResizeObserver(this._skipFirstResize)
         : new ResizeObserver(this._onResize);
 
-      resizeObserver.observe(flicking.viewport.element);
+      [
+        flicking.viewport.element,
+        flicking.camera.element,
+        ...flicking.panels.map(panel => panel.element)
+      ].forEach((element) => { resizeObserver.observe(element); });
 
       this._resizeObserver = resizeObserver;
     } else {
@@ -61,6 +69,13 @@ class AutoResizer {
 
     this._enabled = false;
 
+    return this;
+  }
+
+  public observe(element: Element): this {
+    if (this._resizeObserver) {
+      this._resizeObserver.observe(element);
+    }
     return this;
   }
 
