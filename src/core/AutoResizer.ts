@@ -79,6 +79,13 @@ class AutoResizer {
     return this;
   }
 
+  public unobserve(element: Element): this {
+    if (this._resizeObserver) {
+      this._resizeObserver.unobserve(element);
+    }
+    return this;
+  }
+
   private _onResize = () => {
     const flicking = this._flicking;
     const resizeDebounce = flicking.resizeDebounce;

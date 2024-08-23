@@ -339,6 +339,9 @@ abstract class Renderer {
       panelsAdded.forEach((panel) => {
         flicking.autoResizer.observe(panel.element);
       });
+      panelsRemoved.forEach((panel) => {
+        flicking.autoResizer.unobserve(panel.element);
+      });
     }
 
     void this.render();
