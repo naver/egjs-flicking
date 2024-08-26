@@ -689,6 +689,48 @@ describe("Flicking", () => {
       });
     });
 
+    describe("dragThreshold", () => {
+      it("is 1 by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.dragThreshold).to.equal(1);
+      });
+
+      it("should trigger move event when moving above dragThreshold", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { dragThreshold: 50 });
+        const moveSpy = sinon.spy();
+        flicking.on(EVENTS.MOVE, moveSpy);
+
+
+        await simulate(flicking.element, { deltaX: -51, duration: 3000 });
+
+        expect(moveSpy.called).to.be.true;
+      });
+
+      it("should not trigger move event when moving below dragThreshold", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { dragThreshold: 50 });
+        const moveSpy = sinon.spy();
+        flicking.on(EVENTS.MOVE, moveSpy);
+
+        await simulate(flicking.element, { deltaX: -49, duration: 3000 });
+
+        expect(moveSpy.called).to.be.false;
+      });
+
+      it("should update axes option when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          dragThreshold: 50
+        });
+        const panOptions = flicking.control.controller.panInput.options;
+        const prevVal = panOptions.threshold;
+
+        flicking.dragThreshold = 30;
+
+        expect(prevVal).to.equal(50);
+        expect(panOptions.threshold).to.equal(30);
+      });
+    });
+
     describe("interruptable", () => {
       it("is true by default", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
