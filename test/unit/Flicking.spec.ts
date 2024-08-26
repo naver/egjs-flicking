@@ -1360,7 +1360,7 @@ describe("Flicking", () => {
         expect(event.height).to.equal(viewportSize.height);
       });
 
-      it.only("should have correct offset on extream resize", async () => {
+      it("should have correct offset on extream resize", async () => {
         const viewportSize = {
           width: 400,
           height: 800
