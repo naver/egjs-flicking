@@ -32,6 +32,7 @@ class Camera {
   private _mode: CameraMode;
   private _el: HTMLElement;
   private _transform: string;
+  private _lookedOffset = 0;
   private _position: number;
   private _alignPos: number;
   private _offset: number;
@@ -292,6 +293,8 @@ class Camera {
    * @return {this}
    */
   public lookAt(pos: number): void {
+    const prevOffset = this._offset;
+    const isChangedOffset = this._lookedOffset !== prevOffset;
     const flicking = getFlickingAttached(this._flicking);
     const prevPos = this._position;
 
@@ -304,7 +307,12 @@ class Camera {
     if (toggled) {
       void flicking.renderer.render().then(() => {
         this.updateOffset();
+        this._lookedOffset = this._offset;
       });
+    } else if (isChangedOffset) {
+      // sync offset for renderOnlyVisible on resize
+      this.updateOffset();
+      this._lookedOffset = this._offset;
     } else {
       this.applyTransform();
     }
@@ -599,6 +607,7 @@ class Camera {
 
   private _resetInternalValues() {
     this._position = 0;
+    this._lookedOffset = 0;
     this._alignPos = 0;
     this._offset = 0;
     this._circularOffset = 0;

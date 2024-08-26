@@ -1207,6 +1207,7 @@ describe("Flicking", () => {
       expect(flicking.panels.map(panel => panel.rendered))
         .to.deep.equal([true, true, false, false, true]);
     });
+
   });
 
   describe("Events", () => {
@@ -1357,6 +1358,40 @@ describe("Flicking", () => {
         expect(resizeSpy.calledOnce).to.be.true;
         expect(event.width).to.equal(viewportSize.width);
         expect(event.height).to.equal(viewportSize.height);
+      });
+
+      it.only("should have correct offset on extream resize", async () => {
+        const viewportSize = {
+          width: 400,
+          height: 800
+        };
+
+        const flicking = await createFlicking(
+          El.viewport().setWidth(viewportSize.width).setHeight(viewportSize.height).add(
+            El.camera().add(
+              El.panel().setWidth("100%").setHeight(800),
+              El.panel().setWidth("100%").setHeight(800),
+              El.panel().setWidth("100%").setHeight(800),
+              El.panel().setWidth("100%").setHeight(800),
+              El.panel().setWidth("100%").setHeight(800)
+            )
+          ),
+          { renderOnlyVisible: true, defaultIndex: 3, horizontal: false }
+        );
+
+        const prevOffset = flicking.camera.offset;
+
+        // resize 1/4 height
+        flicking.panels.forEach(panel => {
+          panel.element.style.height = "200px";
+        });
+        flicking.element.style.height = "200px";
+
+        await flicking.resize();
+
+        // 800 * 3 2400 => 200 * 3 600
+        expect(prevOffset).to.be.equals(2400);
+        expect(flicking.camera.offset).to.be.equals(600);
       });
 
       it("should have size 0 on initialization", async () => {
