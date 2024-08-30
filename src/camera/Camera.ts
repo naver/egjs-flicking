@@ -510,8 +510,8 @@ class Camera {
   }
 
   /**
-   * Update Viewport's height to active panel's height
-   * @ko 현재 선택된 패널의 높이와 동일하도록 뷰포트의 높이를 업데이트합니다
+   * Update Viewport's height to visible panel's max height
+   * @ko 현재 활성화된 패널과 보이는 패널의 최대 높이와 동일하도록 뷰포트의 높이를 업데이트합니다
    * @throws {FlickingError}
    * {@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} When {@link Camera#init init} is not called before
    * <ko>{@link ERROR_CODE NOT_ATTACHED_TO_FLICKING} {@link Camera#init init}이 이전에 호출되지 않은 경우</ko>
@@ -521,11 +521,22 @@ class Camera {
   public updateAdaptiveHeight() {
     const flicking = getFlickingAttached(this._flicking);
     const activePanel = flicking.control.activePanel;
+    const visiblePanels = flicking.visiblePanels;
 
-    if (!flicking.horizontal || !flicking.adaptive || !activePanel) return;
+    const selectedPanels = [...visiblePanels];
+
+    if (activePanel) {
+      selectedPanels.push(activePanel);
+    }
+
+    if (!flicking.horizontal || !flicking.adaptive || !selectedPanels.length) return;
+
+
+    const maxHeight = Math.max(...selectedPanels.map(panel => panel.height));
+
 
     flicking.viewport.setSize({
-      height: activePanel.height
+      height: maxHeight
     });
   }
 
