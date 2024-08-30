@@ -337,10 +337,14 @@ abstract class Renderer {
 
     if (flicking.autoResize && flicking.useResizeObserver) {
       panelsAdded.forEach((panel) => {
-        flicking.autoResizer.observe(panel.element);
+        if (panel.element) {
+          flicking.autoResizer.observe(panel.element);
+        }
       });
       panelsRemoved.forEach((panel) => {
-        flicking.autoResizer.unobserve(panel.element);
+        if (panel.element) {
+          flicking.autoResizer.unobserve(panel.element);
+        }
       });
     }
 
