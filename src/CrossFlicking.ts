@@ -20,7 +20,7 @@ export interface CrossFlickingEvents {
  * @interface
  */
 export interface CrossFlickingOptions {
-  verticalOptions: FlickingOptions | undefined;
+  sideOptions: FlickingOptions | undefined;
   // 한쪽 움직이면 다른 한쪽 움직임을 막을지 여부
   // 이전 패널 기억 여부
 }
@@ -39,7 +39,7 @@ export interface CrossFlickingOptions {
  * @property {index} [panels.index] An index of the panel<ko>패널의 인덱스</ko>
  * @property {string | undefined} [panels.html] An `outerHTML` of the panel element<ko>패널 엘리먼트의 `outerHTML`</ko>
  */
-export interface VerticalState {
+export interface SideState {
   key: string;
   start: number;
   end: number;
@@ -54,13 +54,13 @@ export interface VerticalState {
  */
 export class CrossFlicking extends Flicking {
   // Core components
-  private _verticalFlicking: Flicking[];
+  private _sideFlicking: Flicking[];
 
   // Options
-  private _verticalOptions: CrossFlickingOptions["verticalOptions"];
+  private _sideOptions: CrossFlickingOptions["sideOptions"];
 
   // Internal State
-  private _verticalState: VerticalState[];
+  private _sideState: SideState[];
   private _moveDirection: LiteralUnion<ValueOf<typeof MOVE_DIRECTION>> | null;
   private _nextIndex: number;
 
@@ -75,8 +75,8 @@ export class CrossFlicking extends Flicking {
    * @see SnapControl
    * @see FreeControl
    */
-  public get verticalFlicking() {
-    return this._verticalFlicking;
+  public get sideFlicking() {
+    return this._sideFlicking;
   }
 
   // Internal States
@@ -89,8 +89,8 @@ export class CrossFlicking extends Flicking {
    * @default false
    * @readonly
    */
-  public get verticalState() {
-    return this._verticalState;
+  public get sideState() {
+    return this._sideState;
   }
 
   // Options Getter
@@ -103,8 +103,8 @@ export class CrossFlicking extends Flicking {
    * @default undefined
    * @see {@link https://naver.github.io/egjs-flicking/Options#changeonhold changeOnHold ( Options )}
    */
-  public get verticalOptions() {
-    return this._verticalOptions;
+  public get sideOptions() {
+    return this._sideOptions;
   }
 
   // Options Setter
@@ -114,20 +114,20 @@ export class CrossFlicking extends Flicking {
 
   public constructor(
     root: HTMLElement | string,
-    { verticalOptions = undefined }: Partial<CrossFlickingOptions> = {}
+    { sideOptions = undefined }: Partial<CrossFlickingOptions> = {}
   ) {
     super(root);
 
     // Internal states
-    this._verticalState = this._createVerticalState();
+    this._sideState = this._createSideState();
     this._moveDirection = null;
     this._nextIndex = 0;
 
     // Bind options
-    this._verticalOptions = verticalOptions;
+    this._sideOptions = sideOptions;
 
     // Create core components
-    this._verticalFlicking = this._createVerticalFlicking();
+    this._sideFlicking = this._createSideFlicking();
   }
 
   /**
@@ -157,28 +157,28 @@ export class CrossFlicking extends Flicking {
     this.on(EVENTS.MOVE, this._onHorizontalMove);
     this.on(EVENTS.MOVE_END, this._onHorizontalMoveEnd);
 
-    this._verticalFlicking.forEach((flicking) => {
-      flicking.on(EVENTS.HOLD_START, this._onVerticalHoldStart);
-      flicking.on(EVENTS.MOVE, this._onVerticalMove);
-      flicking.on(EVENTS.MOVE_END, this._onVerticalMoveEnd);
-      flicking.on(EVENTS.CHANGED, this._onVerticalChanged);
+    this._sideFlicking.forEach((flicking) => {
+      flicking.on(EVENTS.HOLD_START, this._onSideHoldStart);
+      flicking.on(EVENTS.MOVE, this._onSideMove);
+      flicking.on(EVENTS.MOVE_END, this._onSideMoveEnd);
+      flicking.on(EVENTS.CHANGED, this._onSideChanged);
     });
   }
 
-  private _createVerticalState(): VerticalState[] {
-    // data-index로 분류하기 전에 임시로 모든 children에 대해 vertical flicking으로 해보자.
+  private _createSideState(): SideState[] {
+    // data-index로 분류하기 전에 임시로 모든 children에 대해 side flicking으로 해보자.
     // panels에 data-attributes가 붙어있을 때와 안 붙어있을 때를 다르게 처리
     // 붙어있다면 가상의 viewport들을 index 갯수만큼 만들어줘야 한다
     const cameraEl = this.camera.element;
     const panels = toArray(cameraEl.children) as HTMLElement[];
-    let verticalState: VerticalState[];
-    let verticalPanels: string = "";
+    let sideState: SideState[];
+    let sidePanels: string = "";
 
     // check data attribute exists
     const groupKeys: string[] = [];
     const groupPanels: Record<string, HTMLElement[]> = {};
-    const verticalCamera = document.createElement("div");
-    verticalCamera.classList.add(CLASS.CAMERA);
+    const sideCamera = document.createElement("div");
+    sideCamera.classList.add(CLASS.CAMERA);
 
     panels.forEach((panel) => {
       const groupKey = getDataAttributes(panel, "data-cross-").groupkey;
@@ -193,12 +193,12 @@ export class CrossFlicking extends Flicking {
 
     if (groupKeys.length) {
       panels.forEach(() => this.remove(0));
-      verticalState = groupKeys.reduce(
-        (state: VerticalState[], key: string) => {
+      sideState = groupKeys.reduce(
+        (state: SideState[], key: string) => {
           const start = state.length ? +state[state.length - 1].end + 1 : 0;
           const element = groupPanels[key].reduce(
             (el: HTMLElement, panel: HTMLElement) => {
-              verticalPanels += panel.outerHTML;
+              sidePanels += panel.outerHTML;
               el.appendChild(panel);
               return el;
             },
@@ -217,19 +217,19 @@ export class CrossFlicking extends Flicking {
         []
       );
 
-      verticalCamera.innerHTML = verticalPanels;
+      sideCamera.innerHTML = sidePanels;
       cameraEl.innerHTML = "";
       groupKeys.forEach(() => {
         const panel = document.createElement("div");
         panel.classList.add(CLASS.VIEWPORT, CLASS.VERTICAL);
-        panel.innerHTML = verticalCamera.outerHTML;
+        panel.innerHTML = sideCamera.outerHTML;
         this.append(panel);
       });
     } else {
-      verticalState = panels.reduce(
-        (state: VerticalState[], panel: HTMLElement, i: number) => {
+      sideState = panels.reduce(
+        (state: SideState[], panel: HTMLElement, i: number) => {
           const start = state.length ? +state[state.length - 1].end + 1 : 0;
-          verticalPanels += panel.innerHTML;
+          sidePanels += panel.innerHTML;
           return [
             ...state,
             {
@@ -243,35 +243,35 @@ export class CrossFlicking extends Flicking {
         []
       );
 
-      verticalCamera.innerHTML = verticalPanels;
+      sideCamera.innerHTML = sidePanels;
       panels.forEach((panel) => {
         [CLASS.VIEWPORT, CLASS.VERTICAL].forEach((className) => {
           if (!panel.classList.contains(className)) {
             panel.classList.add(className);
           }
         });
-        panel.innerHTML = verticalCamera.outerHTML;
+        panel.innerHTML = sideCamera.outerHTML;
       });
     }
 
-    return verticalState;
+    return sideState;
   }
 
-  private _createVerticalFlicking(): Flicking[] {
+  private _createSideFlicking(): Flicking[] {
     return this.camera.children.map((panel, i) => {
       return new Flicking(panel, {
-        ...this.verticalOptions,
+        ...this.sideOptions,
         horizontal: false,
         panelsPerView: 1,
-        defaultIndex: this._verticalState[i].start,
+        defaultIndex: this._sideState[i].start,
       });
     });
   }
 
   private _syncToCategory(index: number, outerIndex: number): void {
     this.stopAnimation();
-    this._verticalFlicking.forEach((child, i) => {
-      const { start, end } = this._verticalState[i];
+    this._sideFlicking.forEach((child, i) => {
+      const { start, end } = this._sideState[i];
 
       if (start <= index && end >= index && outerIndex !== i) {
         child.stopAnimation();
@@ -288,7 +288,7 @@ export class CrossFlicking extends Flicking {
 
   private _onHorizontalMove = (e: MoveEvent): void => {
     if (e.isTrusted && !this._moveDirection) {
-      this._verticalFlicking.forEach((child) => {
+      this._sideFlicking.forEach((child) => {
         child.dragThreshold = Infinity;
       });
       this._moveDirection = MOVE_DIRECTION.HORIZONTAL;
@@ -298,7 +298,7 @@ export class CrossFlicking extends Flicking {
   private _onHorizontalMoveEnd = (e: MoveEndEvent): void => {
     const visiblePanels = this.visiblePanels;
 
-    this._verticalFlicking.forEach((child) => {
+    this._sideFlicking.forEach((child) => {
       child.dragThreshold = 10;
     });
     this._moveDirection = null;
@@ -312,9 +312,9 @@ export class CrossFlicking extends Flicking {
       this._nextIndex = visiblePanels[0].index;
     }
 
-    this._verticalFlicking.forEach((child, i) => {
+    this._sideFlicking.forEach((child, i) => {
       if (this._nextIndex !== i) {
-        const { start, end } = this._verticalState[i];
+        const { start, end } = this._sideState[i];
 
         if (child.index < start) {
           child.stopAnimation();
@@ -328,37 +328,37 @@ export class CrossFlicking extends Flicking {
 
     if (e.isTrusted) {
       this._syncToCategory(
-        this._verticalFlicking[this._nextIndex].index,
+        this._sideFlicking[this._nextIndex].index,
         this._nextIndex
       );
     }
   };
 
-  private _onVerticalHoldStart = (): void => {
-    this._verticalFlicking.forEach((child) => {
+  private _onSideHoldStart = (): void => {
+    this._sideFlicking.forEach((child) => {
       child.dragThreshold = 10;
     });
     this._moveDirection = null;
   };
 
-  private _onVerticalMove = (e: MoveEvent): void => {
+  private _onSideMove = (e: MoveEvent): void => {
     if (e.isTrusted && !this._moveDirection) {
       this.dragThreshold = Infinity;
       this._moveDirection = MOVE_DIRECTION.VERTICAL;
     }
   };
 
-  private _onVerticalMoveEnd = (): void => {
+  private _onSideMoveEnd = (): void => {
     this.dragThreshold = 10;
     this._moveDirection = null;
   };
 
-  private _onVerticalChanged = (e: ChangedEvent): void => {
+  private _onSideChanged = (e: ChangedEvent): void => {
     // this.visiblePanels.length 가 2보다 크다면 가로 방향 Flicking이 조작 중이라는 것을 의미합니다.
     // 이 경우 가로 방향 Flicking의 이동이 완전히 끝난 뒤 _onHorizontalMoveEnd 에서 syncToCategory할 것이므로 여기서는 하지 않습니다.
     if (
       this.visiblePanels.length < 2 &&
-      this._verticalFlicking[this.index] === e.currentTarget
+      this._sideFlicking[this.index] === e.currentTarget
     ) {
       this._syncToCategory(e.index, this.index);
     }
