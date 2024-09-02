@@ -28,6 +28,13 @@ describe.only("CrossFlicking", () => {
   });
 
   describe("Options", () => {
+    // describe("preserveIndex", () => {
+    //   it("is true by default", async () => {
+    //     const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+    //     expect(flicking.preserveIndex).to.equal(true);
+    //   });
+    // });
   });
 
   describe("Events", () => {
@@ -42,14 +49,13 @@ describe.only("CrossFlicking", () => {
   });
 
   describe("Key Features", () => {
-    it("should return viewport element", async () => {
+    it("should change index of main flicking from index of side flicking", async () => {
       const flicking = await createCrossFlicking(El.DEFAULT_CROSS);
-      void flicking.verticalFlicking[0].moveTo(5, 0);
-      console.log(flicking.index)
-      console.log(flicking.verticalFlicking[0].index)
-      console.log(flicking.verticalFlicking[1].index)
-      expect(flicking.element).to.be.an.instanceOf(HTMLElement);
-      expect(flicking.element).to.equal(flicking.viewport.element);
+      void flicking.sideFlicking[0].moveTo(5, 0);
+
+      expect(flicking.index).to.equal(1);
+      expect(flicking.sideFlicking[0].index).to.equal(2);
+      expect(flicking.sideFlicking[1].index).to.equal(5);
     });
   });
 
