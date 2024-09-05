@@ -4,6 +4,7 @@
  */
 import Flicking from "./Flicking";
 import type { FlickingOptions, FlickingEvents } from "./Flicking";
+import type { CrossFlickingOptions } from "./CrossFlicking";
 
 export * from "./CrossFlicking";
 
@@ -17,6 +18,6 @@ export * from "./utils";
 
 export * from "./type/event";
 export * from "./type/external";
-export type { FlickingOptions, FlickingEvents };
+export type { FlickingOptions, FlickingEvents, CrossFlickingOptions };
 
 export default Flicking;

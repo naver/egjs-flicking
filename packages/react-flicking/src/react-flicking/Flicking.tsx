@@ -29,14 +29,14 @@ import ReactElementProvider from "./ReactElementProvider";
 class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = DEFAULT_PROPS;
 
-  @withFlickingMethods private _vanillaFlicking: VanillaFlicking;
+  @withFlickingMethods protected _vanillaFlicking: VanillaFlicking;
   private _panels: React.RefObject<StrictPanel | NonStrictPanel | HTMLDivElement>[] = [];
-  private _pluginsDiffer: ListDiffer<any>;
-  private _jsxDiffer: ListDiffer<React.ReactElement>;
-  private _viewportElement: HTMLElement;
+  protected _pluginsDiffer: ListDiffer<any>;
+  protected _jsxDiffer: ListDiffer<React.ReactElement>;
+  protected _viewportElement: HTMLElement;
   private _diffResult: DiffResult<React.ReactElement> | null;
   private _renderEmitter = new Component<{ render: void }>();
-  private _prevChildren: React.ReactElement[];
+  protected _prevChildren: React.ReactElement[];
 
   public get reactPanels() { return this._panels.map(panel => panel.current!); }
   public get renderEmitter() { return this._renderEmitter; }
@@ -216,7 +216,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       : children.map(() => React.createRef());
   }
 
-  private _bindEvents() {
+  protected _bindEvents() {
     const flicking = this._vanillaFlicking!;
 
     Object.keys(EVENTS).forEach((eventKey: keyof typeof EVENTS) => {
@@ -231,12 +231,12 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       });
     });
 
-    flicking.once(EVENTS.READY, () => {
-      this.forceUpdate();
-    });
+    // flicking.once(EVENTS.READY, () => {
+    //   this.forceUpdate();
+    // });
   }
 
-  private _checkPlugins() {
+  protected _checkPlugins() {
     const flicking = this._vanillaFlicking;
     const { list, added, removed, prevList } = this._pluginsDiffer.update(this.props.plugins!) as DiffResult<Plugin>;
 
@@ -260,7 +260,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     return same;
   }
 
-  private _getChildren(children: React.ReactNode = this.props.children) {
+  protected _getChildren(children: React.ReactNode = this.props.children) {
     return (React.Children.toArray(children) as Array<React.ReactElement<any>>)
       .filter(child => child.type !== ViewportSlot)
       .reduce((all, child) => {

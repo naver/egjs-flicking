@@ -19,7 +19,7 @@ export interface CrossFlickingEvents {
 /**
  * @interface
  */
-export interface CrossFlickingOptions {
+export interface CrossFlickingOptions extends FlickingOptions {
   sideOptions: FlickingOptions | undefined;
   // 한쪽 움직이면 다른 한쪽 움직임을 막을지 여부
   // 이전 패널 기억 여부

@@ -17,6 +17,7 @@ export default class Header extends React.Component {
         <li><Link to="/autoplay">AutoPlay</Link></li>
         <li><Link to="/arrow">Arrow</Link></li>
         <li><Link to="/prop">Prop Change</Link></li>
+        <li><Link to="/cross">Cross Flicking</Link></li>
       </ul>
     );
   }
