@@ -231,9 +231,9 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       });
     });
 
-    // flicking.once(EVENTS.READY, () => {
-    //   this.forceUpdate();
-    // });
+    flicking.once(EVENTS.READY, () => {
+      this.forceUpdate();
+    });
   }
 
   protected _checkPlugins() {
@@ -268,7 +268,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       }, []) as Array<React.ReactElement<any>>;
   }
 
-  private _getViewportSlot() {
+  protected _getViewportSlot() {
     return (React.Children.toArray(this.props.children) as Array<React.ReactElement<any>>)
       .filter(child => child.type === ViewportSlot);
   }
@@ -309,7 +309,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     });
   }
 
-  private _getPanels() {
+  protected _getPanels() {
     const origChildren = this._getChildren();
     const vanillaFlicking = this._vanillaFlicking;
     const diffResult = this._diffResult;

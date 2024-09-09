@@ -39,22 +39,28 @@ class CrossFlicking extends Flicking {
     const props = this.props as Required<FlickingProps & CrossFlickingOptions>;
     const rendererOptions: ReactRendererOptions = {
       reactFlicking: this,
-      align: props.align,
-      strategy: props.virtual && props.panelsPerView > 0
-        ? new VirtualRenderingStrategy()
-        : new NormalRenderingStrategy({
-          providerCtor: ReactElementProvider
-        })
+      strategy: new NormalRenderingStrategy({
+        providerCtor: ReactElementProvider
+      })
     };
 
     const flicking = new VanillaCrossFlicking(
       this._viewportElement,
       {
         ...props,
-        externalRenderer: new ReactRenderer(rendererOptions)
+        externalRenderer: new ReactRenderer(rendererOptions),
+        sideOptions: {
+          ...props.sideOptions,
+          externalRenderer: new ReactRenderer({
+            reactFlicking: this,
+            strategy: new NormalRenderingStrategy({
+              providerCtor: ReactElementProvider
+            })
+          }),
+        }
       },
     );
- 
+
     this._vanillaFlicking = flicking;
 
     const children = this._getChildren();
@@ -68,6 +74,63 @@ class CrossFlicking extends Flicking {
     if (props.status) {
       flicking.setStatus(props.status);
     }
+  }
+
+  public render() {
+    const props = this.props;
+    const Viewport = props.viewportTag as any;
+    const Camera = props.cameraTag as any;
+    const attributes: { [key: string]: any } = {};
+    const flicking = this._vanillaFlicking;
+
+    this.beforeRender();
+
+    for (const name in props) {
+      if (!(name in DEFAULT_PROPS) && !(name in VanillaFlicking.prototype)) {
+        attributes[name] = props[name];
+      }
+    }
+
+    const initialized = flicking && flicking.initialized;
+    const viewportClasses: string[] = ["flicking-viewport"];
+    const cameraClasses: string[] = ["flicking-camera"];
+    const isHorizontal = flicking
+      ? flicking.horizontal
+      : props.horizontal ?? true;
+
+    if (!isHorizontal) {
+      viewportClasses.push("vertical");
+    }
+    if (props.hideBeforeInit && !initialized) {
+      viewportClasses.push("flicking-hidden");
+    }
+    if (attributes.className) {
+      viewportClasses.push(attributes.className);
+    }
+    if (props.cameraClass) {
+      cameraClasses.push(props.cameraClass);
+    }
+
+    const cameraProps = !initialized && props.firstPanelSize
+      ? { style: {
+        transform: getDefaultCameraTransform(this.props.align, this.props.horizontal, this.props.firstPanelSize)
+      }}
+      : {};
+
+    const panels = this._getPanels();
+
+    console.log("panels", panels);
+
+    return (
+      <Viewport {...attributes} className={viewportClasses.join(" ")} ref={(e?: HTMLElement) => {
+        e && (this._viewportElement = e);
+      }}>
+        <Camera className={cameraClasses.join(" ")} {...cameraProps}>
+          { panels }
+        </Camera>
+        { this._getViewportSlot() }
+      </Viewport>
+    );
   }
 }
 

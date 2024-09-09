@@ -27,6 +27,9 @@ class StrictPanel extends React.Component<{ children?: React.ReactElement }> {
   }
 
   private _getElement() {
+    console.log(this.props.children, React.cloneElement(React.Children.only(this.props.children) as React.ReactElement, {
+      ref: this._elRef
+    }));
     return React.cloneElement(React.Children.only(this.props.children) as React.ReactElement, {
       ref: this._elRef
     });

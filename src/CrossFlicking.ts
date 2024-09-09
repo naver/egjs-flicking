@@ -20,7 +20,7 @@ export interface CrossFlickingEvents {
  * @interface
  */
 export interface CrossFlickingOptions extends FlickingOptions {
-  sideOptions: FlickingOptions | undefined;
+  sideOptions: Partial<FlickingOptions> | undefined;
   // 한쪽 움직이면 다른 한쪽 움직임을 막을지 여부
   // 이전 패널 기억 여부
 }
@@ -169,6 +169,7 @@ export class CrossFlicking extends Flicking {
     // data-index로 분류하기 전에 임시로 모든 children에 대해 side flicking으로 해보자.
     // panels에 data-attributes가 붙어있을 때와 안 붙어있을 때를 다르게 처리
     // 붙어있다면 가상의 viewport들을 index 갯수만큼 만들어줘야 한다
+    const viewportEl = this.element;
     const cameraEl = this.camera.element;
     const panels = toArray(cameraEl.children) as HTMLElement[];
     let sideState: SideState[];
@@ -180,26 +181,100 @@ export class CrossFlicking extends Flicking {
     const sideCamera = document.createElement("div");
     sideCamera.classList.add(CLASS.CAMERA);
 
-    panels.forEach((panel) => {
-      const groupKey = getDataAttributes(panel, "data-cross-").groupkey;
-      if (groupKey && !includes(groupKeys, groupKey)) {
-        groupKeys.push(groupKey);
-        groupPanels[groupKey] = [panel];
-      } else if (groupKey) {
-        groupPanels[groupKey].push(panel);
-      }
-      return groupKey;
-    });
+    const isCrossStructure = getDataAttributes(viewportEl, "data-cross-").structure;
 
-    if (groupKeys.length) {
-      panels.forEach(() => this.remove(0));
+    if (!isCrossStructure) {
+      viewportEl.setAttribute("data-cross-structure", "true");
+
+      panels.forEach((panel) => {
+        const groupKey = getDataAttributes(panel, "data-cross-").groupkey;
+        if (groupKey && !includes(groupKeys, groupKey)) {
+          groupKeys.push(groupKey);
+          groupPanels[groupKey] = [panel];
+        } else if (groupKey) {
+          groupPanels[groupKey].push(panel);
+        }
+      });
+
+      if (groupKeys.length) {
+        panels.forEach(() => this.remove(0));
+        sideState = groupKeys.reduce(
+          (state: SideState[], key: string) => {
+            const start = state.length ? +state[state.length - 1].end + 1 : 0;
+            const element = groupPanels[key].reduce(
+              (el: HTMLElement, panel: HTMLElement) => {
+                sidePanels += panel.outerHTML;
+                el.innerHTML += panel.outerHTML;
+                return el;
+              },
+              document.createElement("div")
+            );
+            return [
+              ...state,
+              {
+                key,
+                start,
+                end: start + groupPanels[key].length - 1,
+                element: element
+              }
+            ];
+          },
+          []
+        );
+
+        sideCamera.innerHTML = sidePanels;
+        cameraEl.innerHTML = "";
+        groupKeys.forEach(() => {
+          const panel = document.createElement("div");
+          panel.classList.add(CLASS.VIEWPORT, CLASS.VERTICAL);
+          panel.innerHTML = sideCamera.outerHTML;
+          this.append(panel);
+        });
+      } else {
+        sideState = panels.reduce(
+          (state: SideState[], panel: HTMLElement, i: number) => {
+            const start = state.length ? +state[state.length - 1].end + 1 : 0;
+            sidePanels += panel.innerHTML;
+            return [
+              ...state,
+              {
+                key: i.toString(),
+                start,
+                end: start + panel.children.length - 1,
+                element: panel
+              }
+            ];
+          },
+          []
+        );
+
+        sideCamera.innerHTML = sidePanels;
+        panels.forEach((panel) => {
+          [CLASS.VIEWPORT, CLASS.VERTICAL].forEach((className) => {
+            if (!panel.classList.contains(className)) {
+              panel.classList.add(className);
+            }
+          });
+          panel.innerHTML = sideCamera.outerHTML;
+        });
+      }
+    } else {
+      (toArray(panels[0].children[0].children) as HTMLElement[]).forEach((panel) => {
+        const groupKey = getDataAttributes(panel, "data-cross-").groupkey;
+        if (groupKey && !includes(groupKeys, groupKey)) {
+          groupKeys.push(groupKey);
+          groupPanels[groupKey] = [panel];
+        } else if (groupKey) {
+          groupPanels[groupKey].push(panel);
+        }
+      });
+
       sideState = groupKeys.reduce(
         (state: SideState[], key: string) => {
           const start = state.length ? +state[state.length - 1].end + 1 : 0;
           const element = groupPanels[key].reduce(
             (el: HTMLElement, panel: HTMLElement) => {
-              sidePanels += panel.outerHTML;
-              el.appendChild(panel);
+              el.innerHTML += panel.outerHTML;
               return el;
             },
             document.createElement("div")
@@ -210,48 +285,12 @@ export class CrossFlicking extends Flicking {
               key,
               start,
               end: start + groupPanels[key].length - 1,
-              element: element,
-            },
+              element: element
+            }
           ];
         },
         []
       );
-
-      sideCamera.innerHTML = sidePanels;
-      cameraEl.innerHTML = "";
-      groupKeys.forEach(() => {
-        const panel = document.createElement("div");
-        panel.classList.add(CLASS.VIEWPORT, CLASS.VERTICAL);
-        panel.innerHTML = sideCamera.outerHTML;
-        this.append(panel);
-      });
-    } else {
-      sideState = panels.reduce(
-        (state: SideState[], panel: HTMLElement, i: number) => {
-          const start = state.length ? +state[state.length - 1].end + 1 : 0;
-          sidePanels += panel.innerHTML;
-          return [
-            ...state,
-            {
-              key: i.toString(),
-              start,
-              end: start + panel.children.length - 1,
-              element: panel,
-            },
-          ];
-        },
-        []
-      );
-
-      sideCamera.innerHTML = sidePanels;
-      panels.forEach((panel) => {
-        [CLASS.VIEWPORT, CLASS.VERTICAL].forEach((className) => {
-          if (!panel.classList.contains(className)) {
-            panel.classList.add(className);
-          }
-        });
-        panel.innerHTML = sideCamera.outerHTML;
-      });
     }
 
     return sideState;
@@ -263,7 +302,7 @@ export class CrossFlicking extends Flicking {
         ...this.sideOptions,
         horizontal: false,
         panelsPerView: 1,
-        defaultIndex: this._sideState[i].start,
+        defaultIndex: this._sideState[i].start
       });
     });
   }
