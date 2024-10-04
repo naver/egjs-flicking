@@ -335,6 +335,19 @@ abstract class Renderer {
     // Update camera & control
     this._updateCameraAndControl();
 
+    if (flicking.autoResize && flicking.useResizeObserver) {
+      panelsAdded.forEach((panel) => {
+        if (panel.element) {
+          flicking.autoResizer.observe(panel.element);
+        }
+      });
+      panelsRemoved.forEach((panel) => {
+        if (panel.element) {
+          flicking.autoResizer.unobserve(panel.element);
+        }
+      });
+    }
+
     void this.render();
 
     if (!flicking.animating) {
