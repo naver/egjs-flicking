@@ -52,6 +52,7 @@ describe.only("CrossFlicking", () => {
     it("should change index of main flicking from index of side flicking", async () => {
       const flicking = await createCrossFlicking(El.DEFAULT_CROSS);
       void flicking.sideFlicking[0].moveTo(5, 0);
+      tick(100);
 
       expect(flicking.index).to.equal(1);
       expect(flicking.sideFlicking[0].index).to.equal(2);

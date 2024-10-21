@@ -4,6 +4,7 @@
  */
 import Flicking from "./Flicking";
 import CrossFlicking from "./CrossFlicking";
+import CrossGroup from "./CrossGroup";
 import ViewportSlot from "./ViewportSlot";
 
 export * from "@egjs/flicking";
@@ -11,6 +12,7 @@ export * from "./types";
 
 export {
   CrossFlicking,
+  CrossGroup,
   ViewportSlot,
 }
 export default Flicking;

@@ -114,9 +114,9 @@ export class CrossFlicking extends Flicking {
 
   public constructor(
     root: HTMLElement | string,
-    { sideOptions = undefined }: Partial<CrossFlickingOptions> = {}
+    options: Partial<CrossFlickingOptions> = {}
   ) {
-    super(root);
+    super(root, options);
 
     // Internal states
     this._sideState = this._createSideState();
@@ -124,7 +124,7 @@ export class CrossFlicking extends Flicking {
     this._nextIndex = 0;
 
     // Bind options
-    this._sideOptions = sideOptions;
+    this._sideOptions = options.sideOptions;
 
     // Create core components
     this._sideFlicking = this._createSideFlicking();
@@ -172,7 +172,7 @@ export class CrossFlicking extends Flicking {
     const viewportEl = this.element;
     const cameraEl = this.camera.element;
     const panels = toArray(cameraEl.children) as HTMLElement[];
-    let sideState: SideState[];
+    let sideState: SideState[] = [];
     let sidePanels: string = "";
 
     // check data attribute exists
@@ -197,7 +197,6 @@ export class CrossFlicking extends Flicking {
       });
 
       if (groupKeys.length) {
-        panels.forEach(() => this.remove(0));
         sideState = groupKeys.reduce(
           (state: SideState[], key: string) => {
             const start = state.length ? +state[state.length - 1].end + 1 : 0;
@@ -222,13 +221,10 @@ export class CrossFlicking extends Flicking {
           []
         );
 
-        sideCamera.innerHTML = sidePanels;
-        cameraEl.innerHTML = "";
-        groupKeys.forEach(() => {
-          const panel = document.createElement("div");
-          panel.classList.add(CLASS.VIEWPORT, CLASS.VERTICAL);
-          panel.innerHTML = sideCamera.outerHTML;
-          this.append(panel);
+        this.remove(0, this.panelCount - groupKeys.length);
+        sideState.forEach((_, i) => {
+          const panel = this.camera.children[i];
+          Array.from(panel.attributes).forEach(attribute => panel.removeAttribute(attribute.name));
         });
       } else {
         sideState = panels.reduce(
@@ -247,17 +243,18 @@ export class CrossFlicking extends Flicking {
           },
           []
         );
-
-        sideCamera.innerHTML = sidePanels;
-        panels.forEach((panel) => {
-          [CLASS.VIEWPORT, CLASS.VERTICAL].forEach((className) => {
-            if (!panel.classList.contains(className)) {
-              panel.classList.add(className);
-            }
-          });
-          panel.innerHTML = sideCamera.outerHTML;
-        });
       }
+
+      sideCamera.innerHTML = sidePanels;
+      sideState.forEach((_, i) => {
+        const panel = this.camera.children[i];
+        [CLASS.VIEWPORT, CLASS.VERTICAL].forEach((className) => {
+          if (!panel.classList.contains(className)) {
+            panel.classList.add(className);
+          }
+        });
+        panel.innerHTML = sideCamera.outerHTML;
+      });
     } else {
       (toArray(panels[0].children[0].children) as HTMLElement[]).forEach((panel) => {
         const groupKey = getDataAttributes(panel, "data-cross-").groupkey;
@@ -297,12 +294,12 @@ export class CrossFlicking extends Flicking {
   }
 
   private _createSideFlicking(): Flicking[] {
-    return this.camera.children.map((panel, i) => {
-      return new Flicking(panel, {
+    return this.sideState.map((state, i) => {
+      return new Flicking(this.camera.children[i], {
         ...this.sideOptions,
         horizontal: false,
         panelsPerView: 1,
-        defaultIndex: this._sideState[i].start
+        defaultIndex: state.start
       });
     });
   }
@@ -351,18 +348,21 @@ export class CrossFlicking extends Flicking {
       this._nextIndex = visiblePanels[0].index;
     }
 
-    this._sideFlicking.forEach((child, i) => {
-      if (this._nextIndex !== i) {
-        const { start, end } = this._sideState[i];
+    // _syncToCategory에서 완전히 가로 이동이 이루어지기 전에 세로 방향 index가 변하는 경우가 있어 timeout으로 처리
+    setTimeout(() => {
+      this._sideFlicking.forEach((child, i) => {
+        if (this._nextIndex !== i) {
+          const { start, end } = this._sideState[i];
 
-        if (child.index < start) {
-          child.stopAnimation();
-          void child.moveTo(start, 0);
-        } else if (child.index > end) {
-          child.stopAnimation();
-          void child.moveTo(end, 0);
+          if (child.index < start) {
+            child.stopAnimation();
+            void child.moveTo(start, 0);
+          } else if (child.index > end) {
+            child.stopAnimation();
+            void child.moveTo(end, 0);
+          }
         }
-      }
+      });
     });
 
     if (e.isTrusted) {

@@ -4,6 +4,6 @@
  */
 import React, { ReactNode } from "react";
 
-const CrossGroup = React.memo((props: { children?: ReactNode }) => <>{props.children}</>);
+const CrossGroup = React.forwardRef((props: { children?: ReactNode }, ref: React.Ref<HTMLDivElement>) => <div ref={ref}>{props.children}</div>);
 
 export default CrossGroup;
