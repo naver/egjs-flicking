@@ -1,0 +1,7 @@
+
+.flicking-viewport {
+  width: 400px;
+  height: 600px;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+}
