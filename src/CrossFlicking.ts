@@ -9,36 +9,17 @@ import { LiteralUnion, ValueOf } from "./type/internal";
 import { CLASS, EVENTS, MOVE_DIRECTION } from "./const/external";
 import { getDataAttributes, includes, toArray } from "./utils";
 
-/**
- * @interface
- */
 export interface CrossFlickingEvents {
   // FlickingEvent 들을 확장하자...
 }
 
-/**
- * @interface
- */
 export interface CrossFlickingOptions extends FlickingOptions {
   sideOptions: Partial<FlickingOptions> | undefined;
-  // 한쪽 움직이면 다른 한쪽 움직임을 막을지 여부
-  // 이전 패널 기억 여부
+  preserveIndex: boolean | undefined;
+  disableSlideOnHold: boolean | undefined;
+  disableIndexSync: boolean | undefined;
 }
 
-/**
- * Flicking Status returned by {@link Flicking#getStatus}
- * @ko {@link Flicking#getStatus}에 의해 반환된 Flicking 상태 객체
- * @interface
- * @property {number} index An index of the active panel<ko>활성화된 패널의 인덱스</ko>
- * @property {object} position A info to restore camera {@link Camera#position position}<ko>카메라 {@link Camera#position position}을 설정하기 위한 정보들</ko>
- * @property {number} [position.panel] An index of the panel camera is located at<ko>카메라가 위치한 패널의 인덱스</ko>
- * @property {number} [position.progressInPanel] A progress of the camera position inside the panel<ko>패널 내에서의 카메라 위치의 진행도</ko>
- * @property {number} visibleOffset An offset to visible panel's original index. This value is available only when `visiblePanelsOnly` is `true`
- * <ko>현재 보이는 패널들을 저장했을 때, 원래의 인덱스 대비 offset. `visiblePanelsOnly` 옵션을 사용했을 때만 사용 가능합니다</ko>
- * @property {object[]} panels A data array of panels<ko>패널의 정보를 담은 배열</ko>
- * @property {index} [panels.index] An index of the panel<ko>패널의 인덱스</ko>
- * @property {string | undefined} [panels.html] An `outerHTML` of the panel element<ko>패널 엘리먼트의 `outerHTML`</ko>
- */
 export interface SideState {
   key: string;
   start: number;
@@ -46,18 +27,15 @@ export interface SideState {
   element: HTMLElement;
 }
 
-/**
- * @extends Component
- * @support {"ie": "9+(with polyfill)", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "4.X+"}
- * @requires {@link https://github.com/naver/egjs-component|@egjs/component}
- * @requires {@link https://github.com/naver/egjs-axes|@egjs/axes}
- */
 export class CrossFlicking extends Flicking {
   // Core components
   private _sideFlicking: Flicking[];
 
   // Options
   private _sideOptions: CrossFlickingOptions["sideOptions"];
+  private _preserveIndex: CrossFlickingOptions["preserveIndex"];
+  private _disableSlideOnHold: CrossFlickingOptions["disableSlideOnHold"];
+  private _disableIndexSync: CrossFlickingOptions["disableIndexSync"];
 
   // Internal State
   private _sideState: SideState[];
@@ -65,56 +43,45 @@ export class CrossFlicking extends Flicking {
   private _nextIndex: number;
 
   // Components
-  /**
-   * {@link Control} instance of the Flicking
-   * @ko 현재 Flicking에 활성화된 {@link Control} 인스턴스
-   * @type {Control}
-   * @default SnapControl
-   * @readonly
-   * @see Control
-   * @see SnapControl
-   * @see FreeControl
-   */
   public get sideFlicking() {
     return this._sideFlicking;
   }
 
-  // Internal States
-  /**
-   * Whether Flicking's {@link Flicking#init init()} is called.
-   * This is `true` when {@link Flicking#init init()} is called, and is `false` after calling {@link Flicking#destroy destroy()}.
-   * @ko Flicking의 {@link Flicking#init init()}이 호출되었는지를 나타내는 멤버 변수.
-   * 이 값은 {@link Flicking#init init()}이 호출되었으면 `true`로 변하고, {@link Flicking#destroy destroy()}호출 이후에 다시 `false`로 변경됩니다.
-   * @type {boolean}
-   * @default false
-   * @readonly
-   */
   public get sideState() {
     return this._sideState;
   }
 
   // Options Getter
-  /**
-   * Change active panel index on mouse/touch hold while animating.
-   * `index` of the `willChange`/`willRestore` event will be used as new index.
-   * @ko 애니메이션 도중 마우스/터치 입력시 현재 활성화된 패널의 인덱스를 변경합니다.
-   * `willChange`/`willRestore` 이벤트의 `index`값이 새로운 인덱스로 사용될 것입니다.
-   * @type {FlickingOptions}
-   * @default undefined
-   * @see {@link https://naver.github.io/egjs-flicking/Options#changeonhold changeOnHold ( Options )}
-   */
-  public get sideOptions() {
-    return this._sideOptions;
-  }
+  public get sideOptions() { return this._sideOptions; }
+
+  public get preserveIndex() { return this._preserveIndex; }
+
+  public get disableSlideOnHold() { return this._disableSlideOnHold; }
+
+  public get disableIndexSync() { return this._disableIndexSync; }
 
   // Options Setter
-  // public set align(val: FlickingOptions["align"]) {
-  //   this._align = val;
-  // }
+  public set sideOptions(val: CrossFlickingOptions["sideOptions"]) {
+    this._sideOptions = val;
+  }
+  public set preserveIndex(val: CrossFlickingOptions["preserveIndex"]) {
+    this._preserveIndex = val;
+  }
+  public set disableSlideOnHold(val: CrossFlickingOptions["disableSlideOnHold"]) {
+    this._disableSlideOnHold = val;
+  }
+  public set disableIndexSync(val: CrossFlickingOptions["disableIndexSync"]) {
+    this._disableIndexSync = val;
+  }
 
   public constructor(
     root: HTMLElement | string,
-    options: Partial<CrossFlickingOptions> = {}
+    options: Partial<CrossFlickingOptions> = {
+      sideOptions: {},
+      preserveIndex: false,
+      disableSlideOnHold: false,
+      disableIndexSync: false,
+    }
   ) {
     super(root, options);
 
@@ -125,28 +92,18 @@ export class CrossFlicking extends Flicking {
 
     // Bind options
     this._sideOptions = options.sideOptions;
+    this._preserveIndex = options.preserveIndex;
+    this._disableSlideOnHold = options.disableSlideOnHold;
+    this._disableIndexSync = options.disableIndexSync;
 
     // Create core components
     this._sideFlicking = this._createSideFlicking();
   }
 
-  /**
-   * Initialize Flicking and move to the default index
-   * This is automatically called on Flicking's constructor when `autoInit` is true(default)
-   * @ko Flicking을 초기화하고, 디폴트 인덱스로 이동합니다
-   * 이 메소드는 `autoInit` 옵션이 true(default)일 경우 Flicking이 생성될 때 자동으로 호출됩니다
-   * @fires Flicking#ready
-   * @return {Promise<void>}
-   */
   public init(): Promise<void> {
     return super.init().then(() => this._addComponentEvents());
   }
 
-  /**
-   * Destroy Flicking and remove all event handlers
-   * @ko Flicking과 하위 컴포넌트들을 초기 상태로 되돌리고, 부착된 모든 이벤트 핸들러를 제거합니다
-   * @return {void}
-   */
   public destroy(): void {
     // TODO 모든 child flicking destroy
     super.destroy();
@@ -165,10 +122,24 @@ export class CrossFlicking extends Flicking {
     });
   }
 
+  private _getGroupFromAttribute(panels: HTMLElement[]): Record<string, HTMLElement[]> {
+    const groupKeys: string[] = [];
+    const groupPanels: Record<string, HTMLElement[]> = {};
+
+    panels.forEach((panel) => {
+      const groupKey = getDataAttributes(panel, "data-cross-").groupkey;
+      if (groupKey && !includes(groupKeys, groupKey)) {
+        groupKeys.push(groupKey);
+        groupPanels[groupKey] = [panel];
+      } else if (groupKey) {
+        groupPanels[groupKey].push(panel);
+      }
+    });
+
+    return groupPanels;
+  }
+
   private _createSideState(): SideState[] {
-    // data-index로 분류하기 전에 임시로 모든 children에 대해 side flicking으로 해보자.
-    // panels에 data-attributes가 붙어있을 때와 안 붙어있을 때를 다르게 처리
-    // 붙어있다면 가상의 viewport들을 index 갯수만큼 만들어줘야 한다
     const viewportEl = this.element;
     const cameraEl = this.camera.element;
     const panels = toArray(cameraEl.children) as HTMLElement[];
@@ -176,8 +147,6 @@ export class CrossFlicking extends Flicking {
     let sidePanels: string = "";
 
     // check data attribute exists
-    const groupKeys: string[] = [];
-    const groupPanels: Record<string, HTMLElement[]> = {};
     const sideCamera = document.createElement("div");
     sideCamera.classList.add(CLASS.CAMERA);
 
@@ -186,44 +155,15 @@ export class CrossFlicking extends Flicking {
     if (!isCrossStructure) {
       viewportEl.setAttribute("data-cross-structure", "true");
 
-      panels.forEach((panel) => {
-        const groupKey = getDataAttributes(panel, "data-cross-").groupkey;
-        if (groupKey && !includes(groupKeys, groupKey)) {
-          groupKeys.push(groupKey);
-          groupPanels[groupKey] = [panel];
-        } else if (groupKey) {
-          groupPanels[groupKey].push(panel);
-        }
-      });
+      const groupPanels = this._getGroupFromAttribute(panels);
+      const groupKeys = Object.keys(groupPanels);
 
       if (groupKeys.length) {
-        sideState = groupKeys.reduce(
-          (state: SideState[], key: string) => {
-            const start = state.length ? +state[state.length - 1].end + 1 : 0;
-            const element = groupPanels[key].reduce(
-              (el: HTMLElement, panel: HTMLElement) => {
-                sidePanels += panel.outerHTML;
-                el.innerHTML += panel.outerHTML;
-                return el;
-              },
-              document.createElement("div")
-            );
-            return [
-              ...state,
-              {
-                key,
-                start,
-                end: start + groupPanels[key].length - 1,
-                element: element
-              }
-            ];
-          },
-          []
-        );
-
+        sideState = this._getSideStateFromGroup(groupPanels);
         this.remove(0, this.panelCount - groupKeys.length);
-        sideState.forEach((_, i) => {
+        sideState.forEach((state, i) => {
           const panel = this.camera.children[i];
+          sidePanels += state.element.innerHTML;
           Array.from(panel.attributes).forEach(attribute => panel.removeAttribute(attribute.name));
         });
       } else {
@@ -256,41 +196,40 @@ export class CrossFlicking extends Flicking {
         panel.innerHTML = sideCamera.outerHTML;
       });
     } else {
-      (toArray(panels[0].children[0].children) as HTMLElement[]).forEach((panel) => {
-        const groupKey = getDataAttributes(panel, "data-cross-").groupkey;
-        if (groupKey && !includes(groupKeys, groupKey)) {
-          groupKeys.push(groupKey);
-          groupPanels[groupKey] = [panel];
-        } else if (groupKey) {
-          groupPanels[groupKey].push(panel);
-        }
-      });
-
-      sideState = groupKeys.reduce(
-        (state: SideState[], key: string) => {
-          const start = state.length ? +state[state.length - 1].end + 1 : 0;
-          const element = groupPanels[key].reduce(
-            (el: HTMLElement, panel: HTMLElement) => {
-              el.innerHTML += panel.outerHTML;
-              return el;
-            },
-            document.createElement("div")
-          );
-          return [
-            ...state,
-            {
-              key,
-              start,
-              end: start + groupPanels[key].length - 1,
-              element: element
-            }
-          ];
-        },
-        []
-      );
+      sideState = this._getSideStateFromPanels(panels);
     }
 
     return sideState;
+  }
+
+  private _getSideStateFromGroup(groupPanels: Record<string, HTMLElement[]>): SideState[] {
+    return Object.keys(groupPanels).reduce(
+      (state: SideState[], key: string) => {
+        const start = state.length ? +state[state.length - 1].end + 1 : 0;
+        const element = groupPanels[key].reduce(
+          (el: HTMLElement, panel: HTMLElement) => {
+            el.innerHTML += panel.outerHTML;
+            return el;
+          },
+          document.createElement("div")
+        );
+        return [
+          ...state,
+          {
+            key,
+            start,
+            end: start + groupPanels[key].length - 1,
+            element: element
+          }
+        ];
+      },
+      []
+    );
+  }
+
+  private _getSideStateFromPanels(panels: HTMLElement[]): SideState[] {
+    const groupPanels = this._getGroupFromAttribute(panels);
+    return this._getSideStateFromGroup(groupPanels);
   }
 
   private _createSideFlicking(): Flicking[] {
