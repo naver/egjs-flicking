@@ -54,6 +54,4 @@ export interface FlickingProps {
   onPanelChange: (e: PanelChangeEvent<ReactFlicking>) => any;
   [key: string]: any;
 }
-export interface CrossFlickingProps extends FlickingProps {
-  
-}
+

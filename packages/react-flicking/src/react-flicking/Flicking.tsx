@@ -15,7 +15,8 @@ import VanillaFlicking, {
   getDefaultCameraTransform,
   Plugin,
   range,
-  NormalRenderingStrategy
+  NormalRenderingStrategy,
+  FlickingEvents,
 } from "@egjs/flicking";
 
 import { DEFAULT_PROPS } from "./consts";
@@ -156,7 +157,6 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const Viewport = props.viewportTag as any;
     const Camera = props.cameraTag as any;
     const attributes: { [key: string]: any } = {};
-    const flicking = this._vanillaFlicking;
 
     this.beforeRender();
 
@@ -166,31 +166,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       }
     }
 
-    const initialized = flicking && flicking.initialized;
-    const viewportClasses: string[] = ["flicking-viewport"];
-    const cameraClasses: string[] = ["flicking-camera"];
-    const isHorizontal = flicking
-      ? flicking.horizontal
-      : props.horizontal ?? true;
-
-    if (!isHorizontal) {
-      viewportClasses.push("vertical");
-    }
-    if (props.hideBeforeInit && !initialized) {
-      viewportClasses.push("flicking-hidden");
-    }
-    if (attributes.className) {
-      viewportClasses.push(attributes.className);
-    }
-    if (props.cameraClass) {
-      cameraClasses.push(props.cameraClass);
-    }
-
-    const cameraProps = !initialized && props.firstPanelSize
-      ? { style: {
-        transform: getDefaultCameraTransform(this.props.align, this.props.horizontal, this.props.firstPanelSize)
-      }}
-      : {};
+    const { viewportClasses, cameraClasses, cameraProps } = this._getClasses(attributes, props);
 
     const panels = !!props.virtual && (props.panelsPerView ?? -1) > 0
       ? this._getVirtualPanels()
@@ -221,18 +197,22 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
 
     Object.keys(EVENTS).forEach((eventKey: keyof typeof EVENTS) => {
       const eventName = EVENTS[eventKey];
-      const propName = `on${eventName.charAt(0).toUpperCase() + eventName.slice(1)}`;
-
-      flicking.on(eventName, e => {
-        e.currentTarget = this;
-
-        const evtHandler = this.props[propName];
-        evtHandler(e);
-      });
+      this._bindEvent(eventName);
     });
 
     flicking.once(EVENTS.READY, () => {
       this.forceUpdate();
+    });
+  }
+
+  protected _bindEvent(eventName: keyof FlickingEvents) {
+    const propName = `on${eventName.charAt(0).toUpperCase() + eventName.slice(1)}`;
+
+    this._vanillaFlicking!.on(eventName, e => {
+      e.currentTarget = this;
+
+      const evtHandler = this.props[propName];
+      evtHandler(e);
     });
   }
 
@@ -242,6 +222,42 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
 
     flicking.addPlugins(...added.map(index => list[index]));
     flicking.removePlugins(...removed.map(index => prevList[index]));
+  }
+
+  protected _getClasses(attributes: { [key: string]: any }, props: typeof this.props) {
+    const flicking = this._vanillaFlicking;
+
+    const initialized = flicking && flicking.initialized;
+    const viewportClasses: string[] = ["flicking-viewport"];
+    const cameraClasses: string[] = ["flicking-camera"];
+    const isHorizontal = flicking
+      ? flicking.horizontal
+      : props.horizontal ?? true;
+
+    if (!isHorizontal) {
+      viewportClasses.push("vertical");
+    }
+    if (props.hideBeforeInit && !initialized) {
+      viewportClasses.push("flicking-hidden");
+    }
+    if (attributes.className) {
+      viewportClasses.push(attributes.className);
+    }
+    if (props.cameraClass) {
+      cameraClasses.push(props.cameraClass);
+    }
+
+    const cameraProps = !initialized && props.firstPanelSize
+      ? { style: {
+        transform: getDefaultCameraTransform(this.props.align, this.props.horizontal, this.props.firstPanelSize)
+      }}
+      : {};
+
+    return {
+      viewportClasses,
+      cameraClasses,
+      cameraProps,
+    };
   }
 
   private _hasSameChildren(prevChildren: React.ReactElement[], nextChildren: React.ReactElement[]) {

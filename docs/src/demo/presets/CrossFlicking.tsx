@@ -1,39 +1,204 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CrossFlicking, CrossGroup } from "@egjs/react-flicking";
 import "../../css/demo/crossflicking.css";
 
 export default () => {
+  const flicking = useRef<CrossFlicking>();
+  const [transform, setTransform] = useState(0);
+  const groups = [
+    {
+      name: "Microsoft",
+      panels: [
+        {
+          title:
+            "Microsoft 'Kills' HoloLens 2 Headset Amidst Growing Competition in AR/VR",
+          image:
+            "https://i0.wp.com/pune.news/wp-content/uploads/2024/10/HoloLens-2-headset.webp?resize=800%2C422&ssl=1",
+        },
+        {
+          title: "ChatGPT-style tech brought to Microsoft 365",
+          image:
+            "https://ichef.bbci.co.uk/ace/standard/976/cpsprodpb/FCA8/production/_129008646_gettyimages-1237656618.jpg",
+        },
+        {
+          title: "Microsoft Taps Lumen to Boost AI Infrastructure Capacity",
+          image:
+            "https://eu-images.contentstack.com/v3/assets/blt6b0f74e5591baa03/bltc71a236adc37e574/66aa04f5b5726f3b6b85445c/News_Image_-_2024-07-31T103043.248.jpg",
+        },
+        {
+          title: "Microsoft Copilot adds ChatGPT-like features including Voice",
+          image:
+            "https://akm-img-a-in.tosshub.com/indiatoday/images/story/202410/microsoft-copilot-022838371-16x9_0.jpg?VersionId=3be3CqIpb2TtKmFbtibUf.IdLmNhkrjQ&size=690:388",
+        },
+      ],
+    },
+    {
+      name: "Nvidia",
+      panels: [
+        {
+          title: "Nvidia Teams Up With Accenture to Boost Corporate AI Use",
+          image:
+            "https://s.yimg.com/ny/api/res/1.2/2fEs0waxs1mERvKixJh2dw--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTY0MDtjZj13ZWJw/https://media.zenfs.com/en/bloomberg_technology_68/f9e92661f8f8cf487c2551bf5ab970ed",
+        },
+        {
+          title: "All eyes are on Nvidia’s stock, so what’s been going on?",
+          image:
+            "https://dims.apnews.com/dims4/default/a52d371/2147483647/strip/true/crop/3000x2000+0+0/resize/1440x960!/format/webp/quality/90/?url=https%3A%2F%2Fassets.apnews.com%2Ff4%2F21%2F640ac043a2a1e61320ebefda710a%2F9a295a8b1d1049689f551b65a93ec2ef",
+        },
+        {
+          title: "Nvidia value hits $3tn, overtaking Apple",
+          image:
+            "https://ichef.bbci.co.uk/news/1024/branded_news/fea4/live/415e2650-2380-11ef-bac3-438326d5ea25.jpg",
+        },
+        {
+          title: "Nvidia becomes world's most valuable company",
+          image:
+            "https://live-production.wcms.abc-cdn.net.au/1b236644d77b9141c851d5cbbcaa6094",
+        },
+        {
+          title:
+            "Nvidia CEO on the next generation of semiconductors and computing",
+          image:
+            "https://image.cnbcfm.com/api/v1/image/107389422-17108579791710857976-33780118496-1080pnbcnews.jpg?v=1710857978",
+        },
+      ],
+    },
+    {
+      name: "Google",
+      panels: [
+        {
+          title:
+            "AI News: Google Gemini Chatbot Implements Restrictions on Election-Related Queries",
+          image:
+            "https://coingape.com/wp-content/uploads/2023/10/Google-Pledges-to-Defend-Generative-AI-Users-From-Copyright-Disputes.jpg",
+        },
+        {
+          title: "Google to invest another $2.3 billion into Ohio data centers",
+          image:
+            "https://etimg.etb2bimg.com/thumb/msid-111099060,imgsize-57490,width-1200,height=765,overlay-ettelecom/internet/google-to-invest-another-2-3-billion-into-ohio-data-centers.jpg",
+        },
+        {
+          title: "Google to invest US$1bil in UK data centre to meet demand",
+          image:
+            "https://media.freemalaysiatoday.com/wp-content/uploads/2022/10/google-New.jpg",
+        },
+        {
+          title: "Google made payments worth $20 bn to Apple in 2022",
+          image:
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzQEynXqehPlukfb8LDRgVdKvFR1IoJCVT6w&s",
+        },
+      ],
+    },
+  ];
+
+  const [index, setIndex] = useState(0);
+
+  const onChanged = (e) => {
+    setIndex(e.index);
+  };
+
+  const onMove = (e) => {
+    const pos = e.currentTarget.camera._position;
+    setTransform(pos / 5 - 37);
+  };
+
+  const onTabClick = (i: number) => {
+    if (!flicking.current?.animating) {
+      setIndex(i);
+      flicking.current?.moveTo(i, 500).catch(() => void 0);
+    }
+  };
+
+  useEffect(() => {
+    flicking.current?.moveTo(0, 0);
+  }, []);
+
   return (
-    <CrossFlicking preventDefaultOnDrag={true}>
-      <CrossGroup>
-        <div className="shortents_item">
-          <img
-            className="img scaleup"
-            src="https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F001%2F2024%2F08%2F29%2FAKR20240829091100007_03_i_P4_20240829121714208.jpg&amp;type=fc710x1080"
-          />
-        </div>
-      </CrossGroup>
-      <CrossGroup>
-        <div className="shortents_item">
-          <img
-            className="img scaleup"
-            src="https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F001%2F2024%2F08%2F29%2FAKR20240829091100007_03_i_P4_20240829121714208.jpg&amp;type=fc710x1080"
-          />
-        </div>
-      </CrossGroup>
-      <CrossGroup>
-        <div className="shortents_item">
-          <img
-            className="img scaleup"
-            src="https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F001%2F2024%2F08%2F29%2FAKR20240829091100007_03_i_P4_20240829121714208.jpg&amp;type=fc710x1080"
-          />
-        </div>
-      </CrossGroup>
-    </CrossFlicking>
+    <div className="demo">
+      <div className="labels">
+        <a
+          className="area selected"
+          style={{transform: `translate(${transform}px)`}}
+        >
+        </a>
+        {groups.map((item, i) => (
+          <div className="tab" key={i}>
+            <a
+              className={"label " + (index === i ? "" : "")}
+              onClick={() => onTabClick(i)}
+            >
+              {item.name}
+            </a>
+          </div>
+        ))}
+      </div>
+      <CrossFlicking
+        className="main"
+        ref={flicking}
+        bounce={0}
+        preventDefaultOnDrag={true}
+        moveType={"strict"}
+        onMove={onMove}
+        onChanged={onChanged}
+      >
+        {groups.map((item, i) => {
+          return (
+            <CrossGroup key={i}>
+              {item.panels.map((panel, j) => {
+                return (
+                  <div className="item" key={j}>
+                    <img className="img scaleup" src={panel.image} />
+                    <div className="info">
+                      <div className="name">
+                        <span className="source">
+                          {item.name} News ({j + 1}/{item.panels.length})
+                        </span>
+                      </div>
+                      <strong className="headline">{panel.title}</strong>
+                    </div>
+                  </div>
+                );
+              })}
+            </CrossGroup>
+          );
+        })}
+      </CrossFlicking>
+    </div>
   );
 };
+
+// /* eslint-disable @typescript-eslint/no-var-requires */
+// /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+// import React from "react";
+// import { CrossFlicking, CrossGroup } from "@egjs/react-flicking";
+// import "../../css/demo/crossflicking.css";
+
+// export default () => {
+//   return (
+//     <CrossFlicking className="flicking" preventDefaultOnDrag={true}>
+//       <CrossGroup>
+//         <div className="flicking-panel">
+//           <img src="https://naver.github.io/egjs-infinitegrid/assets/image/11.jpg" />
+//           방송 1A
+//         </div>
+//       </CrossGroup>
+//       <CrossGroup>
+//         <div className="flicking-panel">
+//           <img src="https://naver.github.io/egjs-infinitegrid/assets/image/16.jpg" />
+//           축구 2A
+//         </div>
+//       </CrossGroup>
+//       <CrossGroup>
+//         <div className="flicking-panel">
+//           <img src="https://naver.github.io/egjs-infinitegrid/assets/image/21.jpg" />
+//           패션 3A
+//         </div>
+//       </CrossGroup>
+//     </CrossFlicking>
+//   );
+// };
 
 // <head>
 //   <meta charset="UTF-8" />
@@ -68,7 +233,6 @@ export default () => {
 //         <div class="api_flicking_wrap">
 //           <div class="flick_bx">
 //             <a href="#" role="button" class="subject_link" aria-pressed="true"
-//               >축구</a
 //             >
 //           </div>
 //           <div class="flick_bx">

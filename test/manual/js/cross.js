@@ -1,4 +1,5 @@
 const flicking = new Flicking.CrossFlicking("#flicking", {
+  autoInit: false,
   verticalOptions: {
     moveType: "strict"
     // horizontal: false,
@@ -11,6 +12,8 @@ const flicking = new Flicking.CrossFlicking("#flicking", {
   },
 });
 console.log(flicking.camera);
+
+flicking.init();
 /*
 
 const onChildChange = (e) => {
