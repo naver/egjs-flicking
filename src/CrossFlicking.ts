@@ -6,7 +6,15 @@ import { ComponentEvent } from "@egjs/component";
 import { EventKey } from "@egjs/component/declaration/types";
 
 import Flicking, { FlickingEvents, FlickingOptions } from "./Flicking";
-import { ChangedEvent, HoldEndEvent, HoldStartEvent, MoveEndEvent, MoveEvent, MoveStartEvent, WillChangeEvent } from "./type/event";
+import {
+  ChangedEvent,
+  HoldEndEvent,
+  HoldStartEvent,
+  MoveEndEvent,
+  MoveEvent,
+  MoveStartEvent,
+  WillChangeEvent
+} from "./type/event";
 import { LiteralUnion, ValueOf } from "./type/internal";
 import { CLASS, EVENTS, MOVE_DIRECTION } from "./const/external";
 import { getDataAttributes, includes, toArray } from "./utils";
@@ -148,10 +156,12 @@ export class CrossFlicking extends Flicking {
 
       Object.keys(SIDE_EVENTS).forEach((name: EventKey<FlickingEvents>) => {
         flicking.on(EVENTS[name], (event) => {
-          this.trigger(new ComponentEvent(SIDE_EVENTS[name], {
-            mainIndex,
-            ...event
-          }));
+          this.trigger(
+            new ComponentEvent(SIDE_EVENTS[name], {
+              mainIndex,
+              ...event
+            })
+          );
         });
       });
     });
@@ -321,7 +331,11 @@ export class CrossFlicking extends Flicking {
       return;
     }
 
-    const threshold = draggable ? 10 : Infinity;
+    const threshold = draggable
+      ? this.dragThreshold && this.dragThreshold >= 10
+        ? this.dragThreshold
+        : 10
+      : Infinity;
 
     if ((direction === MOVE_DIRECTION.HORIZONTAL) === this.horizontal) {
       this.dragThreshold = threshold;
