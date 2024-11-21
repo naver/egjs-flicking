@@ -1,7 +1,7 @@
 import El from "./helper/El";
 import { cleanup, createCrossFlicking, simulate, tick } from "./helper/test-util";
 
-describe.only("CrossFlicking", () => {
+describe("CrossFlicking", () => {
   afterEach(() => {
     cleanup();
   });
@@ -10,6 +10,11 @@ describe.only("CrossFlicking", () => {
     it("can be created", async () => {
       const err = await createCrossFlicking(El.DEFAULT_CROSS).then(() => null).catch(e => e);
       expect(err).to.be.null;
+    });
+  });
+
+  describe("Properties", () => {
+    describe("sideFlicking", async () => {
     });
   });
 
@@ -119,6 +124,9 @@ describe.only("CrossFlicking", () => {
         expect(flicking.sideFlicking[1].index).to.equal(3);
       });
     });
+  });
+
+  describe("Events", () => {
   });
 
   describe("Key Features", () => {
