@@ -13,11 +13,6 @@ describe("CrossFlicking", () => {
     });
   });
 
-  describe("Properties", () => {
-    describe("sideFlicking", async () => {
-    });
-  });
-
   describe("Options", () => {
     describe("sideOptions", () => {
       it("should apply sideOptions to side flicking instances.", async () => {
@@ -124,9 +119,6 @@ describe("CrossFlicking", () => {
         expect(flicking.sideFlicking[1].index).to.equal(3);
       });
     });
-  });
-
-  describe("Events", () => {
   });
 
   describe("Key Features", () => {

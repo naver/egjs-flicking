@@ -6,6 +6,7 @@ custom_edit_url: null
 import CrossFlickingDemo from "@site/src/demo/presets/CrossFlicking";
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
+import Link from "@docusaurus/Link";
 
 ## CrossFlicking
 
@@ -21,7 +22,7 @@ Moving the first panel up in the vertical Flicking changes to the previous categ
 Moving the last panel down in the vertical Flicking changes to the next category and changes the index in the horizontal Flicking.
 :::
 
-## How to use
+### How to use
 <Tabs
   groupId="cross"
   defaultValue="js-group"
@@ -177,6 +178,74 @@ function App() {
 </Tabs>
 
 
+### Listening to Events
+
+You can listen to events from the Flicking inside each Panel.
+Each event has a `mainIndex: number` property, which is the index of the Panel including Flicking.
+- sideHoldStart extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-holdStart"}>holdStart</Link>
+- sideHoldEnd extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-holdEnd"}>holdEnd</Link>
+- sideMoveStart extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-moveStart"}>moveStart</Link>
+- sideMove extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-move"}>move</Link>
+- sideMoveEnd extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-moveEnd"}>moveEnd</Link>
+- sideWillChange extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-willChange"}>willChange</Link>
+- sideChanged extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-changed"}>changed</Link>
+
+<Tabs
+  groupId="cross"
+  defaultValue="js"
+  lazy={true}
+  values={[
+    { label: "JavaScript", value: "js" },
+    { label: "React", value: "react" },
+  ]}>
+  <TabItem value="js">
+
+```html
+<div id="flicking" class="flicking-viewport">
+  ...
+</div>
+
+<script>
+  const flicking = new Flicking.CrossFlicking("#flicking");
+
+  flicking.on("changed", (e) => {
+    console.log(`Main Flicking index changed to ${e.index}`);
+  });
+
+  flicking.on("sideChanged", (e) => {
+    console.log(`Side Flicking ${e.mainIndex} index changed to ${e.index}`);
+  });
+</script>
+```
+
+  </TabItem>
+  <TabItem value="react">
+
+```jsx
+import { CrossFlicking } from "@egjs/react-flicking";
+import "@egjs/react-flicking/dist/flicking.css";
+
+function App() {
+  const onChanged = (e) => {
+    console.log(`Main Flicking index changed to ${e.index}`);
+  };
+
+  const onSideChanged = (e) => {
+    console.log(`Side Flicking ${e.mainIndex} index changed to ${e.index}`);
+  };
+
+  return (
+    <CrossFlicking onChanged={onChanged} onSideChanged={onSideChanged}>
+      ...
+    </CrossFlicking>
+  );
+}
+```
+
+  </TabItem>
+</Tabs>
+
+
 ### Options
 
 ```ts
@@ -187,4 +256,4 @@ class CrossFlicking extends Flicking
 |sideOptions|FlickingOption|✔️|{}|Options for Vertical Flicking instances.|
 |preserveIndex|boolean|✔️|true|Preserves the previous vertical index when the horizontal index changes.|
 |disableSlideOnHold|boolean|✔️|true|Prevents horizontal and vertical Flicking from being dragged at the same time.|
-|disableSideIndexSync|boolean|✔️|false|Prevents index changes in the horizontal flicking from changing the index in the vertical flicking.|
+|disableIndexSync|boolean|✔️|false|Prevents index changes in the horizontal flicking from changing the index in the vertical flicking.|
