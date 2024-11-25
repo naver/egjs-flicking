@@ -38,9 +38,10 @@
 }
 
 .label {
-  display: block;
+  display: flex;
+  justify-content: center;
   cursor: pointer;
-  padding: 0 12px;
+  width: 80px;
   line-height: 36px;
   font-size: 16px;
   color: rgba(255, 255, 255, 0.6);
@@ -63,11 +64,13 @@
 
 .info {
   position: absolute;
+  z-index: 3;
   bottom: 36px;
   left: 0;
   right: 0;
   max-height: 72px;
   margin: auto 20px;
+  transition: all .25s ease-in-out;
 }
 
 .name {
@@ -98,8 +101,40 @@
 
 .area {
   position: absolute;
-  width: 85px;
+  left: 0px;
   height: 40px;
   -webkit-border-radius: 100px;
   border-radius: 100px;
+  transition: width .5s;
+}
+
+.page {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-right: 12px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.dot {
+  overflow: hidden;
+  width: 5px;
+  height: 5px;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.dot.on {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.dot + .dot {
+  margin-top: 5px;
 }
