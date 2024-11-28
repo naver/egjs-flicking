@@ -63,7 +63,14 @@ class CrossFlicking extends Flicking {
   }
 
   public componentDidMount() {
-    const props = this.props as Required<CrossFlickingProps>;
+    const props: { [key: string]: any } = {};
+
+    for (const name in this.props) {
+      if ((name in CROSSFLICKING_DEFAULT_PROPS) || (name in VanillaCrossFlicking.prototype)) {
+        props[name] = this.props[name];
+      }
+    }
+
     const rendererOptions: ReactRendererOptions = {
       reactFlicking: this,
       strategy: new NormalRenderingStrategy({
