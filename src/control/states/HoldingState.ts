@@ -39,6 +39,10 @@ class HoldingState extends State {
 
     const inputEvent = axesEvent.inputEvent as { offsetX: number; offsetY: number };
 
+    if (!inputEvent) {
+      return;
+    }
+
     const offset = flicking.horizontal
       ? inputEvent.offsetX
       : inputEvent.offsetY;
