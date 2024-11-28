@@ -35,6 +35,8 @@ export interface CrossFlickingProps extends FlickingProps {
   onSideMoveEnd: (e: CrossFlickingEvent<MoveEndEvent<Flicking>>) => any;
   onSideWillChange: (e: CrossFlickingEvent<WillChangeEvent<Flicking>>) => any;
   onSideChanged: (e: CrossFlickingEvent<ChangedEvent<Flicking>>) => any;
+  onSideWillRestore: (e: CrossFlickingEvent<WillChangeEvent<Flicking>>) => any;
+  onSideRestored: (e: CrossFlickingEvent<ChangedEvent<Flicking>>) => any;
 }
 
 export const CROSSFLICKING_DEFAULT_PROPS: CrossFlickingProps = {
@@ -46,6 +48,8 @@ export const CROSSFLICKING_DEFAULT_PROPS: CrossFlickingProps = {
   onSideMoveEnd: (e: CrossFlickingEvent<MoveEndEvent>) => {},
   onSideWillChange: (e: CrossFlickingEvent<WillChangeEvent>) => {},
   onSideChanged: (e: CrossFlickingEvent<ChangedEvent>) => {},
+  onSideWillRestore: (e: CrossFlickingEvent<WillChangeEvent>) => {},
+  onSideRestored: (e: CrossFlickingEvent<ChangedEvent>) => {},
 };
 
 class CrossFlicking extends Flicking {

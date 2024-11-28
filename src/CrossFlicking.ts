@@ -13,7 +13,9 @@ import {
   MoveEndEvent,
   MoveEvent,
   MoveStartEvent,
-  WillChangeEvent
+  RestoredEvent,
+  WillChangeEvent,
+  WillRestoreEvent
 } from "./type/event";
 import { LiteralUnion, ValueOf } from "./type/internal";
 import { CLASS, EVENTS, MOVE_DIRECTION } from "./const/external";
@@ -26,7 +28,9 @@ export const SIDE_EVENTS = {
   MOVE: "sideMove",
   MOVE_END: "sideMoveEnd",
   WILL_CHANGE: "sideWillChange",
-  CHANGED: "sideChanged"
+  CHANGED: "sideChanged",
+  WILL_RESTORE: "sideWillRestore",
+  RESTORED: "sideRestored"
 } as const;
 
 export type CrossFlickingEvent<T> = { mainIndex: number } & T;
@@ -39,6 +43,8 @@ export interface CrossFlickingEvents extends FlickingEvents {
   [SIDE_EVENTS.MOVE_END]: CrossFlickingEvent<MoveEndEvent>;
   [SIDE_EVENTS.WILL_CHANGE]: CrossFlickingEvent<WillChangeEvent>;
   [SIDE_EVENTS.CHANGED]: CrossFlickingEvent<ChangedEvent>;
+  [SIDE_EVENTS.WILL_RESTORE]: CrossFlickingEvent<WillRestoreEvent>;
+  [SIDE_EVENTS.RESTORED]: CrossFlickingEvent<RestoredEvent>;
 }
 
 export interface CrossFlickingOptions extends FlickingOptions {
@@ -68,6 +74,7 @@ export class CrossFlicking extends Flicking {
   // Internal State
   private _sideState: SideState[];
   private _moveDirection: LiteralUnion<ValueOf<typeof MOVE_DIRECTION>> | null;
+  private _originalDragThreshold: number;
   private _nextIndex: number;
 
   // Components
@@ -120,6 +127,7 @@ export class CrossFlicking extends Flicking {
     // Internal states
     this._moveDirection = null;
     this._nextIndex = 0;
+    this._originalDragThreshold = this.dragThreshold;
 
     // Bind options
     this._sideOptions = sideOptions;
@@ -331,9 +339,10 @@ export class CrossFlicking extends Flicking {
       return;
     }
 
+    const dragThreshold = this._originalDragThreshold;
     const threshold = draggable
-      ? this.dragThreshold && this.dragThreshold >= 10
-        ? this.dragThreshold
+      ? dragThreshold && dragThreshold >= 10
+        ? dragThreshold
         : 10
       : Infinity;
 
