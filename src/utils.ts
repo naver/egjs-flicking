@@ -349,3 +349,24 @@ export const setPrototypeOf = Object.setPrototypeOf || ((obj, proto) => {
   obj.__proto__ = proto;
   return obj;
 });
+
+export const camelize = (str: string): string => {
+  return str.replace(/[\s-_]([a-z])/g, (all, letter) => letter.toUpperCase());
+};
+
+export const getDataAttributes = (element: HTMLElement, attributePrefix: string): Record<string, string> => {
+  const dataAttributes: Record<string, string> = {};
+  const attributes = element.attributes;
+  const length = attributes.length;
+
+  for (let i = 0; i < length; ++i) {
+    const attribute = attributes[i];
+    const { name, value } = attribute;
+    if (name.indexOf(attributePrefix) === -1) {
+      continue;
+    }
+    dataAttributes[camelize(name.replace(attributePrefix, ""))] = value;
+  }
+
+  return dataAttributes;
+};

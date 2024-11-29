@@ -55,6 +55,11 @@ module.exports = {
           position: "left"
         },
         {
+          to: "Presets",
+          label: "Presets",
+          position: "left"
+        },
+        {
           type: "docsVersionDropdown",
           position: "right",
           dropdownActiveClassDisabled: true,

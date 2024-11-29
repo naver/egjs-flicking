@@ -3,6 +3,7 @@
  * egjs projects are licensed under the MIT license
  */
 import Flicking from "./Flicking";
+import * as CrossFlicking from "./CrossFlicking";
 import * as Core from "./core";
 import * as Camera from "./camera";
 import * as Control from "./control";
@@ -19,5 +20,6 @@ merge(Flicking, Renderer);
 merge(Flicking, Constants);
 merge(Flicking, CFC);
 merge(Flicking, Utils);
+merge(Flicking, CrossFlicking);
 
 export default Flicking;

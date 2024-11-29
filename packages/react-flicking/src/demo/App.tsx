@@ -20,6 +20,7 @@ import Progress from "./features/Progress";
 import Bound from "./features/Bound";
 import Virtual from "./features/Virtual";
 import PropChange from "./features/PropChange";
+import CrossFlicking from "./features/CrossFlicking";
 import Parallax from "./plugins/Parallax";
 import Fade from "./plugins/Fade";
 import AutoPlay from "./plugins/AutoPlay";
@@ -45,6 +46,7 @@ export default class App extends Component<{}> {
           <Route path="/autoplay" element={<AutoPlay />} />
           <Route path="/arrow" element={<Arrow />} />
           <Route path="/prop" element={<PropChange />} />
+          <Route path="/cross" element={<CrossFlicking />} />
         </Routes>
       </Router>);
   }
