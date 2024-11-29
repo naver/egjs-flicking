@@ -61,6 +61,14 @@ export interface SideState {
   element: HTMLElement;
 }
 
+export interface CrossFlickingChangedEvent extends ChangedEvent {
+  sideIndex?: number;
+}
+
+export interface CrossFlickingWillChangeEvent extends WillChangeEvent {
+  sideIndex?: number;
+}
+
 export class CrossFlicking extends Flicking {
   // Core components
   private _sideFlicking: Flicking[];
@@ -80,6 +88,10 @@ export class CrossFlicking extends Flicking {
   // Components
   public get sideFlicking() {
     return this._sideFlicking;
+  }
+
+  public get sideIndex() {
+    return this._sideFlicking.map(i => i.index);
   }
 
   public get sideState() {
@@ -155,6 +167,9 @@ export class CrossFlicking extends Flicking {
     this.on(EVENTS.HOLD_START, this._onHorizontalHoldStart);
     this.on(EVENTS.MOVE, this._onHorizontalMove);
     this.on(EVENTS.MOVE_END, this._onHorizontalMoveEnd);
+    [EVENTS.CHANGED, EVENTS.WILL_CHANGE].forEach((event) => {
+      this.on(event, this._addSideIndex);
+    });
 
     this._sideFlicking.forEach((flicking, mainIndex) => {
       flicking.on(EVENTS.HOLD_START, this._onSideHoldStart);
@@ -375,6 +390,10 @@ export class CrossFlicking extends Flicking {
         }
       }
     });
+  };
+
+  private _addSideIndex = (e: ChangedEvent | WillChangeEvent): void => {
+    (e as CrossFlickingChangedEvent | CrossFlickingWillChangeEvent).sideIndex = this._sideFlicking[e.index].index;
   };
 
   private _onHorizontalHoldStart = (): void => {
