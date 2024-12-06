@@ -1,0 +1,298 @@
+---
+custom_edit_url: null
+---
+
+```ts
+class StrictControl extends Control
+```
+
+<div>
+
+</div>
+
+A [Control](Control) that allow you to select the maximum number of panels to move at a time
+
+<div className="container">
+  <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
+  <div className="row"><div className="col col--6"><a href="#count">count</a><br/><a href="#controller">controller</a><br/><a href="#activeIndex">activeIndex</a><br/><a href="#activePanel">activePanel</a><br/><a href="#animating">animating</a><br/><a href="#holding">holding</a></div><div className="col col--6"><a href="#destroy">destroy</a><br/><a href="#updateInput">updateInput</a><br/><a href="#moveToPosition">moveToPosition</a><br/><a href="#init">init</a><br/><a href="#enable">enable</a><br/><a href="#disable">disable</a><br/><a href="#release">release</a><br/><a href="#updateAnimation">updateAnimation</a><br/><a href="#stopAnimation">stopAnimation</a><br/><a href="#updatePosition">updatePosition</a><br/><a href="#resetActive">resetActive</a><br/><a href="#moveToPanel">moveToPanel</a><br/><a href="#setActive">setActive</a><br/><a href="#copy">copy</a></div></div>
+</div>
+
+## constructor
+```ts
+new StrictControl()
+```
+
+<div>
+
+</div>
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+||Partial&lt;[StrictControlOptions](StrictControlOptions)&gt;|✔️|{}||
+
+## Properties
+
+### count {#count}
+
+<div>
+
+</div>
+
+Maximum number of panels that can be moved at a time
+
+**Type**: number
+
+**Default**: 1
+
+### controller {#controller}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+A controller that handles the [@egjs/axes](https://naver.github.io/egjs-axes/) events
+
+**Type**: [AxesController](AxesController)
+
+### activeIndex {#activeIndex}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Index number of the [currentPanel](Flicking#currentPanel)
+
+**Type**: number
+
+**Default**: 0
+
+### activePanel {#activePanel}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+An active panel
+
+**Type**: [Panel](Panel) \| null
+
+### animating {#animating}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Whether Flicking's animating
+
+**Type**: boolean
+
+### holding {#holding}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Whether user is clicking or touching
+
+**Type**: boolean
+
+## Methods
+
+### destroy {#destroy}
+
+<div>
+
+</div>
+
+Destroy Control and return to initial state
+
+**Returns**: void
+
+### updateInput {#updateInput}
+
+<div>
+
+</div>
+
+Update [controller](Control#controller)'s state
+
+**Returns**: this
+
+### moveToPosition {#moveToPosition}
+
+<div>
+
+</div>
+
+Move [Camera](Camera) to the given position
+
+**Returns**: Promise&lt;void&gt;
+- A Promise which will be resolved after reaching the target position
+
+**Emits**: [Flicking#event:moveStart](Flicking#event-moveStart), [Flicking#event:move](Flicking#event-move), [Flicking#event:moveEnd](Flicking#event-moveEnd), [Flicking#event:willChange](Flicking#event-willChange), [Flicking#event:changed](Flicking#event-changed), [Flicking#event:willRestore](Flicking#event-willRestore), [Flicking#event:restored](Flicking#event-restored), [Flicking#event:needPanel](Flicking#event-needPanel), [Flicking#event:visibleChange](Flicking#event-visibleChange), [Flicking#event:reachEdge](Flicking#event-reachEdge)
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|position|number|||The target position to move|
+|duration|number|||Duration of the panel movement animation (unit: ms).|
+|axesEvent|object|✔️||[release](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:release) event of [Axes](https://naver.github.io/egjs-axes/)|
+
+**Throws**: [FlickingError](FlickingError)
+
+|code|condition|<br />|---|---|<br />|[POSITION_NOT_REACHABLE](ERROR_CODE)|When the given panel is already removed or not in the Camera's [range](Camera#range)|<br />|[NOT_ATTACHED_TO_FLICKING](ERROR_CODE)|When [init](Control#init) is not called before|<br />|[ANIMATION_INTERRUPTED](ERROR_CODE)|When the animation is interrupted by user input|<br />|[STOP_CALLED_BY_USER](ERROR_CODE)|When the animation is interrupted by user input|
+
+### init {#init}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Initialize Control
+
+**Returns**: this
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|flicking|[Flicking](Flicking)|||An instance of [Flicking](Flicking)|
+
+### enable {#enable}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Enable input from the user (mouse/touch)
+
+**Returns**: this
+
+### disable {#disable}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Disable input from the user (mouse/touch)
+
+**Returns**: this
+
+### release {#release}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Releases ongoing user input (mouse/touch)
+
+**Returns**: this
+
+### updateAnimation {#updateAnimation}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Change the destination and duration of the animation currently playing
+
+**Returns**: this
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|panel|[Panel](Panel)|||The target panel to move|
+|duration|number|✔️||Duration of the animation (unit: ms)|
+|direction|[DIRECTION](DIRECTION)|✔️||Direction to move, only available in the [circular](Flicking#circular) mode|
+
+**Throws**: [FlickingError](FlickingError)
+
+[POSITION_NOT_REACHABLE](ERROR_CODE) When the given panel is already removed or not in the Camera's [range](Camera#range)
+
+### stopAnimation {#stopAnimation}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Stops the animation currently playing
+
+**Returns**: this
+
+### updatePosition {#updatePosition}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Update position after resizing
+
+**Returns**: Promise&lt;void&gt;
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|progressInPanel|number|||Previous camera's progress in active panel before resize|
+
+**Throws**: [FlickingError](FlickingError)
+
+[NOT_ATTACHED_TO_FLICKING](ERROR_CODE) When [init](Camera#init) is not called before
+
+### resetActive {#resetActive}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Reset [activePanel](Control#activePanel) to `null`
+
+**Returns**: this
+
+### moveToPanel {#moveToPanel}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+  <span className="badge badge--success">async</span>
+</div>
+
+Move [Camera](Camera) to the given panel
+
+**Returns**: Promise&lt;void&gt;
+- A Promise which will be resolved after reaching the target panel
+
+**Emits**: [Flicking#event:moveStart](Flicking#event-moveStart), [Flicking#event:move](Flicking#event-move), [Flicking#event:moveEnd](Flicking#event-moveEnd), [Flicking#event:willChange](Flicking#event-willChange), [Flicking#event:changed](Flicking#event-changed), [Flicking#event:willRestore](Flicking#event-willRestore), [Flicking#event:restored](Flicking#event-restored), [Flicking#event:needPanel](Flicking#event-needPanel), [Flicking#event:visibleChange](Flicking#event-visibleChange), [Flicking#event:reachEdge](Flicking#event-reachEdge)
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|panel|[Panel](Panel)|||The target panel to move|
+|options|object|||An options object|
+|duration|number|||Duration of the animation (unit: ms)|
+|axesEvent|object|✔️||[release](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:release) event of [Axes](https://naver.github.io/egjs-axes/)|
+|direction|[DIRECTION](DIRECTION)|✔️|DIRECTION.NONE|Direction to move, only available in the [circular](Flicking#circular) mode|
+
+**Throws**: [FlickingError](FlickingError)
+
+|code|condition|<br />|---|---|<br />|[POSITION_NOT_REACHABLE](ERROR_CODE)|When the given panel is already removed or not in the Camera's [range](Camera#range)|<br />|[NOT_ATTACHED_TO_FLICKING](ERROR_CODE)|When [init](Control#init) is not called before|<br />|[ANIMATION_INTERRUPTED](ERROR_CODE)|When the animation is interrupted by user input|<br />|[STOP_CALLED_BY_USER](ERROR_CODE)|When the animation is interrupted by user input|
+
+### setActive {#setActive}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|newActivePanel|[Panel](Panel)||||
+|prevActivePanel|[Panel](Panel) \| null||||
+|isTrusted|boolean||||
+
+### copy {#copy}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|control|[Control](Control)||||
+

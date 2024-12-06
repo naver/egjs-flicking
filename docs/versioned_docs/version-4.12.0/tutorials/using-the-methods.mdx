@@ -1,0 +1,158 @@
+---
+title: Using the Methods
+id: using-the-methods
+slug: /using-the-methods
+custom_edit_url: null
+sidebar_position: 3
+---
+
+import Link from "@docusaurus/Link";
+import useBaseUrl from "@docusaurus/useBaseUrl";
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs
+  groupId="cfc"
+  defaultValue="js"
+  values={[
+    { label: "JavaScript", value: "js" },
+    { label: "React", value: "react" },
+    { label: "Vue@2", value: "vue" },
+    { label: "Vue@3", value: "vue3" },
+    { label: "Angular", value: "angular" },
+    { label: "Preact", value: "preact" },
+    { label: "Svelte", value: "svelte" }
+  ]}>
+  <TabItem value="js">
+
+You can call methods directly from the Flicking instance.
+
+```js
+const flicking = new Flicking("#el", options);
+
+flicking.next();
+```
+
+  </TabItem>
+  <TabItem value="react">
+
+You can call methods of Flicking by getting a `ref` of Flicking
+
+```jsx
+import { createRef, Component } from "react";
+import Flicking, { FlickingError } from "@egjs/react-flicking";
+
+class MyComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.flicking = createRef();
+    this.panels = [0, 1, 2];
+  }
+  render() {
+    return <Flicking ref={this.flicking}>
+      { this.panels.map(idx => <div className="panel" key={idx}>{idx}</div>) }
+    </Flicking>;
+  }
+  async moveToNextPanel() {
+    try {
+      await this.flicking.next();
+    } catch (e) {
+      console.log(e instanceof FlickingError); // true
+      console.log(e.code);
+    }
+  }
+}
+```
+
+See [React Refs and the DOM](https://reactjs.org/docs/refs-and-the-dom.html) for more info.
+
+  </TabItem>
+  <TabItem value="vue">
+
+You can access instance of Flicking component with the [ref](https://vuejs.org/v2/guide/components-edge-cases.html#Accessing-Child-Component-Instances-amp-Child-Elements) property.
+
+```js
+<Flicking ref="flicking"></Flicking>
+```
+
+Then call methods of it like
+```js
+this.$refs.flicking.next();
+```
+
+  </TabItem>
+  <TabItem value="vue3">
+
+You can access instance of Flicking component with the [ref](https://vuejs.org/v2/guide/components-edge-cases.html#Accessing-Child-Component-Instances-amp-Child-Elements) property.
+
+```js
+<Flicking ref="flicking"></Flicking>
+```
+
+Then call methods of it like
+```js
+this.$refs.flicking.next();
+```
+
+  </TabItem>
+  <TabItem value="angular">
+
+There're few ways to interact with child component in Angular.
+See [Component Interaction](https://angular.io/guide/component-interaction#parent-interacts-with-child-via-local-variable) page from Angular official document, and use that to interact with Flicking.
+
+```js
+@Component({
+  selector: 'flicking-parent',
+  template: `
+    <button (click)="flick.prev()">Prev</button>
+    <button (click)="flick.next()">Next</button>
+    <ngx-flicking #flick></ngx-flicking>
+  `
+})
+export class FlickingParent { }
+```
+
+  </TabItem>
+  <TabItem value="preact">
+
+You can call methods of Flicking by getting a `ref` of Flicking
+
+```jsx
+import { createRef, render } from "preact";
+import Flicking, { FlickingError } from "@egjs/preact-flicking";
+
+const ref = createRef();
+render(<Flicking ref={ref}>{...}</Flicking>, dom);
+
+const flicking = ref.current;
+flicking.next();
+```
+
+See [React Refs and the DOM](https://reactjs.org/docs/refs-and-the-dom.html) for more info.
+
+  </TabItem>
+  <TabItem value="svelte">
+
+You can use [bind:this](https://svelte.dev/tutorial/bind-this) syntax of svelte to get the reference of Flicking.
+
+```jsx
+<script lang="ts">
+  import Flicking, { FlickingPanel } from "@egjs/svelte-flicking";
+  import "@egjs/svelte-flicking/dist/flicking.css";
+
+  let flicking: Flicking;
+</script>
+
+<Flicking bind:this={flicking}>
+  <!-- Those will render "div" element -->
+  <FlickingPanel>0</FlickingPanel>
+  <FlickingPanel>1</FlickingPanel>
+  <FlickingPanel>2</FlickingPanel>
+</Flicking>
+<button on:click{() => { flicking.next(); }} />
+```
+
+  </TabItem>
+</Tabs>
+
+See all available methods at our <Link to={useBaseUrl("docs/api/Flicking#methods")}>API</Link> page.

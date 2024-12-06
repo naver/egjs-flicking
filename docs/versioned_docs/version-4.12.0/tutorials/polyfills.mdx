@@ -1,0 +1,42 @@
+---
+title: Polyfills
+id: polyfills
+slug: /polyfills
+custom_edit_url: null
+sidebar_position: 6
+---
+
+### Before
+Flicking is based on es5 and additionally needs es6 Promise to work properly.
+es5 is basically supported on IE9+ ([Source](http://kangax.github.io/compat-table/es5/))
+So, only es6 Promise is needed to run Flicking on the older browsers.
+
+```html
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/es6-promise/dist/es6-promise.auto.js"></script>
+```
+
+Adding the above script will make Flicking run on the older browsers.
+
+### After
+
+
+Flicking is based on es5 and additionally needs es6 Promise to work properly.
+es5 is basically supported on IE9+ ([Source](http://kangax.github.io/compat-table/es5/))
+So, only es6 Promise is needed to run Flicking on the older browsers.
+
+* How to use it via CDN (For personal or internal use)
+```html
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/es6-promise/dist/es6-promise.auto.js"></script>
+```
+* How to use it yourself (Unlike individual or internal cases, CDN has unpredictable problems with services, so it is better to use your own files.)
+```
+# Download
+https://cdn.jsdelivr.net/npm/es6-promise/dist/es6-promise.auto.js
+```
+* How to use it via module (The pollution of the global scope)
+```js
+require('es6-promise').polyfill();
+```
+
+
+Adding the above script will make Flicking run on the older browsers.
