@@ -72,7 +72,7 @@ describe("Flicking", () => {
       );
 
       expect(flicking.currentPanel).not.to.be.null;
-      expect(flicking.currentPanel).to.equal(flicking.camera.findNearestAnchor(0).panel);
+      expect(flicking.currentPanel).to.equal(flicking.panels[0]);
     });
 
     [15, 30, 50, 100].forEach((width) => {
