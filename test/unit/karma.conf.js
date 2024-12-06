@@ -19,6 +19,7 @@ module.exports = config => {
     files: [
       "./setup.ts",
       "./Flicking.spec.ts",
+      "./CrossFlicking.spec.ts",
       "./utils.spec.ts",
       "./node_modules/hammer-simulator/index.js",
       "./hammer-simulator.run.js",

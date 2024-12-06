@@ -118,6 +118,37 @@ class El {
     );
   }
 
+  /**
+   * Very basic structure of the CrossFlicking
+   * @example
+   * - Viewport (width: 1000px, height: 1000px)
+   *   - Camera
+   *     - Panel (width: 100%, height: 1000px, data-cross-groupkey="0")
+   *     - Panel (width: 100%, height: 1000px, data-cross-groupkey="0")
+   *     - Panel (width: 100%, height: 1000px, data-cross-groupkey="0")
+   *     - Panel (width: 100%, height: 1000px, data-cross-groupkey="1")
+   *     - Panel (width: 100%, height: 1000px, data-cross-groupkey="1")
+   *     - Panel (width: 100%, height: 1000px, data-cross-groupkey="1")
+   *     - Panel (width: 100%, height: 1000px, data-cross-groupkey="2")
+   *     - Panel (width: 100%, height: 1000px, data-cross-groupkey="2")
+   *     - Panel (width: 100%, height: 1000px, data-cross-groupkey="2")
+   */
+  public static get DEFAULT_CROSS() {
+    return El.viewport("1000px", "100%").add(
+      El.camera().add(
+        El.panel().setWidth("100%").setHeight(1000).setAttribute("data-cross-groupkey", "0"),
+        El.panel().setWidth("100%").setHeight(1000).setAttribute("data-cross-groupkey", "0"),
+        El.panel().setWidth("100%").setHeight(1000).setAttribute("data-cross-groupkey", "0"),
+        El.panel().setWidth("100%").setHeight(1000).setAttribute("data-cross-groupkey", "1"),
+        El.panel().setWidth("100%").setHeight(1000).setAttribute("data-cross-groupkey", "1"),
+        El.panel().setWidth("100%").setHeight(1000).setAttribute("data-cross-groupkey", "1"),
+        El.panel().setWidth("100%").setHeight(1000).setAttribute("data-cross-groupkey", "2"),
+        El.panel().setWidth("100%").setHeight(1000).setAttribute("data-cross-groupkey", "2"),
+        El.panel().setWidth("100%").setHeight(1000).setAttribute("data-cross-groupkey", "2"),
+      ),
+    );
+  }
+
   public static viewport(width?: string, height?: string) {
     const el = new El(EL_CLASS.VIEWPORT);
     if (width) {
@@ -225,6 +256,11 @@ class El {
 
   public setDirection(direction: string) {
     this._el.style.direction = direction;
+    return this;
+  }
+
+  public setAttribute(name: string, value: string) {
+    this._el.setAttribute(name, value);
     return this;
   }
 }

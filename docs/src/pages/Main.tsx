@@ -90,6 +90,11 @@ export default () => <>
           to={useBaseUrl("showcases/")}>
             🎭 Showcases
         </Link>
+        <Link
+          className="button is-link m-1"
+          to={useBaseUrl("presets/")}>
+            💡 Presets
+        </Link>
       </div>
     </div>
   </footer>

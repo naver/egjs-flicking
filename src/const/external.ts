@@ -94,6 +94,8 @@ export const MOVE_TYPE = {
 } as const;
 
 export const CLASS = {
+  VIEWPORT: "flicking-viewport",
+  CAMERA: "flicking-camera",
   VERTICAL: "vertical",
   HIDDEN: "flicking-hidden",
   DEFAULT_VIRTUAL: "flicking-panel"
@@ -121,4 +123,16 @@ export const CIRCULAR_FALLBACK = {
 export const ORDER = {
   LTR: "ltr",
   RTL: "rtl"
+} as const;
+
+/**
+ * An object that contains the direction that {@link Flicking} is moving
+ * @ko {@link Flicking}이 움직이는 방향을 담고 있는 객체
+ * @type {object}
+ * @property {"horizontal"} HORIZONTAL horizontal<ko>수평 방향</ko>
+ * @property {"vertical"} VERTICAL vertical<ko>수직 방향</ko>
+ */
+export const MOVE_DIRECTION = {
+  HORIZONTAL: "horizontal",
+  VERTICAL: "vertical"
 } as const;

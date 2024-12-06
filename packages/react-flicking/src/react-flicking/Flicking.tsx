@@ -15,7 +15,8 @@ import VanillaFlicking, {
   getDefaultCameraTransform,
   Plugin,
   range,
-  NormalRenderingStrategy
+  NormalRenderingStrategy,
+  FlickingEvents,
 } from "@egjs/flicking";
 
 import { DEFAULT_PROPS } from "./consts";
@@ -29,14 +30,14 @@ import ReactElementProvider from "./ReactElementProvider";
 class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>> {
   public static defaultProps: FlickingProps = DEFAULT_PROPS;
 
-  @withFlickingMethods private _vanillaFlicking: VanillaFlicking;
+  @withFlickingMethods protected _vanillaFlicking: VanillaFlicking;
   private _panels: React.RefObject<StrictPanel | NonStrictPanel | HTMLDivElement>[] = [];
-  private _pluginsDiffer: ListDiffer<any>;
-  private _jsxDiffer: ListDiffer<React.ReactElement>;
-  private _viewportElement: HTMLElement;
+  protected _pluginsDiffer: ListDiffer<any>;
+  protected _jsxDiffer: ListDiffer<React.ReactElement>;
+  protected _viewportElement: HTMLElement;
   private _diffResult: DiffResult<React.ReactElement> | null;
   private _renderEmitter = new Component<{ render: void }>();
-  private _prevChildren: React.ReactElement[];
+  protected _prevChildren: React.ReactElement[];
 
   public get reactPanels() { return this._panels.map(panel => panel.current!); }
   public get renderEmitter() { return this._renderEmitter; }
@@ -156,7 +157,6 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const Viewport = props.viewportTag as any;
     const Camera = props.cameraTag as any;
     const attributes: { [key: string]: any } = {};
-    const flicking = this._vanillaFlicking;
 
     this.beforeRender();
 
@@ -165,6 +165,67 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
         attributes[name] = props[name];
       }
     }
+
+    const { viewportClasses, cameraClasses, cameraProps } = this._getClasses(attributes, props);
+
+    const panels = !!props.virtual && (props.panelsPerView ?? -1) > 0
+      ? this._getVirtualPanels()
+      : this._getPanels();
+
+    return (
+      <Viewport {...attributes} className={viewportClasses.join(" ")} ref={(e?: HTMLElement) => {
+        e && (this._viewportElement = e);
+      }}>
+        <Camera className={cameraClasses.join(" ")} {...cameraProps}>
+          { panels }
+        </Camera>
+        { this._getViewportSlot() }
+      </Viewport>
+    );
+  }
+
+  private _createPanelRefs(props: this["props"], children: Array<React.ReactElement<any>>): React.RefObject<StrictPanel | NonStrictPanel | HTMLDivElement>[] {
+    const panelsPerView = props.panelsPerView ?? -1;
+
+    return panelsPerView > 0 && !!props.virtual
+      ? range(panelsPerView + 1).map(() => React.createRef())
+      : children.map(() => React.createRef());
+  }
+
+  protected _bindEvents() {
+    const flicking = this._vanillaFlicking!;
+
+    Object.keys(EVENTS).forEach((eventKey: keyof typeof EVENTS) => {
+      const eventName = EVENTS[eventKey];
+      this._bindEvent(eventName);
+    });
+
+    flicking.once(EVENTS.READY, () => {
+      this.forceUpdate();
+    });
+  }
+
+  protected _bindEvent(eventName: keyof FlickingEvents) {
+    const propName = `on${eventName.charAt(0).toUpperCase() + eventName.slice(1)}`;
+
+    this._vanillaFlicking!.on(eventName, e => {
+      e.currentTarget = this;
+
+      const evtHandler = this.props[propName];
+      evtHandler(e);
+    });
+  }
+
+  protected _checkPlugins() {
+    const flicking = this._vanillaFlicking;
+    const { list, added, removed, prevList } = this._pluginsDiffer.update(this.props.plugins!) as DiffResult<Plugin>;
+
+    flicking.addPlugins(...added.map(index => list[index]));
+    flicking.removePlugins(...removed.map(index => prevList[index]));
+  }
+
+  protected _getClasses(attributes: { [key: string]: any }, props: typeof this.props) {
+    const flicking = this._vanillaFlicking;
 
     const initialized = flicking && flicking.initialized;
     const viewportClasses: string[] = ["flicking-viewport"];
@@ -192,56 +253,11 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       }}
       : {};
 
-    const panels = !!props.virtual && (props.panelsPerView ?? -1) > 0
-      ? this._getVirtualPanels()
-      : this._getPanels();
-
-    return (
-      <Viewport {...attributes} className={viewportClasses.join(" ")} ref={(e?: HTMLElement) => {
-        e && (this._viewportElement = e);
-      }}>
-        <Camera className={cameraClasses.join(" ")} {...cameraProps}>
-          { panels }
-        </Camera>
-        { this._getViewportSlot() }
-      </Viewport>
-    );
-  }
-
-  private _createPanelRefs(props: this["props"], children: Array<React.ReactElement<any>>): React.RefObject<StrictPanel | NonStrictPanel | HTMLDivElement>[] {
-    const panelsPerView = props.panelsPerView ?? -1;
-
-    return panelsPerView > 0 && !!props.virtual
-      ? range(panelsPerView + 1).map(() => React.createRef())
-      : children.map(() => React.createRef());
-  }
-
-  private _bindEvents() {
-    const flicking = this._vanillaFlicking!;
-
-    Object.keys(EVENTS).forEach((eventKey: keyof typeof EVENTS) => {
-      const eventName = EVENTS[eventKey];
-      const propName = `on${eventName.charAt(0).toUpperCase() + eventName.slice(1)}`;
-
-      flicking.on(eventName, e => {
-        e.currentTarget = this;
-
-        const evtHandler = this.props[propName];
-        evtHandler(e);
-      });
-    });
-
-    flicking.once(EVENTS.READY, () => {
-      this.forceUpdate();
-    });
-  }
-
-  private _checkPlugins() {
-    const flicking = this._vanillaFlicking;
-    const { list, added, removed, prevList } = this._pluginsDiffer.update(this.props.plugins!) as DiffResult<Plugin>;
-
-    flicking.addPlugins(...added.map(index => list[index]));
-    flicking.removePlugins(...removed.map(index => prevList[index]));
+    return {
+      viewportClasses,
+      cameraClasses,
+      cameraProps,
+    };
   }
 
   private _hasSameChildren(prevChildren: React.ReactElement[], nextChildren: React.ReactElement[]) {
@@ -260,7 +276,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     return same;
   }
 
-  private _getChildren(children: React.ReactNode = this.props.children) {
+  protected _getChildren(children: React.ReactNode = this.props.children) {
     return (React.Children.toArray(children) as Array<React.ReactElement<any>>)
       .filter(child => child.type !== ViewportSlot)
       .reduce((all, child) => {
@@ -268,7 +284,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       }, []) as Array<React.ReactElement<any>>;
   }
 
-  private _getViewportSlot() {
+  protected _getViewportSlot() {
     return (React.Children.toArray(this.props.children) as Array<React.ReactElement<any>>)
       .filter(child => child.type === ViewportSlot);
   }
@@ -309,7 +325,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     });
   }
 
-  private _getPanels() {
+  protected _getPanels() {
     const origChildren = this._getChildren();
     const vanillaFlicking = this._vanillaFlicking;
     const diffResult = this._diffResult;

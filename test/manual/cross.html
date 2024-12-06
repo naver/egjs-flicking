@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<style>
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .flicking-viewport {
+    width: 400px;
+    height: 500px;
+  }
+
+  .gray1 .vertical {
+    background: #BBBBBB;
+  }
+
+  .gray2 .vertical {
+    background: #999999;
+  }
+
+  .gray3 .vertical {
+    background: #666666;
+  }
+
+  .flicking-panel {
+    width: 400px;
+    font-size: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 500px;
+    color: white;
+  }
+</style>
+
+<head>
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/es6-promise/dist/es6-promise.auto.js"></script>
+  <script type="text/javascript" src="../../dist/flicking.pkgd.js"></script>
+  <script type="text/javascript" src="../../node_modules/@egjs/flicking-plugins/dist/plugins.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/egjs-flicking/4.11.3/flicking.css"
+    crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css" />
+  <title>Flicking Manual Test</title>
+</head>
+
+<!-- <body>
+  <div class="demo-area">
+    <div id="flicking" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel has-text-white has-background-black-bis">
+          <img src="https://naver.github.io/egjs-infinitegrid/assets/image/11.jpg" />
+          방송 1A
+        </div>
+        <div data-cross-groupkey="0" class="flicking-panel has-text-white has-background-black-bis">
+          <img src="https://naver.github.io/egjs-infinitegrid/assets/image/11.jpg" />
+          방송 1A
+        </div>
+        <div data-cross-groupkey="0" class="flicking-panel has-text-white has-background-black-ter">
+          <img src="https://naver.github.io/egjs-infinitegrid/assets/image/12.jpg" />
+          방송 1B
+        </div>
+        <div data-cross-groupkey="0" class="flicking-panel has-text-white has-background-black-ter">
+          <img src="https://naver.github.io/egjs-infinitegrid/assets/image/13.jpg" />
+          방송 1C
+        </div>
+        <div data-cross-groupkey="0" class="flicking-panel has-text-white has-background-black-ter">
+          <img src="https://naver.github.io/egjs-infinitegrid/assets/image/14.jpg" />
+          방송 1D
+        </div>
+        <div data-cross-groupkey="0" class="flicking-panel has-text-white has-background-grey-darker">
+          <img src="https://naver.github.io/egjs-infinitegrid/assets/image/15.jpg" />
+          방송 1E
+        </div>
+        <div data-cross-groupkey="1" class="flicking-panel has-text-white has-background-grey-dark">
+          <img src="https://naver.github.io/egjs-infinitegrid/assets/image/16.jpg" />
+          축구 2A
+        </div>
+        <div data-cross-groupkey="1" class="flicking-panel has-text-white has-background-grey">
+          <img src="https://naver.github.io/egjs-infinitegrid/assets/image/17.jpg" />
+          축구 2B
+        </div>
+        <div data-cross-groupkey="1" class="flicking-panel has-text-white has-background-grey-light">
+          <img src="https://naver.github.io/egjs-infinitegrid/assets/image/18.jpg" />
+          축구 2C
+        </div>
+        <div data-cross-groupkey="1" class="flicking-panel has-text-white has-background-grey">
+          <img src="https://naver.github.io/egjs-infinitegrid/assets/image/19.jpg" />
+          축구 2D
+        </div>
+        <div data-cross-groupkey="1" class="flicking-panel has-text-white has-background-grey-light">
+          <img src="https://naver.github.io/egjs-infinitegrid/assets/image/39.jpg" />
+          축구 2E
+        </div>
+        <div data-cross-groupkey="2" class="flicking-panel has-text-black has-background-grey-lighter">
+          <img src="https://naver.github.io/egjs-infinitegrid/assets/image/21.jpg" />
+          패션 3A
+        </div>
+        <div data-cross-groupkey="2" class="flicking-panel has-text-black has-background-white-ter">
+          <img src="https://naver.github.io/egjs-infinitegrid/assets/image/22.jpg" />
+          패션 3B
+        </div>
+        <div data-cross-groupkey="2" class="flicking-panel has-text-black has-background-white-bis">
+          <img src="https://naver.github.io/egjs-infinitegrid/assets/image/38.jpg" />
+          패션 3C
+        </div>
+        <div data-cross-groupkey="2" class="flicking-panel has-text-black has-background-white-ter">
+          <img src="https://naver.github.io/egjs-infinitegrid/assets/image/24.jpg" />
+          패션 3D
+        </div>
+        <div data-cross-groupkey="2" class="flicking-panel has-text-black has-background-white-bis">
+          <img src="https://naver.github.io/egjs-infinitegrid/assets/image/25.jpg" />
+          패션 3E
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="./js/cross.js"></script>
+</body> -->
+
+
+<body>
+  <div class="demo-area">
+    <div id="flicking" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div>
+          <div class="flicking-panel has-text-white has-background-black-bis">
+            <img src="https://naver.github.io/egjs-infinitegrid/assets/image/11.jpg" />
+            방송 1A
+          </div>
+          <div class="flicking-panel has-text-white has-background-black-ter">
+            <img src="https://naver.github.io/egjs-infinitegrid/assets/image/12.jpg" />
+            방송 1B
+          </div>
+          <div class="flicking-panel has-text-white has-background-black-ter">
+            <img src="https://naver.github.io/egjs-infinitegrid/assets/image/13.jpg" />
+            방송 1C
+          </div>
+          <div class="flicking-panel has-text-white has-background-black-ter">
+            <img src="https://naver.github.io/egjs-infinitegrid/assets/image/14.jpg" />
+            방송 1D
+          </div>
+          <div class="flicking-panel has-text-white has-background-grey-darker">
+            <img src="https://naver.github.io/egjs-infinitegrid/assets/image/15.jpg" />
+            방송 1E
+          </div>
+        </div>
+        <div>
+          <div class="flicking-panel has-text-white has-background-grey-dark">
+            <img src="https://naver.github.io/egjs-infinitegrid/assets/image/16.jpg" />
+            축구 2A
+          </div>
+          <div class="flicking-panel has-text-white has-background-grey">
+            <img src="https://naver.github.io/egjs-infinitegrid/assets/image/17.jpg" />
+            축구 2B
+          </div>
+          <div class="flicking-panel has-text-white has-background-grey-light">
+            <img src="https://naver.github.io/egjs-infinitegrid/assets/image/18.jpg" />
+            축구 2C
+          </div>
+          <div class="flicking-panel has-text-white has-background-grey">
+            <img src="https://naver.github.io/egjs-infinitegrid/assets/image/19.jpg" />
+            축구 2D
+          </div>
+          <div class="flicking-panel has-text-white has-background-grey-light">
+            <img src="https://naver.github.io/egjs-infinitegrid/assets/image/39.jpg" />
+            축구 2E
+          </div>
+        </div>
+        <div>
+          <div class="flicking-panel has-text-black has-background-grey-lighter">
+            <img src="https://naver.github.io/egjs-infinitegrid/assets/image/21.jpg" />
+            패션 3A
+          </div>
+          <div class="flicking-panel has-text-black has-background-white-ter">
+            <img src="https://naver.github.io/egjs-infinitegrid/assets/image/22.jpg" />
+            패션 3B
+          </div>
+          <div class="flicking-panel has-text-black has-background-white-bis">
+            <img src="https://naver.github.io/egjs-infinitegrid/assets/image/38.jpg" />
+            패션 3C
+          </div>
+          <div class="flicking-panel has-text-black has-background-white-ter">
+            <img src="https://naver.github.io/egjs-infinitegrid/assets/image/24.jpg" />
+            패션 3D
+          </div>
+          <div class="flicking-panel has-text-black has-background-white-bis">
+            <img src="https://naver.github.io/egjs-infinitegrid/assets/image/25.jpg" />
+            패션 3E
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="./js/cross.js"></script>
+</body>
+
+</html>

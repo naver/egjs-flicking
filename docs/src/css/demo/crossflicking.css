@@ -1,0 +1,140 @@
+
+
+.demo {
+  position: relative;
+  width: 400px;
+  height: 600px;
+  margin: 36px auto;
+}
+
+.main {
+  width: 100%;
+  height: 100%;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+}
+
+
+.item {
+  position: relative;
+  background: black;
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  opacity: 0.6;
+  object-fit: none;
+}
+
+.labels {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  top: 12px;
+  left: 12px;
+  right: 0;
+  z-index: 2;
+}
+
+.label {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  width: 80px;
+  line-height: 36px;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  -webkit-border-radius: 100px;
+  border-radius: 100px;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none
+}
+
+.label:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+.selected {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+.info {
+  position: absolute;
+  z-index: 3;
+  bottom: 36px;
+  left: 0;
+  right: 0;
+  max-height: 72px;
+  margin: auto 20px;
+  transition: all .25s ease-in-out;
+}
+
+.name {
+  overflow: hidden;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  line-height: 42px;
+  font-size: 30px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.headline {
+  display: block;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+  word-wrap: break-word;
+  margin-top: 8px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.area {
+  position: absolute;
+  left: 0px;
+  height: 40px;
+  -webkit-border-radius: 100px;
+  border-radius: 100px;
+  transition: width .5s;
+}
+
+.page {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-right: 12px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.dot {
+  overflow: hidden;
+  width: 5px;
+  height: 5px;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.dot.on {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.dot + .dot {
+  margin-top: 5px;
+}

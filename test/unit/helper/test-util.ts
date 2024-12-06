@@ -1,4 +1,5 @@
 import Flicking, { FlickingOptions } from "~/Flicking";
+import { CrossFlicking } from "~/CrossFlicking";
 import Panel, { PanelOptions } from "~/core/panel/Panel";
 import VanillaElementProvider from "~/core/panel/provider/VanillaElementProvider";
 import { ALIGN, EVENTS } from "~/const/external";
@@ -51,6 +52,24 @@ export const createPanel = async (el: El, panelOption: Partial<PanelOptions> = {
   flicking.camera.element.appendChild(el.el);
 
   return new Panel({ elementProvider: new VanillaElementProvider(el.el), align: ALIGN.CENTER, index: 0, flicking, ...panelOption });
+};
+
+export const createCrossFlicking = async (el: El | any, option: ConstructorParameters<typeof CrossFlicking>[1] = {}): Promise<CrossFlicking> => {
+  const sandbox = createSandbox(`flicking-${Date.now()}`);
+  const element = el instanceof El ? el.el : el;
+
+  if (el instanceof El) {
+    sandbox.appendChild(el.el);
+  }
+
+  const flicking = new CrossFlicking(element, option);
+  (window as any).flickings.push(flicking);
+
+  if (!flicking.autoInit) return Promise.resolve(flicking);
+
+  return new Promise(resolve => {
+    flicking.once(EVENTS.READY, () => resolve(flicking));
+  });
 };
 
 export const tick = (time) => {

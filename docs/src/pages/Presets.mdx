@@ -1,0 +1,259 @@
+---
+title: Presets
+custom_edit_url: null
+---
+
+import CrossFlickingDemo from "@site/src/demo/presets/CrossFlicking";
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import Link from "@docusaurus/Link";
+
+## CrossFlicking
+
+CrossFlicking supports flicking that can move in both horizontal and vertical directions.
+
+You can easily create UIs with panels with multiple categories, like the example below.
+
+<CrossFlickingDemo />
+
+:::info
+Moving the first panel up in the vertical Flicking changes to the previous category and changes the index in the horizontal Flicking.
+
+Moving the last panel down in the vertical Flicking changes to the next category and changes the index in the horizontal Flicking.
+:::
+
+### How to use
+<Tabs
+  groupId="cross"
+  defaultValue="js-group"
+  lazy={true}
+  values={[
+    { label: "JavaScript (Group)", value: "js-group" },
+    { label: "JavaScript (Data attribute)", value: "js-data" },
+    { label: "React (Group)", value: "react-group" },
+    { label: "React (Data attribute)", value: "react-data" },
+  ]}>
+  <TabItem value="js-group">
+
+```html
+<div id="flicking" class="flicking-viewport">
+  <div class="flicking-camera">
+    <div>
+      <div class="flicking-panel">
+        Panel 1-A
+      </div>
+      <div class="flicking-panel">
+        Panel 1-B
+      </div>
+    </div>
+    <div>
+      <div class="flicking-panel">
+        Panel 2-A
+      </div>
+      <div class="flicking-panel">
+        Panel 2-B
+      </div>
+    </div>
+    <div>
+      <div class="flicking-panel">
+        Panel 3-A
+      </div>
+      <div class="flicking-panel">
+        Panel 3-B
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const flicking = new Flicking.CrossFlicking("#flicking");
+</script>
+```
+
+  </TabItem>
+  <TabItem value="js-data">
+
+```html
+<div id="flicking" class="flicking-viewport">
+  <div class="flicking-camera">
+    <div data-flicking-groupkey="1" class="flicking-panel">
+      Panel 1-A
+    </div>
+    <div data-flicking-groupkey="1" class="flicking-panel">
+      Panel 1-B
+    </div>
+    <div data-flicking-groupkey="2" class="flicking-panel">
+      Panel 2-A
+    </div>
+    <div data-flicking-groupkey="2" class="flicking-panel">
+      Panel 2-B
+    </div>
+    <div data-flicking-groupkey="3" class="flicking-panel">
+      Panel 3-A
+    </div>
+    <div data-flicking-groupkey="3" class="flicking-panel">
+      Panel 3-B
+    </div>
+  </div>
+</div>
+
+<script>
+  const flicking = new Flicking.CrossFlicking("#flicking");
+</script>
+```
+
+  </TabItem>
+  <TabItem value="react-group">
+
+```jsx
+import { CrossFlicking, CrossGroup } from "@egjs/react-flicking";
+import "@egjs/react-flicking/dist/flicking.css";
+
+function App() {
+  return (
+    <CrossFlicking>
+      <CrossGroup>
+        <div class="flicking-panel">
+          Panel 1-A
+        </div>
+        <div class="flicking-panel">
+          Panel 1-B
+        </div>
+      </CrossGroup>
+      <CrossGroup>
+        <div class="flicking-panel">
+          Panel 2-A
+        </div>
+        <div class="flicking-panel">
+          Panel 2-B
+        </div>
+      </CrossGroup>
+      <CrossGroup>
+        <div class="flicking-panel">
+          Panel 3-A
+        </div>
+        <div class="flicking-panel">
+          Panel 3-B
+        </div>
+      </CrossGroup>
+    </CrossFlicking>
+  );
+}
+```
+
+  </TabItem>
+  <TabItem value="react-data">
+
+```jsx
+import { CrossFlicking } from "@egjs/react-flicking";
+import "@egjs/react-flicking/dist/flicking.css";
+
+function App() {
+  return (
+    <CrossFlicking>
+      <div data-flicking-groupkey="1" class="flicking-panel">
+        Panel 1-A
+      </div>
+      <div data-flicking-groupkey="1" class="flicking-panel">
+        Panel 1-B
+      </div>
+      <div data-flicking-groupkey="2" class="flicking-panel">
+        Panel 2-A
+      </div>
+      <div data-flicking-groupkey="2" class="flicking-panel">
+        Panel 2-B
+      </div>
+      <div data-flicking-groupkey="3" class="flicking-panel">
+        Panel 3-A
+      </div>
+      <div data-flicking-groupkey="3" class="flicking-panel">
+        Panel 3-B
+      </div>
+    </CrossFlicking>
+  );
+}
+```
+
+  </TabItem>
+</Tabs>
+
+
+### Listening to Events
+
+You can listen to events from the Flicking inside each Panel.
+Each event has a `mainIndex: number` property, which is the index of the Panel including Flicking.
+- sideHoldStart extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-holdStart"}>holdStart</Link>
+- sideHoldEnd extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-holdEnd"}>holdEnd</Link>
+- sideMoveStart extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-moveStart"}>moveStart</Link>
+- sideMove extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-move"}>move</Link>
+- sideMoveEnd extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-moveEnd"}>moveEnd</Link>
+- sideWillChange extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-willChange"}>willChange</Link>
+- sideChanged extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-changed"}>changed</Link>
+
+<Tabs
+  groupId="cross"
+  defaultValue="js"
+  lazy={true}
+  values={[
+    { label: "JavaScript", value: "js" },
+    { label: "React", value: "react" },
+  ]}>
+  <TabItem value="js">
+
+```html
+<div id="flicking" class="flicking-viewport">
+  ...
+</div>
+
+<script>
+  const flicking = new Flicking.CrossFlicking("#flicking");
+
+  flicking.on("changed", (e) => {
+    console.log(`Main Flicking index changed to ${e.index}`);
+  });
+
+  flicking.on("sideChanged", (e) => {
+    console.log(`Side Flicking ${e.mainIndex} index changed to ${e.index}`);
+  });
+</script>
+```
+
+  </TabItem>
+  <TabItem value="react">
+
+```jsx
+import { CrossFlicking } from "@egjs/react-flicking";
+import "@egjs/react-flicking/dist/flicking.css";
+
+function App() {
+  const onChanged = (e) => {
+    console.log(`Main Flicking index changed to ${e.index}`);
+  };
+
+  const onSideChanged = (e) => {
+    console.log(`Side Flicking ${e.mainIndex} index changed to ${e.index}`);
+  };
+
+  return (
+    <CrossFlicking onChanged={onChanged} onSideChanged={onSideChanged}>
+      ...
+    </CrossFlicking>
+  );
+}
+```
+
+  </TabItem>
+</Tabs>
+
+
+### Options
+
+```ts
+class CrossFlicking extends Flicking
+```
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|sideOptions|FlickingOption|✔️|{}|Options for Vertical Flicking instances.|
+|preserveIndex|boolean|✔️|true|Preserves the previous vertical index when the horizontal index changes.|
+|disableSlideOnHold|boolean|✔️|true|Prevents horizontal and vertical Flicking from being dragged at the same time.|
+|disableIndexSync|boolean|✔️|false|Prevents index changes in the horizontal flicking from changing the index in the vertical flicking.|
