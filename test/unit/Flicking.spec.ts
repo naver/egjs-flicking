@@ -205,6 +205,14 @@ describe("Flicking", () => {
 
         expect(flicking.index).to.equal(0);
       });
+
+      it("should initialized with panel which has index equal to defaultIndex when panels are not visible.", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL.setWidth(0), { defaultIndex: 1, autoInit: false });
+
+        await flicking.init();
+
+        expect(flicking.index).to.equal(1);
+      });
     });
 
     describe("horizontal", () => {
