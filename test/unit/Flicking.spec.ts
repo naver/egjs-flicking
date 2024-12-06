@@ -72,7 +72,7 @@ describe("Flicking", () => {
       );
 
       expect(flicking.currentPanel).not.to.be.null;
-      expect(flicking.currentPanel).to.equal(flicking.camera.findNearestAnchor(0).panel);
+      expect(flicking.currentPanel).to.equal(flicking.panels[0]);
     });
 
     [15, 30, 50, 100].forEach((width) => {
@@ -204,6 +204,12 @@ describe("Flicking", () => {
         await flicking.init();
 
         expect(flicking.index).to.equal(0);
+      });
+
+      it("should initialized with panel which has index equal to defaultIndex when panels are not visible.", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL.setWidth(0), { defaultIndex: 1 });
+
+        expect(flicking.index).to.equal(1);
       });
     });
 
