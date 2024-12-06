@@ -41,7 +41,7 @@
   display: flex;
   justify-content: center;
   cursor: pointer;
-  width: 80px;
+  width: 85px;
   line-height: 36px;
   font-size: 16px;
   color: rgba(255, 255, 255, 0.6);
@@ -57,11 +57,6 @@
   color: rgba(255, 255, 255, 1);
 }
 
-.selected {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-
 .info {
   position: absolute;
   z-index: 3;
@@ -71,6 +66,8 @@
   max-height: 72px;
   margin: auto 20px;
   transition: all .25s ease-in-out;
+  pointer-events: none;
+  user-select: none;
 }
 
 .name {
@@ -102,10 +99,14 @@
 .area {
   position: absolute;
   left: 0px;
-  height: 40px;
+  height: 100%;
   -webkit-border-radius: 100px;
   border-radius: 100px;
-  transition: width .5s;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.animating {
+  transition: transform .5s;
 }
 
 .page {
@@ -137,4 +138,8 @@
 
 .dot + .dot {
   margin-top: 5px;
+}
+
+.hidden {
+  display: none;
 }

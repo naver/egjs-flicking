@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { useEffect, useRef, useState } from "react";
-import { CrossFlicking, CrossGroup, DIRECTION } from "@egjs/react-flicking";
+import { CrossFlicking, CrossGroup } from "@egjs/react-flicking";
 import "../../css/demo/crossflicking.css";
 
 export default () => {
@@ -9,9 +9,11 @@ export default () => {
   const tabRef = useRef<null[] | HTMLDivElement[]>([]);
   const [opacity, setOpacity] = useState(1);
   const [page, setPage] = useState([0, 0, 0, 0]);
-  const [panelCount, setPanelCount] = useState(4);
+  const [pagination, setPagination] = useState([0, 0, 0, 0]);
+  const [panelCount, setPanelCount] = useState(5);
   const [transform, setTransform] = useState(0);
   const [selectedWidth, setSelectedWidth] = useState("");
+  const [animating, setAnimating] = useState(false);
   const groups = [
     {
       name: "Spring",
@@ -136,68 +138,90 @@ export default () => {
   const [index, setIndex] = useState(0);
 
   const onChanged = (e) => {
-    const cameraPos = e.currentTarget.camera.position;
     setIndex(e.index);
     setOpacity(1);
     setSelectedWidth(`${tabRef.current[e.index]?.getBoundingClientRect().width}px`);
+    setTransform((+e.index) * 100);
     setPanelCount(groups[e.index].panels.length);
   };
 
   const onSideChanged = (e) => {
-    setPage(page.map((prev, i) => {
-      if (i < e.mainIndex) {
-        e.index = e.index - groups[i].panels.length;
-      } else if (i === e.mainIndex) {
-        return e.index;
-      }
-      return prev;
-    }));
+    setCurrentPage(e.index, e.mainIndex);
   };
 
   const onMove = (e) => {
-    const start = tabRef.current[e.currentTarget.index]!.getBoundingClientRect().x - tabRef.current[0]!.getBoundingClientRect().x;
-    const next = e.currentTarget.index + (e.currentTarget.visiblePanels[0].index === e.currentTarget.index ? 1 : -1);
+    const next = e.currentTarget.index as number + (e.currentTarget.visiblePanels[0].index === e.currentTarget.index ? 1 : -1);
     if (next >= 0 && next <= groups.length - 1) {
       const cameraPos = e.currentTarget.camera.position;
       const visibleLists = e.currentTarget.visiblePanels.map(p => {
         return {
           panelIndex: p.index,
-          diff: p.position - cameraPos,
+          diff: p.position - cameraPos
         };
       });
       const size = e.currentTarget.currentPanel.size;
       const half = size / 2;
-      const end = (tabRef.current[next]!.getBoundingClientRect().x - tabRef.current[e.currentTarget.index]!.getBoundingClientRect().x);
 
       const { diff = 0 } = visibleLists.find(item => item.panelIndex === index) ?? {};
-      const ratio = Math.max(-1, Math.min(1, Math.abs(diff / size))) || 1;
 
       if (e.isTrusted) {
+        setAnimating(false);
+        setTransform(e.currentTarget.index * 100 - (diff / size * 100));
+        setOpacity(Math.max(0, Math.min(1, 1 - Math.abs(diff / half))));
+      } else {
+        setAnimating(true);
       }
-      setOpacity(Math.max(0, Math.min(1, 1 - Math.abs(diff / half))));
-      setTransform((cameraPos - 200) / 5);
     }
   };
 
   const onSideMove = (e) => {
-    const cameraPos = e.currentTarget.camera.position;
-    const visibleLists = e.currentTarget.visiblePanels.map(p => {
+    const sideFlicking = e.currentTarget._vanillaFlicking.sideFlicking[index];
+    const cameraPos = sideFlicking.camera.position;
+    const visibleLists = sideFlicking.visiblePanels.map(p => {
       return {
         panelIndex: p.index,
-        diff: p.position - cameraPos,
+        diff: p.position - cameraPos
       };
     });
-    const size = e.currentTarget.currentPanel.size;
+    const size = sideFlicking.currentPanel.size;
     const half = size / 2;
-    
-    const { diff = 0 } = visibleLists.find(item => item.panelIndex === index) ?? {};;
+
+    const { diff = 0 } = visibleLists.find(item => item.panelIndex === sideFlicking.index) ?? {};
 
     setOpacity(Math.max(0, Math.min(1, 1 - Math.abs(diff / half))));
   };
 
+  const onSideWillChange = (e) => {
+    setCurrentPagination(e.index, e.mainIndex);
+  };
+
+  const setCurrentPage = (sideIndex: number, mainIndex: number) => {
+    setPage(page.map((prev, i) => {
+      if (i < mainIndex) {
+        sideIndex = sideIndex - groups[i].panels.length;
+      } else if (i === mainIndex) {
+        return sideIndex;
+      }
+      return prev;
+    }));
+  };
+
+  const setCurrentPagination = (sideIndex: number, mainIndex: number) => {
+    setPagination(page.map((prev, i) => {
+      if (i < mainIndex) {
+        sideIndex = sideIndex - groups[i].panels.length;
+      } else if (i === mainIndex) {
+        return sideIndex;
+      }
+      return prev;
+    }));
+  };
+
   const onTabClick = (i: number) => {
     if (!flicking.current?.animating) {
-      setIndex(i);
+      setOpacity(0);
+      setAnimating(true);
+      setTransform((i) * 100);
       flicking.current?.moveTo(i, 500).catch(() => void 0);
     }
   };
@@ -211,8 +235,8 @@ export default () => {
     <div className="demo">
       <div className="labels">
         {selectedWidth && <a
-          className="area selected"
-          style={{ width: selectedWidth, transform: `translate(${transform}px)` }}
+          className={"area " + (animating ? "animating" : "")}
+          style={{ width: selectedWidth, transform: `translate(${transform}%)` }}
         >
         </a>}
         {groups.map((item, i) => (
@@ -227,18 +251,21 @@ export default () => {
         ))}
       </div>
       <CrossFlicking
-        className="main"
+        className={"main " + (flicking.current?.initialized ? "" : "hidden")}
         ref={flicking}
         bounce={0.1}
         preventDefaultOnDrag={true}
         moveType={"strict"}
+        interruptable={false}
         sideOptions={{
           bounce: 0.1,
           moveType: "strict",
+          interruptable: false
         }}
         onMove={onMove}
         onSideMove={onSideMove}
         onChanged={onChanged}
+        onSideWillChange={onSideWillChange}
         onSideChanged={onSideChanged}
       >
         {groups.map((item, i) => {
@@ -258,15 +285,15 @@ export default () => {
       <div className="info" style={{ opacity: opacity }}>
         <div className="name">
           <span className="source">
-            {groups[index].name} Wallpaper
+            {groups[index].name} Wallpaper {page[index] + 1}
           </span>
         </div>
-        <strong className="headline">{groups[index].panels[page[index]].title}</strong>
+        <strong className="headline">{groups[index].panels[page[index]]?.title}</strong>
       </div>
       <div className="page">
-        {Array.from({ length: panelCount }).map((_, i) => {
-          return <span key={i} className={`dot ${i === page[index] ? "on" : ""}`}>{i + 1}</span>;
-        })}
+        {(pagination[index] < panelCount && pagination[index] >= 0) ? Array.from({ length: panelCount }).map((_, i) => {
+          return <span key={i} className={`dot ${i === pagination[index] ? "on" : ""}`}>{i + 1}</span>;
+        }) : <></>}
       </div>
     </div>
   );

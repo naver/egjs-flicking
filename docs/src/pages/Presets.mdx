@@ -16,6 +16,8 @@ You can easily create UIs with panels with multiple categories, like the example
 
 <CrossFlickingDemo />
 
+An example of using CrossFlicking is shown in the <Link to={"https://codesandbox.io/p/sandbox/react-crossflicking-viewer-5x7t82?file=%2Fsrc%2Findex.js%3A9%2C1"}>demo</Link> above.
+
 :::info
 Moving the first panel up in the vertical Flicking changes to the previous category and changes the index in the horizontal Flicking.
 
@@ -177,6 +179,11 @@ function App() {
   </TabItem>
 </Tabs>
 
+### Using the Methods
+
+You can use methods that exist in Flicking.
+
+Due to CrossFlicking using a different panel structure, methods that manipulate panels such as <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#append"}>append</Link>, <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#prepend"}>prepend</Link>, <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#insert"}>insert</Link>, and <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#remove"}>remove</Link> are not available in CrossFlicking.
 
 ### Listening to Events
 
@@ -189,6 +196,13 @@ Each event has a `mainIndex: number` property, which is the index of the Panel i
 - sideMoveEnd extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-moveEnd"}>moveEnd</Link>
 - sideWillChange extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-willChange"}>willChange</Link>
 - sideChanged extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-changed"}>changed</Link>
+- sideWillRestore extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-willRestore"}>willRestore</Link>
+- sideRestored extends <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-restored"}>restored</Link>
+
+Also `sideIndex: number` property has been added to the events that notify index changes.
+You can get the side index of the Flicking when the following events are fired.
+- <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-changed"}>changed</Link> event
+- <Link to={"https://naver.github.io/egjs-flicking/ko/docs/api/Flicking#event-willChange"}>willChange</Link> event
 
 <Tabs
   groupId="cross"

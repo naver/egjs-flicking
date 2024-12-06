@@ -262,6 +262,10 @@ export const setSize = (el: HTMLElement, { width, height }: Partial<{
   width: number | string;
   height: number | string;
 }>) => {
+  if (!el) {
+    return;
+  }
+
   if (width != null) {
     if (isString(width)) {
       el.style.width = width;

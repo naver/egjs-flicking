@@ -321,6 +321,10 @@ class Panel {
       useFractionalSize
     } = flicking;
 
+    if (!el) {
+      return this;
+    }
+
     if (cached) {
       this._size = cached.size;
       this._margin = { ...cached.margin };
