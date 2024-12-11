@@ -36,18 +36,61 @@ export default () => {
       </Flicking>
     </div>
 
-    <SourceCode options={{ circular: true }} panels={[
-      { tag: "div", class: "card-panel", content: "1" },
-      { tag: "div", class: "card-panel", content: "2" },
-      { tag: "div", class: "card-panel", content: "3" },
-      { tag: "div", class: "card-panel", content: "4" },
-      { tag: "div", class: "card-panel", content: "5" },
-      { tag: "div", class: "card-panel", content: "6" },
-      { tag: "div", class: "card-panel", content: "7" },
-      { tag: "div", class: "card-panel", content: "8" },
-      { tag: "div", class: "flicking-pagination", content: "", isSlot: true }
-    ]} plugins={[["Pagination", { type: "bullet" }]]}
-    imports={["@egjs/flicking-plugins/dist/pagination.css"]} />
+    <SourceCode
+      options={{ circular: true }}
+      panels={[
+        { tag: "div", class: "card-panel", content: `<span class="flicking-index">1</span>` },
+        { tag: "div", class: "card-panel", content: `<span class="flicking-index">2</span>` },
+        { tag: "div", class: "card-panel", content: `<span class="flicking-index">3</span>` },
+        { tag: "div", class: "card-panel", content: `<span class="flicking-index">4</span>` },
+        { tag: "div", class: "card-panel", content: `<span class="flicking-index">5</span>` },
+        { tag: "div", class: "card-panel", content: `<span class="flicking-index">6</span>` },
+        { tag: "div", class: "card-panel", content: `<span class="flicking-index">7</span>` },
+        { tag: "div", class: "card-panel", content: `<span class="flicking-index">8</span>` },
+        { tag: "div", class: "flicking-pagination", content: "", isSlot: true }
+      ]}
+      plugins={[["Pagination", { type: "bullet" }]]}
+      imports={["@egjs/flicking-plugins/dist/pagination.css"]}
+      style={`.flicking-viewport {
+  padding-bottom: 3rem !important;
+}
+
+.card-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5em 1em -0.125em rgba(10.2, 10.2, 10.2, 0.1);
+  max-width: 100%;
+  font-size: 3rem;
+  margin: 0.5rem;
+  width: 50%;
+  height: 200px;
+  padding: 30px 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.flicking-index {
+  position: relative;
+  min-width: 60px;
+  text-align: center;
+}
+
+.flicking-index::after {
+  position: absolute;
+  content: "PANEL";
+  font-weight: bold;
+  left: 0;
+  bottom: -1.2rem;
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
+}
+`}/>
 
     <div id="pagination-2" className="relative-container pb-1 mb-2">
       <Flicking className="pb-6" plugins={plugins2} circular={true}>
@@ -67,14 +110,14 @@ export default () => {
     </div>
 
     <SourceCode options={{ circular: true }} panels={[
-      { tag: "div", class: "card-panel", content: "1" },
-      { tag: "div", class: "card-panel", content: "2" },
-      { tag: "div", class: "card-panel", content: "3" },
-      { tag: "div", class: "card-panel", content: "4" },
-      { tag: "div", class: "card-panel", content: "5" },
-      { tag: "div", class: "card-panel", content: "6" },
-      { tag: "div", class: "card-panel", content: "7" },
-      { tag: "div", class: "card-panel", content: "8" },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">1</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">2</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">3</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">4</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">5</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">6</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">7</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">8</span>` },
       { tag: "div", class: "flicking-pagination", content: "", isSlot: true }
     ]} plugins={[["Pagination", { type: "fraction" }]]}
     imports={["@egjs/flicking-plugins/dist/pagination.css"]} />
@@ -97,14 +140,14 @@ export default () => {
     </div>
 
     <SourceCode options={{ circular: true }} panels={[
-      { tag: "div", class: "card-panel", content: "1" },
-      { tag: "div", class: "card-panel", content: "2" },
-      { tag: "div", class: "card-panel", content: "3" },
-      { tag: "div", class: "card-panel", content: "4" },
-      { tag: "div", class: "card-panel", content: "5" },
-      { tag: "div", class: "card-panel", content: "6" },
-      { tag: "div", class: "card-panel", content: "7" },
-      { tag: "div", class: "card-panel", content: "8" },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">1</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">2</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">3</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">4</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">5</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">6</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">7</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">8</span>` },
       { tag: "div", class: "flicking-pagination", content: "", isSlot: true }
     ]} plugins={[["Pagination", { type: "scroll" }]]}
     imports={["@egjs/flicking-plugins/dist/pagination.css"]} />

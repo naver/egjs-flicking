@@ -25,4 +25,4 @@ export const getImports = (otherImports, {
 
   return `${imports.map(imp => Array.isArray(imp) ? `import ${imp[0]} from "${imp[1]}";` : `import "${imp}";`).join("\n")}`;
 };
-export const getPlugins = (plugins) => `${plugins.map(plugin => `new ${plugin[0]}(${plugin[1] ? `{ ${getOptionsObject(plugin[1])} }` : ""}`).join(", ")})`;
+export const getPlugins = (plugins) => `${plugins.map(plugin => `new ${plugin[0]}(${typeof plugin[1] === "object" ? `{ ${getOptionsObject(plugin[1])} }` : plugin[1] ?? ""}`).join(", ")})`;

@@ -4,7 +4,7 @@ import CodeBlock from "@theme/CodeBlock";
 import { SourceContext } from "./type";
 import { getClass, getImports, getStyle, withQuoteIfString } from "./utils";
 
-export default ({ options, panels, events = {}, methods = {}, plugins = [], siblings = [], imports = [] }: SourceContext) => {
+export default ({ options, panels, events = {}, methods = {}, plugins = [], siblings = [], imports = [], viewportClass="" }: SourceContext) => {
   const getOptions = (opts: { [key: string]: any }) => `${Object.keys(opts).map(key => `${key}: ${withQuoteIfString(opts[key])}`).join(",\n  ")}`;
 
   const declareVars = Object.keys(methods).map(name => `const ${name} = ${methods[name]};\n`).join("");
@@ -16,7 +16,7 @@ export default ({ options, panels, events = {}, methods = {}, plugins = [], sibl
     : "const flicking = new Flicking(\"#flick\")";
 
   const addPlugins = plugins.length > 0
-    ? `flicking.addPlugins(${plugins.map(plugin => `new ${plugin[0]}(${plugin[1] ? `{\n  ${getOptions(plugin[1])}\n}` : ""})`)});` : "";
+    ? `flicking.addPlugins(${plugins.map(plugin => `new ${plugin[0]}(${plugin[1] ? `{\n  ${typeof plugin[1] === "object" ? getOptions(plugin[1]) : plugin[1] ?? ""}\n}` : ""})`)});` : "";
   const allImports = [...plugins.map(plugin => [`{ ${plugin[0]} }`, "@egjs/flicking-plugins"]), ...imports];
   const addEvents = Object.keys(events).map(evt => {
     const callback = events[evt];
@@ -26,7 +26,7 @@ export default ({ options, panels, events = {}, methods = {}, plugins = [], sibl
   const slots = panels.filter(panel => panel.isSlot);
 
   return <><CodeBlock className="language-html" title="html">
-    {`<div id="flick" class="flicking-viewport${options.horizontal === false ? " vertical" : "" }">
+    {`<div id="flick" class="flicking-viewport${viewportClass && ` ${viewportClass}` }${options.horizontal === false ? " vertical" : "" }">
   <div class="flicking-camera">
     ${panels.filter(panel => !panel.isSlot).map(panel => `<${panel.tag}${getClass(panel)}${getStyle(panel)}>${panel.content}</${panel.tag}>`).join("\n    ")}
   </div>${slots.length ? `\n  ${slots.map(slot => `<${slot.tag}${getClass(slot)}${getStyle(slot)}>${slot.content}</${slot.tag}>`).join("\n  ")}` : ""}
