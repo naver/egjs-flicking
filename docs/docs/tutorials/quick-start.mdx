@@ -299,7 +299,7 @@ You should add directive `flicking-panel` to the panel elements you use
 
 ```html
 <ngx-flicking
-  [options]="{ circular: true, duration: 500 }"
+  [options]="{ circular: true, duration: 500, preventDefaultOnDrag: true }"
   [plugins]="plugins"
   (needPanel)="onNeedPanel($event)"
   (moveEnd)="onMoveEnd($event)"
