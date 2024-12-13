@@ -28,14 +28,57 @@ export default () => {
       </Flicking>
     </div>
 
-    <SourceCode options={{ circular: true }} panels={[
-      { tag: "div", class: "card-panel", content: "1" },
-      { tag: "div", class: "card-panel", content: "2" },
-      { tag: "div", class: "card-panel", content: "3" },
-      { tag: "div", class: "card-panel", content: "4" },
-      { tag: "div", class: "card-panel", content: "5" },
-      { tag: "div", class: "card-panel", content: "6" }
-    ]} plugins={[["Perspective", { rotate: 0.5 }]]} />
+    <SourceCode
+      options={{ circular: true }}
+      panels={[
+        { tag: "div", class: "card-panel is-small", content: `<span class="flicking-index">1</span>` },
+        { tag: "div", class: "card-panel is-small", content: `<span class="flicking-index">2</span>` },
+        { tag: "div", class: "card-panel is-small", content: `<span class="flicking-index">3</span>` },
+        { tag: "div", class: "card-panel is-small", content: `<span class="flicking-index">4</span>` },
+        { tag: "div", class: "card-panel is-small", content: `<span class="flicking-index">5</span>` },
+        { tag: "div", class: "card-panel is-small", content: `<span class="flicking-index">6</span>` },
+      ]}
+      plugins={[["Perspective", { rotate: 0.5 }]]}
+      style={`.card-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5em 1em -0.125em rgba(10.2, 10.2, 10.2, 0.1);
+  max-width: 100%;
+  font-size: 3rem;
+  margin: 0.5rem;
+  width: 50%;
+  height: 200px;
+  padding: 30px 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.is-small {
+  width: 33%;
+}
+
+.flicking-index {
+  position: relative;
+  min-width: 60px;
+  text-align: center;
+}
+
+.flicking-index::after {
+  position: absolute;
+  content: "PANEL";
+  font-weight: bold;
+  left: 0;
+  bottom: -1.2rem;
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
+}
+`}/>
 
     <div id="perspective-2" className="relative-container">
       <Flicking className="pb-6" plugins={plugins2} circular={true}>
@@ -49,12 +92,12 @@ export default () => {
     </div>
 
     <SourceCode options={{ circular: true }} panels={[
-      { tag: "div", class: "card-panel", content: "1" },
-      { tag: "div", class: "card-panel", content: "2" },
-      { tag: "div", class: "card-panel", content: "3" },
-      { tag: "div", class: "card-panel", content: "4" },
-      { tag: "div", class: "card-panel", content: "5" },
-      { tag: "div", class: "card-panel", content: "6" }
+      { tag: "div", class: "card-panel is-small", content: `<span class="flicking-index">1</span>` },
+      { tag: "div", class: "card-panel is-small", content: `<span class="flicking-index">2</span>` },
+      { tag: "div", class: "card-panel is-small", content: `<span class="flicking-index">3</span>` },
+      { tag: "div", class: "card-panel is-small", content: `<span class="flicking-index">4</span>` },
+      { tag: "div", class: "card-panel is-small", content: `<span class="flicking-index">5</span>` },
+      { tag: "div", class: "card-panel is-small", content: `<span class="flicking-index">6</span>` },
     ]} plugins={[["Perspective", { rotate: -1, scale: 2, perspective: 600 }]]} />
   </div>);
 };

@@ -1,13 +1,9 @@
 .plugins-panel {
   position: relative;
-  display: block;
   border-radius: 5px;
   width: 80%;
   margin-right: 10px;
-  background: #f55;
   height: 200px;
-  text-align: center;
-  line-height: 200px;
   overflow: hidden;
 }
 .plugins-panel:after {

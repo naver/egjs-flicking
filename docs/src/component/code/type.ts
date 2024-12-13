@@ -13,6 +13,8 @@ export interface SourceContext {
   angular?: React.ReactElement;
   preact?: React.ReactElement;
   svelte?: React.ReactElement;
+  viewportClass?: string;
+  style?: string;
 }
 
 export interface InnerElement {

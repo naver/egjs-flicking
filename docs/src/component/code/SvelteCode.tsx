@@ -4,7 +4,7 @@ import CodeBlock from "@theme/CodeBlock";
 import { SourceContext } from "./type";
 import { getClass, getImports, getOptionsObject, getPlugins, getStyle } from "./utils";
 
-export default ({ options, panels, events = {}, methods = {}, plugins, siblings, imports = [] }: SourceContext) => {
+export default ({ options, panels, events = {}, methods = {}, plugins, siblings, imports = [], viewportClass="" }: SourceContext) => {
   const optionsObject = getOptionsObject(options);
   const declarePlugins = plugins ? `\n\nconst plugins = [${getPlugins(plugins)}];` : "";
   const slots = panels.filter(panel => panel.isSlot);
@@ -34,7 +34,7 @@ export default ({ options, panels, events = {}, methods = {}, plugins, siblings,
 ${getImports(defaultImports, { includeFlicking: false })}${declarePlugins}${declareMethods}
 </script>
 
-<Flicking${options ? ` options={{ ${optionsObject} }}` : ""}${plugins ? " plugins={plugins}" : ""}${eventStatement}>
+<Flicking${viewportClass && ` class="${viewportClass}"`}${options ? ` options={{ ${optionsObject} }}` : ""}${plugins ? " plugins={plugins}" : ""}${eventStatement}>
   ${panels.filter(panel => !panel.isSlot).map(panel => `<FlickingPanel${getClass(panel)}${getStyle(panel)}>${panel.content}</FlickingPanel>`).join("\n  ")}${slotsTemplate}
 </Flicking>${siblings ? `\n${siblings.map(el => `<${el.tag}${getClass(el)}${getStyle(el)}>${el.content}</${el.tag}>`).join("\n")}` : ""}`}
   </CodeBlock>;

@@ -4,7 +4,7 @@ import CodeBlock from "@theme/CodeBlock";
 import { SourceContext } from "./type";
 import { getClass, getImports, getPlugins, getStyle } from "./utils";
 
-export default ({ options, panels, events = {}, methods = {}, plugins, siblings, imports = [] }: SourceContext) => {
+export default ({ options, panels, events = {}, methods = {}, plugins, siblings, imports = [], viewportClass="" }: SourceContext) => {
   const declarePlugins = plugins ? `\n  private _plugins = [${getPlugins(plugins)}];\n` : "";
   const slots = panels.filter(panel => panel.isSlot);
 
@@ -35,7 +35,7 @@ export default ({ options, panels, events = {}, methods = {}, plugins, siblings,
 ${declareVars}
 export default class DemoComponent extends Component {${declarePlugins}
   public render() {
-    return ${siblings ? "<>\n    " : ""}<Flicking${options ? ` ${Object.keys(options).map(key => `${key}=${typeof options[key] === "string" ? `"${options[key]}"` : `{${options[key]}}`}`).join(" ")}` : ""}${plugins ? " plugins={this._plugins}" : ""}${eventStatement}>
+    return ${siblings ? "<>\n    " : ""}<Flicking${viewportClass && ` className="${viewportClass}"`}${options ? ` ${Object.keys(options).map(key => `${key}=${typeof options[key] === "string" ? `"${options[key]}"` : `{${options[key]}}`}`).join(" ")}` : ""}${plugins ? " plugins={this._plugins}" : ""}${eventStatement}>
       ${panels.filter(panel => !panel.isSlot).map(panel => `<${panel.tag}${getClass(panel, "className")}${getStyle(panel, true)}>${panel.content.replace(/class/g, "className")}</${panel.tag}>`).join("\n      ")}${slotsTemplate}
     </Flicking>${siblings ? `\n    ${siblings.map(el => `<${el.tag}${getClass(el, "className")}${getStyle(el, true)}>${el.content.replace(/class/g, "className")}</${el.tag}>`).join("\n    ")}\n    </>` : ""};
   }

@@ -34,13 +34,53 @@ export default () => {
       </Flicking>
     </div>
 
-    <SourceCode options={{ circular: true }} panels={[
-      { tag: "div", class: "card-panel", content: "1" },
-      { tag: "div", class: "card-panel", content: "2" },
-      { tag: "div", class: "card-panel", content: "3" },
-      { tag: "span", class: "flicking-arrow-prev", content: "", isSlot: true },
-      { tag: "span", class: "flicking-arrow-next", content: "", isSlot: true }
-    ]} plugins={[["Arrow"]]} imports={["@egjs/flicking-plugins/dist/arrow.css"]} />
+    <SourceCode
+      options={{ circular: true }}
+      panels={[
+        { tag: "div", class: "card-panel", content: `<span class="flicking-index">1</span>` },
+        { tag: "div", class: "card-panel", content: `<span class="flicking-index">2</span>` },
+        { tag: "div", class: "card-panel", content: `<span class="flicking-index">3</span>` },
+        { tag: "span", class: "flicking-arrow-prev", content: "", isSlot: true },
+        { tag: "span", class: "flicking-arrow-next", content: "", isSlot: true }
+      ]}
+      plugins={[["Arrow"]]}
+      imports={["@egjs/flicking-plugins/dist/arrow.css"]}
+      style={`.card-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5em 1em -0.125em rgba(10.2, 10.2, 10.2, 0.1);
+  max-width: 100%;
+  font-size: 3rem;
+  margin: 0.5rem;
+  width: 50%;
+  height: 200px;
+  padding: 30px 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.flicking-index {
+  position: relative;
+  min-width: 60px;
+  text-align: center;
+}
+
+.flicking-index::after {
+  position: absolute;
+  content: "PANEL";
+  font-weight: bold;
+  left: 0;
+  bottom: -1.2rem;
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
+}
+`}/>
 
     <div id="arrow-2" className="relative-container">
       <Flicking className="mb-6" plugins={plugins2} circular={true}>
@@ -55,9 +95,9 @@ export default () => {
     </div>
 
     <SourceCode options={{ circular: true }} panels={[
-      { tag: "div", class: "card-panel", content: "1" },
-      { tag: "div", class: "card-panel", content: "2" },
-      { tag: "div", class: "card-panel", content: "3" },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">1</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">2</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">3</span>` },
       { tag: "span", class: "flicking-arrow-prev is-circle", content: "", isSlot: true },
       { tag: "span", class: "flicking-arrow-next is-circle", content: "", isSlot: true }
     ]} plugins={[["Arrow"]]} imports={["@egjs/flicking-plugins/dist/arrow.css"]} />
@@ -73,9 +113,9 @@ export default () => {
     </div>
 
     <SourceCode options={{ circular: true }} panels={[
-      { tag: "div", class: "card-panel", content: "1" },
-      { tag: "div", class: "card-panel", content: "2" },
-      { tag: "div", class: "card-panel", content: "3" }
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">1</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">2</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">3</span>` },
     ]} siblings={[
       { tag: "span", class: "flicking-arrow-prev is-outside", content: "" },
       { tag: "span", class: "flicking-arrow-next is-outside", content: "" }
@@ -93,9 +133,9 @@ export default () => {
     </div>
 
     <SourceCode options={{ circular: true }} panels={[
-      { tag: "div", class: "card-panel", content: "1" },
-      { tag: "div", class: "card-panel", content: "2" },
-      { tag: "div", class: "card-panel", content: "3" }
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">1</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">2</span>` },
+      { tag: "div", class: "card-panel", content: `<span class="flicking-index">3</span>` },
     ]} siblings={[
       { tag: "span", class: "flicking-arrow-prev is-thin", content: "" },
       { tag: "span", class: "flicking-arrow-next is-thin", content: "" }
