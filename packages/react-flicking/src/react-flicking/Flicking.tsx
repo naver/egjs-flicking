@@ -266,11 +266,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
     const same = prevChildren.every((child, idx) => {
       const nextChild = nextChildren[idx];
 
-      if (child.key && nextChild.key) {
-        return child.key === nextChild.key;
-      } else {
-        return child === nextChild;
-      }
+      return child === nextChild;
     });
 
     return same;
