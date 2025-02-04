@@ -332,9 +332,7 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
         : getRenderingPanels(vanillaFlicking, diff(origChildren, origChildren))
       : origChildren;
 
-    return this.props.useFindDOMNode
-      ? children.map((child, idx) => <NonStrictPanel key={child.key!} ref={this._panels[idx] as any}>{child}</NonStrictPanel>)
-      : children.map((child, idx) => <StrictPanel key={child.key!} ref={this._panels[idx] as any}>{child}</StrictPanel>)
+    return children.map((child, idx) => <StrictPanel key={child.key!} ref={this._panels[idx] as any}>{child}</StrictPanel>);
   }
 
   private _isFragment(child: React.ReactElement) {
