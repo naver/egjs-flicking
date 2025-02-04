@@ -221,5 +221,4 @@ demo/release
 packages/**/*/dist/
 demo/_data/version.yml
 
-outjs/
 declaration/
