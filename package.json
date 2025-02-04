@@ -47,7 +47,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/naver/egjs-flicking"
+		"url": "https://github.com/jtwite/egjs-flicking"
 	},
 	"author": {
 		"name": "NAVER Corp."
