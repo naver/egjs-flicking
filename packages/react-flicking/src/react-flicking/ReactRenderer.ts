@@ -28,9 +28,9 @@ class ReactRenderer extends ExternalRenderer {
     const reactFlicking = this._reactFlicking;
     const strategy = this._strategy;
 
+    strategy.updateRenderingPanels(flicking);
     this._rendering = true;
 
-    strategy.updateRenderingPanels(flicking);
     strategy.renderPanels(flicking);
 
     return new Promise<void>(resolve => {
