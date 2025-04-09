@@ -28,6 +28,8 @@ class ReactRenderer extends ExternalRenderer {
     const reactFlicking = this._reactFlicking;
     const strategy = this._strategy;
 
+    // applyTransform does not work when renderer.rendering is true. #916
+    // updateRenderingPanels should be called before rendering becomes true, or transform will be applied later.
     strategy.updateRenderingPanels(flicking);
     this._rendering = true;
 
