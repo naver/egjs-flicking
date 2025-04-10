@@ -109,7 +109,7 @@ class SnapControl extends Control {
     if (snapDelta >= snapThreshold && snapDelta > 0) {
       // Move to anchor at position
       targetAnchor = this._findSnappedAnchor(position, anchorAtCamera);
-    } else if (absPosDelta >= flicking.threshold && absPosDelta > 0) {
+    } else if (absPosDelta >= flicking.threshold && absPosDelta > 0 && anchorAtCamera === activeAnchor) {
       // Move to the adjacent panel
       targetAnchor = this._findAdjacentAnchor(position, posDelta, anchorAtCamera);
     } else {
