@@ -22,7 +22,6 @@ import AutoPlay from "./plugins/AutoPlay";
 import Arrow from "./plugins/Arrow";
 import Header from "./Header";
 import Example from "./debug/Example";
-import VariableHeightPanels from "./debug/VariableHeightPanels";
 
 export default class App extends Component<{}> {
   public render() {
@@ -31,7 +30,6 @@ export default class App extends Component<{}> {
         <Header />
         <Routes>
           <Route path="/debug-example" element={<Example />} />
-          <Route path="/debug-variable-height" element={<VariableHeightPanels />} />
           <Route path="/infinite" element={<InfiniteFlicking />} />
           <Route path="/free-scroll" element={<FreeScroll />} />
           <Route path="/variable-size" element={<VariableSize />} />
