@@ -15,7 +15,9 @@ class AutoResizer {
   private _resizeTimer: number;
   private _maxResizeDebounceTimer: number;
 
-  public get enabled() { return this._enabled; }
+  public get enabled() {
+    return this._enabled;
+  }
 
   public constructor(flicking: Flicking) {
     this._flicking = flicking;
@@ -37,8 +39,8 @@ class AutoResizer {
       const viewportSizeNot0 = viewport.width !== 0 || viewport.height !== 0;
 
       const resizeObserver = viewportSizeNot0
-        ? new ResizeObserver(this._skipFirstResize)
-        : new ResizeObserver(this._onResize);
+        ? new ResizeObserver((entries) => this._skipFirstResize(entries))
+        : new ResizeObserver((entries) => this._onResize(entries));
 
       this._resizeObserver = resizeObserver;
 
@@ -110,17 +112,40 @@ class AutoResizer {
     return this;
   }
 
-  private _onResize = () => {
+  private _onResize = (entries: any) => {
     const flicking = this._flicking;
     const resizeDebounce = flicking.resizeDebounce;
     const maxResizeDebounce = flicking.maxResizeDebounce;
+
+    const resizeEntryInfo = entries[0].contentRect;
+
+    const beforeSize = {
+      width: flicking.viewport.width,
+      height: flicking.viewport.height,
+    };
+
+    const afterSize = {
+      width: resizeEntryInfo.width,
+      height: resizeEntryInfo.height,
+    };
+
+    // resize 이벤트가 발생했으나 이전과 width, height의 변화가 없다면 이후 로직을 진행하지 않는다.
+    if (
+      beforeSize.height === afterSize.height &&
+      beforeSize.width === afterSize.width
+    ) {
+      return;
+    }
 
     if (resizeDebounce <= 0) {
       void flicking.resize();
     } else {
       if (this._maxResizeDebounceTimer <= 0) {
         if (maxResizeDebounce > 0 && maxResizeDebounce >= resizeDebounce) {
-          this._maxResizeDebounceTimer = window.setTimeout(this._doScheduledResize, maxResizeDebounce);
+          this._maxResizeDebounceTimer = window.setTimeout(
+            this._doScheduledResize,
+            maxResizeDebounce
+          );
         }
       }
 
@@ -129,7 +154,10 @@ class AutoResizer {
         this._resizeTimer = 0;
       }
 
-      this._resizeTimer = window.setTimeout(this._doScheduledResize, resizeDebounce);
+      this._resizeTimer = window.setTimeout(
+        this._doScheduledResize,
+        resizeDebounce
+      );
     }
   };
 
@@ -147,13 +175,13 @@ class AutoResizer {
   private _skipFirstResize = (() => {
     let isFirstResize = true;
 
-    return (() => {
+    return (entries) => {
       if (isFirstResize) {
         isFirstResize = false;
         return;
       }
-      this._onResize();
-    });
+      this._onResize(entries);
+    };
   })();
 }
 

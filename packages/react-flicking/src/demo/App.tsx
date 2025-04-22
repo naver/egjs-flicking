@@ -1,10 +1,5 @@
-
 import React, { Component } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./css/common.css";
 import "./css/features.css";
 import "./css/highlight.css";
@@ -26,13 +21,17 @@ import Fade from "./plugins/Fade";
 import AutoPlay from "./plugins/AutoPlay";
 import Arrow from "./plugins/Arrow";
 import Header from "./Header";
+import Example from "./debug/Example";
+import VariableHeightPanels from "./debug/VariableHeightPanels";
 
 export default class App extends Component<{}> {
   public render() {
     return (
       <Router>
-        <Header/>
+        <Header />
         <Routes>
+          <Route path="/debug-example" element={<Example />} />
+          <Route path="/debug-variable-height" element={<VariableHeightPanels />} />
           <Route path="/infinite" element={<InfiniteFlicking />} />
           <Route path="/free-scroll" element={<FreeScroll />} />
           <Route path="/variable-size" element={<VariableSize />} />
@@ -48,7 +47,8 @@ export default class App extends Component<{}> {
           <Route path="/prop" element={<PropChange />} />
           <Route path="/cross" element={<CrossFlicking />} />
         </Routes>
-      </Router>);
+      </Router>
+    );
   }
   public componentDidMount() {
     hljs.initHighlighting();
