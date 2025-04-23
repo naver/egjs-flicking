@@ -121,12 +121,12 @@ class AutoResizer {
 
     const beforeSize = {
       width: flicking.viewport.width,
-      height: flicking.viewport.height,
+      height: flicking.viewport.height
     };
 
     const afterSize = {
       width: resizeEntryInfo.width,
-      height: resizeEntryInfo.height,
+      height: resizeEntryInfo.height
     };
 
     // resize 이벤트가 발생했으나 이전과 width, height의 변화가 없다면 이후 로직을 진행하지 않는다.
