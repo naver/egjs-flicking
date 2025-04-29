@@ -9,6 +9,7 @@ import AnchorPoint from "../core/AnchorPoint";
 import { circulateIndex, clamp, getFlickingAttached } from "../utils";
 import * as AXES from "../const/axes";
 import * as ERROR from "../const/error";
+import { DIRECTION } from "../const/external";
 
 import Control from "./Control";
 
@@ -120,12 +121,16 @@ class SnapControl extends Control {
       });
     }
 
-    this._triggerIndexChangeEvent(targetAnchor.panel, position, axesEvent);
+    const nextPanel = targetAnchor.panel;
+    const direction = (posDelta === 0 || activeAnchor === targetAnchor) ? DIRECTION.NONE : (posDelta > 0 ? DIRECTION.NEXT : DIRECTION.PREV);
+    const nextPosition = this._getPosition(nextPanel, direction);
+
+    this._triggerIndexChangeEvent(nextPanel, position, axesEvent);
 
     return this._animateToPosition({
-      position: camera.clampToReachablePosition(targetAnchor.position),
+      position: camera.clampToReachablePosition(nextPosition),
       duration,
-      newActivePanel: targetAnchor.panel,
+      newActivePanel: nextPanel,
       axesEvent
     });
   }
@@ -138,14 +143,15 @@ class SnapControl extends Control {
     const currentPos = camera.position;
 
     const clampedPosition = camera.clampToReachablePosition(position);
+    const nearestAnchor = camera.findNearestAnchor(clampedPosition);
     const anchorAtPosition = camera.findAnchorIncludePosition(clampedPosition);
 
-    if (!anchorAtCamera || !anchorAtPosition) {
+    if (!anchorAtCamera || !anchorAtPosition || !nearestAnchor) {
       throw new FlickingError(ERROR.MESSAGE.POSITION_NOT_REACHABLE(position), ERROR.CODE.POSITION_NOT_REACHABLE);
     }
 
     if (!isFinite(count)) {
-      return anchorAtPosition;
+      return nearestAnchor;
     }
 
     const panelCount = flicking.panelCount;
