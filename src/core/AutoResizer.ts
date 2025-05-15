@@ -2,6 +2,8 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { getElementSize, getStyle } from "src/utils";
+
 import Flicking from "../Flicking";
 
 /**
@@ -39,8 +41,8 @@ class AutoResizer {
       const viewportSizeNot0 = viewport.width !== 0 || viewport.height !== 0;
 
       const resizeObserver = viewportSizeNot0
-        ? new ResizeObserver((entries: ResizeObserverEntry[]) => this._skipFirstResize(entries))
-        : new ResizeObserver((entries: ResizeObserverEntry[]) => this._onResize(entries));
+        ? new ResizeObserver(this._skipFirstResize)
+        : new ResizeObserver(this._onResize);
 
       this._resizeObserver = resizeObserver;
 
@@ -50,7 +52,7 @@ class AutoResizer {
         this.observePanels();
       }
     } else {
-      window.addEventListener("resize", () => this._onResize([]));
+      window.addEventListener("resize", this._onResizeWrapper);
     }
 
     this._enabled = true;
@@ -104,7 +106,7 @@ class AutoResizer {
       resizeObserver.disconnect();
       this._resizeObserver = null;
     } else {
-      window.removeEventListener("resize", () => this._onResize([]));
+      window.removeEventListener("resize", this._onResizeWrapper);
     }
 
     this._enabled = false;
@@ -112,21 +114,36 @@ class AutoResizer {
     return this;
   }
 
+  private _onResizeWrapper = () => {
+    this._onResize([]);
+  };
+
   private _onResize = (entries: ResizeObserverEntry[]) => {
     const flicking = this._flicking;
     const resizeDebounce = flicking.resizeDebounce;
     const maxResizeDebounce = flicking.maxResizeDebounce;
 
     if (entries.length) {
-      const resizeEntryInfo = entries[0].contentRect;
       const beforeSize = {
         width: flicking.viewport.width,
         height: flicking.viewport.height
       };
 
       const afterSize = {
-        width: resizeEntryInfo.width,
-        height: resizeEntryInfo.height
+        width: getElementSize({
+          el: entries[0].target as HTMLElement,
+          horizontal: true,
+          useFractionalSize: this._flicking.useFractionalSize,
+          useOffset: false,
+          style: getStyle(entries[0].target as HTMLElement)
+        }),
+        height: getElementSize({
+          el: entries[0].target as HTMLElement,
+          horizontal: false,
+          useFractionalSize: this._flicking.useFractionalSize,
+          useOffset: false,
+          style: getStyle(entries[0].target as HTMLElement)
+        })
       };
 
       // resize 이벤트가 발생했으나 이전과 width, height의 변화가 없다면 이후 로직을 진행하지 않는다.
