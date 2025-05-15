@@ -44,7 +44,7 @@ class AutoResizer {
 
       this.observe(flicking.viewport.element);
 
-      if (flicking.resizeObservePanel) {
+      if (flicking.resizePanelObserve) {
         this.observePanels();
       }
     } else {

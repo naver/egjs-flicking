@@ -910,7 +910,7 @@ describe("Flicking", () => {
       });
     });
 
-    describe("resizeObservePanel", () => {
+    describe("resizePanelObserve", () => {
       it(`should call resize when size of panel is changed`, async () => {
         const flicking = await createFlicking(
           El.viewport("1000px", "1000px").add(
@@ -920,7 +920,7 @@ describe("Flicking", () => {
               El.panel("800px", "1000px"),
             )
           ),
-          { autoResize: true, useResizeObserver: true, resizeObservePanel: true }
+          { autoResize: true, useResizeObserver: true, resizePanelObserve: true }
         );
         const afterResizeSpy = sinon.spy();
         const beforeResizeSpy = sinon.spy();
@@ -947,7 +947,7 @@ describe("Flicking", () => {
               El.panel("800px", "1000px"),
             )
           ),
-          { autoResize: true, useResizeObserver: true, resizeObservePanel: true }
+          { autoResize: true, useResizeObserver: true, resizePanelObserve: true }
         );
         const afterResizeSpy = sinon.spy();
         const beforeResizeSpy = sinon.spy();
