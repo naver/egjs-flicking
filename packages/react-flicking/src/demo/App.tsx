@@ -21,7 +21,6 @@ import Fade from "./plugins/Fade";
 import AutoPlay from "./plugins/AutoPlay";
 import Arrow from "./plugins/Arrow";
 import Header from "./Header";
-import Example from "./debug/Example";
 
 export default class App extends Component<{}> {
   public render() {
@@ -29,7 +28,6 @@ export default class App extends Component<{}> {
       <Router>
         <Header />
         <Routes>
-          <Route path="/debug-example" element={<Example />} />
           <Route path="/infinite" element={<InfiniteFlicking />} />
           <Route path="/free-scroll" element={<FreeScroll />} />
           <Route path="/variable-size" element={<VariableSize />} />
