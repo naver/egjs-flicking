@@ -17,7 +17,7 @@ import {
   FreeControl,
   StrictControl,
   FreeControlOptions,
-  StrictControlOptions,
+  StrictControlOptions
 } from "./control";
 import { Camera } from "./camera";
 import {
@@ -26,14 +26,14 @@ import {
   ExternalRenderer,
   RendererOptions,
   NormalRenderingStrategy,
-  VirtualRenderingStrategy,
+  VirtualRenderingStrategy
 } from "./renderer";
 import {
   EVENTS,
   ALIGN,
   MOVE_TYPE,
   DIRECTION,
-  CIRCULAR_FALLBACK,
+  CIRCULAR_FALLBACK
 } from "./const/external";
 import * as ERROR from "./const/error";
 import { findIndex, getElement, includes, parseElement } from "./utils";
@@ -54,7 +54,7 @@ import {
   BeforeResizeEvent,
   ChangedEvent,
   RestoredEvent,
-  PanelChangeEvent,
+  PanelChangeEvent
 } from "./type/event";
 import { LiteralUnion, ValueOf } from "./type/internal";
 import { ElementLike, Plugin, Status, MoveTypeOptions } from "./type/external";
@@ -88,9 +88,9 @@ export interface FlickingEvents {
 export interface FlickingOptions {
   // UI / LAYOUT
   align:
-    | LiteralUnion<ValueOf<typeof ALIGN>>
-    | number
-    | { panel: number | string; camera: number | string };
+  | LiteralUnion<ValueOf<typeof ALIGN>>
+  | number
+  | { panel: number | string; camera: number | string };
   defaultIndex: number;
   horizontal: boolean;
   circular: boolean;
@@ -114,8 +114,8 @@ export interface FlickingOptions {
   // INPUT
   inputType: string[];
   moveType:
-    | ValueOf<typeof MOVE_TYPE>
-    | MoveTypeOptions<ValueOf<typeof MOVE_TYPE>>;
+  | ValueOf<typeof MOVE_TYPE>
+  | MoveTypeOptions<ValueOf<typeof MOVE_TYPE>>;
   threshold: number;
   dragThreshold: number;
   interruptable: boolean;
@@ -139,6 +139,7 @@ export interface FlickingOptions {
   maxResizeDebounce: number;
   useFractionalSize: boolean;
   externalRenderer: ExternalRenderer | null;
+  optimizeSizeUpdate: boolean;
 
   // @deprecated
   renderExternal: {
@@ -218,6 +219,7 @@ class Flicking extends Component<FlickingEvents> {
   private _useFractionalSize: FlickingOptions["useFractionalSize"];
   private _externalRenderer: FlickingOptions["externalRenderer"];
   private _renderExternal: FlickingOptions["renderExternal"];
+  private _optimizeSizeUpdate: FlickingOptions["optimizeSizeUpdate"];
 
   // Internal State
   private _initialized: boolean;
@@ -238,6 +240,7 @@ class Flicking extends Component<FlickingEvents> {
   public get control() {
     return this._control;
   }
+
   /**
    * {@link Camera} instance of the Flicking
    * @ko 현재 Flicking에 활성화된 {@link Camera} 인스턴스
@@ -252,6 +255,7 @@ class Flicking extends Component<FlickingEvents> {
   public get camera() {
     return this._camera;
   }
+
   /**
    * {@link Renderer} instance of the Flicking
    * @ko 현재 Flicking에 활성화된 {@link Renderer} 인스턴스
@@ -265,6 +269,7 @@ class Flicking extends Component<FlickingEvents> {
   public get renderer() {
     return this._renderer;
   }
+
   /**
    * A component that manages viewport size
    * @ko 뷰포트 크기 정보를 담당하는 컴포넌트
@@ -293,6 +298,7 @@ class Flicking extends Component<FlickingEvents> {
   public get initialized() {
     return this._initialized;
   }
+
   /**
    * Whether the `circular` option is enabled.
    * The {@link Flicking#circular circular} option can't be enabled when sum of the panel sizes are too small.
@@ -305,6 +311,7 @@ class Flicking extends Component<FlickingEvents> {
   public get circularEnabled() {
     return this._camera.circularEnabled;
   }
+
   /**
    * Whether the `virtual` option is enabled.
    * The {@link Flicking#virtual virtual} option can't be enabled when  {@link Flicking#panelsPerView panelsPerView} is less or equal than zero.
@@ -317,6 +324,7 @@ class Flicking extends Component<FlickingEvents> {
   public get virtualEnabled() {
     return this._panelsPerView > 0 && this._virtual != null;
   }
+
   /**
    * Index number of the {@link Flicking#currentPanel currentPanel}
    * @ko {@link Flicking#currentPanel currentPanel}의 인덱스 번호
@@ -327,6 +335,7 @@ class Flicking extends Component<FlickingEvents> {
   public get index() {
     return this._control.activeIndex;
   }
+
   /**
    * The root(`.flicking-viewport`) element
    * @ko root(`.flicking-viewport`) 엘리먼트
@@ -336,6 +345,7 @@ class Flicking extends Component<FlickingEvents> {
   public get element() {
     return this._viewport.element;
   }
+
   /**
    * Currently active panel
    * @ko 현재 선택된 패널
@@ -346,6 +356,7 @@ class Flicking extends Component<FlickingEvents> {
   public get currentPanel() {
     return this._control.activePanel;
   }
+
   /**
    * Array of panels
    * @ko 전체 패널들의 배열
@@ -356,6 +367,7 @@ class Flicking extends Component<FlickingEvents> {
   public get panels() {
     return this._renderer.panels;
   }
+
   /**
    * Count of panels
    * @ko 전체 패널의 개수
@@ -365,6 +377,7 @@ class Flicking extends Component<FlickingEvents> {
   public get panelCount() {
     return this._renderer.panelCount;
   }
+
   /**
    * Array of panels that is visible at the current position
    * @ko 현재 보이는 패널의 배열
@@ -375,6 +388,7 @@ class Flicking extends Component<FlickingEvents> {
   public get visiblePanels() {
     return this._camera.visiblePanels;
   }
+
   /**
    * Whether Flicking's animating
    * @ko 현재 애니메이션 동작 여부
@@ -384,6 +398,7 @@ class Flicking extends Component<FlickingEvents> {
   public get animating() {
     return this._control.animating;
   }
+
   /**
    * Whether user is clicking or touching
    * @ko 현재 사용자가 클릭/터치중인지 여부
@@ -393,6 +408,7 @@ class Flicking extends Component<FlickingEvents> {
   public get holding() {
     return this._control.holding;
   }
+
   /**
    * A current list of activated plugins
    * @ko 현재 활성화된 플러그인 목록
@@ -436,6 +452,7 @@ class Flicking extends Component<FlickingEvents> {
   public get align() {
     return this._align;
   }
+
   /**
    * Index of the panel to move when Flicking's {@link Flicking#init init()} is called. A zero-based integer
    * @ko Flicking의 {@link Flicking#init init()}이 호출될 때 이동할 디폴트 패널의 인덱스로, 0부터 시작하는 정수입니다.
@@ -446,6 +463,7 @@ class Flicking extends Component<FlickingEvents> {
   public get defaultIndex() {
     return this._defaultIndex;
   }
+
   /**
    * Direction of panel movement (true: horizontal, false: vertical)
    * @ko 패널 이동 방향 (true: 가로방향, false: 세로방향)
@@ -456,6 +474,7 @@ class Flicking extends Component<FlickingEvents> {
   public get horizontal() {
     return this._horizontal;
   }
+
   /**
    * Enables circular(continuous loop) mode, which connects first/last panel for continuous scrolling.
    * @ko 순환 모드를 활성화합니다. 순환 모드에서는 양 끝의 패널이 서로 연결되어 끊김없는 스크롤이 가능합니다.
@@ -466,6 +485,7 @@ class Flicking extends Component<FlickingEvents> {
   public get circular() {
     return this._circular;
   }
+
   /**
    * Set panel control mode for the case when circular cannot be enabled.
    * "linear" will set the view's range from the top of the first panel to the top of the last panel.
@@ -481,6 +501,7 @@ class Flicking extends Component<FlickingEvents> {
   public get circularFallback() {
     return this._circularFallback;
   }
+
   /**
    * Prevent the view(camera element) from going out of the first/last panel, so it won't show empty spaces before/after the first/last panel
    * Only can be enabled when `circular=false`
@@ -493,6 +514,7 @@ class Flicking extends Component<FlickingEvents> {
   public get bound() {
     return this._bound;
   }
+
   /**
    * Update height of the viewport element after movement same to the height of the panel below. This can be only enabled when `horizontal=true`
    * @ko 이동한 후 뷰포트 엘리먼트의 크기를 현재 패널의 높이와 동일하게 설정합니다. `horizontal=true`인 경우에만 사용할 수 있습니다.
@@ -503,6 +525,7 @@ class Flicking extends Component<FlickingEvents> {
   public get adaptive() {
     return this._adaptive;
   }
+
   /**
    * A visible number of panels on viewport. Enabling this option will automatically resize panel size
    * @ko 한 화면에 보이는 패널의 개수. 이 옵션을 활성화할 경우 패널의 크기를 강제로 재조정합니다
@@ -513,6 +536,7 @@ class Flicking extends Component<FlickingEvents> {
   public get panelsPerView() {
     return this._panelsPerView;
   }
+
   /**
    * Enabling this option will not change `width/height` style of the panels if {@link Flicking#panelsPerView} is enabled.
    * This behavior can be useful in terms of performance when you're manually managing all panel sizes
@@ -524,6 +548,7 @@ class Flicking extends Component<FlickingEvents> {
   public get noPanelStyleOverride() {
     return this._noPanelStyleOverride;
   }
+
   /**
    * Enabling this option will automatically call {@link Flicking#resize} when all image/video inside panels are loaded.
    * This can be useful when you have contents inside Flicking that changes its size when it's loaded
@@ -536,6 +561,7 @@ class Flicking extends Component<FlickingEvents> {
   public get resizeOnContentsReady() {
     return this._resizeOnContentsReady;
   }
+
   /**
    * If you enable this option on child Flicking when the Flicking is placed inside the Flicking, the parent Flicking will move in the same direction after the child Flicking reaches the first/last panel.
    * If the parent Flicking and child Flicking have different horizontal option, you do not need to set this option.
@@ -548,6 +574,7 @@ class Flicking extends Component<FlickingEvents> {
   public get nested() {
     return this._nested;
   }
+
   // EVENTS
   /**
    * A Threshold from viewport edge before triggering `needPanel` event
@@ -559,6 +586,7 @@ class Flicking extends Component<FlickingEvents> {
   public get needPanelThreshold() {
     return this._needPanelThreshold;
   }
+
   /**
    * When enabled, events are not triggered before `ready` when initializing
    * @ko 활성화할 경우 초기화시 `ready` 이벤트 이전의 이벤트가 발생하지 않습니다.
@@ -569,6 +597,7 @@ class Flicking extends Component<FlickingEvents> {
   public get preventEventsBeforeInit() {
     return this._preventEventsBeforeInit;
   }
+
   // ANIMATION
   /**
    * Deceleration value for panel movement animation which is triggered by user input. A higher value means a shorter animation time
@@ -580,6 +609,7 @@ class Flicking extends Component<FlickingEvents> {
   public get deceleration() {
     return this._deceleration;
   }
+
   /**
    * An easing function applied to the panel movement animation. Default value is `easeOutCubic`
    * @ko 패널 이동 애니메이션에 적용할 easing 함수. 기본값은 `easeOutCubic`이다
@@ -591,6 +621,7 @@ class Flicking extends Component<FlickingEvents> {
   public get easing() {
     return this._easing;
   }
+
   /**
    * Default duration of the animation (ms)
    * @ko 디폴트 애니메이션 재생 시간 (ms)
@@ -601,6 +632,7 @@ class Flicking extends Component<FlickingEvents> {
   public get duration() {
     return this._duration;
   }
+
   // INPUT
   /**
    * Types of input devices to enable
@@ -614,6 +646,7 @@ class Flicking extends Component<FlickingEvents> {
   public get inputType() {
     return this._inputType;
   }
+
   /**
    * Movement style by user input. This will change instance type of {@link Flicking#control}
    * You can use the values of the constant {@link MOVE_TYPE}
@@ -648,6 +681,7 @@ class Flicking extends Component<FlickingEvents> {
   public get moveType() {
     return this._moveType;
   }
+
   /**
    * Movement threshold to change panel (unit: px). It should be dragged above the threshold to change the current panel.
    * @ko 패널 변경을 위한 이동 임계값 (단위: px). 주어진 값 이상으로 스크롤해야만 패널 변경이 가능합니다.
@@ -658,6 +692,7 @@ class Flicking extends Component<FlickingEvents> {
   public get threshold() {
     return this._threshold;
   }
+
   /**
    * Minimal distance of user input before recognizing (unit: px). It should be dragged above the dragThreshold to move the panel.
    * @ko 사용자의 입력을 인식하기 위한 최소한의 거리 (단위: px). 주어진 값 이상으로 스크롤해야만 패널이 움직입니다.
@@ -668,6 +703,7 @@ class Flicking extends Component<FlickingEvents> {
   public get dragThreshold() {
     return this._dragThreshold;
   }
+
   /**
    * Set animation to be interruptable by click/touch.
    * @ko 사용자의 클릭/터치로 인해 애니메이션을 도중에 멈출 수 있도록 설정합니다.
@@ -678,6 +714,7 @@ class Flicking extends Component<FlickingEvents> {
   public get interruptable() {
     return this._interruptable;
   }
+
   /**
    * The size value of the bounce area. Only can be enabled when `circular=false`.
    * You can set different bounce value for prev/next direction by using array.
@@ -713,6 +750,7 @@ class Flicking extends Component<FlickingEvents> {
   public get bounce() {
     return this._bounce;
   }
+
   /**
    * Size of the area from the right edge in iOS safari (in px) which enables swipe-back or swipe-forward
    * @ko iOS Safari에서 swipe를 통한 뒤로가기/앞으로가기를 활성화하는 오른쪽 끝으로부터의 영역의 크기 (px)
@@ -723,6 +761,7 @@ class Flicking extends Component<FlickingEvents> {
   public get iOSEdgeSwipeThreshold() {
     return this._iOSEdgeSwipeThreshold;
   }
+
   /**
    * Automatically prevent `click` event if the user has dragged at least a single pixel on the viewport element
    * @ko 사용자가 뷰포트 영역을 1픽셀이라도 드래그했을 경우 자동으로 {@link https://developer.mozilla.org/ko/docs/Web/API/Element/click_event click} 이벤트를 취소합니다
@@ -733,6 +772,7 @@ class Flicking extends Component<FlickingEvents> {
   public get preventClickOnDrag() {
     return this._preventClickOnDrag;
   }
+
   /**
    * Whether to use the {@link https://developer.mozilla.org/ko/docs/Web/API/Event/preventDefault preventDefault} when the user starts dragging
    * @ko 사용자가 드래그를 시작할 때 {@link https://developer.mozilla.org/ko/docs/Web/API/Event/preventDefault preventDefault} 실행 여부
@@ -743,6 +783,7 @@ class Flicking extends Component<FlickingEvents> {
   public get preventDefaultOnDrag() {
     return this._preventDefaultOnDrag;
   }
+
   /**
    * Automatically call {@link Flicking#disableInput disableInput()} on initialization
    * @ko Flicking init시에 {@link Flicking#disableInput disableInput()}을 바로 호출합니다
@@ -753,6 +794,7 @@ class Flicking extends Component<FlickingEvents> {
   public get disableOnInit() {
     return this._disableOnInit;
   }
+
   /**
    * Change active panel index on mouse/touch hold while animating.
    * `index` of the `willChange`/`willRestore` event will be used as new index.
@@ -765,6 +807,7 @@ class Flicking extends Component<FlickingEvents> {
   public get changeOnHold() {
     return this._changeOnHold;
   }
+
   // PERFORMANCE
   /**
    * Whether to render visible panels only. This can dramatically increase performance when there're many panels
@@ -776,6 +819,7 @@ class Flicking extends Component<FlickingEvents> {
   public get renderOnlyVisible() {
     return this._renderOnlyVisible;
   }
+
   /**
    * By enabling this option, it will reduce memory consumption by restricting the number of DOM elements to `panelsPerView + 1`
    * Must be used with `panelsPerview`.
@@ -824,6 +868,7 @@ class Flicking extends Component<FlickingEvents> {
   public get autoInit() {
     return this._autoInit;
   }
+
   /**
    * Whether to automatically call {@link Flicking#resize resize()} when the viewport element(.flicking-viewport)'s size is changed
    * @ko 뷰포트 엘리먼트(.flicking-viewport)의 크기 변경시 {@link Flicking#resize resize()} 메소드를 자동으로 호출할지 여부를 설정합니다
@@ -833,6 +878,7 @@ class Flicking extends Component<FlickingEvents> {
   public get autoResize() {
     return this._autoResize;
   }
+
   /**
    * Whether to listen {@link https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver ResizeObserver}'s event instead of Window's {@link https://developer.mozilla.org/ko/docs/Web/API/Window/resize_event resize} event when using the `autoResize` option
    * @ko autoResize 옵션 사용시 {@link https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver ResizeObserver}의 이벤트를 Window객체의 {@link https://developer.mozilla.org/ko/docs/Web/API/Window/resize_event resize} 이벤트 대신 수신할지 여부를 설정합니다
@@ -864,6 +910,7 @@ class Flicking extends Component<FlickingEvents> {
   public get resizeDebounce() {
     return this._resizeDebounce;
   }
+
   /**
    * The maximum time for size recalculation delay when using `resizeDebounce`, in milisecond.
    * This guarantees that size recalculation is performed at least once every (n)ms.
@@ -876,6 +923,7 @@ class Flicking extends Component<FlickingEvents> {
   public get maxResizeDebounce() {
     return this._maxResizeDebounce;
   }
+
   /**
    * By enabling this, Flicking will calculate all internal size with CSS width computed with getComputedStyle.
    * This can prevent 1px offset issue in some cases where panel size has the fractional part.
@@ -890,6 +938,7 @@ class Flicking extends Component<FlickingEvents> {
   public get useFractionalSize() {
     return this._useFractionalSize;
   }
+
   /**
    * This is an option for the frameworks(React, Vue, Angular, ...). Don't set it as it's automatically managed by Flicking.
    * @ko 프레임워크(React, Vue, Angular, ...)에서만 사용하는 옵션으로, 자동으로 설정되므로 따로 사용하실 필요 없습니다!
@@ -900,6 +949,7 @@ class Flicking extends Component<FlickingEvents> {
   public get externalRenderer() {
     return this._externalRenderer;
   }
+
   /**
    * This is an option for the frameworks(React, Vue, Angular, ...). Don't set it as it's automatically managed by Flicking.
    * @ko 프레임워크(React, Vue, Angular, ...)에서만 사용하는 옵션으로, 자동으로 설정되므로 따로 사용하실 필요 없습니다!
@@ -910,6 +960,24 @@ class Flicking extends Component<FlickingEvents> {
    */
   public get renderExternal() {
     return this._renderExternal;
+  }
+
+  /**
+   * This option works only when autoResize is set to true.
+   * By default, autoResize listens to changes in both the viewport's width and height, updating all panel sizes accordingly.
+   * When optimizeSizeUpdate is enabled, the update behavior is optimized based on the flicking direction:
+   * If direction is "horizontal", only changes in width will trigger panel size updates.
+   * If direction is "vertical", only changes in height will do so.
+   * This option is useful when panel heights vary and unwanted flickering occurs due to frequent size recalculations during flicking. Enabling optimizeSizeUpdate prevents unnecessary updates and helps maintain visual stability.
+   * @ko optimizeSizeUpdate는 autoResize가 true일 때만 동작합니다.
+   * 기본적으로 autoResize는 뷰포트의 width와 height 변화를 모두 감지하여 패널들의 사이즈를 업데이트합니다.
+   * 이 옵션을 활성화하면 플리킹 방향에 따라 필요한 차원(horizontal → width, vertical → height)에 대해서만 사이즈를 업데이트합니다.
+   * 내부 패널의 높이가 서로 다를 때, 플리킹 중 과도한 리사이징으로 인한 깜빡임 현상을 줄이는 데 유용합니다.
+   * @type {boolean}
+   * @default false
+   */
+  public get optimizeSizeUpdate() {
+    return this._optimizeSizeUpdate;
   }
 
   // Options Setter
@@ -924,6 +992,7 @@ class Flicking extends Component<FlickingEvents> {
   public set defaultIndex(val: FlickingOptions["defaultIndex"]) {
     this._defaultIndex = val;
   }
+
   public set horizontal(val: FlickingOptions["horizontal"]) {
     this._horizontal = val;
     this._control.controller.updateDirection();
@@ -979,11 +1048,13 @@ class Flicking extends Component<FlickingEvents> {
   public set needPanelThreshold(val: FlickingOptions["needPanelThreshold"]) {
     this._needPanelThreshold = val;
   }
+
   public set preventEventsBeforeInit(
     val: FlickingOptions["preventEventsBeforeInit"]
   ) {
     this._preventEventsBeforeInit = val;
   }
+
   // ANIMATION
   public set deceleration(val: FlickingOptions["deceleration"]) {
     this._deceleration = val;
@@ -1006,6 +1077,7 @@ class Flicking extends Component<FlickingEvents> {
   public set duration(val: FlickingOptions["duration"]) {
     this._duration = val;
   }
+
   // INPUT
   public set inputType(val: FlickingOptions["inputType"]) {
     this._inputType = val;
@@ -1102,9 +1174,11 @@ class Flicking extends Component<FlickingEvents> {
   public set disableOnInit(val: FlickingOptions["disableOnInit"]) {
     this._disableOnInit = val;
   }
+
   public set changeOnHold(val: FlickingOptions["changeOnHold"]) {
     this._changeOnHold = val;
   }
+
   // PERFORMANCE
   public set renderOnlyVisible(val: FlickingOptions["renderOnlyVisible"]) {
     this._renderOnlyVisible = val;
@@ -1144,6 +1218,10 @@ class Flicking extends Component<FlickingEvents> {
         this._autoResizer.unobservePanels();
       }
     }
+  }
+
+  public set optimizeSizeUpdate(val: FlickingOptions["optimizeSizeUpdate"]) {
+    this._optimizeSizeUpdate = val;
   }
 
   /**
@@ -1212,7 +1290,8 @@ class Flicking extends Component<FlickingEvents> {
     maxResizeDebounce = 100,
     useFractionalSize = false,
     externalRenderer = null,
-    renderExternal = null
+    renderExternal = null,
+    optimizeSizeUpdate = false
   }: Partial<FlickingOptions> = {}) {
     super();
 
@@ -1260,6 +1339,7 @@ class Flicking extends Component<FlickingEvents> {
     this._useFractionalSize = useFractionalSize;
     this._externalRenderer = externalRenderer;
     this._renderExternal = renderExternal;
+    this._optimizeSizeUpdate = optimizeSizeUpdate;
 
     // Create core components
     this._viewport = new Viewport(this, getElement(root));
@@ -1499,7 +1579,7 @@ class Flicking extends Component<FlickingEvents> {
 
     return this._control.moveToPanel(panel, {
       duration,
-      direction,
+      direction
     });
   }
 
@@ -1603,7 +1683,7 @@ class Flicking extends Component<FlickingEvents> {
     index = true,
     position = true,
     includePanelHTML = false,
-    visiblePanelsOnly = false,
+    visiblePanelsOnly = false
   }: Partial<{
     index: boolean;
     position: boolean;
@@ -1622,7 +1702,7 @@ class Flicking extends Component<FlickingEvents> {
         }
 
         return panelInfo;
-      }),
+      })
     };
 
     if (index) {
@@ -1634,7 +1714,7 @@ class Flicking extends Component<FlickingEvents> {
       if (nearestAnchor) {
         status.position = {
           panel: nearestAnchor.panel.index,
-          progressInPanel: camera.getProgressInPanel(nearestAnchor.panel),
+          progressInPanel: camera.getProgressInPanel(nearestAnchor.panel)
         };
       }
     }
@@ -1672,12 +1752,12 @@ class Flicking extends Component<FlickingEvents> {
       renderer.batchRemove({
         index: 0,
         deleteCount: this.panels.length,
-        hasDOMInElements: true,
+        hasDOMInElements: true
       });
       renderer.batchInsert({
         index: 0,
         elements: parseElement(panels.map((panel) => panel.html!)),
-        hasDOMInElements: true,
+        hasDOMInElements: true
       });
     }
 
@@ -1745,7 +1825,7 @@ class Flicking extends Component<FlickingEvents> {
    */
   public async resize(): Promise<void> {
     if (this._isResizing) return;
-    
+
     this._isResizing = true;
 
     const viewport = this._viewport;
@@ -1764,12 +1844,23 @@ class Flicking extends Component<FlickingEvents> {
       new ComponentEvent(EVENTS.BEFORE_RESIZE, {
         width: prevWidth,
         height: prevHeight,
-        element: viewport.element,
+        element: viewport.element
       })
     );
 
     viewport.resize();
-    await renderer.forceRenderAllPanels(); // Render all panel elements, to update sizes
+
+    // 뷰포트 사이즈가 변경되었을 때 내부의 패널 사이즈들도 전부 업데이트 되어야 하므로 패널들을 전부 리렌더링한다.
+    // optimizeSizeUpdate가 true일 경우에는 플리킹 방향에 대응되는 뷰포트 사이즈 요소가 변경되었을 때만 패널들을 리렌더링한다.
+    // 자세한 사항은 optimizeSizeUpdate 옵션의 설명을 참고.
+    if (this._optimizeSizeUpdate) {
+      if ((this.horizontal && viewport.width !== prevWidth) || (!this.horizontal && viewport.height !== prevHeight)) {
+        await renderer.forceRenderAllPanels();
+      }
+    } else {
+      await renderer.forceRenderAllPanels(); // Render all panel elements, to update sizes
+    }
+
     if (!this._initialized) {
       return;
     }
@@ -1802,10 +1893,10 @@ class Flicking extends Component<FlickingEvents> {
         height: viewport.height,
         prev: {
           width: prevWidth,
-          height: prevHeight,
+          height: prevHeight
         },
         sizeChanged,
-        element: viewport.element,
+        element: viewport.element
       })
     );
 
@@ -1892,7 +1983,7 @@ class Flicking extends Component<FlickingEvents> {
     return this._renderer.batchInsert({
       index,
       elements: parseElement(element),
-      hasDOMInElements: true,
+      hasDOMInElements: true
     });
   }
 
@@ -1916,7 +2007,7 @@ class Flicking extends Component<FlickingEvents> {
     return this._renderer.batchRemove({
       index,
       deleteCount,
-      hasDOMInElements: true,
+      hasDOMInElements: true
     });
   }
 
@@ -1951,12 +2042,12 @@ class Flicking extends Component<FlickingEvents> {
     if (this._circular && this._bound) {
       // eslint-disable-next-line no-console
       console.warn(
-        '"circular" and "bound" option cannot be used together, ignoring bound.'
+        "\"circular\" and \"bound\" option cannot be used together, ignoring bound."
       );
     }
 
     return new Camera(this, {
-      align: this._align,
+      align: this._align
     });
   }
 
@@ -1965,15 +2056,15 @@ class Flicking extends Component<FlickingEvents> {
     if (this._virtual && this._panelsPerView <= 0) {
       // eslint-disable-next-line no-console
       console.warn(
-        '"virtual" and "panelsPerView" option should be used together, ignoring virtual.'
+        "\"virtual\" and \"panelsPerView\" option should be used together, ignoring virtual."
       );
     }
 
     return externalRenderer
       ? externalRenderer
       : this._renderExternal
-      ? this._createExternalRenderer()
-      : this._createVanillaRenderer();
+        ? this._createExternalRenderer()
+        : this._createVanillaRenderer();
   }
 
   private _createExternalRenderer(): ExternalRenderer {
@@ -1990,8 +2081,8 @@ class Flicking extends Component<FlickingEvents> {
       strategy: virtual
         ? new VirtualRenderingStrategy()
         : new NormalRenderingStrategy({
-            providerCtor: VanillaElementProvider,
-          }),
+          providerCtor: VanillaElementProvider
+        })
     });
   }
 
@@ -2041,7 +2132,7 @@ class Flicking extends Component<FlickingEvents> {
       new ComponentEvent(EVENTS.BEFORE_RESIZE, {
         width: 0,
         height: 0,
-        element: viewport.element,
+        element: viewport.element
       })
     );
 
@@ -2063,10 +2154,10 @@ class Flicking extends Component<FlickingEvents> {
         height: viewport.height,
         prev: {
           width: 0,
-          height: 0,
+          height: 0
         },
         sizeChanged,
-        element: viewport.element,
+        element: viewport.element
       })
     );
   }
