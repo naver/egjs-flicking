@@ -63,6 +63,13 @@ class AutoResizer {
     return this;
   }
 
+  public unobservePanels(): this {
+    this._flicking.panels.forEach(panel => {
+      this.unobserve(panel.element);
+    });
+    return this;
+  }
+
   public observe(element: HTMLElement): this {
     const resizeObserver = this._resizeObserver;
 
@@ -79,6 +86,10 @@ class AutoResizer {
     if (!resizeObserver) return this;
 
     resizeObserver.unobserve(element);
+
+    if (this._flicking.resizePanelObserve) {
+      this.unobservePanels();
+    }
 
     return this;
   }

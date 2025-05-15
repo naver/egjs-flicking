@@ -947,7 +947,11 @@ class Flicking extends Component<FlickingEvents> {
     this._resizePanelObserve = val;
 
     if (this._initialized && this._autoResize) {
-      this._autoResizer.observePanels();
+      if (val) {
+        this._autoResizer.observePanels();
+      } else {
+        this._autoResizer.unobservePanels();
+      }
     }
   }
 
