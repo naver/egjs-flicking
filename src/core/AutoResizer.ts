@@ -40,18 +40,45 @@ class AutoResizer {
         ? new ResizeObserver(this._skipFirstResize)
         : new ResizeObserver(this._onResize);
 
-      [
-        flicking.viewport.element,
-        flicking.camera.element,
-        ...flicking.panels.map(panel => panel.element)
-      ].forEach((element) => { resizeObserver.observe(element); });
-
       this._resizeObserver = resizeObserver;
+
+      this.observe(flicking.viewport.element);
+
+      if (flicking.resizeObservePanel) {
+        this.observePanels();
+      }
     } else {
       window.addEventListener("resize", this._onResize);
     }
 
     this._enabled = true;
+
+    return this;
+  }
+
+  public observePanels(): this {
+    this._flicking.panels.forEach(panel => {
+      this.observe(panel.element);
+    });
+    return this;
+  }
+
+  public observe(element: HTMLElement): this {
+    const resizeObserver = this._resizeObserver;
+
+    if (!resizeObserver) return this;
+
+    resizeObserver.observe(element);
+
+    return this;
+  }
+
+  public unobserve(element: HTMLElement): this {
+    const resizeObserver = this._resizeObserver;
+
+    if (!resizeObserver) return this;
+
+    resizeObserver.unobserve(element);
 
     return this;
   }
@@ -69,20 +96,6 @@ class AutoResizer {
 
     this._enabled = false;
 
-    return this;
-  }
-
-  public observe(element: Element): this {
-    if (this._resizeObserver) {
-      this._resizeObserver.observe(element);
-    }
-    return this;
-  }
-
-  public unobserve(element: Element): this {
-    if (this._resizeObserver) {
-      this._resizeObserver.unobserve(element);
-    }
     return this;
   }
 

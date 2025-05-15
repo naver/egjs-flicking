@@ -90,6 +90,7 @@ export interface FlickingOptions {
   autoResize: boolean;
   useResizeObserver: boolean;
   resizeDebounce: number;
+  resizeObservePanel: boolean;
   maxResizeDebounce: number;
   useFractionalSize: boolean;
   externalRenderer: ExternalRenderer | null;
@@ -166,6 +167,7 @@ class Flicking extends Component<FlickingEvents> {
   private _autoResize: FlickingOptions["autoResize"];
   private _useResizeObserver: FlickingOptions["useResizeObserver"];
   private _resizeDebounce: FlickingOptions["resizeDebounce"];
+  private _resizeObservePanel: FlickingOptions["resizeObservePanel"];
   private _maxResizeDebounce: FlickingOptions["maxResizeDebounce"];
   private _useFractionalSize: FlickingOptions["useFractionalSize"];
   private _externalRenderer: FlickingOptions["externalRenderer"];
@@ -693,6 +695,15 @@ class Flicking extends Component<FlickingEvents> {
    */
   public get useResizeObserver() { return this._useResizeObserver; }
   /**
+   * Whether to use {@link https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver ResizeObserver} to observe the size of the panel element
+   * This is only available when `useResizeObserver` is enabled.
+   * This option garantees that the resize event is triggered when the size of the panel element is changed.
+   * @ko 이 옵션을 활성화할 경우, {@link https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver ResizeObserver}를 사용하여 패널 엘리먼트의 크기를 추적합니다.
+   * 이 옵션은 `useResizeObserver` 옵션이 활성화된 경우에만 사용할 수 있습니다.
+   * 이 옵션은 패널 엘리먼트의 크기가 변경될 경우 resize 이벤트가 발생하도록 보장합니다.
+   */
+  public get resizeObservePanel() { return this._resizeObservePanel; }
+  /**
    * Delays size recalculation from `autoResize` by the given time in milisecond.
    * If the size is changed again while being delayed, it cancels the previous one and delays from the beginning again.
    * This can increase performance by preventing `resize` being called too often.
@@ -932,6 +943,14 @@ class Flicking extends Component<FlickingEvents> {
     }
   }
 
+  public set resizeObservePanel (val: FlickingOptions["resizeObservePanel"]) {
+    this._resizeObservePanel = val;
+
+    if (this._initialized && this._autoResize) {
+      this._autoResizer.observePanels();
+    }
+  }
+
   /**
    * @param root A root HTMLElement to initialize Flicking on it. When it's a typeof `string`, it should be a css selector string
    * <ko>Flicking을 초기화할 HTMLElement로, `string` 타입으로 지정시 css 선택자 문자열을 지정해야 합니다.</ko>
@@ -993,6 +1012,7 @@ class Flicking extends Component<FlickingEvents> {
     autoResize = true,
     useResizeObserver = true,
     resizeDebounce = 0,
+    resizeObservePanel = false,
     maxResizeDebounce = 100,
     useFractionalSize = false,
     externalRenderer = null,
@@ -1038,6 +1058,7 @@ class Flicking extends Component<FlickingEvents> {
     this._useResizeObserver = useResizeObserver;
     this._resizeDebounce = resizeDebounce;
     this._maxResizeDebounce = maxResizeDebounce;
+    this._resizeObservePanel = resizeObservePanel;
     this._useFractionalSize = useFractionalSize;
     this._externalRenderer = externalRenderer;
     this._renderExternal = renderExternal;

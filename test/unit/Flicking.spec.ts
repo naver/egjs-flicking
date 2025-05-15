@@ -908,45 +908,34 @@ describe("Flicking", () => {
 
         expect(resizeSpy.calledOnce).to.be.true;
       });
+    });
 
-      ["viewport", "camera", "panel"].forEach(element => {
-        it(`should call resize when size of ${element} is changed`, async () => {
-          const flicking = await createFlicking(
-            El.viewport("1000px", "1000px").add(
-              El.camera("1000px", "1000px").add(
-                El.panel("800px", "1000px"),
-                El.panel("800px", "1000px"),
-                El.panel("800px", "1000px"),
-              )
-            ),
-            { autoResize: true, useResizeObserver: true }
-          );
-          const afterResizeSpy = sinon.spy();
-          const beforeResizeSpy = sinon.spy();
-  
-          // wait for initial resize
-          await waitTime(100);
+    describe("resizeObservePanel", () => {
+      it(`should call resize when size of panel is changed`, async () => {
+        const flicking = await createFlicking(
+          El.viewport("1000px", "1000px").add(
+            El.camera("1000px", "1000px").add(
+              El.panel("800px", "1000px"),
+              El.panel("800px", "1000px"),
+              El.panel("800px", "1000px"),
+            )
+          ),
+          { autoResize: true, useResizeObserver: true, resizeObservePanel: true }
+        );
+        const afterResizeSpy = sinon.spy();
+        const beforeResizeSpy = sinon.spy();
 
-          flicking.on(EVENTS.AFTER_RESIZE, afterResizeSpy);
-          flicking.on(EVENTS.BEFORE_RESIZE, beforeResizeSpy);
+        // wait for initial resize
+        await waitTime(100);
 
-          switch (element) {
-            case "viewport":
-              flicking.element.style.height = "3000px";
-              break;
-            case "camera":
-              flicking.camera.element.style.height = "3000px";
-              break;
-            case "panel":
-              flicking.panels[2].element.style.height = "3000px";
-              break;
-          }
-  
-          await waitEvent(flicking, EVENTS.AFTER_RESIZE);
-  
-          expect(afterResizeSpy.calledOnce).to.be.true;
-          expect(beforeResizeSpy.calledOnce).to.be.true;
-        });
+        flicking.on(EVENTS.AFTER_RESIZE, afterResizeSpy);
+        flicking.on(EVENTS.BEFORE_RESIZE, beforeResizeSpy);
+        flicking.panels[2].element.style.height = "3000px";
+
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(afterResizeSpy.calledOnce).to.be.true;
+        expect(beforeResizeSpy.calledOnce).to.be.true;
       });
 
       it("should observe size of panel element if panel element is added later", async () => {
@@ -958,7 +947,7 @@ describe("Flicking", () => {
               El.panel("800px", "1000px"),
             )
           ),
-          { autoResize: true, useResizeObserver: true }
+          { autoResize: true, useResizeObserver: true, resizeObservePanel: true }
         );
         const afterResizeSpy = sinon.spy();
         const beforeResizeSpy = sinon.spy();
