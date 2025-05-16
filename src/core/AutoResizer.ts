@@ -4,6 +4,10 @@
  */
 import Flicking from "../Flicking";
 
+/**
+ * A component that detects size change and trigger resize method when the autoResize option is used
+ * @ko autoResize 옵션을 사용할 때 크기 변화를 감지하고 Flicking의 resize를 호출하는 컴포넌트
+ */
 class AutoResizer {
   private _flicking: Flicking;
   private _enabled: boolean;
@@ -36,14 +40,56 @@ class AutoResizer {
         ? new ResizeObserver(this._skipFirstResize)
         : new ResizeObserver(this._onResize);
 
-      resizeObserver.observe(flicking.viewport.element);
-
       this._resizeObserver = resizeObserver;
+
+      this.observe(flicking.viewport.element);
+
+      if (flicking.resizePanelObserve) {
+        this.observePanels();
+      }
     } else {
       window.addEventListener("resize", this._onResize);
     }
 
     this._enabled = true;
+
+    return this;
+  }
+
+  public observePanels(): this {
+    this._flicking.panels.forEach(panel => {
+      this.observe(panel.element);
+    });
+    return this;
+  }
+
+  public unobservePanels(): this {
+    this._flicking.panels.forEach(panel => {
+      this.unobserve(panel.element);
+    });
+    return this;
+  }
+
+  public observe(element: HTMLElement): this {
+    const resizeObserver = this._resizeObserver;
+
+    if (!resizeObserver) return this;
+
+    resizeObserver.observe(element);
+
+    return this;
+  }
+
+  public unobserve(element: HTMLElement): this {
+    const resizeObserver = this._resizeObserver;
+
+    if (!resizeObserver) return this;
+
+    resizeObserver.unobserve(element);
+
+    if (this._flicking.resizePanelObserve) {
+      this.unobservePanels();
+    }
 
     return this;
   }

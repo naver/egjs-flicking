@@ -91,6 +91,7 @@ export interface FlickingOptions {
   autoResize: boolean;
   useResizeObserver: boolean;
   resizeDebounce: number;
+  resizePanelObserve: boolean;
   maxResizeDebounce: number;
   useFractionalSize: boolean;
   externalRenderer: ExternalRenderer | null;
@@ -168,6 +169,7 @@ class Flicking extends Component<FlickingEvents> {
   private _autoResize: FlickingOptions["autoResize"];
   private _useResizeObserver: FlickingOptions["useResizeObserver"];
   private _resizeDebounce: FlickingOptions["resizeDebounce"];
+  private _resizePanelObserve: FlickingOptions["resizePanelObserve"];
   private _maxResizeDebounce: FlickingOptions["maxResizeDebounce"];
   private _useFractionalSize: FlickingOptions["useFractionalSize"];
   private _externalRenderer: FlickingOptions["externalRenderer"];
@@ -220,6 +222,13 @@ class Flicking extends Component<FlickingEvents> {
    * @see Viewport
    */
   public get viewport() { return this._viewport; }
+  /**
+   * {@link AutoResizer} instance of the Flicking
+   * @ko 현재 Flicking에 활성화된 {@link AutoResizer} 인스턴스
+   * @internal
+   * @readonly
+   */
+  public get autoResizer() { return this._autoResizer; }
   // Internal States
   /**
    * Whether Flicking's {@link Flicking#init init()} is called.
@@ -696,6 +705,15 @@ class Flicking extends Component<FlickingEvents> {
    */
   public get useResizeObserver() { return this._useResizeObserver; }
   /**
+   * Whether to use {@link https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver ResizeObserver} to observe the size of the panel element
+   * This is only available when `useResizeObserver` is enabled.
+   * This option garantees that the resize event is triggered when the size of the panel element is changed.
+   * @ko 이 옵션을 활성화할 경우, {@link https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver ResizeObserver}를 사용하여 패널 엘리먼트의 크기를 추적합니다.
+   * 이 옵션은 `useResizeObserver` 옵션이 활성화된 경우에만 사용할 수 있습니다.
+   * 이 옵션은 패널 엘리먼트의 크기가 변경될 경우 resize 이벤트가 발생하도록 보장합니다.
+   */
+  public get resizePanelObserve() { return this._resizePanelObserve; }
+  /**
    * Delays size recalculation from `autoResize` by the given time in milisecond.
    * If the size is changed again while being delayed, it cancels the previous one and delays from the beginning again.
    * This can increase performance by preventing `resize` being called too often.
@@ -926,6 +944,10 @@ class Flicking extends Component<FlickingEvents> {
   public set autoResize(val: FlickingOptions["autoResize"]) {
     this._autoResize = val;
 
+    if (!this._initialized) {
+      return;
+    }
+
     if (val) {
       this._autoResizer.enable();
     } else {
@@ -936,8 +958,20 @@ class Flicking extends Component<FlickingEvents> {
   public set useResizeObserver(val: FlickingOptions["useResizeObserver"]) {
     this._useResizeObserver = val;
 
-    if (this._autoResize) {
+    if (this._initialized && this._autoResize) {
       this._autoResizer.enable();
+    }
+  }
+
+  public set resizePanelObserve (val: FlickingOptions["resizePanelObserve"]) {
+    this._resizePanelObserve = val;
+
+    if (this._initialized && this._autoResize) {
+      if (val) {
+        this._autoResizer.observePanels();
+      } else {
+        this._autoResizer.unobservePanels();
+      }
     }
   }
 
@@ -1003,6 +1037,7 @@ class Flicking extends Component<FlickingEvents> {
     autoResize = true,
     useResizeObserver = true,
     resizeDebounce = 0,
+    resizePanelObserve = false,
     maxResizeDebounce = 100,
     useFractionalSize = false,
     externalRenderer = null,
@@ -1049,6 +1084,7 @@ class Flicking extends Component<FlickingEvents> {
     this._useResizeObserver = useResizeObserver;
     this._resizeDebounce = resizeDebounce;
     this._maxResizeDebounce = maxResizeDebounce;
+    this._resizePanelObserve = resizePanelObserve;
     this._useFractionalSize = useFractionalSize;
     this._externalRenderer = externalRenderer;
     this._renderExternal = renderExternal;

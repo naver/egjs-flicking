@@ -423,7 +423,7 @@ describe("Renderer", () => {
 
     it("should resize the panel with image when it's loaded", async () => {
       const flicking = await createFlicking(El.viewport("200px", "200px").add(
-        El.camera().add(
+        El.camera("100%", "100%").add(
           El.imgPanel("100%", "100%")
         )
       ), { resizeOnContentsReady: true });
@@ -438,7 +438,7 @@ describe("Renderer", () => {
 
     it("should update the camera range after the image's loaded", async () => {
       const flicking = await createFlicking(El.viewport("200px", "200px").add(
-        El.camera().add(
+        El.camera("100%", "100%").add(
           El.imgPanel("100%", "100%")
         )
       ), { resizeOnContentsReady: true });
