@@ -2,8 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { getElementSize, getStyle } from "src/utils";
-
+import { getElementSize, getStyle } from "../utils";
 import Flicking from "../Flicking";
 
 /**
