@@ -124,7 +124,11 @@ class AutoResizer {
 
     const resizedViewportElement = entries.find(e => e.target === flicking.element)?.target;
 
-    if (resizedViewportElement) {
+    // 현재 구현에서 리사이즈 옵저빙 대상은 패널과 뷰포트 2개만 존재.
+    // 아래는 뷰포트만 변경되었을 때 동작해야하는 로직이므로 아래와 같이 조건문을 건다.
+    // resizeObserver를 사용하지 않은 경우에는 entries.length가 0으로 오므로 이것도 고려한다.
+    // 패널 쪽에서는 리사이즈 감지에 resizeObserver를 사용하지 않는 경우가 없으므로 아래의 조건은 곧 뷰포트만 리사이즈가 된 경우를 의미한다.
+    if ((entries.length === 1 && resizedViewportElement) || entries.length === 0) {
       const beforeSize = {
         width: flicking.viewport.width,
         height: flicking.viewport.height
