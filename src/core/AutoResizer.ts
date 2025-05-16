@@ -123,7 +123,9 @@ class AutoResizer {
     const resizeDebounce = flicking.resizeDebounce;
     const maxResizeDebounce = flicking.maxResizeDebounce;
 
-    if (entries.length) {
+    const resizedViewportElement = entries.find(e => e.target === flicking.element)?.target;
+
+    if (resizedViewportElement) {
       const beforeSize = {
         width: flicking.viewport.width,
         height: flicking.viewport.height
@@ -131,18 +133,18 @@ class AutoResizer {
 
       const afterSize = {
         width: getElementSize({
-          el: entries[0].target as HTMLElement,
+          el: resizedViewportElement as HTMLElement,
           horizontal: true,
           useFractionalSize: this._flicking.useFractionalSize,
           useOffset: false,
-          style: getStyle(entries[0].target as HTMLElement)
+          style: getStyle(resizedViewportElement as HTMLElement)
         }),
         height: getElementSize({
-          el: entries[0].target as HTMLElement,
+          el: resizedViewportElement as HTMLElement,
           horizontal: false,
           useFractionalSize: this._flicking.useFractionalSize,
           useOffset: false,
-          style: getStyle(entries[0].target as HTMLElement)
+          style: getStyle(resizedViewportElement as HTMLElement)
         })
       };
 
