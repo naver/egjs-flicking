@@ -1,0 +1,21 @@
+.flicking-viewport {
+  background-color: aliceblue;
+}
+
+.item-list {
+  width: 100%;
+}
+
+.item {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+  background-color: skyblue;
+}
+
+.dummy-container {
+  background-color: green;
+  height: 500px;
+}

@@ -2,6 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
+import { getElementSize, getStyle } from "../utils";
 import Flicking from "../Flicking";
 
 /**
@@ -15,7 +16,9 @@ class AutoResizer {
   private _resizeTimer: number;
   private _maxResizeDebounceTimer: number;
 
-  public get enabled() { return this._enabled; }
+  public get enabled() {
+    return this._enabled;
+  }
 
   public constructor(flicking: Flicking) {
     this._flicking = flicking;
@@ -48,7 +51,7 @@ class AutoResizer {
         this.observePanels();
       }
     } else {
-      window.addEventListener("resize", this._onResize);
+      window.addEventListener("resize", this._onResizeWrapper);
     }
 
     this._enabled = true;
@@ -102,7 +105,7 @@ class AutoResizer {
       resizeObserver.disconnect();
       this._resizeObserver = null;
     } else {
-      window.removeEventListener("resize", this._onResize);
+      window.removeEventListener("resize", this._onResizeWrapper);
     }
 
     this._enabled = false;
@@ -110,17 +113,64 @@ class AutoResizer {
     return this;
   }
 
-  private _onResize = () => {
+  private _onResizeWrapper = () => {
+    this._onResize([]);
+  };
+
+  private _onResize = (entries: ResizeObserverEntry[]) => {
     const flicking = this._flicking;
     const resizeDebounce = flicking.resizeDebounce;
     const maxResizeDebounce = flicking.maxResizeDebounce;
+
+    const resizedViewportElement = flicking.element;
+    // 현재 구현에서 리사이즈 옵저빙 대상은 패널과 뷰포트 2개만 존재.
+    // 아래는 뷰포트만 변경되었을 때 동작해야하는 로직이 있으므로 아래와 같이 조건문을 건다.
+    // 패널 쪽에서는 리사이즈 감지에 resizeObserver를 사용하지 않는 경우가 없으므로 이 조건은 곧 뷰포트만 리사이즈가 된 경우를 의미한다.
+    const isResizedViewportOnly = entries.find(e => e.target === flicking.element) && entries.length === 1;
+
+    // 참고: resizeObserver를 사용하지 않은 경우에는 entries.length가 0으로 오는데 이 경우에는 그냥 항상 리사이즈가 진행되도록 한다.
+    //   (vw, vh 등을 사용하는 경우 이상 동작이 발생할 여지가 있기 때문이다)
+    if (isResizedViewportOnly) {
+      // resize 이벤트가 발생했으나 이전과 width, height의 변화가 없다면 이후 로직을 진행하지 않는다.
+      const beforeSize = {
+        width: flicking.viewport.width,
+        height: flicking.viewport.height
+      };
+
+      const afterSize = {
+        width: getElementSize({
+          el: resizedViewportElement,
+          horizontal: true,
+          useFractionalSize: this._flicking.useFractionalSize,
+          useOffset: false,
+          style: getStyle(resizedViewportElement)
+        }),
+        height: getElementSize({
+          el: resizedViewportElement,
+          horizontal: false,
+          useFractionalSize: this._flicking.useFractionalSize,
+          useOffset: false,
+          style: getStyle(resizedViewportElement)
+        })
+      };
+
+      if (
+        beforeSize.height === afterSize.height &&
+        beforeSize.width === afterSize.width
+      ) {
+        return;
+      }
+    }
 
     if (resizeDebounce <= 0) {
       void flicking.resize();
     } else {
       if (this._maxResizeDebounceTimer <= 0) {
         if (maxResizeDebounce > 0 && maxResizeDebounce >= resizeDebounce) {
-          this._maxResizeDebounceTimer = window.setTimeout(this._doScheduledResize, maxResizeDebounce);
+          this._maxResizeDebounceTimer = window.setTimeout(
+            this._doScheduledResize,
+            maxResizeDebounce
+          );
         }
       }
 
@@ -129,7 +179,10 @@ class AutoResizer {
         this._resizeTimer = 0;
       }
 
-      this._resizeTimer = window.setTimeout(this._doScheduledResize, resizeDebounce);
+      this._resizeTimer = window.setTimeout(
+        this._doScheduledResize,
+        resizeDebounce
+      );
     }
   };
 
@@ -147,13 +200,13 @@ class AutoResizer {
   private _skipFirstResize = (() => {
     let isFirstResize = true;
 
-    return (() => {
+    return (entries) => {
       if (isFirstResize) {
         isFirstResize = false;
         return;
       }
-      this._onResize();
-    });
+      this._onResize(entries);
+    };
   })();
 }
 
