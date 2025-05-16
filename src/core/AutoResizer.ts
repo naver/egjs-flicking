@@ -20,6 +20,7 @@ class AutoResizer {
     return this._enabled;
   }
 
+  /** */
   public constructor(flicking: Flicking) {
     this._flicking = flicking;
     this._enabled = false;

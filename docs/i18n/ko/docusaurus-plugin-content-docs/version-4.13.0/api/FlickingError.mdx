@@ -1,0 +1,47 @@
+---
+custom_edit_url: null
+---
+
+```ts
+class FlickingError extends Error
+```
+
+<div>
+
+</div>
+
+Flicking 내부에서 알려진 오류 발생시 throw되는 에러
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|code|number|에러 코드|
+|message|string|에러 메시지|
+
+**See**:
+- [ERROR_CODE](ERROR_CODE)
+
+## constructor
+```ts
+new FlickingError(message, code)
+```
+
+<div>
+
+</div>
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|message|string|||에러 메시지|
+|code|number|||에러 코드|
+
+```ts
+import Flicking, { FlickingError, ERROR_CODES } from "@egjs/flicking";
+try {
+  const flicking = new Flicking(".flicking-viewport")
+} catch (e) {
+  if (e instanceof FlickingError && e.code === ERROR_CODES.ELEMENT_NOT_FOUND) {
+    console.error("Element not found")
+  }
+}
+```
+
