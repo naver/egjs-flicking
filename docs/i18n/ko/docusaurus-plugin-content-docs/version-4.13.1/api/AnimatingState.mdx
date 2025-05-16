@@ -1,0 +1,166 @@
+---
+custom_edit_url: null
+---
+
+<div className="notification is-warning my-2">⚠️ This class is for <strong>internal</strong> use only.</div>
+
+```ts
+class AnimatingState extends State
+```
+
+<div>
+
+</div>
+
+사용자 입력이나 메소드 호출에 의해 Flicking의 애니메이션이 동작중인 상태
+
+<div className="container">
+  <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
+  <div className="row"><div className="col col--6"><a href="#holding">holding</a><br/><a href="#animating">animating</a><br/><a href="#delta">delta</a><br/><a href="#targetPanel">targetPanel</a></div><div className="col col--6"><a href="#onEnter">onEnter</a><br/><a href="#onHold">onHold</a><br/><a href="#onChange">onChange</a><br/><a href="#onRelease">onRelease</a><br/><a href="#onAnimationEnd">onAnimationEnd</a><br/><a href="#onFinish">onFinish</a></div></div>
+</div>
+
+## Properties
+
+### holding {#holding}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+현재 사용자가 클릭/터치중인지 여부
+
+**Type**: false
+
+### animating {#animating}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+현재 애니메이션 동작 여부
+
+**Type**: true
+
+### delta {#delta}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+이전 hold이벤트부터 change에 의해 발생한 이동 delta값의 합산
+
+**Type**: number
+
+### targetPanel {#targetPanel}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+애니메이션 종료시 [Control#activePanel](Control#activePanel)로 설정할 패널
+
+**Type**: number
+
+## Methods
+
+### onEnter {#onEnter}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+현재 상태로 돌입했을때 호출되는 콜백 함수
+
+**Returns**: void
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|prevState|[State](State)|||이전 상태값|
+
+### onHold {#onHold}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Axes의 [hold](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:hold) 이벤트 핸들러
+
+**Returns**: void
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|ctx|object|✔️||이벤트 콘텍스트|
+|ctx.flicking|[Flicking](Flicking)|✔️||Flicking 인스턴스|
+|ctx.axesEvent|object|✔️||Axes의 [hold](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:hold) 이벤트|
+|ctx.transitTo|function|✔️||다른 상태로 변경하기 위한 함수|
+
+### onChange {#onChange}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Axes의 [change](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:change) 이벤트 핸들러
+
+**Returns**: void
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|ctx|object|✔️||이벤트 콘텍스트|
+|ctx.flicking|[Flicking](Flicking)|✔️||Flicking 인스턴스|
+|ctx.axesEvent|object|✔️||Axes의 [change](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:change) 이벤트|
+|ctx.transitTo|function|✔️||다른 상태로 변경하기 위한 함수|
+
+### onRelease {#onRelease}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Axes의 [release](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:release) 이벤트 핸들러
+
+**Returns**: void
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|ctx|object|✔️||이벤트 콘텍스트|
+|ctx.flicking|[Flicking](Flicking)|✔️||Flicking 인스턴스|
+|ctx.axesEvent|object|✔️||Axes의 [release](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:release) 이벤트|
+|ctx.transitTo|function|✔️||다른 상태로 변경하기 위한 함수|
+
+### onAnimationEnd {#onAnimationEnd}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Axes의 [animationEnd](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:animationEnd) 이벤트 핸들러
+
+**Returns**: void
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|ctx|object|✔️||이벤트 콘텍스트|
+|ctx.flicking|[Flicking](Flicking)|✔️||Flicking 인스턴스|
+|ctx.axesEvent|object|✔️||Axes의 [animationEnd](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:animationEnd) 이벤트|
+|ctx.transitTo|function|✔️||다른 상태로 변경하기 위한 함수|
+
+### onFinish {#onFinish}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Axes의 [finish](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:finish) 이벤트 핸들러
+
+**Returns**: void
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|ctx|object|✔️||이벤트 콘텍스트|
+|ctx.flicking|[Flicking](Flicking)|✔️||Flicking 인스턴스|
+|ctx.axesEvent|object|✔️||Axes의 [finish](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:finish) 이벤트|
+|ctx.transitTo|function|✔️||다른 상태로 변경하기 위한 함수|
+
