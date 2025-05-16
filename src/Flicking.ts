@@ -135,7 +135,7 @@ export interface FlickingOptions {
   autoResize: boolean;
   useResizeObserver: boolean;
   resizeDebounce: number;
-  resizePanelObserve: boolean;
+  observePanelResize: boolean;
   maxResizeDebounce: number;
   useFractionalSize: boolean;
   externalRenderer: ExternalRenderer | null;
@@ -214,7 +214,7 @@ class Flicking extends Component<FlickingEvents> {
   private _autoResize: FlickingOptions["autoResize"];
   private _useResizeObserver: FlickingOptions["useResizeObserver"];
   private _resizeDebounce: FlickingOptions["resizeDebounce"];
-  private _resizePanelObserve: FlickingOptions["resizePanelObserve"];
+  private _observePanelResize: FlickingOptions["observePanelResize"];
   private _maxResizeDebounce: FlickingOptions["maxResizeDebounce"];
   private _useFractionalSize: FlickingOptions["useFractionalSize"];
   private _externalRenderer: FlickingOptions["externalRenderer"];
@@ -895,7 +895,7 @@ class Flicking extends Component<FlickingEvents> {
    * 이 옵션은 `useResizeObserver` 옵션이 활성화된 경우에만 사용할 수 있습니다.
    * 이 옵션은 패널 엘리먼트의 크기가 변경될 경우 resize 이벤트가 발생하도록 보장합니다.
    */
-  public get resizePanelObserve() { return this._resizePanelObserve; }
+  public get observePanelResize() { return this._observePanelResize; }
   /**
    * Delays size recalculation from `autoResize` by the given time in milisecond.
    * If the size is changed again while being delayed, it cancels the previous one and delays from the beginning again.
@@ -1208,8 +1208,8 @@ class Flicking extends Component<FlickingEvents> {
     }
   }
 
-  public set resizePanelObserve (val: FlickingOptions["resizePanelObserve"]) {
-    this._resizePanelObserve = val;
+  public set observePanelResize(val: FlickingOptions["observePanelResize"]) {
+    this._observePanelResize = val;
 
     if (this._initialized && this._autoResize) {
       if (val) {
@@ -1286,7 +1286,7 @@ class Flicking extends Component<FlickingEvents> {
     autoResize = true,
     useResizeObserver = true,
     resizeDebounce = 0,
-    resizePanelObserve = false,
+    observePanelResize = false,
     maxResizeDebounce = 100,
     useFractionalSize = false,
     externalRenderer = null,
@@ -1335,7 +1335,7 @@ class Flicking extends Component<FlickingEvents> {
     this._useResizeObserver = useResizeObserver;
     this._resizeDebounce = resizeDebounce;
     this._maxResizeDebounce = maxResizeDebounce;
-    this._resizePanelObserve = resizePanelObserve;
+    this._observePanelResize = observePanelResize;
     this._useFractionalSize = useFractionalSize;
     this._externalRenderer = externalRenderer;
     this._renderExternal = renderExternal;
