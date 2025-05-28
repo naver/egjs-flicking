@@ -397,7 +397,7 @@ abstract class Control {
     }
   }
 
-  protected _getPosition(panel: Panel, direction: ValueOf<typeof DIRECTION> = DIRECTION.NONE) {
+  private _getPosition(panel: Panel, direction: ValueOf<typeof DIRECTION> = DIRECTION.NONE) {
     const flicking = getFlickingAttached(this._flicking);
     const camera = flicking.camera;
 
