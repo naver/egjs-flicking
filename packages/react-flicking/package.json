@@ -19,6 +19,8 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@cfcs/core": "^0.1.0",
+    "@cfcs/react": "^0.1.0",
     "@egjs/component": "^3.0.2",
     "@egjs/flicking": "~4.13.1",
     "@egjs/list-differ": "^1.0.1"
@@ -26,6 +28,9 @@
   "devDependencies": {
     "@egjs/build-helper": "0.0.5",
     "@egjs/flicking-plugins": "^4.2.2",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^7.1.1",
     "@types/highlight.js": "^9.12.3",
     "@types/jest": "24.0.12",
     "@types/node": "12.0.0",
