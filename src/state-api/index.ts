@@ -1,5 +1,6 @@
 import { adaptReactive, reactive, ReactiveObject, ReactiveSetupAdapter } from "@cfcs/core";
-import Flicking from "src/Flicking";
+
+import Flicking from "../Flicking";
 
 const getIsReachStart = (flicking: Flicking) => flicking.index === 0;
 const getIsReachEnd = (flicking: Flicking) =>
