@@ -8,10 +8,7 @@ const getIsReachEnd = (flicking: Flicking) =>
 
 const getTotalPanelCount = (flicking: Flicking) => flicking.panelCount;
 const getCurrentPanelIndex = (flicking: Flicking) => flicking.index;
-const getProgress = (flicking: Flicking) =>
-  flicking.panelCount > 1
-    ? (flicking.camera.progress / (flicking.panelCount - 1)) * 100
-    : 100;
+const getProgress = (flicking: Flicking) => (flicking.panelCount > 1 ? (flicking.index / (flicking.panelCount - 1)) * 100 : 100);
 
 
 export type FlickingStateApi = ReactiveObject<{
@@ -24,7 +21,7 @@ export type FlickingStateApi = ReactiveObject<{
 }>;
 
 
-interface FlickingReactiveState {
+export interface FlickingReactiveState {
   isReachStart: boolean;
   isReachEnd: boolean;
   totalPanelCount: number;
