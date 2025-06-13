@@ -15,6 +15,7 @@ export * from "./renderer";
 export * from "./const/external";
 export * from "./cfc";
 export * from "./utils";
+export * from "./state-api";
 
 export * from "./type/event";
 export * from "./type/external";
