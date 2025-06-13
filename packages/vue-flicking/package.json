@@ -36,6 +36,7 @@
     "not op_mini all"
   ],
   "dependencies": {
+    "@cfcs/vue2": "^0.1.0",
     "@egjs/flicking": "~4.13.1",
     "@egjs/list-differ": "^1.0.1"
   },
