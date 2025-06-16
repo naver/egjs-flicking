@@ -13,7 +13,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 const DebugPage: React.FC = () => {
   const flickingRef = useRef<Flicking>(null);
 
-  const {isReachStart, isReachEnd, progress, currentPanelIndex, totalPanelCount, moveTo} = useFlickingStateApi(flickingRef);
+  const {isReachStart, isReachEnd, indexProgress, currentPanelIndex, totalPanelCount, moveTo} = useFlickingStateApi(flickingRef);
 
   const onClickPrev = () => {
     flickingRef.current?.prev();
@@ -90,7 +90,8 @@ const DebugPage: React.FC = () => {
         <Pagination count={totalPanelCount} page={currentPanelIndex+1} onChange={(e, v) => {
           moveTo(v-1);
         }}/>
-        <LinearProgress variant="determinate" value={progress}/>
+        <LinearProgress variant="determinate" value={indexProgress}/>
+        {/* <LinearProgress variant="determinate" value={scrollProgress}/> */}
       </Stack>
     </div>
 

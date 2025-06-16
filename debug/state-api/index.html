@@ -72,6 +72,19 @@
         background-color: #4caf50; /* 채워지는 색 */
         transition: width 0.3s ease; /* 부드럽게 변화 */
       }
+      #scroll-progress-bar {
+        width: 600px;
+        height: 20px;
+        border-radius: 20px;
+        background-color: #e0e0e0;
+        overflow: hidden;
+      }
+      #scroll-progress-fill {
+        height: 100%;
+        width: 0%; /* 초기에는 0% 채워짐 */
+        background-color: #2196f3; /* 채워지는 색 */
+        transition: width 0.3s ease; /* 부드럽게 변화 */
+      }
     </style>
   </head>
   <body>
@@ -80,7 +93,7 @@
         <button class="navigation-btn" id="prev">Previous</button>
         <div class="flicking-viewport">
           <div class="flicking-camera">
-            <div class="flicking-panel">x0</div>
+            <div class="flicking-panel" style="width: 500px;">x0</div>
             <div class="flicking-panel">x1</div>
             <div class="flicking-panel">x2</div>
             <div class="flicking-panel">x3</div>
@@ -92,6 +105,9 @@
       <div id="pagination"></div>
       <div id="progress-bar">
         <div id="progress-fill"></div>
+      </div>
+      <div id="scroll-progress-bar">
+        <div id="scroll-progress-fill"></div>
       </div>
     </div>
 
@@ -109,10 +125,16 @@
     <script src="../../dist/flicking.pkgd.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const flicking = new Flicking(".flicking-viewport");
+        const flicking = new Flicking(".flicking-viewport", {renderOnlyVisible: true});
         const { connectFlickingStateApi } = Flicking;
         const reactiveObj = connectFlickingStateApi(flicking);
-        const {isReachStart, isReachEnd, totalPanelCount, currentPanelIndex, moveTo} = reactiveObj
+        const {
+          isReachStart,
+          isReachEnd,
+          totalPanelCount,
+          currentPanelIndex,
+          moveTo,
+        } = reactiveObj;
 
         // Navigation buttons
         const prevButton = document.getElementById("prev");
@@ -191,21 +213,18 @@
         const paginationElement = document.getElementById("pagination");
         const progressFillElement = document.getElementById("progress-fill");
 
-        const pageNums = Array.from(
-          { length: totalPanelCount },
-          (_, i) => {
-            const div = document.createElement("div");
-            div.className = `pagination-num ${
-              i === currentPanelIndex ? "active" : ""
-            }`;
-            div.textContent = `${i}`;
+        const pageNums = Array.from({ length: totalPanelCount }, (_, i) => {
+          const div = document.createElement("div");
+          div.className = `pagination-num ${
+            i === currentPanelIndex ? "active" : ""
+          }`;
+          div.textContent = `${i}`;
 
-            div.addEventListener("click", (e) => {
-              moveTo(i);
-            });
-            return div;
-          }
-        );
+          div.addEventListener("click", (e) => {
+            moveTo(i);
+          });
+          return div;
+        });
 
         paginationElement.append(...pageNums);
 
@@ -218,10 +237,15 @@
           });
         });
 
-        reactiveObj.subscribe("progress", (nextValue) => {
+        reactiveObj.subscribe("indexProgress", (nextValue) => {
           progressFillElement.style.width = `${nextValue}%`;
-        })
-        
+        });
+
+
+        const scrollProgressFillElement = document.getElementById("scroll-progress-fill");
+        reactiveObj.subscribe("scrollProgress", (nextValue) => {
+          scrollProgressFillElement.style.width = `${nextValue}%`;
+        });
       });
     </script>
   </body>
