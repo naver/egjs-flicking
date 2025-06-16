@@ -72,7 +72,6 @@ const flickingStateApiAdapter: ReactiveSetupAdapter<FlickingStateApi, FlickingRe
     reactiveObj.isReachEnd = getIsReachEnd(flicking);
     reactiveObj.currentPanelIndex = getCurrentPanelIndex(flicking);
     reactiveObj.indexProgress = getProgressByPanelIndex(flicking);
-    reactiveObj.scrollProgress = getProgressByScrollPos(flicking);
   };
 
   const onPanelChange = () => {
@@ -80,6 +79,12 @@ const flickingStateApiAdapter: ReactiveSetupAdapter<FlickingStateApi, FlickingRe
 
     onChanged();
     reactiveObj.totalPanelCount = getTotalPanelCount(flicking);
+  };
+
+  const onMove = () => {
+    if (flicking === null) return;
+
+    reactiveObj.scrollProgress = getProgressByScrollPos(flicking);
   };
 
   onInit((inst, data) => {
@@ -96,11 +101,13 @@ const flickingStateApiAdapter: ReactiveSetupAdapter<FlickingStateApi, FlickingRe
 
     flicking?.on("changed", onChanged);
     flicking?.on("panelChange", onPanelChange);
+    flicking?.on("move", onMove);
   });
 
   onDestroy(() => {
     flicking?.off("changed", onChanged);
     flicking?.off("panelChange", onPanelChange);
+    flicking?.off("move", onMove);
   });
 
   return reactiveObj;

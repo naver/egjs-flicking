@@ -26,7 +26,8 @@ describe("State API", () => {
       expect(stateApi.isReachEnd).to.be.false;
       expect(stateApi.totalPanelCount).to.equal(3);
       expect(stateApi.currentPanelIndex).to.equal(0);
-      expect(stateApi.progress).to.equal(0);
+      expect(stateApi.indexProgress).to.equal(0);
+      expect(stateApi.scrollProgress).to.equal(0);
     });
   });
 
@@ -39,7 +40,8 @@ describe("State API", () => {
       expect(stateApi.isReachStart).to.be.false;
       expect(stateApi.isReachEnd).to.be.false;
       expect(stateApi.currentPanelIndex).to.equal(1);
-      expect(stateApi.progress).to.equal(50);
+      expect(stateApi.indexProgress).to.equal(50);
+      expect(stateApi.scrollProgress).to.equal(50);
     });
 
     it("should update state when moving to last panel", async () => {
@@ -50,7 +52,7 @@ describe("State API", () => {
       expect(stateApi.isReachStart).to.be.false;
       expect(stateApi.isReachEnd).to.be.true;
       expect(stateApi.currentPanelIndex).to.equal(2);
-      expect(stateApi.progress).to.equal(100);
+      expect(stateApi.indexProgress).to.equal(100);
     });
 
     it("should update state when adding panels", async () => {
@@ -75,7 +77,7 @@ describe("State API", () => {
       await promise;
 
       expect(stateApi.currentPanelIndex).to.equal(1);
-      expect(stateApi.progress).to.equal(50);
+      expect(stateApi.indexProgress).to.equal(50);
     });
   });
 });
