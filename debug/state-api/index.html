@@ -93,7 +93,7 @@
         <button class="navigation-btn" id="prev">Previous</button>
         <div class="flicking-viewport">
           <div class="flicking-camera">
-            <div class="flicking-panel" style="width: 500px;">x0</div>
+            <div class="flicking-panel" style="width: 500px">x0</div>
             <div class="flicking-panel">x1</div>
             <div class="flicking-panel">x2</div>
             <div class="flicking-panel">x3</div>
@@ -125,7 +125,10 @@
     <script src="../../dist/flicking.pkgd.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const flicking = new Flicking(".flicking-viewport", {renderOnlyVisible: true});
+        const flicking = new Flicking(".flicking-viewport", {
+          renderOnlyVisible: true,
+          // circular: true
+        });
         const { connectFlickingStateApi } = Flicking;
         const reactiveObj = connectFlickingStateApi(flicking);
         const {
@@ -237,13 +240,10 @@
           });
         });
 
-        reactiveObj.subscribe("indexProgress", (nextValue) => {
-          progressFillElement.style.width = `${nextValue}%`;
-        });
-
-
-        const scrollProgressFillElement = document.getElementById("scroll-progress-fill");
-        reactiveObj.subscribe("scrollProgress", (nextValue) => {
+        const scrollProgressFillElement = document.getElementById(
+          "scroll-progress-fill"
+        );
+        reactiveObj.subscribe("progress", (nextValue) => {
           scrollProgressFillElement.style.width = `${nextValue}%`;
         });
       });

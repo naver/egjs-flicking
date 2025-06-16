@@ -7,21 +7,17 @@ import {
 
 import Flicking from "../Flicking";
 
-const getIsReachStart = (flicking: Flicking) => flicking.index === 0;
-const getIsReachEnd = (flicking: Flicking) =>
-  flicking.index === flicking.panelCount - 1;
+const getIsReachStart = (flicking: Flicking) => !flicking.circular && flicking.index === 0;
+
+const getIsReachEnd = (flicking: Flicking) => !flicking.circular && flicking.index === flicking.panelCount - 1;
+
 
 const getTotalPanelCount = (flicking: Flicking) => flicking.panelCount;
 const getCurrentPanelIndex = (flicking: Flicking) => flicking.index;
 
-// Returns the progress percentage based on the current panel index.
-const getProgressByPanelIndex = (flicking: Flicking) =>
-  flicking.panelCount > 1
-    ? (flicking.index / (flicking.panelCount - 1)) * 100
-    : 100;
 
 // Returns the progress percentage based on the current scroll position.
-const getProgressByScrollPos = (flicking: Flicking) => {
+const getProgress = (flicking: Flicking) => {
   const cam = flicking.camera;
 
   const progressRatio = (cam.position - cam.range.min) / (cam.range.max - cam.range.min);
@@ -31,37 +27,33 @@ const getProgressByScrollPos = (flicking: Flicking) => {
   return percent;
 };
 
-export type FlickingStateApi = ReactiveObject<{
-  isReachStart: boolean;
-  isReachEnd: boolean;
-  totalPanelCount: number;
-  currentPanelIndex: number;
-  indexProgress: number;
-  scrollProgress: number;
-  moveTo: (i: number) => Promise<void> | undefined;
-}>;
+export type FlickingReactiveStateApi = ReactiveObject<FlickingReactiveState  & FlickingReactiveMethod>;
 
 export interface FlickingReactiveState {
   isReachStart: boolean;
   isReachEnd: boolean;
   totalPanelCount: number;
   currentPanelIndex: number;
-  indexProgress: number;
-  scrollProgress: number;
+  progress: number;
 }
 
-const flickingStateApiAdapter: ReactiveSetupAdapter<FlickingStateApi, FlickingReactiveState, "moveTo"> = ({ onInit, onDestroy }) => {
+export interface FlickingReactiveMethod {
+  moveTo: (i: number) => Promise<void>;
+}
+
+const flickingStateApiAdapter: ReactiveSetupAdapter<FlickingReactiveStateApi, FlickingReactiveState, "moveTo"> = ({ onInit, onDestroy }) => {
   let flicking: Flicking | null = null;
 
-  const moveTo = (i: number) => flicking?.moveTo(i);
+  const moveTo = (i: number) => {
+    return flicking ? flicking.moveTo(i) : Promise.reject(new Error("Flicking instance is not available"));
+  };
 
   const reactiveObj = reactive({
     isReachStart: false,
     isReachEnd: false,
     totalPanelCount: 0,
     currentPanelIndex: 0,
-    indexProgress: 0,
-    scrollProgress: 0,
+    progress: 0,
     moveTo
   });
 
@@ -71,7 +63,6 @@ const flickingStateApiAdapter: ReactiveSetupAdapter<FlickingStateApi, FlickingRe
     reactiveObj.isReachStart = getIsReachStart(flicking);
     reactiveObj.isReachEnd = getIsReachEnd(flicking);
     reactiveObj.currentPanelIndex = getCurrentPanelIndex(flicking);
-    reactiveObj.indexProgress = getProgressByPanelIndex(flicking);
   };
 
   const onPanelChange = () => {
@@ -84,7 +75,7 @@ const flickingStateApiAdapter: ReactiveSetupAdapter<FlickingStateApi, FlickingRe
   const onMove = () => {
     if (flicking === null) return;
 
-    reactiveObj.scrollProgress = getProgressByScrollPos(flicking);
+    reactiveObj.progress = getProgress(flicking);
   };
 
   onInit((inst, data) => {
@@ -94,8 +85,7 @@ const flickingStateApiAdapter: ReactiveSetupAdapter<FlickingStateApi, FlickingRe
     reactiveObj.isReachStart = getIsReachStart(flicking);
     reactiveObj.isReachEnd = getIsReachEnd(flicking);
     reactiveObj.currentPanelIndex = getCurrentPanelIndex(flicking);
-    reactiveObj.indexProgress = getProgressByPanelIndex(flicking);
-    reactiveObj.scrollProgress = getProgressByScrollPos(flicking);
+    reactiveObj.progress = getProgress(flicking);
 
     reactiveObj.totalPanelCount = getTotalPanelCount(flicking);
 
