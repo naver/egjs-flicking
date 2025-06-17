@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./demo/App";
 import * as serviceWorker from "./demo/serviceWorker";
+// import DebugPage from "./demo/DebugPage";
 
 const container = document.getElementById("root");
 const root = createRoot(container as HTMLElement);
@@ -9,6 +10,7 @@ const root = createRoot(container as HTMLElement);
 root.render(
   <StrictMode>
     <App />
+    {/* <DebugPage /> */}
   </StrictMode>
 );
 

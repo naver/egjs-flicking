@@ -6,6 +6,7 @@
 import { VueConstructor } from "vue";
 
 import Flicking from "./Flicking";
+import { useFlickingStateApi } from "./state-api";
 
 declare global {
   interface Window {
@@ -21,6 +22,9 @@ const install = (Vue: VueConstructor): void => {
 const plugin = {
   Flicking,
   install,
-  version
+  version,
+  useFlickingStateApi
 };
+
+export { useFlickingStateApi };
 export default plugin;

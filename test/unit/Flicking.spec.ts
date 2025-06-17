@@ -958,6 +958,65 @@ describe("Flicking", () => {
       });
     });
 
+    describe("observePanelResize", () => {
+      it(`should call resize when size of panel is changed`, async () => {
+        const flicking = await createFlicking(
+          El.viewport("1000px", "1000px").add(
+            El.camera("1000px", "1000px").add(
+              El.panel("800px", "1000px"),
+              El.panel("800px", "1000px"),
+              El.panel("800px", "1000px"),
+            )
+          ),
+          { autoResize: true, useResizeObserver: true, observePanelResize: true }
+        );
+        const afterResizeSpy = sinon.spy();
+        const beforeResizeSpy = sinon.spy();
+
+        // wait for initial resize
+        await waitTime(100);
+
+        flicking.on(EVENTS.AFTER_RESIZE, afterResizeSpy);
+        flicking.on(EVENTS.BEFORE_RESIZE, beforeResizeSpy);
+        flicking.panels[2].element.style.height = "3000px";
+
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(afterResizeSpy.calledOnce).to.be.true;
+        expect(beforeResizeSpy.calledOnce).to.be.true;
+      });
+
+      it("should observe size of panel element if panel element is added later", async () => {
+        const flicking = await createFlicking(
+          El.viewport("1000px", "1000px").add(
+            El.camera("1000px", "1000px").add(
+              El.panel("800px", "1000px"),
+              El.panel("800px", "1000px"),
+              El.panel("800px", "1000px"),
+            )
+          ),
+          { autoResize: true, useResizeObserver: true, observePanelResize: true }
+        );
+        const afterResizeSpy = sinon.spy();
+        const beforeResizeSpy = sinon.spy();
+
+        // wait for initial resize
+        await waitTime(100);
+
+        flicking.on(EVENTS.AFTER_RESIZE, afterResizeSpy);
+        flicking.on(EVENTS.BEFORE_RESIZE, beforeResizeSpy);
+
+        flicking.append(flicking.panels[0].element.outerHTML);
+
+        flicking.panels[3].element.style.height = "3000px";
+
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(afterResizeSpy.calledOnce).to.be.true;
+        expect(beforeResizeSpy.calledOnce).to.be.true;
+      });
+    });
+
     describe("preventClickOnDrag", () => {
       it("should trigger click event when Flicking's not dragged at all", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventClickOnDrag: true });

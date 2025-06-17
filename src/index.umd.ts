@@ -10,6 +10,7 @@ import * as Control from "./control";
 import * as Renderer from "./renderer";
 import * as Constants from "./const/external";
 import * as CFC from "./cfc";
+import * as FlickingStateAPI from "./state-api";
 import * as Utils from "./utils";
 import { merge } from "./utils";
 
@@ -21,5 +22,6 @@ merge(Flicking, Constants);
 merge(Flicking, CFC);
 merge(Flicking, Utils);
 merge(Flicking, CrossFlicking);
+merge(Flicking, FlickingStateAPI);
 
 export default Flicking;

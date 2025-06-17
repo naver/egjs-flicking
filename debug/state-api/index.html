@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flicking Basic Demo</title>
+    <link rel="stylesheet" href="../../dist/flicking.css" />
+    <style>
+      #container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      #nav-wrapper {
+        display: flex;
+        align-items: center;
+      }
+      .flicking-viewport {
+        width: 500px;
+        height: 300px;
+        /* margin: 0 auto; */
+        border: 1px solid black;
+      }
+      .flicking-camera {
+        display: flex;
+      }
+      .flicking-panel {
+        align-items: flex-end;
+        border-radius: 5px;
+        box-sizing: border-box;
+        display: flex;
+        /* height: 200px; */
+        justify-content: flex-start;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-right: 10px;
+        position: relative;
+        width: 200px;
+        background-color: aliceblue;
+        justify-content: center;
+        align-items: center;
+      }
+      .navigation-btn {
+        text-align: center;
+        margin: 0 5px;
+        padding: 5px 10px;
+        height: 50px;
+      }
+      #pagination {
+        display: flex;
+      }
+      .pagination-num {
+        background-color: beige;
+        margin: 5px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+      }
+      .pagination-num.active {
+        background-color: yellowgreen;
+      }
+      #progress-bar {
+        width: 600px;
+        height: 20px;
+        border-radius: 20px;
+        background-color: #e0e0e0;
+        overflow: hidden;
+      }
+      #progress-fill {
+        height: 100%;
+        width: 0%; /* 초기에는 0% 채워짐 */
+        background-color: #4caf50; /* 채워지는 색 */
+        transition: width 0.3s ease; /* 부드럽게 변화 */
+      }
+      #scroll-progress-bar {
+        width: 600px;
+        height: 20px;
+        border-radius: 20px;
+        background-color: #e0e0e0;
+        overflow: hidden;
+      }
+      #scroll-progress-fill {
+        height: 100%;
+        width: 0%; /* 초기에는 0% 채워짐 */
+        background-color: #2196f3; /* 채워지는 색 */
+        transition: width 0.3s ease; /* 부드럽게 변화 */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="nav-wrapper">
+        <button class="navigation-btn" id="prev">Previous</button>
+        <div class="flicking-viewport">
+          <div class="flicking-camera">
+            <div class="flicking-panel" style="width: 500px">x0</div>
+            <div class="flicking-panel">x1</div>
+            <div class="flicking-panel">x2</div>
+            <div class="flicking-panel">x3</div>
+            <div class="flicking-panel">x4</div>
+          </div>
+        </div>
+        <button class="navigation-btn" id="next">Next</button>
+      </div>
+      <div id="pagination"></div>
+      <div id="progress-bar">
+        <div id="progress-fill"></div>
+      </div>
+      <div id="scroll-progress-bar">
+        <div id="scroll-progress-fill"></div>
+      </div>
+    </div>
+
+    <div class="add">
+      <button id="prepend">prepend</button>
+      <button id="append">append</button>
+      <button id="add-random">add random</button>
+    </div>
+    <div class="remove">
+      <button id="remove-first">remove first</button>
+      <button id="remove-last">remove last</button>
+      <button id="remove-random">remove random</button>
+    </div>
+
+    <script src="../../dist/flicking.pkgd.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const flicking = new Flicking(".flicking-viewport", {
+          renderOnlyVisible: true,
+          // circular: true
+        });
+        const { connectFlickingStateApi } = Flicking;
+        const reactiveObj = connectFlickingStateApi(flicking);
+        const {
+          isReachStart,
+          isReachEnd,
+          totalPanelCount,
+          currentPanelIndex,
+          moveTo,
+        } = reactiveObj;
+
+        // Navigation buttons
+        const prevButton = document.getElementById("prev");
+        const nextButton = document.getElementById("next");
+
+        // 비활성화 여부 초기화
+        prevButton.disabled = isReachStart;
+        nextButton.disabled = isReachEnd;
+
+        // 반응형과 엮기
+        reactiveObj.subscribe("isReachStart", (nextValue) => {
+          prevButton.disabled = nextValue;
+        });
+        reactiveObj.subscribe("isReachEnd", (nextValue) => {
+          nextButton.disabled = nextValue;
+        });
+
+        // 이벤트 리스너 등록
+        prevButton.addEventListener("click", () => {
+          flicking.prev();
+        });
+
+        nextButton.addEventListener("click", () => {
+          flicking.next();
+        });
+
+        // 패널이 동적으로 추가되거나 삭제되었을 때도 잘 동작해야함.
+
+        let appendNum = 100;
+        let prependNum = -1;
+
+        const appendButton = document.getElementById("append");
+        const prependButton = document.getElementById("prepend");
+        const addRandomButton = document.getElementById("add-random");
+
+        const getRandomInt = (min, max) => {
+          const minCeiled = Math.ceil(min);
+          const maxFloored = Math.floor(max);
+          return Math.floor(
+            Math.random() * (maxFloored - minCeiled) + minCeiled
+          );
+        };
+        appendButton.addEventListener("click", () => {
+          flicking.append(`<div class="flicking-panel">x${appendNum}</div>`);
+          appendNum++;
+        });
+        prependButton.addEventListener("click", () => {
+          flicking.prepend(`<div class="flicking-panel">x${prependNum}</div>`);
+          prependNum--;
+        });
+        addRandomButton.addEventListener("click", () => {
+          const randomN = getRandomInt(0, flicking.panelCount);
+          flicking.insert(
+            randomN,
+            `<div class="flicking-panel">random ${randomN}</div>`
+          );
+        });
+
+        const removeFirstButton = document.getElementById("remove-first");
+        const removeLastButton = document.getElementById("remove-last");
+        const removeRandomButton = document.getElementById("remove-random");
+
+        removeFirstButton.addEventListener("click", () => {
+          flicking.remove(0);
+        });
+
+        // active panel을 지우는 경우 포커스가 가장 처음으로 돌아가는 현상이 있음.
+        removeLastButton.addEventListener("click", () => {
+          flicking.remove(flicking.panelCount - 1);
+        });
+        removeRandomButton.addEventListener("click", () => {
+          const randomN = getRandomInt(0, flicking.panelCount);
+          flicking.remove(randomN);
+        });
+
+        const paginationElement = document.getElementById("pagination");
+        const progressFillElement = document.getElementById("progress-fill");
+
+        const pageNums = Array.from({ length: totalPanelCount }, (_, i) => {
+          const div = document.createElement("div");
+          div.className = `pagination-num ${
+            i === currentPanelIndex ? "active" : ""
+          }`;
+          div.textContent = `${i}`;
+
+          div.addEventListener("click", (e) => {
+            moveTo(i);
+          });
+          return div;
+        });
+
+        paginationElement.append(...pageNums);
+
+        reactiveObj.subscribe("currentPanelIndex", (nextValue) => {
+          pageNums.forEach((v, i) => {
+            v.classList.remove("active");
+            if (i === nextValue) {
+              v.classList.add("active");
+            }
+          });
+        });
+
+        const scrollProgressFillElement = document.getElementById(
+          "scroll-progress-fill"
+        );
+        reactiveObj.subscribe("progress", (nextValue) => {
+          scrollProgressFillElement.style.width = `${nextValue}%`;
+        });
+      });
+    </script>
+  </body>
+</html>

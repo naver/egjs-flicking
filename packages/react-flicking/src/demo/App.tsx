@@ -1,10 +1,5 @@
-
 import React, { Component } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./css/common.css";
 import "./css/features.css";
 import "./css/highlight.css";
@@ -31,7 +26,7 @@ export default class App extends Component<{}> {
   public render() {
     return (
       <Router>
-        <Header/>
+        <Header />
         <Routes>
           <Route path="/infinite" element={<InfiniteFlicking />} />
           <Route path="/free-scroll" element={<FreeScroll />} />
@@ -48,7 +43,8 @@ export default class App extends Component<{}> {
           <Route path="/prop" element={<PropChange />} />
           <Route path="/cross" element={<CrossFlicking />} />
         </Routes>
-      </Router>);
+      </Router>
+    );
   }
   public componentDidMount() {
     hljs.initHighlighting();
