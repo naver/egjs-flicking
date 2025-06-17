@@ -66,13 +66,13 @@ class ReactRenderer extends ExternalRenderer {
   protected _collectPanels() {
     const flicking = getFlickingAttached(this._flicking);
     const reactFlicking = this._reactFlicking;
-    const reactPanels = reactFlicking.reactPanels;
+    const reactPanels = reactFlicking.reactPanels.map(panel => panel.nativeElement);
 
     this._panels = this._strategy.collectPanels(flicking, reactPanels);
   }
 
   protected _createPanel(externalComponent: StrictPanel | NonStrictPanel | HTMLDivElement, options: PanelOptions) {
-    return this._strategy.createPanel(externalComponent, options);
+    return this._strategy.createPanel(externalComponent.nativeElement, options);
   }
 }
 
