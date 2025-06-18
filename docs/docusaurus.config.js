@@ -1,5 +1,5 @@
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
-
+const path = require("path");
 const isDev = process.env.NODE_ENV === "development";
 
 /** @type {import('@docusaurus/types').Config} */
@@ -14,7 +14,24 @@ module.exports = {
   projectName: "naver.github.io",
   trailingSlash: false,
   organizationName: "naver",
-  plugins: ["docusaurus-plugin-sass"],
+  plugins: [
+    "docusaurus-plugin-sass",
+    () => {
+      return {
+        name: "custom-webpack-alias",
+        configureWebpack: (config, isServer, utils) => {
+          return {
+            resolve: {
+              alias: {
+                react: path.resolve(__dirname, "./node_modules/react"),
+                "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
+              }
+            }
+          };
+        }
+      };
+    }
+  ],
   themeConfig: {
     navbar: {
       logo: {

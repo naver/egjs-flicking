@@ -189,3 +189,31 @@ article a {
   margin-right: 0px;
   margin-left: 0px;
 }
+
+
+
+
+.skelton-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  justify-content: center;
+  align-items: flex-start;
+}
+.skeleton-bar {
+  height: 10px;
+  border-radius: 5px;
+  background: white;
+}
+.skeleton-bar-size1 {
+  width: 100px;
+}
+.skeleton-bar-size2 {
+  width: 120px;
+}
+.skeleton-bar-size3 {
+  width: 160px;
+}
+.skeleton-bar-size4 {
+  width: 200px;
+}
