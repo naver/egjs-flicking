@@ -6,14 +6,16 @@ import Flicking from "./Flicking";
 import CrossFlicking from "./CrossFlicking";
 import CrossGroup from "./CrossGroup";
 import ViewportSlot from "./ViewportSlot";
+import { useFlickingStateApi } from "./state-api";
 
 export * from "@egjs/flicking";
 export * from "./types";
-export * from "./state-api";
+
 
 export {
   CrossFlicking,
   CrossGroup,
   ViewportSlot,
+  useFlickingStateApi
 }
 export default Flicking;

@@ -26,5 +26,4 @@ const plugin = {
   useFlickingStateApi
 };
 
-export { useFlickingStateApi };
 export default plugin;
