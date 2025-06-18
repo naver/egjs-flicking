@@ -112,11 +112,11 @@ export interface FlickingReactiveData {
   flicking: Flicking | null;
 }
 
-const FlickingReactiveAPIAdapter: ReactiveSetupAdapter<
-  FlickingReactiveObject,
-  FlickingReactiveState,
-  "moveTo",
-  FlickingReactiveData
+const flickingReactiveAPIAdapter: ReactiveSetupAdapter<
+FlickingReactiveObject,
+FlickingReactiveState,
+"moveTo",
+FlickingReactiveData
 > = ({ onInit, onDestroy }) => {
   let flicking: Flicking | null = null;
 
@@ -182,11 +182,11 @@ const FlickingReactiveAPIAdapter: ReactiveSetupAdapter<
 };
 
 const connectFlickingReactiveAPI = (flicking: Flicking) => {
-  const obj = adaptReactive(FlickingReactiveAPIAdapter, () => ({ flicking }));
+  const obj = adaptReactive(flickingReactiveAPIAdapter, () => ({ flicking }));
   obj.mounted();
   const instance = obj.instance();
   obj.init();
   return instance;
 };
 
-export { FlickingReactiveAPIAdapter, connectFlickingReactiveAPI };
+export { flickingReactiveAPIAdapter, connectFlickingReactiveAPI };
