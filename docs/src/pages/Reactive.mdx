@@ -13,6 +13,7 @@ import CFCTabs from "@site/src/component/CFCTabs"
 import Columns from "@site/src/component/Columns";
 import ColumnItem from "@site/src/component/ColumnItem";
 import AutoInit from "@site/src/demo/AutoInit";
+import Parallax from "@site/src/demo/reactive/Parallax";
 import Pagination from '@mui/material/Pagination';
 import LinearProgress from '@mui/material/LinearProgress';
 import Tabs from "@theme/Tabs";
@@ -414,16 +415,13 @@ module.exports = {
 </Tabs>
 
 
-### Fade
-> `.indexedProgress`를 이용하여 각 Panel의 Fade를 만들 수 있습니다.
+### Parallax
+> `.indexProgress`를 이용하여 각 Panel의 Parallax 효과를를 만들 수 있습니다.
 
 <Columns>
   <ColumnItem is={12} className="is-flex is-flex-direction-column is-align-items-center">
- <Flicking align={{ camera: "20%", panel: "40px" }}>
-    { Panels(4) }
-  </Flicking>
-  <Pagination page={1} count={10} />
-</ColumnItem>
+    <Parallax />
+  </ColumnItem>
 </Columns>
 
 

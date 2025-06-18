@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  #app {
+    font-family: "Avenir", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+    background: #F2F4F7;
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .flicking-viewport {
+  transition: height 500ms;
+}
+  .panel {
+    background: #D7E6FF;
+    padding: 40px;
+    margin-right: 20px;
+  }
+
+.long {
+  width: 300px;
+}
+
+.short {
+  width: 300px;
+}
+
+.flicking-container {
+  padding: 10px 0;
+}
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  justify-content: center;
+}
+.skeleton-bar {
+  height: 10px;
+  border-radius: 5px;
+  background: rgba(200, 200, 200);
+}
+.skeleton-size1 {
+  width: 100px;
+}
+.skeleton-size2 {
+  width: 120px;
+}
+.skeleton-size3 {
+  width: 160px;
+}
+.skeleton-size4 {
+  width: 200px;
+}
+
+</style>
+
+<head>
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <script type="text/javascript" src="../../dist/flicking.pkgd.js"></script>
+  <link rel="stylesheet" href="../../dist/flicking.css">
+  <title>Adaptive Flicking Test</title>
+</head>
+
+<body>
+  <div id="app">
+    <div class="flicking-container">
+      <div id="flicking" class="flicking-viewport">
+        <div class="flicking-camera">
+          <div class="panel long">
+            <div class="skeleton-bar skeleton-size4"></div>
+            <div class="skeleton-bar skeleton-size1"></div>
+            <div class="skeleton-bar skeleton-size3"></div>
+            <div class="skeleton-bar skeleton-size2"></div>
+          </div>
+          <div class="panel short">
+            <div class="skeleton-bar skeleton-size4"></div>
+            <div class="skeleton-bar skeleton-size1"></div>
+            <div class="skeleton-bar skeleton-size3"></div>
+            <div class="skeleton-bar skeleton-size2"></div>
+          </div>
+          <div class="panel long">Short</div>
+          <div class="panel short">Short</div>
+          <div class="panel short">Short</div>
+          <div class="panel long">Long</div>
+          <div class="panel short">Short</div>
+          <div class="panel short">Short</div>
+          <div class="panel short">Short</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+const children = [...document.querySelectorAll(".flicking-camera>*")];
+
+children.forEach(child => {
+  child.innerHTML = `<div class="skeleton-bar skeleton-size4"></div>
+            <div class="skeleton-bar skeleton-size1"></div>
+            <div class="skeleton-bar skeleton-size3"></div>
+            <div class="skeleton-bar skeleton-size2"></div>`;
+})
+const flicking = new Flicking("#flicking", {
+  // bound: true,
+  // circular: true,
+  // panelsPerView: 3,
+  // adaptive: true,
+});
+const state = Flicking.connectFlickingReactiveAPI(flicking);
+state.subscribe("indexProgress", indexProgress => {
+  console.log("?", indexProgress);
+
+  const length = children.length;
+  children.forEach((child, i) => {
+    const childProgress = (i - indexProgress + length + length / 2) % length -  length / 2;
+
+    child.querySelectorAll(".skeleton-bar").forEach((sk, j) => {
+      sk.style.opacity = Math.max(0, Math.min(1, 1 -  Math.abs(childProgress)));
+      sk.style.transform = `translate(${childProgress * 10 * (10 + 2 * (4 - j))}px)`;
+    });
+  });
+})
+</script>
+</html>

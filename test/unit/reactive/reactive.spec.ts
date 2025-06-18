@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import Flicking from "~/Flicking";
-import { connectFlickingStateApi } from "~/state-api";
+import { connectFlickingReactiveAPI } from "~/reactive";
 import {
   cleanup,
   createFlicking,
@@ -9,15 +9,15 @@ import {
 } from "../helper/test-util";
 import El from "../helper/El";
 
-describe("State API", () => {
+describe("Reactive API", () => {
   let container: HTMLElement;
   let flicking: Flicking;
-  let stateApi: ReturnType<typeof connectFlickingStateApi>;
+  let stateApi: ReturnType<typeof connectFlickingReactiveAPI>;
 
   beforeEach(async () => {
-    container = createSandbox("state-api-test");
+    container = createSandbox("reactive-test");
     flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
-    stateApi = connectFlickingStateApi(flicking);
+    stateApi = connectFlickingReactiveAPI(flicking);
   });
 
   afterEach(async () => {

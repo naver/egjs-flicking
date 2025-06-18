@@ -26,34 +26,111 @@ const getProgress = (flicking: Flicking) => {
 
   return percent;
 };
+const getIndexProgress = (flicking: Flicking) => {
+  const cam = flicking.camera;
+  const anchorPoints = cam.anchorPoints;
+  const length = anchorPoints.length;
+  const cameraPosition = cam.position;
+  const isCircular = flicking.circularEnabled;
+  let indexProgress = 0;
 
-export type FlickingReactiveStateApi = ReactiveObject<FlickingReactiveState  & FlickingReactiveMethod>;
+  const { min, max } = cam.range;
+  const firstAnchorPoint = anchorPoints[0];
+  const lastAnchorPoint = anchorPoints[length - 1];
+  const distanceLastToFirst = (max - lastAnchorPoint.position) + (firstAnchorPoint.position - min);
 
+  anchorPoints.some((anchorPoint, index) => {
+    const anchorPosition = anchorPoint.position;
+    const nextAnchorPoint = anchorPoints[index + 1];
+
+    if (index === 0 && cameraPosition <= anchorPosition) {
+      if (isCircular) {
+        indexProgress = (cameraPosition - anchorPosition) / distanceLastToFirst;
+      } else {
+        indexProgress = (cameraPosition - anchorPosition) / anchorPoint.panel.size;
+      }
+    } else if (index === length - 1 && cameraPosition >= anchorPosition) {
+      if (isCircular) {
+        indexProgress = index + (cameraPosition - anchorPosition) / distanceLastToFirst;
+      } else {
+        indexProgress = index + (cameraPosition - anchorPosition) / anchorPoint.panel.size;
+      }
+    } else if (nextAnchorPoint && anchorPosition <=  cameraPosition && cameraPosition <= nextAnchorPoint.position) {
+      indexProgress = index + (cameraPosition - anchorPosition) / (nextAnchorPoint.position - anchorPosition);
+    } else {
+      return false;
+    }
+    return true;
+  });
+
+  return indexProgress;
+};
+
+export type FlickingReactiveObject = ReactiveObject<FlickingReactiveState & FlickingReactiveMethod>;
+
+/**
+ * @typedef
+ */
 export interface FlickingReactiveState {
+  /**
+   * isReachStart
+   * @ko isReachStart
+   */
   isReachStart: boolean;
+  /**
+   * isReachEnd
+   * @ko isReachEnd
+   */
   isReachEnd: boolean;
+  /**
+   * totalPanelCount
+   * @ko totalPanelCount
+   */
   totalPanelCount: number;
+  /**
+   * currentPanelIndex
+   * @ko currentPanelIndex
+   */
   currentPanelIndex: number;
+  /**
+   * totalPanelCount
+   * @ko totalPanelCount
+   */
   progress: number;
+  /**
+   * indexProgress
+   * @ko indexProgress
+   */
+  indexProgress: number;
 }
 
 export interface FlickingReactiveMethod {
   moveTo: (i: number) => Promise<void>;
 }
 
-const flickingStateApiAdapter: ReactiveSetupAdapter<FlickingReactiveStateApi, FlickingReactiveState, "moveTo"> = ({ onInit, onDestroy }) => {
+export interface FlickingReactiveData {
+  flicking: Flicking | null;
+}
+
+const flickingReactiveAPIAdapter: ReactiveSetupAdapter<
+FlickingReactiveObject,
+FlickingReactiveState,
+"moveTo",
+FlickingReactiveData
+> = ({ onInit, onDestroy }) => {
   let flicking: Flicking | null = null;
 
   const moveTo = (i: number) => {
     return flicking ? flicking.moveTo(i) : Promise.reject(new Error("Flicking instance is not available"));
   };
 
-  const reactiveObj = reactive({
+  const reactiveObj: FlickingReactiveObject = reactive({
     isReachStart: false,
     isReachEnd: false,
     totalPanelCount: 0,
     currentPanelIndex: 0,
     progress: 0,
+    indexProgress: 0,
     moveTo
   });
 
@@ -76,6 +153,7 @@ const flickingStateApiAdapter: ReactiveSetupAdapter<FlickingReactiveStateApi, Fl
     if (flicking === null) return;
 
     reactiveObj.progress = getProgress(flicking);
+    reactiveObj.indexProgress = getIndexProgress(flicking);
   };
 
   onInit((inst, data) => {
@@ -103,12 +181,12 @@ const flickingStateApiAdapter: ReactiveSetupAdapter<FlickingReactiveStateApi, Fl
   return reactiveObj;
 };
 
-const connectFlickingStateApi = (flicking: Flicking) => {
-  const obj = adaptReactive(flickingStateApiAdapter, () => ({ flicking }));
+const connectFlickingReactiveAPI = (flicking: Flicking) => {
+  const obj = adaptReactive(flickingReactiveAPIAdapter, () => ({ flicking }));
   obj.mounted();
   const instance = obj.instance();
   obj.init();
   return instance;
 };
 
-export { flickingStateApiAdapter, connectFlickingStateApi };
+export { flickingReactiveAPIAdapter, connectFlickingReactiveAPI };
