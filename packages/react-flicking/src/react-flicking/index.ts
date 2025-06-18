@@ -9,7 +9,7 @@ import ViewportSlot from "./ViewportSlot";
 
 export * from "@egjs/flicking";
 export * from "./types";
-export * from "./state-api";
+export * from "./reactive";
 
 export {
   CrossFlicking,

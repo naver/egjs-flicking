@@ -7,13 +7,13 @@ import Flicking from "../react-flicking";
 
 import "@egjs/flicking/dist/flicking.css";
 import './StatePage.css';
-import { useFlickingStateApi } from "../react-flicking/state-api";
+import { useFlickingReactiveAPI } from "../react-flicking/reactive";
 import LinearProgress from "@mui/material/LinearProgress";
 
 const DebugPage: React.FC = () => {
   const flickingRef = useRef<Flicking>(null);
 
-  const {isReachStart, isReachEnd, progress, currentPanelIndex, totalPanelCount, moveTo} = useFlickingStateApi(flickingRef);
+  const {isReachStart, isReachEnd, progress, currentPanelIndex, totalPanelCount, moveTo} = useFlickingReactiveAPI(flickingRef);
 
   const onClickPrev = () => {
     flickingRef.current?.prev();

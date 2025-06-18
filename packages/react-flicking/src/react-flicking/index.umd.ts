@@ -4,8 +4,8 @@
  */
 import Flicking from "./Flicking";
 import ViewportSlot from "./ViewportSlot";
-import { useFlickingStateApi } from "./state-api";
+import { useFlickingReactiveAPI } from "./reactive";
 
 (Flicking as any).ViewportSlot = ViewportSlot;
-export { useFlickingStateApi };
+(Flicking as any).useFlickingReactiveAPI = useFlickingReactiveAPI;
 export default Flicking;
