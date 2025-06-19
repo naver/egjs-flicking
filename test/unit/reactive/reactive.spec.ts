@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import Flicking from "~/Flicking";
-import { connectFlickingReactiveAPI } from "~/reactive";
+import { connectFlickingReactiveAPI, FlickingReactiveObject } from "~/reactive";
 import {
   cleanup,
   createFlicking,
