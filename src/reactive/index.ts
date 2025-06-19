@@ -125,7 +125,7 @@ FlickingReactiveData
       return Promise.reject(new Error("Flicking instance is not available"));
     }
     if (flicking?.animating) {
-      return Promise.reject(new Error("Flicking is currently animating"));
+      return Promise.resolve();
     }
     return flicking.moveTo(i);
   };
