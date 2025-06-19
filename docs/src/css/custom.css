@@ -20,6 +20,7 @@
   --ifm-color-success: #48c78e;
   --ifm-code-font-size: 95%;
 }
+
 html[data-theme='dark'] {
   --ifm-background-color: #242526 !important;
 }
@@ -27,6 +28,7 @@ html[data-theme='dark'] {
 .title {
   color: var(--ifm-font-color-base) !important;
 }
+
 .subtitle {
   color: var(--ifm-font-color-base) !important;
 }
@@ -35,12 +37,15 @@ html[data-theme='dark'] {
 .navbar__logo {
   margin-right: 0 !important;
 }
+
 .navbar__brand {
   padding: var(--ifm-navbar-item-padding-vertical) 1rem;
 }
+
 .navbar--fixed-top {
   z-index: 2002;
 }
+
 html[data-theme='dark'] .navbar__logo {
   content: url("@site/static/img/flicking_textonly_white.svg");
 }
@@ -65,11 +70,11 @@ article a {
 }
 
 .codesandbox-playground {
-  width:100%;
-  height:500px;
-  border:0;
+  width: 100%;
+  height: 500px;
+  border: 0;
   border-radius: 4px;
-  overflow:hidden;
+  overflow: hidden;
 }
 
 .flicking-viewport {
@@ -78,7 +83,8 @@ article a {
   margin-left: auto;
   margin-right: auto;
 }
-.flicking-viewport.vertical > .flicking-camera {
+
+.flicking-viewport.vertical>.flicking-camera {
   align-items: center;
 }
 
@@ -98,11 +104,13 @@ article a {
   box-sizing: border-box;
   position: relative;
 }
+
 .flicking-index {
   min-width: 60px;
   text-align: center;
   position: relative;
 }
+
 .flicking-index::before {
   content: "";
   position: absolute;
@@ -111,9 +119,11 @@ article a {
   width: 80%;
   border-bottom: 2px solid white;
 }
+
 .flicking-panel.has-background-warning .flicking-index::before {
-  border-color: rgba(0,0,0,.7);
+  border-color: rgba(0, 0, 0, .7);
 }
+
 .flicking-index::after {
   content: "PANEL";
   font-weight: bold;
@@ -128,21 +138,26 @@ article a {
 .flicking-panel.high {
   height: 300px;
 }
+
 .flicking-panel.higher {
   height: 400px;
 }
+
 .flicking-panel.full {
   width: 100%;
 }
+
 .flicking-panel.thumb {
   padding: 0;
   width: 20%;
   height: 100px;
   margin-bottom: 0;
 }
+
 .flicking-panel.thumb.active {
   border: 5px solid #48c78e;
 }
+
 .flicking-panel .thumb-image {
   width: 100%;
   height: 100%;
@@ -162,6 +177,7 @@ article a {
   user-select: none;
   -webkit-user-select: none;
 }
+
 .panel-with-link .flicking-panel {
   width: 100%;
   margin: 0;
@@ -200,20 +216,33 @@ article a {
   justify-content: center;
   align-items: flex-start;
 }
+
 .skeleton-bar {
   height: 10px;
   border-radius: 5px;
   background: white;
 }
+
 .skeleton-bar-size1 {
   width: 100px;
 }
+
 .skeleton-bar-size2 {
   width: 120px;
 }
+
 .skeleton-bar-size3 {
   width: 160px;
 }
+
 .skeleton-bar-size4 {
   width: 200px;
+}
+
+.flicking-coverflow {
+  perspective: 400px;
+}
+
+.flicking-coverflow .flicking-camera {
+  transform-style: preserve-3d;
 }
