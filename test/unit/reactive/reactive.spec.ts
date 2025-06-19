@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import Flicking from "~/Flicking";
-import { connectFlickingReactiveAPI } from "~/reactive";
+import { connectFlickingReactiveAPI, FlickingReactiveObject } from "~/reactive";
 import {
   cleanup,
   createFlicking,
@@ -12,7 +12,7 @@ import El from "../helper/El";
 describe("Reactive API", () => {
   let container: HTMLElement;
   let flicking: Flicking;
-  let stateApi: ReturnType<typeof connectFlickingReactiveAPI>;
+  let stateApi: FlickingReactiveObject;
 
   beforeEach(async () => {
     container = createSandbox("reactive-test");
@@ -32,6 +32,7 @@ describe("Reactive API", () => {
       expect(stateApi.totalPanelCount).to.equal(3);
       expect(stateApi.currentPanelIndex).to.equal(0);
       expect(stateApi.progress).to.equal(0);
+      expect(stateApi.indexProgress).to.equal(0);
     });
   });
 
@@ -44,6 +45,7 @@ describe("Reactive API", () => {
       expect(stateApi.isReachStart).to.be.false;
       expect(stateApi.isReachEnd).to.be.false;
       expect(stateApi.currentPanelIndex).to.equal(1);
+      expect(stateApi.indexProgress).to.equal(1);
       expect(stateApi.progress).to.equal(50);
     });
 
@@ -55,6 +57,7 @@ describe("Reactive API", () => {
       expect(stateApi.isReachStart).to.be.false;
       expect(stateApi.isReachEnd).to.be.true;
       expect(stateApi.currentPanelIndex).to.equal(2);
+      expect(stateApi.indexProgress).to.equal(2);
       expect(stateApi.progress).to.equal(100);
     });
 
@@ -80,6 +83,7 @@ describe("Reactive API", () => {
       await promise;
 
       expect(stateApi.currentPanelIndex).to.equal(1);
+      expect(stateApi.indexProgress).to.equal(1);
       expect(stateApi.progress).to.equal(50);
     });
   });
