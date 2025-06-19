@@ -117,12 +117,19 @@ FlickingReactiveObject,
 FlickingReactiveState,
 "moveTo",
 FlickingReactiveData
-> = ({ onInit, onDestroy }) => {
+> = ({ onInit, onDestroy, setMethods }) => {
   let flicking: Flicking | null = null;
 
   const moveTo = (i: number) => {
-    return flicking ? flicking.moveTo(i) : Promise.reject(new Error("Flicking instance is not available"));
+    if (flicking === null) {
+      return Promise.reject(new Error("Flicking instance is not available"));
+    }
+    if (flicking?.animating) {
+      return Promise.reject(new Error("Flicking is currently animating"));
+    }
+    return flicking.moveTo(i);
   };
+  setMethods(["moveTo"]);
 
   const reactiveObj: FlickingReactiveObject = reactive({
     isReachStart: false,
