@@ -35,7 +35,8 @@
   "dependencies": {
     "@cfcs/vue3": "^0.1.0",
     "@egjs/component": "^3.0.2",
-    "@egjs/flicking": "~4.13.1"
+    "@egjs/flicking": "~4.13.1",
+    "vue-router": "^4.5.1"
   },
   "peerDependencies": {
     "vue": "^3.0.0"
