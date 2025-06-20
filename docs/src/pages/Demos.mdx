@@ -69,7 +69,7 @@ Made with [@egjs/grid](https://github.com/naver/egjs-grid)
 ## Reactive API demo
 
 ### Pagination
-> `currentPanelIndex`, `totalPanelCount` 를 이용하여 Flicking과 Pagination을 연동시킬 수 있습니다.
+> You can synchronize Flicking with Pagination using `currentPanelIndex` and `totalPanelCount`.
 
 <Columns>
   <ColumnItem is={12} className="is-flex is-flex-direction-column is-align-items-center">
@@ -108,7 +108,7 @@ import Flicking, { connectFlickingReactiveAPI } from "@egjs/flicking";
 const flicking = new Flicking(".flicking-viewport");
 const reactiveObj = connectFlickingReactiveAPI(flicking);
 
-// Pagination 컴포넌트와 연동
+// Connect with Pagination component
 const pagination = document.querySelector(".pagination");
 const pageNums = Array.from({ length: reactiveObj.totalPanelCount }, (_, i) => {
   const div = document.createElement("div");
@@ -123,7 +123,7 @@ const pageNums = Array.from({ length: reactiveObj.totalPanelCount }, (_, i) => {
 
 pagination.append(...pageNums);
 
-// 현재 페이지 업데이트
+// Update current page
 reactiveObj.subscribe("currentPanelIndex", (nextValue) => {
   pageNums.forEach((v, i) => {
     v.classList.remove("active");
@@ -151,7 +151,7 @@ export default function PaginationExample() {
   } = useFlickingReactiveAPI(flickingRef);
 
   const handlePageChange = (event, page) => {
-    moveTo(page - 1); // MUI Pagination은 1부터 시작
+    moveTo(page - 1); // MUI Pagination starts from 1
   };
 
   return (
@@ -201,10 +201,10 @@ export default function PaginationExample() {
 
     <div class="controls">
       <button @click="handlePrev" :disabled="isReachStart" class="btn">
-        이전
+        Prev
       </button>
       <button @click="handleNext" :disabled="isReachEnd" class="btn">
-        다음
+        Next
       </button>
     </div>
 
@@ -221,11 +221,11 @@ export default function PaginationExample() {
     </div>
 
     <div class="status">
-      <p>총 패널 수: {{ totalPanelCount }}</p>
-      <p>현재 인덱스: {{ currentPanelIndex }}</p>
-      <p>진행률: {{ progress.toFixed(1) }}%</p>
-      <p>첫 번째 패널: {{ isReachStart ? '도달' : '미도달' }}</p>
-      <p>마지막 패널: {{ isReachEnd ? '도달' : '미도달' }}</p>
+      <p>Total panels: {{ totalPanelCount }}</p>
+      <p>Current index: {{ currentPanelIndex }}</p>
+      <p>Progress: {{ progress.toFixed(1) }}%</p>
+      <p>First panel: {{ isReachStart ? 'Reached' : 'Not reached' }}</p>
+      <p>Last panel: {{ isReachEnd ? 'Reached' : 'Not reached' }}</p>
     </div>
   </div>
 </template>
@@ -242,7 +242,7 @@ export default {
     Flicking
   },
   setup() {
-    // 반응형 데이터
+    // Reactive data
     const panels = ref([
       { id: 1, text: '패널 1', color: '#ff6b6b' },
       { id: 2, text: '패널 2', color: '#4ecdc4' },
@@ -251,7 +251,7 @@ export default {
       { id: 5, text: '패널 5', color: '#feca57' }
     ])
 
-    // Flicking 옵션
+    // Flicking options
     const flickingOptions = ref({
       circular: false,
       bound: false,
@@ -259,10 +259,10 @@ export default {
       defaultIndex: 0,
     })
 
-    // Flicking 인스턴스 참조
+    // Flicking instance reference
     const flickingRef = ref(null)
 
-    // Reactive API 훅 사용
+    // Use Reactive API hook
     const {
       currentPanelIndex,
       totalPanelCount,
@@ -272,7 +272,7 @@ export default {
       moveTo
     } = useFlickingReactiveAPI(flickingRef)
 
-    // 메서드들
+    // Methods
     const handlePrev = () => {
       if (!isReachStart.value) {
         moveTo(currentPanelIndex.value - 1)
@@ -285,7 +285,7 @@ export default {
       }
     }
 
-    // 라이프사이클 훅
+    // Lifecycle hook
     onMounted(() => {
       if (flickingRef.value) {
         console.log('Flicking 인스턴스가 마운트되었습니다')
@@ -338,10 +338,10 @@ export default {
 
     <div class="controls">
       <button @click="handlePrev" :disabled="isReachStart" class="btn">
-        이전
+        Prev
       </button>
       <button @click="handleNext" :disabled="isReachEnd" class="btn">
-        다음
+        Next
       </button>
     </div>
 
@@ -358,11 +358,11 @@ export default {
     </div>
 
     <div class="status">
-      <p>총 패널 수: {{ totalPanelCount }}</p>
-      <p>현재 인덱스: {{ currentPanelIndex }}</p>
-      <p>진행률: {{ progress.toFixed(1) }}%</p>
-      <p>첫 번째 패널: {{ isReachStart ? '도달' : '미도달' }}</p>
-      <p>마지막 패널: {{ isReachEnd ? '도달' : '미도달' }}</p>
+      <p>Total panels: {{ totalPanelCount }}</p>
+      <p>Current index: {{ currentPanelIndex }}</p>
+      <p>Progress: {{ progress.toFixed(1) }}%</p>
+      <p>First panel: {{ isReachStart ? 'Reached' : 'Not reached' }}</p>
+      <p>Last panel: {{ isReachEnd ? 'Reached' : 'Not reached' }}</p>
     </div>
   </div>
 </template>
@@ -373,10 +373,10 @@ import { ref, reactive, onMounted } from 'vue'
 import Flicking from '../src/Flicking'
 import { useFlickingReactiveAPI } from "../src/reactive";
 
-// Flicking 인스턴스 참조
+// Flicking instance reference
 const flickingRef = ref(null)
 
-// 반응형 데이터
+// Reactive data
 const panels = reactive([
   { id: 1, text: 'Panel 1', color: '#ff6b6b' },
   { id: 2, text: 'Panel 2', color: '#4ecdc4' },
@@ -385,7 +385,7 @@ const panels = reactive([
   { id: 5, text: 'Panel 5', color: '#feca57' }
 ])
 
-// Flicking 옵션
+// Flicking options
 const flickingOptions = reactive({
   circular: false,
   bound: false,
@@ -393,7 +393,7 @@ const flickingOptions = reactive({
   defaultIndex: 0,
 })
 
-// Reactive API 훅 사용
+// Use Reactive API hook
 const {
   currentPanelIndex,
   totalPanelCount,
@@ -403,7 +403,7 @@ const {
   moveTo
 } = useFlickingReactiveAPI(flickingRef)
 
-// 메서드들
+// Methods
 const handlePrev = () => {
   if (!isReachStart.value) {
     moveTo(currentPanelIndex.value - 1)
@@ -416,7 +416,7 @@ const handleNext = () => {
   }
 }
 
-// 라이프사이클 훅
+// Lifecycle hook
 onMounted(() => {
   if (flickingRef.value) {
     console.log('Flicking instance mounted')
@@ -428,7 +428,7 @@ onMounted(() => {
 </Tabs>
 
 ### Prev / Next Button
-> `isReachStart`, `isReachEnd` 를 이용하여 Flicking과 Prev, Next Button의 비활성화 여부를 연동시킬 수 있습니다.
+> You can synchronize Flicking with Prev/Next buttons using `isReachStart` and `isReachEnd`.
 
 <Columns>
   <ColumnItem is={12} className="is-flex is-flex-direction-column is-align-items-center">
@@ -470,7 +470,7 @@ import Flicking, { connectFlickingReactiveAPI } from "@egjs/flicking";
 const flicking = new Flicking(".flicking-viewport");
 const reactiveObj = connectFlickingReactiveAPI(flicking);
 
-// Prev/Next 버튼과 연동
+// Connect with Prev/Next button
 const prevBtn = document.querySelector(".prev-btn");
 const nextBtn = document.querySelector(".next-btn");
 
@@ -486,7 +486,7 @@ nextBtn.addEventListener("click", () => {
   }
 });
 
-// 버튼 상태 업데이트
+// Update button state
 reactiveObj.subscribe("isReachStart", (nextValue) => {
   prevBtn.disabled = nextValue;
 });
@@ -744,7 +744,7 @@ onMounted(() => {
 </Tabs>
 
 ### Progress Bar
-> `progress`를 이용하여 Flicking과 Progress Bar를 연동시킬 수 있습니다.
+> You can synchronize Flicking with Progress Bar using `progress`.
 
 <Columns>
   <ColumnItem is={12} className="is-flex is-flex-direction-column is-align-items-center">
@@ -788,7 +788,7 @@ const flicking = new Flicking(".flicking-viewport", {
 });
 const reactiveObj = connectFlickingReactiveAPI(flicking);
 
-// Progress Bar와 연동
+// Connect with Progress Bar
 const progressBar = document.querySelector(".progress-bar");
 const progressText = document.querySelector(".progress-text");
 
@@ -976,7 +976,7 @@ onMounted(() => {
 </Tabs>
 
 ### Parallax
-> `indexProgress`를 이용하여 각 Panel의 Parallax 효과를 만들 수 있습니다.
+> You can create a Parallax effect for each panel using `indexProgress`.
 
 <Columns>
   <ColumnItem is={12} className="is-flex is-flex-direction-column is-align-items-center">
@@ -1043,7 +1043,7 @@ import Flicking, { connectFlickingReactiveAPI } from "@egjs/flicking";
 const flicking = new Flicking(".flicking-viewport");
 const reactiveObj = connectFlickingReactiveAPI(flicking);
 
-// Parallax 효과 구현
+// Implement Parallax effect
 reactiveObj.subscribe("indexProgress", (nextValue) => {
   const panels = document.querySelectorAll(".flicking-panel");
   panels.forEach((panel, index) => {
@@ -1285,7 +1285,7 @@ onMounted(() => {
 </Tabs>
 
 ### Slide Over
-> `indexProgress`를 이용하여 Slide Over 효과를 만들 수 있습니다.
+> You can create a Slide Over effect using `indexProgress`.
 
 <Columns>
   <ColumnItem is={12} className="is-flex is-flex-direction-column is-align-items-center">
@@ -1327,7 +1327,7 @@ const reactiveObj = connectFlickingReactiveAPI(flicking);
 const panels = document.querySelectorAll(".flicking-panel");
 const length = panels.length;
 
-// Slide Over 효과 구현
+// Implement Slide Over effect
 reactiveObj.subscribe("indexProgress", (nextValue) => {
   panels.forEach((panel, index) => {
     const childProgress = (index - nextValue + length * 1.5) % length - length * 0.5;
@@ -1482,7 +1482,7 @@ const getSlideOverStyle = (index) => {
 </Tabs>
 
 ### Cover flow
-> `indexProgress`를 이용하여 Cover flow UI를 만들 수 있습니다.
+> You can create a Cover flow UI using `indexProgress`.
 
 <Columns>
   <ColumnItem is={12} className="is-flex is-flex-direction-column is-align-items-center">
@@ -1524,7 +1524,7 @@ const reactiveObj = connectFlickingReactiveAPI(flicking);
 const panels = document.querySelectorAll(".flicking-panel");
 const length = panels.length;
 
-// Cover flow 효과 구현
+// Implement Cover flow effect
 reactiveObj.subscribe("indexProgress", (nextValue) => {
   panels.forEach((panel, index) => {
     const childProgress = (index - nextValue + length * 1.5) % length - length * 0.5;
