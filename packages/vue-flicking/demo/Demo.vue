@@ -22,6 +22,11 @@
         <router-link to="/arrow">Arrow</router-link>
         <router-link to="/sync">Sync</router-link>
       </div>
+      <div>
+        <span>Demos:</span>
+        <router-link to="/basic">BasicDemo</router-link>
+        <router-link to="/reactive">ReactiveDemo</router-link>
+      </div>
     </header>
     <transition name="component-fade" mode="out-in">
       <router-view></router-view>

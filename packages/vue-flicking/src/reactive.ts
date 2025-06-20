@@ -1,5 +1,5 @@
 import { flickingReactiveAPIAdapter } from "@egjs/flicking";
-import { Ref } from "vue";
+import { Ref } from "@vue/composition-api";
 import { useReactive } from "@cfcs/vue2";
 
 import Flicking from "./Flicking";

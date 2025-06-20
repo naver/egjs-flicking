@@ -1,5 +1,5 @@
 import Flicking from "./Flicking";
 import { useFlickingReactiveAPI } from "./reactive";
 
-export { useFlickingReactiveAPI };
+Flicking.useFlickingReactiveAPI = useFlickingReactiveAPI;
 export default Flicking;

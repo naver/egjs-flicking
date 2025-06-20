@@ -14,7 +14,7 @@ export default () => {
         const childProgress = index - indexProgress;
         const opacity = Math.min(Math.max(1 - Math.abs(childProgress), 0), 1);
 
-        return <div className={"flicking-panel skelton-panel has-background-primary is-size-1"}>
+        return <div key={index} className={"flicking-panel skelton-panel has-background-primary is-size-1"}>
           <span className="skeleton-bar skeleton-bar-size4" style={{
             transform: `translate(${childProgress * 180}px)`,
             opacity
