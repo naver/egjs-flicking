@@ -20,6 +20,8 @@ import Pagination from "@site/src/demo/reactive/Pagination";
 import PrevNext from "@site/src/demo/reactive/PrevNext";
 import ProgressBar from "@site/src/demo/reactive/ProgressBar";
 import Parallax from "@site/src/demo/reactive/Parallax";
+import SlideOver from "@site/src/demo/reactive/SlideOver";
+import Coverflow from "@site/src/demo/reactive/Coverflow";
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
@@ -1277,6 +1279,401 @@ onMounted(() => {
     console.log('Flicking instance mounted')
   }
 })
+```
+
+  </TabItem>
+</Tabs>
+
+### Slide Over
+> `indexProgress`를 이용하여 Slide Over 효과를 만들 수 있습니다.
+
+<Columns>
+  <ColumnItem is={12} className="is-flex is-flex-direction-column is-align-items-center">
+    <SlideOver />
+  </ColumnItem>
+</Columns>
+
+<Tabs
+  defaultValue="js"
+  lazy={true}
+  values={[
+    { label: "JavaScript", value: "js" },
+    { label: "React", value: "react" },
+    { label: "Vue@2", value: "vue" },
+    { label: "Vue@3", value: "vue3" },
+  ]}>
+  <TabItem value="js">
+
+```html title="html"
+<div class="flicking-viewport">
+  <div class="flicking-camera">
+    <div class="flicking-panel">Panel 1</div>
+    <div class="flicking-panel">Panel 2</div>
+    <div class="flicking-panel">Panel 3</div>
+    <div class="flicking-panel">Panel 4</div>
+    <div class="flicking-panel">Panel 5</div>
+  </div>
+</div>
+```
+
+```js title="js"
+import Flicking, { connectFlickingReactiveAPI } from "@egjs/flicking";
+
+const flicking = new Flicking(".flicking-viewport", {
+  circular: true
+});
+const reactiveObj = connectFlickingReactiveAPI(flicking);
+
+const panels = document.querySelectorAll(".flicking-panel");
+const length = panels.length;
+
+// Slide Over 효과 구현
+reactiveObj.subscribe("indexProgress", (nextValue) => {
+  panels.forEach((panel, index) => {
+    const childProgress = (index - nextValue + length * 1.5) % length - length * 0.5;
+    const pos = childProgress < 0 ? -childProgress * 100 : 0;
+    const scale = childProgress < 0 ? Math.max(0, 1 - Math.abs(childProgress)) : 1;
+    
+    panel.style.transform = `translate(${pos}%) scale(${scale})`;
+  });
+});
+```
+
+  </TabItem>
+  <TabItem value="react">
+
+```jsx
+import React from "react";
+import Flicking, { useFlickingReactiveAPI } from "@egjs/react-flicking";
+import Panel from "@site/src/component/Panel";
+
+export default () => {
+  const flickingRef = React.createRef();
+  const {
+    indexProgress
+  } = useFlickingReactiveAPI(flickingRef);
+
+  const length = 5;
+  return (
+    <Flicking ref={flickingRef} style={{ maxWidth: "300px" }}>
+      {[0, 1, 2, 3, 4].map((index) => {
+        const childProgress = (index - indexProgress + length * 1.5) % length -  length * 0.5;
+        const pos = childProgress < 0 ? `${-childProgress * 100}%` : "0px";
+        const scale = childProgress < 0 ? `${Math.max(0, 1 - Math.abs(childProgress))}` : 1;
+
+        return <Panel key={index} index={index} style={{
+          width: "100%",
+          transform: `translate(${pos}) scale(${scale})`
+        }} />;
+      })}
+    </Flicking>
+  );
+};
+```
+
+  </TabItem>
+  <TabItem value="vue">
+
+```html title="template"
+<template>
+  <div>
+    <Flicking ref="flickingRef" :options="flickingOptions" style="max-width: 300px;">
+      <div 
+        v-for="index in 5" 
+        :key="index - 1"
+        class="flicking-panel"
+        :style="getSlideOverStyle(index - 1)"
+      >
+        Panel {{ index }}
+      </div>
+    </Flicking>
+  </div>
+</template>
+```
+
+```js title="script"
+import { ref, onMounted } from '@vue/composition-api'
+import Flicking from '../src/Flicking'
+import { useFlickingReactiveAPI } from "../src/reactive";
+
+export default {
+  name: 'SlideOverDemo',
+  components: {
+    Flicking
+  },
+  setup() {
+    const flickingOptions = ref({})
+
+    const flickingRef = ref(null)
+    const {
+      indexProgress
+    } = useFlickingReactiveAPI(flickingRef)
+
+    const length = 5
+
+    const getSlideOverStyle = (index) => {
+      const childProgress = (index - indexProgress.value + length * 1.5) % length - length * 0.5
+      const pos = childProgress < 0 ? `${-childProgress * 100}%` : "0px"
+      const scale = childProgress < 0 ? Math.max(0, 1 - Math.abs(childProgress)) : 1
+
+      return {
+        width: "100%",
+        transform: `translate(${pos}) scale(${scale})`
+      }
+    }
+
+    return {
+      flickingOptions,
+      flickingRef,
+      getSlideOverStyle
+    }
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="vue3">
+
+```html title="template"
+<template>
+  <div>
+    <Flicking ref="flickingRef" :options="flickingOptions" style="max-width: 300px;">
+      <div 
+        v-for="index in 5" 
+        :key="index - 1"
+        class="flicking-panel"
+        :style="getSlideOverStyle(index - 1)"
+      >
+        Panel {{ index }}
+      </div>
+    </Flicking>
+  </div>
+</template>
+```
+
+```js title="script"
+import { ref, reactive } from 'vue'
+import Flicking from '../src/Flicking'
+import { useFlickingReactiveAPI } from "../src/reactive";
+
+const flickingRef = ref(null)
+
+const flickingOptions = reactive({})
+
+const {
+  indexProgress
+} = useFlickingReactiveAPI(flickingRef)
+
+const length = 5
+
+const getSlideOverStyle = (index) => {
+  const childProgress = (index - indexProgress.value + length * 1.5) % length - length * 0.5
+  const pos = childProgress < 0 ? `${-childProgress * 100}%` : "0px"
+  const scale = childProgress < 0 ? Math.max(0, 1 - Math.abs(childProgress)) : 1
+
+  return {
+    width: "100%",
+    transform: `translate(${pos}) scale(${scale})`
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### Cover flow
+> `indexProgress`를 이용하여 Cover flow UI를 만들 수 있습니다.
+
+<Columns>
+  <ColumnItem is={12} className="is-flex is-flex-direction-column is-align-items-center">
+    <Coverflow />
+  </ColumnItem>
+</Columns>
+
+<Tabs
+  defaultValue="js"
+  lazy={true}
+  values={[
+    { label: "JavaScript", value: "js" },
+    { label: "React", value: "react" },
+    { label: "Vue@2", value: "vue" },
+    { label: "Vue@3", value: "vue3" },
+  ]}>
+  <TabItem value="js">
+
+```html title="html"
+<div class="flicking-viewport flicking-coverflow">
+  <div class="flicking-camera">
+    <div class="flicking-panel">Panel 1</div>
+    <div class="flicking-panel">Panel 2</div>
+    <div class="flicking-panel">Panel 3</div>
+    <div class="flicking-panel">Panel 4</div>
+    <div class="flicking-panel">Panel 5</div>
+  </div>
+</div>
+```
+
+```js title="js"
+import Flicking, { connectFlickingReactiveAPI } from "@egjs/flicking";
+
+const flicking = new Flicking(".flicking-viewport", {
+  circular: true
+});
+const reactiveObj = connectFlickingReactiveAPI(flicking);
+
+const panels = document.querySelectorAll(".flicking-panel");
+const length = panels.length;
+
+// Cover flow 효과 구현
+reactiveObj.subscribe("indexProgress", (nextValue) => {
+  panels.forEach((panel, index) => {
+    const childProgress = (index - nextValue + length * 1.5) % length - length * 0.5;
+    const scale = Math.max(0, 0.9 - Math.abs(childProgress) * 0.2);
+    
+    panel.style.transformOrigin = `${50 - childProgress * 50}% 50%`;
+    panel.style.transform = `rotateY(${-childProgress * 50}deg) scale(${scale})`;
+  });
+});
+```
+
+  </TabItem>
+  <TabItem value="react">
+
+```jsx
+import React from "react";
+import Flicking, { useFlickingReactiveAPI } from "@egjs/react-flicking";
+import Panel from "@site/src/component/Panel";
+
+export default () => {
+  const flickingRef = React.createRef();
+  const {
+    indexProgress
+  } = useFlickingReactiveAPI(flickingRef);
+
+  const length = 5;
+  return (
+    <Flicking ref={flickingRef} circular={true} className="flicking-coverflow">
+      {[0, 1, 2, 3, 4].map((index) => {
+        const childProgress = (index - indexProgress + length * 1.5) % length -  length * 0.5;
+        const scale = Math.max(0, 0.9 - Math.abs(childProgress) * 0.2);
+
+        return <Panel key={index} index={index} style={{
+          transformOrigin: `${50 - childProgress * 50}% 50%`,
+          transform: `rotateY(${-childProgress * 50}deg) scale(${scale})`
+        }} />;
+      })}
+    </Flicking>
+  );
+};
+```
+
+  </TabItem>
+  <TabItem value="vue">
+
+```html title="template"
+<template>
+  <div>
+    <Flicking ref="flickingRef" :options="flickingOptions" className="flicking-coverflow">
+      <div 
+        v-for="index in 5" 
+        :key="index - 1"
+        class="flicking-panel"
+        :style="getCoverflowStyle(index - 1)"
+      >
+        Panel {{ index }}
+      </div>
+    </Flicking>
+  </div>
+</template>
+```
+
+```js title="script"
+import { ref } from '@vue/composition-api'
+import Flicking from '../src/Flicking'
+import { useFlickingReactiveAPI } from "../src/reactive";
+
+export default {
+  name: 'CoverflowDemo',
+  components: {
+    Flicking
+  },
+  setup() {
+    const flickingOptions = ref({
+      circular: true
+    })
+
+    const flickingRef = ref(null)
+    const {
+      indexProgress
+    } = useFlickingReactiveAPI(flickingRef)
+
+    const length = 5
+
+    const getCoverflowStyle = (index) => {
+      const childProgress = (index - indexProgress.value + length * 1.5) % length - length * 0.5
+      const scale = Math.max(0, 0.9 - Math.abs(childProgress) * 0.2)
+
+      return {
+        transformOrigin: `${50 - childProgress * 50}% 50%`,
+        transform: `rotateY(${-childProgress * 50}deg) scale(${scale})`
+      }
+    }
+
+    return {
+      flickingOptions,
+      flickingRef,
+      getCoverflowStyle
+    }
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="vue3">
+
+```html title="template"
+<template>
+  <div>
+    <Flicking ref="flickingRef" :options="flickingOptions" className="flicking-coverflow">
+      <div 
+        v-for="index in 5" 
+        :key="index - 1"
+        class="flicking-panel"
+        :style="getCoverflowStyle(index - 1)"
+      >
+        Panel {{ index }}
+      </div>
+    </Flicking>
+  </div>
+</template>
+```
+
+```js title="script"
+import { ref, reactive } from 'vue'
+import Flicking from '../src/Flicking'
+import { useFlickingReactiveAPI } from "../src/reactive";
+
+const flickingRef = ref(null)
+
+const flickingOptions = reactive({
+  circular: true
+})
+
+const {
+  indexProgress
+} = useFlickingReactiveAPI(flickingRef)
+
+const length = 5
+
+const getCoverflowStyle = (index) => {
+  const childProgress = (index - indexProgress.value + length * 1.5) % length - length * 0.5
+  const scale = Math.max(0, 0.9 - Math.abs(childProgress) * 0.2)
+
+  return {
+    transformOrigin: `${50 - childProgress * 50}% 50%`,
+    transform: `rotateY(${-childProgress * 50}deg) scale(${scale})`
+  }
+}
 ```
 
   </TabItem>
