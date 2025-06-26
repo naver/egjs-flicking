@@ -5,7 +5,7 @@ import {
   ReactiveSetupAdapter
 } from "@cfcs/core";
 
-import Flicking from "../Flicking";
+import Flicking, { FlickingOptions } from "../Flicking";
 
 // Check if Flicking has reached the first panel
 const getIsReachStart = (flicking: Flicking) => !flicking.circular && flicking.index === 0;
@@ -137,7 +137,11 @@ export interface FlickingReactiveData {
   /**
    * Flicking instance to connect<ko>연결할 Flicking 인스턴스</ko>
    */
-  flicking: Flicking | null;
+  flicking: Flicking | undefined;
+  /**
+   * Flicking options used for initialization<ko>초기화에 사용되는 Flicking 옵션</ko>
+   */
+  options: FlickingOptions | undefined;
 }
 
 /**
@@ -158,11 +162,11 @@ FlickingReactiveState,
 "moveTo",
 FlickingReactiveData
 > = ({ onInit, onDestroy, setMethods, getProps }) => {
-  let flicking: Flicking | null = null;
+  let flicking: Flicking | undefined;
 
   // Move to a specific panel index
   const moveTo = (i: number) => {
-    if (flicking === null) {
+    if (flicking === undefined) {
       return Promise.reject(new Error("Flicking instance is not available"));
     }
     if (flicking?.animating) {
@@ -172,19 +176,23 @@ FlickingReactiveData
   };
   setMethods(["moveTo"]);
 
+  const options = getProps().options;
+
+  // options를 고려하지 않고 초기값을 설정해도 동작에는 아무런 문제가 없으나, 이 시점의 초기값과 컴포넌트 init 단계에서의 초기값이 다르면 화면 리렌더링이 발생할 수 있으므로
+  // 이렇게 미리 옵션을 통해서 예측할 수 있는 부분들은 맞춰둔다.
   const reactiveObj: FlickingReactiveObject = reactive({
-    isReachStart: false, // 이 값을 전달 받은 옵션을 이용해서 설정. getProps()를 통해 전달된 옵션을 사용하여 설정할 수 있습니다.
-    isReachEnd: false, //
-    totalPanelCount: 0, //
-    currentPanelIndex: 0, //
-    progress: 0, //
-    indexProgress: 0, //
+    isReachStart: (options?.defaultIndex === 0 && !options.circular),
+    isReachEnd: false,
+    totalPanelCount: 0,
+    currentPanelIndex: options?.defaultIndex ?? 0,
+    progress: 0,
+    indexProgress: 0,
     moveTo
   });
 
   // Update state when panel changes
   const onChanged = () => {
-    if (flicking === null) return;
+    if (flicking === undefined) return;
 
     reactiveObj.isReachStart = getIsReachStart(flicking);
     reactiveObj.isReachEnd = getIsReachEnd(flicking);
@@ -193,7 +201,7 @@ FlickingReactiveData
 
   // Update state when panel count changes
   const onPanelChange = () => {
-    if (flicking === null) return;
+    if (flicking === undefined) return;
 
     onChanged();
     reactiveObj.totalPanelCount = getTotalPanelCount(flicking);
@@ -201,7 +209,7 @@ FlickingReactiveData
 
   // Update progress when camera moves
   const onMove = () => {
-    if (flicking === null) return;
+    if (flicking === undefined) return;
 
     reactiveObj.progress = getProgress(flicking);
     reactiveObj.indexProgress = getIndexProgress(flicking);
@@ -209,7 +217,7 @@ FlickingReactiveData
 
   onInit((inst, data) => {
     flicking = data.flicking;
-    if (flicking === null) return;
+    if (flicking === undefined) return;
 
     reactiveObj.isReachStart = getIsReachStart(flicking);
     reactiveObj.isReachEnd = getIsReachEnd(flicking);
@@ -235,7 +243,8 @@ FlickingReactiveData
 /**
  * Connect Flicking instance to reactive API
  * @ko Flicking 인스턴스를 반응형 API에 연결합니다
- * @param flicking - Flicking instance to connect<ko>연결할 Flicking 인스턴스</ko>
+ * @param {Flicking} flicking - Flicking instance to connect<ko>연결할 Flicking 인스턴스</ko>
+ * @param {FlickingOptions} [options] - Flicking options<ko>Flicking 옵션</ko>
  * @returns {FlickingReactiveObject} Reactive object with Flicking state and methods<ko>Flicking 상태와 메서드를 포함한 반응형 객체</ko>
  * @example
  * ```js
@@ -261,8 +270,8 @@ FlickingReactiveData
  * reactiveObj.moveTo(2); // Move to third panel
  * ```
  */
-const connectFlickingReactiveAPI = (flicking: Flicking) => {
-  const obj = adaptReactive(flickingReactiveAPIAdapter, () => ({ flicking }));
+const connectFlickingReactiveAPI = (flicking: Flicking, options?: FlickingOptions) => {
+  const obj = adaptReactive(flickingReactiveAPIAdapter, () => ({ flicking, options }));
   obj.mounted();
   const instance = obj.instance();
   obj.init();
