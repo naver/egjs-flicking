@@ -79,57 +79,37 @@ const getIndexProgress = (flicking: Flicking) => {
  * 이 타입은 Flicking 인스턴스의 상태가 변경될 때 자동으로 업데이트되는
  * 반응형 상태 속성들과 메서드들을 제공합니다.
  * @typedef
- *
- * @property {boolean} isReachStart - Whether Flicking has reached the first panel<ko>첫 번째 패널에 도달했는지 여부</ko>
- * @property {boolean} isReachEnd - Whether Flicking has reached the last panel<ko>마지막 패널에 도달했는지 여부</ko>
- * @property {number} totalPanelCount - Total number of panels<ko>전체 패널 개수</ko>
- * @property {number} currentPanelIndex - Current active panel index<ko>현재 활성화된 패널의 인덱스</ko>
- * @property {number} progress - Overall scroll progress percentage (0-100)<ko>전체 스크롤 진행률 (0-100)</ko>
- * @property {number} indexProgress - Panel progress with decimal values<ko>패널 간 진행률 (소수점 포함)</ko>
- * @property {function} moveTo - Move to a specific panel index<ko>특정 패널 인덱스로 이동하는 함수</ko>
  */
 export type FlickingReactiveObject = ReactiveObject<FlickingReactiveState & FlickingReactiveMethod>;
 
 /**
  * Reactive state properties for Flicking
  * @ko Flicking의 반응형 상태 속성들
- * @interface
- * @property {boolean} isReachStart - Whether Flicking has reached the first panel<ko>첫 번째 패널에 도달했는지 여부</ko>
- * @property {boolean} isReachEnd - Whether Flicking has reached the last panel<ko>마지막 패널에 도달했는지 여부</ko>
- * @property {number} totalPanelCount - Total number of panels<ko>전체 패널 개수</ko>
- * @property {number} currentPanelIndex - Current active panel index<ko>현재 활성화된 패널의 인덱스</ko>
- * @property {number} progress - Overall scroll progress percentage (0-100)<ko>전체 스크롤 진행률 (0-100)</ko>
- * @property {number} indexProgress - Panel progress with decimal values<ko>패널 간 진행률 (소수점 포함)</ko>
+ * @typedef
  */
 export interface FlickingReactiveState {
   /**
-   * Whether Flicking has reached the first panel
-   * @ko 첫 번째 패널에 도달했는지 여부
+   * Whether Flicking has reached the first panel<ko>첫 번째 패널에 도달했는지 여부</ko>
    */
   isReachStart: boolean;
   /**
-   * Whether Flicking has reached the last panel
-   * @ko 마지막 패널에 도달했는지 여부
+   * Whether Flicking has reached the last panel<ko>마지막 패널에 도달했는지 여부</ko>
    */
   isReachEnd: boolean;
   /**
-   * Total number of panels
-   * @ko 전체 패널 개수
+   * Total number of panels<ko>전체 패널 개수</ko>
    */
   totalPanelCount: number;
   /**
-   * Current active panel index
-   * @ko 현재 활성화된 패널의 인덱스
+   * Current active panel index<ko>현재 활성화된 패널의 인덱스</ko>
    */
   currentPanelIndex: number;
   /**
-   * Overall scroll progress percentage (0-100)
-   * @ko 전체 스크롤 진행률 (0-100)
+   * Overall scroll progress percentage (0-100)<ko>전체 스크롤 진행률 (0-100)</ko>
    */
   progress: number;
   /**
-   * Panel progress with decimal values
-   * @ko 패널 간 진행률 (소수점 포함)
+   * Panel progress with decimal values<ko>소수점을 포함한 패널 진행률</ko>
    */
   indexProgress: number;
 }
@@ -137,13 +117,11 @@ export interface FlickingReactiveState {
 /**
  * Reactive methods for Flicking
  * @ko Flicking의 반응형 메서드들
- * @interface
- * @property {function} moveTo - Move to a specific panel index<ko>특정 패널 인덱스로 이동</ko>
+ * @typedef
  */
 export interface FlickingReactiveMethod {
   /**
-   * Move to a specific panel index
-   * @ko 특정 패널 인덱스로 이동합니다
+   * Move to a specific panel index<ko>특정 패널 인덱스로 이동</ko>
    * @param i - Target panel index<ko>목표 패널 인덱스</ko>
    * @returns Promise that resolves when movement is complete<ko>이동이 완료되면 resolve되는 Promise</ko>
    */
@@ -153,10 +131,12 @@ export interface FlickingReactiveMethod {
 /**
  * Data required for reactive API setup
  * @ko 반응형 API 설정에 필요한 데이터
- * @interface
- * @property {Flicking | null} flicking - Flicking instance or null<ko>Flicking 인스턴스 또는 null</ko>
+ * @typedef
  */
 export interface FlickingReactiveData {
+  /**
+   * Flicking instance to connect<ko>연결할 Flicking 인스턴스</ko>
+   */
   flicking: Flicking | null;
 }
 
@@ -177,7 +157,7 @@ FlickingReactiveObject,
 FlickingReactiveState,
 "moveTo",
 FlickingReactiveData
-> = ({ onInit, onDestroy, setMethods }) => {
+> = ({ onInit, onDestroy, setMethods, getProps }) => {
   let flicking: Flicking | null = null;
 
   // Move to a specific panel index
@@ -193,12 +173,12 @@ FlickingReactiveData
   setMethods(["moveTo"]);
 
   const reactiveObj: FlickingReactiveObject = reactive({
-    isReachStart: false,
-    isReachEnd: false,
-    totalPanelCount: 0,
-    currentPanelIndex: 0,
-    progress: 0,
-    indexProgress: 0,
+    isReachStart: false, // 이 값을 전달 받은 옵션을 이용해서 설정. getProps()를 통해 전달된 옵션을 사용하여 설정할 수 있습니다.
+    isReachEnd: false, //
+    totalPanelCount: 0, //
+    currentPanelIndex: 0, //
+    progress: 0, //
+    indexProgress: 0, //
     moveTo
   });
 
