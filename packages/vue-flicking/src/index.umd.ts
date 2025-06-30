@@ -26,5 +26,4 @@ const plugin = {
   useFlickingReactiveAPI
 };
 
-export { useFlickingReactiveAPI };
 export default plugin;

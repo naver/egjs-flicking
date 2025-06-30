@@ -57,11 +57,6 @@ module.exports = {
           position: "left"
         },
         {
-          to: "Reactive",
-          label: "Reactive",
-          position: "left"
-        },
-        {
           to: "Plugins",
           label: "Plugins",
           position: "left"
@@ -120,10 +115,6 @@ module.exports = {
             {
               label: "Options",
               to: "Options/"
-            },
-            {
-              label: "Reactive",
-              to: "Reactive/"
             }
           ]
         },
