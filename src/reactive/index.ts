@@ -79,6 +79,14 @@ const getIndexProgress = (flicking: Flicking) => {
  * 이 타입은 Flicking 인스턴스의 상태가 변경될 때 자동으로 업데이트되는
  * 반응형 상태 속성들과 메서드들을 제공합니다.
  * @typedef
+ * @see {@link https://naver.github.io/egjs-flicking/Demos#reactive-api-demo}
+ * @example
+ * ```jsx
+ *   const flickingRef = React.useRef(null);
+ *   const {
+ *     progress
+ *   } = useFlickingReactiveAPI(flickingRef);
+ *  ```
  */
 export type FlickingReactiveObject = ReactiveObject<FlickingReactiveState & FlickingReactiveMethod>;
 
@@ -141,8 +149,45 @@ export interface FlickingReactiveData {
   /**
    * Flicking options used for initialization<ko>초기화에 사용되는 Flicking 옵션</ko>
    */
-  options: FlickingOptions | undefined;
+  options: FlickingReactiveAPIOptions | undefined;
 }
+
+/**
+ * Options for Flicking reactive API that help optimize initial rendering in SSR scenarios
+ * These options allow you to set initial state values before the Flicking instance is fully initialized,
+ * preventing unnecessary re-renders when the actual Flicking state is applied.
+ * @ko SSR 상황 등에서 초기 렌더링을 최적화할 수 있게 하는 Flicking 반응형 API 옵션
+ * 이 옵션들을 통해 Flicking 인스턴스가 완전히 초기화되기 전에 초기 상태 값을 설정할 수 있어,
+ * 실제 Flicking 상태가 적용될 때 불필요한 리렌더링을 방지할 수 있습니다.
+ * @typedef
+ * @example
+ * ```js
+ * const options = {
+ *   defaultIndex: 2,
+ *   totalPanelCount: 5
+ * };
+ * const reactiveObj = connectFlickingReactiveAPI(flicking, options);
+ * ```
+ */
+export interface FlickingReactiveAPIOptions {
+  /**
+   * Initial panel index to start with. This sets the currentPanelIndex and indexProgress initial values.
+   * Also affects isReachStart calculation (true when defaultIndex is 0).
+   * @ko 시작할 초기 패널 인덱스. currentPanelIndex와 indexProgress의 초기값을 설정합니다.
+   * 또한 isReachStart 계산에도 영향을 줍니다 (defaultIndex가 0일 때 true).
+   * @default 0
+   */
+  defaultIndex: number;
+  /**
+   * Total number of panels in the Flicking instance. This sets the totalPanelCount initial value
+   * and helps prevent layout shifts during SSR hydration.
+   * @ko Flicking 인스턴스의 전체 패널 개수. totalPanelCount의 초기값을 설정하며
+   * SSR 하이드레이션 과정에서 레이아웃 시프트를 방지하는 데 도움이 됩니다.
+   * @default 0
+   */
+  totalPanelCount: number;
+}
+
 
 /**
  * Internal reactive API adapter for Flicking that manages state and event listeners
@@ -166,7 +211,7 @@ FlickingReactiveData
 
   // Move to a specific panel index
   const moveTo = (i: number) => {
-    if (flicking === undefined) {
+    if (flicking == null) {
       return Promise.reject(new Error("Flicking instance is not available"));
     }
     if (flicking?.animating) {
@@ -181,12 +226,12 @@ FlickingReactiveData
   // options를 고려하지 않고 초기값을 설정해도 동작에는 아무런 문제가 없으나, 이 시점의 초기값과 컴포넌트 init 단계에서의 초기값이 다르면 화면 리렌더링이 발생할 수 있으므로
   // 이렇게 미리 옵션을 통해서 예측할 수 있는 부분들은 맞춰둔다.
   const reactiveObj: FlickingReactiveObject = reactive({
-    isReachStart: (options?.defaultIndex === 0 && !options.circular),
+    isReachStart: options?.defaultIndex === 0,
     isReachEnd: false,
-    totalPanelCount: 0,
+    totalPanelCount: options?.totalPanelCount ?? 0,
     currentPanelIndex: options?.defaultIndex ?? 0,
     progress: 0,
-    indexProgress: 0,
+    indexProgress: options?.defaultIndex ?? 0,
     moveTo
   });
 
@@ -244,7 +289,7 @@ FlickingReactiveData
  * Connect Flicking instance to reactive API
  * @ko Flicking 인스턴스를 반응형 API에 연결합니다
  * @param {Flicking} flicking - Flicking instance to connect<ko>연결할 Flicking 인스턴스</ko>
- * @param {FlickingOptions} [options] - Flicking options<ko>Flicking 옵션</ko>
+ * @param {FlickingReactiveAPIOptions} [options] - Flicking options<ko>Flicking 옵션</ko>
  * @returns {FlickingReactiveObject} Reactive object with Flicking state and methods<ko>Flicking 상태와 메서드를 포함한 반응형 객체</ko>
  * @example
  * ```js
@@ -270,7 +315,7 @@ FlickingReactiveData
  * reactiveObj.moveTo(2); // Move to third panel
  * ```
  */
-const connectFlickingReactiveAPI = (flicking: Flicking, options?: FlickingOptions) => {
+const connectFlickingReactiveAPI = (flicking: Flicking, options?: FlickingReactiveAPIOptions) => {
   const obj = adaptReactive(flickingReactiveAPIAdapter, () => ({ flicking, options }));
   obj.mounted();
   const instance = obj.instance();
