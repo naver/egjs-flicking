@@ -1,1 +1,6 @@
-module.exports = {};
+module.exports = {
+  plugins: {
+    autoprefixer: {},
+    "postcss-clean": {}
+  }
+};

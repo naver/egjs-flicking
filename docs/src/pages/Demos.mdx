@@ -14,6 +14,16 @@ import LazyLoad from "@site/src/demo/LazyLoad";
 import Nested from "@site/src/demo/Nested";
 import Link from "@docusaurus/Link";
 import useBaseUrl from "@docusaurus/useBaseUrl";
+import Columns from "@site/src/component/Columns";
+import ColumnItem from "@site/src/component/ColumnItem";
+import Pagination from "@site/src/demo/reactive/Pagination";
+import PrevNext from "@site/src/demo/reactive/PrevNext";
+import ProgressBar from "@site/src/demo/reactive/ProgressBar";
+import Parallax from "@site/src/demo/reactive/Parallax";
+import SlideOver from "@site/src/demo/reactive/SlideOver";
+import Coverflow from "@site/src/demo/reactive/Coverflow";
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 
 # Demos
 ## Panel add / remove
@@ -55,3 +65,1616 @@ Made with [@egjs/grid](https://github.com/naver/egjs-grid)
 
 ## Date Selector
 <DateSelector />
+
+## Reactive API demo
+
+### Pagination
+> You can synchronize Flicking with Pagination using <Link to={useBaseUrl("docs/api/FlickingReactiveState")}>currentPanelIndex</Link> and <Link to={useBaseUrl("docs/api/FlickingReactiveState")}>totalPanelCount</Link>.
+
+<Columns>
+  <ColumnItem is={12} className="is-flex is-flex-direction-column is-align-items-center">
+    <Pagination />
+  </ColumnItem>
+</Columns>
+
+<Tabs
+  defaultValue="js"
+  lazy={true}
+  values={[
+    { label: "JavaScript", value: "js" },
+    { label: "React", value: "react" },
+    { label: "Vue@2", value: "vue" },
+    { label: "Vue@3", value: "vue3" },
+  ]}>
+  <TabItem value="js">
+
+```html title="html"
+<div class="flicking-viewport">
+  <div class="flicking-camera">
+    <div class="flicking-panel">Panel 1</div>
+    <div class="flicking-panel">Panel 2</div>
+    <div class="flicking-panel">Panel 3</div>
+    <div class="flicking-panel">Panel 4</div>
+    <div class="flicking-panel">Panel 5</div>
+  </div>
+</div>
+
+<div class="pagination"></div>
+```
+
+```js title="js"
+import Flicking, { connectFlickingReactiveAPI } from "@egjs/flicking";
+
+const flicking = new Flicking(".flicking-viewport");
+const reactiveObj = connectFlickingReactiveAPI(flicking);
+
+// Connect with Pagination component
+const pagination = document.querySelector(".pagination");
+const pageNums = Array.from({ length: reactiveObj.totalPanelCount }, (_, i) => {
+  const div = document.createElement("div");
+  div.className = `pagination-num ${i === reactiveObj.currentPanelIndex ? "active" : ""}`;
+  div.textContent = `${i + 1}`;
+
+  div.addEventListener("click", () => {
+    reactiveObj.moveTo(i);
+  });
+  return div;
+});
+
+pagination.append(...pageNums);
+
+// Update current page
+reactiveObj.subscribe("currentPanelIndex", (nextValue) => {
+  pageNums.forEach((v, i) => {
+    v.classList.remove("active");
+    if (i === nextValue) {
+      v.classList.add("active");
+    }
+  });
+});
+```
+
+  </TabItem>
+  <TabItem value="react">
+
+```jsx
+import React from "react";
+import Flicking, { useFlickingReactiveAPI } from "@egjs/react-flicking";
+import Pagination from "@mui/material/Pagination";
+
+export default function PaginationExample() {
+  const flickingRef = React.useRef(null);
+  const {
+    currentPanelIndex,
+    totalPanelCount,
+    moveTo
+  } = useFlickingReactiveAPI(flickingRef);
+
+  const handlePageChange = (event, page) => {
+    moveTo(page - 1); // MUI Pagination starts from 1
+  };
+
+  return (
+    <div>
+      <Flicking ref={flickingRef}>
+        {panels.map((panel, index) => (
+          <div key={index} className="panel">{panel}</div>
+        ))}
+      </Flicking>
+      
+      <Pagination
+        page={currentPanelIndex + 1}
+        count={totalPanelCount}
+        onChange={handlePageChange}
+      />
+    </div>
+  );
+}
+```
+
+  </TabItem>
+  <TabItem value="vue">
+
+```html title="template"
+<template>
+  <div class="reactive-demo">
+    <h2>Reactive API - Pagination Demo (Vue 2)</h2>
+    
+    <div class="section">
+      <h3>Pagination with Reactive API</h3>
+      <Flicking ref="flickingRef" :options="flickingOptions">
+        <div 
+          v-for="item in panels" 
+          :key="item.id" 
+          class="panel"
+          :style="{ backgroundColor: item.color }"
+        >
+          {{ item.text }}
+        </div>
+      </Flicking>
+    </div>
+    
+    <div class="progress-container">
+      <div class="progress-bar" :style="{ width: progress + '%' }"></div>
+      <div class="progress-text">Progress: {{ progress.toFixed(1) }}%</div>
+    </div>
+
+    <div class="controls">
+      <button @click="handlePrev" :disabled="isReachStart" class="btn">
+        Prev
+      </button>
+      <button @click="handleNext" :disabled="isReachEnd" class="btn">
+        Next
+      </button>
+    </div>
+
+    <div class="pagination">
+      <button 
+        v-for="page in totalPanelCount" 
+        :key="page"
+        :class="{ active: currentPanelIndex + 1 === page }"
+        @click="moveTo(page - 1)"
+        class="pagination-btn"
+      >
+        {{ page }}
+      </button>
+    </div>
+
+    <div class="status">
+      <p>Total panels: {{ totalPanelCount }}</p>
+      <p>Current index: {{ currentPanelIndex }}</p>
+      <p>Progress: {{ progress.toFixed(1) }}%</p>
+      <p>First panel: {{ isReachStart ? 'Reached' : 'Not reached' }}</p>
+      <p>Last panel: {{ isReachEnd ? 'Reached' : 'Not reached' }}</p>
+    </div>
+  </div>
+</template>
+```
+
+```js title="script"
+import { ref, onMounted } from '@vue/composition-api'
+import Flicking from '../src/Flicking'
+import { useFlickingReactiveAPI } from "../src/reactive";
+
+export default {
+  name: 'ReactiveDemo',
+  components: {
+    Flicking
+  },
+  setup() {
+    // Reactive data
+    const panels = ref([
+      { id: 1, text: '패널 1', color: '#ff6b6b' },
+      { id: 2, text: '패널 2', color: '#4ecdc4' },
+      { id: 3, text: '패널 3', color: '#45b7d1' },
+      { id: 4, text: '패널 4', color: '#96ceb4' },
+      { id: 5, text: '패널 5', color: '#feca57' }
+    ])
+
+    // Flicking options
+    const flickingOptions = ref({
+      circular: false,
+      bound: false,
+      duration: 500,
+      defaultIndex: 0,
+    })
+
+    // Flicking instance reference
+    const flickingRef = ref(null)
+
+    // Use Reactive API hook
+    const {
+      currentPanelIndex,
+      totalPanelCount,
+      isReachStart,
+      isReachEnd,
+      progress,
+      moveTo
+    } = useFlickingReactiveAPI(flickingRef)
+
+    // Methods
+    const handlePrev = () => {
+      if (!isReachStart.value) {
+        moveTo(currentPanelIndex.value - 1)
+      }
+    }
+
+    const handleNext = () => {
+      if (!isReachEnd.value) {
+        moveTo(currentPanelIndex.value + 1)
+      }
+    }
+
+    // Lifecycle hook
+    onMounted(() => {
+      if (flickingRef.value) {
+        console.log('Flicking 인스턴스가 마운트되었습니다')
+      }
+    })
+
+    return {
+      panels,
+      flickingOptions,
+      flickingRef,
+      currentPanelIndex,
+      totalPanelCount,
+      isReachStart,
+      isReachEnd,
+      progress,
+      moveTo,
+      handlePrev,
+      handleNext
+    }
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="vue3">
+
+```html title="template"
+<template>
+  <div class="reactive-demo">
+    <h2>Reactive API - Pagination Demo</h2>
+    
+    <div class="section">
+      <h3>Pagination with Reactive API</h3>
+      <Flicking ref="flickingRef" :options="flickingOptions">
+        <div 
+          v-for="item in panels" 
+          :key="item.id" 
+          class="panel"
+          :style="{ backgroundColor: item.color }"
+        >
+          {{ item.text }}
+        </div>
+      </Flicking>
+    </div>
+    
+    <div class="progress-container">
+      <div class="progress-bar" :style="{ width: progress + '%' }"></div>
+      <div class="progress-text">Progress: {{ progress.toFixed(1) }}%</div>
+    </div>
+
+    <div class="controls">
+      <button @click="handlePrev" :disabled="isReachStart" class="btn">
+        Prev
+      </button>
+      <button @click="handleNext" :disabled="isReachEnd" class="btn">
+        Next
+      </button>
+    </div>
+
+    <div class="pagination">
+      <button 
+        v-for="page in totalPanelCount" 
+        :key="page"
+        :class="{ active: currentPanelIndex + 1 === page }"
+        @click="moveTo(page - 1)"
+        class="pagination-btn"
+      >
+        {{ page }}
+      </button>
+    </div>
+
+    <div class="status">
+      <p>Total panels: {{ totalPanelCount }}</p>
+      <p>Current index: {{ currentPanelIndex }}</p>
+      <p>Progress: {{ progress.toFixed(1) }}%</p>
+      <p>First panel: {{ isReachStart ? 'Reached' : 'Not reached' }}</p>
+      <p>Last panel: {{ isReachEnd ? 'Reached' : 'Not reached' }}</p>
+    </div>
+  </div>
+</template>
+```
+
+```js title="script"
+import { ref, reactive, onMounted } from 'vue'
+import Flicking from '../src/Flicking'
+import { useFlickingReactiveAPI } from "../src/reactive";
+
+// Flicking instance reference
+const flickingRef = ref(null)
+
+// Reactive data
+const panels = reactive([
+  { id: 1, text: 'Panel 1', color: '#ff6b6b' },
+  { id: 2, text: 'Panel 2', color: '#4ecdc4' },
+  { id: 3, text: 'Panel 3', color: '#45b7d1' },
+  { id: 4, text: 'Panel 4', color: '#96ceb4' },
+  { id: 5, text: 'Panel 5', color: '#feca57' }
+])
+
+// Flicking options
+const flickingOptions = reactive({
+  circular: false,
+  bound: false,
+  duration: 500,
+  defaultIndex: 0,
+})
+
+// Use Reactive API hook
+const {
+  currentPanelIndex,
+  totalPanelCount,
+  isReachStart,
+  isReachEnd,
+  progress,
+  moveTo
+} = useFlickingReactiveAPI(flickingRef)
+
+// Methods
+const handlePrev = () => {
+  if (!isReachStart.value) {
+    moveTo(currentPanelIndex.value - 1)
+  }
+}
+
+const handleNext = () => {
+  if (!isReachEnd.value) {
+    moveTo(currentPanelIndex.value + 1)
+  }
+}
+
+// Lifecycle hook
+onMounted(() => {
+  if (flickingRef.value) {
+    console.log('Flicking instance mounted')
+  }
+})
+```
+
+  </TabItem>
+</Tabs>
+
+### Prev / Next Button
+> You can synchronize Flicking with Prev/Next buttons using <Link to={useBaseUrl("docs/api/FlickingReactiveState")}>isReachStart</Link> and <Link to={useBaseUrl("docs/api/FlickingReactiveState")}>isReachEnd</Link>.
+
+<Columns>
+  <ColumnItem is={12} className="is-flex is-flex-direction-column is-align-items-center">
+    <PrevNext />
+  </ColumnItem>
+</Columns>
+
+<Tabs
+  defaultValue="js"
+  lazy={true}
+  values={[
+    { label: "JavaScript", value: "js" },
+    { label: "React", value: "react" },
+    { label: "Vue@2", value: "vue" },
+    { label: "Vue@3", value: "vue3" },
+  ]}>
+  <TabItem value="js">
+
+```html title="html"
+<div class="flicking-viewport">
+  <div class="flicking-camera">
+    <div class="flicking-panel">Panel 1</div>
+    <div class="flicking-panel">Panel 2</div>
+    <div class="flicking-panel">Panel 3</div>
+    <div class="flicking-panel">Panel 4</div>
+    <div class="flicking-panel">Panel 5</div>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="prev-btn">Previous</button>
+  <button class="next-btn">Next</button>
+</div>
+```
+
+```js title="js"
+import Flicking, { connectFlickingReactiveAPI } from "@egjs/flicking";
+
+const flicking = new Flicking(".flicking-viewport");
+const reactiveObj = connectFlickingReactiveAPI(flicking);
+
+// Connect with Prev/Next button
+const prevBtn = document.querySelector(".prev-btn");
+const nextBtn = document.querySelector(".next-btn");
+
+prevBtn.addEventListener("click", () => {
+  if (!reactiveObj.isReachStart) {
+    reactiveObj.moveTo(flicking.index - 1);
+  }
+});
+
+nextBtn.addEventListener("click", () => {
+  if (!reactiveObj.isReachEnd) {
+    reactiveObj.moveTo(flicking.index + 1);
+  }
+});
+
+// Update button state
+reactiveObj.subscribe("isReachStart", (nextValue) => {
+  prevBtn.disabled = nextValue;
+});
+
+reactiveObj.subscribe("isReachEnd", (nextValue) => {
+  nextBtn.disabled = nextValue;
+});
+```
+
+  </TabItem>
+  <TabItem value="react">
+
+```jsx
+import React from "react";
+import Flicking, { useFlickingReactiveAPI } from "@egjs/react-flicking";
+import Button from "@mui/material/Button";
+
+export default function PrevNextExample() {
+  const flickingRef = React.useRef(null);
+  const {
+    isReachStart,
+    isReachEnd,
+    moveTo
+  } = useFlickingReactiveAPI(flickingRef);
+
+  const handlePrev = () => {
+    if (!isReachStart) {
+      moveTo(flickingRef.current.index - 1);
+    };
+  };
+
+  const handleNext = () => {
+    if (!isReachEnd) {
+      moveTo(flickingRef.current.index + 1);
+    };
+  };
+
+  return (
+    <div>
+      <Flicking ref={flickingRef}>
+        {panels.map((panel, index) => (
+          <div key={index} className="panel">{panel}</div>
+        ))}
+      </Flicking>
+      
+      <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
+        <Button
+          variant="contained"
+          onClick={handlePrev}
+          disabled={isReachStart}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleNext}
+          disabled={isReachEnd}
+        >
+          Next
+        </Button>
+      </div>
+    </div>
+  );
+}
+```
+
+  </TabItem>
+  <TabItem value="vue">
+
+```html title="template"
+<template>
+  <div class="reactive-demo">
+    <h3>Prev/Next Button with Reactive API</h3>
+    <Flicking ref="flickingRef" :options="flickingOptions">
+      <div 
+        v-for="item in panels" 
+        :key="item.id" 
+        class="panel"
+        :style="{ backgroundColor: item.color }"
+      >
+        {{ item.text }}
+      </div>
+    </Flicking>
+    
+    <div class="controls">
+      <button 
+        :disabled="isReachStart"
+        @click="handlePrev"
+        class="btn prev-btn"
+      >
+        Previous
+      </button>
+      <button 
+        :disabled="isReachEnd"
+        @click="handleNext"
+        class="btn next-btn"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</template>
+```
+
+```js title="script"
+import { ref, onMounted } from '@vue/composition-api'
+import Flicking from '../src/Flicking'
+import { useFlickingReactiveAPI } from "../src/reactive";
+
+export default {
+  name: 'PrevNextDemo',
+  components: {
+    Flicking
+  },
+  setup() {
+    const panels = ref([
+      { id: 1, text: 'Panel 1', color: '#ff6b6b' },
+      { id: 2, text: 'Panel 2', color: '#4ecdc4' },
+      { id: 3, text: 'Panel 3', color: '#45b7d1' },
+      { id: 4, text: 'Panel 4', color: '#96ceb4' },
+      { id: 5, text: 'Panel 5', color: '#feca57' }
+    ])
+
+    const flickingOptions = ref({
+      circular: false,
+      bound: false,
+      duration: 500,
+      defaultIndex: 0,
+    })
+
+    const flickingRef = ref(null)
+    const {
+      isReachStart,
+      isReachEnd,
+      moveTo
+    } = useFlickingReactiveAPI(flickingRef)
+
+    const handlePrev = () => {
+      if (!isReachStart.value) {
+        moveTo(flickingRef.value.index - 1)
+      }
+    }
+
+    const handleNext = () => {
+      if (!isReachEnd.value) {
+        moveTo(flickingRef.value.index + 1)
+      }
+    }
+
+    onMounted(() => {
+      if (flickingRef.value) {
+        console.log('Flicking instance mounted')
+      }
+    })
+
+    return {
+      panels,
+      flickingOptions,
+      flickingRef,
+      isReachStart,
+      isReachEnd,
+      handlePrev,
+      handleNext
+    }
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="vue3">
+
+```html title="template"
+<template>
+  <div class="reactive-demo">
+    <h3>Prev/Next Button with Reactive API</h3>
+    <Flicking ref="flickingRef" :options="flickingOptions">
+      <div 
+        v-for="item in panels" 
+        :key="item.id" 
+        class="panel"
+        :style="{ backgroundColor: item.color }"
+      >
+        {{ item.text }}
+      </div>
+    </Flicking>
+    
+    <div class="controls">
+      <button 
+        :disabled="isReachStart"
+        @click="handlePrev"
+        class="btn prev-btn"
+      >
+        Previous
+      </button>
+      <button 
+        :disabled="isReachEnd"
+        @click="handleNext"
+        class="btn next-btn"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</template>
+```
+
+```js title="script"
+import { ref, reactive, onMounted } from 'vue'
+import Flicking from '../src/Flicking'
+import { useFlickingReactiveAPI } from "../src/reactive";
+
+const flickingRef = ref(null)
+
+const panels = reactive([
+  { id: 1, text: 'Panel 1', color: '#ff6b6b' },
+  { id: 2, text: 'Panel 2', color: '#4ecdc4' },
+  { id: 3, text: 'Panel 3', color: '#45b7d1' },
+  { id: 4, text: 'Panel 4', color: '#96ceb4' },
+  { id: 5, text: 'Panel 5', color: '#feca57' }
+])
+
+const flickingOptions = reactive({
+  circular: false,
+  bound: false,
+  duration: 500,
+  defaultIndex: 0,
+})
+
+const {
+  isReachStart,
+  isReachEnd,
+  moveTo
+} = useFlickingReactiveAPI(flickingRef)
+
+const handlePrev = () => {
+  if (!isReachStart.value) {
+    moveTo(flickingRef.value.index - 1)
+  }
+}
+
+const handleNext = () => {
+  if (!isReachEnd.value) {
+    moveTo(flickingRef.value.index + 1)
+  }
+}
+
+onMounted(() => {
+  if (flickingRef.value) {
+    console.log('Flicking instance mounted')
+  }
+})
+```
+
+  </TabItem>
+</Tabs>
+
+### Progress Bar
+> You can synchronize Flicking with Progress Bar using <Link to={useBaseUrl("docs/api/FlickingReactiveState")}>progress</Link>.
+
+<Columns>
+  <ColumnItem is={12} className="is-flex is-flex-direction-column is-align-items-center">
+    <ProgressBar />
+  </ColumnItem>
+</Columns>
+
+<Tabs
+  defaultValue="js"
+  lazy={true}
+  values={[
+    { label: "JavaScript", value: "js" },
+    { label: "React", value: "react" },
+    { label: "Vue@2", value: "vue" },
+    { label: "Vue@3", value: "vue3" },
+  ]}>
+  <TabItem value="js">
+
+```html title="html"
+<div class="flicking-viewport">
+  <div class="flicking-camera">
+    <div class="flicking-panel">Panel 1</div>
+    <div class="flicking-panel">Panel 2</div>
+    <div class="flicking-panel">Panel 3</div>
+    <div class="flicking-panel">Panel 4</div>
+    <div class="flicking-panel">Panel 5</div>
+  </div>
+</div>
+
+<div class="progress-container">
+  <div class="progress-bar"></div>
+  <div class="progress-text">Progress: 0%</div>
+</div>
+```
+
+```js title="js"
+import Flicking, { connectFlickingReactiveAPI } from "@egjs/flicking";
+
+const flicking = new Flicking(".flicking-viewport", {
+  moveType: "free-scroll"
+});
+const reactiveObj = connectFlickingReactiveAPI(flicking);
+
+// Connect with Progress Bar
+const progressBar = document.querySelector(".progress-bar");
+const progressText = document.querySelector(".progress-text");
+
+reactiveObj.subscribe("progress", (nextValue) => {
+  progressBar.style.width = `${nextValue}%`;
+  progressText.textContent = `Progress: ${nextValue.toFixed(1)}%`;
+});
+```
+
+  </TabItem>
+  <TabItem value="react">
+
+```jsx
+import React from "react";
+import Flicking, { useFlickingReactiveAPI } from "@egjs/react-flicking";
+import LinearProgress from "@mui/material/LinearProgress";
+
+export default function ProgressBarExample() {
+  const flickingRef = React.useRef(null);
+  const {
+    progress
+  } = useFlickingReactiveAPI(flickingRef);
+
+  return (
+    <div>
+      <Flicking 
+        ref={flickingRef}
+        moveType="free-scroll"
+      >
+        {panels.map((panel, index) => (
+          <div key={index} className="panel">{panel}</div>
+        ))}
+      </Flicking>
+      
+      <div style={{ marginTop: "20px" }}>
+        <LinearProgress 
+          variant="determinate" 
+          value={progress} 
+          style={{ width: "100%" }}
+        />
+        <div style={{ textAlign: "center", marginTop: "10px" }}>
+          Progress: {progress.toFixed(1)}%
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+  </TabItem>
+  <TabItem value="vue">
+
+```html title="template"
+<template>
+  <div class="reactive-demo">
+    <h3>Progress Bar with Reactive API</h3>
+    <Flicking ref="flickingRef" :options="flickingOptions">
+      <div 
+        v-for="item in panels" 
+        :key="item.id" 
+        class="panel"
+        :style="{ backgroundColor: item.color }"
+      >
+        {{ item.text }}
+      </div>
+    </Flicking>
+    
+    <div class="progress-container">
+      <div class="progress-bar" :style="{ width: progress + '%' }"></div>
+      <div class="progress-text">Progress: {{ progress.toFixed(1) }}%</div>
+    </div>
+  </div>
+</template>
+```
+
+```js title="script"
+import { ref, onMounted } from '@vue/composition-api'
+import Flicking from '../src/Flicking'
+import { useFlickingReactiveAPI } from "../src/reactive";
+
+export default {
+  name: 'ProgressBarDemo',
+  components: {
+    Flicking
+  },
+  setup() {
+    const panels = ref([
+      { id: 1, text: 'Panel 1', color: '#ff6b6b' },
+      { id: 2, text: 'Panel 2', color: '#4ecdc4' },
+      { id: 3, text: 'Panel 3', color: '#45b7d1' },
+      { id: 4, text: 'Panel 4', color: '#96ceb4' },
+      { id: 5, text: 'Panel 5', color: '#feca57' }
+    ])
+
+    const flickingOptions = ref({
+      circular: false,
+      bound: false,
+      duration: 500,
+      defaultIndex: 0,
+      moveType: "free-scroll"
+    })
+
+    const flickingRef = ref(null)
+    const {
+      progress
+    } = useFlickingReactiveAPI(flickingRef)
+
+    onMounted(() => {
+      if (flickingRef.value) {
+        console.log('Flicking instance mounted')
+      }
+    })
+
+    return {
+      panels,
+      flickingOptions,
+      flickingRef,
+      progress
+    }
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="vue3">
+
+```html title="template"
+<template>
+  <div class="reactive-demo">
+    <h3>Progress Bar with Reactive API</h3>
+    <Flicking ref="flickingRef" :options="flickingOptions">
+      <div 
+        v-for="item in panels" 
+        :key="item.id" 
+        class="panel"
+        :style="{ backgroundColor: item.color }"
+      >
+        {{ item.text }}
+      </div>
+    </Flicking>
+    
+    <div class="progress-container">
+      <div class="progress-bar" :style="{ width: progress + '%' }"></div>
+      <div class="progress-text">Progress: {{ progress.toFixed(1) }}%</div>
+    </div>
+  </div>
+</template>
+```
+
+```js title="script"
+import { ref, reactive, onMounted } from 'vue'
+import Flicking from '../src/Flicking'
+import { useFlickingReactiveAPI } from "../src/reactive";
+
+const flickingRef = ref(null)
+
+const panels = reactive([
+  { id: 1, text: 'Panel 1', color: '#ff6b6b' },
+  { id: 2, text: 'Panel 2', color: '#4ecdc4' },
+  { id: 3, text: 'Panel 3', color: '#45b7d1' },
+  { id: 4, text: 'Panel 4', color: '#96ceb4' },
+  { id: 5, text: 'Panel 5', color: '#feca57' }
+])
+
+const flickingOptions = reactive({
+  circular: false,
+  bound: false,
+  duration: 500,
+  defaultIndex: 0,
+  moveType: "free-scroll"
+})
+
+const {
+  progress
+} = useFlickingReactiveAPI(flickingRef)
+
+onMounted(() => {
+  if (flickingRef.value) {
+    console.log('Flicking instance mounted')
+  }
+})
+```
+
+  </TabItem>
+</Tabs>
+
+### Parallax
+> You can create a Parallax effect for each panel using <Link to={useBaseUrl("docs/api/FlickingReactiveState")}>indexProgress</Link>.
+
+<Columns>
+  <ColumnItem is={12} className="is-flex is-flex-direction-column is-align-items-center">
+    <Parallax />
+  </ColumnItem>
+</Columns>
+
+<Tabs
+  defaultValue="js"
+  lazy={true}
+  values={[
+    { label: "JavaScript", value: "js" },
+    { label: "React", value: "react" },
+    { label: "Vue@2", value: "vue" },
+    { label: "Vue@3", value: "vue3" },
+  ]}>
+  <TabItem value="js">
+
+```html title="html"
+<div class="flicking-viewport">
+  <div class="flicking-camera">
+    <div class="flicking-panel skelton-panel has-background-primary is-size-1">
+      <span class="skeleton-bar skeleton-bar-size4 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size1 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size3 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size2 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size3 parallax-element"></span>
+    </div>
+    <div class="flicking-panel skelton-panel has-background-primary is-size-1">
+      <span class="skeleton-bar skeleton-bar-size4 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size1 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size3 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size2 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size3 parallax-element"></span>
+    </div>
+    <div class="flicking-panel skelton-panel has-background-primary is-size-1">
+      <span class="skeleton-bar skeleton-bar-size4 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size1 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size3 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size2 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size3 parallax-element"></span>
+    </div>
+    <div class="flicking-panel skelton-panel has-background-primary is-size-1">
+      <span class="skeleton-bar skeleton-bar-size4 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size1 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size3 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size2 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size3 parallax-element"></span>
+    </div>
+    <div class="flicking-panel skelton-panel has-background-primary is-size-1">
+      <span class="skeleton-bar skeleton-bar-size4 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size1 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size3 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size2 parallax-element"></span>
+      <span class="skeleton-bar skeleton-bar-size3 parallax-element"></span>
+    </div>
+  </div>
+</div>
+```
+
+```js title="js"
+import Flicking, { connectFlickingReactiveAPI } from "@egjs/flicking";
+
+const flicking = new Flicking(".flicking-viewport");
+const reactiveObj = connectFlickingReactiveAPI(flicking);
+
+// Implement Parallax effect
+reactiveObj.subscribe("indexProgress", (nextValue) => {
+  const panels = document.querySelectorAll(".flicking-panel");
+  panels.forEach((panel, index) => {
+    const childProgress = index - nextValue;
+    const opacity = Math.min(Math.max(1 - Math.abs(childProgress), 0), 1);
+    
+    const elements = panel.querySelectorAll(".parallax-element");
+    elements.forEach((element, i) => {
+      element.style.transform = `translate(${childProgress * (180 - i * 20)}px)`;
+      element.style.opacity = opacity;
+    });
+  });
+});
+```
+
+  </TabItem>
+  <TabItem value="react">
+
+```jsx
+import React from "react";
+import Flicking, { useFlickingReactiveAPI } from "@egjs/react-flicking";
+
+export default function ParallaxExample() {
+  const flickingRef = React.useRef(null);
+  const {
+    indexProgress
+  } = useFlickingReactiveAPI(flickingRef);
+
+  return (
+    <Flicking ref={flickingRef}>
+      {[0, 1, 2, 3, 4].map((index) => {
+        const childProgress = index - indexProgress;
+        const opacity = Math.min(Math.max(1 - Math.abs(childProgress), 0), 1);
+
+        return (
+          <div key={index} className="flicking-panel skelton-panel has-background-primary is-size-1">
+            <span 
+              className="skeleton-bar skeleton-bar-size4" 
+              style={{
+                transform: `translate(${childProgress * 180}px)`,
+                opacity
+              }}
+            />
+            <span 
+              className="skeleton-bar skeleton-bar-size1" 
+              style={{
+                transform: `translate(${childProgress * 160}px)`,
+                opacity
+              }}
+            />
+            <span 
+              className="skeleton-bar skeleton-bar-size3" 
+              style={{
+                transform: `translate(${childProgress * 140}px)`,
+                opacity
+              }}
+            />
+            <span 
+              className="skeleton-bar skeleton-bar-size2" 
+              style={{
+                transform: `translate(${childProgress * 120}px)`,
+                opacity
+              }}
+            />
+            <span 
+              className="skeleton-bar skeleton-bar-size3" 
+              style={{
+                transform: `translate(${childProgress * 100}px)`,
+                opacity
+              }}
+            />
+          </div>
+        );
+      })}
+    </Flicking>
+  );
+}
+```
+
+  </TabItem>
+  <TabItem value="vue">
+
+```html title="template"
+<template>
+  <div class="reactive-demo">
+    <h3>Parallax with Reactive API</h3>
+    <Flicking ref="flickingRef" :options="flickingOptions">
+      <div 
+        v-for="(panel, index) in panels" 
+        :key="index"
+        class="flicking-panel skelton-panel has-background-primary is-size-1"
+      >
+        <span 
+          v-for="(element, i) in parallaxElements" 
+          :key="i"
+          :class="element.class"
+          :style="getParallaxStyle(index, i)"
+        />
+      </div>
+    </Flicking>
+  </div>
+</template>
+```
+
+```js title="script"
+import { ref, onMounted } from '@vue/composition-api'
+import Flicking from '../src/Flicking'
+import { useFlickingReactiveAPI } from "../src/reactive";
+
+export default {
+  name: 'ParallaxDemo',
+  components: {
+    Flicking
+  },
+  setup() {
+    const panels = ref([0, 1, 2, 3, 4])
+
+    const flickingOptions = ref({
+      circular: false,
+      bound: false,
+      duration: 500,
+      defaultIndex: 0,
+    })
+
+    const flickingRef = ref(null)
+    const {
+      indexProgress
+    } = useFlickingReactiveAPI(flickingRef)
+
+    const parallaxElements = ref([
+      { class: "skeleton-bar skeleton-bar-size4", offset: 180 },
+      { class: "skeleton-bar skeleton-bar-size1", offset: 160 },
+      { class: "skeleton-bar skeleton-bar-size3", offset: 140 },
+      { class: "skeleton-bar skeleton-bar-size2", offset: 120 },
+      { class: "skeleton-bar skeleton-bar-size3", offset: 100 }
+    ])
+
+    const getParallaxStyle = (index, elementIndex) => {
+      const childProgress = index - indexProgress.value
+      const opacity = Math.min(Math.max(1 - Math.abs(childProgress), 0), 1)
+      const offset = parallaxElements.value[elementIndex].offset
+
+      return {
+        transform: `translate(${childProgress * offset}px)`,
+        opacity
+      }
+    }
+
+    onMounted(() => {
+      if (flickingRef.value) {
+        console.log('Flicking instance mounted')
+      }
+    })
+
+    return {
+      panels,
+      flickingOptions,
+      flickingRef,
+      indexProgress,
+      parallaxElements,
+      getParallaxStyle
+    }
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="vue3">
+
+```html title="template"
+<template>
+  <div class="reactive-demo">
+    <h3>Parallax with Reactive API</h3>
+    <Flicking ref="flickingRef" :options="flickingOptions">
+      <div 
+        v-for="(panel, index) in panels" 
+        :key="index"
+        class="flicking-panel skelton-panel has-background-primary is-size-1"
+      >
+        <span 
+          v-for="(element, i) in parallaxElements" 
+          :key="i"
+          :class="element.class"
+          :style="getParallaxStyle(index, i)"
+        />
+      </div>
+    </Flicking>
+  </div>
+</template>
+```
+
+```js title="script"
+import { ref, reactive, onMounted } from 'vue'
+import Flicking from '../src/Flicking'
+import { useFlickingReactiveAPI } from "../src/reactive";
+
+const flickingRef = ref(null)
+
+const panels = reactive([0, 1, 2, 3, 4])
+
+const flickingOptions = reactive({
+  circular: false,
+  bound: false,
+  duration: 500,
+  defaultIndex: 0,
+})
+
+const {
+  indexProgress
+} = useFlickingReactiveAPI(flickingRef)
+
+const parallaxElements = reactive([
+  { class: "skeleton-bar skeleton-bar-size4", offset: 180 },
+  { class: "skeleton-bar skeleton-bar-size1", offset: 160 },
+  { class: "skeleton-bar skeleton-bar-size3", offset: 140 },
+  { class: "skeleton-bar skeleton-bar-size2", offset: 120 },
+  { class: "skeleton-bar skeleton-bar-size3", offset: 100 }
+])
+
+const getParallaxStyle = (index, elementIndex) => {
+  const childProgress = index - indexProgress.value
+  const opacity = Math.min(Math.max(1 - Math.abs(childProgress), 0), 1)
+  const offset = parallaxElements[elementIndex].offset
+
+  return {
+    transform: `translate(${childProgress * offset}px)`,
+    opacity
+  }
+}
+
+onMounted(() => {
+  if (flickingRef.value) {
+    console.log('Flicking instance mounted')
+  }
+})
+```
+
+  </TabItem>
+</Tabs>
+
+### Slide Over
+> You can create a Slide Over effect using <Link to={useBaseUrl("docs/api/FlickingReactiveState")}>indexProgress</Link>.
+
+<Columns>
+  <ColumnItem is={12} className="is-flex is-flex-direction-column is-align-items-center">
+    <SlideOver />
+  </ColumnItem>
+</Columns>
+
+<Tabs
+  defaultValue="js"
+  lazy={true}
+  values={[
+    { label: "JavaScript", value: "js" },
+    { label: "React", value: "react" },
+    { label: "Vue@2", value: "vue" },
+    { label: "Vue@3", value: "vue3" },
+  ]}>
+  <TabItem value="js">
+
+```html title="html"
+<div class="flicking-viewport">
+  <div class="flicking-camera">
+    <div class="flicking-panel">Panel 1</div>
+    <div class="flicking-panel">Panel 2</div>
+    <div class="flicking-panel">Panel 3</div>
+    <div class="flicking-panel">Panel 4</div>
+    <div class="flicking-panel">Panel 5</div>
+  </div>
+</div>
+```
+
+```js title="js"
+import Flicking, { connectFlickingReactiveAPI } from "@egjs/flicking";
+
+const flicking = new Flicking(".flicking-viewport", {
+  circular: true
+});
+const reactiveObj = connectFlickingReactiveAPI(flicking);
+
+const panels = document.querySelectorAll(".flicking-panel");
+const length = panels.length;
+
+// Implement Slide Over effect
+reactiveObj.subscribe("indexProgress", (nextValue) => {
+  panels.forEach((panel, index) => {
+    const childProgress = (index - nextValue + length * 1.5) % length - length * 0.5;
+    const pos = childProgress < 0 ? -childProgress * 100 : 0;
+    const scale = childProgress < 0 ? Math.max(0, 1 - Math.abs(childProgress)) : 1;
+    
+    panel.style.transform = `translate(${pos}%) scale(${scale})`;
+  });
+});
+```
+
+  </TabItem>
+  <TabItem value="react">
+
+```jsx
+import React from "react";
+import Flicking, { useFlickingReactiveAPI } from "@egjs/react-flicking";
+import Panel from "@site/src/component/Panel";
+
+export default () => {
+  const flickingRef = React.createRef();
+  const {
+    indexProgress
+  } = useFlickingReactiveAPI(flickingRef);
+
+  const length = 5;
+  return (
+    <Flicking ref={flickingRef} style={{ maxWidth: "300px" }}>
+      {[0, 1, 2, 3, 4].map((index) => {
+        const childProgress = (index - indexProgress + length * 1.5) % length -  length * 0.5;
+        const pos = childProgress < 0 ? `${-childProgress * 100}%` : "0px";
+        const scale = childProgress < 0 ? `${Math.max(0, 1 - Math.abs(childProgress))}` : 1;
+
+        return <Panel key={index} index={index} style={{
+          width: "100%",
+          transform: `translate(${pos}) scale(${scale})`
+        }} />;
+      })}
+    </Flicking>
+  );
+};
+```
+
+  </TabItem>
+  <TabItem value="vue">
+
+```html title="template"
+<template>
+  <div>
+    <Flicking ref="flickingRef" :options="flickingOptions" style="max-width: 300px;">
+      <div 
+        v-for="index in 5" 
+        :key="index - 1"
+        class="flicking-panel"
+        :style="getSlideOverStyle(index - 1)"
+      >
+        Panel {{ index }}
+      </div>
+    </Flicking>
+  </div>
+</template>
+```
+
+```js title="script"
+import { ref, onMounted } from '@vue/composition-api'
+import Flicking from '../src/Flicking'
+import { useFlickingReactiveAPI } from "../src/reactive";
+
+export default {
+  name: 'SlideOverDemo',
+  components: {
+    Flicking
+  },
+  setup() {
+    const flickingOptions = ref({})
+
+    const flickingRef = ref(null)
+    const {
+      indexProgress
+    } = useFlickingReactiveAPI(flickingRef)
+
+    const length = 5
+
+    const getSlideOverStyle = (index) => {
+      const childProgress = (index - indexProgress.value + length * 1.5) % length - length * 0.5
+      const pos = childProgress < 0 ? `${-childProgress * 100}%` : "0px"
+      const scale = childProgress < 0 ? Math.max(0, 1 - Math.abs(childProgress)) : 1
+
+      return {
+        width: "100%",
+        transform: `translate(${pos}) scale(${scale})`
+      }
+    }
+
+    return {
+      flickingOptions,
+      flickingRef,
+      getSlideOverStyle
+    }
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="vue3">
+
+```html title="template"
+<template>
+  <div>
+    <Flicking ref="flickingRef" :options="flickingOptions" style="max-width: 300px;">
+      <div 
+        v-for="index in 5" 
+        :key="index - 1"
+        class="flicking-panel"
+        :style="getSlideOverStyle(index - 1)"
+      >
+        Panel {{ index }}
+      </div>
+    </Flicking>
+  </div>
+</template>
+```
+
+```js title="script"
+import { ref, reactive } from 'vue'
+import Flicking from '../src/Flicking'
+import { useFlickingReactiveAPI } from "../src/reactive";
+
+const flickingRef = ref(null)
+
+const flickingOptions = reactive({})
+
+const {
+  indexProgress
+} = useFlickingReactiveAPI(flickingRef)
+
+const length = 5
+
+const getSlideOverStyle = (index) => {
+  const childProgress = (index - indexProgress.value + length * 1.5) % length - length * 0.5
+  const pos = childProgress < 0 ? `${-childProgress * 100}%` : "0px"
+  const scale = childProgress < 0 ? Math.max(0, 1 - Math.abs(childProgress)) : 1
+
+  return {
+    width: "100%",
+    transform: `translate(${pos}) scale(${scale})`
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### Cover flow
+> You can create a Cover flow UI using <Link to={useBaseUrl("docs/api/FlickingReactiveState")}>indexProgress</Link>.
+
+<Columns>
+  <ColumnItem is={12} className="is-flex is-flex-direction-column is-align-items-center">
+    <Coverflow />
+  </ColumnItem>
+</Columns>
+
+<Tabs
+  defaultValue="js"
+  lazy={true}
+  values={[
+    { label: "JavaScript", value: "js" },
+    { label: "React", value: "react" },
+    { label: "Vue@2", value: "vue" },
+    { label: "Vue@3", value: "vue3" },
+  ]}>
+  <TabItem value="js">
+
+```html title="html"
+<div class="flicking-viewport flicking-coverflow">
+  <div class="flicking-camera">
+    <div class="flicking-panel">Panel 1</div>
+    <div class="flicking-panel">Panel 2</div>
+    <div class="flicking-panel">Panel 3</div>
+    <div class="flicking-panel">Panel 4</div>
+    <div class="flicking-panel">Panel 5</div>
+  </div>
+</div>
+```
+
+```js title="js"
+import Flicking, { connectFlickingReactiveAPI } from "@egjs/flicking";
+
+const flicking = new Flicking(".flicking-viewport", {
+  circular: true
+});
+const reactiveObj = connectFlickingReactiveAPI(flicking);
+
+const panels = document.querySelectorAll(".flicking-panel");
+const length = panels.length;
+
+// Implement Cover flow effect
+reactiveObj.subscribe("indexProgress", (nextValue) => {
+  panels.forEach((panel, index) => {
+    const childProgress = (index - nextValue + length * 1.5) % length - length * 0.5;
+    const scale = Math.max(0, 0.9 - Math.abs(childProgress) * 0.2);
+    
+    panel.style.transformOrigin = `${50 - childProgress * 50}% 50%`;
+    panel.style.transform = `rotateY(${-childProgress * 50}deg) scale(${scale})`;
+  });
+});
+```
+
+  </TabItem>
+  <TabItem value="react">
+
+```jsx
+import React from "react";
+import Flicking, { useFlickingReactiveAPI } from "@egjs/react-flicking";
+import Panel from "@site/src/component/Panel";
+
+export default () => {
+  const flickingRef = React.createRef();
+  const {
+    indexProgress
+  } = useFlickingReactiveAPI(flickingRef);
+
+  const length = 5;
+  return (
+    <Flicking ref={flickingRef} circular={true} className="flicking-coverflow">
+      {[0, 1, 2, 3, 4].map((index) => {
+        const childProgress = (index - indexProgress + length * 1.5) % length -  length * 0.5;
+        const scale = Math.max(0, 0.9 - Math.abs(childProgress) * 0.2);
+
+        return <Panel key={index} index={index} style={{
+          transformOrigin: `${50 - childProgress * 50}% 50%`,
+          transform: `rotateY(${-childProgress * 50}deg) scale(${scale})`
+        }} />;
+      })}
+    </Flicking>
+  );
+};
+```
+
+  </TabItem>
+  <TabItem value="vue">
+
+```html title="template"
+<template>
+  <div>
+    <Flicking ref="flickingRef" :options="flickingOptions" className="flicking-coverflow">
+      <div 
+        v-for="index in 5" 
+        :key="index - 1"
+        class="flicking-panel"
+        :style="getCoverflowStyle(index - 1)"
+      >
+        Panel {{ index }}
+      </div>
+    </Flicking>
+  </div>
+</template>
+```
+
+```js title="script"
+import { ref } from '@vue/composition-api'
+import Flicking from '../src/Flicking'
+import { useFlickingReactiveAPI } from "../src/reactive";
+
+export default {
+  name: 'CoverflowDemo',
+  components: {
+    Flicking
+  },
+  setup() {
+    const flickingOptions = ref({
+      circular: true
+    })
+
+    const flickingRef = ref(null)
+    const {
+      indexProgress
+    } = useFlickingReactiveAPI(flickingRef)
+
+    const length = 5
+
+    const getCoverflowStyle = (index) => {
+      const childProgress = (index - indexProgress.value + length * 1.5) % length - length * 0.5
+      const scale = Math.max(0, 0.9 - Math.abs(childProgress) * 0.2)
+
+      return {
+        transformOrigin: `${50 - childProgress * 50}% 50%`,
+        transform: `rotateY(${-childProgress * 50}deg) scale(${scale})`
+      }
+    }
+
+    return {
+      flickingOptions,
+      flickingRef,
+      getCoverflowStyle
+    }
+  }
+}
+```
+
+  </TabItem>
+  <TabItem value="vue3">
+
+```html title="template"
+<template>
+  <div>
+    <Flicking ref="flickingRef" :options="flickingOptions" className="flicking-coverflow">
+      <div 
+        v-for="index in 5" 
+        :key="index - 1"
+        class="flicking-panel"
+        :style="getCoverflowStyle(index - 1)"
+      >
+        Panel {{ index }}
+      </div>
+    </Flicking>
+  </div>
+</template>
+```
+
+```js title="script"
+import { ref, reactive } from 'vue'
+import Flicking from '../src/Flicking'
+import { useFlickingReactiveAPI } from "../src/reactive";
+
+const flickingRef = ref(null)
+
+const flickingOptions = reactive({
+  circular: true
+})
+
+const {
+  indexProgress
+} = useFlickingReactiveAPI(flickingRef)
+
+const length = 5
+
+const getCoverflowStyle = (index) => {
+  const childProgress = (index - indexProgress.value + length * 1.5) % length - length * 0.5
+  const scale = Math.max(0, 0.9 - Math.abs(childProgress) * 0.2)
+
+  return {
+    transformOrigin: `${50 - childProgress * 50}% 50%`,
+    transform: `rotateY(${-childProgress * 50}deg) scale(${scale})`
+  }
+}
+```
+
+  </TabItem>
+</Tabs>

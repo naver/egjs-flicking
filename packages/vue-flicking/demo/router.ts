@@ -13,6 +13,8 @@ import Fade from "./plugins/Fade.vue";
 import Parallax from "./plugins/Parallax.vue";
 import Arrow from "./plugins/Arrow.vue";
 import Sync from "./plugins/Sync.vue";
+import ReactiveDemo from "./ReactiveDemo.vue";
+import BasicDemo from "./BasicDemo.vue";
 
 export default {
   routes: [
@@ -90,6 +92,16 @@ export default {
       path: "/sync",
       name: "Sync",
       component: Sync,
+    },
+    {
+      path: "/basic",
+      name: "Basic",
+      component: BasicDemo,
+    },
+    {
+      path: "/reactive",
+      name: "Reactive",
+      component: ReactiveDemo,
     }
   ],
 };
