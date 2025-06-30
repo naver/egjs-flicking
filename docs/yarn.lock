@@ -1148,12 +1148,19 @@
   dependencies:
     "@egjs/component" "^3.0.4"
 
-"@cfcs/core@^0.1.0":
+"@cfcs/core@^0.1.0", "@cfcs/core@~0.1.0":
   version "0.1.0"
   resolved "https://registry.npmjs.org/@cfcs/core/-/core-0.1.0.tgz"
   integrity sha512-kvYX0RpL45XTHJ5sW7teNbKeAa7pK3nNqaJPoFfZDPTIBJOkTtRD3QhkBG+O3Hu69a8xeMoPvF6y/RtJ6JUOdA==
   dependencies:
     "@egjs/component" "^3.0.4"
+
+"@cfcs/react@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.npmjs.org/@cfcs/react/-/react-0.1.0.tgz"
+  integrity sha512-3IaDaE1Qn0iLZ1ZqD0cqoiX0Kjzp6/VB56409A963lQ5kK6ONNa3cNbCBqFZccCfPSnyzeSdvPlg75Af3W4raA==
+  dependencies:
+    "@cfcs/core" "~0.1.0"
 
 "@colors/colors@1.5.0":
   version "1.5.0"
@@ -1612,7 +1619,7 @@
   dependencies:
     "@egjs/list-differ" "^1.0.0"
 
-"@egjs/component@^3.0.0", "@egjs/component@^3.0.1", "@egjs/component@^3.0.4":
+"@egjs/component@^3.0.0", "@egjs/component@^3.0.1", "@egjs/component@^3.0.2", "@egjs/component@^3.0.4":
   version "3.0.5"
   resolved "https://registry.npmjs.org/@egjs/component/-/component-3.0.5.tgz"
   integrity sha512-cLcGizTrrUNA2EYE3MBmEDt2tQv1joVP1Q3oDisZ5nw0MZDx2kcgEXM+/kZpfa/PAkFvYVhRUZwytIQWoN3V/w==
@@ -1622,11 +1629,12 @@
   resolved "https://registry.npmjs.org/@egjs/flicking-plugins/-/flicking-plugins-4.7.1.tgz"
   integrity sha512-J0k499sCs5IAMXAJuBcrY1OoiHRi4BPbS1/RCCkIzsYgdoHzcAUjKyhSsms3gLz4O/K5eTbBmWBUtFO86fETHg==
 
-"@egjs/flicking@*", "@egjs/flicking@^4.1.0":
-  version "4.13.1"
-  resolved "https://registry.npmjs.org/@egjs/flicking/-/flicking-4.13.1.tgz"
-  integrity sha512-SDBGFdAIpyUJ3j6MtA86zeCMu9V5aOMfJfrWamZiafQ9P/pBGGL8r8dG4BDdrWXVPFcf4Sl9H50OlUSYFMjfag==
+"@egjs/flicking@*", "@egjs/flicking@^4.1.0", "@egjs/flicking@~4.14.0":
+  version "4.14.0"
+  resolved "https://registry.npmjs.org/@egjs/flicking/-/flicking-4.14.0.tgz"
+  integrity sha512-0FWs/3r1QFrDTv8iouN7Ml9O2IKZZkQhJzMw8BGVVnMkISg/YeQlRYHFFt4mpup/wNmvtY73HwbnLpjemsCptQ==
   dependencies:
+    "@cfcs/core" "^0.1.0"
     "@egjs/axes" "^3.9.1"
     "@egjs/component" "^3.0.1"
     "@egjs/imready" "^1.3.1"
@@ -1654,14 +1662,15 @@
   resolved "https://registry.npmjs.org/@egjs/list-differ/-/list-differ-1.0.1.tgz"
   integrity sha512-OTFTDQcWS+1ZREOdCWuk5hCBgYO4OsD30lXcOCyVOAjXMhgL5rBRDnt/otb6Nz8CzU0L/igdcaQBDLWc4t9gvg==
 
-"@egjs/react-flicking@file:../packages/react-flicking":
-  version "4.13.0"
-  resolved "file:../packages/react-flicking"
+"@egjs/react-flicking@^4.14.0":
+  version "4.14.0"
+  resolved "https://registry.npmjs.org/@egjs/react-flicking/-/react-flicking-4.14.0.tgz"
+  integrity sha512-LhreAViO8Ky6RT/FX/pPIklQj48CTU9T5XLOC2zLE4KAe/9xzMcehISdi0cabDvcyOVr3xjUGnrEAbTFZrF3tg==
   dependencies:
     "@cfcs/core" "^0.1.0"
     "@cfcs/react" "^0.1.0"
     "@egjs/component" "^3.0.2"
-    "@egjs/flicking" "~4.13.1"
+    "@egjs/flicking" "~4.14.0"
     "@egjs/list-differ" "^1.0.1"
 
 "@egjs/react-grid@^1.1.2":

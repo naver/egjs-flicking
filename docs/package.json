@@ -16,14 +16,13 @@
     "link:flicking": "cd ../ && npm link",
     "link:react-flicking": "cd ../packages/react-flicking && npm link @egjs/flicking && npm link",
     "link:docs": "npm link @egjs/react-flicking"
-
   },
   "dependencies": {
     "@docusaurus/core": "2.4.3",
     "@docusaurus/preset-classic": "2.4.3",
-    "@egjs/flicking-plugins": "^4.6.0",
     "@egjs/flicking": "*",
-    "@egjs/react-flicking": "*",
+    "@egjs/flicking-plugins": "^4.6.0",
+    "@egjs/react-flicking": "^4.14.0",
     "@egjs/react-grid": "^1.1.2",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",

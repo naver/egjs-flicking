@@ -1,0 +1,25 @@
+---
+custom_edit_url: null
+---
+
+<div>
+
+</div>
+
+Options for Flicking reactive API that help optimize initial rendering in SSR scenarios<br />These options allow you to set initial state values before the Flicking instance is fully initialized,<br />preventing unnecessary re-renders when the actual Flicking state is applied.
+
+**Type**: TSInterface
+
+|PROPERTY|TYPE|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|
+|defaultIndex|number|0|Initial panel index to start with. This sets the currentPanelIndex and indexProgress initial values.<br />Also affects isReachStart and isReachEnd initial value setting.<br />|
+|totalPanelCount|number|0|Total number of panels in the Flicking instance. This sets the totalPanelCount initial value<br />and helps prevent layout shifts during SSR hydration.<br />|
+
+```js
+const options = {
+  defaultIndex: 2,
+  totalPanelCount: 5
+};
+const reactiveObj = connectFlickingReactiveAPI(flicking, options);
+```
+

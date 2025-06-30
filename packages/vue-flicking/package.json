@@ -1,6 +1,6 @@
 {
   "name": "@egjs/vue-flicking",
-  "version": "4.13.0",
+  "version": "4.14.0",
   "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
   "main": "dist/flicking.cjs.js",
   "module": "dist/flicking.esm.js",
@@ -37,7 +37,7 @@
   ],
   "dependencies": {
     "@cfcs/vue2": "^0.1.0",
-    "@egjs/flicking": "~4.13.1",
+    "@egjs/flicking": "~4.14.0",
     "@egjs/list-differ": "^1.0.1",
     "@vue/composition-api": "^1.7.2"
   },
