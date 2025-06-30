@@ -5,7 +5,7 @@ import {
   ReactiveSetupAdapter
 } from "@cfcs/core";
 
-import Flicking, { FlickingOptions } from "../Flicking";
+import Flicking from "../Flicking";
 
 // Check if Flicking has reached the first panel
 const getIsReachStart = (flicking: Flicking) => !flicking.circular && flicking.index === 0;
@@ -145,11 +145,11 @@ export interface FlickingReactiveData {
   /**
    * Flicking instance to connect<ko>연결할 Flicking 인스턴스</ko>
    */
-  flicking: Flicking | undefined;
+  flicking?: Flicking;
   /**
    * Flicking options used for initialization<ko>초기화에 사용되는 Flicking 옵션</ko>
    */
-  options: FlickingReactiveAPIOptions | undefined;
+  options?: FlickingReactiveAPIOptions;
 }
 
 /**
@@ -177,7 +177,7 @@ export interface FlickingReactiveAPIOptions {
    * 또한 isReachStart 계산에도 영향을 줍니다 (defaultIndex가 0일 때 true).
    * @default 0
    */
-  defaultIndex: number;
+  defaultIndex?: number;
   /**
    * Total number of panels in the Flicking instance. This sets the totalPanelCount initial value
    * and helps prevent layout shifts during SSR hydration.
@@ -185,7 +185,7 @@ export interface FlickingReactiveAPIOptions {
    * SSR 하이드레이션 과정에서 레이아웃 시프트를 방지하는 데 도움이 됩니다.
    * @default 0
    */
-  totalPanelCount: number;
+  totalPanelCount?: number;
 }
 
 
@@ -226,8 +226,8 @@ FlickingReactiveData
   // options를 고려하지 않고 초기값을 설정해도 동작에는 아무런 문제가 없으나, 이 시점의 초기값과 컴포넌트 init 단계에서의 초기값이 다르면 화면 리렌더링이 발생할 수 있으므로
   // 이렇게 미리 옵션을 통해서 예측할 수 있는 부분들은 맞춰둔다.
   const reactiveObj: FlickingReactiveObject = reactive({
-    isReachStart: options?.defaultIndex === 0,
-    isReachEnd: false,
+    isReachStart: options?.defaultIndex ? options?.defaultIndex === 0 : true,
+    isReachEnd: (options?.totalPanelCount && options?.defaultIndex) ? (options.defaultIndex === options.totalPanelCount - 1) : false,
     totalPanelCount: options?.totalPanelCount ?? 0,
     currentPanelIndex: options?.defaultIndex ?? 0,
     progress: 0,
