@@ -172,9 +172,9 @@ export interface FlickingReactiveData {
 export interface FlickingReactiveAPIOptions {
   /**
    * Initial panel index to start with. This sets the currentPanelIndex and indexProgress initial values.
-   * Also affects isReachStart calculation (true when defaultIndex is 0).
+   * Also affects isReachStart and isReachEnd initial value setting.
    * @ko 시작할 초기 패널 인덱스. currentPanelIndex와 indexProgress의 초기값을 설정합니다.
-   * 또한 isReachStart 계산에도 영향을 줍니다 (defaultIndex가 0일 때 true).
+   * 또한 isReachStart, isReachEnd 초기값 계산에도 영향을 줍니다.
    * @default 0
    */
   defaultIndex?: number;
