@@ -1,12 +1,13 @@
-import { flickingReactiveAPIAdapter } from "@egjs/flicking";
+import { FlickingOptions, flickingReactiveAPIAdapter } from "@egjs/flicking";
 import { Ref } from "@vue/composition-api";
 import { useReactive } from "@cfcs/vue2";
 
 import Flicking from "./Flicking";
 
 
-export const useFlickingReactiveAPI = (flickingRef: Ref<Flicking>) => {
+export const useFlickingReactiveAPI = (flickingRef: Ref<Flicking>, options?: FlickingOptions) => {
   return useReactive(flickingReactiveAPIAdapter, () => ({
-    flicking: flickingRef.value
+    flicking: flickingRef.value ?? undefined,
+    options
   }));
 };
