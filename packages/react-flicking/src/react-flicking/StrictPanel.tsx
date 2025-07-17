@@ -11,6 +11,7 @@ class StrictPanel extends React.Component<{ children?: React.ReactElement }> {
 
   public get nativeElement() { return this._elRef.current!; }
   public get rendered() { return !this._hide; }
+  public get elRef() { return this._elRef; }
 
   public render() {
     return this._hide
