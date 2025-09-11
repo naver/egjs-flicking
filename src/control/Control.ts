@@ -389,7 +389,9 @@ abstract class Control {
       return animate();
     } else {
       return animate().then(async () => {
-        await flicking.renderer.render();
+        if (flicking.initialized) {
+          await flicking.renderer.render();
+        }
       }).catch(err => {
         if (axesEvent && err instanceof FlickingError && err.code === ERROR.CODE.ANIMATION_INTERRUPTED) return;
         throw err;

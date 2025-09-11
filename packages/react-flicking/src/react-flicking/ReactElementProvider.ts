@@ -7,21 +7,25 @@ import StrictPanel from "./StrictPanel";
 import NonStrictPanel from "./NonStrictPanel";
 
 class ReactElementProvider implements ElementProvider {
-  private _el: StrictPanel | NonStrictPanel;
+  private _elRef: React.RefObject<HTMLElement>;
 
-  public get element() { return this._el.nativeElement; }
-  public get rendered() { return this._el.rendered; }
+  public get element() { return this._elRef.current!; }
+  public get rendered() { return this._elRef.current != null; }
 
-  public constructor(el: StrictPanel | NonStrictPanel) {
-    this._el = el;
+  public constructor(el: StrictPanel | NonStrictPanel | HTMLDivElement) {
+    this._elRef = el instanceof Element ? { current: el } : el.elRef;
   }
 
   public show() {
-    this._el.show();
+    if (this._elRef.current) {
+      this._elRef.current.style.display = "";
+    }
   }
 
   public hide() {
-    this._el.hide();
+    if (this._elRef.current) {
+      this._elRef.current.style.display = "none";
+    }
   }
 }
 
