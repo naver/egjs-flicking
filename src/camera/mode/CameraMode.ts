@@ -33,9 +33,8 @@ abstract class CameraMode {
 
   public findAnchorIncludePosition(position: number): AnchorPoint | null {
     const anchors = this._flicking.camera.anchorPoints;
-    const anchorsIncludingPosition = anchors.filter(anchor => anchor.panel.includePosition(position, true));
 
-    return anchorsIncludingPosition.reduce((nearest: AnchorPoint | null, anchor) => {
+    return anchors.reduce((nearest: AnchorPoint | null, anchor) => {
       if (!nearest) return anchor;
 
       return Math.abs(nearest.position - position) < Math.abs(anchor.position - position)
