@@ -28,10 +28,16 @@ class ReactRenderer extends ExternalRenderer {
     const reactFlicking = this._reactFlicking;
     const strategy = this._strategy;
 
-    // applyTransform does not work when renderer.rendering is true. #916
-    // updateRenderingPanels should be called before rendering becomes true, or transform will be applied later.
-    strategy.updateRenderingPanels(flicking);
-    this._rendering = true;
+    if (flicking.virtualEnabled) {
+      // virtual 값은 VirtualManager Object 이므로 virtualEnabled 로 검사하는 것이 맞습니다.
+      // applyTransform does not work when renderer.rendering is true. #916
+      // updateRenderingPanels should be called before rendering becomes true, or transform will be applied later.
+      strategy.updateRenderingPanels(flicking);
+      this._rendering = true;
+    } else {
+      this._rendering = true;
+      strategy.updateRenderingPanels(flicking);
+    }
 
     strategy.renderPanels(flicking);
 
