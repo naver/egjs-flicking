@@ -87,6 +87,16 @@ export default (flicking: Flicking, diffResult: DiffResult<any>, rendered: any[]
 
   if (diffResult.added.length > 0 || diffResult.removed.length > 0) {
     renderer.updateAfterPanelChange(added, removed);
+  } else if (diffResult.ordered.length > 0) {
+    const camera = flicking.camera;
+    // 순서 변경으로 인한 index 변경 및 range 값 변경
+    camera.updateRange();
+    // index 변경으로 인한 카메라 위치 즉시 변경
+    camera.updateOffset();
+    // 순서 변경으로 인한 anchors 전부 업데이트
+    camera.updateAnchors();
+    // need panel 여부 재확인 필요
+    camera.resetNeedPanelHistory();
   }
 };
 
