@@ -312,12 +312,12 @@ class Flicking extends React.Component<Partial<FlickingProps & FlickingOptions>>
       : {};
 
     return renderingIndexes.map(idx => {
-      return <div
-        key={idx}
-        data-element-index={idx}
-        ref={this._panels[idx] as React.RefObject<HTMLDivElement>}
-        className={panelClass}
-        style={size} />
+      return <StrictPanel key={idx} ref={this._panels[idx] as any}>
+          <div
+          data-element-index={idx}
+          className={panelClass}
+          style={size} />
+        </StrictPanel>;
     });
   }
 

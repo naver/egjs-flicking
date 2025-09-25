@@ -5,27 +5,24 @@
 import { ElementProvider } from "@egjs/flicking";
 import StrictPanel from "./StrictPanel";
 import NonStrictPanel from "./NonStrictPanel";
+import React from "react";
 
 class ReactElementProvider implements ElementProvider {
-  private _elRef: React.RefObject<HTMLElement>;
+  private _el: StrictPanel;
 
-  public get element() { return this._elRef.current!; }
-  public get rendered() { return this._elRef.current != null; }
+  public get element() { return this._el?.nativeElement }
+  public get rendered() { return this._el?.rendered; }
 
-  public constructor(el: StrictPanel | NonStrictPanel | HTMLDivElement) {
-    this._elRef = el instanceof Element ? { current: el } : el.elRef;
+  public constructor(el: StrictPanel) {
+    this._el = el;
   }
 
   public show() {
-    if (this._elRef.current) {
-      this._elRef.current.style.display = "";
-    }
+    this._el?.show();
   }
 
   public hide() {
-    if (this._elRef.current) {
-      this._elRef.current.style.display = "none";
-    }
+    this._el?.hide();
   }
 }
 
