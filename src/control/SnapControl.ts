@@ -85,6 +85,8 @@ class SnapControl extends Control {
    * @return {Promise<void>} A Promise which will be resolved after reaching the target position<ko>해당 좌표 도달시에 resolve되는 Promise</ko>
    */
   public moveToPosition(position: number, duration: number, axesEvent?: OnRelease) {
+    // moveToPosition은 관련 메서드가 호출되었을 때 혹은 사용자가 드래그를 중단했을 때 발생합니다.
+    // 각각의 경우에 맞게 도착해야 할 패널을 계산합니다.
     const flicking = getFlickingAttached(this._flicking);
     const camera = flicking.camera;
     const activeAnchor = camera.findActiveAnchor();
@@ -107,13 +109,18 @@ class SnapControl extends Control {
     let targetAnchor: AnchorPoint;
 
     if (snapDelta >= snapThreshold && snapDelta > 0) {
-      // Move to anchor at position
+      // 사용자가 드래그를 마치며 호출되었다면 snapDelta 값이 존재합니다.
+      // position 값에는 사용자의 드래그가 종료된 시점에서 가속도 등을 고려하여 계산된 도착 지점입니다.
+      // findSnappedAnchor는 position에서 가장 가까운 Anchor를 가진 패널을 찾습니다.
       targetAnchor = this._findSnappedAnchor(position, anchorAtCamera);
-    } else if (absPosDelta >= flicking.threshold && absPosDelta > 0) {
-      // Move to the adjacent panel
+    } else if (absPosDelta >= flicking.threshold && absPosDelta > 0 && anchorAtCamera === activeAnchor) {
+      // threshold 옵션 값보다 큰 거리를 움직인 채로 드래그가 현재 패널에서 멈추면 이전/다음 패널로 움직입니다.
+      // anchorAtCamera === activeAnchor 는 드래그가 현재 패널 위치에서 멈춘 경우를 의미합니다.
+      // findAdjacentAnchor는 현재 패널의 이전/다음 패널을 찾습니다.
       targetAnchor = this._findAdjacentAnchor(position, posDelta, anchorAtCamera);
     } else {
-      // Fallback to nearest panel from current camera
+      // 사용자 입력이 아닌 메서드를 통한 호출 등 위 경우들에 해당되지 않는 fallback입니다.
+      // 사용자 입력의 가속도를 고려할 필요 없이 현재 카메라 위치에서 가장 가까운 Anchor를 찾습니다.
       return this.moveToPanel(anchorAtCamera.panel, {
         duration,
         axesEvent
