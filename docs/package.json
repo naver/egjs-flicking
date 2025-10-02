@@ -22,7 +22,7 @@
     "@docusaurus/preset-classic": "2.4.3",
     "@egjs/flicking": "*",
     "@egjs/flicking-plugins": "^4.6.0",
-    "@egjs/react-flicking": "^4.14.0",
+    "@egjs/react-flicking": "^4.14.1",
     "@egjs/react-grid": "^1.1.2",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",

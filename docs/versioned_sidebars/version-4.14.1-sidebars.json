@@ -26,13 +26,15 @@
         "api/IdleState",
         "api/State",
         "api/AnchorPoint",
+        "api/AutoResizer",
         "api/FlickingError",
         "api/Viewport",
         "api/Panel",
         "api/VirtualPanel",
         "api/ExternalRenderer",
         "api/Renderer",
-        "api/VanillaRenderer"
+        "api/VanillaRenderer",
+        "api/Component"
       ]
     },
     {
