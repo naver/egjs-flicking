@@ -1159,6 +1159,40 @@ describe("Flicking", () => {
         expect(willChangeSpy.callCount).to.equal(0);
       });
     });
+     describe(`animationThreshold"`, () => {
+      it(`should trigger animation works unconditionally with no animationThreshold`, async () => {
+        // Given
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          animationThreshold: 0,
+        });
+
+        const moveEndSpy = sinon.spy();
+        flicking.on("moveEnd", moveEndSpy);
+
+        // When
+        simulate(flicking.element, { deltaX: 1, duration: 1000 }, 1000);
+        await waitTime(10);
+
+        // Then
+        expect(moveEndSpy.callCount).to.equal(0);
+      });
+      it(`should trigger no animation with animationThreshold > delta`, async () => {
+        // Given
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          animationThreshold: 2,
+        });
+
+        const moveEndSpy = sinon.spy();
+        flicking.on("moveEnd", moveEndSpy);
+
+        // When
+        simulate(flicking.element, { deltaX: 1, duration: 1000 }, 1000);
+        await waitTime(10);
+
+        // Then
+        expect(moveEndSpy.callCount).to.equal(1);
+      });
+    });
     describe("changeOnHold", () => {
       it("should be false by default", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
