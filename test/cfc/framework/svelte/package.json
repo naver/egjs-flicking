@@ -5,6 +5,7 @@
     "test": "jest --config=\"./jest.config.js\""
   },
   "devDependencies": {
+    "@cfcs/svelte": "^0.1.0",
     "@testing-library/svelte": "^3.2.2",
     "jest-environment-jsdom": "^29.5.0",
     "svelte": "^3.44.1",

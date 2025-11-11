@@ -5,6 +5,7 @@
     "test": "jest --config=\"./jest.config.js\""
   },
   "devDependencies": {
+    "@cfcs/react": "^0.1.0",
     "@testing-library/react": "^12.1.2"
   }
 }
