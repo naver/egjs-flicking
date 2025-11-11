@@ -345,7 +345,7 @@ class AxesController {
       return Promise.reject(new FlickingError(ERROR.MESSAGE.NOT_ATTACHED_TO_FLICKING, ERROR.CODE.NOT_ATTACHED_TO_FLICKING));
     }
 
-    const startPos = axes.get([AXES.POSITION_KEY])[AXES.POSITION_KEY];
+    const startPos = this.getCurrentPosition();
 
     if (startPos === position) {
       const flicking = getFlickingAttached(this._flicking);
@@ -394,6 +394,14 @@ class AxesController {
 
       animate();
     });
+  }
+
+  /**
+   * Returns the current axes position
+   * @ko 현재 axes의 position을 반환합니다.
+   */
+  public getCurrentPosition() {
+    return this._axes?.get([AXES.POSITION_KEY])[AXES.POSITION_KEY] ?? 0;
   }
 
   public updateDirection() {
