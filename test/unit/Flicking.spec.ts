@@ -1140,6 +1140,25 @@ describe("Flicking", () => {
       });
     });
 
+    describe(`moveType: "strict"`, () => {
+      it(`should trigger no bounce with bounce: 0 and moveType: "strict"`, async () => {
+        // Given
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: "strict",
+          changeOnHold: true,
+          bounce: 0,
+        });
+        const willChangeSpy = sinon.spy();
+
+        flicking.on("willChange", willChangeSpy);
+
+        // When
+        await simulate(flicking.element, { deltaX: 100 });
+
+        // Then
+        expect(willChangeSpy.callCount).to.equal(0);
+      });
+    });
     describe("changeOnHold", () => {
       it("should be false by default", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
