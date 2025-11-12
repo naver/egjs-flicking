@@ -153,6 +153,17 @@ abstract class Renderer {
   }
 
   /**
+   * Return Rendered Panels
+   * @ko 렌더링이 된 패널을 반환합니다.
+   * @return {Panel[]}
+   */
+  public getRenderedPanels() {
+    const flicking = getFlickingAttached(this._flicking);
+
+    return flicking.renderer.panels.filter(panel => panel.rendered);
+  }
+
+  /**
    * Update all panel sizes
    * @ko 모든 패널의 크기를 업데이트합니다
    * @chainable
@@ -554,6 +565,15 @@ abstract class Renderer {
     const flicking = getFlickingAttached(this._flicking);
 
     flicking.camera.applyTransform();
+
+    if (flicking.useCSSOrder) {
+      // useCSSOrder를 사용하는 경우 DOM은 변화가 없지만 대신 CSS Order가 추가 된다.
+      const panels = flicking.panels;
+
+      this._strategy.getRenderingIndexesByOrder(flicking).forEach((domIndex, index) => {
+        panels[domIndex].element.style.order = `${index}`;
+      });
+    }
   }
 }
 

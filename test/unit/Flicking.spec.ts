@@ -1401,6 +1401,44 @@ describe("Flicking", () => {
         expect(event.height).to.equal(300);
       });
 
+      it("should have previous size in it", async () => {
+        const viewportEl = El.viewport().setWidth(300).setHeight(300).add(El.camera());
+        const flicking = await createFlicking(viewportEl);
+        const resizeSpy = sinon.spy();
+
+        flicking.on(EVENTS.BEFORE_RESIZE, resizeSpy);
+
+        viewportEl.setWidth(500).setHeight(500);
+        await flicking.resize();
+
+        const event = resizeSpy.firstCall.args[0] as BeforeResizeEvent;
+        expect(resizeSpy.calledOnce).to.be.true;
+        expect(event.width).to.exist;
+        expect(event.height).to.exist;
+        expect(event.width).to.equal(300);
+        expect(event.height).to.equal(300);
+      });
+      it("should be resize calculation must be done, even if resize is executed twice (consecutive)", async () => {
+        const viewportEl = El.viewport().setWidth(300).setHeight(300).add(El.camera());
+        const flicking = await createFlicking(viewportEl);
+        const resizeSpy = sinon.spy();
+
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
+        viewportEl.setWidth(500).setHeight(500);
+        flicking.resize();
+        viewportEl.setWidth(400).setHeight(400);
+        flicking.resize();
+        await waitTime(1000);
+
+
+        const firstEvent = resizeSpy.firstCall.args[0] as AfterResizeEvent;
+        const lastEvent = resizeSpy.lastCall.args[0] as AfterResizeEvent;
+        expect(resizeSpy.calledTwice).to.be.true;
+        expect(firstEvent.width).to.equal(500);
+        expect(firstEvent.height).to.equal(500);
+        expect(lastEvent.width).to.equal(400);
+        expect(lastEvent.height).to.equal(400);
+      });
       it(`should be triggered before ${EVENTS.AFTER_RESIZE}`, async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
         const beforeResizeSpy = sinon.spy();
