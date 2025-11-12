@@ -1870,6 +1870,7 @@ class Flicking extends Component<FlickingEvents> {
       return;
     }
     if (this._isResizing) {
+      // resize를 연속으로 발생하면 스케줄링 등록
       this._scheduleResize = true;
       return;
     }
@@ -1952,6 +1953,7 @@ class Flicking extends Component<FlickingEvents> {
 
     this._isResizing = false;
 
+    // 연속으로 resize를 호출하는 경우를 대비하기 위해서 스케줄링 반영
     if (this._scheduleResize) {
       this.resize();
     }

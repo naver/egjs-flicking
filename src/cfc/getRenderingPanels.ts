@@ -13,7 +13,7 @@ export default <T>(flicking: Flicking, diffResult: DiffResult<T>) => {
     return map;
   }, {});
   const renderingPanels = flicking.panels
-      .filter(panel => !removedPanels[panel.index]);
+    .filter(panel => !removedPanels[panel.index]);
 
 
   if (!flicking.useCSSOrder) {
@@ -26,4 +26,3 @@ export default <T>(flicking: Flicking, diffResult: DiffResult<T>) => {
     ...diffResult.added.map(idx => diffResult.list[idx])
   ];
 };
-
