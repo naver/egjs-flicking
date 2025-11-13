@@ -1870,7 +1870,8 @@ class Flicking extends Component<FlickingEvents> {
       return;
     }
     if (this._isResizing) {
-      // resize를 연속으로 발생하면 스케줄링 등록
+      // resize를 연속으로 발생하면 무시하기에 마지막 viewport를 사이즈를 알 수 없음.
+      // resize를 1번 더 실행할 수 잇는 스케줄링 등록
       this._scheduleResize = true;
       return;
     }
