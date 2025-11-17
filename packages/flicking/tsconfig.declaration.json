@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig",
+  "compilerOptions": {
+    "removeComments": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "declaration",
+    "skipLibCheck": true,
+    "strictNullChecks": false
+  },
+  "include": [
+    "./src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
+
+

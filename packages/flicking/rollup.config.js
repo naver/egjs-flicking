@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-const buildHelper = require("./config/build-helper");
+const buildHelper = require("../../config/build-helper");
 
 const external = {
   "@egjs/axes": "eg.Axes",

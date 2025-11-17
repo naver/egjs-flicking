@@ -1,4 +1,4 @@
-const buildHelper = require("./config/build-helper");
+const buildHelper = require("../../config/build-helper");
 
 export default buildHelper([
   {

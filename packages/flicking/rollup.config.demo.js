@@ -3,7 +3,7 @@
 import serve from "rollup-plugin-serve";
 import livereload from "rollup-plugin-livereload";
 
-const buildHelper = require("./config/build-helper");
+const buildHelper = require("../../config/build-helper");
 
 export default buildHelper([
   {
