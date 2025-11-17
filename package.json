@@ -136,7 +136,7 @@
 	"husky": {
 		"hooks": {
 			"commit-msg": "node config/validate-commit-msg.js",
-			"pre-push": "npm run lint"
+			"pre-push": "pnpm --filter @egjs/flicking run lint"
 		}
 	},
 	"watch": {
