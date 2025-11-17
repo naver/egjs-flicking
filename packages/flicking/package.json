@@ -6,6 +6,20 @@
 	"module": "dist/flicking.esm.js",
 	"es2015": "dist/flicking.esm.js",
 	"types": "declaration/index.d.ts",
+	"scripts": {
+		"start": "concurrently \"rollup -w --config ./rollup.config.dev.js\" \"http-serve\"",
+		"build": "run-s build:bundle build:declaration build:css printsizes",
+		"build:bundle": "rm -rf ./dist && rollup -c",
+		"build:declaration": "rm -rf ./declaration && tsc -p tsconfig.declaration.json",
+		"build:css": "run-s build:css-clear build:sass build:css-prefix build:css-min",
+		"build:css-clear": "rm -rf ./dist/*.css",
+		"build:sass": "sass sass/:dist/ --style=expanded --no-source-map && sass sass/flicking.sass dist/flicking.min.css --style=compressed --no-source-map && sass sass/flicking-inline.sass dist/flicking-inline.min.css --style=compressed --no-source-map",
+		"build:css-prefix": "postcss dist/*.css --replace --use autoprefixer --no-map",
+		"build:css-min": "postcss dist/*.css --ext .min.css --use postcss-clean -d dist/ --no-map",
+		"declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
+		"css": "postcss css/*.css --use autoprefixer postcss-clean -d dist/ -m",
+		"printsizes": "print-sizes ./dist --exclude=\\.map"
+	},
 	"sideEffects": [
 		"**/*.css",
 		"**/*.sass"
