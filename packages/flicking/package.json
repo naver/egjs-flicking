@@ -18,8 +18,7 @@
 		"build:css-min": "postcss dist/*.css --ext .min.css --use postcss-clean -d dist/ --no-map",
 		"declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
 		"css": "postcss css/*.css --use autoprefixer postcss-clean -d dist/ -m",
-		"printsizes": "print-sizes ./dist --exclude=\\.map",
-		"lint": "eslint src/**/*.ts"
+		"printsizes": "print-sizes ./dist --exclude=\\.map"
 	},
 	"sideEffects": [
 		"**/*.css",

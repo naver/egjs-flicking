@@ -1238,9 +1238,9 @@
   resolved "https://registry.npmjs.org/@egjs/flicking-plugins/-/flicking-plugins-4.7.0.tgz"
   integrity sha512-BbFDKanOPVLG042fRNC0BSNa/28mohscT0hQOruorfplv/4Qm3jQ+Ldk2iytsdN631tF199NW6nkkizEmRMRRA==
 
-"@egjs/flicking@^4.1.0", "@egjs/flicking@file:../../../../../../../usr/local/lib/node_modules/@egjs/flicking":
+"@egjs/flicking@^4.1.0", "@egjs/flicking@file:../../../.nvm/versions/node/v18.20.8/lib/node_modules/@egjs/flicking":
   version "4.14.1"
-  resolved "file:../../../../../../../usr/local/lib/node_modules/@egjs/flicking"
+  resolved "file:../../../.nvm/versions/node/v18.20.8/lib/node_modules/@egjs/flicking"
   dependencies:
     "@cfcs/core" "^0.1.0"
     "@egjs/axes" "^3.9.1"

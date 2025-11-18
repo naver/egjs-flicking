@@ -806,20 +806,6 @@
     "@babel/helper-string-parser" "^7.27.1"
     "@babel/helper-validator-identifier" "^7.27.1"
 
-"@cfcs/core@^0.0.24":
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/@cfcs/core/-/core-0.0.24.tgz#2ab40d1fe5cf64f50acc31983a5b589521268dde"
-  integrity sha512-feB38qu+eDk0Pggh/yR7gjaNmvUYA2uCxHP3Pz2MLE4LZ/9jPdtu8bzCSI47yTEhWyZCF5Pk698hdz8IN2mTjA==
-  dependencies:
-    "@egjs/component" "^3.0.4"
-
-"@cfcs/core@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@cfcs/core/-/core-0.1.0.tgz#64346f7634b46de6e9b1d4c195743b9b8e603162"
-  integrity sha512-kvYX0RpL45XTHJ5sW7teNbKeAa7pK3nNqaJPoFfZDPTIBJOkTtRD3QhkBG+O3Hu69a8xeMoPvF6y/RtJ6JUOdA==
-  dependencies:
-    "@egjs/component" "^3.0.4"
-
 "@daybrush/jsdoc@^0.3.10":
   version "0.3.12"
   resolved "https://registry.yarnpkg.com/@daybrush/jsdoc/-/jsdoc-0.3.12.tgz#22fc3a008eb52a01eae728d8b75fe7661cc71d48"
@@ -881,42 +867,10 @@
   resolved "https://registry.yarnpkg.com/@daybrush/utils/-/utils-1.13.0.tgz#ea70a60864130da476406fdd1d465e3068aea0ff"
   integrity sha512-ALK12C6SQNNHw1enXK+UO8bdyQ+jaWNQ1Af7Z3FNxeAwjYhQT7do+TRE4RASAJ3ObaS2+TJ7TXR3oz2Gzbw0PQ==
 
-"@egjs/agent@^2.2.1":
-  version "2.4.4"
-  resolved "https://registry.yarnpkg.com/@egjs/agent/-/agent-2.4.4.tgz#bd2ef4a17427d425332b01f3e79953cd413b532d"
-  integrity sha512-cvAPSlUILhBBOakn2krdPnOGv5hAZq92f1YHxYcfu0p7uarix2C6Ia3AVizpS1SGRZGiEkIS5E+IVTLg1I2Iog==
-
-"@egjs/axes@^3.9.1":
-  version "3.9.2"
-  resolved "https://registry.yarnpkg.com/@egjs/axes/-/axes-3.9.2.tgz#37347442816d706e51b38dd5f6ac8b2d6bb41e0a"
-  integrity sha512-LEyJfhAdOrg672twCtH9KUloMTGCERm2tqxNLaXFjm/2rOcd4n5yrUofIjY0m/oG146XmSLeCR9+ri2kOA4BHg==
-  dependencies:
-    "@cfcs/core" "^0.1.0"
-    "@egjs/agent" "^2.2.1"
-    "@egjs/component" "^3.0.1"
-
-"@egjs/component@^3.0.1", "@egjs/component@^3.0.4":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@egjs/component/-/component-3.0.5.tgz#2dc86e835d5dc5055cdf46c7cd794eb45330e1b6"
-  integrity sha512-cLcGizTrrUNA2EYE3MBmEDt2tQv1joVP1Q3oDisZ5nw0MZDx2kcgEXM+/kZpfa/PAkFvYVhRUZwytIQWoN3V/w==
-
 "@egjs/flicking-plugins@^4.2.2":
   version "4.7.1"
   resolved "https://registry.yarnpkg.com/@egjs/flicking-plugins/-/flicking-plugins-4.7.1.tgz#178d8e38e1fc681af5a4c3fd6d0e2e1b160ee1dd"
   integrity sha512-J0k499sCs5IAMXAJuBcrY1OoiHRi4BPbS1/RCCkIzsYgdoHzcAUjKyhSsms3gLz4O/K5eTbBmWBUtFO86fETHg==
-
-"@egjs/imready@^1.3.1":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@egjs/imready/-/imready-1.4.2.tgz#5e0f3fe54536d5bd258babc57fa0adb462fbdded"
-  integrity sha512-ckV7KlBa23Bw6iZP59W2cMZfAmV5q0BtMoOz7ZkzIvjoOtkxfLZkqVJROSgDP5Ha0hsnskyL4vtom9Bt7FZSRQ==
-  dependencies:
-    "@cfcs/core" "^0.0.24"
-    "@egjs/component" "^3.0.1"
-
-"@egjs/list-differ@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@egjs/list-differ/-/list-differ-1.0.1.tgz#5772b0f8b87973bb67827f6c7d7df8d7f64a22eb"
-  integrity sha512-OTFTDQcWS+1ZREOdCWuk5hCBgYO4OsD30lXcOCyVOAjXMhgL5rBRDnt/otb6Nz8CzU0L/igdcaQBDLWc4t9gvg==
 
 "@egjs/release-helper@0.0.3":
   version "0.0.3"
