@@ -45,6 +45,7 @@
     "@egjs/build-helper": "^0.1.2",
     "@egjs/flicking-plugins": "^4.2.2",
     "@rollup/plugin-commonjs": "^19.0.2",
+    "@types/webpack-env": "^1.18.0",
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.2.6",
