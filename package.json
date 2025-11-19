@@ -126,12 +126,6 @@
 		"typescript": "^3.9.10",
 		"typescript-transform-paths": "^2.2.3"
 	},
-	"husky": {
-		"hooks": {
-			"commit-msg": "node config/validate-commit-msg.js",
-			"pre-push": "pnpm lint"
-		}
-	},
 	"watch": {
 		"jsdoc": {
 			"patterns": [
