@@ -8,24 +8,24 @@
 		"**/*.sass"
 	],
 	"scripts": {
-		"test": "npm run test --prefix test/unit",
-		"test:chrome": "npm run test:chrome --prefix test/unit",
-		"test:cfc": "npm run test --prefix test/cfc",
+		"test": "pnpm test --prefix test/unit",
+		"test:chrome": "pnpm test:chrome --prefix test/unit",
+		"test:cfc": "pnpm test --prefix test/cfc",
 		"lint": "eslint 'packages/flicking/src/**/*.ts'",
 		"lint:test": "eslint 'test/unit/**/*.ts'",
 		"jsdoc": "jsdoc -c jsdoc.json",
 		"jsdoc:watch": "npm-watch jsdoc",
 		"docs:build": "jsdoc-to-mdx -c ./jsdoc-to-mdx.json",
 		"docs:version": "node ./config/docs-version-up",
-		"docs:release": "npm run docs:build && npm run docs:version && npm run build --prefix docs",
+		"docs:release": "pnpm docs:build && pnpm docs:version && pnpm build --prefix docs",
 		"demo:prebuild-version": "cpx 'packages/flicking/dist/**/*' docs/build/release/$npm_package_version/dist --clean",
 		"demo:prebuild-latest": "cpx 'packages/flicking/dist/**/*' docs/build/release/latest/dist --clean",
-		"demo:deploy": "npm run docs:release && pnpm --filter @egjs/flicking run build && npm run demo:prebuild-version && npm run demo:prebuild-latest && gh-pages -d docs/build/ --add --remote upstream",
-		"demo:deploy-origin": "npm run docs:release && pnpm --filter @egjs/flicking run build && npm run demo:prebuild-version && npm run demo:prebuild-latest && gh-pages -d docs/build/ --add --remote origin",
+		"demo:deploy": "pnpm docs:release && pnpm --filter @egjs/flicking run build && pnpm demo:prebuild-version &&  pnpm demo:prebuild-latest && gh-pages -d docs/build/ --add --remote upstream",
+		"demo:deploy-origin": "pnpm docs:release && pnpm --filter @egjs/flicking run build && pnpm demo:prebuild-version && pnpm demo:prebuild-latest && gh-pages -d docs/build/ --add --remote origin",
 		"release": "release-helper upstream",
 		"changelog": "node ./config/changelog.js",
 		"coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-		"packages": "npm run packages:update && npm run packages:build && npm run packages:publish",
+		"packages": "pnpm packages:update && pnpm packages:build && pnpm packages:publish",
 		"packages:update": "pvu --update=react-flicking,ngx-flicking/projects/ngx-flicking,vue-flicking,vue3-flicking,svelte-flicking",
 		"packages:build": "pvu --build=react-flicking,ngx-flicking,vue-flicking,vue3-flicking,svelte-flicking",
 		"packages:publish": "pvu --publish=react-flicking,ngx-flicking/dist/ngx-flicking,vue-flicking,vue3-flicking,svelte-flicking"
@@ -127,7 +127,7 @@
 	"husky": {
 		"hooks": {
 			"commit-msg": "node config/validate-commit-msg.js",
-			"pre-push": "npm run lint"
+			"pre-push": "pnpm lint"
 		}
 	},
 	"watch": {

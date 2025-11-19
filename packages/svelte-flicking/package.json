@@ -12,7 +12,7 @@
   "types": "declaration/index.d.ts",
   "svelte": "lib/index.js",
   "scripts": {
-    "build": "rm -rf dist && rollup -c ./rollup.config.build.js && npm run build:lib && npm run declaration",
+    "build": "rm -rf dist && rollup -c ./rollup.config.build.js && pnpm build:lib && pnpm declaration",
     "postbuild": "cpx 'node_modules/@egjs/flicking/dist/*.{css,css.map}' dist/",
     "build:lib": "rm -rf lib && node ./build",
     "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",

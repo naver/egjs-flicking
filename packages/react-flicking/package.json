@@ -12,7 +12,7 @@
   "types": "declaration/index.d.ts",
   "scripts": {
     "start": "react-scripts start",
-    "build": "rollup -c && npm run declaration",
+    "build": "rollup -c && pnpm declaration",
     "postbuild": "cpx 'node_modules/@egjs/flicking/dist/*.{css,css.map}' dist/",
     "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
     "test": "react-scripts test",

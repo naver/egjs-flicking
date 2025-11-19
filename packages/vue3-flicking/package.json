@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "start": "vue-cli-service serve ./demo/main.ts",
-    "build": "rm -rf dist && rollup -c && npm run declaration",
+    "build": "rm -rf dist && rollup -c && pnpm declaration",
     "postbuild": "cpx 'node_modules/@egjs/flicking/dist/*.{css,css.map}' dist/",
     "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json"
   },

@@ -12,10 +12,6 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "postinstall": "yarn link:react-flicking && yarn link:flicking && yarn link:docs",
-    "link:flicking": "cd ../ && npm link",
-    "link:react-flicking": "cd ../packages/react-flicking && npm link @egjs/flicking && npm link",
-    "link:docs": "npm link @egjs/react-flicking"
   },
   "dependencies": {
     "@docusaurus/core": "2.4.3",

@@ -7,7 +7,6 @@
     "install:angular": "npm install --prefix framework/angular",
     "install:react": "npm install --prefix framework/react",
     "install:preact": "npm install --prefix framework/preact",
-    "install:vue": "npm install --prefix framework/vue",
     "install:vue3": "npm install --prefix framework/vue3",
     "install:svelte": "npm install --prefix framework/svelte",
     "test": "npm run test:all",
@@ -18,7 +17,6 @@
     "test:angular": "npm test --prefix framework/angular",
     "test:react": "npm test --prefix framework/react",
     "test:preact": "npm test --prefix framework/preact",
-    "test:vue": "npm test --prefix framework/vue",
     "test:vue3": "npm test --prefix framework/vue3",
     "test:svelte": "npm test --prefix framework/svelte"
   },
