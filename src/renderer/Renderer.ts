@@ -567,7 +567,7 @@ abstract class Renderer {
     flicking.camera.applyTransform();
 
     if (flicking.useCSSOrder) {
-      // useCSSOrder를 사용하는 경우 DOM은 변화가 없지만 대신 CSS Order가 추가 된다.
+      // useCSSOrder를 사용하는 경우 DOM은 변화가 없지만 대신 css `order`값을 주입
       const panels = flicking.panels;
 
       this._strategy.getRenderingIndexesByOrder(flicking).forEach((domIndex, index) => {
