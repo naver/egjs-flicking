@@ -376,7 +376,7 @@ importers:
         version: 1.0.4
       rollup-plugin-preact:
         specifier: ^0.5.2
-        version: 0.5.2(preact@10.27.2)(rollup@2.79.2)
+        version: 0.5.2(preact@10.27.2)(rollup@3.29.5)
       typescript:
         specifier: 4.8.4
         version: 4.8.4
@@ -562,7 +562,7 @@ importers:
         version: 4.7.1(@egjs/flicking@4.14.1)
       '@rollup/plugin-commonjs':
         specifier: ^19.0.2
-        version: 19.0.2(rollup@2.79.2)
+        version: 19.0.2(rollup@3.29.5)
       '@types/webpack-env':
         specifier: ^1.18.0
         version: 1.18.8
@@ -9845,6 +9845,9 @@ packages:
     resolution: {integrity: sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA==}
     engines: {node: '>=8'}
 
+  please-upgrade-node@3.2.0:
+    resolution: {integrity: sha512-gQR3WpIgNIKwBMVLkpMUeR3e1/E1y42bqDQZfql+kDeXd8COYfM8PQA4X6y7a8u9Ua9FHmsrrmirW2vHs45hWg==}
+
   pnp-webpack-plugin@1.7.0:
     resolution: {integrity: sha512-2Rb3vm+EXble/sMXNSu6eoBx8e79gKqhNq9F5ZWW6ERNCTE/Q0wQNne5541tE5vKjfM8hpNCYL+LGc1YTfI0dg==}
     engines: {node: '>=6'}
@@ -17411,7 +17414,7 @@ snapshots:
       proc-log: 3.0.0
       promise-inflight: 1.0.1(bluebird@3.7.2)
       promise-retry: 2.0.1
-      semver: 7.5.3
+      semver: 7.7.3
       which: 3.0.1
     transitivePeerDependencies:
       - bluebird
@@ -17563,16 +17566,16 @@ snapshots:
       resolve: 1.22.11
       rollup: 2.79.2
 
-  '@rollup/plugin-commonjs@19.0.2(rollup@2.79.2)':
+  '@rollup/plugin-commonjs@19.0.2(rollup@3.29.5)':
     dependencies:
-      '@rollup/pluginutils': 3.1.0(rollup@2.79.2)
+      '@rollup/pluginutils': 3.1.0(rollup@3.29.5)
       commondir: 1.0.1
       estree-walker: 2.0.2
       glob: 7.2.3
       is-reference: 1.2.1
       magic-string: 0.25.9
       resolve: 1.22.11
-      rollup: 2.79.2
+      rollup: 3.29.5
 
   '@rollup/plugin-json@6.1.0(rollup@3.29.5)':
     dependencies:
@@ -17630,6 +17633,13 @@ snapshots:
       estree-walker: 1.0.1
       picomatch: 2.3.1
       rollup: 2.79.2
+
+  '@rollup/pluginutils@3.1.0(rollup@3.29.5)':
+    dependencies:
+      '@types/estree': 0.0.39
+      estree-walker: 1.0.1
+      picomatch: 2.3.1
+      rollup: 3.29.5
 
   '@rollup/pluginutils@4.2.1':
     dependencies:
@@ -25748,7 +25758,7 @@ snapshots:
 
   npm-install-checks@6.3.0:
     dependencies:
-      semver: 7.5.3
+      semver: 7.7.3
 
   npm-normalize-package-bin@3.0.1: {}
 
@@ -26291,6 +26301,10 @@ snapshots:
   pkg-up@3.1.0:
     dependencies:
       find-up: 3.0.0
+
+  please-upgrade-node@3.2.0:
+    dependencies:
+      semver-compare: 1.0.0
 
   pnp-webpack-plugin@1.7.0(typescript@4.8.4):
     dependencies:
@@ -28165,13 +28179,13 @@ snapshots:
       is-module: 1.0.0
       resolve: 1.22.11
 
-  rollup-plugin-node-resolve@5.2.0(rollup@2.79.2):
+  rollup-plugin-node-resolve@5.2.0(rollup@3.29.5):
     dependencies:
       '@types/resolve': 0.0.8
       builtin-modules: 3.3.0
       is-module: 1.0.0
       resolve: 1.22.11
-      rollup: 2.79.2
+      rollup: 3.29.5
       rollup-pluginutils: 2.8.2
 
   rollup-plugin-postcss@3.1.8:
@@ -28191,11 +28205,11 @@ snapshots:
       safe-identifier: 0.4.2
       style-inject: 0.3.0
 
-  rollup-plugin-preact@0.5.2(preact@10.27.2)(rollup@2.79.2):
+  rollup-plugin-preact@0.5.2(preact@10.27.2)(rollup@3.29.5):
     dependencies:
       preact-compat: 3.19.0(preact@10.27.2)
       preact-compat2: 0.1.0(preact@10.27.2)
-      rollup-plugin-node-resolve: 5.2.0(rollup@2.79.2)
+      rollup-plugin-node-resolve: 5.2.0(rollup@3.29.5)
     transitivePeerDependencies:
       - preact
       - rollup
