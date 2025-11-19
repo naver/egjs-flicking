@@ -8,6 +8,8 @@
 		"**/*.sass"
 	],
 	"scripts": {
+		"clean:all": "pnpm -r --include-workspace-root exec -- rm -rf node_modules",
+		"reinstall": "pnpm clean:all && pnpm install",
 		"test": "pnpm test --prefix test/unit",
 		"test:chrome": "pnpm test:chrome --prefix test/unit",
 		"test:cfc": "pnpm test --prefix test/cfc",

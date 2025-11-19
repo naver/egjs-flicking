@@ -6,6 +6,13 @@
 	"module": "dist/flicking.esm.js",
 	"es2015": "dist/flicking.esm.js",
 	"types": "declaration/index.d.ts",
+	"dependencies": {
+		"@cfcs/core": "^0.1.0",
+		"@egjs/axes": "^3.9.1",
+		"@egjs/component": "^3.0.2",
+		"@egjs/imready": "^1.1.1",
+		"@egjs/list-differ": "^1.0.1"
+	},
 	"scripts": {
 		"start": "concurrently \"rollup -w --config ./rollup.config.dev.js\" \"http-serve\"",
 		"build": "run-s build:bundle build:declaration build:css printsizes",
