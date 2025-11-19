@@ -1,6 +1,7 @@
 {
   "name": "cfc",
   "version": "0.0.0",
+  "private": true,
   "scripts": {
     "postinstall": "npm run install:all",
     "install:all": "npm-run-all --parallel install:angular install:react install:preact install:vue install:vue3 install:svelte",

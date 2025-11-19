@@ -1,6 +1,7 @@
 {
 	"name": "unit",
 	"version": "0.0.0",
+	"private": true,
 	"scripts": {
 		"preprocess": "ts-node ./preprocess",
 		"test": "karma start",
