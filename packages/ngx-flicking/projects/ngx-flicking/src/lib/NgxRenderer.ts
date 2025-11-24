@@ -56,9 +56,16 @@ class NgxRenderer extends ExternalRenderer {
     const cameraEl = flicking.camera.element;
 
     // We're using reversed panels here as last panel should be the last element of camera element
-    const reversedElements = this._strategy
-      .getRenderingElementsByOrder(flicking)
-      .reverse();
+    let reversedElements: HTMLElement[] = [];
+
+    if (flicking.useCSSOrder) {
+      // useCSSOrder를 사용하는 경우 DOM은 변화가 없지만 대신 css `order`값을 주입
+      reversedElements = this.getRenderedPanels().map(panel => panel.element).reverse();
+    } else {
+      reversedElements = this._strategy
+        .getRenderingElementsByOrder(flicking)
+        .reverse();
+    }
 
     reversedElements.forEach((el, idx) => {
       const nextEl = reversedElements[idx - 1] ? reversedElements[idx - 1] : null;

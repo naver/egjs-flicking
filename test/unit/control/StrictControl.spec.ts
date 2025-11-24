@@ -268,7 +268,10 @@ describe("StrictControl", () => {
       });
 
       it("Should move to the nearest panel from the camera, when animation is interrupted by user input", async () => {
-        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.STRICT });
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: MOVE_TYPE.STRICT,
+          animationThreshold: 0,
+        });
 
         const control = flicking.control;
         const camera = flicking.camera;

@@ -100,6 +100,9 @@ export const simulate = (el: HTMLElement, option: Partial<{
       easing: "linear"
     }, option), resolve);
 
+    if (time === 0) {
+      return;
+    }
     tick(time);
   })
 );

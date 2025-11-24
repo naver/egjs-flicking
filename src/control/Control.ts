@@ -380,12 +380,19 @@ abstract class Control {
     axesEvent?: OnRelease;
   }) {
     const flicking = getFlickingAttached(this._flicking);
-    const animate = () => this._controller.animateTo(position, duration, axesEvent);
+
+    // 거리(1px 미만)가 매우 짧은 경우 duration이 늘어지는걸 방지하기 위해 0으로 바꿔 즉시 변경
+    let nextDuration = duration;
+
+    if (Math.abs(nextDuration - position) < flicking.animationThreshold) {
+      nextDuration = 0;
+    }
+    const animate = () => this._controller.animateTo(position, nextDuration, axesEvent);
     const state = this._controller.state;
 
     state.targetPanel = newActivePanel;
 
-    if (duration <= 0) {
+    if (nextDuration <= 0) {
       return animate();
     } else {
       return animate().then(async () => {

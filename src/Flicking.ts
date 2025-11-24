@@ -118,6 +118,8 @@ export interface FlickingOptions {
   | MoveTypeOptions<ValueOf<typeof MOVE_TYPE>>;
   threshold: number;
   dragThreshold: number;
+  animationThreshold: number;
+  useCSSOrder: boolean;
   interruptable: boolean;
   bounce: number | string | [number | string, number | string];
   iOSEdgeSwipeThreshold: number;
@@ -200,6 +202,9 @@ class Flicking extends Component<FlickingEvents> {
   private _moveType: FlickingOptions["moveType"];
   private _threshold: FlickingOptions["threshold"];
   private _dragThreshold: FlickingOptions["dragThreshold"];
+  private _animationThreshold: FlickingOptions["animationThreshold"];
+  private _useCSSOrder: FlickingOptions["useCSSOrder"];
+
   private _interruptable: FlickingOptions["interruptable"];
   private _bounce: FlickingOptions["bounce"];
   private _iOSEdgeSwipeThreshold: FlickingOptions["iOSEdgeSwipeThreshold"];
@@ -225,6 +230,7 @@ class Flicking extends Component<FlickingEvents> {
   private _initialized: boolean;
   private _plugins: Plugin[];
   private _isResizing: boolean;
+  private _scheduleResize = false;
 
   // Components
   /**
@@ -703,6 +709,30 @@ class Flicking extends Component<FlickingEvents> {
   public get dragThreshold() {
     return this._dragThreshold;
   }
+  /**
+   * The minimum distance for animation to proceed. If the distance to be moved is less than `animationThreshold`, the movement proceeds immediately without animation (duration: 0).
+   * @ko animation이 진행되기 위한 최소한의 거리. 이동하려는 거리가 `animationThreshold`보다 적으면 애니메이션 없이(duration: 0) 즉시 이동한다.
+   * @type {number}
+   * @default 0.5
+   * @see {@link https://naver.github.io/egjs-flicking/Options#animationThreshold animationThreshold ( Options )}
+   */
+  public get animationThreshold() {
+    return this._animationThreshold;
+  }
+  /**
+   * Using `useCSSOrder` does not change the DOM order, but the `order` CSS property changes the order on the screen. (When `circular` is used, the DOM order changes depending on the position.)
+   * When using `iframe`, you can prevent reloading when the DOM order changes.
+   * In svelte, CSS order is always used.
+   * @ko `useCSSOrder`를 사용하면 DOM의 순서는 변경되지 않지만 `order` css가 설정되면서 화면상 순서가 바뀐다. (`circular`를 사용한 경우 위치에 따라 DOM의 순서가 변경된다.)
+   * `iframe`을 사용하는 경우 DOM의 순서가 변경되면서 reload가 되는 것을 막을 수 있다.
+   * svelte에서는 css order를 무조건 사용한다.
+   * @type {boolean}
+   * @default false
+   * @see {@link https://naver.github.io/egjs-flicking/Options#useCSSOrder useCSSOrder ( Options )}
+   */
+  public get useCSSOrder() {
+    return this._useCSSOrder;
+  }
 
   /**
    * Set animation to be interruptable by click/touch.
@@ -1117,6 +1147,12 @@ class Flicking extends Component<FlickingEvents> {
       panInput.options.threshold = val;
     }
   }
+  public set animationThreshold(val: FlickingOptions["animationThreshold"]) {
+    this._animationThreshold = val;
+  }
+  public set useCSSOrder(val: FlickingOptions["useCSSOrder"]) {
+    this._useCSSOrder = val;
+  }
 
   public set interruptable(val: FlickingOptions["interruptable"]) {
     this._interruptable = val;
@@ -1291,7 +1327,9 @@ class Flicking extends Component<FlickingEvents> {
     useFractionalSize = false,
     externalRenderer = null,
     renderExternal = null,
-    optimizeSizeUpdate = false
+    optimizeSizeUpdate = false,
+    animationThreshold = 0.5,
+    useCSSOrder = false,
   }: Partial<FlickingOptions> = {}) {
     super();
 
@@ -1340,6 +1378,8 @@ class Flicking extends Component<FlickingEvents> {
     this._externalRenderer = externalRenderer;
     this._renderExternal = renderExternal;
     this._optimizeSizeUpdate = optimizeSizeUpdate;
+    this._animationThreshold = animationThreshold;
+    this._useCSSOrder = useCSSOrder;
 
     // Create core components
     this._viewport = new Viewport(this, getElement(root));
@@ -1423,7 +1463,9 @@ class Flicking extends Component<FlickingEvents> {
 
     this._plugins.forEach((plugin) => plugin.destroy());
 
+    this._scheduleResize = false;
     this._initialized = false;
+    this._isResizing = false;
   }
 
   /**
@@ -1821,11 +1863,20 @@ class Flicking extends Component<FlickingEvents> {
    * @method
    * @fires Flicking#beforeResize
    * @fires Flicking#afterResize
-   * @return {this}
+   * @return {boolean}
    */
   public async resize(): Promise<void> {
-    if (this._isResizing) return;
+    if (!this._initialized) {
+      return;
+    }
+    if (this._isResizing) {
+      // resize를 연속으로 발생하면 무시하기에 마지막 viewport를 사이즈를 알 수 없음.
+      // resize를 1번 더 실행할 수 잇는 스케줄링 등록
+      this._scheduleResize = true;
+      return;
+    }
 
+    this._scheduleResize = false;
     this._isResizing = true;
 
     const viewport = this._viewport;
@@ -1872,6 +1923,7 @@ class Flicking extends Component<FlickingEvents> {
     camera.updatePanelOrder();
     camera.updateOffset();
     await renderer.render();
+
     if (!this._initialized) {
       return;
     }
@@ -1901,6 +1953,12 @@ class Flicking extends Component<FlickingEvents> {
     );
 
     this._isResizing = false;
+
+    // 연속으로 resize를 호출하는 경우를 대비하기 위해서 스케줄링 반영
+    if (this._scheduleResize) {
+      this.resize();
+    }
+    return;
   }
 
   /**
@@ -2098,8 +2156,8 @@ class Flicking extends Component<FlickingEvents> {
     const nearestAnchor = camera.findNearestAnchor(defaultPanel.position);
     const initialPanel =
       nearestAnchor &&
-      defaultPanel.position !== nearestAnchor.panel.position &&
-      defaultPanel.index !== nearestAnchor.panel.index
+        defaultPanel.position !== nearestAnchor.panel.position &&
+        defaultPanel.index !== nearestAnchor.panel.index
         ? nearestAnchor.panel
         : defaultPanel;
     control.setActive(initialPanel, null, false);

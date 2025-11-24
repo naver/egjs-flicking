@@ -220,8 +220,9 @@ class StrictControl extends Control {
     const firstAnchor = anchors[0];
     const lastAnchor = anchors[anchors.length - 1];
 
-    const shouldBounceToFirst = position <= cameraRange.min && isBetween(firstAnchor.panel.index, indexRange.min, indexRange.max);
-    const shouldBounceToLast = position >= cameraRange.max && isBetween(lastAnchor.panel.index, indexRange.min, indexRange.max);
+    // position이 bounce으로 인하여 범위를 넘어가야 동작하도록 변경
+    const shouldBounceToFirst = position < cameraRange.min && isBetween(firstAnchor.panel.index, indexRange.min, indexRange.max);
+    const shouldBounceToLast = position > cameraRange.max && isBetween(lastAnchor.panel.index, indexRange.min, indexRange.max);
 
     const isAdjacent = adjacentAnchor && (indexRange.min <= indexRange.max
       ? isBetween(adjacentAnchor.index, indexRange.min, indexRange.max)
