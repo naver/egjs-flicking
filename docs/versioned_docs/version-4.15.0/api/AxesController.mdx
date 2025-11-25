@@ -12,7 +12,7 @@ class AxesController
 
 </div>
 
-[@egjs/axes](https://naver.github.io/egjs-axes/)의 이벤트를 처리하는 컨트롤러 컴포넌트
+A controller that handles the [@egjs/axes](https://naver.github.io/egjs-axes/) events
 
 <div className="container">
   <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
@@ -27,7 +27,7 @@ class AxesController
   <span className="badge badge--warning">readonly</span>
 </div>
 
-[Axes](https://naver.github.io/egjs-axes/docs/api/Axes)의 인스턴스
+An [Axes](https://naver.github.io/egjs-axes/docs/api/Axes) instance
 
 **Type**: Axes \| null
 
@@ -40,7 +40,7 @@ class AxesController
   <span className="badge badge--warning">readonly</span>
 </div>
 
-[PanInput](https://naver.github.io/egjs-axes/docs/api/PanInput)의 인스턴스
+An [PanInput](https://naver.github.io/egjs-axes/docs/api/PanInput) instance
 
 **Type**: PanInput \| null
 
@@ -59,7 +59,7 @@ class AxesController
 
 </div>
 
-현재 활성화된 [State](State) 인스턴스로 사용자 입력 또는 애니메이션 상태를 나타냅니다
+A activated [State](State) that shows the current status of the user input or the animation
 
 **Type**: [State](State)
 
@@ -69,15 +69,15 @@ class AxesController
   <span className="badge badge--warning">readonly</span>
 </div>
 
-현재 재생중인 애니메이션 정보
+A context of the current animation playing
 
 **Type**: object
 
 |PROPERTY|TYPE|DESCRIPTION|
 |:---:|:---:|:---:|
-|start|number|애니메이션 시작 지점|
-|end|number|애니메이션 끝 지점|
-|offset|number|카메라 오프셋|
+|start|number|A start position of the animation|
+|end|number|A end position of the animation|
+|offset|number|camera offset|
 
 ### controlParams {#controlParams}
 
@@ -85,7 +85,7 @@ class AxesController
 
 </div>
 
-활성화된 현재 Axes 패러미터들
+A current control parameters of the Axes instance
 
 **Type**: [ControlParams](ControlParams)
 
@@ -97,7 +97,7 @@ class AxesController
   <span className="badge badge--warning">readonly</span>
 </div>
 
-현재 사용자 입력이 활성화되었는지를 나타내는 값
+A Boolean indicating whether the user input is enabled
 
 **Type**: boolean
 
@@ -107,7 +107,7 @@ class AxesController
   <span className="badge badge--warning">readonly</span>
 </div>
 
-[Axes](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html) 인스턴스 내부의 현재 좌표 값
+Current position value in [Axes](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html) instance
 
 **Type**: number
 
@@ -117,7 +117,7 @@ class AxesController
   <span className="badge badge--warning">readonly</span>
 </div>
 
-[Axes](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html) 인스턴스 내부의 현재 이동 범위 값
+Current range value in [Axes](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html) instance
 
 **Type**: Array&lt;number&gt;
 
@@ -127,7 +127,7 @@ class AxesController
   <span className="badge badge--warning">readonly</span>
 </div>
 
-적용된 bounce 크기(px 단위)
+Actual bounce size(px)
 
 **Type**: Array&lt;number&gt;
 
@@ -139,7 +139,7 @@ class AxesController
 
 </div>
 
-AxesController를 초기화합니다
+Initialize AxesController
 
 **Returns**: this
 
@@ -153,7 +153,7 @@ AxesController를 초기화합니다
 
 </div>
 
-AxesController를 초기 상태로 되돌립니다
+Destroy AxesController and return to initial state
 
 **Returns**: void
 
@@ -163,7 +163,7 @@ AxesController를 초기 상태로 되돌립니다
 
 </div>
 
-사용자의 입력(마우스/터치)를 활성화합니다
+Enable input from the user (mouse/touch)
 
 **Returns**: this
 
@@ -173,7 +173,7 @@ AxesController를 초기 상태로 되돌립니다
 
 </div>
 
-사용자의 입력(마우스/터치)를 막습니다
+Disable input from the user (mouse/touch)
 
 **Returns**: this
 
@@ -183,7 +183,7 @@ AxesController를 초기 상태로 되돌립니다
 
 </div>
 
-사용자의 현재 입력(마우스/터치)를 중단시킵니다
+Releases ongoing user input (mouse/touch)
 
 **Returns**: this
 
@@ -193,14 +193,14 @@ AxesController를 초기 상태로 되돌립니다
 
 </div>
 
-재생 중인 애니메이션의 목적지와 재생 시간을 변경합니다
+Change the destination and duration of the animation currently playing
 
 **Returns**: this
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|position|number|||이동할 좌표|
-|duration|number|✔️||애니메이션 진행 시간 (단위: ms)|
+|position|number|||A position to move|
+|duration|number|✔️||Duration of the animation (unit: ms)|
 
 ### stopAnimation {#stopAnimation}
 
@@ -208,7 +208,7 @@ AxesController를 초기 상태로 되돌립니다
 
 </div>
 
-재생 중인 애니메이션을 중단시킵니다
+Stops the animation currently playing
 
 **Returns**: this
 
@@ -218,7 +218,7 @@ AxesController를 초기 상태로 되돌립니다
 
 </div>
 
-[@egjs/axes](https://naver.github.io/egjs-axes/)의 상태를 갱신합니다
+Update [@egjs/axes](https://naver.github.io/egjs-axes/)'s state
 
 **Returns**: this
 
@@ -228,7 +228,7 @@ AxesController를 초기 상태로 되돌립니다
 
 **Throws**: [FlickingError](FlickingError)
 
-[init](AxesController#init)이 이전에 호출되지 않은 경우
+[NOT_ATTACHED_TO_FLICKING](ERROR_CODE) When [init](AxesController#init) is not called before
 
 ### addPreventClickHandler {#addPreventClickHandler}
 
@@ -236,7 +236,7 @@ AxesController를 초기 상태로 되돌립니다
 
 </div>
 
-카메라 엘리먼트에 애니메이션 도중에 클릭 이벤트를 방지하는 핸들러를 부착합니다
+Attach a handler to the camera element to prevent click events during animation
 
 **Returns**: this
 
@@ -246,7 +246,7 @@ AxesController를 초기 상태로 되돌립니다
 
 </div>
 
-카메라 엘리먼트에 애니메이션 도중에 클릭 이벤트를 방지하는 핸들러를 탈착합니다
+Detach a handler to the camera element to prevent click events during animation
 
 **Returns**: this
 
@@ -256,20 +256,20 @@ AxesController를 초기 상태로 되돌립니다
 
 </div>
 
-Axes의 [setTo](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#setTo) 메소드를 주어진 좌표를 이용하여 수행합니다
+Run Axes's [setTo](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#setTo) using the given position
 
 **Returns**: Promise&lt;void&gt;
-- 해당 좌표 도달시에 resolve되는 Promise
+- A Promise which will be resolved after reaching the target position
 
 |PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
 |:---:|:---:|:---:|:---:|:---:|
-|position|number|||이동할 좌표|
-|duration|number|||애니메이션 진행 시간 (단위: ms)|
-|axesEvent|number|✔️||이 값이 주어졌을 경우, 해당 이벤트의 [setTo](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#setTo) 메소드를 대신해서 사용합니다.|
+|position|number|||A position to move|
+|duration|number|||Duration of the animation (unit: ms)|
+|axesEvent|number|✔️||If provided, it'll use its [setTo](https://naver#github#io/egjs-axes/release/latest/doc/eg#Axes#html#setTo) method instead|
 
 **Throws**: [FlickingError](FlickingError)
 
-<br /><br />|code|condition|<br />|---|---|<br />|[NOT_ATTACHED_TO_FLICKING](ERROR_CODE)|[init](Control#init)이 이전에 호출되지 않은 경우|<br />|[ANIMATION_INTERRUPTED](ERROR_CODE)|사용자 입력에 의해 애니메이션이 중단된 경우|<br /><br />
+|code|condition|<br />|---|---|<br />|[NOT_ATTACHED_TO_FLICKING](ERROR_CODE)|When [init](Control#init) is not called before|<br />|[ANIMATION_INTERRUPTED](ERROR_CODE)|When the animation is interrupted by user input|
 
 ### getCurrentPosition {#getCurrentPosition}
 
@@ -277,5 +277,5 @@ Axes의 [setTo](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.htm
 
 </div>
 
-현재 axes의 position을 반환합니다.
+Returns the current axes position
 

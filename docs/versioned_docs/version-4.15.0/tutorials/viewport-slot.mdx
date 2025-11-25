@@ -1,0 +1,20 @@
+---
+title: Rendering elements inside the wrapper element
+id: viewport-slot
+slug: /viewport-slot
+custom_edit_url: null
+sidebar_position: 8
+---
+
+import SourceCode from "@site/src/component/SourceCode";
+
+
+You can place elements inside the `.flicking-viewport` element like the following:
+
+<SourceCode options={{ circular: true }} panels={[
+  { tag: "div", class: "panel", content: "1" },
+  { tag: "div", class: "panel", content: "2" },
+  { tag: "div", class: "panel", content: "3" },
+  { tag: "span", class: "item-inside-viewport", content: "", isSlot: true },
+  { tag: "span", class: "item-inside-viewport", content: "", isSlot: true }
+]} />

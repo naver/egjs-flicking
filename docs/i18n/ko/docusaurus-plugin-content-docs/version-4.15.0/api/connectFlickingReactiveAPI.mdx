@@ -1,0 +1,45 @@
+---
+custom_edit_url: null
+---
+
+```ts
+function connectFlickingReactiveAPI(flicking: [Flicking](Flicking), options: [FlickingReactiveAPIOptions](FlickingReactiveAPIOptions))
+```
+
+<div>
+
+</div>
+
+Flicking 인스턴스를 반응형 API에 연결합니다
+
+**Returns**: [FlickingReactiveObject](FlickingReactiveObject)
+- Flicking 상태와 메서드를 포함한 반응형 객체
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|flicking|[Flicking](Flicking)|||연결할 Flicking 인스턴스|
+|options|[FlickingReactiveAPIOptions](FlickingReactiveAPIOptions)|✔️||Flicking 옵션|
+
+```js
+import Flicking, { connectFlickingReactiveAPI } from "@egjs/flicking";
+
+const flicking = new Flicking("#el");
+const reactiveObj = connectFlickingReactiveAPI(flicking);
+
+// Access reactive state
+console.log("Current panel:", reactiveObj.currentPanelIndex);
+console.log("Progress:", reactiveObj.progress + "%");
+console.log("Is at start:", reactiveObj.isReachStart);
+console.log("Is at end:", reactiveObj.isReachEnd);
+console.log("Total panels:", reactiveObj.totalPanelCount);
+console.log("Index progress:", reactiveObj.indexProgress);
+
+// Subscribe to state changes
+reactiveObj.subscribe("currentPanelIndex", (nextValue) => {
+  console.log("Panel changed to:", nextValue);
+});
+
+// Use reactive methods
+reactiveObj.moveTo(2); // Move to third panel
+```
+

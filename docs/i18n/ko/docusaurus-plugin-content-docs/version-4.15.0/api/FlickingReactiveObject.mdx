@@ -1,0 +1,21 @@
+---
+custom_edit_url: null
+---
+
+<div>
+
+</div>
+
+Flicking의 상태와 메서드를 결합한 반응형 객체 타입<br />이 타입은 Flicking 인스턴스의 상태가 변경될 때 자동으로 업데이트되는<br />반응형 상태 속성들과 메서드들을 제공합니다.
+
+**Type**: ReactiveObject&lt;[FlickingReactiveState](FlickingReactiveState) & [FlickingReactiveMethod](FlickingReactiveMethod)&gt;
+
+**See**:
+- [https://naver.github.io/egjs-flicking/Demos#reactive-api-demo](https://naver.github.io/egjs-flicking/Demos#reactive-api-demo)
+```jsx
+  const flickingRef = React.useRef(null);
+  const {
+    progress
+  } = useFlickingReactiveAPI(flickingRef);
+ ```
+

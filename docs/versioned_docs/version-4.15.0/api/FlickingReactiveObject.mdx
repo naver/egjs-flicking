@@ -1,0 +1,21 @@
+---
+custom_edit_url: null
+---
+
+<div>
+
+</div>
+
+Reactive object type that combines state and methods for Flicking<br />This type provides reactive state properties and methods that automatically update<br />when the Flicking instance state changes.
+
+**Type**: ReactiveObject&lt;[FlickingReactiveState](FlickingReactiveState) & [FlickingReactiveMethod](FlickingReactiveMethod)&gt;
+
+**See**:
+- [https://naver.github.io/egjs-flicking/Demos#reactive-api-demo](https://naver.github.io/egjs-flicking/Demos#reactive-api-demo)
+```jsx
+  const flickingRef = React.useRef(null);
+  const {
+    progress
+  } = useFlickingReactiveAPI(flickingRef);
+ ```
+

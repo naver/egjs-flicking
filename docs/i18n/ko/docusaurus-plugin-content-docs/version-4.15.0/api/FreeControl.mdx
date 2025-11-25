@@ -1,0 +1,298 @@
+---
+custom_edit_url: null
+---
+
+```ts
+class FreeControl extends Control
+```
+
+<div>
+
+</div>
+
+패널이 정해진 지점에 정렬되지 않고, 자유롭게 스크롤할 수 있는 이동 방식을 사용하는 [Control](Control)
+
+<div className="container">
+  <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
+  <div className="row"><div className="col col--6"><a href="#stopAtEdge">stopAtEdge</a><br/><a href="#controller">controller</a><br/><a href="#activeIndex">activeIndex</a><br/><a href="#activePanel">activePanel</a><br/><a href="#animating">animating</a><br/><a href="#holding">holding</a></div><div className="col col--6"><a href="#updatePosition">updatePosition</a><br/><a href="#moveToPosition">moveToPosition</a><br/><a href="#init">init</a><br/><a href="#destroy">destroy</a><br/><a href="#enable">enable</a><br/><a href="#disable">disable</a><br/><a href="#release">release</a><br/><a href="#updateAnimation">updateAnimation</a><br/><a href="#stopAnimation">stopAnimation</a><br/><a href="#updateInput">updateInput</a><br/><a href="#resetActive">resetActive</a><br/><a href="#moveToPanel">moveToPanel</a><br/><a href="#setActive">setActive</a><br/><a href="#copy">copy</a></div></div>
+</div>
+
+## constructor
+```ts
+new FreeControl()
+```
+
+<div>
+
+</div>
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+||Partial&lt;[FreeControlOptions](FreeControlOptions)&gt;|✔️|{}||
+
+## Properties
+
+### stopAtEdge {#stopAtEdge}
+
+<div>
+
+</div>
+
+스크롤 애니메이션을 스크롤 영역의 시작과 끝부분에서 멈추도록 하여, 바운스 영역을 넘어가지 않도록 합니다
+
+**Type**: boolean
+
+**Default**: true
+
+### controller {#controller}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+[@egjs/axes](https://naver.github.io/egjs-axes/)의 이벤트를 처리하는 컨트롤러 컴포넌트
+
+**Type**: [AxesController](AxesController)
+
+### activeIndex {#activeIndex}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+[currentPanel](Flicking#currentPanel)의 인덱스 번호
+
+**Type**: number
+
+**Default**: 0
+
+### activePanel {#activePanel}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+현재 선택된 패널
+
+**Type**: [Panel](Panel) \| null
+
+### animating {#animating}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+현재 애니메이션 동작 여부
+
+**Type**: boolean
+
+### holding {#holding}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+현재 사용자가 클릭/터치중인지 여부
+
+**Type**: boolean
+
+## Methods
+
+### updatePosition {#updatePosition}
+
+<div>
+
+</div>
+
+resize 이후에 position을 업데이트합니다
+
+**Returns**: Promise&lt;void&gt;
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|progressInPanel|number|||Resize 이전 현재 선택된 패널 내에서의 카메라 progress 값|
+
+**Throws**: [FlickingError](FlickingError)
+
+[NOT_ATTACHED_TO_FLICKING](ERROR_CODE) [init](Camera#init)이 이전에 호출되지 않은 경우
+
+### moveToPosition {#moveToPosition}
+
+<div>
+
+</div>
+
+[Camera](Camera)를 주어진 좌표로 이동합니다
+
+**Returns**: Promise&lt;void&gt;
+- 해당 좌표 도달시에 resolve되는 Promise
+
+**Emits**: [Flicking#event:moveStart](Flicking#event-moveStart), [Flicking#event:move](Flicking#event-move), [Flicking#event:moveEnd](Flicking#event-moveEnd), [Flicking#event:willChange](Flicking#event-willChange), [Flicking#event:changed](Flicking#event-changed), [Flicking#event:willRestore](Flicking#event-willRestore), [Flicking#event:restored](Flicking#event-restored), [Flicking#event:needPanel](Flicking#event-needPanel), [Flicking#event:visibleChange](Flicking#event-visibleChange), [Flicking#event:reachEdge](Flicking#event-reachEdge)
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|position|number|||이동할 좌표|
+|duration|number|||패널 이동 애니메이션 진행 시간 (단위: ms)|
+|axesEvent|object|✔️||[Axes](https://naver.github.io/egjs-axes/)의 [release](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:release) 이벤트|
+
+**Throws**: [FlickingError](FlickingError)
+
+<br /><br />|code|condition|<br />|---|---|<br />|[POSITION_NOT_REACHABLE](ERROR_CODE)|주어진 패널이 제거되었거나, Camera의 [range](Camera#range) 밖에 있을 경우|<br />|[NOT_ATTACHED_TO_FLICKING](ERROR_CODE)|[init](Control#init)이 이전에 호출되지 않은 경우|<br />|[ANIMATION_INTERRUPTED](ERROR_CODE)|사용자 입력에 의해 애니메이션이 중단된 경우|<br />|[STOP_CALLED_BY_USER](ERROR_CODE)|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|<br /><br />
+
+### init {#init}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Control을 초기화합니다
+
+**Returns**: this
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|flicking|[Flicking](Flicking)|||Flicking의 인스턴스|
+
+### destroy {#destroy}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+Control을 초기 상태로 되돌립니다
+
+**Returns**: void
+
+### enable {#enable}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+사용자의 입력(마우스/터치)를 활성화합니다
+
+**Returns**: this
+
+### disable {#disable}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+사용자의 입력(마우스/터치)를 막습니다
+
+**Returns**: this
+
+### release {#release}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+사용자의 현재 입력(마우스/터치)를 중단시킵니다
+
+**Returns**: this
+
+### updateAnimation {#updateAnimation}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+재생 중인 애니메이션의 목적지와 재생 시간을 변경합니다
+
+**Returns**: this
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|panel|[Panel](Panel)|||이동할 패널|
+|duration|number|✔️||애니메이션 진행 시간 (단위: ms)|
+|direction|[DIRECTION](DIRECTION)|✔️||이동할 방향. [circular](Flicking#circular) 옵션 활성화시에만 사용 가능합니다|
+
+**Throws**: [FlickingError](FlickingError)
+
+[POSITION_NOT_REACHABLE](ERROR_CODE) 주어진 패널이 제거되었거나, Camera의 [range](Camera#range) 밖에 있을 경우
+
+### stopAnimation {#stopAnimation}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+재생 중인 애니메이션을 중단시킵니다
+
+**Returns**: this
+
+### updateInput {#updateInput}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+[controller](Control#controller)의 내부 상태를 갱신합니다
+
+**Returns**: this
+
+### resetActive {#resetActive}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+[activePanel](Control#activePanel)을 `null`로 초기화합니다
+
+**Returns**: this
+
+### moveToPanel {#moveToPanel}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+  <span className="badge badge--success">async</span>
+</div>
+
+[Camera](Camera)를 해당 패널 위로 이동합니다
+
+**Returns**: Promise&lt;void&gt;
+- 해당 패널 도달시에 resolve되는 Promise
+
+**Emits**: [Flicking#event:moveStart](Flicking#event-moveStart), [Flicking#event:move](Flicking#event-move), [Flicking#event:moveEnd](Flicking#event-moveEnd), [Flicking#event:willChange](Flicking#event-willChange), [Flicking#event:changed](Flicking#event-changed), [Flicking#event:willRestore](Flicking#event-willRestore), [Flicking#event:restored](Flicking#event-restored), [Flicking#event:needPanel](Flicking#event-needPanel), [Flicking#event:visibleChange](Flicking#event-visibleChange), [Flicking#event:reachEdge](Flicking#event-reachEdge)
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|panel|[Panel](Panel)|||이동할 패널|
+|options|object|||옵션 오브젝트|
+|duration|number|||애니메이션 진행 시간 (단위: ms)|
+|axesEvent|object|✔️||[Axes](https://naver.github.io/egjs-axes/)의 [release](https://naver.github.io/egjs-axes/release/latest/doc/eg.Axes.html#event:release) 이벤트|
+|direction|[DIRECTION](DIRECTION)|✔️|DIRECTION.NONE|이동할 방향. [circular](Flicking#circular) 옵션 활성화시에만 사용 가능합니다|
+
+**Throws**: [FlickingError](FlickingError)
+
+<br /><br />|code|condition|<br />|---|---|<br />|[POSITION_NOT_REACHABLE](ERROR_CODE)|주어진 패널이 제거되었거나, Camera의 [range](Camera#range) 밖에 있을 경우|<br />|[NOT_ATTACHED_TO_FLICKING](ERROR_CODE)|[init](Control#init)이 이전에 호출되지 않은 경우|<br />|[ANIMATION_INTERRUPTED](ERROR_CODE)|사용자 입력에 의해 애니메이션이 중단된 경우|<br />|[STOP_CALLED_BY_USER](ERROR_CODE)|발생된 이벤트들 중 하나라도 `stop()`이 호출된 경우|<br /><br />
+
+### setActive {#setActive}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|newActivePanel|[Panel](Panel)||||
+|prevActivePanel|[Panel](Panel) \| null||||
+|isTrusted|boolean||||
+
+### copy {#copy}
+
+<div>
+  <span className="badge badge--danger">inherited</span>
+</div>
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|control|[Control](Control)||||
+

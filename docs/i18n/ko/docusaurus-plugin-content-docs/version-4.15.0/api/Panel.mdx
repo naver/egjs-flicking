@@ -1,0 +1,461 @@
+---
+custom_edit_url: null
+---
+
+```ts
+class Panel
+```
+
+<div>
+
+</div>
+
+슬라이드 데이터 컴포넌트로, 단일 HTMLElement의 정보를 갖고 있습니다
+
+<div className="container">
+  <div className="row mb-2"><div className="col col--6"><strong>Properties</strong></div><div className="col col--6"><strong>Methods</strong></div></div>
+  <div className="row"><div className="col col--6"><a href="#element">element</a><br/><a href="#elementProvider">elementProvider</a><br/><a href="#index">index</a><br/><a href="#position">position</a><br/><a href="#size">size</a><br/><a href="#sizeIncludingMargin">sizeIncludingMargin</a><br/><a href="#height">height</a><br/><a href="#margin">margin</a><br/><a href="#alignPosition">alignPosition</a><br/><a href="#removed">removed</a><br/><a href="#rendered">rendered</a><br/><a href="#loading">loading</a><br/><a href="#range">range</a><br/><a href="#toggled">toggled</a><br/><a href="#toggleDirection">toggleDirection</a><br/><a href="#offset">offset</a><br/><a href="#progress">progress</a><br/><a href="#outsetProgress">outsetProgress</a><br/><a href="#visibleRatio">visibleRatio</a><br/><a href="#align">align</a></div><div className="col col--6"><a href="#markForShow">markForShow</a><br/><a href="#markForHide">markForHide</a><br/><a href="#resize">resize</a><br/><a href="#setSize">setSize</a><br/><a href="#contains">contains</a><br/><a href="#destroy">destroy</a><br/><a href="#includePosition">includePosition</a><br/><a href="#includeRange">includeRange</a><br/><a href="#isVisibleOnRange">isVisibleOnRange</a><br/><a href="#focus">focus</a><br/><a href="#prev">prev</a><br/><a href="#next">next</a><br/><a href="#increaseIndex">increaseIndex</a><br/><a href="#decreaseIndex">decreaseIndex</a><br/><a href="#updatePosition">updatePosition</a><br/><a href="#toggle">toggle</a><br/><a href="#updateCircularToggleDirection">updateCircularToggleDirection</a></div></div>
+</div>
+
+## constructor
+```ts
+new Panel(options, options.index, options.align, options.flicking, options.elementProvider)
+```
+
+<div>
+
+</div>
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|options|object|||옵션 오브젝트|
+|options.index|number|✔️||패널의 초기 인덱스|
+|options.align|Constants.ALIGN \| string \| number|✔️||패널의 초기 [align](Flicking#align)값|
+|options.flicking|[Flicking](Flicking)|✔️||패널이 참조하는 [Flicking](Flicking) 인스턴스|
+|options.elementProvider|[Flicking](Flicking)|✔️||실제 엘리먼트를 반환하는 엘리먼트 공급자의 인스턴스|
+
+## Properties
+
+### element {#element}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+패널이 참조하고 있는 `HTMLElement`
+
+**Type**: HTMLElement
+
+### elementProvider {#elementProvider}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+### index {#index}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+패널의 인덱스
+
+**Type**: number
+
+### position {#position}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+패널의 현재 좌표, [alignPosition](Panel#alignPosition)을 포함하고 있습니다
+
+**Type**: number
+
+### size {#size}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+패널 엘리먼트의 캐시된 크기<br />이 값은 [horizontal](Flicking#horizontal)이 `true`일 경우 [element](Panel#element)의 `offsetWidth`와 동일하고, `false`일 경우 `offsetHeight`와 동일합니다
+
+**Type**: number
+
+### sizeIncludingMargin {#sizeIncludingMargin}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+CSS `margin`을 포함한 패널의 크기<br />이 값은 [horizontal](Flicking#horizontal)이 `true`일 경우 margin left/right을 포함하고, `false`일 경우 margin top/bottom을 포함합니다
+
+**Type**: number
+
+### height {#height}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+패널 엘리먼트의 높이
+
+**Type**: number
+
+### margin {#margin}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+패널 엘리먼트의 CSS `margin` 값
+
+**Type**: object
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|prev|number|[horizontal](Flicking#horizontal)이 `true`일 경우 `margin-left`, `false`일 경우 `margin-top`에 해당하는 값|
+|next|number|[horizontal](Flicking#horizontal)이 `true`일 경우 `margin-right`, `false`일 경우 `margin-bottom`에 해당하는 값|
+
+### alignPosition {#alignPosition}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+패널의 정렬 기준 위치. [Camera](Camera)의 뷰포트 내에서의 [alignPosition](Camera#alignPosition)이 위치해야 하는 곳입니다
+
+**Type**: number
+
+### removed {#removed}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+패널이 [remove](Flicking#remove)되었는지 여부를 나타내는 값
+
+**Type**: boolean
+
+### rendered {#rendered}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+패널의 엘리먼트가 화면상에 렌더링되고있는지 여부를 나타내는 값
+
+**Type**: boolean
+
+### loading {#loading}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+패널 내부의 이미지/비디오가 아직 로드되지 않아 [resize](Panel#resize)될 것인지를 나타내는 값
+
+**Type**: boolean
+
+### range {#range}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+패널 엘리먼트의 Bounding box 범위
+
+**Type**: object
+
+|PROPERTY|TYPE|DESCRIPTION|
+|:---:|:---:|:---:|
+|min|number|Bounding box's left([horizontal](Flicking#horizontal): true) / top([horizontal](Flicking#horizontal): false)|
+|max|number|Bounding box's right([horizontal](Flicking#horizontal): true) / bottom([horizontal](Flicking#horizontal): false)|
+
+### toggled {#toggled}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+패널의 위치가 circular 동작에 의해 토글되었는지 여부를 나타내는 값
+
+**Type**: boolean
+
+### toggleDirection {#toggleDirection}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+패널의 위치가 circular 동작에 의해 토글되는 방향
+
+**Type**: [DIRECTION](DIRECTION)
+
+### offset {#offset}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+[Panel#order](Panel#order)에 의한 실제 위치 변경값
+
+**Type**: number
+
+### progress {#progress}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+이 패널로부터 이전/다음 패널으로의 이동 진행률
+
+**Type**: number
+
+### outsetProgress {#outsetProgress}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+현재 패널이 뷰포트 영역 밖으로 완전히 사라지는 지점을 기준으로 하는 진행도(prev방향: -1, 선택 지점: 0, next방향: 1)
+
+**Type**: number
+
+### visibleRatio {#visibleRatio}
+
+<div>
+  <span className="badge badge--warning">readonly</span>
+</div>
+
+뷰포트 안에서 패널이 보이는 영역의 비율
+
+**Type**: number
+
+### align {#align}
+
+<div>
+
+</div>
+
+[alignPosition](Panel#alignPosition)이 패널 내의 어디에 위치해야 하는지를 나타내는 값
+
+**Type**: Constants.ALIGN \| string \| number
+
+## Methods
+
+### markForShow {#markForShow}
+
+<div>
+
+</div>
+
+Mark panel element to be appended on the camera element
+
+### markForHide {#markForHide}
+
+<div>
+
+</div>
+
+Mark panel element to be removed from the camera element
+
+### resize {#resize}
+
+<div>
+
+</div>
+
+패널의 크기를 갱신합니다
+
+**Returns**: this
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|cached|object|✔️||사전에 캐시된 패널의 크기 정보|
+
+### setSize {#setSize}
+
+<div>
+
+</div>
+
+패널 크기를 변경합니다. 패널 엘리먼트에 해당 크기의 CSS width/height를 적용합니다
+
+**Returns**: this
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|size|object|✔️||새 패널 크기|
+|size.width|number \| string|✔️||CSS 문자열 또는 숫자(px)|
+|size.height|number \| string|✔️||CSS 문자열 또는 숫자(px)|
+
+### contains {#contains}
+
+<div>
+
+</div>
+
+해당 엘리먼트가 이 패널의 [element](Panel#element) 내에 포함되어 있는지를 반환합니다
+
+**Returns**: boolean
+- 패널의 [element](Panel#element)내에 해당 엘리먼트 포함 여부
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|element|HTMLElement|||확인하고자 하는 HTMLElement|
+
+### destroy {#destroy}
+
+<div>
+
+</div>
+
+내부 상태를 초기화하고 [removed](Panel#removed)를 `true`로 설정합니다.
+
+**Returns**: void
+
+### includePosition {#includePosition}
+
+<div>
+
+</div>
+
+주어진 좌표가 현재 패널의 [range](Panel#range)내에 속해있는지를 반환합니다.
+
+**Returns**: boolean
+- 해당 좌표가 패널 영역 내에 속해있는지 여부
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|pos|number|||확인하고자 하는 좌표|
+|includeMargin|boolean|✔️|false|패널 영역에 [margin](Panel#margin)값을 포함시킵니다|
+
+### includeRange {#includeRange}
+
+<div>
+
+</div>
+
+주어진 범위가 이 패널 내부에 완전히 포함되는지를 반환합니다
+
+**Returns**: boolean
+- 해당 범위가 패널 영역 내에 완전히 속해있는지 여부
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|min|number|||확인하고자 하는 최소 범위|
+|max|number|||확인하고자 하는 최대 범위|
+|includeMargin|boolean|✔️|false|패널 영역에 [margin](Panel#margin)값을 포함시킵니다|
+
+### isVisibleOnRange {#isVisibleOnRange}
+
+<div>
+
+</div>
+
+주어진 범위 내에서 이 패널의 일부가 보여지는지를 반환합니다
+
+**Returns**: boolean
+- 해당 범위 내에서 패널을 볼 수 있는지 여부
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|min|number|||확인하고자 하는 최소 범위|
+|max|number|||확인하고자 하는 최대 범위|
+
+### focus {#focus}
+
+<div>
+
+</div>
+
+[Camera](Camera)를 이 패널로 이동합니다
+
+**Returns**: Promise&lt;void&gt;
+- 패널 도달시에 resolve되는 Promise
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|duration|number|✔️||애니메이션 진행 시간 (단위: ms)|
+
+### prev {#prev}
+
+<div>
+
+</div>
+
+이전(`index - 1`) 패널을 반환합니다. 이전 패널이 없을 경우 `null`을 반환합니다<br />[circular](Flicking#circularEnabled) 모드가 활성화되었을 때 첫번째 패널에서 이 메소드를 호출할 경우 마지막 패널을 반환합니다
+
+**Returns**: [Panel](Panel) \| null
+- 이전 패널
+
+### next {#next}
+
+<div>
+
+</div>
+
+다음(`index + 1`) 패널을 반환합니다. 다음 패널이 없을 경우 `null`을 반환합니다<br />[circular](Flicking#circularEnabled) 모드가 활성화되었을 때 마지막 패널에서 이 메소드를 호출할 경우 첫번째 패널을 반환합니다
+
+**Returns**: [Panel](Panel) \| null
+- 다음 패널
+
+### increaseIndex {#increaseIndex}
+
+<div>
+
+</div>
+
+패널의 인덱스를 주어진 값만큼 증가시킵니다
+
+**Returns**: this
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|val|number|||0보다 같거나 큰 정수|
+
+### decreaseIndex {#decreaseIndex}
+
+<div>
+
+</div>
+
+패널의 인덱스를 주어진 값만큼 감소시킵니다
+
+**Returns**: this
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|val|number|||0보다 같거나 큰 정수|
+
+### updatePosition {#updatePosition}
+
+<div>
+
+</div>
+
+**Returns**: this
+
+### toggle {#toggle}
+
+<div>
+
+</div>
+
+**Returns**: boolean
+- toggled
+
+|PARAMETER|TYPE|OPTIONAL|DEFAULT|DESCRIPTION|
+|:---:|:---:|:---:|:---:|:---:|
+|prevPos|number||||
+|newPos|number||||
+
+### updateCircularToggleDirection {#updateCircularToggleDirection}
+
+<div>
+
+</div>
+
+**Returns**: this
+
