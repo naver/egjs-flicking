@@ -521,7 +521,7 @@ abstract class Renderer {
     const firstPanelSizeObj = {
       size: panelSize,
       margin: referencePanel.margin,
-      ...(!flicking.horizontal && { height: referencePanel.height})
+      ...(!flicking.horizontal && { height: referencePanel.height })
     };
 
     if (!flicking.noPanelStyleOverride) {
@@ -567,11 +567,14 @@ abstract class Renderer {
     flicking.camera.applyTransform();
 
     if (flicking.useCSSOrder) {
-      // useCSSOrder를 사용하는 경우 DOM은 변화가 없지만 대신 css `order`값을 주입
-      const panels = flicking.panels;
+      // `useCSSOrder`를 사용하는 경우 DOM은 변화가 없지만 대신 css `order`값을 주입
+      const renderedPanels = flicking.renderer.panels.filter(panel => panel.rendered);
 
       this._strategy.getRenderingIndexesByOrder(flicking).forEach((domIndex, index) => {
-        panels[domIndex].element.style.order = `${index}`;
+        if (renderedPanels[domIndex].element) {
+          // 방어 코드 추가
+          renderedPanels[domIndex].element.style.order = `${index}`;
+        }
       });
     }
   }
