@@ -262,6 +262,19 @@ describe("SnapControl", () => {
         expect(position).to.equal(flicking.panels[flicking.panelCount - 1].position);
       });
 
+      it("should not move to the adjacent panel if anchor in camera is not same as current anchor", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          align: "prev",
+          moveType: MOVE_TYPE.SNAP,
+          threshold: 40
+        });
+        const control = flicking.control;
+
+        await simulate(flicking.element, { deltaX: -800, duration: 500 }, 1000);
+
+        expect(control.activePanel).to.equal(flicking.getPanel(1));
+      });
+
       it("should move to the adjacent panel with the nearest position, from last to first panel", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
           moveType: MOVE_TYPE.SNAP,
