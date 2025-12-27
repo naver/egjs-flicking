@@ -42,54 +42,6 @@ const Flicking = defineComponent({
     this.renderEmitter = new Component();
     this.diffResult = null;
 
-    this.getPanels = () => {
-      const componentInstance = getCurrentInstance() as unknown as { ctx: Flicking } | null;
-      const vueFlicking = componentInstance?.ctx;
-      const flicking = this.vanillaFlicking;
-      const defaultSlots = this.getSlots();
-      const diffResult = vueFlicking?.diffResult;
-
-      const slots = diffResult
-        ? getRenderingPanels(flicking, diffResult)
-        : defaultSlots;
-
-      const panelComponent = resolveComponent("Panel");
-      const panels = slots.map((slot, idx) => h(panelComponent as any, {
-        key: slot.key!,
-        ref: idx.toString()
-      }, () => slot));
-
-      return panels;
-    };
-    this.getVirtualPanels = () => {
-      const options = this.options;
-      const {
-        panelClass = "flicking-panel"
-      } = options.virtual!;
-      const panelsPerView = options.panelsPerView as number;
-      const flicking = this.vanillaFlicking;
-      const initialized = flicking && flicking.initialized;
-
-      const renderingIndexes = initialized
-        ? flicking.renderer.strategy.getRenderingIndexesByOrder(flicking)
-        : range(panelsPerView + 1);
-
-      const firstPanel = initialized && flicking.panels[0];
-      const size = firstPanel
-        ? flicking.horizontal
-          ? { width: firstPanel.size }
-          : { height: firstPanel.size }
-        : {};
-
-      return renderingIndexes.map(idx => h("div", {
-        key: idx,
-        ref: idx.toString(),
-        class: panelClass,
-        style: size,
-        "data-element-index": idx
-      }));
-    };
-
     withFlickingMethods(this, "vanillaFlicking");
   },
   mounted() {
@@ -232,6 +184,53 @@ const Flicking = defineComponent({
 
       this.vanillaFlicking!.addPlugins(...added.map(index => list[index]));
       this.vanillaFlicking!.removePlugins(...removed.map(index => prevList[index]));
+    },
+    getPanels() {
+      const componentInstance = getCurrentInstance() as unknown as { ctx: Flicking } | null;
+      const vueFlicking = componentInstance?.ctx;
+      const flicking = this.vanillaFlicking;
+      const defaultSlots = this.getSlots();
+      const diffResult = vueFlicking?.diffResult;
+
+      const slots = diffResult
+        ? getRenderingPanels(flicking, diffResult)
+        : defaultSlots;
+
+      const panelComponent = resolveComponent("Panel");
+      const panels = slots.map((slot, idx) => h(panelComponent as any, {
+        key: slot.key!,
+        ref: idx.toString()
+      }, () => slot));
+
+      return panels;
+    },
+    getVirtualPanels() {
+      const options = this.options;
+      const {
+        panelClass = "flicking-panel"
+      } = options.virtual!;
+      const panelsPerView = options.panelsPerView as number;
+      const flicking = this.vanillaFlicking;
+      const initialized = flicking && flicking.initialized;
+
+      const renderingIndexes = initialized
+        ? flicking.renderer.strategy.getRenderingIndexesByOrder(flicking)
+        : range(panelsPerView + 1);
+
+      const firstPanel = initialized && flicking.panels[0];
+      const size = firstPanel
+        ? flicking.horizontal
+          ? { width: firstPanel.size }
+          : { height: firstPanel.size }
+        : {};
+
+      return renderingIndexes.map(idx => h("div", {
+        key: idx,
+        ref: idx.toString(),
+        class: panelClass,
+        style: size,
+        "data-element-index": idx
+      }));
     },
     fillKeys() {
       const vnodes = this.getSlots();
