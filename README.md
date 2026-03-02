@@ -106,7 +106,7 @@ import Flicking from "@egjs/flicking";
 // import styles
 import "@egjs/flicking/dist/flicking.css"; // Supports IE10+, using CSS flex
 // Or...
-import "@egjs/flicking/dist/flicking.inline.css"; //Supports IE9+, using CSS inline-box
+import "@egjs/flicking/dist/flicking.inline.css"; // Supports IE9+, using CSS inline-box
 
 const flicking = new Flicking("#my-flicking", { circular: true });
 ```
