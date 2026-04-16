@@ -1,0 +1,4108 @@
+{
+  "metadata": {
+    "toolPackage": "@microsoft/api-extractor",
+    "toolVersion": "7.55.2",
+    "schemaVersion": 1011,
+    "oldestForwardsCompatibleVersion": 1001,
+    "tsdocConfig": {
+      "$schema": "https://developer.microsoft.com/json-schemas/tsdoc/v0/tsdoc.schema.json",
+      "noStandardTags": true,
+      "tagDefinitions": [
+        {
+          "tagName": "@alpha",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@beta",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@defaultValue",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@decorator",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@deprecated",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@eventProperty",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@example",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@experimental",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@inheritDoc",
+          "syntaxKind": "inline"
+        },
+        {
+          "tagName": "@internal",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@label",
+          "syntaxKind": "inline"
+        },
+        {
+          "tagName": "@link",
+          "syntaxKind": "inline",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@override",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@packageDocumentation",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@param",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@privateRemarks",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@public",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@readonly",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@remarks",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@returns",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@sealed",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@see",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@throws",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@typeParam",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@virtual",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@jsx",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@jsxRuntime",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@jsxFrag",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@jsxImportSource",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@betaDocumentation",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@internalRemarks",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@preapproved",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@fires",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@dependency",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@since",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@accepts",
+          "syntaxKind": "block"
+        }
+      ],
+      "supportForTags": {
+        "@alpha": true,
+        "@beta": true,
+        "@defaultValue": true,
+        "@decorator": true,
+        "@deprecated": true,
+        "@eventProperty": true,
+        "@example": true,
+        "@experimental": true,
+        "@inheritDoc": true,
+        "@internal": true,
+        "@label": true,
+        "@link": true,
+        "@override": true,
+        "@packageDocumentation": true,
+        "@param": true,
+        "@privateRemarks": true,
+        "@public": true,
+        "@readonly": true,
+        "@remarks": true,
+        "@returns": true,
+        "@sealed": true,
+        "@see": true,
+        "@throws": true,
+        "@typeParam": true,
+        "@virtual": true,
+        "@betaDocumentation": true,
+        "@internalRemarks": true,
+        "@preapproved": true
+      },
+      "reportUnsupportedHtmlElements": false
+    }
+  },
+  "kind": "Package",
+  "canonicalReference": "@egjs/flicking-plugins!",
+  "docComment": "",
+  "name": "@egjs/flicking-plugins",
+  "preserveMemberOrder": false,
+  "members": [
+    {
+      "kind": "EntryPoint",
+      "canonicalReference": "@egjs/flicking-plugins!",
+      "name": "",
+      "preserveMemberOrder": false,
+      "members": [
+        {
+          "kind": "Class",
+          "canonicalReference": "@egjs/flicking-plugins!Arrow:class",
+          "docComment": "/**\n * A plugin to easily create prev/next arrow buttons for Flicking\n *\n * @see\n *\n * {@link https://naver.github.io/egjs-flicking/docs/demos/plugins/arrow | Demo: Arrow}\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "declare class Arrow implements "
+            },
+            {
+              "kind": "Reference",
+              "text": "Plugin",
+              "canonicalReference": "@egjs/flicking!Plugin:interface"
+            },
+            {
+              "kind": "Content",
+              "text": " "
+            }
+          ],
+          "fileUrlPath": "declaration/Arrow.d.ts",
+          "releaseTag": "Public",
+          "isAbstract": false,
+          "name": "Arrow",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "Constructor",
+              "canonicalReference": "@egjs/flicking-plugins!Arrow:constructor(1)",
+              "docComment": "/**\n * Constructs a new instance of the `Arrow` class\n *\n * @param options - Options for the Arrow instance\n *\n * @example\n * ```ts\n * flicking.addPlugins(new Arrow({ parentEl: null, prevElSelector: \".flicking-arrow-prev\", nextElSelector: \".flicking-arrow-next\" }));\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "constructor(options?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Partial",
+                  "canonicalReference": "!Partial:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ArrowOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!ArrowOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ">"
+                },
+                {
+                  "kind": "Content",
+                  "text": ");"
+                }
+              ],
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "options",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 5
+                  },
+                  "isOptional": true
+                }
+              ]
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!Arrow#destroy:member(1)",
+              "docComment": "/**\n * Destroy the plugin and remove all arrow event listeners.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "destroy(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "destroy"
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Arrow#disabledClass:member",
+              "docComment": "/**\n * Current value of the {@link ArrowOptions.disabledClass | disabledClass} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get disabledClass(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ArrowOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!ArrowOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"disabledClass\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset disabledClass(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ArrowOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!ArrowOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"disabledClass\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "disabledClass",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!Arrow#init:member(1)",
+              "docComment": "/**\n * Initialize the plugin and attach arrow event listeners to the Flicking instance.\n *\n * @param flicking - The Flicking instance to attach this plugin to\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "init(flicking: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Flicking",
+                  "canonicalReference": "@egjs/flicking!Flicking:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "flicking",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "init"
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Arrow#moveByViewportSize:member",
+              "docComment": "/**\n * Current value of the {@link ArrowOptions.moveByViewportSize | moveByViewportSize} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get moveByViewportSize(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ArrowOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!ArrowOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"moveByViewportSize\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset moveByViewportSize(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ArrowOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!ArrowOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"moveByViewportSize\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "moveByViewportSize",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Arrow#moveCount:member",
+              "docComment": "/**\n * Current value of the {@link ArrowOptions.moveCount | moveCount} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get moveCount(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ArrowOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!ArrowOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"moveCount\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset moveCount(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ArrowOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!ArrowOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"moveCount\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "moveCount",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Arrow#nextEl:member",
+              "docComment": "/**\n * The \"next\" arrow HTMLElement\n *\n * @readonly\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get nextEl(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "HTMLElement",
+                  "canonicalReference": "!HTMLElement:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": true,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "nextEl",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Arrow#nextElSelector:member",
+              "docComment": "/**\n * Current value of the {@link ArrowOptions.nextElSelector | nextElSelector} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get nextElSelector(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ArrowOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!ArrowOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"nextElSelector\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset nextElSelector(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ArrowOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!ArrowOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"nextElSelector\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "nextElSelector",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Arrow#parentEl:member",
+              "docComment": "/**\n * Current value of the {@link ArrowOptions.parentEl | parentEl} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get parentEl(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ArrowOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!ArrowOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"parentEl\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset parentEl(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ArrowOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!ArrowOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"parentEl\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "parentEl",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Arrow#prevEl:member",
+              "docComment": "/**\n * The \"previous\" arrow HTMLElement\n *\n * @readonly\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get prevEl(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "HTMLElement",
+                  "canonicalReference": "!HTMLElement:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": true,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "prevEl",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Arrow#prevElSelector:member",
+              "docComment": "/**\n * Current value of the {@link ArrowOptions.prevElSelector | prevElSelector} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get prevElSelector(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ArrowOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!ArrowOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"prevElSelector\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset prevElSelector(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ArrowOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!ArrowOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"prevElSelector\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "prevElSelector",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!Arrow#update:member(1)",
+              "docComment": "/**\n * Update the arrow disabled/enabled state based on the current camera position.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "update(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "update"
+            }
+          ],
+          "implementsTokenRanges": [
+            {
+              "startIndex": 1,
+              "endIndex": 2
+            }
+          ]
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@egjs/flicking-plugins!ARROW:var",
+          "docComment": "",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "ARROW: "
+            },
+            {
+              "kind": "Content",
+              "text": "{\n    readonly PREV_SELECTOR: \".flicking-arrow-prev\";\n    readonly NEXT_SELECTOR: \".flicking-arrow-next\";\n    readonly DISABLED_CLASS: \"flicking-arrow-disabled\";\n}"
+            }
+          ],
+          "fileUrlPath": "declaration/const.d.ts",
+          "isReadonly": true,
+          "releaseTag": "Public",
+          "name": "ARROW",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
+        },
+        {
+          "kind": "Interface",
+          "canonicalReference": "@egjs/flicking-plugins!ArrowOptions:interface",
+          "docComment": "/**\n * Options for the {@link Arrow} plugin\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export interface ArrowOptions "
+            }
+          ],
+          "fileUrlPath": "declaration/Arrow.d.ts",
+          "releaseTag": "Public",
+          "name": "ArrowOptions",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!ArrowOptions#disabledClass:member",
+              "docComment": "/**\n * CSS class added to an arrow element when it is disabled (at the start/end of non-circular Flicking)\n *\n * @defaultValue \"flicking-arrow-disabled\"\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "disabledClass: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "disabledClass",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!ArrowOptions#moveByViewportSize:member",
+              "docComment": "/**\n * Whether to move by viewport size instead of panel count\n *\n * @defaultValue false\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "moveByViewportSize: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "moveByViewportSize",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!ArrowOptions#moveCount:member",
+              "docComment": "/**\n * Number of panels to move when an arrow is clicked\n *\n * @defaultValue 1\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "moveCount: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "moveCount",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!ArrowOptions#nextElSelector:member",
+              "docComment": "/**\n * CSS selector for the \"next\" arrow element\n *\n * @defaultValue \".flicking-arrow-next\"\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "nextElSelector: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "nextElSelector",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!ArrowOptions#parentEl:member",
+              "docComment": "/**\n * The parent element to search for arrow elements. If `null`, the Flicking element is used\n *\n * @defaultValue null\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "parentEl: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "HTMLElement",
+                  "canonicalReference": "!HTMLElement:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": " | null"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "parentEl",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!ArrowOptions#prevElSelector:member",
+              "docComment": "/**\n * CSS selector for the \"previous\" arrow element\n *\n * @defaultValue \".flicking-arrow-prev\"\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "prevElSelector: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "prevElSelector",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "extendsTokenRanges": []
+        },
+        {
+          "kind": "Class",
+          "canonicalReference": "@egjs/flicking-plugins!AutoPlay:class",
+          "docComment": "/**\n * Plugin that allows you to automatically move to the next/previous panel on a specific time basis\n *\n * @see\n *\n * {@link https://naver.github.io/egjs-flicking/docs/demos/plugins/autoplay | Demo: AutoPlay}\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "declare class AutoPlay implements "
+            },
+            {
+              "kind": "Reference",
+              "text": "Plugin",
+              "canonicalReference": "@egjs/flicking!Plugin:interface"
+            },
+            {
+              "kind": "Content",
+              "text": " "
+            }
+          ],
+          "fileUrlPath": "declaration/AutoPlay.d.ts",
+          "releaseTag": "Public",
+          "isAbstract": false,
+          "name": "AutoPlay",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "Constructor",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlay:constructor(1)",
+              "docComment": "/**\n * Constructs a new instance of the `AutoPlay` class\n *\n * @param options - Options for the AutoPlay instance\n *\n * @example\n * ```ts\n * flicking.addPlugins(new AutoPlay({ duration: 2000, direction: \"NEXT\" }));\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "constructor(options?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Partial",
+                  "canonicalReference": "!Partial:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "AutoPlayOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!AutoPlayOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ">"
+                },
+                {
+                  "kind": "Content",
+                  "text": ");"
+                }
+              ],
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "options",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 5
+                  },
+                  "isOptional": true
+                }
+              ]
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlay#animationDuration:member",
+              "docComment": "/**\n * Current value of the {@link AutoPlayOptions.animationDuration | animationDuration} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get animationDuration(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number | undefined"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset animationDuration(val: number | undefined);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "animationDuration",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlay#delayAfterHover:member",
+              "docComment": "/**\n * Current value of the {@link AutoPlayOptions.delayAfterHover | delayAfterHover} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get delayAfterHover(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset delayAfterHover(val: number);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "delayAfterHover",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlay#destroy:member(1)",
+              "docComment": "/**\n * Destroy the plugin, stop autoplay, and remove all event listeners.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "destroy(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "destroy"
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlay#direction:member",
+              "docComment": "/**\n * Current value of the {@link AutoPlayOptions.direction | direction} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get direction(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "AutoPlayOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!AutoPlayOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"direction\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset direction(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "AutoPlayOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!AutoPlayOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"direction\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "direction",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlay#duration:member",
+              "docComment": "/**\n * Current value of the {@link AutoPlayOptions.duration | duration} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get duration(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset duration(val: number);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "duration",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlay#init:member(1)",
+              "docComment": "/**\n * Initialize the plugin and start autoplay on the given Flicking instance.\n *\n * @param flicking - The Flicking instance to attach this plugin to\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "init(flicking: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Flicking",
+                  "canonicalReference": "@egjs/flicking!Flicking:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "flicking",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "init"
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlay#play:member",
+              "docComment": "/**\n * Start the autoplay timer. Panels will move automatically after the configured {@link AutoPlayOptions.duration | duration}.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "play: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "() => void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "play",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlay#playing:member",
+              "docComment": "/**\n * Whether the autoplay is currently active\n *\n * @readonly\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get playing(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": true,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "playing",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlay#stop:member",
+              "docComment": "/**\n * Stop the autoplay timer and cancel any pending panel movement.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "stop: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "() => void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "stop",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlay#stopOnHover:member",
+              "docComment": "/**\n * Current value of the {@link AutoPlayOptions.stopOnHover | stopOnHover} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get stopOnHover(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset stopOnHover(val: boolean);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "stopOnHover",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlay#stopOnInit:member",
+              "docComment": "/**\n * Current value of the {@link AutoPlayOptions.stopOnInit | stopOnInit} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get stopOnInit(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset stopOnInit(val: boolean);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "stopOnInit",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlay#update:member(1)",
+              "docComment": "/**\n * Update the plugin state. This is a no-op for AutoPlay.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "update(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "update"
+            }
+          ],
+          "implementsTokenRanges": [
+            {
+              "startIndex": 1,
+              "endIndex": 2
+            }
+          ]
+        },
+        {
+          "kind": "Interface",
+          "canonicalReference": "@egjs/flicking-plugins!AutoPlayOptions:interface",
+          "docComment": "/**\n * Options for the {@link AutoPlay} plugin\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export interface AutoPlayOptions "
+            }
+          ],
+          "fileUrlPath": "declaration/AutoPlay.d.ts",
+          "releaseTag": "Public",
+          "name": "AutoPlayOptions",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlayOptions#animationDuration:member",
+              "docComment": "/**\n * Duration of the panel move animation (ms). If `undefined`, the Flicking instance's `duration` is used\n *\n * @defaultValue undefined\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "animationDuration: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number | undefined"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "animationDuration",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlayOptions#delayAfterHover:member",
+              "docComment": "/**\n * If `stopOnHover` is true, time to wait before resuming after mouse leaves (ms)\n *\n * @defaultValue Same as `duration`\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "delayAfterHover: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "delayAfterHover",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlayOptions#direction:member",
+              "docComment": "/**\n * The direction in which the panel moves\n *\n * @defaultValue \"NEXT\"\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "direction: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "(typeof "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "DIRECTION",
+                  "canonicalReference": "@egjs/flicking!DIRECTION:var"
+                },
+                {
+                  "kind": "Content",
+                  "text": ")[\"NEXT\"] | (typeof "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "DIRECTION",
+                  "canonicalReference": "@egjs/flicking!DIRECTION:var"
+                },
+                {
+                  "kind": "Content",
+                  "text": ")[\"PREV\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "direction",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 6
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlayOptions#duration:member",
+              "docComment": "/**\n * Time to wait before moving on to the next panel (ms)\n *\n * @defaultValue 2000\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "duration: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "duration",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlayOptions#stopOnHover:member",
+              "docComment": "/**\n * Whether to stop when the mouse hovers over the element\n *\n * @defaultValue false\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "stopOnHover: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "stopOnHover",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!AutoPlayOptions#stopOnInit:member",
+              "docComment": "/**\n * Whether to stop autoplay when the plugin is first initialized\n *\n * @defaultValue false\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "stopOnInit: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "stopOnInit",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "extendsTokenRanges": []
+        },
+        {
+          "kind": "Class",
+          "canonicalReference": "@egjs/flicking-plugins!Fade:class",
+          "docComment": "/**\n * A plugin to apply fade in/out effect while panels are moving\n *\n * @see\n *\n * {@link https://naver.github.io/egjs-flicking/docs/demos/plugins/fade | Demo: Fade}\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "declare class Fade implements "
+            },
+            {
+              "kind": "Reference",
+              "text": "Plugin",
+              "canonicalReference": "@egjs/flicking!Plugin:interface"
+            },
+            {
+              "kind": "Content",
+              "text": " "
+            }
+          ],
+          "fileUrlPath": "declaration/Fade.d.ts",
+          "releaseTag": "Public",
+          "isAbstract": false,
+          "name": "Fade",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "Constructor",
+              "canonicalReference": "@egjs/flicking-plugins!Fade:constructor(1)",
+              "docComment": "/**\n * Constructs a new instance of the `Fade` class\n *\n * @param selector - CSS selector for the element to apply the fade effect. If empty, the panel element itself is used\n *\n * @param scale - Effect amplification scale\n *\n * @example\n * ```ts\n * flicking.addPlugins(new Fade(\"p\", 1));\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "constructor(selector?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", scale?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ");"
+                }
+              ],
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "selector",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": true
+                },
+                {
+                  "parameterName": "scale",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ]
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!Fade#destroy:member(1)",
+              "docComment": "/**\n * Destroy the plugin and remove all event listeners.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "destroy(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "destroy"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!Fade#init:member(1)",
+              "docComment": "/**\n * Initialize the plugin and apply the fade effect to the Flicking instance.\n *\n * @param flicking - The Flicking instance to attach this plugin to\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "init(flicking: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Flicking",
+                  "canonicalReference": "@egjs/flicking!Flicking:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "flicking",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "init"
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Fade#scale:member",
+              "docComment": "/**\n * Effect amplification scale\n *\n * @readonly\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get scale(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset scale(val: number);"
+                }
+              ],
+              "isReadonly": true,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "scale",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Fade#selector:member",
+              "docComment": "/**\n * CSS selector for the element to apply the fade effect. If empty, the panel element itself is used\n *\n * @readonly\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get selector(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset selector(val: string);"
+                }
+              ],
+              "isReadonly": true,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "selector",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Fade#update:member",
+              "docComment": "/**\n * Recalculate and apply the fade effect to all visible panels.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "update: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "() => void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "update",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            }
+          ],
+          "implementsTokenRanges": [
+            {
+              "startIndex": 1,
+              "endIndex": 2
+            }
+          ]
+        },
+        {
+          "kind": "Class",
+          "canonicalReference": "@egjs/flicking-plugins!Pagination:class",
+          "docComment": "/**\n * A plugin to add pagination indicators (bullets, fractions, or scrollable bullets) to Flicking\n *\n * @see\n *\n * {@link https://naver.github.io/egjs-flicking/docs/demos/plugins/pagination | Demo: Pagination}\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "declare class Pagination implements "
+            },
+            {
+              "kind": "Reference",
+              "text": "Plugin",
+              "canonicalReference": "@egjs/flicking!Plugin:interface"
+            },
+            {
+              "kind": "Content",
+              "text": " "
+            }
+          ],
+          "fileUrlPath": "declaration/pagination/Pagination.d.ts",
+          "releaseTag": "Public",
+          "isAbstract": false,
+          "name": "Pagination",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "Constructor",
+              "canonicalReference": "@egjs/flicking-plugins!Pagination:constructor(1)",
+              "docComment": "/**\n * Constructs a new instance of the `Pagination` class\n *\n * @param options - Options for the Pagination instance\n *\n * @example\n * ```ts\n * flicking.addPlugins(new Pagination({ type: \"bullet\", selector: \".flicking-pagination\" }));\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "constructor(options?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Partial",
+                  "canonicalReference": "!Partial:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ">"
+                },
+                {
+                  "kind": "Content",
+                  "text": ");"
+                }
+              ],
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "options",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 5
+                  },
+                  "isOptional": true
+                }
+              ]
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Pagination#bulletCount:member",
+              "docComment": "/**\n * Current value of the {@link PaginationOptions.bulletCount | bulletCount} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get bulletCount(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"bulletCount\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset bulletCount(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"bulletCount\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "bulletCount",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Pagination#bulletWrapperclassPrefixClass:member",
+              "docComment": "/**\n * Sets {@link PaginationOptions.classPrefix | classPrefix}.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "set bulletWrapperclassPrefixClass(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"classPrefix\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ");"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "bulletWrapperclassPrefixClass",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Pagination#classPrefix:member",
+              "docComment": "/**\n * Current value of the {@link PaginationOptions.classPrefix | classPrefix} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get classPrefix(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": true,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "classPrefix",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!Pagination#destroy:member(1)",
+              "docComment": "/**\n * Destroy the plugin, remove all event listeners, and clean up pagination DOM elements.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "destroy(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "destroy"
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Pagination#fractionCurrentFormat:member",
+              "docComment": "/**\n * Current value of the {@link PaginationOptions.fractionCurrentFormat | fractionCurrentFormat} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get fractionCurrentFormat(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"fractionCurrentFormat\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset fractionCurrentFormat(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"fractionCurrentFormat\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "fractionCurrentFormat",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Pagination#fractionTotalFormat:member",
+              "docComment": "/**\n * Current value of the {@link PaginationOptions.fractionTotalFormat | fractionTotalFormat} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get fractionTotalFormat(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"fractionTotalFormat\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset fractionTotalFormat(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"fractionTotalFormat\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "fractionTotalFormat",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!Pagination#init:member(1)",
+              "docComment": "/**\n * Initialize the plugin, create the pagination renderer, and attach event listeners to the Flicking instance.\n *\n * @param flicking - The Flicking instance to attach this plugin to\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "init(flicking: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Flicking",
+                  "canonicalReference": "@egjs/flicking!Flicking:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "flicking",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "init"
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Pagination#parentEl:member",
+              "docComment": "/**\n * Current value of the {@link PaginationOptions.parentEl | parentEl} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get parentEl(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"parentEl\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset parentEl(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"parentEl\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "parentEl",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Pagination#renderActiveBullet:member",
+              "docComment": "/**\n * Current value of the {@link PaginationOptions.renderActiveBullet | renderActiveBullet} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get renderActiveBullet(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"renderActiveBullet\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset renderActiveBullet(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"renderActiveBullet\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "renderActiveBullet",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Pagination#renderBullet:member",
+              "docComment": "/**\n * Current value of the {@link PaginationOptions.renderBullet | renderBullet} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get renderBullet(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"renderBullet\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset renderBullet(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"renderBullet\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "renderBullet",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Pagination#renderFraction:member",
+              "docComment": "/**\n * Current value of the {@link PaginationOptions.renderFraction | renderFraction} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get renderFraction(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"renderFraction\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset renderFraction(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"renderFraction\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "renderFraction",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Pagination#scrollOnChange:member",
+              "docComment": "/**\n * Current value of the {@link PaginationOptions.scrollOnChange | scrollOnChange} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get scrollOnChange(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"scrollOnChange\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset scrollOnChange(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"scrollOnChange\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "scrollOnChange",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Pagination#selector:member",
+              "docComment": "/**\n * Current value of the {@link PaginationOptions.selector | selector} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get selector(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"selector\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset selector(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"selector\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "selector",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Pagination#type:member",
+              "docComment": "/**\n * Current value of the {@link PaginationOptions.type | type} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get type(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"type\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset type(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PaginationOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"type\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "type",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Pagination#update:member",
+              "docComment": "/**\n * Re-render the pagination indicators to reflect the current panel state.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "update: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "() => void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "update",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            }
+          ],
+          "implementsTokenRanges": [
+            {
+              "startIndex": 1,
+              "endIndex": 2
+            }
+          ]
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@egjs/flicking-plugins!PAGINATION:var",
+          "docComment": "",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "PAGINATION: "
+            },
+            {
+              "kind": "Content",
+              "text": "{\n    readonly SELECTOR: \".flicking-pagination\";\n    readonly PREFIX: \"flicking-pagination\";\n    readonly BULLET_WRAPPER_SUFFIX: \"bullets\";\n    readonly BULLET_SUFFIX: \"bullet\";\n    readonly BULLET_ACTIVE_SUFFIX: \"bullet-active\";\n    readonly FRACTION_WRAPPER_SUFFIX: \"fraction\";\n    readonly FRACTION_CURRENT_SUFFIX: \"fraction-current\";\n    readonly FRACTION_TOTAL_SUFFIX: \"fraction-total\";\n    readonly SCROLL_UNINIT_SUFFIX: \"uninitialized\";\n    readonly SCROLL_WRAPPER_SUFFIX: \"scroll\";\n    readonly SCROLL_SLIDER_SUFFIX: \"slider\";\n    readonly SCROLL_PREV_SUFFIX: \"bullet-prev\";\n    readonly SCROLL_NEXT_SUFFIX: \"bullet-next\";\n    readonly TYPE: {\n        readonly BULLET: \"bullet\";\n        readonly FRACTION: \"fraction\";\n        readonly SCROLL: \"scroll\";\n    };\n}"
+            }
+          ],
+          "fileUrlPath": "declaration/const.d.ts",
+          "isReadonly": true,
+          "releaseTag": "Public",
+          "name": "PAGINATION",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
+        },
+        {
+          "kind": "Interface",
+          "canonicalReference": "@egjs/flicking-plugins!PaginationOptions:interface",
+          "docComment": "/**\n * Options for the {@link Pagination} plugin\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export interface PaginationOptions "
+            }
+          ],
+          "fileUrlPath": "declaration/pagination/Pagination.d.ts",
+          "releaseTag": "Public",
+          "name": "PaginationOptions",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!PaginationOptions#bulletCount:member",
+              "docComment": "/**\n * Maximum number of bullet indicators displayed at once (only for `\"scroll\"` type)\n *\n * @defaultValue 5\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "bulletCount: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "bulletCount",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!PaginationOptions#classPrefix:member",
+              "docComment": "/**\n * CSS class prefix for pagination elements\n *\n * @defaultValue \"flicking-pagination\"\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "classPrefix: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "classPrefix",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!PaginationOptions#fractionCurrentFormat:member",
+              "docComment": "/**\n * Format function for the current index in fraction type\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "fractionCurrentFormat: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "(index: number) => string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "fractionCurrentFormat",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!PaginationOptions#fractionTotalFormat:member",
+              "docComment": "/**\n * Format function for the total count in fraction type\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "fractionTotalFormat: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "(total: number) => string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "fractionTotalFormat",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!PaginationOptions#parentEl:member",
+              "docComment": "/**\n * The parent element to search for the pagination wrapper. If `null`, the Flicking element is used\n *\n * @defaultValue null\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "parentEl: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "HTMLElement",
+                  "canonicalReference": "!HTMLElement:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": " | null"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "parentEl",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!PaginationOptions#renderActiveBullet:member",
+              "docComment": "/**\n * Custom render function for the active bullet element. If `null`, the default bullet is used\n *\n * @defaultValue null\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "renderActiveBullet: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "((className: string, index: number) => string) | null"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "renderActiveBullet",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!PaginationOptions#renderBullet:member",
+              "docComment": "/**\n * Custom render function for each bullet element\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "renderBullet: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "(className: string, index: number) => string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "renderBullet",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!PaginationOptions#renderFraction:member",
+              "docComment": "/**\n * Custom render function for the fraction display\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "renderFraction: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "(currentClass: string, totalClass: string) => string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "renderFraction",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!PaginationOptions#scrollOnChange:member",
+              "docComment": "/**\n * Callback invoked when the scroll pagination index changes\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "scrollOnChange: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "(index: number, ctx: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ScrollContext",
+                  "canonicalReference": "@egjs/flicking-plugins!~ScrollContext:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ") => any"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "scrollOnChange",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 4
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!PaginationOptions#selector:member",
+              "docComment": "/**\n * CSS selector for the pagination wrapper element\n *\n * @defaultValue \".flicking-pagination\"\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "selector: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "selector",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!PaginationOptions#type:member",
+              "docComment": "/**\n * Pagination display type\n *\n * @defaultValue \"bullet\"\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "type: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "\"bullet\" | \"fraction\" | \"scroll\""
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "type",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "extendsTokenRanges": []
+        },
+        {
+          "kind": "Class",
+          "canonicalReference": "@egjs/flicking-plugins!Parallax:class",
+          "docComment": "/**\n * A plugin to apply parallax effect while panels are moving\n *\n * @see\n *\n * {@link https://naver.github.io/egjs-flicking/docs/demos/plugins/parallax | Demo: Parallax}\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "declare class Parallax implements "
+            },
+            {
+              "kind": "Reference",
+              "text": "Plugin",
+              "canonicalReference": "@egjs/flicking!Plugin:interface"
+            },
+            {
+              "kind": "Content",
+              "text": " "
+            }
+          ],
+          "fileUrlPath": "declaration/Parallax.d.ts",
+          "releaseTag": "Public",
+          "isAbstract": false,
+          "name": "Parallax",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "Constructor",
+              "canonicalReference": "@egjs/flicking-plugins!Parallax:constructor(1)",
+              "docComment": "/**\n * Constructs a new instance of the `Parallax` class\n *\n * @param selector - CSS selector for the element to apply the parallax effect. If empty, the panel element itself is used\n *\n * @param scale - Effect amplification scale\n *\n * @example\n * ```ts\n * flicking.addPlugins(new Parallax(\"img\", 1));\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "constructor(selector?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", scale?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ");"
+                }
+              ],
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "selector",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": true
+                },
+                {
+                  "parameterName": "scale",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ]
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!Parallax#destroy:member(1)",
+              "docComment": "/**\n * Destroy the plugin and remove all event listeners.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "destroy(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "destroy"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!Parallax#init:member(1)",
+              "docComment": "/**\n * Initialize the plugin and apply the parallax effect to the Flicking instance.\n *\n * @param flicking - The Flicking instance to attach this plugin to\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "init(flicking: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Flicking",
+                  "canonicalReference": "@egjs/flicking!Flicking:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "flicking",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "init"
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Parallax#scale:member",
+              "docComment": "/**\n * Effect amplification scale\n *\n * @readonly\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get scale(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset scale(val: number);"
+                }
+              ],
+              "isReadonly": true,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "scale",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Parallax#selector:member",
+              "docComment": "/**\n * CSS selector for the element to apply the parallax effect. If empty, the panel element itself is used\n *\n * @readonly\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get selector(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset selector(val: string);"
+                }
+              ],
+              "isReadonly": true,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "selector",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Parallax#update:member",
+              "docComment": "/**\n * Recalculate and apply the parallax effect to all visible panels.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "update: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "() => void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "update",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            }
+          ],
+          "implementsTokenRanges": [
+            {
+              "startIndex": 1,
+              "endIndex": 2
+            }
+          ]
+        },
+        {
+          "kind": "Class",
+          "canonicalReference": "@egjs/flicking-plugins!Perspective:class",
+          "docComment": "/**\n * A plugin to apply 3D perspective effect while panels are moving\n *\n * @see\n *\n * {@link https://naver.github.io/egjs-flicking/docs/demos/plugins/perspective | Demo: Perspective}\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "declare class Perspective implements "
+            },
+            {
+              "kind": "Reference",
+              "text": "Plugin",
+              "canonicalReference": "@egjs/flicking!Plugin:interface"
+            },
+            {
+              "kind": "Content",
+              "text": " "
+            }
+          ],
+          "fileUrlPath": "declaration/Perspective.d.ts",
+          "releaseTag": "Public",
+          "isAbstract": false,
+          "name": "Perspective",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "Constructor",
+              "canonicalReference": "@egjs/flicking-plugins!Perspective:constructor(1)",
+              "docComment": "/**\n * Constructs a new instance of the `Perspective` class\n *\n * @param options - Options for the Perspective instance\n *\n * @example\n * ```ts\n * flicking.addPlugins(new Perspective({ selector: \"p\", scale: 1, rotate: 1, perspective: 1000 }));\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "constructor(options?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Partial",
+                  "canonicalReference": "!Partial:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PerspectiveOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!PerspectiveOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ">"
+                },
+                {
+                  "kind": "Content",
+                  "text": ");"
+                }
+              ],
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "options",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 5
+                  },
+                  "isOptional": true
+                }
+              ]
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!Perspective#destroy:member(1)",
+              "docComment": "/**\n * Destroy the plugin and remove all event listeners.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "destroy(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "destroy"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!Perspective#init:member(1)",
+              "docComment": "/**\n * Initialize the plugin and apply the perspective effect to the Flicking instance.\n *\n * @param flicking - The Flicking instance to attach this plugin to\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "init(flicking: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Flicking",
+                  "canonicalReference": "@egjs/flicking!Flicking:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "flicking",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "init"
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Perspective#perspective:member",
+              "docComment": "/**\n * Current value of the {@link PerspectiveOptions.perspective | perspective} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get perspective(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset perspective(val: number);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "perspective",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Perspective#rotate:member",
+              "docComment": "/**\n * Current value of the {@link PerspectiveOptions.rotate | rotate} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get rotate(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset rotate(val: number);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "rotate",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Perspective#scale:member",
+              "docComment": "/**\n * Current value of the {@link PerspectiveOptions.scale | scale} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get scale(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset scale(val: number);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "scale",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Perspective#selector:member",
+              "docComment": "/**\n * Current value of the {@link PerspectiveOptions.selector | selector} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get selector(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset selector(val: string);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "selector",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Perspective#update:member",
+              "docComment": "/**\n * Recalculate and apply the perspective effect to all visible panels.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "update: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "() => void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "update",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            }
+          ],
+          "implementsTokenRanges": [
+            {
+              "startIndex": 1,
+              "endIndex": 2
+            }
+          ]
+        },
+        {
+          "kind": "Interface",
+          "canonicalReference": "@egjs/flicking-plugins!PerspectiveOptions:interface",
+          "docComment": "/**\n * Options for the {@link Perspective} plugin\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export interface PerspectiveOptions "
+            }
+          ],
+          "fileUrlPath": "declaration/Perspective.d.ts",
+          "releaseTag": "Public",
+          "name": "PerspectiveOptions",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!PerspectiveOptions#perspective:member",
+              "docComment": "/**\n * The value of the CSS `perspective` property (px)\n *\n * @defaultValue 1000\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "perspective: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "perspective",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!PerspectiveOptions#rotate:member",
+              "docComment": "/**\n * Rotation amplification scale\n *\n * @defaultValue 1\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "rotate: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "rotate",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!PerspectiveOptions#scale:member",
+              "docComment": "/**\n * Effect amplification scale\n *\n * @defaultValue 1\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "scale: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "scale",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!PerspectiveOptions#selector:member",
+              "docComment": "/**\n * CSS selector for the element to apply the perspective effect. If empty, the panel element itself is used\n *\n * @defaultValue \"\"\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "selector: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "selector",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "extendsTokenRanges": []
+        },
+        {
+          "kind": "Interface",
+          "canonicalReference": "@egjs/flicking-plugins!SychronizableFlickingOptions:interface",
+          "docComment": "/**\n * Per-instance synchronization options used in {@link SyncOptions.synchronizedFlickingOptions}\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export interface SychronizableFlickingOptions "
+            }
+          ],
+          "fileUrlPath": "declaration/Sync.d.ts",
+          "releaseTag": "Public",
+          "name": "SychronizableFlickingOptions",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!SychronizableFlickingOptions#activeClass:member",
+              "docComment": "/**\n * CSS class added to the active (selected) panel\n *\n * @defaultValue undefined\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "activeClass?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "activeClass",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!SychronizableFlickingOptions#flicking:member",
+              "docComment": "/**\n * The Flicking instance to synchronize\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "flicking: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Flicking",
+                  "canonicalReference": "@egjs/flicking!Flicking:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "flicking",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!SychronizableFlickingOptions#isClickable:member",
+              "docComment": "/**\n * Whether clicking this Flicking's panel changes the index of all synced Flickings\n *\n * @defaultValue false\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "isClickable?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "isClickable",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!SychronizableFlickingOptions#isSlidable:member",
+              "docComment": "/**\n * Whether mouse/touch scroll on this Flicking changes other Flickings' index. Only available for the `\"index\"` type\n *\n * @defaultValue false\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "isSlidable?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "isSlidable",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "extendsTokenRanges": []
+        },
+        {
+          "kind": "Class",
+          "canonicalReference": "@egjs/flicking-plugins!Sync:class",
+          "docComment": "/**\n * Plugin for synchronizing multiple Flicking instances\n *\n * @see\n *\n * {@link https://naver.github.io/egjs-flicking/docs/demos/plugins/sync | Demo: Sync}\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "declare class Sync implements "
+            },
+            {
+              "kind": "Reference",
+              "text": "Plugin",
+              "canonicalReference": "@egjs/flicking!Plugin:interface"
+            },
+            {
+              "kind": "Content",
+              "text": " "
+            }
+          ],
+          "fileUrlPath": "declaration/Sync.d.ts",
+          "releaseTag": "Public",
+          "isAbstract": false,
+          "name": "Sync",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "Constructor",
+              "canonicalReference": "@egjs/flicking-plugins!Sync:constructor(1)",
+              "docComment": "/**\n * Constructs a new instance of the `Sync` class\n *\n * @param options - Options for the Sync instance\n *\n * @example\n * ```ts\n * flicking.addPlugins(new Sync({\n *   type: \"camera\",\n *   synchronizedFlickingOptions: [\n *     { flicking: flicking1 },\n *     { flicking: flicking2, isClickable: true }\n *   ]\n * }));\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "constructor(options?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Partial",
+                  "canonicalReference": "!Partial:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "SyncOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!SyncOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ">"
+                },
+                {
+                  "kind": "Content",
+                  "text": ");"
+                }
+              ],
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "options",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 5
+                  },
+                  "isOptional": true
+                }
+              ]
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!Sync#destroy:member(1)",
+              "docComment": "/**\n * Destroy the plugin and remove all synchronization event listeners.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "destroy(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "destroy"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!Sync#init:member(1)",
+              "docComment": "/**\n * Initialize the plugin and set up synchronization event listeners between Flicking instances.\n *\n * @param flicking - The Flicking instance to attach this plugin to\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "init(flicking: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Flicking",
+                  "canonicalReference": "@egjs/flicking!Flicking:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "flicking",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "init"
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Sync#synchronizedFlickingOptions:member",
+              "docComment": "/**\n * Current value of the {@link SyncOptions.synchronizedFlickingOptions | synchronizedFlickingOptions} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get synchronizedFlickingOptions(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "SyncOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!SyncOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"synchronizedFlickingOptions\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset synchronizedFlickingOptions(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "SyncOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!SyncOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"synchronizedFlickingOptions\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "synchronizedFlickingOptions",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@egjs/flicking-plugins!Sync#type:member",
+              "docComment": "/**\n * Current value of the {@link SyncOptions.type | type} option.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get type(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "SyncOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!SyncOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"type\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset type(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "SyncOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!SyncOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"type\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "type",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@egjs/flicking-plugins!Sync#update:member(1)",
+              "docComment": "/**\n * Update the active class state for all synchronized Flicking instances.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "update(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "update"
+            }
+          ],
+          "implementsTokenRanges": [
+            {
+              "startIndex": 1,
+              "endIndex": 2
+            }
+          ]
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@egjs/flicking-plugins!SYNC:var",
+          "docComment": "",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "SYNC: "
+            },
+            {
+              "kind": "Content",
+              "text": "{\n    readonly TYPE: {\n        readonly CAMERA: \"camera\";\n        readonly INDEX: \"index\";\n    };\n}"
+            }
+          ],
+          "fileUrlPath": "declaration/const.d.ts",
+          "isReadonly": true,
+          "releaseTag": "Public",
+          "name": "SYNC",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
+        },
+        {
+          "kind": "Interface",
+          "canonicalReference": "@egjs/flicking-plugins!SyncOptions:interface",
+          "docComment": "/**\n * Options for the {@link Sync} plugin\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export interface SyncOptions "
+            }
+          ],
+          "fileUrlPath": "declaration/Sync.d.ts",
+          "releaseTag": "Public",
+          "name": "SyncOptions",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!SyncOptions#synchronizedFlickingOptions:member",
+              "docComment": "/**\n * Detailed options for each Flicking instance to synchronize\n *\n * @defaultValue []\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "synchronizedFlickingOptions: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "SychronizableFlickingOptions",
+                  "canonicalReference": "@egjs/flicking-plugins!SychronizableFlickingOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "synchronizedFlickingOptions",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking-plugins!SyncOptions#type:member",
+              "docComment": "/**\n * Method to synchronize between Flickings. `\"camera\"` syncs by camera position, `\"index\"` syncs by panel index\n *\n * @defaultValue \"camera\"\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "type: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "typeof "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "SYNC.TYPE.CAMERA",
+                  "canonicalReference": "@egjs/flicking-plugins!~__type#CAMERA:member"
+                },
+                {
+                  "kind": "Content",
+                  "text": " | typeof "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "SYNC.TYPE.INDEX",
+                  "canonicalReference": "@egjs/flicking-plugins!~__type#INDEX:member"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "type",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 5
+              }
+            }
+          ],
+          "extendsTokenRanges": []
+        }
+      ]
+    }
+  ]
+}

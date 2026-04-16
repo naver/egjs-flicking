@@ -1,0 +1,132 @@
+---
+title: "Infinite Scroll"
+id: infinite-scroll
+slug: /demos/advanced/infinite-scroll
+sidebar_position: 4
+description: needPanelThreshold 옵션과 needPanel 이벤트로 무한 스크롤을 구현합니다
+keywords: [flicking, carousel, infinite, scroll, needPanel, threshold, 무한, 스크롤, 동적]
+---
+
+import InfiniteScroll from '@site/src/demo/advanced/InfiniteScroll';
+
+# Infinite Scroll
+
+[`needPanelThreshold`](../../api/interfaces/FlickingOptions#needpanelthreshold) 옵션과 `needPanel` 이벤트로 무한 스크롤을 구현합니다.
+
+<InfiniteScroll />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`needPanelThreshold`](../../api/interfaces/FlickingOptions#needpanelthreshold) | `number` | `0` | needPanel 이벤트 발생 임계값 (px) |
+
+### 관련 이벤트
+
+| 이벤트 | 설명 |
+|--------|------|
+| [`needPanel`](../../api/interfaces/NeedPanelEvent) | 뷰포트 끝에 빈 공간이 보일 때 발생 |
+
+### 임계값별 비교
+
+| needPanelThreshold | 동작 |
+|--------------------|------|
+| `0` (기본값) | 끝에 완전히 도달해야 이벤트 발생 |
+| `100` | 끝에서 100px 전에 이벤트 발생 (프리로딩) |
+| `200` | 끝에서 200px 전에 이벤트 발생 |
+
+## 상세 설명
+
+### 동작 원리
+
+1. 스크롤하여 뷰포트 끝에 가까워짐
+2. `needPanelThreshold` 거리 내에 들어오면 `needPanel` 이벤트 발생
+3. 이벤트 핸들러에서 새 패널 추가
+4. 계속 스크롤 가능
+
+```tsx
+<Flicking
+  needPanelThreshold={100}
+  onNeedPanel={(e) => {
+    if (e.direction === "NEXT") {
+      // 뒤에 패널 추가
+      setPanels(prev => [...prev, newPanel]);
+    }
+  }}
+>
+  {panels.map(p => <Panel key={p.id} />)}
+</Flicking>
+```
+
+### needPanel 이벤트
+
+```typescript
+interface NeedPanelEvent {
+  direction: "PREV" | "NEXT";
+}
+```
+
+- `direction`으로 어느 방향에 패널이 필요한지 확인
+- `"PREV"`: 앞에 패널 추가 필요 (prepend)
+- `"NEXT"`: 뒤에 패널 추가 필요 (append)
+
+### Vanilla JS에서 패널 추가
+
+```javascript
+flicking.on("needPanel", (e) => {
+  if (e.direction === "NEXT") {
+    const newPanel = document.createElement("div");
+    newPanel.className = "flicking-panel";
+    newPanel.textContent = "New Panel";
+    flicking.append(newPanel);
+  }
+});
+```
+
+### 사용 시나리오
+
+:::info 언제 needPanelThreshold를 사용하나요?
+
+**사용 권장:**
+- 무한 스크롤 구현
+- 페이지네이션 (끝에 도달하면 다음 페이지 로드)
+- 대량 데이터의 점진적 로딩
+
+**적절한 임계값:**
+- `0`: 끝에 정확히 도달해야 할 때
+- `100~200`: 일반적인 프리로딩
+- 뷰포트 너비 이상: 매우 공격적인 프리로딩
+:::
+
+### 주의사항
+
+:::warning 이벤트 중복 발생
+패널 추가 중에 needPanel 이벤트가 다시 발생할 수 있습니다. 로딩 상태를 관리하여 중복 요청을 방지하세요.
+:::
+
+```tsx
+const [isLoading, setIsLoading] = useState(false);
+
+const handleNeedPanel = async (e) => {
+  if (isLoading) return; // 중복 방지
+  setIsLoading(true);
+
+  await loadMorePanels();
+
+  setIsLoading(false);
+};
+```
+
+## 관련 링크
+
+### 관련 이벤트
+- [`needPanel`](../../api/interfaces/NeedPanelEvent): 패널 추가 필요 이벤트
+
+### 관련 메서드
+- [`append`](../../api/classes/Flicking#append): 패널 뒤에 추가
+- [`prepend`](../../api/classes/Flicking#prepend): 패널 앞에 추가
+
+### 관련 데모
+- [Virtual Scroll](./virtual-scroll): 대량 패널의 가상 렌더링

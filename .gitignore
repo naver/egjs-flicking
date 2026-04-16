@@ -208,8 +208,9 @@ test/e2e/log/
 test/e2e/screenshots/diff/
 
 ### Docs ###
-docs/docs/api/
-docs/sidebars-api.js
+packages/docs/docs/api/
+packages/docs/sidebars-api.js
+
 
 ### Custom ###
 TODO.md
@@ -220,8 +221,12 @@ temp/
 demo/release
 packages/**/*/dist/
 demo/_data/version.yml
-
+dist/
 outjs/
 declaration/
 
+### tsdoc
+tsdoc-metadata.json
 
+### LLM
+.claude/settings.local.json

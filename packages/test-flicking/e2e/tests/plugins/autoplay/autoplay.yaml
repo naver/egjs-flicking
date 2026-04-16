@@ -1,0 +1,16 @@
+id: autoplay
+category: plugins
+demo: plugins/Autoplay
+
+intent: "AutoPlay 플러그인으로 일정 간격으로 자동 패널 전환을 구현할 수 있음을 보여준다"
+
+focus:
+  - 4개 패널이 렌더링됨
+  - 2초 후 자동으로 다음 패널로 이동
+  - circular 모드로 무한 자동 재생
+
+api:
+  options: [circular, preventDefaultOnDrag]
+  plugins: [AutoPlay]
+
+frameworks: [vanilla, react, vue]

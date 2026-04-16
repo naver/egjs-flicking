@@ -1,0 +1,79 @@
+---
+title: "Deceleration"
+id: deceleration
+slug: /demos/basic/deceleration
+sidebar_position: 10
+description: deceleration 옵션으로 플릭 후 관성 이동의 감속률을 조절합니다
+keywords: [flicking, carousel, deceleration, momentum, inertia, 관성, 감속]
+---
+
+import Deceleration from '@site/src/demo/basic/Deceleration';
+
+# Deceleration
+
+[`deceleration`](../../api/interfaces/FlickingOptions#deceleration) 옵션으로 사용자 플릭 후 관성 이동의 감속률을 설정합니다. 값이 높을수록 빠르게 멈추고, 낮을수록 멀리 이동합니다.
+
+<Deceleration />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`deceleration`](../../api/interfaces/FlickingOptions#deceleration) | `number` | `0.0075` | 관성 이동 감속률 |
+
+### 값별 비교
+
+| 값 | 동작 | 적합한 상황 |
+|----|------|-------------|
+| `0.001` | 느리게 감속, 멀리 이동 | 긴 리스트 빠른 탐색, freeScroll |
+| `0.0075` | 적당한 감속 (기본값) | 일반 캐러셀 |
+| `0.05` | 빠르게 감속, 가까이 멈춤 | 정밀한 제어, 한 패널씩 이동 |
+
+## 상세 설명
+
+### deceleration 동작 원리
+사용자가 드래그 후 손을 떼면 플릭 속도에 따라 관성 이동이 발생합니다. `deceleration`은 이 관성의 감속률을 결정합니다.
+
+```javascript
+// 낮은 값: 관성이 오래 지속, 멀리 이동
+deceleration: 0.001
+
+// 기본값: 적당한 관성
+deceleration: 0.0075
+
+// 높은 값: 빠르게 멈춤
+deceleration: 0.05
+```
+
+### 물리적 의미
+`deceleration`은 마찰 계수와 유사합니다. 값이 클수록 마찰이 강해 빨리 멈추고, 작을수록 미끄러지듯 멀리 이동합니다.
+
+### 연관 옵션
+- **moveType과의 관계**: `moveType: "freeScroll"`에서 deceleration 효과가 더 두드러집니다. "snap" 모드에서는 스냅 위치로 이동하므로 차이가 덜 느껴질 수 있습니다.
+- **duration과의 관계**: deceleration은 관성 이동 거리를, duration은 스냅 애니메이션 시간을 결정합니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **낮은 값 (0.001~0.005)**: 긴 리스트를 빠르게 스크롤할 때, freeScroll 모드
+- **기본값 (0.0075)**: 일반적인 캐러셀, 이미지 갤러리
+- **높은 값 (0.01~0.05)**: 정밀한 제어가 필요할 때, 한 패널씩 이동
+:::
+
+### 주의사항
+
+:::warning 극단적인 값 주의
+너무 낮은 값(0에 가까운)은 끝없이 스크롤되는 느낌을 주고, 너무 높은 값은 플릭 제스처가 무시되는 것처럼 느껴질 수 있습니다.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`moveType`](../../api/interfaces/FlickingOptions#movetype): 이동 동작 모드 (freeScroll에서 효과 두드러짐)
+- [`duration`](../../api/interfaces/FlickingOptions#duration): 스냅 애니메이션 시간
+
+### 관련 데모
+- [Movement Types](./movement-types): freeScroll 모드
+- [Duration](./duration): 애니메이션 시간

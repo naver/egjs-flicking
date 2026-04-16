@@ -1,0 +1,15 @@
+id: nested
+category: basic
+demo: basic/Nested
+
+intent: "nested 옵션으로 중첩된 Flicking 간의 이벤트 전파를 제어할 수 있음을 보여준다"
+
+focus:
+  - 외부 + 내부 Flicking 구조가 렌더링됨
+  - 내부 Flicking에서 드래그로 패널 이동 가능
+  - nested:true 설정이 올바르게 적용됨
+
+api:
+  options: [nested, bound]
+
+frameworks: [vanilla, react, vue]

@@ -1,0 +1,84 @@
+---
+title: "Easing"
+id: easing
+slug: /demos/basic/easing
+sidebar_position: 9
+description: easing 옵션으로 패널 이동 애니메이션의 곡선(가감속 패턴)을 설정합니다
+keywords: [flicking, carousel, easing, animation, curve, 애니메이션, 곡선]
+---
+
+import Easing from '@site/src/demo/basic/Easing';
+
+# Easing
+
+[`easing`](../../api/interfaces/FlickingOptions#easing) 옵션으로 패널 이동 애니메이션의 곡선을 설정합니다. 함수 형태로 지정하며, 진행률(0~1)을 입력받아 실제 이동 비율을 반환합니다.
+
+<Easing />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`easing`](../../api/interfaces/FlickingOptions#easing) | `(x: number) => number` | `easeOutCubic` | 애니메이션 곡선 함수 |
+
+### 값별 비교
+
+| 함수 | 동작 | 적합한 상황 |
+|------|------|-------------|
+| `linear` | 일정한 속도로 이동 | 기계적인 느낌, 진행 표시 |
+| `easeOutCubic` | 빠르게 시작 → 천천히 끝 | 자연스러운 감속, 일반 UI |
+| `easeInOutQuad` | 천천히 → 빠르게 → 천천히 | 부드러운 전환, 프레젠테이션 |
+
+## 상세 설명
+
+### easing 함수 형태
+easing 함수는 0~1 사이의 진행률을 입력받아 실제 이동 비율을 반환합니다.
+
+```javascript
+// linear: 일정한 속도
+const linear = x => x;
+
+// easeOutCubic: 빠르게 시작, 천천히 끝 (기본값)
+const easeOutCubic = x => 1 - Math.pow(1 - x, 3);
+
+// easeInOutQuad: 가속 후 감속
+const easeInOutQuad = x => x < 0.5
+  ? 2 * x * x
+  : 1 - Math.pow(-2 * x + 2, 2) / 2;
+```
+
+### 주요 easing 패턴
+- **linear**: 입력 = 출력. 일정한 속도로 이동
+- **easeOut**: 초반 빠르고 후반 느림 (감속). 자연스러운 멈춤
+- **easeIn**: 초반 느리고 후반 빠름 (가속). 시작 강조
+- **easeInOut**: 가속 후 감속. 부드러운 전환
+
+### 연관 옵션
+- **duration과의 관계**: `duration`은 애니메이션 시간을, `easing`은 그 시간 동안의 속도 변화 패턴을 결정합니다. 둘을 조합하여 다양한 효과를 만들 수 있습니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **linear**: 로딩 진행 표시, 기계적인 UI
+- **easeOut (기본값)**: 일반적인 캐러셀, 자연스러운 스냅
+- **easeInOut**: 프레젠테이션, 온보딩, 부드러운 전환 강조
+:::
+
+### 주의사항
+
+:::warning easing 함수 규칙
+easing 함수는 반드시 `f(0) = 0`, `f(1) = 1`을 만족해야 합니다. 이 규칙을 어기면 애니메이션이 제대로 동작하지 않습니다.
+:::
+
+## 관련 링크
+
+### 외부 참고
+- [Easing Functions Cheat Sheet](https://easings.net/) - 다양한 easing 함수 시각화
+
+### 관련 옵션
+- [`duration`](../../api/interfaces/FlickingOptions#duration): 애니메이션 지속 시간
+
+### 관련 데모
+- [Duration](./duration): 애니메이션 시간 조절

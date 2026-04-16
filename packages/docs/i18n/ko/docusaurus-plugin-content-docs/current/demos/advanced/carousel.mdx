@@ -1,0 +1,84 @@
+---
+title: "Carousel"
+id: carousel
+slug: /demos/advanced/carousel
+sidebar_position: 9
+description: circular, panelsPerView, align 옵션 조합으로 전형적 캐러셀 UI를 구성합니다
+keywords: [flicking, carousel, circular, panelsPerView, 순환, 캐러셀, 슬라이더]
+---
+
+import Carousel from '@site/src/demo/advanced/Carousel';
+
+# Carousel
+
+[`circular`](../../api/interfaces/FlickingOptions#circular), [`panelsPerView`](../../api/interfaces/FlickingOptions#panelsperview), [`align`](../../api/interfaces/FlickingOptions#align) 옵션을 조합하여 다양한 캐러셀 UI를 구성합니다.
+
+<Carousel />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`circular`](../../api/interfaces/FlickingOptions#circular) | `boolean` | `false` | 순환 모드 |
+| [`panelsPerView`](../../api/interfaces/FlickingOptions#panelsperview) | `number` | `-1` | 화면당 패널 수 (-1이면 비활성) |
+| [`align`](../../api/interfaces/FlickingOptions#align) | `string \| number` | `"center"` | 패널 정렬 위치 |
+
+### 조합별 비교
+
+| 조합 | 동작 | 적합한 상황 |
+|------|------|-------------|
+| `circular + panelsPerView: 3 + align: "prev"` | 3개씩 보이는 무한 순환 | 상품 목록, 카드 캐러셀 |
+| `circular + panelsPerView: 1 + align: "center"` | 1개씩 중앙 정렬 무한 순환 | 히어로 슬라이더, 배너 |
+| `circular: false + panelsPerView: 3 + bound` | 끝이 있는 3열 슬라이더 | 유한 목록, 갤러리 |
+
+## 상세 설명
+
+### circular + panelsPerView 조합
+
+`circular: true`와 `panelsPerView`를 함께 사용하면 지정된 수의 패널이 화면에 보이면서 무한 순환됩니다. 패널 너비는 `100% / panelsPerView`로 자동 계산됩니다.
+
+### align의 역할
+
+- `"prev"`: 패널이 왼쪽 정렬 → 리스트형 캐러셀에 적합
+- `"center"`: 현재 패널이 중앙 → 스포트라이트형에 적합
+
+### 비순환 슬라이더
+
+`circular: false` + `bound: true`로 설정하면 끝에서 빈 공간 없이 멈추는 일반 슬라이더가 됩니다.
+
+### 연관 옵션
+
+- **`circularFallback`과의 관계**: 패널 수가 부족하여 순환이 불가능할 때 대체 동작 설정
+- **`bound`와의 관계**: `circular: false`일 때 `bound: true`로 빈 공간 방지
+- **`noPanelStyleOverride`와의 관계**: `panelsPerView` 사용 시 패널 너비 자동 설정을 끄고 CSS로 직접 제어 가능
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **상품 캐러셀**: `circular + panelsPerView: 3~5` 조합
+- **히어로 배너**: `circular + panelsPerView: 1 + align: "center"` 조합
+- **이미지 갤러리**: `circular: false + panelsPerView: 3 + bound` 조합
+:::
+
+### 주의사항
+
+:::warning 주의
+- `circular: true`가 동작하려면 패널 총 너비가 뷰포트보다 커야 합니다. 패널이 부족하면 `circularFallback` 설정을 확인하세요.
+- `panelsPerView`를 설정하면 패널의 CSS width가 자동으로 오버라이드됩니다. CSS에서 별도로 width를 설정하면 충돌할 수 있습니다.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`circular`](../../api/interfaces/FlickingOptions#circular): 순환 모드
+- [`panelsPerView`](../../api/interfaces/FlickingOptions#panelsperview): 화면당 패널 수
+- [`align`](../../api/interfaces/FlickingOptions#align): 패널 정렬
+- [`circularFallback`](../../api/interfaces/FlickingOptions#circularfallback): 순환 불가 시 대체 동작
+- [`bound`](../../api/interfaces/FlickingOptions#bound): 경계 제한
+
+### 관련 데모
+- [Circular](../basic/circular): circular 옵션 자체의 on/off 비교
+- [Panels Per View](../basic/panels-per-view): panelsPerView 옵션 상세
+- [Fullpage Scroll](./fullpage-scroll): 다른 옵션 조합 패턴

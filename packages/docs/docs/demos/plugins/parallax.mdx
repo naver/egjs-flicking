@@ -1,0 +1,95 @@
+---
+title: "Parallax"
+id: parallax
+slug: /demos/plugins/parallax
+sidebar_position: 3
+description: A plugin that applies parallax scroll effects to elements inside panels
+keywords: [flicking, plugin, parallax, scroll, effect]
+---
+
+import Parallax from '@site/src/demo/plugins/Parallax';
+
+# Parallax
+
+Applies parallax scroll effects to elements inside panels. Horizontally translates the target element based on the panel's `outsetProgress` to create a sense of depth.
+
+<Parallax />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `selector` | `string` | `""` | CSS selector for the element to apply the effect to (uses `querySelector`) |
+| `scale` | `number` | `1` | Parallax movement intensity multiplier |
+
+### Movement Formula
+
+```
+position = ((parentWidth - elemWidth) / 2) * outsetProgress * scale
+transform: translate(-50%) translate(${position}px)
+```
+
+| Condition | Movement Direction | Description |
+|-----------|-------------------|-------------|
+| Element > Parent | Opposite to scroll | Content moves slower than the panel (image parallax) |
+| Element < Parent | Same as scroll | Content moves faster than the panel (depth effect) |
+
+## Details
+
+### How It Works
+
+The plugin applies `translate(-50%) translate(${position}px)` to the target element. Since `translate(-50%)` is always included, the target element must be positioned with `position: absolute; left: 50%` for proper centering.
+
+- **`parentWidth - elemWidth`**: The width difference between parent and element determines the movement range
+- **`outsetProgress`**: How far the panel has moved from its aligned position (center = 0, left exit = -1, right exit = 1)
+- **`scale`**: Amplifies the movement amount
+
+### Usage
+
+Uses `querySelector` to target **only the first matching element per panel**. To apply different parallax effects to multiple elements, **use separate instances**.
+
+```js
+import { Parallax } from "@egjs/flicking-plugins";
+
+// Single target: parallax effect on images inside panels
+flicking.addPlugins(new Parallax("img"));
+
+// Multiple targets: individual control with unique selectors per element
+flicking.addPlugins(
+  new Parallax(".bar-0", 2),
+  new Parallax(".bar-1", 2),
+  new Parallax(".bar-2", 2)
+);
+```
+
+### CSS Setup
+
+```css
+/* Panel: overflow: hidden + position: relative required */
+.flicking-panel {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Target element: position: absolute + left: 50% required */
+/* translate(-50%) is always applied, so this combination ensures center alignment */
+.parallax-target {
+  position: absolute;
+  left: 50%;
+}
+```
+
+:::warning Caution
+- Without `position: absolute; left: 50%` on the target element, `translate(-50%)` will break the layout.
+- If the element width equals the parent width, the movement amount becomes 0 and no effect is visible.
+- If `selector` is left as an empty string, the effect is applied to the panel itself.
+:::
+
+## Related Links
+
+### Related Demos
+- [Parallax (Reactive API)](../reactive/parallax): Parallax using `indexProgress` (includes opacity effect)
+- [Fade](./fade): Fade effect
+- [Perspective](./perspective): 3D perspective effect

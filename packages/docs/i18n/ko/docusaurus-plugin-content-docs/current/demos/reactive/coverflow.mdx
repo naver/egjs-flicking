@@ -1,0 +1,83 @@
+---
+title: "Coverflow"
+id: coverflow
+slug: /demos/reactive/coverflow
+sidebar_position: 5
+description: Reactive API의 indexProgress를 활용하여 3D 커버플로우 효과 만들기
+keywords: [flicking, carousel, coverflow, 3D, reactive, indexProgress, transform, rotateY, 커버플로우, 캐러셀, 회전]
+---
+
+import Coverflow from '@site/src/demo/reactive/Coverflow';
+
+# Coverflow
+
+Reactive API의 `indexProgress`를 사용하여 앨범 아트 스타일의 커버플로우 인터페이스를 구현하는 3D 회전 및 스케일링 효과를 적용합니다.
+
+<Coverflow />
+
+## 요약
+
+### 주요 API
+
+| 속성 | 타입 | 설명 |
+|------|------|------|
+| [`indexProgress`](../../api/interfaces/FlickingReactiveState#indexprogress) | `number` | 소수점 패널 인덱스로 표현된 카메라 위치 |
+| [`useFlickingReactiveAPI`](../../api/types/FlickingReactiveObject) | Hook (React) | React에서 reactive 상태를 구독 |
+| [`connectFlickingReactiveAPI`](../../api/functions/connectFlickingReactiveAPI) | Function (Vanilla) | Vanilla JS에서 reactive 상태를 구독 |
+
+### 효과 매핑
+
+| 패널 위치 | rotateY | scale | transformOrigin |
+|-----------|---------|-------|-----------------|
+| 현재 (childProgress ~ 0) | 0deg | 0.9 | 50% 50% |
+| 인접 (childProgress ~ +/-1) | -/+50deg | 0.7 | 중앙 방향으로 이동 |
+| 먼 거리 (childProgress ~ +/-2) | -/+100deg | 0.5 | 중앙 방향으로 이동 |
+
+## 상세 설명
+
+### indexProgress란?
+
+`indexProgress`는 현재 카메라 위치를 소수점 패널 인덱스로 나타냅니다. 예를 들어, `2.5`는 카메라가 패널 2와 패널 3 사이의 정확히 중간 지점에 있다는 의미입니다. 드래그 중 실시간으로 업데이트되어 부드러운 시각적 전환을 가능하게 합니다.
+
+### 동작 원리
+
+순환 모드에서 각 패널의 `childProgress`는 래핑(wrapping)을 적용하여 계산됩니다:
+
+```js
+const childProgress = (index - indexProgress + length * 1.5) % length - length * 0.5;
+```
+
+이 값은 세 가지 CSS transform 속성을 제어합니다:
+- **`rotateY`**: 패널이 Y축을 기준으로 회전하여 중앙에서 멀어질수록 기울어짐
+- **`scale`**: 패널이 중앙에서 멀어질수록 축소
+- **`transformOrigin`**: 자연스러운 원근 회전 기준점을 만들기 위해 이동
+
+### 관련 옵션
+
+- **`circular: true`**: 끊김 없이 매끄럽게 순환하는 커버플로우를 위해 필수입니다.
+- **`align: "center"`**: 활성 패널을 커버플로우의 시각적 중앙에 배치합니다.
+
+### 사용 시나리오
+
+:::info 이런 경우에 사용하세요
+- 앨범 / 포트폴리오 갤러리
+- 제품 쇼케이스
+- 미디어 플레이어 UI
+:::
+
+### 주의사항
+
+:::warning 참고
+- 3D 효과가 렌더링되려면 viewport에 CSS `perspective`를, camera에 `transform-style: preserve-3d`를 설정해야 합니다.
+- 순환 모드 사용 시 빈 공간이 생기지 않도록 최소 5개 이상의 패널을 사용하세요.
+:::
+
+## 관련 링크
+
+### 관련 API
+- [`indexProgress`](../../api/interfaces/FlickingReactiveState#indexprogress): 소수점 패널 인덱스 진행률
+- [`connectFlickingReactiveAPI`](../../api/functions/connectFlickingReactiveAPI): Flicking을 Reactive API에 연결
+
+### 관련 데모
+- [Parallax](./parallax): indexProgress를 활용한 패럴랙스 스크롤 효과
+- [Progress Bar](./progress-bar): 스크롤 진행률 표시기

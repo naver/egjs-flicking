@@ -1,0 +1,61 @@
+---
+title: "Progress Bar"
+id: progress-bar
+slug: /demos/reactive/progress-bar
+sidebar_position: 1
+description: Reactive API의 progress 속성을 활용한 스크롤 진행률 표시
+keywords: [flicking, carousel, progress, reactive, freeScroll, progress bar, 진행률, 프로그레스 바, 캐러셀]
+---
+
+import ProgressBar from '@site/src/demo/reactive/ProgressBar';
+
+# Progress Bar
+
+Reactive API의 `progress` 속성을 사용하여 실시간으로 업데이트되는 시각적 스크롤 진행률 표시기를 구현합니다.
+
+<ProgressBar />
+
+## 요약
+
+### 주요 API
+
+| 속성 | 타입 | 설명 |
+|------|------|------|
+| [`progress`](../../api/interfaces/FlickingReactiveState#progress) | `number` | 전체 스크롤 진행률 백분율 (0-100) |
+
+### 동작
+
+| 위치 | progress | 바 너비 |
+|------|----------|---------|
+| 시작 | 0 | 0% |
+| 중간 | ~50 | ~50% |
+| 끝 | 100 | 100% |
+
+## 상세 설명
+
+### progress란?
+
+`progress`는 현재 카메라 위치를 전체 스크롤 가능 범위의 백분율로 나타냅니다. `moveType: "freeScroll"`과 함께 사용하면 스냅 없이 연속적인 진행률 업데이트가 가능하여 부드러운 프로그레스 바 애니메이션에 이상적입니다.
+
+### 관련 옵션
+
+- **`moveType: "freeScroll"`**: 패널 경계에 스냅하지 않고 연속적인 진행률 변화를 가능하게 합니다.
+- **`bound: true`**: 시작 지점에서 정확히 0, 끝 지점에서 정확히 100이 되도록 보장합니다.
+
+### 사용 시나리오
+
+:::info 이런 경우에 사용하세요
+- 이미지 갤러리 스크롤 진행률
+- 온보딩 단계 표시기
+- 콘텐츠 읽기 진행률
+:::
+
+## 관련 링크
+
+### 관련 API
+- [`progress`](../../api/interfaces/FlickingReactiveState#progress): 스크롤 진행률 백분율
+- [`connectFlickingReactiveAPI`](../../api/functions/connectFlickingReactiveAPI): Flicking을 Reactive API에 연결
+
+### 관련 데모
+- [Pagination](./pagination): 도트 페이지네이션 네비게이션
+- [Prev / Next](./prev-next): 이전/다음 버튼 네비게이션

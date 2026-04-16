@@ -1,0 +1,16 @@
+id: lazy-load
+category: advanced
+demo: advanced/LazyLoad
+
+intent: "renderOnlyVisible 옵션과 함께 이미지를 지연 로딩하여 초기 렌더링 성능을 최적화하는 패턴을 보여준다"
+
+focus:
+  - 100개 패널 등록
+  - renderOnlyVisible:true 설정 확인
+  - info-bar에 로드된 이미지 수 표시
+  - 드래그 후 추가 이미지 로드
+
+api:
+  options: [renderOnlyVisible, align, bound, preventDefaultOnDrag]
+
+frameworks: [vanilla, react, vue]

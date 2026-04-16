@@ -1,0 +1,50 @@
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.slider-row input[type="range"] {
+  flex: 1;
+}
+
+.slider-row .value-label {
+  font-size: 13px;
+  color: #666;
+  min-width: 50px;
+  text-align: right;
+}
+
+.demo-section {
+  margin-bottom: 20px;
+}
+
+.demo-section .demo-label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.resize-count {
+  font-size: 13px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.toggle-row .button {
+  font-size: 13px;
+  padding: 6px 12px;
+}
+
+.toggle-row .button.active {
+  background: #3498db;
+  color: white;
+}

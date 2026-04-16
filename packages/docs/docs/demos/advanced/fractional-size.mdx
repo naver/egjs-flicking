@@ -1,0 +1,91 @@
+---
+title: "Fractional Size"
+id: fractional-size
+slug: /demos/advanced/fractional-size
+sidebar_position: 3
+description: Prevent 1px misalignment errors in panels with fractional sizes using the useFractionalSize option
+keywords: [flicking, carousel, useFractionalSize, subpixel, precision, fractional, accuracy, error]
+---
+
+import FractionalSize from '@site/src/demo/advanced/FractionalSize';
+
+# Fractional Size
+
+Use the [`useFractionalSize`](../../api/interfaces/FlickingOptions#usefractionalsize) option to prevent 1px misalignment errors in panels with fractional sizes.
+
+<FractionalSize />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`useFractionalSize`](../../api/interfaces/FlickingOptions#usefractionalsize) | `boolean` | `false` | Calculate sizes with fractional precision |
+
+### Mode Comparison
+
+| Setting | Size Measurement Method | Precision | Performance |
+|---------|------------------------|-----------|-------------|
+| `false` (default) | `offsetWidth` / `clientWidth` | Integer (rounded) | Fast |
+| `true` | `parseFloat(computedStyle.width)` | Fractional | Slightly slower |
+
+## Details
+
+### The 1px Misalignment Problem
+
+When panel width is fractional (e.g., `199.5px` in a `200px` viewport), `offsetWidth` rounds it to `200px`.
+Flicking uses that rounded value for snap position calculations, so panels gradually drift from their actual CSS position.
+
+```
+Viewport: 200px, Panel: 199.5px, defaultIndex: 2
+
+offsetWidth (integer):
+  Panel size = 200px (rounded from 199.5)
+  Panel 2 position = 2 × 200 = 400px   ← 1px off from actual 399px
+
+computedStyle (fractional):
+  Panel size = 199.5px (precise)
+  Panel 2 position = 2 × 199.5 = 399px ← correct
+```
+
+The error grows with index: panel 4 is off by 2px, panel 6 by 3px, and so on.
+
+### How It Works
+
+```javascript
+// false (default): uses offsetWidth (integer)
+const width = panel.offsetWidth; // 200 (rounded from 199.5)
+
+// true: uses parseFloat(computedStyle.width) (fractional)
+const width = parseFloat(getComputedStyle(panel).width); // 199.5 (precise)
+```
+
+Setting `useFractionalSize: true` makes Flicking internally calculate sizes with fractional precision.
+
+### Use Cases
+
+:::info When should you use useFractionalSize?
+
+**Recommended:**
+- When panel width is set in % units (33.33%, 16.66%, etc.)
+- When panel alignment is slightly off
+- When precise rendering is needed on high-resolution displays
+
+**Not necessary:**
+- When panel width is an integer px (200px, 300px, etc.)
+- When minor alignment errors are not a concern
+- When performance is a priority
+:::
+
+### Notes
+
+:::warning Performance Consideration
+`parseFloat(computedStyle.width)` is slightly slower than `offsetWidth`. Consider the performance impact when there are many panels or frequent resizes occur.
+:::
+
+## Related Links
+
+### Related Options
+- [`autoResize`](../../api/interfaces/FlickingOptions#autoresize): Auto resize
+- [`useResizeObserver`](../../api/interfaces/FlickingOptions#useresizeobserver): Whether to use ResizeObserver

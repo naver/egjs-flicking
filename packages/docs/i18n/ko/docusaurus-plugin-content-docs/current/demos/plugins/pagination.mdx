@@ -1,0 +1,89 @@
+---
+title: "Pagination"
+id: pagination
+slug: /demos/plugins/pagination
+sidebar_position: 6
+description: 현재 패널 위치를 표시하는 페이지 인디케이터(bullet/fraction/scroll)를 추가하는 플러그인
+keywords: [flicking, plugin, pagination, bullet, fraction, scroll, indicator]
+---
+
+import Pagination from '@site/src/demo/plugins/Pagination';
+
+# Pagination
+
+현재 패널 위치를 표시하는 페이지 인디케이터를 추가합니다. bullet, fraction, scroll 세 가지 타입을 지원합니다.
+
+<Pagination />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `type` | `"bullet" \| "fraction" \| "scroll"` | `"bullet"` | 인디케이터 표시 방식 |
+| `parentEl` | `HTMLElement` | - | 인디케이터의 부모 요소. 기본적으로 `.flicking-pagination` 요소 사용 |
+
+### 필수 CSS
+
+```js
+import "@egjs/flicking-plugins/dist/pagination.css";
+```
+
+## 상세 설명
+
+### 타입별 동작
+
+| 타입 | 설명 |
+|------|------|
+| `bullet` | 각 패널에 대응하는 점(dot) 표시. 클릭으로 해당 패널로 이동 |
+| `fraction` | `현재/전체` 형태의 숫자 표시 (예: `1/5`) |
+| `scroll` | 스크롤바 형태의 인디케이터 |
+
+### HTML 구조
+
+페이지네이션 요소를 뷰포트 내부에 배치해야 합니다.
+
+```html
+<div class="flicking-viewport">
+  <div class="flicking-camera">
+    <!-- 패널들 -->
+  </div>
+  <div class="flicking-pagination"></div>
+</div>
+```
+
+### 프레임워크별 사용법
+
+**React** — `ViewportSlot`을 사용합니다:
+```jsx
+<Flicking plugins={plugins}>
+  {/* 패널들 */}
+  <ViewportSlot>
+    <div className="flicking-pagination"></div>
+  </ViewportSlot>
+</Flicking>
+```
+
+**Vue** — `#viewport` 슬롯을 사용합니다:
+```html
+<Flicking :plugins="plugins">
+  <!-- 패널들 -->
+  <template #viewport>
+    <div class="flicking-pagination"></div>
+  </template>
+</Flicking>
+```
+
+### 주의사항
+
+:::warning 주의
+- 반드시 `@egjs/flicking-plugins/dist/pagination.css`를 import해야 인디케이터가 올바르게 표시됩니다.
+- `bullet` 타입에서 패널 수가 많으면 점이 너무 많아질 수 있습니다. 이 경우 `fraction`이나 `scroll` 타입을 고려하세요.
+:::
+
+## 관련 링크
+
+### 관련 데모
+- [Arrow](./arrow): 화살표 네비게이션
+- [Pagination (Reactive API)](../reactive/pagination): Reactive API 기반 커스텀 페이지네이션

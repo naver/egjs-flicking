@@ -1,0 +1,162 @@
+---
+title: "Virtual Scroll"
+id: virtual-scroll
+slug: /demos/advanced/virtual-scroll
+sidebar_position: 1
+description: Efficiently render a large number of panels and reduce memory usage with the virtual option
+keywords: [flicking, carousel, virtual, performance, memory, optimization]
+---
+
+import VirtualScroll from '@site/src/demo/advanced/VirtualScroll';
+
+# Virtual Scroll
+
+Use the [`virtual`](../../api/interfaces/FlickingOptions#virtual) option to virtually render a large number of panels and significantly reduce memory usage.
+
+<VirtualScroll />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`virtual`](../../api/interfaces/FlickingOptions#virtual) | `VirtualOptions \| null` | `null` | Virtual rendering settings |
+| [`panelsPerView`](../../api/interfaces/FlickingOptions#panelsperview) | `number` | `-1` | Number of panels visible in the viewport (required when using virtual) |
+
+### VirtualOptions Properties
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `renderPanel` | `(panel, index) => string` | - | Function that returns panel innerHTML |
+| `initialPanelCount` | `number` | `-1` | Initial virtual panel count |
+| `cache` | `boolean` | `false` | Whether to cache rendering results |
+| `panelClass` | `string` | `"flicking-panel"` | Panel element class name |
+
+### Mode Comparison
+
+| Mode | DOM Elements with 1000 panels | Memory Usage | Initial Rendering |
+|------|-------------------------------|--------------|-------------------|
+| Normal mode | 1000 | High | Slow |
+| Virtual mode | ~4 (`panelsPerView + 1`) | Low | Fast |
+
+## Details
+
+### Virtual Rendering Principle
+
+Virtual mode keeps only the visible panels + buffer in the actual DOM:
+
+```javascript
+// 1000 logical panels, only 4 actual DOM elements
+const flicking = new Flicking("#el", {
+  panelsPerView: 3,  // Required: number of visible panels
+  virtual: {
+    renderPanel: (panel, index) => `Panel ${index + 1}`,
+    initialPanelCount: 1000,
+    cache: true  // Prevent re-rendering of the same panel
+  }
+});
+```
+
+During scrolling, DOM elements are recycled and replaced with new panel content. This approach can handle 1,000, 10,000 or more panels with constant memory usage.
+
+### Required Setting: panelsPerView
+
+:::warning panelsPerView Required
+To use the `virtual` option, you must set `panelsPerView` to a positive number.
+If `panelsPerView: -1` (auto), virtual is ignored.
+:::
+
+```javascript
+// Correct setting
+{ panelsPerView: 3, virtual: { ... } }  // Works
+
+// Incorrect setting
+{ panelsPerView: -1, virtual: { ... } }  // virtual is ignored
+```
+
+### renderPanel Callback
+
+`renderPanel` is called whenever a panel appears on screen and returns its innerHTML:
+
+```javascript
+virtual: {
+  renderPanel: (panel, index) => {
+    // index: 0-based panel index
+    return `
+      <img src="/images/item-${index}.jpg" />
+      <span>Item ${index + 1}</span>
+    `;
+  },
+  initialPanelCount: 1000
+}
+```
+
+### cache Option
+
+```javascript
+// cache: true (recommended for static content)
+virtual: {
+  renderPanel: (panel, index) => `Panel ${index}`,
+  cache: true  // Reuse previously rendered panel content
+}
+
+// cache: false (for dynamic content)
+virtual: {
+  renderPanel: (panel, index) => `Panel ${index}: ${Date.now()}`,
+  cache: false  // Re-render every time
+}
+```
+
+### VirtualManager Methods
+
+You can add/remove virtual panels at runtime:
+
+```javascript
+// Add panels
+flicking.virtual.append(100);     // Append 100 to the end
+flicking.virtual.prepend(50);     // Prepend 50 to the front
+flicking.virtual.insert(10, 20);  // Insert 20 at index 10
+
+// Remove panels
+flicking.virtual.remove(0, 10);   // Remove 10 starting from index 0
+```
+
+## Use Cases
+
+:::info When should you use virtual?
+
+**Recommended:**
+- When there are many panels (50+)
+- Image galleries, product lists, and other large datasets
+- Infinite scroll implementation
+- Mobile environments with memory constraints
+
+**Not necessary:**
+- When there are few panels (less than 10)
+- When complex panel interactions are needed
+- When panel content is highly dynamic
+:::
+
+### Notes
+
+:::warning Framework Differences
+In React and Vue, `renderPanel` returns an HTML string. If you need component rendering, consider the [`renderOnlyVisible`](../../api/interfaces/FlickingOptions#renderonlyvisible) option instead.
+:::
+
+:::warning renderPanel Performance
+`renderPanel` is called frequently during scrolling. Avoid complex computations or DOM manipulations, and leverage `cache: true`.
+:::
+
+## Related Links
+
+### Related Options
+- [`panelsPerView`](../../api/interfaces/FlickingOptions#panelsperview): Number of panels visible in the viewport
+- [`renderOnlyVisible`](../../api/interfaces/FlickingOptions#renderonlyvisible): Render only visible panels in React/Vue
+
+### Related Classes
+- [`VirtualManager`](../../api/classes/VirtualManager): Virtual panel manager
+
+### Related Demos
+- [Render Only Visible](./render-only-visible): Framework-optimized rendering
+- [Infinite Scroll](./infinite-scroll): Infinite scroll implementation

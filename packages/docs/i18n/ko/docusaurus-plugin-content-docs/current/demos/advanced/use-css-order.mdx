@@ -1,0 +1,74 @@
+---
+title: "CSS Order"
+id: use-css-order
+slug: /demos/advanced/use-css-order
+sidebar_position: 17
+description: useCSSOrder 옵션으로 circular 모드에서 DOM 순서 대신 CSS order 속성으로 패널 순서를 관리합니다
+keywords: [flicking, carousel, useCSSOrder, circular, DOM, CSS order, iframe, 순환]
+---
+
+import UseCSSOrder from '@site/src/demo/advanced/UseCSSOrder';
+
+# CSS Order
+
+[`useCSSOrder`](../../api/interfaces/FlickingOptions#usecssorder) 옵션으로 `circular` 모드에서 패널의 시각적 순서를 관리하는 방식을 설정합니다. 기본값(`false`)은 DOM 노드 순서를 직접 변경하고, `true`로 설정하면 CSS `order` 속성을 사용해 DOM 순서는 그대로 유지합니다.
+
+패널을 순환 이동한 후 아래의 "DOM 순서" 표시가 어떻게 달라지는지 확인하세요.
+
+<UseCSSOrder />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`useCSSOrder`](../../api/interfaces/FlickingOptions#usecssorder) | `boolean` | `false` | CSS order 속성으로 패널 순서 관리 |
+
+### 값별 비교
+
+| 값 | 동작 | 적합한 상황 |
+|----|------|-------------|
+| `false` | circular 순환 시 DOM 노드를 직접 재배치 (기본값) | 일반적인 캐러셀 |
+| `true` | DOM 순서 고정, CSS `order` 속성으로 시각적 순서 조정 | iframe, video, 상태 유지가 필요한 패널 |
+
+## 상세 설명
+
+### useCSSOrder 동작 원리
+
+`circular: true`인 Flicking은 순환 효과를 만들기 위해 패널들의 순서를 재배치합니다.
+
+**`useCSSOrder: false` (기본값)**: 패널 DOM 노드를 실제로 이동시켜 순서를 변경합니다. 단순 div 패널에는 문제없지만, `<iframe>`이나 `<video>` 처럼 DOM 이동 시 리로드되는 요소를 포함한 패널에서는 순환할 때마다 콘텐츠가 초기화됩니다.
+
+**`useCSSOrder: true`**: DOM 노드는 원래 위치에 고정하고, CSS flexbox의 `order` 속성으로 시각적 순서만 변경합니다. DOM 재배치가 없으므로 iframe이나 video가 리로드되지 않습니다.
+
+```javascript
+// iframe 패널이 있는 circular 캐러셀
+const flicking = new Flicking("#el", {
+  circular: true,
+  useCSSOrder: true  // DOM 재배치 없이 CSS order로 관리
+});
+```
+
+:::info Svelte에서는 항상 useCSSOrder
+Svelte 바인딩을 사용할 때는 내부적으로 항상 `useCSSOrder: true`가 적용됩니다. Svelte의 렌더링 방식과 DOM 재배치가 충돌하기 때문입니다.
+:::
+
+### 주의사항
+
+:::warning CSS order와 flexbox
+`useCSSOrder: true`는 Flicking의 카메라 엘리먼트(`flicking-camera`)가 flexbox 레이아웃을 사용한다는 전제 하에 동작합니다. 커스텀 CSS로 flexbox를 제거하면 순서가 올바르게 적용되지 않을 수 있습니다.
+:::
+
+:::warning circular가 아닌 경우
+`circular: false`이면 패널 재배치가 발생하지 않으므로 `useCSSOrder` 옵션은 의미가 없습니다.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`circular`](../../api/interfaces/FlickingOptions#circular): 순환 모드 설정
+- [`circularFallback`](../../api/interfaces/FlickingOptions#circularfallback): 순환 불가 시 대체 동작
+
+### 관련 데모
+- [Circular](../basic/circular): 순환 모드 기본 사용법

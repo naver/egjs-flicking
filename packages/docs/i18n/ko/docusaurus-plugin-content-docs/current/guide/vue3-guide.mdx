@@ -1,0 +1,433 @@
+---
+title: "Vue3 가이드"
+id: vue3-guide
+slug: /guide/vue3-guide
+sidebar_position: 4
+description: Flicking 사용을 위한 Vue3 전용 기능, 이벤트 핸들러, 컴포넌트 사용법
+keywords: [flicking, vue3, composition api, ref, 컴포넌트]
+---
+
+# Vue3 가이드
+
+Vue3 애플리케이션에서 Flicking을 사용하기 위한 Vue3 전용 기능, 이벤트 처리, 컴포넌트 사용법을 알아보세요.
+
+:::info
+이 가이드는 Vue3 사용자를 위한 것입니다. React는 [React 가이드](./react-guide)를, 바닐라 JavaScript는 [빠른 시작](./quickstart) 가이드를 참조하세요.
+:::
+
+---
+
+## 설치 & 임포트
+
+### 패키지 설치
+
+```bash
+npm install @egjs/vue3-flicking
+# or
+yarn add @egjs/vue3-flicking
+```
+
+### 로컬 임포트 (권장)
+
+사용하는 각 파일에서 컴포넌트를 임포트하세요:
+
+```vue
+<script setup>
+import Flicking from "@egjs/vue3-flicking";
+import "@egjs/vue3-flicking/dist/flicking.css";
+</script>
+```
+
+### 전역 등록
+
+애플리케이션 전체에서 사용하기 위해 컴포넌트를 전역으로 등록합니다:
+
+```javascript
+// main.js 또는 main.ts
+import { createApp } from "vue";
+import App from "./App.vue";
+import Flicking from "@egjs/vue3-flicking";
+import "@egjs/vue3-flicking/dist/flicking.css";
+
+const app = createApp(App);
+
+// 전역 등록
+app.component("Flicking", Flicking);
+
+app.mount("#app");
+```
+
+이제 임포트 없이 어떤 컴포넌트에서든 `<Flicking>`을 사용할 수 있습니다:
+
+```vue
+<template>
+  <Flicking>
+    <div>패널 1</div>
+    <div>패널 2</div>
+  </Flicking>
+</template>
+
+<!-- 임포트 불필요! -->
+```
+
+:::tip 로컬 vs 전역
+**로컬 임포트**는 더 나은 트리 셰이킹과 명시적인 의존성을 위해 권장됩니다. **전역 등록**은 많은 컴포넌트에서 Flicking을 사용하는 경우에만 사용하세요.
+:::
+
+:::warning 임포트 경로
+올바른 패키지를 사용하고 있는지 확인하세요:
+- ✅ `@egjs/vue3-flicking` (Vue3)
+- ❌ `@egjs/flicking` (바닐라 JS 전용)
+- ❌ `@egjs/vue-flicking` (Vue 2 전용)
+:::
+
+---
+
+## 이벤트 처리
+
+Vue3에서 이벤트 핸들러는 `@` 디렉티브와 kebab-case 이벤트명을 사용합니다.
+
+### 이벤트 네이밍 패턴
+
+**형식**: `@` + kebab-case 이벤트명
+
+```vue
+<Flicking
+  @ready="handleReady"
+  @changed="handleChanged"
+  @will-change="handleWillChange"
+  @will-restore="handleWillRestore"
+  @restored="handleRestored"
+  @move-start="handleMoveStart"
+  @move="handleMove"
+  @move-end="handleMoveEnd"
+  @hold-start="handleHoldStart"
+  @hold-end="handleHoldEnd"
+  @select="handleSelect"
+  @need-panel="handleNeedPanel"
+  @visible-change="handleVisibleChange"
+  @reach-edge="handleReachEdge">
+  <!-- 패널 -->
+</Flicking>
+```
+
+:::tip Vue3 이벤트 바인딩 패턴
+- camelCase 이벤트명: `changed`, `willChange`, `moveStart`
+- kebab-case로 변환: `changed`, `will-change`, `move-start`
+- `@` 디렉티브 사용: `@changed`, `@will-change`, `@move-start`
+:::
+
+### 자주 사용하는 이벤트 핸들러
+
+```vue
+<template>
+  <Flicking
+    @changed="handleChanged"
+    @will-change="handleWillChange"
+    @move-start="handleMoveStart">
+    <!-- 패널 -->
+  </Flicking>
+</template>
+
+<script setup>
+// 패널 변경 완료 후 발생
+const handleChanged = (e) => {
+  console.log("새 패널 인덱스:", e.index);
+  console.log("이전 패널 인덱스:", e.prevIndex);
+};
+
+// 패널 변경 시작 전 발생 (취소 가능)
+const handleWillChange = (e) => {
+  console.log("이동할 패널:", e.index);
+  // e.stop()을 호출하여 변경을 방지할 수 있습니다
+  if (e.index === 5) {
+    e.stop(); // 패널 5로의 이동 취소
+  }
+};
+
+// 사용자가 드래그를 시작할 때 발생
+const handleMoveStart = (e) => {
+  console.log("사용자가 이동을 시작했습니다");
+};
+</script>
+```
+
+**참고:**
+- [`ChangedEvent`](../api/interfaces/ChangedEvent) - 패널 변경 후 발생
+- [`WillChangeEvent`](../api/interfaces/WillChangeEvent) - 패널 변경 전 발생
+- [모든 이벤트 인터페이스](../api/interfaces/ChangedEvent)
+
+---
+
+## 인스턴스 사용하기
+
+`ref`를 사용하여 Flicking 인스턴스에 접근하고 캐러셀을 프로그래밍 방식으로 제어합니다.
+
+### ref 사용
+
+```vue
+<template>
+  <div>
+    <Flicking ref="flickingRef">
+      <div>패널 1</div>
+      <div>패널 2</div>
+      <div>패널 3</div>
+      <div>패널 4</div>
+    </Flicking>
+
+    <button @click="handlePrev">이전</button>
+    <button @click="handleNext">다음</button>
+    <button @click="handleMoveTo">패널 4로 이동</button>
+  </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+import Flicking from "@egjs/vue3-flicking";
+
+const flickingRef = ref(null);
+
+const handlePrev = () => {
+  flickingRef.value?.prev();
+};
+
+const handleNext = () => {
+  flickingRef.value?.next();
+};
+
+const handleMoveTo = () => {
+  flickingRef.value?.moveTo(3);
+};
+</script>
+```
+
+:::tip 옵셔널 체이닝
+ref가 아직 마운트되지 않았을 때 오류를 방지하기 위해 옵셔널 체이닝(`?.`)을 사용하세요:
+```javascript
+flickingRef.value?.moveTo(2);  // ✅ 안전
+flickingRef.value.moveTo(2);   // ❌ 마운트 전에 오류 발생 가능
+```
+:::
+
+**참고:**
+- [`moveTo()`](../api/classes/Flicking#moveto)
+- [`prev()`](../api/classes/Flicking#prev)
+- [`next()`](../api/classes/Flicking#next)
+- [모든 Flicking 메서드](../api/classes/Flicking)
+
+---
+
+## 옵션 전달
+
+쉬운 관리와 반응성을 위해 단일 객체로 옵션을 전달합니다.
+
+### 옵션 객체 (권장)
+
+```vue
+<template>
+  <Flicking :options="flickingOptions">
+    <!-- 패널 -->
+  </Flicking>
+</template>
+
+<script setup>
+import { ref } from "vue";
+
+const flickingOptions = ref({
+  align: "center",
+  circular: true,
+  horizontal: true,
+  bound: false,
+  adaptive: false
+});
+</script>
+```
+
+**장점:**
+
+✅ 많은 옵션을 쉽게 관리
+✅ 반응형 객체 사용 가능
+✅ 동적 옵션에 편리
+
+### 개별 Props (대안)
+
+개별 props로 옵션을 전달할 수도 있습니다:
+
+```vue
+<Flicking
+  align="center"
+  :circular="true"
+  :horizontal="true"
+  :bound="false">
+  <!-- 패널 -->
+</Flicking>
+```
+
+---
+
+## 스타일링
+
+Vue3에서 `<Flicking>` 컴포넌트에 전달하는 `class` 속성은 `.flicking-viewport` 요소에 직접 적용됩니다:
+
+```vue
+<template>
+  <!-- class는 Flicking 컴포넌트에 적용 -->
+  <Flicking class="my-carousel">
+    <div class="panel">패널 1</div>
+  </Flicking>
+</template>
+
+<script setup>
+import Flicking from "@egjs/vue3-flicking";
+import "@egjs/vue3-flicking/dist/flicking.css";
+</script>
+
+<style scoped>
+/* 커스텀 클래스는 .flicking-viewport에 적용됨 */
+.my-carousel {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.panel {
+  width: 300px;
+  height: 400px;
+}
+</style>
+```
+
+scoped 스타일, CSS modules, 인라인 스타일, 전역 스타일 등 어떤 스타일링 방식이든 사용할 수 있습니다 — 핵심은 클래스가 뷰포트에 적용된다는 것입니다.
+
+:::tip 전체 스타일링 가이드
+Flicking의 HTML 구조, 필수 CSS, 상세한 스타일링 가이드라인에 대한 자세한 내용은 [HTML 구조 & 스타일링](./structure-and-styling)을 참조하세요.
+:::
+
+---
+
+## Vue3 컴포넌트 패널
+
+Vue3 컴포넌트를 패널로 사용할 때 Flicking이 올바르게 관리할 수 있도록 특정 요구사항이 있습니다.
+
+### 단일 루트 요소 요구사항
+
+패널로 사용되는 Vue3 컴포넌트는 **단일 루트 요소**를 가져야 합니다. 이를 통해 Flicking이 패널 DOM 요소에 올바르게 접근하고 조작할 수 있습니다.
+
+```vue
+<!-- ✅ 올바름 - 단일 루트 요소 -->
+<template>
+  <Flicking>
+    <PanelComponent />
+    <PanelComponent />
+    <PanelComponent />
+  </Flicking>
+</template>
+
+<script setup>
+// PanelComponent.vue
+</script>
+
+<template>
+  <div class="panel">
+    <h3>패널 제목</h3>
+    <p>패널 내용</p>
+  </div>
+</template>
+```
+
+```vue
+<!-- ❌ 잘못됨 - 다중 루트 요소 -->
+<template>
+  <h3>패널 제목</h3>
+  <p>패널 내용</p>
+</template>
+```
+
+```vue
+<!-- ❌ 잘못됨 - Fragment 루트 -->
+<template>
+  <>
+    <div>헤더</div>
+    <div>콘텐츠</div>
+  </>
+</template>
+```
+
+:::danger 다중 루트 요소 미지원
+Vue3에서는 다중 루트 요소(fragments)를 가진 컴포넌트를 허용하지만, **Flicking은 이를 지원하지 않습니다**. 패널 컴포넌트는 반드시 하나의 루트 요소만 가져야 합니다.
+:::
+
+### 다중 루트 컴포넌트 해결 방법
+
+다중 루트 요소를 가진 컴포넌트를 사용해야 하는 경우 컨테이너로 감싸세요:
+
+```vue
+<template>
+  <Flicking>
+    <!-- 다중 루트 컴포넌트를 div로 감싸기 -->
+    <div><MultiRootComponent /></div>
+    <div><MultiRootComponent /></div>
+    <div><MultiRootComponent /></div>
+  </Flicking>
+</template>
+```
+
+---
+
+## 자주 하는 실수
+
+### 1. 잘못된 임포트 경로
+
+```vue
+<!-- ❌ 잘못됨 - 바닐라 JS용 -->
+import Flicking from "@egjs/flicking";
+
+<!-- ❌ 잘못됨 - Vue 2용 -->
+import Flicking from "@egjs/vue-flicking";
+
+<!-- ✅ 올바름 - Vue 3 래퍼 -->
+import Flicking from "@egjs/vue3-flicking";
+```
+
+### 2. 잘못된 이벤트 핸들러 이름
+
+```vue
+<!-- ❌ 잘못됨 - camelCase 사용 -->
+<Flicking @changed="handler" />
+
+<!-- ❌ 잘못됨 - on 접두사 사용 (React 스타일) -->
+<Flicking @onChanged="handler" />
+
+<!-- ✅ 올바름 - @ 디렉티브와 kebab-case -->
+<Flicking @changed="handler" />
+```
+
+### 3. CSS 임포트 누락
+
+```vue
+<!-- ❌ CSS 누락 - 패널이 올바르게 표시되지 않음 -->
+<script setup>
+import Flicking from "@egjs/vue3-flicking";
+</script>
+
+<!-- ✅ CSS 포함 -->
+<script setup>
+import Flicking from "@egjs/vue3-flicking";
+import "@egjs/vue3-flicking/dist/flicking.css";
+</script>
+```
+
+### 4. 마운트 전 메서드 접근
+
+```vue
+<script setup>
+const flickingRef = ref(null);
+
+// ❌ 잘못됨 - setup 중 ref가 null
+flickingRef.value?.moveTo(2);
+
+// ✅ 올바름 - onMounted나 이벤트 핸들러에서 사용
+onMounted(() => {
+  flickingRef.value?.moveTo(2);
+});
+</script>
+```

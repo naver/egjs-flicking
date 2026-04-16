@@ -1,0 +1,71 @@
+---
+title: "Auto Resize"
+id: auto-resize
+slug: /demos/advanced/auto-resize
+sidebar_position: 7
+description: Control how viewport size changes are detected with the autoResize and useResizeObserver options
+keywords: [flicking, carousel, resize, autoResize, useResizeObserver, ResizeObserver]
+---
+
+import AutoResize from '@site/src/demo/advanced/AutoResize';
+
+# Auto Resize
+
+Control how viewport size changes are detected using the [`autoResize`](../../api/interfaces/FlickingOptions#autoresize) and [`useResizeObserver`](../../api/interfaces/FlickingOptions#useresizeobserver) options.
+
+Try changing the container width with the slider and compare the resize response difference between the two carousels.
+
+<AutoResize />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`autoResize`](../../api/interfaces/FlickingOptions#autoresize) | `boolean` | `true` | Automatically call `resize()` when viewport size changes |
+| [`useResizeObserver`](../../api/interfaces/FlickingOptions#useresizeobserver) | `boolean` | `true` | Whether to use ResizeObserver (falls back to window resize if false) |
+
+### Option Combination Comparison
+
+| Combination | Behavior | Best For |
+|-------------|----------|----------|
+| `autoResize: true` + `useResizeObserver: true` | Immediately detects element size changes | General use (default) |
+| `autoResize: true` + `useResizeObserver: false` | Only detects window resize | Element size is fixed, only window size changes |
+| `autoResize: false` | Manual `resize()` call required | When you want to control the resize timing yourself |
+
+## Details
+
+### autoResize
+
+When `autoResize: true` (default), Flicking automatically calls the `resize()` method when the viewport size changes. Setting it to `false` requires the developer to manually call `flicking.resize()`.
+
+### useResizeObserver
+
+When `useResizeObserver: true` (default), the `ResizeObserver` API is used to detect element-level size changes. When `false`, only the `window`'s `resize` event is detected, which means changes to the parent element size may not be detected.
+
+### Use Cases
+
+:::info When should you use this?
+- **Responsive layouts**: Use the defaults as-is (autoResize + ResizeObserver)
+- **Tab switching UI**: Set `autoResize: false` and manually resize only when the tab is activated
+- **Performance-sensitive environments**: Set `useResizeObserver: false` to only detect window resize
+:::
+
+### Notes
+
+:::warning Caution
+- When `autoResize: false` is set, you must call `resize()` after the viewport size changes
+- When `useResizeObserver: false`, size changes caused by CSS layout changes (flex, grid, etc.) are not detected
+:::
+
+## Related Links
+
+### Related Options
+- [`autoResize`](../../api/interfaces/FlickingOptions#autoresize): Auto resize
+- [`useResizeObserver`](../../api/interfaces/FlickingOptions#useresizeobserver): Use ResizeObserver
+
+### Related Demos
+- [Resize Debounce](./resize-debounce): Control resize call frequency
+- [Optimize Size Update](./optimize-size-update): Skip unnecessary axis changes
+- [Observe Panel Resize](./observe-panel-resize): Detect panel size changes

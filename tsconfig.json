@@ -14,10 +14,6 @@
     "skipLibCheck": true,
     "baseUrl": "."
   },
-  "include": [
-    "./src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["./packages/**/src/**/*.ts"],
+  "exclude": ["node_modules"]
 }

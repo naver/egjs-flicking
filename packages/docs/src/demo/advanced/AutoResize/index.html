@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="slider-row">
+    <span>Container width</span>
+    <input type="range" id="width-slider" min="30" max="100" value="100" />
+    <span class="value-label" id="width-value">100%</span>
+  </div>
+
+  <div class="demo-section">
+    <div class="demo-label">useResizeObserver: true</div>
+    <div id="wrap-a" style="width: 100%">
+      <div id="flick-observer" class="flicking-viewport">
+        <div class="flicking-camera">
+          <div class="flicking-panel panel-1">1</div>
+          <div class="flicking-panel panel-2">2</div>
+          <div class="flicking-panel panel-3">3</div>
+          <div class="flicking-panel panel-4">4</div>
+          <div class="flicking-panel panel-5">5</div>
+        </div>
+      </div>
+    </div>
+    <div class="resize-count">Resize count: <span id="count-a">0</span></div>
+  </div>
+
+  <div class="demo-section">
+    <div class="demo-label">useResizeObserver: false</div>
+    <div id="wrap-b" style="width: 100%">
+      <div id="flick-window" class="flicking-viewport">
+        <div class="flicking-camera">
+          <div class="flicking-panel panel-1">1</div>
+          <div class="flicking-panel panel-2">2</div>
+          <div class="flicking-panel panel-3">3</div>
+          <div class="flicking-panel panel-4">4</div>
+          <div class="flicking-panel panel-5">5</div>
+        </div>
+      </div>
+    </div>
+    <div class="resize-count">Resize count: <span id="count-b">0</span></div>
+  </div>
+
+  <div class="toggle-row">
+    <button class="button active" id="btn-toggle">autoResize: true</button>
+    <button class="button" id="manual-btn" style="display: none">Manual resize()</button>
+  </div>
+</body>
+</html>

@@ -1,0 +1,83 @@
+---
+title: "Bound"
+id: bound
+slug: /demos/basic/bound
+sidebar_position: 7
+description: bound 옵션으로 카메라가 첫/마지막 패널 경계를 넘어가지 않도록 제한합니다
+keywords: [flicking, carousel, bound, bounce, 경계, 바운스]
+---
+
+import Bound from '@site/src/demo/basic/Bound';
+
+# Bound
+
+[`bound`](../../api/interfaces/FlickingOptions#bound) 옵션으로 카메라가 첫 번째와 마지막 패널 경계를 넘어가지 않도록 제한합니다. [`bounce`](../../api/interfaces/FlickingOptions#bounce) 옵션과 함께 사용하여 경계에서의 탄성 효과를 조절할 수 있습니다.
+
+<Bound />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`bound`](../../api/interfaces/FlickingOptions#bound) | `boolean` | `false` | 경계 제한 활성화 |
+| [`bounce`](../../api/interfaces/FlickingOptions#bounce) | `number \| string \| [number \| string, number \| string]` | `"20%"` | 바운스 영역 크기 |
+
+### 값별 비교
+
+| 값 | 동작 | 적합한 상황 |
+|----|------|-------------|
+| `bound: false` | 첫/마지막 패널 이후에도 빈 공간으로 드래그 가능 | 무한 스크롤 느낌, 자유로운 탐색 |
+| `bound: true` | 첫/마지막 패널 경계에서 멈추고 바운스 효과 | 유한한 콘텐츠, 명확한 시작/끝 표시 |
+
+## 상세 설명
+
+### bound: false 상세
+기본값입니다. 마지막 패널 이후에도 계속 드래그할 수 있으며, 빈 공간이 보입니다. 손을 떼면 가장 가까운 패널로 스냅됩니다.
+
+### bound: true 상세
+카메라가 첫 번째 패널의 시작과 마지막 패널의 끝을 넘어가지 않습니다. 경계에 도달하면 바운스 효과가 표시되어 사용자에게 끝에 도달했음을 알립니다.
+
+### bounce 상세
+경계에서 표시되는 탄성 영역의 크기입니다. 값이 클수록 더 많이 당겨지는 느낌을 줍니다.
+
+```javascript
+// 다양한 bounce 값
+bounce: "20%"      // 기본값, viewport의 20%
+bounce: "50%"      // 더 큰 바운스
+bounce: "100px"    // 고정 픽셀 값
+bounce: 0          // 바운스 없음
+bounce: ["10%", "30%"]  // 시작/끝 다른 값
+```
+
+### 연관 옵션
+- **circular과의 관계**: `circular: true`와 `bound: true`는 상호 배타적입니다. 둘 다 true이면 circular가 우선되고 bound는 무시됩니다.
+- **moveType: "freeScroll"과의 관계**: freeScroll 모드에서 `bound: true`를 함께 사용하면 경계를 넘어 스크롤되는 것을 방지합니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **bound: false**: 무한 스크롤 느낌을 주고 싶을 때, circular와 함께 사용하지 않을 때
+- **bound: true**: 콘텐츠의 시작과 끝을 명확히 표시하고 싶을 때, freeScroll 모드에서 경계 제한이 필요할 때
+:::
+
+### 주의사항
+
+:::warning circular과 함께 사용 불가
+`circular: true`와 `bound: true`를 동시에 설정하면 circular가 우선됩니다. bound 효과를 원하면 `circular: false`로 설정하세요.
+:::
+
+:::warning bounce 값 주의
+bounce 값이 너무 크면 사용자가 끝에 도달했는지 혼란스러울 수 있습니다. 일반적으로 20~30% 정도가 적절합니다.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`circular`](../../api/interfaces/FlickingOptions#circular): 무한 루프 모드 (bound와 상호 배타)
+- [`moveType`](../../api/interfaces/FlickingOptions#movetype): 이동 동작 모드 (freeScroll + bound 조합 권장)
+
+### 관련 데모
+- [Circular](./circular): 무한 루프 모드
+- [Movement Types](./movement-types): freeScroll + bound 조합

@@ -1,0 +1,23 @@
+{
+  "name": "@test/cfc",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "test:vanilla": "vitest run --project Vanilla",
+    "test:react": "vitest run --project React",
+    "test:vue3": "vitest run --project Vue3"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^9.2.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "16.8.17",
+    "@types/react-dom": "16.8.4",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "replace-in-file": "^6.3.2",
+    "vitest": "^4.0.0"
+  }
+}

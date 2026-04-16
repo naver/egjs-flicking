@@ -1,0 +1,77 @@
+---
+title: "Duration"
+id: duration
+slug: /demos/basic/duration
+sidebar_position: 8
+description: duration 옵션으로 패널 스냅 애니메이션의 지속 시간을 조절합니다
+keywords: [flicking, carousel, duration, animation, speed, 애니메이션, 속도]
+---
+
+import Duration from '@site/src/demo/basic/Duration';
+
+# Duration
+
+[`duration`](../../api/interfaces/FlickingOptions#duration) 옵션으로 패널 스냅 애니메이션의 지속 시간을 밀리초 단위로 설정합니다.
+
+<Duration />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`duration`](../../api/interfaces/FlickingOptions#duration) | `number` | `500` | 애니메이션 지속 시간 (ms) |
+
+### 값별 비교
+
+| 값 | 동작 | 적합한 상황 |
+|----|------|-------------|
+| `100` 이하 | 거의 즉시 스냅 | 빠른 반응이 필요한 UI, 게임 |
+| `300~500` | 자연스러운 속도 | 일반 캐러셀, 이미지 갤러리 |
+| `1000` 이상 | 느린 전환 | 프레젠테이션, 강조 효과 |
+
+## 상세 설명
+
+### duration 동작 원리
+드래그를 마치고 손을 떼면 패널이 목표 위치로 스냅됩니다. `duration`은 이 스냅 애니메이션이 완료되기까지 걸리는 시간입니다.
+
+```javascript
+// 다양한 duration 값
+duration: 100   // 빠른 스냅 (0.1초)
+duration: 500   // 기본값 (0.5초)
+duration: 1500  // 느린 스냅 (1.5초)
+duration: 0     // 애니메이션 없이 즉시 이동
+```
+
+### 연관 옵션
+- **easing과의 관계**: `duration`은 애니메이션 시간을, `easing`은 애니메이션 곡선을 결정합니다. 둘을 조합하여 다양한 전환 효과를 만들 수 있습니다.
+- **moveType과의 관계**: `moveType: "freeScroll"`에서는 관성 스크롤이 적용되어 duration과 다르게 동작할 수 있습니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **짧은 duration (100~300ms)**: 빠른 반응이 중요한 UI, 탭 전환, 게임 인터페이스
+- **기본 duration (400~600ms)**: 일반적인 캐러셀, 이미지 갤러리
+- **긴 duration (800ms 이상)**: 프레젠테이션, 온보딩, 전환 효과 강조
+:::
+
+### 주의사항
+
+:::warning duration: 0 사용 시
+`duration: 0`으로 설정하면 애니메이션 없이 즉시 이동합니다. 시각적 피드백이 없어 사용자가 혼란스러울 수 있으니 주의하세요.
+:::
+
+:::warning 너무 긴 duration
+1초 이상의 duration은 사용자가 기다리는 느낌을 줄 수 있습니다. 특별한 의도가 아니라면 500ms 전후를 권장합니다.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`easing`](../../api/interfaces/FlickingOptions#easing): 애니메이션 곡선
+- [`moveType`](../../api/interfaces/FlickingOptions#movetype): 이동 동작 모드
+
+### 관련 데모
+- [Easing](./easing): 애니메이션 곡선 조절
+- [Movement Types](./movement-types): 이동 동작 모드

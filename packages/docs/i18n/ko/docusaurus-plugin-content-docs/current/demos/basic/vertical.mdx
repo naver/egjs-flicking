@@ -1,0 +1,94 @@
+---
+title: "Vertical"
+id: vertical
+slug: /demos/basic/vertical
+sidebar_position: 5
+description: horizontal 옵션으로 패널의 이동 방향을 수평 또는 수직으로 설정합니다
+keywords: [flicking, carousel, horizontal, vertical, direction, 방향, 수직]
+---
+
+import Vertical from '@site/src/demo/basic/Vertical';
+
+# Vertical
+
+[`horizontal`](../../api/interfaces/FlickingOptions#horizontal) 옵션으로 패널의 이동 방향을 설정합니다. `true`이면 수평(좌우), `false`이면 수직(상하) 방향으로 이동합니다.
+
+<Vertical />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`horizontal`](../../api/interfaces/FlickingOptions#horizontal) | `boolean` | `true` | 패널 이동 방향 (`true`: 수평, `false`: 수직) |
+
+### 값별 비교
+
+| 값 | 동작 | 적합한 상황 |
+|----|------|-------------|
+| `true` | 좌우로 드래그하여 패널 이동 | 일반 캐러셀, 이미지 갤러리, 배너 슬라이더 |
+| `false` | 상하로 드래그하여 패널 이동 | 세로 카드 스택, 스토리 뷰어, 세로 온보딩 |
+
+## 상세 설명
+
+### horizontal: true 상세
+기본값입니다. 패널이 좌우로 배치되고, 사용자는 좌우 드래그로 패널을 이동합니다. 대부분의 캐러셀 UI에서 사용됩니다.
+
+### horizontal: false 상세
+패널이 상하로 배치되고, 사용자는 상하 드래그로 패널을 이동합니다. 세로 스크롤 UI나 풀스크린 스토리 뷰어에 적합합니다.
+
+**중요**: 수직 모드에서는 viewport에 **고정 height**를 반드시 설정해야 합니다. height가 없으면 패널이 보이지 않습니다.
+
+```css
+.flicking-viewport {
+  height: 300px; /* 수직 모드에서 필수 */
+}
+```
+
+**Vanilla JS 전용**: viewport 요소에 `vertical` 클래스를 직접 추가해야 합니다. React, Vue 래퍼는 이 클래스를 자동으로 추가합니다.
+
+```html
+<!-- Vanilla JS: "vertical" 클래스 필수 -->
+<div id="my-flicking" class="flicking-viewport vertical">
+  <div class="flicking-camera">
+    <div class="panel">1</div>
+    <div class="panel">2</div>
+  </div>
+</div>
+```
+
+이 클래스가 카메라의 `flex-direction`을 `column`으로 변경하여 수직 패널 배치를 활성화합니다.
+
+### 연관 옵션
+- **adaptive와의 관계**: `adaptive` 옵션은 `horizontal: true`일 때만 동작합니다. 수직 모드에서는 효과가 없습니다.
+- **nested와의 관계**: 부모와 자식 Flicking의 horizontal 값이 다르면 `nested` 옵션 없이도 자연스럽게 동작합니다.
+- **inputType과의 관계**: 기본 inputType `["mouse", "touch"]`는 수평/수직 모두 지원합니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **horizontal: true**: 이미지 갤러리, 제품 슬라이더, 배너, 탭 형태 UI
+- **horizontal: false**: TikTok/Instagram 스토리 스타일, 세로 카드 스택, 풀스크린 온보딩
+:::
+
+### 주의사항
+
+:::warning 수직 모드에서 viewport height 필수
+`horizontal: false`로 설정할 때 viewport에 고정 height를 지정하지 않으면 패널이 표시되지 않습니다. CSS에서 `height` 값을 반드시 설정하세요.
+:::
+
+:::warning 터치 디바이스에서 스크롤 충돌
+수직 모드에서 상하 드래그는 페이지 스크롤과 충돌할 수 있습니다. 필요시 `preventDefaultOnDrag` 옵션이나 CSS `touch-action` 설정을 검토하세요.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`adaptive`](../../api/interfaces/FlickingOptions#adaptive): 패널 높이에 viewport 맞춤 (horizontal: true 전용)
+- [`nested`](../../api/interfaces/FlickingOptions#nested): 중첩 Flicking 동작
+- [`inputType`](../../api/interfaces/FlickingOptions#inputtype): 입력 타입 설정
+
+### 관련 데모
+- [Nested](./nested): 중첩 Flicking (방향이 다르면 nested 불필요)
+- [Adaptive](./adaptive): 패널 높이 적응

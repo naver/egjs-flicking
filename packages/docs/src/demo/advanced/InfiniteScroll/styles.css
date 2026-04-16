@@ -1,0 +1,44 @@
+.flicking-panel {
+  width: 200px;
+  height: 120px;
+  margin-right: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+}
+
+.demo-container {
+  margin-bottom: 32px;
+}
+
+.demo-info {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 12px;
+}
+.panel-counter {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+}
+.panel-counter strong {
+  color: #3e8ed0;
+}
+.event-log {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #e8f4f8;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #333;
+  font-family: monospace;
+  max-height: 80px;
+  overflow-y: auto;
+}

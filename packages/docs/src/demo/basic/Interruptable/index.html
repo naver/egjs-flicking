@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <!-- interruptable: true (default) -->
+  <div class="demo-container">
+    <div class="demo-label">interruptable: true (default — drag during animation)</div>
+    <div id="flick-interruptable" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel panel-1">1</div>
+        <div class="flicking-panel panel-2">2</div>
+        <div class="flicking-panel panel-3">3</div>
+        <div class="flicking-panel panel-4">4</div>
+        <div class="flicking-panel panel-5">5</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button id="btn1">Next (start 2s animation)</button>
+    </div>
+    <div class="demo-hint">Drag during animation to interrupt it immediately</div>
+  </div>
+
+  <!-- interruptable: false -->
+  <div class="demo-container">
+    <div class="demo-label">interruptable: false (ignores drag until animation ends)</div>
+    <div id="flick-not-interruptable" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel panel-1">1</div>
+        <div class="flicking-panel panel-2">2</div>
+        <div class="flicking-panel panel-3">3</div>
+        <div class="flicking-panel panel-4">4</div>
+        <div class="flicking-panel panel-5">5</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button id="btn2">Next (start 2s animation)</button>
+    </div>
+    <div class="demo-hint">Drag is ignored until the animation completes</div>
+  </div>
+
+</body>
+</html>

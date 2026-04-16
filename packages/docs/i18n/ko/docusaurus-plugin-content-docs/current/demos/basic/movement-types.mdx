@@ -1,0 +1,88 @@
+---
+title: "Movement Types"
+id: movement-types
+slug: /demos/basic/movement-types
+sidebar_position: 4
+description: moveType 옵션으로 패널의 이동 및 스냅 동작을 제어합니다
+keywords: [flicking, carousel, moveType, snap, freeScroll, strict, 이동]
+---
+
+import MoveType from '@site/src/demo/basic/MoveType';
+
+# Movement Types
+
+[`moveType`](../../api/interfaces/FlickingOptions#movetype) 옵션으로 패널의 이동 및 스냅 동작을 제어합니다. snap, freeScroll, strict 세 가지 모드를 제공합니다.
+
+<MoveType />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`moveType`](../../api/interfaces/FlickingOptions#movetype) | `"snap" \| "freeScroll" \| "strict" \| object` | `"snap"` | 이동 동작 모드 |
+
+### 값별 비교
+
+| 값 | 동작 | 적합한 상황 |
+|----|------|-------------|
+| `"snap"` | 패널 단위로 스냅. 드래그 거리에 따라 여러 패널 이동 가능 | 일반 캐러셀, 이미지 갤러리 |
+| `"freeScroll"` | 스냅 없이 자유롭게 스크롤. 관성 적용 | 수평 스크롤 리스트, 탭 바 |
+| `"strict"` | 한 번에 정확히 한 패널씩만 이동 | 온보딩, 단계별 가이드, 풀스크린 슬라이더 |
+
+## 상세 설명
+
+### "snap" 상세
+기본값입니다. 드래그 후 손을 떼면 가장 가까운 패널에 스냅됩니다. 드래그 속도와 거리에 따라 여러 패널을 건너뛸 수 있습니다.
+
+**snap with count**: 한 번에 이동할 패널 수를 제한할 수 있습니다.
+```javascript
+moveType: { type: "snap", count: 2 }  // 한 번에 최대 2개 패널씩 이동
+```
+
+### "freeScroll" 상세
+패널에 스냅되지 않고 네이티브 스크롤처럼 자유롭게 이동합니다. 드래그 속도에 따른 관성이 적용됩니다. 현재 패널 인덱스는 화면 중앙에 가장 가까운 패널로 결정됩니다.
+
+**stopAtEdge 옵션**: 경계에서 멈출지 여부를 설정합니다.
+```javascript
+moveType: ["freeScroll", { stopAtEdge: true }]
+```
+
+### "strict" 상세
+한 번의 플릭으로 정확히 한 패널만 이동합니다. 아무리 빠르게 드래그해도 한 칸씩만 이동합니다. 사용자가 콘텐츠를 건너뛰지 못하게 해야 할 때 사용합니다.
+
+### 연관 옵션
+- **bound와의 관계**: `freeScroll` 모드에서는 `bound: true`를 함께 사용하는 것을 권장합니다. 그렇지 않으면 경계를 넘어 스크롤될 수 있습니다.
+- **threshold와의 관계**: `threshold`는 패널 전환에 필요한 최소 드래그 거리입니다. `strict` 모드에서 특히 중요합니다.
+- **duration과의 관계**: 스냅 애니메이션의 지속 시간을 조절합니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **"snap"**: 일반적인 캐러셀, 이미지 갤러리, 제품 슬라이더
+- **"freeScroll"**: 수평 스크롤 메뉴, 탭 바, 태그 리스트, 네이티브 스크롤 느낌이 필요한 UI
+- **"strict"**: 온보딩 화면, 튜토리얼, 단계별 가이드, 콘텐츠 건너뛰기 방지
+:::
+
+### 주의사항
+
+:::warning freeScroll 사용 시
+`freeScroll` 모드는 기본적으로 경계를 넘어 스크롤됩니다. `bound: true`를 함께 설정하여 경계를 제한하세요.
+:::
+
+:::warning strict 모드
+`strict` 모드는 사용자의 자유를 제한합니다. 온보딩처럼 순차적 탐색이 필요한 경우에만 사용하세요.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`bound`](../../api/interfaces/FlickingOptions#bound): 경계 제한 (freeScroll과 함께 사용 권장)
+- [`threshold`](../../api/interfaces/FlickingOptions#threshold): 패널 전환 최소 드래그 거리
+- [`duration`](../../api/interfaces/FlickingOptions#duration): 애니메이션 지속 시간
+
+### 관련 데모
+- [Alignment](./alignment): 패널 정렬
+- [Bound](./bound): 경계 제한 모드
+- [Threshold](./threshold): 드래그 임계값

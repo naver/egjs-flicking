@@ -1,0 +1,17 @@
+.flicking-panel {
+  width: 50%;
+  height: 120px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.click-count {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #333;
+}
+.demo-hint {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #888;
+}

@@ -1,0 +1,163 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.11/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/declaration",
+      "!**/coverage",
+      "!**/build",
+      "!**/.docusaurus",
+      "!**/api-artifacts",
+      "!**/api-documenter-output",
+      "!packages/test-flicking/manual",
+      "!packages/test-flicking/cfc/replace-coverage.js",
+      "!packages/docs/src/css/showcases/post.css",
+      "!config"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 120,
+    "lineEnding": "lf"
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always",
+      "trailingCommas": "none",
+      "arrowParentheses": "asNeeded"
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noAssignInExpressions": "warn",
+        "noVar": "error",
+        "useIterableCallbackReturn": "off",
+        "noUnsafeDeclarationMerging": "off"
+      },
+      "complexity": {
+        "noForEach": "off",
+        "noBannedTypes": "off",
+        "noImportantStyles": "off",
+        "useArrowFunction": "warn"
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "noInferrableTypes": "off",
+        "useConst": "error",
+        "useImportType": "off",
+        "useExportType": "off"
+      },
+      "correctness": {
+        "noUnusedVariables": "warn",
+        "noUnusedImports": "warn",
+        "noUnusedFunctionParameters": "off"
+      }
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.vue"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedImports": "off",
+            "noUnusedVariables": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["packages/test-flicking/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off",
+            "noEmptyBlockStatements": "off"
+          },
+          "style": {
+            "noUnusedTemplateLiteral": "off"
+          },
+          "complexity": {
+            "useArrowFunction": "off"
+          },
+          "correctness": {
+            "noUnusedVariables": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["packages/docs/**"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedImports": "off",
+            "useHookAtTopLevel": "off",
+            "useExhaustiveDependencies": "off"
+          },
+          "suspicious": {
+            "noConsole": "off",
+            "noArrayIndexKey": "off"
+          },
+          "a11y": {
+            "useAltText": "off",
+            "useButtonType": "off",
+            "useValidAnchor": "off",
+            "useAnchorContent": "off",
+            "useKeyWithClickEvents": "off",
+            "noStaticElementInteractions": "off",
+            "useSemanticElements": "off"
+          },
+          "security": {
+            "noDangerouslySetInnerHtml": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/dev/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off",
+            "noArrayIndexKey": "off"
+          },
+          "complexity": {
+            "useArrowFunction": "off"
+          },
+          "a11y": {
+            "useAltText": "off",
+            "useButtonType": "off",
+            "useValidAnchor": "off",
+            "useAnchorContent": "off",
+            "useKeyWithClickEvents": "off",
+            "noStaticElementInteractions": "off",
+            "useSemanticElements": "off"
+          }
+        }
+      }
+    }
+  ]
+}

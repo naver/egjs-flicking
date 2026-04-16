@@ -1,0 +1,33 @@
+.outer-panel {
+  width: 80%;
+  height: 180px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.outer-1 {
+  background: #3e8ed0;
+}
+.outer-2 {
+  background: #00d1b2;
+}
+.outer-3 {
+  background: #f14668;
+}
+
+.inner-viewport {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+}
+.inner-panel {
+  width: 60%;
+  height: 140px;
+  background: rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.demo-hint {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 8px;
+}

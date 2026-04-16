@@ -7,24 +7,51 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v4
         with:
-          node-version: 16
-          cache: "npm"
-          cache-dependency-path: "**/package-lock.json"
+          # 최신 노드 버전 사용
+          node-version: "22.x"
+          cache: "pnpm"
+          cache-dependency-path: "**/pnpm-lock.yaml"
       - name: install-root
-        run: npm install
+        run: pnpm install
       - name: install-unit
-        working-directory: ./test/unit
-        run: npm install
+        working-directory: ./packages/test-flicking/unit
+        run: pnpm install
       - name: run unit test
-        working-directory: ./test/unit
-        run: npm run coverage
+        working-directory: ./packages/test-flicking/unit
+        run: pnpm run coverage
       - name: send coverage
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: unit
-          base-path: ./test/unit
-          path-to-lcov: ./test/unit/coverage/lcov.info
+          base-path: ./packages/test-flicking/unit
+          path-to-lcov: ./packages/test-flicking/unit/coverage/lcov.info
+          parallel: true
+  plugins:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v4
+        with:
+          # 최신 노드 버전 사용
+          node-version: "22.x"
+          cache: "pnpm"
+          cache-dependency-path: "**/pnpm-lock.yaml"
+      - name: install-root
+        run: pnpm install
+      - name: install-plugins
+        working-directory: ./packages/test-flicking/plugins
+        run: pnpm install
+      - name: run plugins test
+        working-directory: ./packages/test-flicking/plugins
+        run: pnpm run coverage
+      - name: send coverage
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: plugins
+          base-path: ./packages/test-flicking/plugins
+          path-to-lcov: ./packages/test-flicking/plugins/coverage/lcov.info
           parallel: true
   cfc:
     runs-on: ubuntu-latest
@@ -32,27 +59,48 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v4
         with:
-          node-version: 16
-          cache: "npm"
-          cache-dependency-path: "**/package-lock.json"
+          # 최신 노드 버전 사용
+          node-version: "22.x"
+          cache: "pnpm"
+          cache-dependency-path: "**/pnpm-lock.yaml"
       - name: install-root
-        run: npm install
+        run: pnpm install
       - name: install-cfc
-        working-directory: ./test/cfc
-        run: npm install
+        working-directory: ./packages/test-flicking/cfc
+        run: pnpm install
       - name: run cfc test
-        working-directory: ./test/cfc
-        run: npm run coverage
+        working-directory: ./packages/test-flicking/cfc
+        run: pnpm run coverage
       - name: send coverage
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: cfc
-          base-path: ./test/cfc
-          path-to-lcov: ./test/cfc/coverage/lcov.info
+          base-path: ./packages/test-flicking/cfc
+          path-to-lcov: ./packages/test-flicking/cfc/coverage/lcov.info
           parallel: true
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          cache: "pnpm"
+          cache-dependency-path: "**/pnpm-lock.yaml"
+      - name: install-root
+        run: pnpm install
+      - name: install-e2e
+        working-directory: ./packages/test-flicking/e2e
+        run: pnpm install
+      - name: install-browsers
+        working-directory: ./packages/test-flicking/e2e
+        run: npx playwright install --with-deps chromium
+      - name: run e2e
+        working-directory: ./packages/test-flicking/e2e
+        run: pnpm test
   teardown:
-    needs: [unit, cfc]
+    needs: [unit, plugins, cfc, e2e]
     runs-on: ubuntu-latest
     steps:
     - name: Coveralls Finished

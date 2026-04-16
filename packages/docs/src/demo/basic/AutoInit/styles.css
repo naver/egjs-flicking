@@ -1,0 +1,18 @@
+.flicking-panel {
+  width: 50%;
+  height: 120px;
+}
+
+.controls {
+  margin-top: 8px;
+}
+.controls button {
+  margin-right: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.status {
+  margin-top: 4px;
+  font-size: 14px;
+  color: #888;
+}

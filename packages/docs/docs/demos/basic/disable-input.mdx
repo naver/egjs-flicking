@@ -1,0 +1,73 @@
+---
+title: "Disable Input"
+id: disable-input
+slug: /demos/basic/disable-input
+sidebar_position: 13
+description: Disable user input on initialization using the disableOnInit option
+keywords: [flicking, carousel, disableOnInit, disable, enable]
+---
+
+import DisableInput from '@site/src/demo/basic/DisableInput';
+
+# Disable Input
+
+The [`disableOnInit`](../../api/interfaces/FlickingOptions#disableoninit) option disables user input (drag) on initialization. Useful for carousels controlled only by buttons or the API.
+
+<DisableInput />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`disableOnInit`](../../api/interfaces/FlickingOptions#disableoninit) | `boolean` | `false` | Disable input on initialization |
+
+### Comparison by Value
+
+| Value | Behavior | Suitable For |
+|-------|----------|--------------|
+| `false` | Panels can be moved by dragging (default) | General carousels |
+| `true` | Drag is ignored, only API control available | Auto-play sliders, button-only control |
+
+## Details
+
+### How disableOnInit Works
+When `disableOnInit: true` is set, the `disableInput()` method is automatically called on initialization. After this, user drag input is ignored, but programmatic controls such as `moveTo()`, `prev()`, and `next()` work normally.
+
+### Dynamic Control Methods
+You can change the input enabled state at runtime.
+
+```javascript
+const flicking = new Flicking("#el");
+
+// Disable input
+flicking.disableInput();
+
+// Enable input
+flicking.enableInput();
+```
+
+### Related Options
+- **Relationship with inputType**: `inputType: []` also disables input, but `disableOnInit` allows later activation with `enableInput()`.
+
+### Use Cases
+
+:::info When to use?
+- **disableOnInit: true**: Auto-play carousels, UI controlled only by buttons/arrows, presentations requiring touch prevention
+- **Dynamic toggle**: Allow drag only under certain conditions, disable background carousel when a modal is open
+:::
+
+### Notes
+
+:::warning Provide alternative controls
+When `disableOnInit: true` is set, dragging is not possible. Be sure to provide alternatives such as navigation buttons, arrows, or keyboard controls.
+:::
+
+## Related Links
+
+### Related Options
+- [`inputType`](../../api/interfaces/FlickingOptions#inputtype): Input device type restriction
+
+### Related Demos
+- [Input Type](./input-type): Input device type settings

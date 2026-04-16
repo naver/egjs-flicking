@@ -1,0 +1,59 @@
+---
+title: "Fade"
+id: fade
+slug: /demos/plugins/fade
+sidebar_position: 1
+description: A plugin that applies fade in/out effects during panel transitions
+keywords: [flicking, plugin, fade, transition, opacity]
+---
+
+import Fade from '@site/src/demo/plugins/Fade';
+
+# Fade
+
+Applies fade in/out effects by adjusting opacity during panel transitions.
+
+<Fade />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `selector` | `string` | `""` | CSS selector for the element to apply the effect to. If empty, the effect is applied to the panel itself |
+| `scale` | `number` | `1` | Effect intensity multiplier |
+
+## Details
+
+### How It Works
+
+The Fade plugin automatically adjusts `opacity` based on each panel's visible ratio. The currently visible panel becomes opaque, while panels moving out of view become transparent.
+
+### Usage
+
+```js
+import { Fade } from "@egjs/flicking-plugins";
+
+// Basic usage
+flicking.addPlugins(new Fade());
+
+// Apply to a specific element only
+flicking.addPlugins(new Fade("img"));
+
+// Adjust effect intensity
+flicking.addPlugins(new Fade("", 2));
+```
+
+### Notes
+
+:::warning Caution
+- Using with `circular: true` enables a seamless fade effect.
+- If the panel background is transparent, panels behind may show through. It is recommended to use an opaque background color or image.
+:::
+
+## Related Links
+
+### Related Demos
+- [Parallax](./parallax): Parallax scroll effect
+- [AutoPlay](./autoplay): Use with autoplay

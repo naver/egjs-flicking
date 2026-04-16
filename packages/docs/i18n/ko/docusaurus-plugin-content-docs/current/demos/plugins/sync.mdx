@@ -1,0 +1,93 @@
+---
+title: "Sync"
+id: sync
+slug: /demos/plugins/sync
+sidebar_position: 7
+description: 여러 Flicking 인스턴스를 동기화하는 플러그인 (카메라/인덱스 동기화)
+keywords: [flicking, plugin, sync, synchronize, thumbnail, gallery]
+---
+
+import Sync from '@site/src/demo/plugins/Sync';
+
+# Sync
+
+여러 Flicking 인스턴스를 동기화합니다. 대표적으로 메인 이미지와 썸네일 갤러리를 연동할 때 사용합니다.
+
+<Sync />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `type` | `"camera" \| "index"` | `"camera"` | 동기화 방식. `camera`는 카메라 위치, `index`는 패널 인덱스 기준 동기화 |
+| `synchronizedFlickingOptions` | `SyncOption[]` | `[]` | 동기화할 Flicking 인스턴스와 옵션 목록 |
+
+### SyncOption
+
+| 옵션 | 타입 | 설명 |
+|------|------|------|
+| `flicking` | `Flicking` | 동기화할 Flicking 인스턴스 |
+| `isSlidable` | `boolean` | 드래그로 슬라이드 가능 여부 |
+| `isClickable` | `boolean` | 클릭으로 해당 패널로 이동 가능 여부 |
+| `activeClass` | `string` | 활성 패널에 추가될 CSS 클래스 |
+
+## 상세 설명
+
+### 동기화 타입
+
+| 타입 | 설명 | 사용 예 |
+|------|------|---------|
+| `camera` | 모든 Flicking의 카메라 위치를 동시에 이동 | 같은 콘텐츠를 다른 뷰로 표시 |
+| `index` | 하나의 Flicking에서 패널을 변경하면 다른 Flicking도 같은 인덱스로 이동 | 메인 이미지 + 썸네일 |
+
+### 프레임워크별 사용법
+
+**React** — `useRef`와 `useEffect`로 인스턴스에 접근합니다:
+```jsx
+const mainRef = useRef(null);
+const thumbRef = useRef(null);
+const [plugins, setPlugins] = useState([]);
+
+useEffect(() => {
+  setPlugins([new Sync({
+    type: "index",
+    synchronizedFlickingOptions: [
+      { flicking: mainRef.current, isSlidable: true },
+      { flicking: thumbRef.current, isClickable: true, activeClass: "active" }
+    ]
+  })]);
+}, []);
+```
+
+**Vue** — `ref()`와 `onMounted`로 인스턴스에 접근합니다:
+```js
+const mainRef = ref(null);
+const thumbRef = ref(null);
+const plugins = ref([]);
+
+onMounted(() => {
+  plugins.value = [new Sync({
+    type: "index",
+    synchronizedFlickingOptions: [
+      { flicking: mainRef.value, isSlidable: true },
+      { flicking: thumbRef.value, isClickable: true, activeClass: "active" }
+    ]
+  })];
+});
+```
+
+### 주의사항
+
+:::warning 주의
+- Sync 플러그인은 Flicking 인스턴스가 마운트된 후에 생성해야 합니다. React에서는 `useEffect`, Vue에서는 `onMounted`를 사용하세요.
+- `index` 타입에서 동기화된 Flicking들의 패널 수가 같아야 올바르게 동작합니다.
+- 플러그인은 동기화 대상 중 하나의 Flicking에만 추가(`addPlugins`)하면 됩니다.
+:::
+
+## 관련 링크
+
+### 관련 데모
+- [Arrow](./arrow): 화살표 네비게이션과 함께 사용
+- [Pagination](./pagination): 페이지 인디케이터와 함께 사용

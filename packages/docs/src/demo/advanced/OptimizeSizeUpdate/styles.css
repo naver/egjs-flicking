@@ -1,0 +1,46 @@
+.demo-section {
+  margin-bottom: 16px;
+}
+
+.demo-section .demo-label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.demo-hint {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.flicking-panel {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* Cycle through 5 different heights */
+.panel-h120 {
+  background: #3e8ed0;
+  height: 120px;
+}
+.panel-h130 {
+  background: #00d1b2;
+  height: 130px;
+}
+.panel-h140 {
+  background: #f14668;
+  height: 140px;
+}
+.panel-h150 {
+  background: #ffe08a;
+  color: #333;
+  height: 150px;
+}
+.panel-h160 {
+  background: #48c78e;
+  height: 160px;
+}

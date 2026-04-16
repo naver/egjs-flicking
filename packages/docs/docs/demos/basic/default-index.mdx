@@ -1,0 +1,76 @@
+---
+title: "Default Index"
+id: default-index
+slug: /demos/basic/default-index
+sidebar_position: 14
+description: Set the panel index to display on initialization using the defaultIndex option
+keywords: [flicking, carousel, defaultIndex, initial, start]
+---
+
+import DefaultIndex from '@site/src/demo/basic/DefaultIndex';
+
+# Default Index
+
+The [`defaultIndex`](../../api/interfaces/FlickingOptions#defaultindex) option sets the index of the panel to display on initialization. Specified as a 0-based index.
+
+<DefaultIndex />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`defaultIndex`](../../api/interfaces/FlickingOptions#defaultindex) | `number` | `0` | Initial active panel index (0-based) |
+
+### Comparison by Value
+
+| Value | Behavior | Suitable For |
+|-------|----------|--------------|
+| `0` | Starts at the first panel (default) | General carousels |
+| `n` | Starts at the (n+1)th panel | Navigating directly to a specific panel, deep linking |
+| `last index` | Starts at the last panel | Reverse browsing, showing newest items first |
+
+## Details
+
+### How defaultIndex Works
+When Flicking is initialized (`init()`), it moves to the panel at the specified index. The panel is displayed immediately without animation.
+
+```javascript
+// Start at the first panel (default)
+defaultIndex: 0
+
+// Start at the third panel
+defaultIndex: 2
+
+// Start at the last panel (when there are 5 panels)
+defaultIndex: 4
+```
+
+### Related Options
+- **Relationship with circular**: defaultIndex works correctly even with `circular: true`. The specified panel becomes the initial active panel.
+- **Relationship with align**: When used with `align: "center"`, the initial panel is positioned at the center.
+
+### Use Cases
+
+:::info When to use?
+- **defaultIndex: 0**: General sequential browsing carousels
+- **Specific index**: Sharing a specific slide via URL parameters (deep linking), restoring previous state
+- **Last index**: UI that shows the newest items first, chat/feed
+:::
+
+### Notes
+
+:::warning Index range
+If you specify an index larger than the number of panels, it moves to the last panel. Negative indices may be treated as the first panel.
+:::
+
+## Related Links
+
+### Related Options
+- [`circular`](../../api/interfaces/FlickingOptions#circular): Infinite loop mode
+- [`align`](../../api/interfaces/FlickingOptions#align): Panel alignment
+
+### Related Demos
+- [Circular](./circular): Infinite loop mode
+- [Alignment](./alignment): Panel alignment

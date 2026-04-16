@@ -1,0 +1,78 @@
+---
+title: "Alignment"
+id: alignment
+slug: /demos/basic/alignment
+sidebar_position: 2
+description: align 옵션으로 뷰포트 내 패널 정렬 위치를 제어합니다
+keywords: [flicking, carousel, align, alignment, 정렬, prev, center, next]
+---
+
+import AlignOptions from '@site/src/demo/basic/AlignOptions';
+
+# Alignment
+
+[`align`](../../api/interfaces/FlickingOptions#align) 옵션으로 뷰포트 내 패널의 정렬 위치를 제어합니다. 패널이 왼쪽, 중앙, 오른쪽 중 어디에 위치할지 결정합니다.
+
+<AlignOptions />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`align`](../../api/interfaces/FlickingOptions#align) | `"prev" \| "center" \| "next" \| number \| string` | `"center"` | 패널 정렬 위치 |
+
+### 값별 비교
+
+| 값 | 동작 | 적합한 상황 |
+|----|------|-------------|
+| `"prev"` | 현재 패널이 뷰포트 왼쪽(세로면 위)에 정렬 | 갤러리, 리스트형 UI |
+| `"center"` | 현재 패널이 뷰포트 중앙에 정렬 | 스포트라이트, 제품 쇼케이스 |
+| `"next"` | 현재 패널이 뷰포트 오른쪽(세로면 아래)에 정렬 | RTL 인터페이스, 특수 레이아웃 |
+| 숫자/문자열 | 지정한 위치에 정렬 (`0.25`, `"100px"`, `"50% - 25px"`) | 정밀한 커스텀 위치 |
+
+## 상세 설명
+
+### "prev" 상세
+패널의 시작점(왼쪽 또는 위)이 뷰포트의 시작점에 맞춰집니다. 리스트를 넘기듯 자연스러운 흐름을 만듭니다. LTR(왼쪽→오른쪽) 인터페이스에서 가장 직관적입니다.
+
+### "center" 상세
+패널의 중심이 뷰포트의 중심에 맞춰집니다. 현재 패널에 시각적 집중을 유도하며, 좌우에 이전/다음 패널이 살짝 보이는 효과를 줄 수 있습니다.
+
+### "next" 상세
+패널의 끝점(오른쪽 또는 아래)이 뷰포트의 끝점에 맞춰집니다. RTL(오른쪽→왼쪽) 언어 인터페이스나 특수한 디자인 요구사항에 사용됩니다.
+
+### 숫자/문자열 값 상세
+- `0` ~ `1` 숫자: 뷰포트 너비의 비율 (0=왼쪽, 0.5=중앙, 1=오른쪽)
+- `"100px"`: 뷰포트 왼쪽에서 100px 위치
+- `"50% - 25px"`: 수식 계산 가능
+
+### 연관 옵션
+- **panelsPerView와의 관계**: `panelsPerView`가 설정되면 정렬 기준점이 개별 패널이 아닌 보이는 패널 그룹의 중심이 됩니다
+- **circular와의 관계**: `circular: true`와 `align: "center"` 조합이 가장 일반적인 캐러셀 패턴입니다
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **"prev"**: 이미지 갤러리, 기사 목록, 썸네일 네비게이션
+- **"center"**: 제품 상세, 히어로 슬라이더, 카드 캐러셀
+- **"next"**: 아랍어/히브리어 UI, 역방향 타임라인
+:::
+
+### 주의사항
+
+:::warning 주의
+- `panelsPerView` 사용 시 정렬 동작이 달라집니다. 개별 패널이 아닌 패널 그룹 기준으로 정렬됩니다.
+- 패널 크기가 뷰포트보다 크면 예상과 다르게 보일 수 있습니다.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`panelsPerView`](../../api/interfaces/FlickingOptions#panelsperview): 화면당 패널 수 (정렬 계산에 영향)
+- [`circular`](../../api/interfaces/FlickingOptions#circular): 순환 모드
+
+### 관련 데모
+- [Circular](./circular): 순환 모드와 정렬 조합
+- [Panels Per View](./panels-per-view): 다중 패널 표시와 정렬

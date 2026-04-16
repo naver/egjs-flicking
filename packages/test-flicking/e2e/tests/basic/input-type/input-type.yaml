@@ -1,0 +1,16 @@
+id: input-type
+category: basic
+demo: basic/InputType
+
+intent: "inputType 옵션으로 허용할 입력 방식(touch/mouse)을 제한할 수 있음을 보여준다"
+
+focus:
+  - 3개의 Flicking 인스턴스가 렌더링됨 (touch+mouse / touch / mouse)
+  - touch+mouse 인스턴스에서 마우스 드래그 동작
+  - mouse-only 인스턴스에서 마우스 드래그 동작
+  - touch-only 인스턴스에서 마우스 드래그 불가
+
+api:
+  options: [inputType]
+
+frameworks: [vanilla, react, vue]

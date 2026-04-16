@@ -1,7 +1,0 @@
-.demo-show-button {
-  cursor: pointer;
-  color: var(--ifm-link-color);
-}
-.demo-show-button:hover {
-  text-decoration: underline;
-}

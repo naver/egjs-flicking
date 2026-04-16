@@ -1,0 +1,14 @@
+id: default-index
+category: basic
+demo: basic/DefaultIndex
+
+intent: "defaultIndex 옵션으로 초기에 표시할 패널 인덱스를 지정할 수 있음을 보여준다"
+
+focus:
+  - 3개의 Flicking 인스턴스가 렌더링됨 (defaultIndex 0/2/4)
+  - 각 인스턴스의 초기 currentIndex가 지정한 값과 일치
+
+api:
+  options: [defaultIndex]
+
+frameworks: [vanilla, react, vue]

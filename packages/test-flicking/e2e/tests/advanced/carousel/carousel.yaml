@@ -1,0 +1,17 @@
+id: carousel
+category: advanced
+demo: advanced/Carousel
+
+intent: "circular, panelsPerView, align, bound 옵션 조합으로 다양한 캐러셀 구성을 보여준다"
+
+focus:
+  - 3개 인스턴스 × 8개 패널 렌더링
+  - 옵션 값 확인 (circular, panelsPerView, align, bound)
+  - circular 인스턴스에서 드래그 이동
+  - circular 인스턴스에서 마지막→첫 패널 순환
+  - bound 인스턴스에서 드래그 이동
+
+api:
+  options: [circular, panelsPerView, align, bound]
+
+frameworks: [vanilla, react, vue]

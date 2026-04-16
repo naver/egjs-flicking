@@ -1,0 +1,4 @@
+.generated/
+test-results/
+playwright-report/
+node_modules/

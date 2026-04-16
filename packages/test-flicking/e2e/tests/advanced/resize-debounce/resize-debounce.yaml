@@ -1,0 +1,16 @@
+id: resize-debounce
+category: advanced
+demo: advanced/ResizeDebounce
+
+intent: "resizeDebounce/maxResizeDebounce 옵션으로 리사이즈 콜백 빈도를 제어하는 효과를 비교한다"
+
+focus:
+  - 2개 viewport + 슬라이더 렌더링
+  - resizeDebounce 옵션 확인 (0/300)
+  - 슬라이더로 너비 변경 시 리사이즈 로그 기록
+  - debounce:0은 즉시 반응, debounce:300은 지연 반응
+
+api:
+  options: [resizeDebounce, maxResizeDebounce]
+
+frameworks: [vanilla, react, vue]

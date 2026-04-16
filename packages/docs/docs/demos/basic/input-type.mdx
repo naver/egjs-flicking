@@ -1,0 +1,100 @@
+---
+title: "Input Type"
+id: input-type
+slug: /demos/basic/input-type
+sidebar_position: 12
+description: Set which input device types to enable using the inputType option
+keywords: [flicking, carousel, inputType, touch, mouse, input]
+---
+
+import InputType from '@site/src/demo/basic/InputType';
+
+# Input Type
+
+The [`inputType`](../../api/interfaces/FlickingOptions#inputtype) option sets the input device types to enable as an array. You can allow or restrict specific input devices.
+
+<InputType />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`inputType`](../../api/interfaces/FlickingOptions#inputtype) | `string[]` | `["touch", "mouse"]` | Input device types to enable |
+
+### Comparison by Value
+
+| Value | Behavior | Suitable For |
+|-------|----------|--------------|
+| `["touch", "mouse"]` | Both touch and mouse allowed (default) | General usage, cross-platform |
+| `["touch"]` | Touch only, mouse drag ignored | Touch-only UI, preventing mouse drag |
+| `["mouse"]` | Mouse only, touch ignored | Desktop-only UI |
+
+## Details
+
+### How inputType Works
+Only the input types included in the array are used for Flicking interaction. Input types not included are ignored.
+
+```javascript
+// Allow all input (default)
+inputType: ["touch", "mouse"]
+
+// Touch only
+inputType: ["touch"]
+
+// Mouse only
+inputType: ["mouse"]
+
+// Disable all input
+inputType: []
+```
+
+### Supported Input Types
+- `"touch"`: Touchscreen input (smartphones, tablets)
+- `"mouse"`: Mouse drag input (desktop)
+
+### iOSEdgeSwipeThreshold
+
+In iOS Safari, swiping from the edge of the screen triggers the browser's back/forward navigation gesture. The [`iOSEdgeSwipeThreshold`](../../api/interfaces/FlickingOptions#iosedgeswipethreshold) option specifies the width (px) of this area, so touches starting within that range are passed to the browser instead of being handled by Flicking.
+
+```javascript
+const flicking = new Flicking("#el", {
+  inputType: ["touch", "mouse"],
+  iOSEdgeSwipeThreshold: 30 // Default: 30px area on each side is deferred to browser gestures
+});
+```
+
+:::info Only applies on iOS
+`iOSEdgeSwipeThreshold` only works on iOS devices. The default value (30px) is generally sufficient. For full-screen horizontal sliders where edge panels are frequently dragged, you can reduce the value or set it to `0`.
+:::
+
+### Related Options
+- **Relationship with disableOnInit**: `disableOnInit: true` disables all input, and `inputType: []` has the same effect. The difference is that disableOnInit can be later activated with `enable()`.
+
+### Use Cases
+
+:::info When to use?
+- **["touch", "mouse"]**: General web apps, supporting various devices
+- **["touch"]**: Mobile-only UI, when you want only button/arrow control on desktop
+- **["mouse"]**: Desktop-only apps, when touch input is used for other purposes
+:::
+
+### Notes
+
+:::warning Provide alternatives when restricting input
+Restricting certain input types means users on those devices cannot interact. Provide alternatives such as navigation buttons or keyboard controls.
+:::
+
+:::warning Accessibility considerations
+Generally, using the default `["touch", "mouse"]` is recommended from an accessibility standpoint. Do not restrict input types without a specific reason.
+:::
+
+## Related Links
+
+### Related Options
+- [`disableOnInit`](../../api/interfaces/FlickingOptions#disableoninit): Disable input on initialization
+- [`iOSEdgeSwipeThreshold`](../../api/interfaces/FlickingOptions#iosedgeswipethreshold): iOS edge swipe exclusion area width
+
+### Related Demos
+- [Disable Input](./disable-input): Disabling input

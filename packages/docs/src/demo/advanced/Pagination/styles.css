@@ -1,0 +1,42 @@
+.flicking-panel {
+  width: 300px;
+  height: 150px;
+  margin-right: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+  gap: 6px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ccc;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s;
+}
+
+.dot.active {
+  background: #3498db;
+}
+
+.dot:hover {
+  background: #95a5a6;
+}
+
+.dot.active:hover {
+  background: #3498db;
+}

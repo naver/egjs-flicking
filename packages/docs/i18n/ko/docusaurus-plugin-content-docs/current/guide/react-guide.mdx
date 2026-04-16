@@ -1,0 +1,407 @@
+---
+title: "React 가이드"
+id: react-guide
+slug: /guide/react-guide
+sidebar_position: 3
+description: Flicking 사용을 위한 React 전용 기능, 이벤트 핸들러, 컴포넌트 사용법
+keywords: [flicking, react, hooks, useRef, 컴포넌트]
+---
+
+# React 가이드
+
+React 애플리케이션에서 Flicking을 사용하기 위한 React 전용 기능, 이벤트 처리, 컴포넌트 사용법을 알아보세요.
+
+:::info
+이 가이드는 React 사용자를 위한 것입니다. Vue3는 [Vue3 가이드](./vue3-guide)를, 바닐라 JavaScript는 [빠른 시작](./quickstart) 가이드를 참조하세요.
+:::
+
+---
+
+## 설치 & 임포트
+
+### 패키지 설치
+
+```bash
+npm install @egjs/react-flicking
+# or
+yarn add @egjs/react-flicking
+```
+
+### 컴포넌트에서 임포트
+
+```jsx
+import Flicking from "@egjs/react-flicking";
+import "@egjs/react-flicking/dist/flicking.css";
+```
+
+:::warning 임포트 경로
+올바른 패키지를 사용하고 있는지 확인하세요:
+- ✅ `@egjs/react-flicking` (React)
+- ❌ `@egjs/flicking` (바닐라 JS 전용)
+:::
+
+---
+
+## 이벤트 처리
+
+React에서 이벤트 핸들러는 `on` 접두사와 PascalCase 이벤트명을 사용합니다.
+
+### 이벤트 네이밍 패턴
+
+**형식**: `on` + PascalCase 이벤트명
+
+```jsx
+<Flicking
+  onReady={(e) => console.log("ready")}
+  onChanged={(e) => console.log("changed")}
+  onWillChange={(e) => console.log("willChange")}
+  onWillRestore={(e) => console.log("willRestore")}
+  onRestored={(e) => console.log("restored")}
+  onMoveStart={(e) => console.log("moveStart")}
+  onMove={(e) => console.log("move")}
+  onMoveEnd={(e) => console.log("moveEnd")}
+  onHoldStart={(e) => console.log("holdStart")}
+  onHoldEnd={(e) => console.log("holdEnd")}
+  onSelect={(e) => console.log("select")}
+  onNeedPanel={(e) => console.log("needPanel")}
+  onVisibleChange={(e) => console.log("visibleChange")}
+  onReachEdge={(e) => console.log("reachEdge")}>
+  {/* 패널 */}
+</Flicking>
+```
+
+:::tip React 이벤트 핸들러 패턴
+- camelCase 이벤트명: `changed`, `willChange`, `moveStart`
+- `on` 접두사 추가: `onChanged`, `onWillChange`, `onMoveStart`
+- 복합어에는 PascalCase 사용: `onVisibleChange` (`onvisibleChange`가 아님)
+:::
+
+### 자주 사용하는 이벤트 핸들러
+
+```jsx
+function MyCarousel() {
+  // 패널 변경 완료 후 발생
+  const handleChanged = (e) => {
+    console.log("새 패널 인덱스:", e.index);
+    console.log("이전 패널 인덱스:", e.prevIndex);
+  };
+
+  // 패널 변경 시작 전 발생 (취소 가능)
+  const handleWillChange = (e) => {
+    console.log("이동할 패널:", e.index);
+    // e.stop()을 호출하여 변경을 방지할 수 있습니다
+    if (e.index === 5) {
+      e.stop(); // 패널 5로의 이동 취소
+    }
+  };
+
+  // 사용자가 드래그를 시작할 때 발생
+  const handleMoveStart = (e) => {
+    console.log("사용자가 이동을 시작했습니다");
+  };
+
+  return (
+    <Flicking
+      onChanged={handleChanged}
+      onWillChange={handleWillChange}
+      onMoveStart={handleMoveStart}>
+      {/* 패널 */}
+    </Flicking>
+  );
+}
+```
+
+**참고:**
+- [`ChangedEvent`](../api/interfaces/ChangedEvent) - 패널 변경 후 발생
+- [`WillChangeEvent`](../api/interfaces/WillChangeEvent) - 패널 변경 전 발생
+- [모든 이벤트 인터페이스](../api/interfaces/ChangedEvent)
+
+---
+
+## 인스턴스 사용하기
+
+`useRef`를 사용하여 Flicking 인스턴스에 접근하고 캐러셀을 프로그래밍 방식으로 제어합니다.
+
+### useRef 사용
+
+```jsx
+import { useRef } from "react";
+import Flicking from "@egjs/react-flicking";
+
+function MyCarousel() {
+  const flickingRef = useRef(null);
+
+  const handlePrev = () => {
+    flickingRef.current?.prev();
+  };
+
+  const handleNext = () => {
+    flickingRef.current?.next();
+  };
+
+  const handleMoveTo = () => {
+    flickingRef.current?.moveTo(3);
+  };
+
+  return (
+    <div>
+      <Flicking ref={flickingRef}>
+        <div>패널 1</div>
+        <div>패널 2</div>
+        <div>패널 3</div>
+        <div>패널 4</div>
+      </Flicking>
+
+      <button onClick={handlePrev}>이전</button>
+      <button onClick={handleNext}>다음</button>
+      <button onClick={handleMoveTo}>패널 4로 이동</button>
+    </div>
+  );
+}
+```
+
+:::tip 옵셔널 체이닝
+ref가 아직 마운트되지 않았을 때 오류를 방지하기 위해 옵셔널 체이닝(`?.`)을 사용하세요:
+```jsx
+flickingRef.current?.moveTo(2);  // ✅ 안전
+flickingRef.current.moveTo(2);   // ❌ 마운트 전에 오류 발생 가능
+```
+:::
+
+**참고:**
+- [`moveTo()`](../api/classes/Flicking#moveto)
+- [`prev()`](../api/classes/Flicking#prev)
+- [`next()`](../api/classes/Flicking#next)
+- [모든 Flicking 메서드](../api/classes/Flicking)
+
+---
+
+## 스타일링
+
+React에서 `<Flicking>` 컴포넌트에 전달하는 `className` prop은 `.flicking-viewport` 요소에 직접 적용됩니다:
+
+```jsx
+import Flicking from "@egjs/react-flicking";
+import "@egjs/react-flicking/dist/flicking.css";
+
+// className은 Flicking 컴포넌트에 적용
+<Flicking className="my-carousel">
+  <div className="panel">패널 1</div>
+</Flicking>
+```
+
+```css
+/* 커스텀 클래스는 .flicking-viewport에 적용됨 */
+.my-carousel {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.panel {
+  width: 300px;
+  height: 400px;
+}
+```
+
+CSS 파일, CSS Modules, styled-components, 인라인 스타일 등 어떤 스타일링 방식이든 사용할 수 있습니다 — 핵심은 클래스가 뷰포트에 적용된다는 것입니다.
+
+:::tip 전체 스타일링 가이드
+Flicking의 HTML 구조, 필수 CSS, 상세한 스타일링 가이드라인에 대한 자세한 내용은 [HTML 구조 & 스타일링](./structure-and-styling)을 참조하세요.
+:::
+
+---
+
+## React 컴포넌트 패널
+
+React 컴포넌트를 패널로 사용할 때 Flicking이 올바르게 관리할 수 있도록 특정 요구사항이 있습니다.
+
+### Ref 포워딩 요구사항
+
+패널로 사용되는 React 컴포넌트는 루트 DOM 요소에 **ref를 포워딩해야** 합니다. 이를 통해 Flicking이 패널 요소에 접근하고 조작할 수 있습니다.
+
+```jsx
+import { forwardRef } from "react";
+import Flicking from "@egjs/react-flicking";
+
+// ✅ 올바름 - 컴포넌트가 ref를 포워딩
+const Panel = forwardRef((props, ref) => (
+  <div ref={ref} className="panel">
+    {props.children}
+  </div>
+));
+
+function MyCarousel() {
+  return (
+    <Flicking>
+      <Panel>패널 1</Panel>
+      <Panel>패널 2</Panel>
+      <Panel>패널 3</Panel>
+    </Flicking>
+  );
+}
+```
+
+```jsx
+// ❌ 잘못됨 - ref 포워딩 없음
+const Panel = (props) => (
+  <div className="panel">
+    {props.children}
+  </div>
+);
+
+// ❌ 잘못됨 - 다중 루트 요소
+const Panel = forwardRef((props, ref) => (
+  <>
+    <div>헤더</div>
+    <div ref={ref}>콘텐츠</div>
+  </>
+));
+```
+
+### 해결 방법
+
+컴포넌트를 수정하여 ref를 포워딩할 수 없는 경우 다음 방법을 사용하세요:
+
+#### 1. div로 감싸기 (권장)
+
+```jsx
+<Flicking>
+  <div><ThirdPartyComponent /></div>
+  <div><ThirdPartyComponent /></div>
+  <div><ThirdPartyComponent /></div>
+</Flicking>
+```
+
+#### 2. useFindDOMNode 옵션 사용
+
+```jsx
+<Flicking useFindDOMNode={true}>
+  <ThirdPartyComponent />
+  <ThirdPartyComponent />
+  <ThirdPartyComponent />
+</Flicking>
+```
+
+:::warning 성능 주의
+`useFindDOMNode`는 React의 deprecated `findDOMNode` API를 사용하며 성능에 영향을 줄 수 있습니다. div로 감싸는 방법이 권장됩니다.
+:::
+
+---
+
+## React 전용 옵션
+
+React Flicking은 바닐라 JS나 Vue3에서 사용할 수 없는 추가 옵션을 제공합니다.
+
+### HTML 태그 커스터마이징
+
+**viewportTag** - 뷰포트 요소의 HTML 태그 커스터마이징 (기본값: `"div"`)
+
+```jsx
+<Flicking viewportTag="section">
+  {/* <section class="flicking-viewport">로 렌더링 */}
+</Flicking>
+```
+
+**cameraTag** - 카메라 요소의 HTML 태그 커스터마이징 (기본값: `"div"`)
+
+```jsx
+<Flicking cameraTag="ul">
+  {/* 카메라가 <ul class="flicking-camera">로 렌더링 */}
+  <li>패널 1</li>
+  <li>패널 2</li>
+</Flicking>
+```
+
+### 카메라 스타일링
+
+**cameraClass** - 카메라 요소에 커스텀 className 추가 (기본값: `""`)
+
+```jsx
+<Flicking cameraClass="my-camera-class">
+  {/* 카메라 클래스: "flicking-camera my-camera-class" */}
+</Flicking>
+```
+
+### 렌더링 최적화
+
+**renderOnSameKey** - 동일한 key를 가진 children의 리렌더링 제어 (기본값: `false`)
+
+```jsx
+const [panels, setPanels] = useState([1, 2, 3]);
+
+<Flicking renderOnSameKey={false}>
+  {panels.map((num) => (
+    <div key={num}>패널 {num}</div>
+  ))}
+</Flicking>
+```
+
+`false`일 때 동일한 key를 가진 패널은 리렌더링되지 않아 성능이 향상됩니다. 강제로 리렌더링이 필요한 경우 `true`로 설정하세요.
+
+**useFindDOMNode** - 대체 DOM 접근 방식 활성화 (기본값: `false`)
+
+```jsx
+<Flicking useFindDOMNode={true}>
+  {/* ref 포워딩 없는 컴포넌트 허용 */}
+</Flicking>
+```
+
+:::tip
+이 옵션들은 React 전용입니다. 전체 레퍼런스는 [Flicking API](../api/classes/Flicking)를 참조하세요.
+:::
+
+---
+
+## 자주 하는 실수
+
+### 1. 잘못된 임포트 경로
+
+```jsx
+// ❌ 잘못됨 - 바닐라 JS용
+import Flicking from "@egjs/flicking";
+
+// ✅ 올바름 - React 래퍼
+import Flicking from "@egjs/react-flicking";
+```
+
+### 2. 잘못된 이벤트 핸들러 이름
+
+```jsx
+// ❌ 잘못됨 - 'on' 접두사 누락
+<Flicking changed={handler} />
+
+// ❌ 잘못됨 - 바닐라 JS 이벤트명 사용
+<Flicking on="changed" />
+
+// ✅ 올바름 - onChanged (PascalCase)
+<Flicking onChanged={handler} />
+```
+
+### 3. CSS 임포트 누락
+
+```jsx
+// ❌ CSS 누락 - 패널이 올바르게 표시되지 않음
+import Flicking from "@egjs/react-flicking";
+
+// ✅ CSS 포함
+import Flicking from "@egjs/react-flicking";
+import "@egjs/react-flicking/dist/flicking.css";
+```
+
+### 4. 마운트 전 메서드 접근
+
+```jsx
+function MyCarousel() {
+  const flickingRef = useRef(null);
+
+  // ❌ 잘못됨 - 렌더링 중 ref가 null
+  flickingRef.current?.moveTo(2);
+
+  // ✅ 올바름 - 이벤트 핸들러나 useEffect에서 사용
+  useEffect(() => {
+    flickingRef.current?.moveTo(2);
+  }, []);
+
+  return <Flicking ref={flickingRef}>{/* 패널 */}</Flicking>;
+}
+```

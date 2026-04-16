@@ -1,0 +1,15 @@
+id: parallax
+category: reactive
+demo: reactive/Parallax
+
+intent: "Reactive API(indexProgress subscription)를 이용한 시차 스크롤 효과를 보여준다"
+
+focus:
+  - 5개 skeleton 패널 + 25개 bar 요소 렌더링
+  - bar 요소에 translateX transform 적용
+  - 드래그 후 bar transform 값 변화
+
+api:
+  options: []
+
+frameworks: [vanilla, react, vue]

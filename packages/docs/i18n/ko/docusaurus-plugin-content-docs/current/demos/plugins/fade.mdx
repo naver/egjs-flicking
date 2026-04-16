@@ -1,0 +1,59 @@
+---
+title: "Fade"
+id: fade
+slug: /demos/plugins/fade
+sidebar_position: 1
+description: 패널 전환 시 페이드 인/아웃 효과를 적용하는 플러그인
+keywords: [flicking, plugin, fade, transition, opacity]
+---
+
+import Fade from '@site/src/demo/plugins/Fade';
+
+# Fade
+
+패널 전환 시 투명도를 조절하여 페이드 인/아웃 효과를 적용합니다.
+
+<Fade />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `selector` | `string` | `""` | 효과를 적용할 요소의 CSS 선택자. 빈 문자열이면 패널 자체에 적용 |
+| `scale` | `number` | `1` | 효과 강도 배율 |
+
+## 상세 설명
+
+### 동작 원리
+
+Fade 플러그인은 각 패널의 가시 비율(visible ratio)에 따라 `opacity`를 자동으로 조절합니다. 현재 보이는 패널은 불투명하게, 벗어나는 패널은 투명하게 처리됩니다.
+
+### 사용법
+
+```js
+import { Fade } from "@egjs/flicking-plugins";
+
+// 기본 사용
+flicking.addPlugins(new Fade());
+
+// 특정 요소에만 적용
+flicking.addPlugins(new Fade("img"));
+
+// 효과 강도 조절
+flicking.addPlugins(new Fade("", 2));
+```
+
+### 주의사항
+
+:::warning 주의
+- `circular: true`와 함께 사용하면 끊김 없는 페이드 효과를 구현할 수 있습니다.
+- 패널 배경이 투명한 경우 뒤쪽 패널이 비칠 수 있으므로, 불투명한 배경색이나 이미지를 사용하는 것이 좋습니다.
+:::
+
+## 관련 링크
+
+### 관련 데모
+- [Parallax](./parallax): 시차 스크롤 효과
+- [AutoPlay](./autoplay): 자동 재생과 함께 사용

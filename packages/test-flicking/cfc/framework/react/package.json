@@ -1,0 +1,12 @@
+{
+  "name": "@test/react",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "vitest run --config ./vitest.config.ts"
+  },
+  "devDependencies": {
+    "@cfcs/react": "^0.1.0",
+    "@testing-library/react": "^12.1.2"
+  }
+}

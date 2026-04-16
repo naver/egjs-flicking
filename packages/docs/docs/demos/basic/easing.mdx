@@ -1,0 +1,84 @@
+---
+title: "Easing"
+id: easing
+slug: /demos/basic/easing
+sidebar_position: 9
+description: Set the animation curve (acceleration/deceleration pattern) for panel movement using the easing option
+keywords: [flicking, carousel, easing, animation, curve]
+---
+
+import Easing from '@site/src/demo/basic/Easing';
+
+# Easing
+
+The [`easing`](../../api/interfaces/FlickingOptions#easing) option sets the animation curve for panel movement. Specified as a function that takes a progress value (0-1) and returns the actual movement ratio.
+
+<Easing />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`easing`](../../api/interfaces/FlickingOptions#easing) | `(x: number) => number` | `easeOutCubic` | Animation curve function |
+
+### Comparison by Value
+
+| Function | Behavior | Suitable For |
+|----------|----------|--------------|
+| `linear` | Moves at constant speed | Mechanical feel, progress indicators |
+| `easeOutCubic` | Starts fast, ends slow | Natural deceleration, general UI |
+| `easeInOutQuad` | Slow, fast, then slow | Smooth transitions, presentations |
+
+## Details
+
+### Easing Function Format
+An easing function takes a progress value between 0 and 1 and returns the actual movement ratio.
+
+```javascript
+// linear: constant speed
+const linear = x => x;
+
+// easeOutCubic: starts fast, ends slow (default)
+const easeOutCubic = x => 1 - Math.pow(1 - x, 3);
+
+// easeInOutQuad: accelerates then decelerates
+const easeInOutQuad = x => x < 0.5
+  ? 2 * x * x
+  : 1 - Math.pow(-2 * x + 2, 2) / 2;
+```
+
+### Key Easing Patterns
+- **linear**: Input = output. Moves at constant speed
+- **easeOut**: Fast at the beginning, slow at the end (deceleration). Natural stopping
+- **easeIn**: Slow at the beginning, fast at the end (acceleration). Emphasizes the start
+- **easeInOut**: Accelerates then decelerates. Smooth transitions
+
+### Related Options
+- **Relationship with duration**: `duration` determines the animation time, while `easing` determines the velocity change pattern during that time. Combine both to create various effects.
+
+### Use Cases
+
+:::info When to use?
+- **linear**: Loading progress indicators, mechanical UI
+- **easeOut (default)**: General carousels, natural snapping
+- **easeInOut**: Presentations, onboarding, emphasizing smooth transitions
+:::
+
+### Notes
+
+:::warning Easing function rules
+The easing function must satisfy `f(0) = 0` and `f(1) = 1`. Breaking this rule will cause the animation to malfunction.
+:::
+
+## Related Links
+
+### External References
+- [Easing Functions Cheat Sheet](https://easings.net/) - Visualization of various easing functions
+
+### Related Options
+- [`duration`](../../api/interfaces/FlickingOptions#duration): Animation duration
+
+### Related Demos
+- [Duration](./duration): Adjusting animation time

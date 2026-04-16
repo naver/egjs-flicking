@@ -1,0 +1,17 @@
+id: prev-next
+category: advanced
+demo: advanced/PrevNext
+
+intent: "Reactive API(connectFlickingReactiveAPI)를 이용한 Prev/Next 버튼 네비게이션을 보여준다"
+
+focus:
+  - 초기 상태에서 Prev disabled, Next enabled
+  - Next 클릭으로 다음 패널 이동 + Prev 활성화
+  - Prev 클릭으로 이전 패널 복귀 + Prev 다시 disabled
+  - 마지막 패널에서 Next disabled
+  - nav-info에 현재 위치 표시
+
+api:
+  options: [align]
+
+frameworks: [vanilla, react, vue]

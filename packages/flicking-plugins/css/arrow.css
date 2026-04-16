@@ -1,0 +1,100 @@
+.flicking-arrow-prev,
+.flicking-arrow-next {
+  position: absolute;
+  top: 50%;
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.flicking-arrow-prev.is-circle,
+.flicking-arrow-next.is-circle {
+  background-color: #f2a65e;
+  border-radius: 50%;
+}
+
+.flicking-arrow-disabled.is-circle {
+  background-color: rgb(10 10 10 / 10%);
+}
+
+.flicking-arrow-prev.is-circle::before,
+.flicking-arrow-prev.is-circle::after,
+.flicking-arrow-next.is-circle::before,
+.flicking-arrow-next.is-circle::after {
+  background-color: white;
+}
+
+.flicking-arrow-prev {
+  left: 10px;
+}
+.flicking-arrow-next {
+  right: 10px;
+}
+
+.flicking-arrow-prev.is-outside {
+  left: -74px;
+}
+.flicking-arrow-next.is-outside {
+  right: -74px;
+}
+
+.flicking-arrow-prev::before,
+.flicking-arrow-prev::after,
+.flicking-arrow-next::before,
+.flicking-arrow-next::after {
+  content: "";
+  width: 24px;
+  height: 6px;
+  position: absolute;
+  background-color: #f2a65e;
+}
+.flicking-arrow-prev::before {
+  top: 50%;
+  left: 22px;
+  transform: rotate(-45deg);
+  transform-origin: 0% 50%;
+}
+.flicking-arrow-prev::after {
+  top: calc(50% - 4px);
+  left: 22px;
+  transform: rotate(45deg);
+  transform-origin: 0% 50%;
+}
+.flicking-arrow-next::before {
+  top: 50%;
+  right: 22px;
+  transform: rotate(45deg);
+  transform-origin: 100% 50%;
+}
+.flicking-arrow-next::after {
+  top: calc(50% - 4px);
+  right: 22px;
+  transform: rotate(-45deg);
+  transform-origin: 100% 50%;
+}
+
+.flicking-arrow-disabled,
+.flicking-arrow-disabled {
+  cursor: default;
+}
+
+.flicking-arrow-disabled::before,
+.flicking-arrow-disabled::after,
+.flicking-arrow-disabled::before,
+.flicking-arrow-disabled::after {
+  background-color: #e6e6e6;
+}
+
+.flicking-arrow-prev.is-thin::before,
+.flicking-arrow-prev.is-thin::after,
+.flicking-arrow-next.is-thin::before,
+.flicking-arrow-next.is-thin::after {
+  height: 3px;
+}
+
+.flicking-arrow-prev.is-thin::after,
+.flicking-arrow-next.is-thin::after {
+  top: calc(50% - 2px);
+}

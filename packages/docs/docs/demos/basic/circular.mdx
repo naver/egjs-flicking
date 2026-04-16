@@ -1,0 +1,77 @@
+---
+title: "Circular"
+id: circular
+slug: /demos/basic/circular
+sidebar_position: 3
+description: Connect the first and last panels to enable infinite loop navigation using the circular option
+keywords: [flicking, carousel, circular, infinite, loop]
+---
+
+import Circular from '@site/src/demo/basic/Circular';
+
+# Circular
+
+The [`circular`](../../api/interfaces/FlickingOptions#circular) option connects the first and last panels to enable infinite loop navigation. Moving next from the last panel goes to the first panel, and moving previous from the first panel goes to the last panel.
+
+<Circular />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`circular`](../../api/interfaces/FlickingOptions#circular) | `boolean` | `false` | Enable infinite loop mode |
+| [`circularFallback`](../../api/interfaces/FlickingOptions#circularfallback) | `"linear" \| "bound"` | `"linear"` | Fallback behavior when circular cannot be activated |
+
+### Comparison by Value
+
+| Value | Behavior | Suitable For |
+|-------|----------|--------------|
+| `false` | Cannot move beyond the first/last panel | Finite content, UI with clear start/end |
+| `true` | First and last panels are connected for infinite navigation | Carousels, galleries, continuous browsing |
+
+## Details
+
+### circular: false in Detail
+This is the default. You cannot move previous from the first panel or next from the last panel. Suitable for displaying finite content.
+
+### circular: true in Detail
+The first and last panels are internally connected. Users can scroll continuously in either direction. Panels are not duplicated; instead, their positions are recalculated to create a seamless connection.
+
+### circularFallback in Detail
+Specifies the fallback behavior when `circular: true` but the activation conditions are not met:
+- `"linear"`: Operates in normal mode (stops at first/last)
+- `"bound"`: Operates in bound mode (bounces at boundaries)
+
+### Related Options
+- **Relationship with bound**: When `circular: true` and `bound: true` are set together, circular takes priority. bound is ignored.
+- **Relationship with align**: The combination of `circular: true` + `align: "center"` is the most common carousel pattern.
+- **Relationship with panelsPerView**: Setting `panelsPerView` affects the total panel size calculation, which can influence the circular activation condition.
+
+### Use Cases
+
+:::info When to use?
+- **circular: true**: Image galleries, product carousels, banner sliders, seamless browsing
+- **circular: false**: Onboarding screens, step-by-step wizards, content with clear start/end
+:::
+
+### Notes
+
+:::warning Activation condition
+Circular mode is only activated when **total panel size >= viewport size**. If the condition is not met, it automatically falls back to the mode specified in `circularFallback`.
+:::
+
+:::warning Cannot be used with bound
+`circular: true` and `bound: true` are mutually exclusive. If both are true, circular takes priority and bound is ignored.
+:::
+
+## Related Links
+
+### Related Options
+- [`bound`](../../api/interfaces/FlickingOptions#bound): Boundary restriction mode (mutually exclusive with circular)
+- [`align`](../../api/interfaces/FlickingOptions#align): Panel alignment method
+
+### Related Demos
+- [Alignment](./alignment): Alignment options with circular combination
+- [Bound](./bound): Boundary restriction mode

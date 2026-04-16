@@ -1,0 +1,62 @@
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.slider-row input[type="range"] {
+  flex: 1;
+}
+
+.slider-row .value-label {
+  font-size: 13px;
+  color: #666;
+  min-width: 50px;
+  text-align: right;
+}
+
+.demo-section {
+  margin-bottom: 16px;
+}
+
+.demo-section .demo-label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.demo-hint {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.log-area {
+  margin-top: 6px;
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: monospace;
+  color: #333;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.log-header span {
+  font-size: 13px;
+  color: #888;
+}
+
+.count-badge {
+  font-size: 13px;
+  font-weight: bold;
+  color: #3498db;
+}

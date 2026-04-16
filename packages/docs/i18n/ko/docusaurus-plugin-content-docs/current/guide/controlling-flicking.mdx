@@ -1,0 +1,267 @@
+---
+title: "Flicking 제어하기"
+id: controlling-flicking
+slug: /guide/controlling-flicking
+sidebar_position: 5
+description: Flicking 제어, 이벤트 응답, 에러 처리 패턴
+keywords: [flicking, 메서드, 이벤트, 에러 처리, 패턴]
+---
+
+# Flicking 제어하기
+
+Flicking을 프로그래밍 방식으로 제어하고, 이벤트에 응답하며, 에러를 처리하는 패턴과 모범 사례입니다.
+
+:::info 프레임워크별 가이드
+프레임워크에서의 메서드 접근과 이벤트 처리에 대한 자세한 내용은:
+- [React 가이드](./react-guide) - `useRef`와 이벤트 핸들러 사용
+- [Vue3 가이드](./vue3-guide) - `ref`와 이벤트 바인딩 사용
+- [빠른 시작](./quickstart) - 바닐라 JavaScript 사용법
+:::
+
+---
+
+## 메서드 패턴
+
+Flicking을 프로그래밍 방식으로 제어하는 일반적인 패턴입니다. 전체 메서드 레퍼런스는 [Flicking API](../api/classes/Flicking)를 참조하세요.
+
+#### 순차 탐색
+
+```javascript
+// 패널을 순서대로 탐색
+async function autoNavigate() {
+  for (let i = 0; i < flicking.panelCount; i++) {
+    await flicking.moveTo(i, 1000);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+  }
+}
+```
+
+#### 조건부 탐색
+
+```javascript
+// 이미 대상에 있지 않은 경우에만 이동
+async function moveToIfNeeded(targetIndex) {
+  const currentPanel = flicking.getCurrentPanel();
+  if (currentPanel.index !== targetIndex) {
+    await flicking.moveTo(targetIndex);
+  }
+}
+```
+
+#### 인터럽션 처리
+
+```javascript
+// 애니메이션 인터럽션을 우아하게 처리
+async function safeNext() {
+  try {
+    await flicking.next();
+    console.log("다음 패널로 성공적으로 이동했습니다");
+  } catch (error) {
+    if (error.code === ERROR_CODE.ANIMATION_ALREADY_PLAYING) {
+      console.log("애니메이션이 이미 진행 중이므로 건너뜁니다");
+    } else if (error.code === ERROR_CODE.ANIMATION_INTERRUPTED) {
+      console.log("사용자에 의해 애니메이션이 중단되었습니다");
+    } else {
+      throw error; // 예상치 못한 에러는 다시 throw
+    }
+  }
+}
+```
+
+---
+
+## 이벤트 패턴
+
+Flicking의 이벤트 시스템을 이해하세요. 전체 이벤트 레퍼런스는 [이벤트 인터페이스](../api/interfaces/ChangedEvent)를 참조하세요.
+
+### 이벤트 타임라인
+
+이벤트가 언제 발생하는지 이해하는 것은 반응형 UI를 구축하는 데 매우 중요합니다. 사용자 인터랙션 중 이벤트의 전체 타임라인입니다:
+
+```
+사용자가 드래그 시작
+  ↓
+[holdStart] ← 터치/마우스 다운
+  ↓
+[moveStart] ← 이동 시작
+  ↓
+[move] ← 이동 중 지속적으로 발생
+  ↓
+[willChange] ← 패널 인덱스 변경 전 (취소 가능)
+  ↓
+[changed] ← 패널 인덱스 변경 후
+  ↓
+[moveEnd] ← 이동 애니메이션 종료
+  ↓
+[holdEnd] ← 터치/마우스 업
+```
+
+---
+
+### 주요 이벤트
+
+**패널 변경 이벤트**
+- [`willChange`](../api/interfaces/WillChangeEvent) - 패널 변경 전 발생 (`e.stop()`으로 취소 가능)
+- [`changed`](../api/interfaces/ChangedEvent) - 패널 변경 후 발생
+
+**이동 이벤트**
+- [`moveStart`](../api/interfaces/MoveStartEvent) - 애니메이션 시작
+- [`move`](../api/interfaces/MoveEvent) - 이동 중 지속적으로 발생
+- [`moveEnd`](../api/interfaces/MoveEndEvent) - 애니메이션 종료
+
+**사용자 입력 이벤트**
+- [`holdStart`](../api/interfaces/HoldStartEvent) / [`holdEnd`](../api/interfaces/HoldEndEvent) - 터치/클릭 이벤트
+- [`select`](../api/interfaces/SelectEvent) - 패널 클릭/탭
+
+**기타 이벤트**
+- `ready` - Flicking 초기화 완료
+- [`needPanel`](../api/interfaces/NeedPanelEvent) - 지연 로딩용
+- [`visibleChange`](../api/interfaces/VisibleChangeEvent) - 보이는 패널 변경
+
+---
+
+### 이벤트 사용 패턴
+
+#### 여러 Flicking 인스턴스 동기화
+
+```javascript
+const flicking1 = new Flicking("#carousel1");
+const flicking2 = new Flicking("#carousel2");
+
+flicking1.on(EVENTS.CHANGED, (e) => {
+  flicking2.moveTo(e.index);
+});
+
+flicking2.on(EVENTS.CHANGED, (e) => {
+  flicking1.moveTo(e.index);
+});
+```
+
+#### 진행 상황 추적
+
+```javascript
+let startPosition = 0;
+
+flicking.on(EVENTS.MOVE_START, (e) => {
+  startPosition = e.axesEvent.pos.flick;
+});
+
+flicking.on(EVENTS.MOVE, (e) => {
+  const currentPosition = e.axesEvent.pos.flick;
+  const distance = currentPosition - startPosition;
+  console.log("드래그 거리:", distance);
+});
+```
+
+#### 조건부 패널 변경
+
+```javascript
+flicking.on(EVENTS.WILL_CHANGE, (e) => {
+  // 최소 드래그 거리 요구
+  if (Math.abs(e.axesEvent.delta.flick) < 50) {
+    e.stop();
+    console.log("드래그 거리가 너무 짧아 변경을 방지합니다");
+  }
+});
+```
+
+---
+
+## 에러 처리 패턴
+
+Flicking은 `ERROR_CODE` 상수를 가진 [`FlickingError`](../api/classes/FlickingError) 인스턴스를 throw합니다. 전체 에러 레퍼런스는 [FlickingError API](../api/classes/FlickingError)를 참조하세요.
+
+#### 우아한 성능 저하
+
+```javascript
+async function safeNavigation(targetIndex) {
+  try {
+    await flicking.moveTo(targetIndex);
+    return true;
+  } catch (err) {
+    if (err instanceof FlickingError) {
+      switch (err.code) {
+        case ERROR_CODE.ANIMATION_ALREADY_PLAYING:
+          // 나중에 실행하도록 큐에 추가
+          setTimeout(() => safeNavigation(targetIndex), 300);
+          return false;
+
+        case ERROR_CODE.INDEX_OUT_OF_RANGE:
+          console.warn("유효하지 않은 인덱스, 첫 번째 패널로 이동합니다");
+          await flicking.moveTo(0);
+          return false;
+
+        case ERROR_CODE.ANIMATION_INTERRUPTED:
+          // 사용자가 인터럽트함, 괜찮습니다
+          return false;
+
+        default:
+          throw err;
+      }
+    }
+    throw err;
+  }
+}
+```
+
+---
+
+#### 디바운스된 탐색
+
+```javascript
+let navigationTimeout = null;
+
+function debouncedNext() {
+  if (navigationTimeout) {
+    clearTimeout(navigationTimeout);
+  }
+
+  navigationTimeout = setTimeout(async () => {
+    try {
+      await flicking.next();
+    } catch (err) {
+      if (err instanceof FlickingError &&
+          err.code === ERROR_CODE.ANIMATION_ALREADY_PLAYING) {
+        // 애니메이션 완료 후 재시도
+        debouncedNext();
+      }
+    }
+  }, 100);
+}
+```
+
+---
+
+#### 사용자 친화적 에러 메시지
+
+```javascript
+function getUserFriendlyMessage(error) {
+  if (!(error instanceof FlickingError)) {
+    return "예상치 못한 오류가 발생했습니다";
+  }
+
+  switch (error.code) {
+    case ERROR_CODE.ANIMATION_ALREADY_PLAYING:
+      return "현재 애니메이션이 완료될 때까지 기다려 주세요";
+
+    case ERROR_CODE.INDEX_OUT_OF_RANGE:
+      return "요청한 패널이 존재하지 않습니다";
+
+    case ERROR_CODE.ANIMATION_INTERRUPTED:
+      return "탐색이 중단되었습니다";
+
+    case ERROR_CODE.NO_ACTIVE:
+      return "사용 가능한 패널이 없습니다";
+
+    default:
+      return error.message;
+  }
+}
+
+// 사용 예
+try {
+  await flicking.moveTo(targetIndex);
+} catch (err) {
+  showToast(getUserFriendlyMessage(err));
+}
+```

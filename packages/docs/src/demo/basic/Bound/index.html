@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <!-- bound: false (default) -->
+  <div class="demo-container">
+    <div class="demo-label">bound: false (default, no boundary constraint)</div>
+    <div id="flick-unbound" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel panel-1">1</div>
+        <div class="flicking-panel panel-2">2</div>
+        <div class="flicking-panel panel-3">3</div>
+        <div class="flicking-panel panel-4">4</div>
+        <div class="flicking-panel panel-5">5</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- bound: true -->
+  <div class="demo-container">
+    <div class="demo-label">bound: true (bounded at first/last panel)</div>
+    <div id="flick-bound" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel panel-1">1</div>
+        <div class="flicking-panel panel-2">2</div>
+        <div class="flicking-panel panel-3">3</div>
+        <div class="flicking-panel panel-4">4</div>
+        <div class="flicking-panel panel-5">5</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- bound: true + bounce: "50%" -->
+  <div class="demo-container">
+    <div class="demo-label">bound: true + bounce: "50%" (larger bounce)</div>
+    <div id="flick-bounce" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel panel-1">1</div>
+        <div class="flicking-panel panel-2">2</div>
+        <div class="flicking-panel panel-3">3</div>
+        <div class="flicking-panel panel-4">4</div>
+        <div class="flicking-panel panel-5">5</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

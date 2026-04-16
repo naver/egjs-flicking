@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <!-- animationThreshold: 0.5 (default) -->
+  <div class="demo-container">
+    <div class="demo-label">animationThreshold: 0.5 (default) — normal animation</div>
+    <div id="flick-default" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel panel-1">1</div>
+        <div class="flicking-panel panel-2">2</div>
+        <div class="flicking-panel panel-3">3</div>
+        <div class="flicking-panel panel-4">4</div>
+        <div class="flicking-panel panel-5">5</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button id="prev1">Prev</button>
+      <button id="next1">Next</button>
+      <span class="event-log" id="log1">—</span>
+    </div>
+  </div>
+
+  <!-- animationThreshold: 300 -->
+  <div class="demo-container">
+    <div class="demo-label">animationThreshold: 300 — moves under 300px are instant (no animation)</div>
+    <div id="flick-threshold" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel panel-1">1</div>
+        <div class="flicking-panel panel-2">2</div>
+        <div class="flicking-panel panel-3">3</div>
+        <div class="flicking-panel panel-4">4</div>
+        <div class="flicking-panel panel-5">5</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button id="prev2">Prev</button>
+      <button id="next2">Next</button>
+      <span class="event-log" id="log2">—</span>
+    </div>
+  </div>
+
+</body>
+</html>

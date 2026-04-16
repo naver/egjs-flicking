@@ -1,0 +1,87 @@
+---
+title: "Prevent Click"
+id: prevent-click
+slug: /demos/basic/prevent-click
+sidebar_position: 19
+description: preventClickOnDrag 옵션으로 드래그 후 발생하는 의도치 않은 클릭 이벤트를 방지합니다
+keywords: [flicking, carousel, preventClickOnDrag, preventDefaultOnDrag, click, drag, 클릭 방지]
+---
+
+import PreventClick from '@site/src/demo/basic/PreventClick';
+
+# Prevent Click
+
+[`preventClickOnDrag`](../../api/interfaces/FlickingOptions#preventclickondrag) 옵션으로 드래그 후 의도치 않게 발생하는 클릭 이벤트를 방지합니다. 패널 안에 링크나 버튼이 있을 때 특히 중요합니다.
+
+패널을 드래그한 뒤 손을 떼보면 클릭 처리 방식의 차이를 확인할 수 있습니다.
+
+<PreventClick />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`preventClickOnDrag`](../../api/interfaces/FlickingOptions#preventclickondrag) | `boolean` | `true` | 드래그 후 클릭 이벤트 방지 |
+| [`preventDefaultOnDrag`](../../api/interfaces/FlickingOptions#preventdefaultondrag) | `boolean` | `false` | 드래그 중 브라우저 기본 동작 방지 |
+
+### 값별 비교
+
+| 옵션 | 값 | 동작 | 적합한 상황 |
+|------|----|----|-------------|
+| `preventClickOnDrag` | `true` | 드래그 후 클릭 이벤트 무시 (기본값) | 패널 내 링크/버튼이 있는 일반 캐러셀 |
+| `preventClickOnDrag` | `false` | 드래그 후에도 클릭 이벤트 발생 | 클릭 이벤트를 직접 관리하는 경우 |
+| `preventDefaultOnDrag` | `true` | 드래그 중 텍스트 선택 등 기본 동작 방지 | 텍스트 선택 방지가 필요한 경우 |
+| `preventDefaultOnDrag` | `false` | 기본 동작 허용 (기본값) | 대부분의 일반적인 캐러셀 |
+
+## 상세 설명
+
+### preventClickOnDrag 동작 원리
+
+터치/마우스 드래그가 끝날 때 브라우저는 자연스럽게 `click` 이벤트를 발생시킵니다. 캐러셀을 드래그해 패널을 넘긴 후 손가락을 뗄 때 패널 안의 링크나 버튼이 의도치 않게 클릭될 수 있습니다.
+
+`preventClickOnDrag: true`(기본값)로 설정하면 드래그가 발생한 인터랙션에서의 클릭 이벤트를 무시합니다. 단순 탭/클릭(드래그 없음)은 정상적으로 동작합니다.
+
+```javascript
+// 기본값: 드래그 후 클릭 방지 (권장)
+const flicking = new Flicking("#el", {
+  preventClickOnDrag: true
+});
+
+// 드래그 후에도 클릭 허용
+const flicking = new Flicking("#el", {
+  preventClickOnDrag: false
+});
+```
+
+### preventDefaultOnDrag
+
+드래그 중 `preventDefault()`를 호출해 브라우저 기본 동작(텍스트 선택, 이미지 드래그 등)을 막습니다.
+
+```javascript
+const flicking = new Flicking("#el", {
+  preventDefaultOnDrag: true  // 드래그 중 텍스트 선택 불가
+});
+```
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **패널 안에 링크/버튼이 있는 경우**: `preventClickOnDrag: true`로 설정해 드래그 후 의도치 않은 이동을 방지하세요.
+- **텍스트가 많은 패널**: `preventDefaultOnDrag: true`로 드래그 중 텍스트 선택을 막아 사용성을 향상시킬 수 있습니다.
+:::
+
+:::warning preventClickOnDrag: false 사용 시
+드래그 후에도 클릭이 발생하므로, 짧은 드래그 후 의도치 않은 링크 이동이나 버튼 클릭이 발생할 수 있습니다. 클릭 이벤트를 직접 관리(예: 드래그 거리를 측정해 클릭 여부 판단)할 때만 사용하세요.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`inputType`](../../api/interfaces/FlickingOptions#inputtype): 입력 장치 타입 설정
+- [`threshold`](../../api/interfaces/FlickingOptions#threshold): 패널 전환 최소 드래그 거리
+
+### 관련 데모
+- [Input Type](./input-type): 입력 장치 타입 제한
+- [Threshold](./threshold): 패널 전환 임계값 설정

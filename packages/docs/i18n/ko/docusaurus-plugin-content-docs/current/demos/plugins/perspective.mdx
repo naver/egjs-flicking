@@ -1,0 +1,57 @@
+---
+title: "Perspective"
+id: perspective
+slug: /demos/plugins/perspective
+sidebar_position: 4
+description: 패널에 3D 원근 회전 효과를 적용하는 플러그인
+keywords: [flicking, plugin, perspective, 3D, rotate, transform]
+---
+
+import Perspective from '@site/src/demo/plugins/Perspective';
+
+# Perspective
+
+패널의 위치에 따라 3D 원근 회전 및 크기 변환 효과를 적용합니다.
+
+<Perspective />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `rotate` | `number` | `1` | 회전 강도. 양수면 오른쪽 패널이 안쪽으로, 음수면 바깥쪽으로 회전 |
+| `scale` | `number` | `2` | 크기 변환 강도 |
+| `perspective` | `number` | `1000` | CSS perspective 값 (px). 작을수록 왜곡이 강해짐 |
+
+## 상세 설명
+
+### 동작 원리
+
+Perspective 플러그인은 각 패널의 가시 비율(visible ratio)을 기반으로 `rotateY`와 `scale` 변환을 자동 적용합니다. 중앙에 가까운 패널은 정면을, 멀어질수록 회전된 모습을 보여줍니다.
+
+### 사용법
+
+```js
+import { Perspective } from "@egjs/flicking-plugins";
+
+// 기본 사용
+flicking.addPlugins(new Perspective({ rotate: 1, perspective: 1000 }));
+
+// 강한 왜곡
+flicking.addPlugins(new Perspective({ rotate: -1, scale: 2, perspective: 600 }));
+```
+
+### 주의사항
+
+:::warning 주의
+- `circular: true`와 함께 사용하면 끊김 없는 3D 회전 효과를 구현할 수 있습니다.
+- 패널이 너무 적으면 순환 시 빈 공간이 생길 수 있으므로 최소 4~5개 이상의 패널을 권장합니다.
+:::
+
+## 관련 링크
+
+### 관련 데모
+- [Coverflow](../reactive/coverflow): Reactive API 기반 3D 효과
+- [Parallax](./parallax): 시차 스크롤 효과

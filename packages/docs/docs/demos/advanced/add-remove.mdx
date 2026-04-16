@@ -1,0 +1,74 @@
+---
+title: "Add / Remove"
+id: add-remove
+slug: /demos/advanced/add-remove
+sidebar_position: 8
+description: Dynamically add/remove panels using the prepend, append, and remove APIs
+keywords: [flicking, carousel, prepend, append, remove, dynamic, add panel, remove panel]
+---
+
+import AddRemove from '@site/src/demo/advanced/AddRemove';
+
+# Add / Remove
+
+Dynamically add or remove panels using the `prepend()`, `append()`, and `remove()` API methods.
+
+<AddRemove />
+
+## Summary
+
+### Key API Methods
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| [`append`](../../api/classes/Flicking#append) | `append(element): Panel[]` | Add after the last panel |
+| [`prepend`](../../api/classes/Flicking#prepend) | `prepend(element): Panel[]` | Add before the first panel |
+| [`remove`](../../api/classes/Flicking#remove) | `remove(index, count?): Panel[]` | Remove panel at specified index |
+
+### Behavior Comparison
+
+| Method | Index Change | Best For |
+|--------|-------------|----------|
+| `prepend` | Existing panel indices increase by +1 | Adding latest items to the front |
+| `append` | Existing panel indices unchanged | Adding new items to the end of a feed |
+| `remove` | Indices after removed panel decrease by -1 | Deleting items |
+
+## Details
+
+### Framework-Specific Patterns
+
+**React / Vue**: Manipulate the panel array through the framework's state management. Flicking detects state changes and automatically updates panels.
+
+**Vanilla JS**: Directly call the `prepend()`, `append()`, `remove()` methods on the Flicking instance. You can pass an HTMLElement or an outerHTML string as the `element` parameter.
+
+### Related Options
+
+- **Relationship with `renderOnlyVisible`**: When there are many panels, using `renderOnlyVisible: true` together maintains performance even with dynamic additions
+- **Relationship with `needPanelThreshold`**: Can be combined with the `needPanel` event to implement an infinite scroll pattern
+
+### Use Cases
+
+:::info When should you use this?
+- Social media feeds: `prepend` new posts to the front, `append` older posts to the back
+- E-commerce product lists: Remove/add panels based on filtering
+- Dashboard widgets: Add/remove widgets
+:::
+
+### Notes
+
+:::warning Caution
+- When using `prepend`, all existing panel indices increase by 1. Be careful if you have logic that depends on indices.
+- If the currently visible panel is removed after a `remove`, it automatically moves to an adjacent panel.
+- In React/Vue, each panel must have a unique `key` to work properly.
+:::
+
+## Related Links
+
+### Related API
+- [`append`](../../api/classes/Flicking#append): Add after panels
+- [`prepend`](../../api/classes/Flicking#prepend): Add before panels
+- [`remove`](../../api/classes/Flicking#remove): Remove panels
+
+### Related Demos
+- [Infinite Scroll](./infinite-scroll): Automatic panel addition with the `needPanel` event
+- [Lazy Load](./lazy-load): Optimization pattern used with `renderOnlyVisible`

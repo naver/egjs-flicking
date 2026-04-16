@@ -1,0 +1,18 @@
+id: add-remove
+category: advanced
+demo: advanced/AddRemove
+
+intent: "append/prepend/remove API로 패널을 동적으로 추가/삭제할 수 있음을 보여준다"
+
+focus:
+  - 초기 5개 패널이 렌더링됨
+  - Append 버튼 클릭 시 패널이 추가되고 panelCount가 증가
+  - Prepend 버튼 클릭 시 패널이 앞에 추가됨
+  - Remove 버튼 클릭 시 패널이 삭제되고 panelCount가 감소
+  - 패널이 1개일 때 Remove 버튼은 동작하지 않음 (최소 1개 보장)
+
+api:
+  options: [renderOnlyVisible, align, bound]
+  methods: [append, prepend, remove]
+
+frameworks: [vanilla, react, vue]

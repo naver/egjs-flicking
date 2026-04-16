@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <!-- preventClickOnDrag: true (default) -->
+  <div class="demo-container">
+    <div class="demo-label">preventClickOnDrag: true (default)</div>
+    <div id="flick-prevent" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel panel-1">click</div>
+        <div class="flicking-panel panel-2">click</div>
+        <div class="flicking-panel panel-3">click</div>
+        <div class="flicking-panel panel-4">click</div>
+        <div class="flicking-panel panel-5">click</div>
+      </div>
+    </div>
+    <div class="click-count" id="count1">Click count: 0</div>
+    <div class="demo-hint">Click after drag is ignored. Count increases only on pure tap/click.</div>
+  </div>
+
+  <!-- preventClickOnDrag: false -->
+  <div class="demo-container">
+    <div class="demo-label">preventClickOnDrag: false</div>
+    <div id="flick-no-prevent" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel panel-1">click</div>
+        <div class="flicking-panel panel-2">click</div>
+        <div class="flicking-panel panel-3">click</div>
+        <div class="flicking-panel panel-4">click</div>
+        <div class="flicking-panel panel-5">click</div>
+      </div>
+    </div>
+    <div class="click-count" id="count2">Click count: 0</div>
+    <div class="demo-hint">Click event fires even after drag release.</div>
+  </div>
+
+</body>
+</html>

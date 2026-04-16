@@ -2,12 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import {
-  ExternalRenderer,
-  getFlickingAttached,
-  PanelOptions,
-  RendererOptions
-} from "@egjs/flicking";
+import { ExternalRenderer, getFlickingAttached, PanelOptions, RendererOptions } from "@egjs/flicking";
 
 import VueFlicking from "./Flicking";
 import VuePanel from "./VuePanel";
@@ -34,7 +29,7 @@ class VueRenderer extends ExternalRenderer {
     strategy.updateRenderingPanels(flicking);
     strategy.renderPanels(flicking);
 
-    return new Promise<void>((resolve) => {
+    return new Promise<void>(resolve => {
       vueFlicking.renderEmitter.once("render", () => {
         this._afterRender();
         resolve();
@@ -48,7 +43,7 @@ class VueRenderer extends ExternalRenderer {
 
     await super.forceRenderAllPanels();
 
-    return new Promise<void>((resolve) => {
+    return new Promise<void>(resolve => {
       vueFlicking.renderEmitter.once("render", resolve);
       vueFlicking.$forceUpdate();
     });

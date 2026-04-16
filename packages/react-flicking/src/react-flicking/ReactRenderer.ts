@@ -2,11 +2,10 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { ExternalRenderer, PanelOptions, RendererOptions, getFlickingAttached } from "@egjs/flicking";
+import { ExternalRenderer, getFlickingAttached, PanelOptions, RendererOptions } from "@egjs/flicking";
 
 import ReactFlicking from "./Flicking";
 import StrictPanel from "./StrictPanel";
-import NonStrictPanel from "./NonStrictPanel";
 
 export interface ReactRendererOptions extends RendererOptions {
   reactFlicking: ReactFlicking;

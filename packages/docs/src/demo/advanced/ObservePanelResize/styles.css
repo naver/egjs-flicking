@@ -1,0 +1,28 @@
+.flicking-panel {
+  height: 120px;
+  transition: width 0.3s;
+}
+
+.panel-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 8px;
+}
+.panel-inner button {
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: inherit;
+  border-radius: 4px;
+}
+
+.demo-hint {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #888;
+}

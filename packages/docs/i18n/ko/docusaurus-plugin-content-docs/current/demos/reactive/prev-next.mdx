@@ -1,0 +1,67 @@
+---
+title: "Prev / Next"
+id: prev-next
+slug: /demos/reactive/prev-next
+sidebar_position: 3
+description: Reactive API를 활용한 이전/다음 네비게이션 버튼 구현
+keywords: [flicking, carousel, prev, next, navigation, reactive, isReachStart, isReachEnd, 이전, 다음, 네비게이션, 캐러셀]
+---
+
+import PrevNext from '@site/src/demo/reactive/PrevNext';
+
+# Prev / Next
+
+Reactive API의 `isReachStart`, `isReachEnd`, `moveTo`를 사용하여 캐러셀 경계에서 자동으로 비활성화되는 네비게이션 버튼을 구현합니다.
+
+<PrevNext />
+
+## 요약
+
+### 주요 API
+
+| 속성 / 메서드 | 타입 | 설명 |
+|--------------|------|------|
+| [`isReachStart`](../../api/interfaces/FlickingReactiveState#isreachstart) | `boolean` | 첫 번째 패널이 활성 상태인지 여부 |
+| [`isReachEnd`](../../api/interfaces/FlickingReactiveState#isreachend) | `boolean` | 마지막 패널이 활성 상태인지 여부 |
+| [`currentPanelIndex`](../../api/interfaces/FlickingReactiveState#currentpanelindex) | `number` | 현재 활성화된 패널 인덱스 |
+| [`moveTo`](../../api/interfaces/FlickingReactiveMethod#moveto) | `(i: number) => Promise` | 특정 패널로 이동 |
+
+### 버튼 상태
+
+| 위치 | 이전 버튼 | 다음 버튼 |
+|------|----------|----------|
+| 첫 번째 패널 (`isReachStart`) | 비활성화 | 활성화 |
+| 중간 패널 | 활성화 | 활성화 |
+| 마지막 패널 (`isReachEnd`) | 활성화 | 비활성화 |
+
+## 상세 설명
+
+### 동작 원리
+
+- `isReachStart`가 `true`일 때 이전 버튼을 비활성화
+- `isReachEnd`가 `true`일 때 다음 버튼을 비활성화
+- 이전 클릭: `moveTo(currentPanelIndex - 1)`
+- 다음 클릭: `moveTo(currentPanelIndex + 1)`
+- 사용자가 드래그하여 새 패널로 이동하면 버튼 상태가 자동으로 동기화
+
+### 관련 옵션
+
+- **`circular: true`**: 순환 모드에서는 `isReachStart`와 `isReachEnd`가 항상 `false`이므로 두 버튼 모두 항상 활성화 상태를 유지합니다.
+
+### 사용 시나리오
+
+:::info 이런 경우에 사용하세요
+- 드래그 조작이 잘 인지되지 않는 데스크톱 캐러셀
+- 접근성(a11y) 키보드/버튼 네비게이션
+- 터치가 비활성화된 환경
+:::
+
+## 관련 링크
+
+### 관련 API
+- [`isReachStart`](../../api/interfaces/FlickingReactiveState#isreachstart): 시작 경계 플래그
+- [`isReachEnd`](../../api/interfaces/FlickingReactiveState#isreachend): 끝 경계 플래그
+
+### 관련 데모
+- [Pagination](./pagination): 도트 페이지네이션
+- [Progress Bar](./progress-bar): 스크롤 진행률 표시기

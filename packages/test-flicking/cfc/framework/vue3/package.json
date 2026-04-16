@@ -1,0 +1,14 @@
+{
+  "name": "@test/vue",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "vitest run --config ./vitest.config.ts"
+  },
+  "devDependencies": {
+    "@cfcs/vue3": "^0.1.0",
+    "@vue/test-utils": "^2.0.0-rc.16",
+    "vue": "^3.2.21",
+    "vue-class-component": "^8.0.0-rc.1"
+  }
+}

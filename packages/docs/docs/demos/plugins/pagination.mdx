@@ -1,0 +1,89 @@
+---
+title: "Pagination"
+id: pagination
+slug: /demos/plugins/pagination
+sidebar_position: 6
+description: A plugin that adds page indicators (bullet/fraction/scroll) to show the current panel position
+keywords: [flicking, plugin, pagination, bullet, fraction, scroll, indicator]
+---
+
+import Pagination from '@site/src/demo/plugins/Pagination';
+
+# Pagination
+
+Adds page indicators to show the current panel position. Supports three types: bullet, fraction, and scroll.
+
+<Pagination />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `type` | `"bullet" \| "fraction" \| "scroll"` | `"bullet"` | Indicator display style |
+| `parentEl` | `HTMLElement` | - | Parent element for the indicator. By default, uses the `.flicking-pagination` element |
+
+### Required CSS
+
+```js
+import "@egjs/flicking-plugins/dist/pagination.css";
+```
+
+## Details
+
+### Behavior by Type
+
+| Type | Description |
+|------|-------------|
+| `bullet` | Displays dots corresponding to each panel. Click to move to that panel |
+| `fraction` | Displays numbers in `current/total` format (e.g., `1/5`) |
+| `scroll` | Displays a scrollbar-style indicator |
+
+### HTML Structure
+
+The pagination element must be placed inside the viewport.
+
+```html
+<div class="flicking-viewport">
+  <div class="flicking-camera">
+    <!-- Panels -->
+  </div>
+  <div class="flicking-pagination"></div>
+</div>
+```
+
+### Framework-specific Usage
+
+**React** — Use `ViewportSlot`:
+```jsx
+<Flicking plugins={plugins}>
+  {/* Panels */}
+  <ViewportSlot>
+    <div className="flicking-pagination"></div>
+  </ViewportSlot>
+</Flicking>
+```
+
+**Vue** — Use the `#viewport` slot:
+```html
+<Flicking :plugins="plugins">
+  <!-- Panels -->
+  <template #viewport>
+    <div class="flicking-pagination"></div>
+  </template>
+</Flicking>
+```
+
+### Notes
+
+:::warning Caution
+- You must import `@egjs/flicking-plugins/dist/pagination.css` for the indicator to display correctly.
+- With the `bullet` type, having too many panels can result in too many dots. In that case, consider using the `fraction` or `scroll` type.
+:::
+
+## Related Links
+
+### Related Demos
+- [Arrow](./arrow): Arrow navigation
+- [Pagination (Reactive API)](../reactive/pagination): Custom pagination based on Reactive API

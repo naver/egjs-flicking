@@ -1,0 +1,22 @@
+{
+  "name": "@test/e2e",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node generate-test-harness.mjs",
+    "dev": "node generate-test-harness.mjs && vite --port 3010",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "js-yaml": "^4.1.0",
+    "vite": "^6.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vue": "^3.3.0"
+  }
+}

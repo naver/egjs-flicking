@@ -1,0 +1,96 @@
+---
+title: "Render Only Visible"
+id: render-only-visible
+slug: /demos/advanced/render-only-visible
+sidebar_position: 2
+description: Improve performance by keeping only visible panels in the DOM using the renderOnlyVisible option
+keywords: [flicking, carousel, renderOnlyVisible, performance, optimization, rendering]
+---
+
+import RenderOnlyVisible from '@site/src/demo/advanced/RenderOnlyVisible';
+
+# Render Only Visible
+
+Use the [`renderOnlyVisible`](../../api/interfaces/FlickingOptions#renderonlyvisible) option to keep only visible panels in the DOM, improving performance.
+
+<RenderOnlyVisible />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`renderOnlyVisible`](../../api/interfaces/FlickingOptions#renderonlyvisible) | `boolean` | `false` | Keep only visible panels in the DOM |
+
+### Mode Comparison
+
+| Setting | DOM Panel Count | On Scroll | Memory |
+|---------|----------------|-----------|--------|
+| `false` (default) | All panels | No change | High |
+| `true` | Only visible panels | DOM add/remove occurs | Low |
+
+## Details
+
+### How It Works
+
+Setting `renderOnlyVisible: true` **removes DOM elements of non-visible panels from the camera container**.
+When scrolling brings a new panel into view, it is added to the DOM, and panels that leave the viewport are removed from the DOM.
+
+```js
+// Vanilla JS
+const flicking = new Flicking("#flick", {
+  renderOnlyVisible: true
+});
+```
+
+```tsx
+// React
+<Flicking renderOnlyVisible={true}>
+  {panels.map(p => <Panel key={p.id} />)}
+</Flicking>
+```
+
+### Difference Between Vanilla JS and Frameworks
+
+This option **works in both Vanilla JS and frameworks**.
+
+| Environment | Behavior | Effect |
+|-------------|----------|--------|
+| Vanilla JS | DOM removal/addition via `removeChild`/`appendChild` | Reduced DOM node count |
+| React / Vue | DOM removal/addition via framework render cycle + component skip rendering | Reduced DOM node count + reduced rendering cost |
+
+In frameworks, the component rendering cost itself is also reduced, resulting in a greater effect.
+
+### Difference from the virtual Option
+
+| Feature | `renderOnlyVisible` | `virtual` |
+|---------|---------------------|-----------|
+| DOM element count | Only visible panels (gradually added/removed) | `panelsPerView` + buffer (fixed) |
+| Applicable environment | All environments | All environments |
+| Panel content | No restrictions | Only innerHTML strings from `renderPanel` callback |
+| Configuration complexity | Simple (`boolean`) | Complex (`renderPanel` callback required) |
+
+### Use Cases
+
+:::info When should you use renderOnlyVisible?
+
+**Recommended:**
+- When there are many panels and you want to reduce DOM nodes
+- When panel components are complex in frameworks
+- When you want to avoid the complexity of virtual
+
+**virtual is more suitable when:**
+- There are very many panels (100+)
+- Memory usage needs to be minimized
+- Panel content is simple
+:::
+
+## Related Links
+
+### Related Options
+- [`virtual`](../../api/interfaces/FlickingOptions#virtual): Virtualization that limits DOM elements themselves
+
+### Related Demos
+- [Virtual Scroll](./virtual-scroll): Virtualization using the virtual option
+- [Lazy Load](./lazy-load): Lazy loading combined with renderOnlyVisible

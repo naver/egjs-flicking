@@ -1,17 +1,12 @@
-import { ComponentOptionsMixin, DefineComponent, VNode } from "vue";
-import VanillaFlicking, {
-  Plugin,
-  Status,
-  FlickingOptions,
-  FlickingEvents
-} from "@egjs/flicking";
 import Component from "@egjs/component";
+import VanillaFlicking, { FlickingEvents, FlickingOptions, Plugin, Status } from "@egjs/flicking";
 import ListDiffer, { DiffResult } from "@egjs/list-differ";
+import { ComponentOptionsMixin, DefineComponent, VNode } from "vue";
 
 import FlickingProps from "./FlickingProps";
 
 export interface FlickingData {
-  renderEmitter: Component<{ render: void }>;
+  renderEmitter: Component<{ render: undefined }>;
   vanillaFlicking: VanillaFlicking;
   pluginsDiffer: ListDiffer<Plugin>;
   slotDiffer: ListDiffer<VNode>;
@@ -43,28 +38,30 @@ export type VueFlicking = DefineComponent<
   // Public Props
   import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps,
   // Props
-  Readonly<{
-    viewportTag?: unknown;
-    cameraTag?: unknown;
-    cameraClass?: unknown;
-    hideBeforeInit?: unknown;
-    firstPanelSize?: unknown;
-    options?: unknown;
-    plugins?: unknown;
-    status?: unknown;
-  } & {
-    viewportTag: string;
-    cameraTag: string;
-    cameraClass: string;
-    hideBeforeInit: boolean;
-    options: Partial<FlickingOptions>;
-    plugins: Plugin[];
-  } & {
-    firstPanelSize?: string;
-    status?: Status;
-  } & {
-    [K in keyof VueFlickingEmits as `on${Capitalize<K>}`]?: VueFlickingEmits[K];
-  }>,
+  Readonly<
+    {
+      viewportTag?: unknown;
+      cameraTag?: unknown;
+      cameraClass?: unknown;
+      hideBeforeInit?: unknown;
+      firstPanelSize?: unknown;
+      options?: unknown;
+      plugins?: unknown;
+      status?: unknown;
+    } & {
+      viewportTag: string;
+      cameraTag: string;
+      cameraClass: string;
+      hideBeforeInit: boolean;
+      options: Partial<FlickingOptions>;
+      plugins: Plugin[];
+    } & {
+      firstPanelSize?: string;
+      status?: Status;
+    } & {
+      [K in keyof VueFlickingEmits as `on${Capitalize<K>}`]?: VueFlickingEmits[K];
+    }
+  >,
   // Defaults
   {
     viewportTag: string;

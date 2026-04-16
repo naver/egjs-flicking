@@ -1,0 +1,36 @@
+{
+  "name": "@egjs/flicking",
+  "version": "4.15.0",
+  "description": "Everyday 30 million people experience. It's reliable, flexible and extendable carousel.",
+  "main": "dist/flicking.cjs.js",
+  "module": "dist/flicking.esm.js",
+  "es2015": "dist/flicking.esm.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "@cfcs/core": "^0.1.0",
+    "@egjs/axes": "^3.9.1",
+    "@egjs/component": "^3.0.2",
+    "@egjs/imready": "^1.1.1",
+    "@egjs/list-differ": "^1.0.1"
+  },
+  "scripts": {
+    "dev": "vite --config vite.dev.config.ts",
+    "dev:preview": "vite --config vite.dev.config.ts --mode production",
+    "build": "run-s build:bundle build:css build:declaration printsizes",
+    "build:bundle": "rm -rf ./dist && run-s build:bundle:common build:bundle:umd",
+    "build:bundle:common": "vite build",
+    "build:bundle:umd": "concurrently \"VITE_BUILD_FORMAT=umd vite build\" \"VITE_BUILD_FORMAT=umd VITE_MINIFY=true vite build\" \"VITE_BUILD_FORMAT=umd VITE_RESOLVE=true vite build\" \"VITE_BUILD_FORMAT=umd VITE_RESOLVE=true VITE_MINIFY=true vite build\"",
+    "build:css": "run-s build:css-clear build:sass build:css-prefix build:css-min",
+    "build:css-clear": "rm -rf ./dist/*.css",
+    "build:sass": "sass sass/:dist/ --style=expanded --no-source-map && sass sass/flicking.sass dist/flicking.min.css --style=compressed --no-source-map && sass sass/flicking-inline.sass dist/flicking-inline.min.css --style=compressed --no-source-map",
+    "build:css-prefix": "postcss dist/*.css --replace --use autoprefixer --no-map",
+    "build:css-min": "postcss dist/*.css --ext .min.css --use postcss-clean -d dist/ --no-map",
+    "build:declaration": "tsc -p tsconfig.declaration.json",
+    "css": "postcss css/*.css --use autoprefixer postcss-clean -d dist/ -m",
+    "printsizes": "print-sizes ./dist --exclude=\\.map"
+  },
+  "sideEffects": [
+    "**/*.css",
+    "**/*.sass"
+  ]
+}

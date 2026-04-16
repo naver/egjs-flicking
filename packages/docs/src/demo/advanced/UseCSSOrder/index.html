@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <!-- useCSSOrder: false (default) -->
+  <div class="demo-container">
+    <div class="demo-label">useCSSOrder: false (default) — DOM node order changes in circular mode</div>
+    <div id="flick-default" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel panel-1" data-id="1">Panel 1</div>
+        <div class="flicking-panel panel-2" data-id="2">Panel 2</div>
+        <div class="flicking-panel panel-3" data-id="3">Panel 3</div>
+        <div class="flicking-panel panel-4" data-id="4">Panel 4</div>
+        <div class="flicking-panel panel-5" data-id="5">Panel 5</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button id="prev1">Prev</button>
+      <button id="next1">Next</button>
+    </div>
+    <div class="dom-order-display" id="log1">DOM order: —</div>
+  </div>
+
+  <!-- useCSSOrder: true -->
+  <div class="demo-container">
+    <div class="demo-label">useCSSOrder: true — preserves DOM order, uses CSS order property for visual ordering</div>
+    <div id="flick-cssorder" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel panel-1" data-id="1">Panel 1</div>
+        <div class="flicking-panel panel-2" data-id="2">Panel 2</div>
+        <div class="flicking-panel panel-3" data-id="3">Panel 3</div>
+        <div class="flicking-panel panel-4" data-id="4">Panel 4</div>
+        <div class="flicking-panel panel-5" data-id="5">Panel 5</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button id="prev2">Prev</button>
+      <button id="next2">Next</button>
+    </div>
+    <div class="dom-order-display" id="log2">DOM order: —</div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+---
+title: "Interruptable"
+id: interruptable
+slug: /demos/basic/interruptable
+sidebar_position: 18
+description: interruptable 옵션으로 애니메이션 진행 중 사용자 입력 허용 여부를 설정합니다
+keywords: [flicking, carousel, interruptable, animation, interrupt, 애니메이션, 중단, 인터럽트]
+---
+
+import Interruptable from '@site/src/demo/basic/Interruptable';
+
+# Interruptable
+
+[`interruptable`](../../api/interfaces/FlickingOptions#interruptable) 옵션으로 패널 애니메이션이 진행 중일 때 사용자 드래그 입력을 허용할지 설정합니다.
+
+버튼을 눌러 2초짜리 애니메이션을 시작한 뒤, 도중에 드래그해 차이를 확인하세요.
+
+<Interruptable />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`interruptable`](../../api/interfaces/FlickingOptions#interruptable) | `boolean` | `true` | 애니메이션 중 사용자 입력 허용 여부 |
+| [`changeOnHold`](../../api/interfaces/FlickingOptions#changeonhold) | `boolean` | `false` | 드래그 중 패널 인덱스를 즉시 변경할지 여부 |
+
+### 값별 비교
+
+| 값 | 동작 | 적합한 상황 |
+|----|------|-------------|
+| `true` | 애니메이션 중 드래그하면 즉시 반응 (기본값) | 일반적인 캐러셀, 빠른 탐색 |
+| `false` | 애니메이션이 끝날 때까지 드래그 무시 | 프레젠테이션, 정확한 애니메이션 완료 보장 |
+
+## 상세 설명
+
+### interruptable 동작 원리
+
+`interruptable: true`(기본값)일 때 Flicking은 애니메이션 중에도 사용자 입력을 받아 즉시 새 드래그로 전환합니다. 버튼으로 패널을 이동시키는 도중 사용자가 드래그하면 그 시점의 위치에서 새 드래그가 시작됩니다.
+
+`interruptable: false`이면 애니메이션이 완전히 끝나야 다음 입력을 받습니다. 슬라이드쇼나 프레젠테이션처럼 각 전환 효과를 온전히 보여주어야 할 때 유용합니다.
+
+```javascript
+// 기본값: 애니메이션 중 드래그 가능
+const flicking = new Flicking("#el", {
+  interruptable: true
+});
+
+// 애니메이션 완료 후 입력 허용
+const flicking = new Flicking("#el", {
+  interruptable: false,
+  duration: 1000
+});
+```
+
+### changeOnHold
+
+`changeOnHold` 옵션은 사용자가 드래그 중 멈춰서 패널을 "잡고 있을 때" 현재 패널 인덱스를 즉시 갱신할지 결정합니다. 기본값 `false`로 두면 릴리즈 후 스냅이 완료될 때 인덱스가 변경됩니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **interruptable: true** (기본값): 일반 이미지 갤러리, 상품 목록 등 사용자가 자유롭게 탐색하는 캐러셀
+- **interruptable: false**: 프레젠테이션 슬라이드, 온보딩 화면처럼 각 슬라이드 전환 애니메이션을 완전히 보여주어야 하는 경우
+:::
+
+:::warning 주의
+`interruptable: false`일 때 긴 `duration`을 설정하면 사용자가 입력을 기다리며 불편함을 느낄 수 있습니다. 필요한 경우에만 사용하세요.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`duration`](../../api/interfaces/FlickingOptions#duration): 애니메이션 지속 시간
+- [`changeOnHold`](../../api/interfaces/FlickingOptions#changeonhold): 드래그 중 패널 인덱스 즉시 갱신 여부
+
+### 관련 데모
+- [Duration](./duration): 애니메이션 지속 시간 설정
+- [Easing](./easing): 애니메이션 가속도 곡선

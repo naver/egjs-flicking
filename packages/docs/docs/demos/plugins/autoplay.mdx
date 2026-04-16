@@ -1,0 +1,65 @@
+---
+title: "AutoPlay"
+id: autoplay
+slug: /demos/plugins/autoplay
+sidebar_position: 2
+description: A plugin that automatically transitions panels at regular intervals
+keywords: [flicking, plugin, autoplay, auto, play, timer]
+---
+
+import Autoplay from '@site/src/demo/plugins/Autoplay';
+
+# AutoPlay
+
+Automatically transitions panels at regular intervals. Supports pause on mouse hover.
+
+<Autoplay />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `duration` | `number` | `2000` | Interval between panel transitions (ms) |
+| `direction` | `"NEXT" \| "PREV"` | `"NEXT"` | Direction of automatic transition |
+| `stopOnHover` | `boolean` | `false` | Pause autoplay on mouse hover |
+| `animationDuration` | `number` | - | Duration of the panel transition animation (ms) |
+
+## Details
+
+### How It Works
+
+The AutoPlay plugin automatically transitions panels in the specified direction at every `duration` interval. When the user drags, autoplay pauses and resumes after the drag ends.
+
+### Usage
+
+```js
+import { AutoPlay } from "@egjs/flicking-plugins";
+
+flicking.addPlugins(new AutoPlay({
+  duration: 2000,
+  direction: "NEXT",
+  stopOnHover: true
+}));
+```
+
+### Control Methods
+
+| Method | Description |
+|--------|-------------|
+| `plugin.stop()` | Stop autoplay |
+| `plugin.play()` | Start autoplay |
+
+### Notes
+
+:::warning Caution
+- For seamless autoplay, use it together with the `circular: true` option.
+- When `stopOnHover: true` is set, it pauses on touch on mobile devices.
+:::
+
+## Related Links
+
+### Related Demos
+- [Fade](./fade): Use with fade effect
+- [Pagination](./pagination): Use with page indicator

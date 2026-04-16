@@ -1,0 +1,15 @@
+id: resize-on-contents-ready
+category: advanced
+demo: advanced/ResizeOnContentsReady
+
+intent: "resizeOnContentsReady 옵션으로 이미지 로드 후 패널 크기를 자동 재계산하는 효과를 비교한다"
+
+focus:
+  - resizeOnContentsReady 옵션 확인 (true/false)
+  - 이미지 패널이 존재함
+  - 두 인스턴스 모두 드래그로 패널 이동 가능
+
+api:
+  options: [resizeOnContentsReady, align, preventDefaultOnDrag, bound]
+
+frameworks: [vanilla, react, vue]

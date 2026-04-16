@@ -2,26 +2,27 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { h, defineComponent, VNode, resolveComponent, Fragment, getCurrentInstance, Comment, Text } from "vue";
-import ListDiffer, { DiffResult } from "@egjs/list-differ";
+
 import Component from "@egjs/component";
 import VanillaFlicking, {
   EVENTS,
-  withFlickingMethods,
-  sync,
-  Plugin,
-  getRenderingPanels,
   getDefaultCameraTransform,
+  getRenderingPanels,
+  NormalRenderingStrategy,
+  Plugin,
   range,
+  sync,
   VirtualRenderingStrategy,
-  NormalRenderingStrategy
+  withFlickingMethods
 } from "@egjs/flicking";
+import ListDiffer, { DiffResult } from "@egjs/list-differ";
+import { Comment, defineComponent, Fragment, getCurrentInstance, h, resolveComponent, Text, VNode } from "vue";
 
 import FlickingProps from "./FlickingProps";
-import VueRenderer, { VueRendererOptions } from "./VueRenderer";
-import VuePanel from "./VuePanel";
-import VueElementProvider from "./VueElementProvider";
 import { VueFlicking } from "./types";
+import VueElementProvider from "./VueElementProvider";
+import VuePanel from "./VuePanel";
+import VueRenderer, { VueRendererOptions } from "./VueRenderer";
 
 const Flicking = defineComponent({
   props: FlickingProps,
@@ -30,7 +31,7 @@ const Flicking = defineComponent({
   },
   data() {
     return {} as {
-      renderEmitter: Component<{ render: void }>;
+      renderEmitter: Component<{ render: undefined }>;
       vanillaFlicking: VanillaFlicking;
       pluginsDiffer: ListDiffer<Plugin>;
       slotDiffer: ListDiffer<VNode>;
@@ -49,45 +50,45 @@ const Flicking = defineComponent({
       const defaultSlots = this.getSlots();
       const diffResult = vueFlicking?.diffResult;
 
-      const slots = diffResult
-        ? getRenderingPanels(flicking, diffResult)
-        : defaultSlots;
+      const slots = diffResult ? getRenderingPanels(flicking, diffResult) : defaultSlots;
 
       const panelComponent = resolveComponent("Panel");
-      const panels = slots.map((slot, idx) => h(panelComponent as any, {
-        key: slot.key!,
-        ref: idx.toString()
-      }, () => slot));
+      const panels = slots.map((slot, idx) =>
+        h(
+          panelComponent as any,
+          {
+            key: slot.key!,
+            ref: idx.toString()
+          },
+          () => slot
+        )
+      );
 
       return panels;
     };
     this.getVirtualPanels = () => {
       const options = this.options;
-      const {
-        panelClass = "flicking-panel"
-      } = options.virtual!;
+      const { panelClass = "flicking-panel" } = options.virtual!;
       const panelsPerView = options.panelsPerView as number;
       const flicking = this.vanillaFlicking;
-      const initialized = flicking && flicking.initialized;
+      const initialized = flicking?.initialized;
 
       const renderingIndexes = initialized
         ? flicking.renderer.strategy.getRenderingIndexesByOrder(flicking)
         : range(panelsPerView + 1);
 
       const firstPanel = initialized && flicking.panels[0];
-      const size = firstPanel
-        ? flicking.horizontal
-          ? { width: firstPanel.size }
-          : { height: firstPanel.size }
-        : {};
+      const size = firstPanel ? (flicking.horizontal ? { width: firstPanel.size } : { height: firstPanel.size }) : {};
 
-      return renderingIndexes.map(idx => h("div", {
-        key: idx,
-        ref: idx.toString(),
-        class: panelClass,
-        style: size,
-        "data-element-index": idx
-      }));
+      return renderingIndexes.map(idx =>
+        h("div", {
+          key: idx,
+          ref: idx.toString(),
+          class: panelClass,
+          style: size,
+          "data-element-index": idx
+        })
+      );
     };
 
     withFlickingMethods(this, "vanillaFlicking");
@@ -98,11 +99,12 @@ const Flicking = defineComponent({
     const rendererOptions: VueRendererOptions = {
       vueFlicking: this,
       align: options.align,
-      strategy: options.virtual && (options.panelsPerView ?? -1) > 0
-        ? new VirtualRenderingStrategy()
-        : new NormalRenderingStrategy({
-          providerCtor: VueElementProvider
-        })
+      strategy:
+        options.virtual && (options.panelsPerView ?? -1) > 0
+          ? new VirtualRenderingStrategy()
+          : new NormalRenderingStrategy({
+              providerCtor: VueElementProvider
+            })
     };
 
     const flicking = new VanillaFlicking(viewportEl, {
@@ -159,15 +161,13 @@ const Flicking = defineComponent({
   render() {
     const flicking = this.vanillaFlicking;
     const options = this.options;
-    const initialized = flicking && flicking.initialized;
-    const isHorizontal = flicking
-      ? flicking.horizontal
-      : this.options.horizontal ?? true;
+    const initialized = flicking?.initialized;
+    const isHorizontal = flicking ? flicking.horizontal : (this.options.horizontal ?? true);
 
     const viewportData = {
       class: {
         "flicking-viewport": true,
-        "vertical": !isHorizontal,
+        vertical: !isHorizontal,
         "flicking-hidden": this.hideBeforeInit && !initialized
       }
     };
@@ -176,28 +176,22 @@ const Flicking = defineComponent({
         "flicking-camera": true,
         [this.cameraClass]: !!this.cameraClass
       },
-      style: !initialized && this.firstPanelSize
-        ? { transform: getDefaultCameraTransform(this.options.align, this.options.horizontal, this.firstPanelSize) }
-        : {}
+      style:
+        !initialized && this.firstPanelSize
+          ? { transform: getDefaultCameraTransform(this.options.align, this.options.horizontal, this.firstPanelSize) }
+          : {}
     };
 
-    const panels = options.virtual && options.panelsPerView && options.panelsPerView > 0
-      ? this.getVirtualPanels
-      : this.getPanels;
+    const panels =
+      options.virtual && options.panelsPerView && options.panelsPerView > 0 ? this.getVirtualPanels : this.getPanels;
 
-    const viewportSlots = this.$slots.viewport
-      ? this.$slots.viewport()
-      : [];
+    const viewportSlots = this.$slots.viewport ? this.$slots.viewport() : [];
 
-    return h(this.viewportTag, viewportData,
-      [h(this.cameraTag, cameraData, { default: panels }), ...viewportSlots]
-    );
+    return h(this.viewportTag, viewportData, [h(this.cameraTag, cameraData, { default: panels }), ...viewportSlots]);
   },
   methods: {
     getSlots() {
-      const slots = this.$slots.default
-        ? this.$slots.default()
-        : [];
+      const slots = this.$slots.default ? this.$slots.default() : [];
 
       return slots
         .reduce((elementSlots, slot) => [...elementSlots, ...this.getElementVNodes(slot)], [] as VNode[])
@@ -216,8 +210,7 @@ const Flicking = defineComponent({
     },
     bindEvents() {
       const flicking = this.vanillaFlicking;
-      const events = (Object.keys(EVENTS) as Array<keyof typeof EVENTS>)
-        .map(key => EVENTS[key]);
+      const events = (Object.keys(EVENTS) as Array<keyof typeof EVENTS>).map(key => EVENTS[key]);
 
       events.forEach(eventName => {
         flicking.on(eventName, (e: any) => {

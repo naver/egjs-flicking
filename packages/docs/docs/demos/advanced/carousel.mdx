@@ -1,0 +1,84 @@
+---
+title: "Carousel"
+id: carousel
+slug: /demos/advanced/carousel
+sidebar_position: 9
+description: Build a typical carousel UI by combining circular, panelsPerView, and align options
+keywords: [flicking, carousel, circular, panelsPerView, loop, slider]
+---
+
+import Carousel from '@site/src/demo/advanced/Carousel';
+
+# Carousel
+
+Combine the [`circular`](../../api/interfaces/FlickingOptions#circular), [`panelsPerView`](../../api/interfaces/FlickingOptions#panelsperview), and [`align`](../../api/interfaces/FlickingOptions#align) options to build various carousel UIs.
+
+<Carousel />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`circular`](../../api/interfaces/FlickingOptions#circular) | `boolean` | `false` | Circular mode |
+| [`panelsPerView`](../../api/interfaces/FlickingOptions#panelsperview) | `number` | `-1` | Number of panels per view (-1 to disable) |
+| [`align`](../../api/interfaces/FlickingOptions#align) | `string \| number` | `"center"` | Panel alignment position |
+
+### Combination Comparison
+
+| Combination | Behavior | Best For |
+|-------------|----------|----------|
+| `circular + panelsPerView: 3 + align: "prev"` | Infinite loop showing 3 panels | Product lists, card carousels |
+| `circular + panelsPerView: 1 + align: "center"` | Infinite loop with 1 center-aligned panel | Hero sliders, banners |
+| `circular: false + panelsPerView: 3 + bound` | 3-column slider with end boundaries | Finite lists, galleries |
+
+## Details
+
+### circular + panelsPerView Combination
+
+When using `circular: true` together with `panelsPerView`, the specified number of panels are visible on screen while looping infinitely. Panel width is automatically calculated as `100% / panelsPerView`.
+
+### Role of align
+
+- `"prev"`: Panels are left-aligned — suitable for list-type carousels
+- `"center"`: Current panel is centered — suitable for spotlight-type carousels
+
+### Non-Circular Slider
+
+Setting `circular: false` + `bound: true` creates a regular slider that stops without empty space at the end.
+
+### Related Options
+
+- **Relationship with `circularFallback`**: Sets fallback behavior when there are not enough panels for circular mode
+- **Relationship with `bound`**: Use `bound: true` with `circular: false` to prevent empty space
+- **Relationship with `noPanelStyleOverride`**: When using `panelsPerView`, you can disable automatic panel width setting and control it directly with CSS
+
+### Use Cases
+
+:::info When should you use this?
+- **Product carousel**: `circular + panelsPerView: 3~5` combination
+- **Hero banner**: `circular + panelsPerView: 1 + align: "center"` combination
+- **Image gallery**: `circular: false + panelsPerView: 3 + bound` combination
+:::
+
+### Notes
+
+:::warning Caution
+- For `circular: true` to work, the total panel width must be larger than the viewport. If there are not enough panels, check the `circularFallback` setting.
+- When `panelsPerView` is set, the panel's CSS width is automatically overridden. Setting a separate width in CSS may cause conflicts.
+:::
+
+## Related Links
+
+### Related Options
+- [`circular`](../../api/interfaces/FlickingOptions#circular): Circular mode
+- [`panelsPerView`](../../api/interfaces/FlickingOptions#panelsperview): Number of panels per view
+- [`align`](../../api/interfaces/FlickingOptions#align): Panel alignment
+- [`circularFallback`](../../api/interfaces/FlickingOptions#circularfallback): Fallback behavior when circular is not possible
+- [`bound`](../../api/interfaces/FlickingOptions#bound): Boundary restriction
+
+### Related Demos
+- [Circular](../basic/circular): On/off comparison of the circular option itself
+- [Panels Per View](../basic/panels-per-view): Detailed panelsPerView option
+- [Fullpage Scroll](./fullpage-scroll): Other option combination patterns

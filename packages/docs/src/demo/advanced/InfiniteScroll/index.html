@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="demo-container">
+    <div class="demo-label">needPanelThreshold: 100</div>
+    <div class="demo-info">needPanel event fires 100px before the end → panels are added automatically</div>
+    <div id="flick" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel" style="background: #3e8ed0">Panel 1</div>
+        <div class="flicking-panel" style="background: #00d1b2">Panel 2</div>
+        <div class="flicking-panel" style="background: #f14668">Panel 3</div>
+        <div class="flicking-panel" style="background: #ffe08a">Panel 4</div>
+        <div class="flicking-panel" style="background: #48c78e">Panel 5</div>
+      </div>
+    </div>
+    <div class="panel-counter">
+      Current panel count: <strong id="panel-count">5</strong> (auto-appends on scroll to end)
+    </div>
+    <div id="event-log" class="event-log">
+      Event log...
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+id: prev-next
+category: reactive
+demo: reactive/PrevNext
+
+intent: "Reactive API(isReachStart/isReachEnd subscription)를 이용한 Prev/Next 버튼 상태 관리를 보여준다"
+
+focus:
+  - 초기 상태에서 Prev disabled, Next enabled
+  - Next 클릭으로 다음 패널 이동 + Prev 활성화
+  - Prev 클릭으로 이전 패널 복귀 + Prev 다시 disabled
+  - 마지막 패널에서 Next disabled
+
+api:
+  options: []
+
+frameworks: [vanilla, react, vue]

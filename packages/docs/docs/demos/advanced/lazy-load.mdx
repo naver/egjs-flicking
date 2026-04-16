@@ -1,0 +1,85 @@
+---
+title: "Lazy Load"
+id: lazy-load
+slug: /demos/advanced/lazy-load
+sidebar_position: 6
+description: Load images only for visible panels using the renderOnlyVisible option and visibleChange event
+keywords: [flicking, carousel, lazy load, renderOnlyVisible, visibleChange, performance, optimization]
+---
+
+import LazyLoad from '@site/src/demo/advanced/LazyLoad';
+
+# Lazy Load
+
+A performance optimization pattern that loads images only for visible panels by combining the [`renderOnlyVisible`](../../api/interfaces/FlickingOptions#renderonlyvisible) option with the `visibleChange` event.
+
+<LazyLoad />
+
+## Summary
+
+### Key Options/Events
+
+| Item | Type | Default | Description |
+|------|------|---------|-------------|
+| [`renderOnlyVisible`](../../api/interfaces/FlickingOptions#renderonlyvisible) | `boolean` | `false` | Render only visible panels |
+| [`visibleChange`](../../api/interfaces/FlickingEvents#visiblechange) | `VisibleChangeEvent` | - | Fired when the visible panels change |
+
+### Event Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `added` | `Panel[]` | Panels that newly entered the viewport |
+| `removed` | `Panel[]` | Panels that left the viewport |
+| `visiblePanels` | `Panel[]` | All currently visible panels |
+
+### Behavior Comparison
+
+| Method | Image Load Timing | Best For |
+|--------|-------------------|----------|
+| Normal loading | All panels loaded at once | Few panels (10 or less) |
+| Lazy loading | Loaded when entering the viewport | Many panels (tens to hundreds) |
+
+## Details
+
+### How It Works
+
+1. `renderOnlyVisible: true` renders only visible panels
+2. Detect newly visible panels from the `added` array in the `visibleChange` event
+3. Load images for those panels and record the load status
+4. Images that have already been loaded are not loaded again (tracked with a Set)
+
+### Initial Load
+
+Since `visibleChange` has not fired yet right after Flicking initialization, you need to load images for the initially visible panels in the `ready` event.
+
+### Related Options
+
+- **Relationship with `renderOnlyVisible`**: This option is the core. It reduces DOM overhead by skipping rendering of non-visible panels
+- **Relationship with `bound`**: Using `bound: true` together provides smooth scrolling without empty space at the end
+- **Relationship with `align`**: `align: "prev"` is suitable for list-type layouts
+
+### Use Cases
+
+:::info When should you use this?
+- Galleries with many images (50+)
+- Image optimization in infinite scroll feeds
+- Reducing network load in mobile environments
+:::
+
+### Notes
+
+:::warning Caution
+- `renderOnlyVisible` is recommended for use in framework (React, Vue) environments
+- Panels in the `added` array of the `visibleChange` event are `Panel` objects and can be identified by their `index` property
+- During initial load, you need to separately handle visible panels in the `ready` event
+:::
+
+## Related Links
+
+### Related Options
+- [`renderOnlyVisible`](../../api/interfaces/FlickingOptions#renderonlyvisible): Render only visible panels
+- [`bound`](../../api/interfaces/FlickingOptions#bound): Boundary restriction
+
+### Related Demos
+- [Render Only Visible](./render-only-visible): On/off comparison of the renderOnlyVisible option
+- [Virtual Scroll](./virtual-scroll): Handling large numbers of panels with virtual mode

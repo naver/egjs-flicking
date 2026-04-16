@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="demo-hint">
+    Change the width using the slider and compare the resize call frequency between the two carousels.
+  </div>
+
+  <div class="slider-row">
+    <span>Container width</span>
+    <input type="range" id="width-slider" min="30" max="100" value="100" />
+    <span class="value-label" id="width-value">100%</span>
+  </div>
+
+  <div class="demo-section">
+    <div class="demo-label">resizeDebounce: 0 (default)</div>
+    <div id="wrap-a" style="width: 100%">
+      <div id="flick-a" class="flicking-viewport">
+        <div class="flicking-camera">
+          <div class="flicking-panel panel-1">1</div>
+          <div class="flicking-panel panel-2">2</div>
+          <div class="flicking-panel panel-3">3</div>
+          <div class="flicking-panel panel-4">4</div>
+          <div class="flicking-panel panel-5">5</div>
+        </div>
+      </div>
+    </div>
+    <div class="log-header">
+      <span>Resize log</span>
+      <span class="count-badge" id="count-a">0x</span>
+    </div>
+    <div class="log-area" id="log-a">
+      Move the slider to see resize logs...
+    </div>
+  </div>
+
+  <div class="demo-section">
+    <div class="demo-label">resizeDebounce: 300ms / maxResizeDebounce: 800ms</div>
+    <div id="wrap-b" style="width: 100%">
+      <div id="flick-b" class="flicking-viewport">
+        <div class="flicking-camera">
+          <div class="flicking-panel panel-1">1</div>
+          <div class="flicking-panel panel-2">2</div>
+          <div class="flicking-panel panel-3">3</div>
+          <div class="flicking-panel panel-4">4</div>
+          <div class="flicking-panel panel-5">5</div>
+        </div>
+      </div>
+    </div>
+    <div class="log-header">
+      <span>Resize log</span>
+      <span class="count-badge" id="count-b">0x</span>
+    </div>
+    <div class="log-area" id="log-b">
+      Move the slider to see resize logs...
+    </div>
+  </div>
+</body>
+</html>

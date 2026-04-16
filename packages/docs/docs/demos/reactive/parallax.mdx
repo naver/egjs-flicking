@@ -1,0 +1,64 @@
+---
+title: "Parallax"
+id: parallax
+slug: /demos/reactive/parallax
+sidebar_position: 4
+description: Create a parallax scrolling effect using the Reactive API's indexProgress
+keywords: [flicking, carousel, parallax, reactive, indexProgress, transform]
+---
+
+import Parallax from '@site/src/demo/reactive/Parallax';
+
+# Parallax
+
+Use `indexProgress` from the Reactive API to create a parallax effect where inner elements move at different speeds based on the panel's distance from the camera center.
+
+<Parallax />
+
+## Summary
+
+### Key API
+
+| Property | Type | Description |
+|----------|------|-------------|
+| [`indexProgress`](../../api/interfaces/FlickingReactiveState#indexprogress) | `number` | Camera position as a fractional panel index |
+
+### Effect Mapping
+
+| Panel Position | translateX | Opacity |
+|---------------|------------|---------|
+| Current (childProgress = 0) | 0px | 1.0 |
+| Adjacent (childProgress = ±1) | ±offset | 0.0 |
+
+## Details
+
+### How It Works
+
+Each panel contains skeleton bar elements. The `childProgress` for each panel is calculated as `panelIndex - indexProgress`. This value drives two visual effects:
+
+1. **Horizontal offset**: Each bar translates by `childProgress * offset`, where different bars have different offset values (100-180px), creating a layered depth effect.
+2. **Opacity**: Fades from 1 (current panel) to 0 (adjacent panels) based on `|childProgress|`.
+
+The varying offsets per bar create the signature parallax look: elements closer to the "camera" appear to move faster than those further away.
+
+### Related Options
+
+- **`moveType: "freeScroll"`**: Produces smoother continuous parallax as the user scrolls freely.
+- **Default `moveType` (snap)**: Parallax still works but snaps between discrete panel positions.
+
+### Use Cases
+
+:::info When to use
+- Card-based content with layered elements
+- Storytelling / editorial carousels
+- Product showcase with depth effect
+:::
+
+## Related Links
+
+### Related API
+- [`indexProgress`](../../api/interfaces/FlickingReactiveState#indexprogress): Fractional panel index progress
+
+### Related Demos
+- [Coverflow](./coverflow): 3D rotation effect using indexProgress
+- [Progress Bar](./progress-bar): Scroll progress indicator

@@ -1,0 +1,16 @@
+id: auto-init
+category: basic
+demo: basic/AutoInit
+
+intent: "autoInit 옵션으로 Flicking 자동 초기화를 비활성화하고 수동으로 init()을 호출할 수 있음을 보여준다"
+
+focus:
+  - autoInit:true 인스턴스는 즉시 초기화됨
+  - autoInit:false 인스턴스는 버튼 클릭 전까지 초기화되지 않음
+  - 버튼 클릭 후 초기화되어 드래그 가능해짐
+
+api:
+  options: [autoInit]
+  methods: [init]
+
+frameworks: [vanilla, react, vue]

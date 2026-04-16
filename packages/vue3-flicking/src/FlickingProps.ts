@@ -2,8 +2,9 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import { PropType } from "vue";
+
 import { FlickingOptions, Plugin, Status } from "@egjs/flicking";
+import { PropType } from "vue";
 
 export default {
   viewportTag: {
@@ -37,7 +38,7 @@ export default {
   },
   plugins: {
     type: Array as PropType<Plugin[]>,
-    default: () => ([]),
+    default: () => [],
     required: false
   },
   status: {

@@ -1,0 +1,70 @@
+---
+title: "Resize Debounce"
+id: resize-debounce
+slug: /demos/advanced/resize-debounce
+sidebar_position: 8
+description: Control resize call frequency with the resizeDebounce and maxResizeDebounce options
+keywords: [flicking, carousel, resize, resizeDebounce, maxResizeDebounce, debounce, performance]
+---
+
+import ResizeDebounce from '@site/src/demo/advanced/ResizeDebounce';
+
+# Resize Debounce
+
+Control the resize call frequency using the [`resizeDebounce`](../../api/interfaces/FlickingOptions#resizedebounce) and [`maxResizeDebounce`](../../api/interfaces/FlickingOptions#maxresizedebounce) options.
+
+Try dragging the bottom-right corner of the container and compare the resize call frequency between the two carousels.
+
+<ResizeDebounce />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`resizeDebounce`](../../api/interfaces/FlickingOptions#resizedebounce) | `number` | `0` | Resize call debounce delay (ms) |
+| [`maxResizeDebounce`](../../api/interfaces/FlickingOptions#maxresizedebounce) | `number` | `100` | Maximum debounce delay guarantee (ms) |
+
+### Behavior Comparison
+
+| Setting | Behavior | Best For |
+|---------|----------|----------|
+| `resizeDebounce: 0` | Resize called immediately on size change | General use (default) |
+| `resizeDebounce: 300` | Called after 300ms of no changes | Performance optimization during frequent size changes |
+| `resizeDebounce: 300` + `maxResizeDebounce: 800` | 300ms debounce + guaranteed every 800ms max | Periodic updates needed even during continuous changes |
+
+## Details
+
+### resizeDebounce
+
+`resizeDebounce` delays the resize call by the specified time. If the size changes again during the delay, the timer is reset.
+
+### maxResizeDebounce
+
+`maxResizeDebounce` guarantees a maximum delay for debouncing. Even if `resizeDebounce` is set and continuous size changes occur, resize is executed at least once every `maxResizeDebounce` milliseconds.
+
+### Use Cases
+
+:::info When should you use this?
+- **Chat/live feeds**: Reduce frequent resize calls with `resizeDebounce`
+- **Draggable layouts**: Guarantee intermediate updates with `resizeDebounce` + `maxResizeDebounce`
+- **Typical responsive**: Respond immediately with the default (`resizeDebounce: 0`)
+:::
+
+### Notes
+
+:::warning Caution
+- If the `resizeDebounce` value is too large, users may see panels repositioning late after a size change
+- `maxResizeDebounce` is only meaningful when `resizeDebounce` is greater than 0
+:::
+
+## Related Links
+
+### Related Options
+- [`resizeDebounce`](../../api/interfaces/FlickingOptions#resizedebounce): Resize debounce
+- [`maxResizeDebounce`](../../api/interfaces/FlickingOptions#maxresizedebounce): Maximum debounce
+
+### Related Demos
+- [Auto Resize](./auto-resize): Resize detection method settings
+- [Optimize Size Update](./optimize-size-update): Skip unnecessary axis changes

@@ -1,0 +1,94 @@
+---
+title: "Vertical"
+id: vertical
+slug: /demos/basic/vertical
+sidebar_position: 5
+description: Set the panel movement direction to horizontal or vertical using the horizontal option
+keywords: [flicking, carousel, horizontal, vertical, direction]
+---
+
+import Vertical from '@site/src/demo/basic/Vertical';
+
+# Vertical
+
+The [`horizontal`](../../api/interfaces/FlickingOptions#horizontal) option sets the direction of panel movement. When `true`, panels move horizontally (left/right); when `false`, panels move vertically (up/down).
+
+<Vertical />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`horizontal`](../../api/interfaces/FlickingOptions#horizontal) | `boolean` | `true` | Panel movement direction (`true`: horizontal, `false`: vertical) |
+
+### Comparison by Value
+
+| Value | Behavior | Suitable For |
+|-------|----------|--------------|
+| `true` | Drag left/right to move panels | General carousels, image galleries, banner sliders |
+| `false` | Drag up/down to move panels | Vertical card stacks, story viewers, vertical onboarding |
+
+## Details
+
+### horizontal: true in Detail
+This is the default. Panels are arranged horizontally, and users move panels by dragging left/right. Used in most carousel UIs.
+
+### horizontal: false in Detail
+Panels are arranged vertically, and users move panels by dragging up/down. Suitable for vertical scroll UIs or fullscreen story viewers.
+
+**Important**: In vertical mode, a **fixed height** must be set on the viewport. Without a height, panels will not be visible.
+
+```css
+.flicking-viewport {
+  height: 300px; /* Required in vertical mode */
+}
+```
+
+**Vanilla JS only**: You must manually add the `vertical` class to the viewport element. React and Vue wrappers add this class automatically.
+
+```html
+<!-- Vanilla JS: "vertical" class is required -->
+<div id="my-flicking" class="flicking-viewport vertical">
+  <div class="flicking-camera">
+    <div class="panel">1</div>
+    <div class="panel">2</div>
+  </div>
+</div>
+```
+
+This class changes the camera's `flex-direction` to `column`, enabling vertical panel layout.
+
+### Related Options
+- **Relationship with adaptive**: The `adaptive` option only works when `horizontal: true`. It has no effect in vertical mode.
+- **Relationship with nested**: If parent and child Flicking have different horizontal values, it works naturally without the `nested` option.
+- **Relationship with inputType**: The default inputType `["mouse", "touch"]` supports both horizontal and vertical.
+
+### Use Cases
+
+:::info When to use?
+- **horizontal: true**: Image galleries, product sliders, banners, tab-style UI
+- **horizontal: false**: TikTok/Instagram Stories style, vertical card stacks, fullscreen onboarding
+:::
+
+### Notes
+
+:::warning Viewport height required in vertical mode
+When setting `horizontal: false`, panels will not be displayed if a fixed height is not set on the viewport. Make sure to set a `height` value in CSS.
+:::
+
+:::warning Scroll conflict on touch devices
+In vertical mode, up/down dragging may conflict with page scrolling. If necessary, review the `preventDefaultOnDrag` option or CSS `touch-action` settings.
+:::
+
+## Related Links
+
+### Related Options
+- [`adaptive`](../../api/interfaces/FlickingOptions#adaptive): Adjust viewport to panel height (horizontal: true only)
+- [`nested`](../../api/interfaces/FlickingOptions#nested): Nested Flicking behavior
+- [`inputType`](../../api/interfaces/FlickingOptions#inputtype): Input type settings
+
+### Related Demos
+- [Nested](./nested): Nested Flicking (nested not needed for different directions)
+- [Adaptive](./adaptive): Panel height adaptation

@@ -1,0 +1,112 @@
+---
+title: "Optimize Size Update"
+id: optimize-size-update
+slug: /demos/advanced/optimize-size-update
+sidebar_position: 9
+description: Optimize performance by skipping unnecessary panel rendering on irrelevant axis changes using the optimizeSizeUpdate option
+keywords: [flicking, carousel, resize, optimizeSizeUpdate, renderOnlyVisible, autoResize, performance, optimization]
+---
+
+import OptimizeSizeUpdate from '@site/src/demo/advanced/OptimizeSizeUpdate';
+
+# Optimize Size Update
+
+Use the [`optimizeSizeUpdate`](../../api/interfaces/FlickingOptions#optimizesizeupdate) option to skip forced panel rendering (`forceRenderAllPanels`) when the size change occurs on an axis irrelevant to the Flicking direction, optimizing performance.
+
+Try swiping through panels and compare the **flickering** difference between the two carousels.
+With `optimizeSizeUpdate: false`, all 200 panels are inserted into and removed from the DOM on every height change, causing flickering.
+With `true`, this process is skipped when only the height changes, resulting in smooth operation without flickering.
+
+<OptimizeSizeUpdate />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`optimizeSizeUpdate`](../../api/interfaces/FlickingOptions#optimizesizeupdate) | `boolean` | `false` | Skip forced panel rendering when irrelevant axis changes based on direction |
+
+### Direction-Based Behavior
+
+| Flicking Direction | Force Rendering Condition with optimizeSizeUpdate: true |
+|--------------------|-------------------------------------------------------|
+| `horizontal` (default) | Force renders all panels only when **width changes** |
+| `vertical` | Force renders all panels only when **height changes** |
+
+## Details
+
+### Flow: When autoResize Detects a Height Change
+
+In an `autoResize: true` + `renderOnlyVisible: true` environment, the following flow occurs when only the viewport height changes:
+
+```
+1. Viewport height changes (panel height differences, external layout changes, etc.)
+
+2. autoResize's ResizeObserver detects the height change
+   -> flicking.resize() called
+
+3. Inside resize(), forceRenderAllPanels()
+   -> All hidden panels are inserted into DOM (cameraEl.appendChild)
+   -> Browser briefly renders all panels -> unnecessary DOM manipulation!
+
+4. renderer.render()
+   -> Non-visible panels removed from DOM again
+
+With optimizeSizeUpdate: true applied:
+   -> If width hasn't changed in a horizontal Flicking
+   -> forceRenderAllPanels() is skipped -> DOM manipulation prevented
+```
+
+### How optimizeSizeUpdate Works
+
+Inside Flicking's `resize()`, `forceRenderAllPanels()` is called to accurately measure all panel sizes. This method renders all panels to the DOM so their sizes can be measured.
+
+When using [`renderOnlyVisible`](../../api/interfaces/FlickingOptions#renderonlyvisible) or virtual rendering, non-visible panels are normally removed from the DOM. During `resize()`, inserting and removing all these panels becomes increasingly expensive as the panel count grows.
+
+With `optimizeSizeUpdate: true`, this forced rendering is skipped when only the axis irrelevant to the Flicking direction has changed.
+
+```
+resize() internal flow:
+
+1. viewport.resize()                          <- Always executed
+2. forceRenderAllPanels()                     <- Part controlled by optimizeSizeUpdate
+   - false: Always renders all panels to DOM
+   - true: Only renders when the relevant axis changes (horizontal->width, vertical->height)
+3. updatePanelSize() -> render()               <- Always executed
+```
+
+### Prerequisites
+
+:::info When This Is Effective
+This option is effective when used with **`autoResize: true`** in combination with **`renderOnlyVisible: true`** or **virtual rendering**.
+In normal rendering mode, all panels are always in the DOM, so `forceRenderAllPanels()` has virtually no cost.
+:::
+
+### Use Cases
+
+:::info When should you use this?
+- **`autoResize: true` + `renderOnlyVisible: true` + many panels**: Reduces unnecessary DOM manipulation when only viewport height changes, improving performance
+- **Horizontal slider inside vertical scroll**: Prevents unnecessary rendering of hidden panels on height changes from scrolling
+- **Virtual rendering environment**: Prevents unnecessary render/unmount of virtual panels
+:::
+
+### Notes
+
+:::warning Caution
+- Only works when `autoResize: true`
+- Has no effect without `renderOnlyVisible` or virtual rendering
+- If panel size depends on the container height (e.g., `height: 100%`), using this option may prevent panel sizes from being updated
+:::
+
+## Related Links
+
+### Related Options
+- [`optimizeSizeUpdate`](../../api/interfaces/FlickingOptions#optimizesizeupdate): Size update optimization
+- [`autoResize`](../../api/interfaces/FlickingOptions#autoresize): Auto resize (dependent option)
+- [`renderOnlyVisible`](../../api/interfaces/FlickingOptions#renderonlyvisible): Render only visible panels
+
+### Related Demos
+- [Auto Resize](./auto-resize): Resize detection method settings
+- [Resize Debounce](./resize-debounce): Control resize call frequency
+- [Render Only Visible](./render-only-visible): Render only visible panels

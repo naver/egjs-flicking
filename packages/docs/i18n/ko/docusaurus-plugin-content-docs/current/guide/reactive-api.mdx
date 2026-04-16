@@ -1,0 +1,327 @@
+---
+title: "Reactive API"
+id: reactive-api
+slug: /guide/reactive-api
+sidebar_position: 5
+description: Reactive API를 사용하여 Flicking 상태를 UI와 자동으로 동기화하기
+keywords: [flicking, reactive, 상태, hooks, composable, progress, pagination, navigation]
+---
+
+# Reactive API
+
+Reactive API는 Flicking의 자동 동기화되는 상태 속성을 제공하여, 수동 이벤트 리스너와 상태 관리 보일러플레이트를 제거합니다.
+
+---
+
+## 개요
+
+캐러셀 UI를 구축할 때, 페이지네이션 닷, 프로그레스 바, 탐색 버튼 등 주변 요소에 Flicking의 내부 상태를 반영해야 하는 경우가 많습니다. 전통적인 방법은 여러 이벤트를 리스닝하고 수동으로 UI를 동기화해야 합니다.
+
+Reactive API는 Flicking의 상태가 변경될 때마다 자동으로 업데이트되는 **반응형 상태 속성**을 노출하여 이 문제를 해결합니다.
+
+### 전통적인 방법 vs Reactive API
+
+<Tabs groupId="framework" defaultValue="js">
+  <TabItem value="js" label="JavaScript">
+
+**전통적 (이벤트 기반):**
+```js
+const flicking = new Flicking("#el");
+
+let progress = 0;
+let isReachStart = true;
+let isReachEnd = false;
+
+flicking.on("move", () => {
+  const cam = flicking.camera;
+  progress = ((cam.position - cam.range.min) / (cam.range.max - cam.range.min)) * 100;
+  updateProgressBar(progress);
+});
+
+flicking.on("changed", () => {
+  isReachStart = flicking.index === 0;
+  isReachEnd = flicking.index === flicking.panelCount - 1;
+  updateButtons(isReachStart, isReachEnd);
+});
+```
+
+**Reactive API:**
+```js
+const flicking = new Flicking("#el");
+const reactive = connectFlickingReactiveAPI(flicking);
+
+reactive.subscribe("progress", (value) => updateProgressBar(value));
+reactive.subscribe("isReachStart", (value) => updateButtons(value, reactive.isReachEnd));
+reactive.subscribe("isReachEnd", (value) => updateButtons(reactive.isReachStart, value));
+```
+
+  </TabItem>
+  <TabItem value="react" label="React">
+
+**전통적 (이벤트 기반):**
+```jsx
+function App() {
+  const flickingRef = useRef(null);
+  const [progress, setProgress] = useState(0);
+  const [isReachStart, setIsReachStart] = useState(true);
+  const [isReachEnd, setIsReachEnd] = useState(false);
+
+  useEffect(() => {
+    const flicking = flickingRef.current;
+    if (!flicking) return;
+
+    const onMove = () => {
+      const cam = flicking.camera;
+      const ratio = (cam.position - cam.range.min) / (cam.range.max - cam.range.min);
+      setProgress(ratio * 100);
+    };
+    const onChanged = () => {
+      setIsReachStart(flicking.index === 0);
+      setIsReachEnd(flicking.index === flicking.panelCount - 1);
+    };
+
+    flicking.on("move", onMove);
+    flicking.on("changed", onChanged);
+    return () => {
+      flicking.off("move", onMove);
+      flicking.off("changed", onChanged);
+    };
+  }, []);
+
+  return (/* ... */);
+}
+```
+
+**Reactive API:**
+```jsx
+function App() {
+  const flickingRef = useRef(null);
+  const { progress, isReachStart, isReachEnd } = useFlickingReactiveAPI(flickingRef);
+
+  return (/* ... */);
+}
+```
+
+  </TabItem>
+  <TabItem value="vue3" label="Vue3">
+
+**전통적 (이벤트 기반):**
+```vue
+<script setup>
+const flickingRef = ref(null);
+const progress = ref(0);
+const isReachStart = ref(true);
+const isReachEnd = ref(false);
+
+const onMove = (e) => {
+  const cam = e.currentTarget.camera;
+  const ratio = (cam.position - cam.range.min) / (cam.range.max - cam.range.min);
+  progress.value = ratio * 100;
+};
+
+const onChanged = (e) => {
+  const flicking = e.currentTarget;
+  isReachStart.value = flicking.index === 0;
+  isReachEnd.value = flicking.index === flicking.panelCount - 1;
+};
+</script>
+
+<template>
+  <Flicking ref="flickingRef" @move="onMove" @changed="onChanged">
+    <!-- 패널 -->
+  </Flicking>
+</template>
+```
+
+**Reactive API:**
+```vue
+<script setup>
+const flickingRef = ref(null);
+const { progress, isReachStart, isReachEnd } = useFlickingReactiveAPI(flickingRef);
+</script>
+
+<template>
+  <Flicking ref="flickingRef">
+    <!-- 패널 -->
+  </Flicking>
+</template>
+```
+
+  </TabItem>
+</Tabs>
+
+---
+
+## 주요 장점
+
+1. **보일러플레이트 감소**: UI 동기화를 위한 수동 이벤트 리스너, `useState`, `useEffect`가 불필요합니다.
+2. **프레임워크 네이티브**: React state / Vue3 reactive ref를 반환하여 컴포넌트 및 UI 라이브러리와 자연스럽게 통합됩니다.
+3. **자동 동기화**: 드래그, 프로그래밍 방식 이동, 패널 추가 등 모든 상태 업데이트가 자동으로 반영됩니다.
+4. **SSR 지원**: 초기값을 미리 설정하여 서버 렌더링된 마크업과 일치시키고 하이드레이션 깜빡임을 방지합니다.
+
+---
+
+## 시작하기
+
+<Tabs groupId="framework" defaultValue="js">
+  <TabItem value="js" label="JavaScript">
+
+```js
+import Flicking, { connectFlickingReactiveAPI } from "@egjs/flicking";
+
+const flicking = new Flicking("#el");
+const reactive = connectFlickingReactiveAPI(flicking);
+
+// 현재 값 읽기
+console.log(reactive.currentPanelIndex);
+console.log(reactive.progress);
+
+// 변경 구독
+reactive.subscribe("currentPanelIndex", (value) => {
+  console.log("패널이 변경됨:", value);
+});
+
+// 메서드 사용
+reactive.moveTo(2);
+```
+
+`connectFlickingReactiveAPI`는 반응형 객체를 반환합니다. `.subscribe()`를 사용하여 상태 변경을 리스닝하세요.
+
+  </TabItem>
+  <TabItem value="react" label="React">
+
+```jsx
+import Flicking, { useFlickingReactiveAPI } from "@egjs/react-flicking";
+
+function App() {
+  const flickingRef = useRef(null);
+  const {
+    currentPanelIndex,
+    totalPanelCount,
+    progress,
+    indexProgress,
+    isReachStart,
+    isReachEnd,
+    moveTo
+  } = useFlickingReactiveAPI(flickingRef);
+
+  return (
+    <Flicking ref={flickingRef}>
+      <div>패널 1</div>
+      <div>패널 2</div>
+      <div>패널 3</div>
+    </Flicking>
+  );
+}
+```
+
+`useFlickingReactiveAPI`는 반응형 상태 값을 반환하는 React hook입니다. 상태가 변경되면 컴포넌트가 자동으로 리렌더링됩니다.
+
+  </TabItem>
+  <TabItem value="vue3" label="Vue3">
+
+```vue
+<script setup>
+import { ref } from "vue";
+import Flicking, { useFlickingReactiveAPI } from "@egjs/vue3-flicking";
+
+const flickingRef = ref(null);
+const {
+  currentPanelIndex,
+  totalPanelCount,
+  progress,
+  indexProgress,
+  isReachStart,
+  isReachEnd,
+  moveTo
+} = useFlickingReactiveAPI(flickingRef);
+</script>
+
+<template>
+  <Flicking ref="flickingRef">
+    <div>패널 1</div>
+    <div>패널 2</div>
+    <div>패널 3</div>
+  </Flicking>
+</template>
+```
+
+`useFlickingReactiveAPI`는 reactive ref를 반환하는 Vue3 composable입니다. 상태가 변경되면 템플릿이 자동으로 업데이트됩니다.
+
+  </TabItem>
+</Tabs>
+
+---
+
+## 반응형 상태
+
+| 속성 | 타입 | 설명 |
+|------|------|------|
+| [`currentPanelIndex`](../api/interfaces/FlickingReactiveState#currentpanelindex) | `number` | 현재 활성 패널의 인덱스 |
+| [`totalPanelCount`](../api/interfaces/FlickingReactiveState#totalpanelcount) | `number` | 총 패널 수 |
+| [`progress`](../api/interfaces/FlickingReactiveState#progress) | `number` | 전체 스크롤 진행률 (0-100) |
+| [`indexProgress`](../api/interfaces/FlickingReactiveState#indexprogress) | `number` | 소수점 패널 인덱스로 표현된 카메라 위치 (예: `2.5`는 패널 2와 3 사이의 중간) |
+| [`isReachStart`](../api/interfaces/FlickingReactiveState#isreachstart) | `boolean` | 첫 번째 패널이 현재 활성 상태인지 여부 |
+| [`isReachEnd`](../api/interfaces/FlickingReactiveState#isreachend) | `boolean` | 마지막 패널이 현재 활성 상태인지 여부 |
+
+:::tip progress vs indexProgress
+- **`progress`**는 프로그레스 바와 같은 연속적인 인디케이터에 적합합니다. 0부터 100까지의 범위이며 `moveType: "freeScroll"`과 잘 작동합니다.
+- **`indexProgress`**는 패럴랙스나 커버플로우 같은 패널별 시각 효과에 적합합니다. 패널 인덱스 사이의 소수점 값을 제공하며 드래그 중 실시간으로 업데이트됩니다.
+:::
+
+## 반응형 메서드
+
+| 메서드 | 타입 | 설명 |
+|--------|------|------|
+| [`moveTo`](../api/interfaces/FlickingReactiveMethod#moveto) | `(index: number) => Promise<void>` | 인덱스로 특정 패널로 이동합니다. 애니메이션 중에는 호출을 무시합니다. |
+
+---
+
+## SSR 최적화
+
+SSR(서버 사이드 렌더링) 사용 시 하이드레이션 중 레이아웃 시프트를 방지하기 위해 초기값을 제공할 수 있습니다:
+
+<Tabs groupId="framework" defaultValue="js">
+  <TabItem value="js" label="JavaScript">
+
+```js
+const reactive = connectFlickingReactiveAPI(flicking, {
+  defaultIndex: 2,
+  totalPanelCount: 10
+});
+```
+
+  </TabItem>
+  <TabItem value="react" label="React">
+
+```jsx
+const { currentPanelIndex } = useFlickingReactiveAPI(flickingRef, {
+  defaultIndex: 2,       // 패널 2에서 시작
+  totalPanelCount: 10    // 패널 수 사전 설정
+});
+```
+
+  </TabItem>
+  <TabItem value="vue3" label="Vue3">
+
+```js
+const { currentPanelIndex } = useFlickingReactiveAPI(flickingRef, {
+  defaultIndex: 2,
+  totalPanelCount: 10
+});
+```
+
+  </TabItem>
+</Tabs>
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`defaultIndex`](../api/interfaces/FlickingReactiveAPIOptions#defaultindex) | `number` | `0` | 초기 패널 인덱스. `isReachStart`, `isReachEnd`, `indexProgress` 초기값에도 영향을 줍니다. |
+| [`totalPanelCount`](../api/interfaces/FlickingReactiveAPIOptions#totalpanelcount) | `number` | `0` | 초기 패널 수. 페이지네이션 UI가 이 값에 의존할 때 레이아웃 시프트를 방지합니다. |
+
+---
+
+## 다음 단계
+
+- **[데모](../demos/reactive/progress-bar)**: 인터랙티브 예제로 Reactive API를 직접 확인하세요
+- **[API 레퍼런스](../api/interfaces/FlickingReactiveState)**: 전체 타입 정의와 속성 상세 정보

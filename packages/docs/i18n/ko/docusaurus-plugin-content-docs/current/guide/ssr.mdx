@@ -1,0 +1,180 @@
+---
+title: "서버 사이드 렌더링 (SSR)"
+id: ssr
+slug: /guide/ssr
+sidebar_position: 5
+description: Next.js, Nuxt 등 SSR 프레임워크에서 Flicking을 사용하는 방법
+keywords: [flicking, carousel, ssr, 서버 사이드 렌더링, nextjs, nuxt, hydration]
+---
+
+# 서버 사이드 렌더링 (SSR)
+
+Flicking은 [Next.js](https://nextjs.org/)나 [Nuxt](https://nuxt.com/) 같은 SSR 프레임워크에서 사용할 수 있습니다. 다만 Flicking은 DOM 요소의 실제 크기를 기반으로 패널 위치를 계산하기 때문에, hydration 이후 패널이 이동하는 현상이 발생할 수 있습니다. 이 가이드에서는 이를 방지하는 방법을 다룹니다.
+
+## 문제
+
+Flicking은 패널 요소의 실제 크기를 측정해야 올바른 위치에 배치할 수 있습니다. SSR 환경에서는 이 측정이 불가능하므로, 클라이언트에서 Flicking이 초기화될 때까지 패널이 잘못된 위치에 나타날 수 있습니다.
+
+특히 다음 경우에 눈에 띕니다:
+- `align: "center"` (기본값) 등 `"prev"`가 아닌 정렬을 사용할 때
+- 패널마다 크기가 다를 때
+
+## 방법 1: `firstPanelSize`
+
+첫 번째 패널의 크기를 알고 있다면, `firstPanelSize` 옵션으로 지정할 수 있습니다. Flicking이 초기화 전에 이 값을 사용하여 올바른 카메라 위치를 계산합니다.
+
+<Tabs groupId="framework" defaultValue="js">
+  <TabItem value="js" label="JavaScript">
+
+```html
+<div id="flicking" class="flicking-viewport">
+  <div class="flicking-camera">
+    <div class="panel">1</div>
+    <div class="panel">2</div>
+    <div class="panel">3</div>
+  </div>
+</div>
+```
+
+```js
+import Flicking from "@egjs/flicking";
+
+const flicking = new Flicking("#flicking", {
+  firstPanelSize: "200px"
+});
+```
+
+  </TabItem>
+  <TabItem value="react" label="React">
+
+```jsx
+import Flicking from "@egjs/react-flicking";
+
+export default () => (
+  <Flicking firstPanelSize="200px">
+    <div className="panel">1</div>
+    <div className="panel">2</div>
+    <div className="panel">3</div>
+  </Flicking>
+);
+```
+
+  </TabItem>
+  <TabItem value="vue3" label="Vue3">
+
+```html
+<template>
+  <Flicking :options="{ firstPanelSize: '200px' }">
+    <div class="panel">1</div>
+    <div class="panel">2</div>
+    <div class="panel">3</div>
+  </Flicking>
+</template>
+
+<script setup>
+import Flicking from "@egjs/vue3-flicking";
+</script>
+```
+
+  </TabItem>
+</Tabs>
+
+`"200px"`, `"50%"` 등 CSS 길이 값을 사용할 수 있습니다.
+
+:::caution
+`firstPanelSize`는 `circular` 옵션과 함께 사용하면 제대로 동작하지 않습니다. 순환 모드에서는 패널을 복제하며, 복제된 패널의 위치는 실제 DOM 측정에 의존하기 때문입니다.
+:::
+
+## 방법 2: `hideBeforeInit`
+
+패널 크기를 미리 알 수 없다면, Flicking 초기화가 완료될 때까지 패널을 숨길 수 있습니다. 올바른 위치가 계산되기 전까지 아무것도 보여주지 않아 레이아웃 이동을 방지합니다.
+
+<Tabs groupId="framework" defaultValue="js">
+  <TabItem value="js" label="JavaScript">
+
+```js
+import Flicking from "@egjs/flicking";
+
+const flicking = new Flicking("#flicking", {
+  hideBeforeInit: true
+});
+```
+
+  </TabItem>
+  <TabItem value="react" label="React">
+
+```jsx
+import Flicking from "@egjs/react-flicking";
+
+export default () => (
+  <Flicking hideBeforeInit={true}>
+    <div className="panel">1</div>
+    <div className="panel">2</div>
+    <div className="panel">3</div>
+  </Flicking>
+);
+```
+
+  </TabItem>
+  <TabItem value="vue3" label="Vue3">
+
+```html
+<template>
+  <Flicking :options="{ hideBeforeInit: true }">
+    <div class="panel">1</div>
+    <div class="panel">2</div>
+    <div class="panel">3</div>
+  </Flicking>
+</template>
+
+<script setup>
+import Flicking from "@egjs/vue3-flicking";
+</script>
+```
+
+  </TabItem>
+</Tabs>
+
+`hideBeforeInit`을 활성화하면 Flicking이 뷰포트에 `flicking-hidden` CSS 클래스를 추가하여 모든 패널 요소에 `visibility: hidden`을 적용합니다. Flicking이 준비되면 이 클래스가 자동으로 제거됩니다.
+
+:::tip
+두 옵션을 함께 사용할 수도 있습니다. `firstPanelSize`로 올바른 위치를 잡고, `hideBeforeInit`으로 크기 추정이 부정확한 경우를 대비할 수 있습니다.
+:::
+
+## 어떤 옵션을 선택해야 할까?
+
+| | `firstPanelSize` | `hideBeforeInit` |
+|---|---|---|
+| **동작** | 추정 크기를 사용해 패널 위치 계산 | 준비될 때까지 패널 숨김 |
+| **시각적 결과** | 패널이 즉시 보이며, 이동 최소화 | 초기화 전까지 빈 공간 |
+| **적합한 경우** | 고정된 패널 크기를 알 때 | 동적이거나 크기를 모를 때 |
+| **`circular`와 호환** | 아니오 | 예 |
+
+## Reactive API와 SSR
+
+[Reactive API](/docs/guide/reactive-api)로 페이지네이션이나 내비게이션 같은 UI 컴포넌트를 만들 때, 초기값을 제공하여 hydration 불일치를 방지할 수 있습니다:
+
+<Tabs groupId="framework" defaultValue="react">
+  <TabItem value="react" label="React">
+
+```jsx
+const { currentPanelIndex, totalPanelCount } = useFlickingReactiveAPI(flickingRef, {
+  defaultIndex: 0,
+  totalPanelCount: 10
+});
+```
+
+  </TabItem>
+  <TabItem value="vue3" label="Vue3">
+
+```js
+const { currentPanelIndex, totalPanelCount } = useFlickingReactiveAPI(flickingRef, {
+  defaultIndex: 0,
+  totalPanelCount: 10
+});
+```
+
+  </TabItem>
+</Tabs>
+
+자세한 내용은 [Reactive API 가이드](/docs/guide/reactive-api#ssr-optimization)를 참고하세요.

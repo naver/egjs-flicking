@@ -1,0 +1,21 @@
+.flicking-panel {
+  width: 50%;
+  height: 120px;
+}
+
+.controls {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.controls button {
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.event-log {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #555;
+  min-height: 20px;
+}

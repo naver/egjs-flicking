@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "lib": ["es2020", "dom"],
+    "target": "ES5",
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "noUnusedLocals": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "types": ["node", "react"],
+    "baseUrl": ".",
+    "paths": {
+      "@common/renderer": ["./common/FixtureRenderer.tsx"],
+      "@egjs/flicking": ["../../flicking/src/index.ts"],
+      "@egjs/react-flicking": ["../../react-flicking/src/react-flicking/index.ts"],
+      "@egjs/vue3-flicking": ["../../vue3-flicking/src/index.ts"]
+    }
+  },
+  "include": ["suite/**/*", "common/**/*", "fixture/**/*"],
+  "exclude": ["**/node_modules"]
+}

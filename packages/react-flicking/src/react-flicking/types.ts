@@ -2,28 +2,29 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import ReactFlicking from "./Flicking";
+
 import {
-  SelectEvent,
-  NeedPanelEvent,
-  VisibleChangeEvent,
-  HoldStartEvent,
-  HoldEndEvent,
-  MoveStartEvent,
-  MoveEvent,
-  MoveEndEvent,
-  WillChangeEvent,
-  ChangedEvent,
-  WillRestoreEvent,
-  RestoredEvent,
-  ReadyEvent,
-  BeforeResizeEvent,
   AfterResizeEvent,
-  ReachEdgeEvent,
+  BeforeResizeEvent,
+  ChangedEvent,
+  HoldEndEvent,
+  HoldStartEvent,
+  MoveEndEvent,
+  MoveEvent,
+  MoveStartEvent,
+  NeedPanelEvent,
   PanelChangeEvent,
   Plugin,
-  Status
+  ReachEdgeEvent,
+  ReadyEvent,
+  RestoredEvent,
+  SelectEvent,
+  Status,
+  VisibleChangeEvent,
+  WillChangeEvent,
+  WillRestoreEvent
 } from "@egjs/flicking";
+import ReactFlicking from "./Flicking";
 
 export interface FlickingProps {
   viewportTag: keyof JSX.IntrinsicElements;
@@ -54,4 +55,3 @@ export interface FlickingProps {
   onPanelChange: (e: PanelChangeEvent<ReactFlicking>) => any;
   [key: string]: any;
 }
-

@@ -1,0 +1,102 @@
+---
+title: "Auto Init"
+id: auto-init
+slug: /demos/basic/auto-init
+sidebar_position: 15
+description: autoInit 옵션으로 인스턴스 생성 시 자동 초기화 여부를 설정합니다
+keywords: [flicking, carousel, autoInit, init, initialization, 초기화, 지연]
+---
+
+import AutoInit from '@site/src/demo/basic/AutoInit';
+
+# Auto Init
+
+[`autoInit`](../../api/interfaces/FlickingOptions#autoinit) 옵션으로 Flicking 인스턴스 생성 시 자동으로 `init()`을 호출할지 설정합니다. 지연 초기화가 필요한 경우 `false`로 설정합니다.
+
+<AutoInit />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`autoInit`](../../api/interfaces/FlickingOptions#autoinit) | `boolean` | `true` | 생성 시 자동 init() 호출 |
+| [`preventEventsBeforeInit`](../../api/interfaces/FlickingOptions#preventeventsbeforeinit) | `boolean` | `true` | init() 호출 전 이벤트 발생 방지 |
+
+### 값별 비교
+
+| 값 | 동작 | 적합한 상황 |
+|----|------|-------------|
+| `true` | 인스턴스 생성 즉시 초기화 (기본값) | 일반적인 사용 |
+| `false` | 수동으로 init() 호출 필요 | 지연 초기화, 동적 패널 추가 후 초기화 |
+
+## 상세 설명
+
+### autoInit 동작 원리
+`autoInit: true`이면 `new Flicking()` 호출 시 자동으로 `init()`이 실행됩니다. `init()`은 패널 크기 계산, 이벤트 바인딩, 초기 위치 설정 등을 수행합니다.
+
+```javascript
+// 자동 초기화 (기본값)
+const flicking = new Flicking("#el", { autoInit: true });
+// 이미 초기화됨, 바로 사용 가능
+
+// 수동 초기화
+const flicking = new Flicking("#el", { autoInit: false });
+// 아직 초기화 안 됨, 드래그 불가
+flicking.init(); // 이제 초기화됨
+```
+
+### 초기화 전 상태
+`autoInit: false`로 생성하면 `init()` 호출 전까지:
+- 드래그/터치 입력 무시
+- 패널 위치 계산 안 됨
+- 이벤트 리스너 바인딩 안 됨
+
+### preventEventsBeforeInit
+
+`autoInit: false`로 지연 초기화를 사용할 때 관련 있는 옵션입니다. 기본값 `true`이면 `init()` 호출 전까지 `ready`, `willChange`, `changed` 등 Flicking 이벤트가 발생하지 않습니다. 초기화 전에 이벤트 핸들러가 의도치 않게 실행되는 것을 방지합니다.
+
+`false`로 설정하면 초기화 전에도 일부 이벤트가 발생할 수 있으므로, 특별한 이유가 없다면 기본값을 유지하는 것을 권장합니다.
+
+```javascript
+const flicking = new Flicking("#el", {
+  autoInit: false,
+  preventEventsBeforeInit: true // 기본값: init() 전 이벤트 방지
+});
+
+flicking.on("ready", () => {
+  console.log("init() 호출 후에만 실행됨");
+});
+
+flicking.init(); // 여기서부터 이벤트 수신 시작
+```
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **autoInit: true**: 일반적인 캐러셀, 정적 패널
+- **autoInit: false**:
+  - API에서 데이터 로드 후 패널 생성
+  - 탭/모달 내부의 숨겨진 Flicking
+  - DOM 크기가 확정된 후 초기화 필요
+:::
+
+### 주의사항
+
+:::warning 초기화 전 메서드 호출
+`autoInit: false` 상태에서 `moveTo()`, `prev()` 등을 호출하면 오류가 발생할 수 있습니다. 반드시 `init()` 호출 후 사용하세요.
+:::
+
+:::warning 숨겨진 요소에서의 초기화
+`display: none` 상태에서 초기화하면 크기 계산이 잘못될 수 있습니다. 요소가 보이는 상태에서 `init()`을 호출하거나, 표시 후 `resize()`를 호출하세요.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`defaultIndex`](../../api/interfaces/FlickingOptions#defaultindex): 초기 패널 인덱스
+- [`preventEventsBeforeInit`](../../api/interfaces/FlickingOptions#preventeventsbeforeinit): init() 전 이벤트 발생 방지
+
+### 관련 데모
+- [Default Index](./default-index): 초기 패널 설정

@@ -1,0 +1,91 @@
+---
+title: "Panels Per View"
+id: panels-per-view
+slug: /demos/basic/panels-per-view
+sidebar_position: 6
+description: Specify the number of panels to display in the viewport and enable automatic sizing using the panelsPerView option
+keywords: [flicking, carousel, panelsPerView, responsive, panel count]
+---
+
+import PanelsPerView from '@site/src/demo/basic/PanelsPerView';
+
+# Panels Per View
+
+The [`panelsPerView`](../../api/interfaces/FlickingOptions#panelsperview) option specifies the number of panels to simultaneously display in the viewport. When a positive value is set, panel sizes are automatically adjusted.
+
+<PanelsPerView />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`panelsPerView`](../../api/interfaces/FlickingOptions#panelsperview) | `number` | `-1` | Number of panels to display in viewport (-1: no auto-calculation) |
+| [`noPanelStyleOverride`](../../api/interfaces/FlickingOptions#nopanelstyleoverride) | `boolean` | `false` | Disable automatic panel size adjustment |
+
+### Comparison by Value
+
+| Value | Behavior | Suitable For |
+|-------|----------|--------------|
+| `-1` | Does not change panel size. Must be set manually via CSS | Panels of varying sizes, custom layouts |
+| `1` | Panel fills the entire viewport | Fullscreen sliders, hero banners |
+| `3` | Resizes so exactly 3 panels are visible | Product cards, thumbnail galleries |
+| `n` | Resizes so exactly n panels are visible | Responsive grid carousels |
+
+## Details
+
+### panelsPerView: -1 in Detail
+This is the default. Panel sizes are not changed, and you must specify panel sizes directly in CSS. Use when mixing panels of various sizes or when a custom layout is needed.
+
+```css
+/* Required when panelsPerView: -1 */
+.flicking-panel {
+  width: 150px; /* Manual specification */
+}
+```
+
+### panelsPerView: Positive Value in Detail
+Panel sizes are automatically adjusted so the specified number of panels are visible in the viewport. There is no need to specify panel width in CSS.
+
+```javascript
+// Display exactly 3 panels in the viewport
+new Flicking("#el", { panelsPerView: 3 });
+```
+
+### noPanelStyleOverride in Detail
+Prevents width/height style modification of panels when `panelsPerView` is active. Used for performance optimization when managing all panel sizes manually.
+
+### Related Options
+- **Relationship with align**: When used with panelsPerView, `align: "prev"` is common. Left alignment shows panels sequentially.
+- **Relationship with virtual**: The `virtual` option requires `panelsPerView > 0`. If -1, virtual is ignored.
+- **Relationship with circular**: The panelsPerView setting can affect the circular activation condition (total panel size >= viewport).
+
+### Use Cases
+
+:::info When to use?
+- **panelsPerView: -1**: Cards of varying sizes, tag lists, custom layouts
+- **panelsPerView: 1**: Hero banners, fullscreen onboarding, image viewers
+- **panelsPerView: 3-5**: Product carousels, thumbnail galleries, team member introductions
+:::
+
+### Notes
+
+:::warning CSS conflict caution
+When setting a positive value for `panelsPerView`, Flicking automatically calculates the panel width. Specifying width separately in CSS may cause conflicts.
+:::
+
+:::warning Required for virtual
+To use the `virtual` option, you must set `panelsPerView > 0`. Virtual does not work with -1.
+:::
+
+## Related Links
+
+### Related Options
+- [`noPanelStyleOverride`](../../api/interfaces/FlickingOptions#nopanelstyleoverride): Prevent automatic panel style modification
+- [`virtual`](../../api/interfaces/FlickingOptions#virtual): Virtual scrolling (requires panelsPerView)
+- [`align`](../../api/interfaces/FlickingOptions#align): Panel alignment method
+
+### Related Demos
+- [Virtual Scroll](../advanced/virtual-scroll): Large panel optimization (requires panelsPerView)
+- [Alignment](./alignment): Alignment options

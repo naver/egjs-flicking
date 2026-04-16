@@ -1,0 +1,73 @@
+---
+title: "Disable Input"
+id: disable-input
+slug: /demos/basic/disable-input
+sidebar_position: 13
+description: disableOnInit 옵션으로 초기화 시 사용자 입력을 비활성화합니다
+keywords: [flicking, carousel, disableOnInit, disable, enable, 비활성화]
+---
+
+import DisableInput from '@site/src/demo/basic/DisableInput';
+
+# Disable Input
+
+[`disableOnInit`](../../api/interfaces/FlickingOptions#disableoninit) 옵션으로 초기화 시 사용자 입력(드래그)을 비활성화합니다. 버튼이나 API로만 제어하는 캐러셀에 유용합니다.
+
+<DisableInput />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`disableOnInit`](../../api/interfaces/FlickingOptions#disableoninit) | `boolean` | `false` | 초기화 시 입력 비활성화 |
+
+### 값별 비교
+
+| 값 | 동작 | 적합한 상황 |
+|----|------|-------------|
+| `false` | 드래그로 패널 이동 가능 (기본값) | 일반적인 캐러셀 |
+| `true` | 드래그 무시, API로만 제어 가능 | 자동 재생 슬라이더, 버튼 제어 전용 |
+
+## 상세 설명
+
+### disableOnInit 동작 원리
+`disableOnInit: true`로 설정하면 초기화 시 자동으로 `disableInput()` 메서드가 호출됩니다. 이후 사용자 드래그 입력은 무시되지만, `moveTo()`, `prev()`, `next()` 등 프로그래매틱 제어는 정상 동작합니다.
+
+### 동적 제어 메서드
+런타임에 입력 활성화 상태를 변경할 수 있습니다.
+
+```javascript
+const flicking = new Flicking("#el");
+
+// 입력 비활성화
+flicking.disableInput();
+
+// 입력 활성화
+flicking.enableInput();
+```
+
+### 연관 옵션
+- **inputType과의 관계**: `inputType: []`도 입력을 비활성화하지만, `disableOnInit`은 나중에 `enableInput()`으로 활성화할 수 있습니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **disableOnInit: true**: 자동 재생 캐러셀, 버튼/화살표로만 제어하는 UI, 터치 방지가 필요한 프레젠테이션
+- **동적 토글**: 특정 조건에서만 드래그 허용, 모달 열림 시 배경 캐러셀 비활성화
+:::
+
+### 주의사항
+
+:::warning 대안 제어 수단 제공
+`disableOnInit: true`로 설정하면 드래그가 불가능합니다. 네비게이션 버튼, 화살표, 또는 키보드 제어 등 대안을 반드시 제공하세요.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`inputType`](../../api/interfaces/FlickingOptions#inputtype): 입력 장치 타입 제한
+
+### 관련 데모
+- [Input Type](./input-type): 입력 장치 타입 설정

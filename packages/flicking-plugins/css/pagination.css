@@ -1,0 +1,72 @@
+.flicking-pagination {
+  position: absolute;
+  left: 0;
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+  z-index: 2;
+}
+
+.flicking-pagination-bullets,
+.flicking-pagination-scroll {
+  font-size: 0;
+}
+
+.flicking-pagination-scroll {
+  left: 50%;
+  transform: translate(-50%);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.flicking-pagination-scroll .flicking-pagination-slider {
+  transition: 0.2s transform;
+}
+.flicking-pagination-scroll.flicking-pagination-uninitialized .flicking-pagination-slider,
+.flicking-pagination-scroll.flicking-pagination-uninitialized .flicking-pagination-bullet {
+  transition: none;
+}
+
+.flicking-pagination-bullet {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin: 0 4px;
+  border-radius: 50%;
+  background-color: rgb(10 10 10 / 10%);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.flicking-pagination-scroll .flicking-pagination-bullet {
+  vertical-align: middle;
+  position: relative;
+  transition: 0.2s transform;
+}
+
+.flicking-pagination-bullet-active {
+  background-color: #f2a65e;
+}
+
+.flicking-pagination-scroll .flicking-pagination-bullet {
+  vertical-align: middle;
+  position: relative;
+  transition:
+    0.2s transform,
+    0.2s left;
+  transform: scale(0);
+}
+
+.flicking-pagination-scroll .flicking-pagination-bullet-active {
+  transform: scale(1);
+}
+
+.flicking-pagination-scroll .flicking-pagination-bullet-prev,
+.flicking-pagination-scroll .flicking-pagination-bullet-next {
+  transform: scale(0.66);
+}
+
+.flicking-pagination-scroll .flicking-pagination-bullet-prev2,
+.flicking-pagination-scroll .flicking-pagination-bullet-next2 {
+  transform: scale(0.33);
+}

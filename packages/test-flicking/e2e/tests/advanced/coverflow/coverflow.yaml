@@ -1,0 +1,15 @@
+id: coverflow
+category: advanced
+demo: advanced/Coverflow
+
+intent: "connectFlickingReactiveAPI를 이용한 coverflow 3D 효과를 보여준다"
+
+focus:
+  - 8개의 패널이 렌더링됨
+  - 각 패널에 CSS transform이 적용됨
+  - 드래그로 패널 이동 시 transform 값이 동적으로 변경됨
+
+api:
+  options: [circular, align]
+
+frameworks: [vanilla, react, vue]

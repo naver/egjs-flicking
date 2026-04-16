@@ -1,0 +1,15 @@
+id: move-type
+category: basic
+demo: basic/MoveType
+
+intent: "moveType 옵션(snap/freeScroll/strict)에 따라 패널 이동 방식이 달라짐을 보여준다"
+
+focus:
+  - 3개의 Flicking 인스턴스가 렌더링됨
+  - snap은 드래그 후 패널에 스냅
+  - strict는 한 번에 한 칸만 이동
+
+api:
+  options: [moveType, bound]
+
+frameworks: [vanilla, react, vue]

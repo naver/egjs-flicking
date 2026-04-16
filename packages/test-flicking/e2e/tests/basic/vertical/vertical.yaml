@@ -1,0 +1,15 @@
+id: vertical
+category: basic
+demo: basic/Vertical
+
+intent: "horizontal:false 옵션으로 수직 방향 캐러셀을 구현할 수 있음을 보여준다"
+
+focus:
+  - 2개의 Flicking 인스턴스가 렌더링됨 (수평/수직)
+  - 수직 인스턴스의 horizontal 옵션이 false
+  - 수직 인스턴스에서 수직 드래그로 패널 이동
+
+api:
+  options: [horizontal, bound]
+
+frameworks: [vanilla, react, vue]

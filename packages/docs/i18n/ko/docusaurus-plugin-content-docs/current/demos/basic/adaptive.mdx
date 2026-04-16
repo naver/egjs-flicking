@@ -1,0 +1,71 @@
+---
+title: "Adaptive"
+id: adaptive
+slug: /demos/basic/adaptive
+sidebar_position: 16
+description: adaptive 옵션으로 활성 패널 높이에 맞춰 viewport 높이를 자동 조정합니다
+keywords: [flicking, carousel, adaptive, height, responsive, 높이, 적응형]
+---
+
+import Adaptive from '@site/src/demo/basic/Adaptive';
+
+# Adaptive
+
+[`adaptive`](../../api/interfaces/FlickingOptions#adaptive) 옵션으로 패널 이동 후 활성 패널의 높이에 맞춰 viewport 높이를 자동 조정합니다. 다양한 높이의 콘텐츠를 가진 캐러셀에 유용합니다.
+
+<Adaptive />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`adaptive`](../../api/interfaces/FlickingOptions#adaptive) | `boolean` | `false` | 패널 높이에 맞춰 viewport 높이 자동 조정 |
+
+### 값별 비교
+
+| 값 | 동작 | 적합한 상황 |
+|----|------|-------------|
+| `false` | viewport 높이 고정 (기본값) | 동일한 높이의 패널, 고정 레이아웃 |
+| `true` | 활성 패널 높이에 맞춰 viewport 조정 | 다양한 높이의 카드, 가변 콘텐츠 |
+
+## 상세 설명
+
+### adaptive 동작 원리
+`adaptive: true`이면 패널이 전환될 때마다 현재 활성 패널의 높이로 viewport 높이가 업데이트됩니다.
+
+```css
+/* 부드러운 높이 변화를 위한 CSS */
+.flicking-viewport {
+  transition: height 0.3s;
+}
+```
+
+### 연관 옵션
+- **horizontal과의 관계**: `adaptive`는 `horizontal: true`(수평 모드)에서만 동작합니다. 수직 모드에서는 효과가 없습니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **adaptive: false**: 이미지 갤러리, 동일한 크기의 카드
+- **adaptive: true**: 다양한 길이의 텍스트 카드, 상품 설명, FAQ 아코디언 스타일
+:::
+
+### 주의사항
+
+:::warning 수평 모드 전용
+`adaptive`는 `horizontal: true`일 때만 동작합니다. `horizontal: false`(수직 모드)에서는 효과가 없습니다.
+:::
+
+:::warning 레이아웃 시프트
+높이가 크게 변하면 아래 콘텐츠가 밀려나는 레이아웃 시프트가 발생합니다. CSS transition으로 부드럽게 처리하거나, 최소 높이를 설정하는 것을 권장합니다.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`horizontal`](../../api/interfaces/FlickingOptions#horizontal): 수평/수직 방향 (adaptive는 수평 전용)
+
+### 관련 데모
+- [Vertical](./vertical): 수직 모드 (adaptive 미지원)

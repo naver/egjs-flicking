@@ -1,0 +1,132 @@
+---
+title: "Infinite Scroll"
+id: infinite-scroll
+slug: /demos/advanced/infinite-scroll
+sidebar_position: 4
+description: Implement infinite scroll using the needPanelThreshold option and needPanel event
+keywords: [flicking, carousel, infinite, scroll, needPanel, threshold, dynamic]
+---
+
+import InfiniteScroll from '@site/src/demo/advanced/InfiniteScroll';
+
+# Infinite Scroll
+
+Implement infinite scroll using the [`needPanelThreshold`](../../api/interfaces/FlickingOptions#needpanelthreshold) option and the `needPanel` event.
+
+<InfiniteScroll />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`needPanelThreshold`](../../api/interfaces/FlickingOptions#needpanelthreshold) | `number` | `0` | Threshold for triggering the needPanel event (px) |
+
+### Related Events
+
+| Event | Description |
+|-------|-------------|
+| [`needPanel`](../../api/interfaces/NeedPanelEvent) | Fired when empty space is visible at the viewport edge |
+
+### Threshold Comparison
+
+| needPanelThreshold | Behavior |
+|--------------------|----------|
+| `0` (default) | Event fires only when the end is fully reached |
+| `100` | Event fires 100px before the end (preloading) |
+| `200` | Event fires 200px before the end |
+
+## Details
+
+### How It Works
+
+1. Scroll approaches the viewport edge
+2. When within the `needPanelThreshold` distance, the `needPanel` event fires
+3. Add new panels in the event handler
+4. Scrolling can continue
+
+```tsx
+<Flicking
+  needPanelThreshold={100}
+  onNeedPanel={(e) => {
+    if (e.direction === "NEXT") {
+      // Append panels
+      setPanels(prev => [...prev, newPanel]);
+    }
+  }}
+>
+  {panels.map(p => <Panel key={p.id} />)}
+</Flicking>
+```
+
+### needPanel Event
+
+```typescript
+interface NeedPanelEvent {
+  direction: "PREV" | "NEXT";
+}
+```
+
+- Use `direction` to determine which direction needs panels
+- `"PREV"`: Panels needed at the front (prepend)
+- `"NEXT"`: Panels needed at the end (append)
+
+### Adding Panels in Vanilla JS
+
+```javascript
+flicking.on("needPanel", (e) => {
+  if (e.direction === "NEXT") {
+    const newPanel = document.createElement("div");
+    newPanel.className = "flicking-panel";
+    newPanel.textContent = "New Panel";
+    flicking.append(newPanel);
+  }
+});
+```
+
+### Use Cases
+
+:::info When should you use needPanelThreshold?
+
+**Recommended:**
+- Infinite scroll implementation
+- Pagination (load next page when reaching the end)
+- Progressive loading of large datasets
+
+**Appropriate threshold values:**
+- `0`: When the end must be exactly reached
+- `100~200`: Typical preloading
+- Viewport width or more: Very aggressive preloading
+:::
+
+### Notes
+
+:::warning Duplicate Event Firing
+The needPanel event may fire again while panels are being added. Manage loading state to prevent duplicate requests.
+:::
+
+```tsx
+const [isLoading, setIsLoading] = useState(false);
+
+const handleNeedPanel = async (e) => {
+  if (isLoading) return; // Prevent duplicates
+  setIsLoading(true);
+
+  await loadMorePanels();
+
+  setIsLoading(false);
+};
+```
+
+## Related Links
+
+### Related Events
+- [`needPanel`](../../api/interfaces/NeedPanelEvent): Panel needed event
+
+### Related Methods
+- [`append`](../../api/classes/Flicking#append): Add panels at the end
+- [`prepend`](../../api/classes/Flicking#prepend): Add panels at the front
+
+### Related Demos
+- [Virtual Scroll](./virtual-scroll): Virtual rendering of large numbers of panels

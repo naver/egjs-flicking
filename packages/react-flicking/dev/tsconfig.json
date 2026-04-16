@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@dev/react-flicking": ["../src/react-flicking/index.ts"],
+      "@dev/flicking": ["../../flicking/src/index.ts"],
+      "@dev/plugins": ["../../flicking-plugins/src/index.ts"]
+    }
+  },
+  "include": ["./**/*.ts", "./**/*.tsx"]
+}

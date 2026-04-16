@@ -1,0 +1,29 @@
+{
+  "name": "api-docs-generator",
+  "version": "1.0.0",
+  "main": "main.ts",
+  "scripts": {
+    "start": "api-documenter markdown -i api-artifacts -o api-documenter-output",
+    "generate": "tsx scripts/build-docs.ts",
+    "generate:docusaurus": "tsx scripts/build-docusaurus-docs.ts",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.5",
+    "@vitest/ui": "^4.0.17",
+    "tsx": "^4.21.0",
+    "typescript": "5.9.3",
+    "vitest": "^4.0.17"
+  },
+  "dependencies": {
+    "@microsoft/api-documenter": "^7.28.2",
+    "@microsoft/api-extractor-model": "^7.32.2",
+    "@microsoft/tsdoc": "^0.16.0"
+  }
+}

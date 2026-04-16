@@ -1,0 +1,21 @@
+.flicking-coverflow {
+  perspective: 800px;
+}
+
+.flicking-coverflow .flicking-camera {
+  transform-style: preserve-3d;
+}
+
+.flicking-panel {
+  width: 150px;
+  height: 200px;
+  margin: 0 10px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+  backface-visibility: hidden;
+}

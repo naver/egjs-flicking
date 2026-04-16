@@ -1,0 +1,16 @@
+id: sync
+category: plugins
+demo: plugins/Sync
+
+intent: "Sync 플러그인으로 메인 캐러셀과 썸네일 캐러셀을 동기화할 수 있음을 보여준다"
+
+focus:
+  - 메인과 썸네일 2개의 Flicking 인스턴스가 렌더링됨
+  - 각 인스턴스에 6개 패널이 존재
+  - 메인 드래그 시 썸네일의 active 클래스가 변경됨
+
+api:
+  options: [bounce, bound, moveType, preventDefaultOnDrag]
+  plugins: [Sync]
+
+frameworks: [vanilla, react, vue]

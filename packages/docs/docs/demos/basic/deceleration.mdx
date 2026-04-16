@@ -1,0 +1,79 @@
+---
+title: "Deceleration"
+id: deceleration
+slug: /demos/basic/deceleration
+sidebar_position: 10
+description: Control the deceleration rate of inertial movement after a flick using the deceleration option
+keywords: [flicking, carousel, deceleration, momentum, inertia]
+---
+
+import Deceleration from '@site/src/demo/basic/Deceleration';
+
+# Deceleration
+
+The [`deceleration`](../../api/interfaces/FlickingOptions#deceleration) option sets the deceleration rate of inertial movement after a user flick. Higher values cause it to stop faster, while lower values make it travel farther.
+
+<Deceleration />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`deceleration`](../../api/interfaces/FlickingOptions#deceleration) | `number` | `0.0075` | Inertial movement deceleration rate |
+
+### Comparison by Value
+
+| Value | Behavior | Suitable For |
+|-------|----------|--------------|
+| `0.001` | Slow deceleration, travels far | Fast browsing of long lists, freeScroll |
+| `0.0075` | Moderate deceleration (default) | General carousels |
+| `0.05` | Fast deceleration, stops nearby | Precise control, one panel at a time |
+
+## Details
+
+### How Deceleration Works
+When a user releases after dragging, inertial movement occurs based on the flick speed. `deceleration` determines the deceleration rate of this inertia.
+
+```javascript
+// Low value: inertia lasts longer, travels far
+deceleration: 0.001
+
+// Default: moderate inertia
+deceleration: 0.0075
+
+// High value: stops quickly
+deceleration: 0.05
+```
+
+### Physical Meaning
+`deceleration` is similar to a friction coefficient. The larger the value, the stronger the friction causing it to stop quickly; the smaller the value, the farther it slides.
+
+### Related Options
+- **Relationship with moveType**: The deceleration effect is more pronounced with `moveType: "freeScroll"`. In "snap" mode, the difference may be less noticeable since it moves to a snap position.
+- **Relationship with duration**: deceleration determines the inertial movement distance, while duration determines the snap animation time.
+
+### Use Cases
+
+:::info When to use?
+- **Low value (0.001-0.005)**: Fast scrolling through long lists, freeScroll mode
+- **Default (0.0075)**: General carousels, image galleries
+- **High value (0.01-0.05)**: When precise control is needed, one panel at a time
+:::
+
+### Notes
+
+:::warning Extreme values caution
+Very low values (close to 0) give a feeling of endless scrolling, while very high values may make it feel like flick gestures are being ignored.
+:::
+
+## Related Links
+
+### Related Options
+- [`moveType`](../../api/interfaces/FlickingOptions#movetype): Movement behavior mode (effect is more pronounced with freeScroll)
+- [`duration`](../../api/interfaces/FlickingOptions#duration): Snap animation time
+
+### Related Demos
+- [Movement Types](./movement-types): freeScroll mode
+- [Duration](./duration): Animation time

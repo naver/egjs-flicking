@@ -1,0 +1,84 @@
+---
+title: "Nested"
+id: nested
+slug: /demos/basic/nested
+sidebar_position: 17
+description: Transfer control to the parent Flicking when the child reaches its boundary using the nested option
+keywords: [flicking, carousel, nested, parent, child]
+---
+
+import Nested from '@site/src/demo/basic/Nested';
+
+# Nested
+
+The [`nested`](../../api/interfaces/FlickingOptions#nested) option transfers control to the parent Flicking when the child Flicking reaches its boundary. Provides a natural UX for same-direction nested Flicking instances.
+
+<Nested />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`nested`](../../api/interfaces/FlickingOptions#nested) | `boolean` | `false` | Transfer control to parent when reaching boundary |
+
+### Comparison by Value
+
+| Value | Behavior | Suitable For |
+|-------|----------|--------------|
+| `false` | Stops at inner boundary, parent does not move (default) | Independent inner carousels |
+| `true` | Transfers control to parent after reaching inner boundary | Same-direction nested carousels |
+
+## Details
+
+### How Nested Works
+When a child Flicking with `nested: true` reaches the first or last panel and the user continues to drag in the same direction, the parent Flicking moves instead.
+
+```jsx
+// Parent Flicking
+<Flicking>
+  <div className="panel">
+    {/* Child Flicking - nested enabled */}
+    <Flicking nested={true} bound={true}>
+      <div>Inner 1</div>
+      <div>Inner 2</div>
+    </Flicking>
+  </div>
+</Flicking>
+```
+
+### When Is It Needed?
+- **Needed**: When parent and child are in the **same direction** (both horizontal: true or both false)
+- **Not needed**: When parent and child are in **different directions** (one horizontal, one vertical) - they are automatically distinguished
+
+### Related Options
+- **Relationship with bound**: Using `bound: true` together makes the inner boundary clearer, resulting in more natural nested behavior.
+- **Relationship with horizontal**: If the parent/child have different horizontal values, it works naturally without the nested option.
+
+### Use Cases
+
+:::info When to use?
+- **nested: true**: Product carousels by category (outer: categories, inner: products)
+- **nested: false**: Inner carousels that need to operate independently
+:::
+
+### Notes
+
+:::warning Set on the child Flicking
+The `nested` option is set on the child (inner) Flicking. There is no need to set it on the parent.
+:::
+
+:::warning Not needed for different directions
+If the parent is horizontal and the child is vertical (or vice versa), it works naturally without the nested option.
+:::
+
+## Related Links
+
+### Related Options
+- [`bound`](../../api/interfaces/FlickingOptions#bound): Boundary restriction (recommended with nested)
+- [`horizontal`](../../api/interfaces/FlickingOptions#horizontal): Movement direction
+
+### Related Demos
+- [Bound](./bound): Boundary restriction mode
+- [Vertical](./vertical): Vertical mode (different direction combination)

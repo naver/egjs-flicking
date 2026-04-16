@@ -1,0 +1,15 @@
+id: parallax
+category: plugins
+demo: plugins/Parallax
+
+intent: "Parallax 플러그인으로 패널 내 요소들에 시차 스크롤 효과를 적용할 수 있음을 보여준다"
+
+focus:
+  - 5개 skeleton 패널이 렌더링됨
+  - 각 패널 안에 5개 bar 요소가 존재
+  - 드래그 시 bar의 transform이 변화 (시차 효과)
+
+api:
+  plugins: [Parallax]
+
+frameworks: [vanilla, react, vue]

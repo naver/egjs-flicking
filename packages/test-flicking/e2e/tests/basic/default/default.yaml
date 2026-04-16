@@ -1,0 +1,15 @@
+id: default
+category: basic
+demo: basic/Default
+
+intent: "Flicking의 기본 사용법과 필수 HTML 구조, 기본 옵션 값을 보여준다"
+
+focus:
+  - 5개 패널이 정상 렌더링됨
+  - 좌측 드래그로 다음 패널(index 1)로 이동
+  - 우측 드래그로 이전 패널로 복귀
+
+api:
+  options: [align]
+
+frameworks: [vanilla, react, vue]

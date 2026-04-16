@@ -1,0 +1,16 @@
+id: progress-bar
+category: reactive
+demo: reactive/ProgressBar
+
+intent: "Reactive API(progress subscription)를 이용한 progress bar UI를 보여준다"
+
+focus:
+  - 5개 패널 + progress bar가 렌더링됨
+  - 초기 progress 값은 0%
+  - 드래그 후 progress 값 증가
+  - 마지막 패널 이동 시 progress 100%
+
+api:
+  options: [moveType]
+
+frameworks: [vanilla, react, vue]

@@ -1,0 +1,162 @@
+---
+title: "Virtual Scroll"
+id: virtual-scroll
+slug: /demos/advanced/virtual-scroll
+sidebar_position: 1
+description: virtual 옵션으로 대량의 패널을 효율적으로 렌더링하여 메모리 사용량을 줄입니다
+keywords: [flicking, carousel, virtual, performance, memory, optimization, 가상, 성능, 메모리, 최적화]
+---
+
+import VirtualScroll from '@site/src/demo/advanced/VirtualScroll';
+
+# Virtual Scroll
+
+[`virtual`](../../api/interfaces/FlickingOptions#virtual) 옵션으로 대량의 패널을 가상 렌더링하여 메모리 사용량을 대폭 줄입니다.
+
+<VirtualScroll />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`virtual`](../../api/interfaces/FlickingOptions#virtual) | `VirtualOptions \| null` | `null` | 가상 렌더링 설정 |
+| [`panelsPerView`](../../api/interfaces/FlickingOptions#panelsperview) | `number` | `-1` | 뷰포트에 보이는 패널 수 (virtual 사용 시 필수) |
+
+### VirtualOptions 속성
+
+| 속성 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `renderPanel` | `(panel, index) => string` | - | 패널 innerHTML 반환 함수 |
+| `initialPanelCount` | `number` | `-1` | 초기 가상 패널 수 |
+| `cache` | `boolean` | `false` | 렌더링 결과 캐싱 여부 |
+| `panelClass` | `string` | `"flicking-panel"` | 패널 요소 클래스명 |
+
+### 모드별 비교
+
+| 모드 | 패널 1000개 시 DOM 요소 | 메모리 사용 | 초기 렌더링 |
+|------|------------------------|------------|-------------|
+| 일반 모드 | 1000개 | 높음 | 느림 |
+| virtual 모드 | ~4개 (`panelsPerView + 1`) | 낮음 | 빠름 |
+
+## 상세 설명
+
+### Virtual 렌더링 원리
+
+Virtual 모드는 화면에 보이는 패널 + 버퍼만 실제 DOM에 유지합니다:
+
+```javascript
+// 1000개의 논리적 패널, 실제 DOM은 4개만
+const flicking = new Flicking("#el", {
+  panelsPerView: 3,  // 필수: 화면에 보이는 패널 수
+  virtual: {
+    renderPanel: (panel, index) => `Panel ${index + 1}`,
+    initialPanelCount: 1000,
+    cache: true  // 동일 패널 재렌더링 방지
+  }
+});
+```
+
+스크롤 시 DOM 요소를 재활용하여 새 패널 내용으로 교체합니다. 이 방식으로 1000개, 10000개 이상의 패널도 일정한 메모리로 처리할 수 있습니다.
+
+### 필수 설정: panelsPerView
+
+:::warning panelsPerView 필수
+`virtual` 옵션을 사용하려면 반드시 `panelsPerView`를 양수로 설정해야 합니다.
+`panelsPerView: -1` (자동)이면 virtual은 무시됩니다.
+:::
+
+```javascript
+// 올바른 설정
+{ panelsPerView: 3, virtual: { ... } }  // 동작함
+
+// 잘못된 설정
+{ panelsPerView: -1, virtual: { ... } }  // virtual 무시됨
+```
+
+### renderPanel 콜백
+
+`renderPanel`은 패널이 화면에 나타날 때마다 호출되어 innerHTML을 반환합니다:
+
+```javascript
+virtual: {
+  renderPanel: (panel, index) => {
+    // index: 0부터 시작하는 패널 인덱스
+    return `
+      <img src="/images/item-${index}.jpg" />
+      <span>Item ${index + 1}</span>
+    `;
+  },
+  initialPanelCount: 1000
+}
+```
+
+### cache 옵션
+
+```javascript
+// cache: true (권장 - 정적 콘텐츠)
+virtual: {
+  renderPanel: (panel, index) => `Panel ${index}`,
+  cache: true  // 한 번 렌더링된 패널 내용 재사용
+}
+
+// cache: false (동적 콘텐츠)
+virtual: {
+  renderPanel: (panel, index) => `Panel ${index}: ${Date.now()}`,
+  cache: false  // 매번 새로 렌더링
+}
+```
+
+### VirtualManager 메서드
+
+런타임에 가상 패널을 추가/제거할 수 있습니다:
+
+```javascript
+// 패널 추가
+flicking.virtual.append(100);     // 끝에 100개 추가
+flicking.virtual.prepend(50);     // 앞에 50개 추가
+flicking.virtual.insert(10, 20);  // 인덱스 10에 20개 삽입
+
+// 패널 제거
+flicking.virtual.remove(0, 10);   // 인덱스 0부터 10개 제거
+```
+
+## 사용 시나리오
+
+:::info 언제 virtual을 사용하나요?
+
+**사용 권장:**
+- 패널 수가 많은 경우 (50개 이상)
+- 이미지 갤러리, 상품 목록 등 대량 데이터
+- 무한 스크롤 구현
+- 메모리 제약이 있는 모바일 환경
+
+**사용하지 않아도 되는 경우:**
+- 패널 수가 적은 경우 (10개 미만)
+- 복잡한 패널 상호작용이 필요한 경우
+- 패널 내용이 매우 동적인 경우
+:::
+
+### 주의사항
+
+:::warning 프레임워크별 차이
+React, Vue에서는 `renderPanel`이 문자열 HTML을 반환합니다. 컴포넌트 렌더링이 필요하면 [`renderOnlyVisible`](../../api/interfaces/FlickingOptions#renderonlyvisible) 옵션을 고려하세요.
+:::
+
+:::warning renderPanel 성능
+`renderPanel`은 스크롤 중 빈번히 호출됩니다. 복잡한 연산이나 DOM 조작은 피하고, `cache: true`를 활용하세요.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`panelsPerView`](../../api/interfaces/FlickingOptions#panelsperview): 뷰포트에 보이는 패널 수
+- [`renderOnlyVisible`](../../api/interfaces/FlickingOptions#renderonlyvisible): React/Vue에서 보이는 패널만 렌더링
+
+### 관련 클래스
+- [`VirtualManager`](../../api/classes/VirtualManager): 가상 패널 관리자
+
+### 관련 데모
+- [Render Only Visible](./render-only-visible): 프레임워크 최적화 렌더링
+- [Infinite Scroll](./infinite-scroll): 무한 스크롤 구현

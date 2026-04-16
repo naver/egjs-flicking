@@ -1,0 +1,49 @@
+.flicking-panel {
+  width: 300px;
+  height: 150px;
+  margin-right: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.nav-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+  gap: 16px;
+}
+
+.nav-btn {
+  padding: 8px 20px;
+  border: 2px solid #3498db;
+  background: transparent;
+  color: #3498db;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: #3498db;
+  color: white;
+}
+
+.nav-btn:disabled {
+  border-color: #ccc;
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.nav-info {
+  font-size: 14px;
+  color: #666;
+  min-width: 60px;
+  text-align: center;
+}

@@ -1,0 +1,49 @@
+.page-panel {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.page-panel .page-subtitle {
+  font-size: 14px;
+  font-weight: normal;
+  opacity: 0.8;
+}
+
+.flicking-viewport {
+  height: 300px;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+  gap: 8px;
+}
+
+.button {
+  padding: 8px 16px;
+  border: 2px solid #3498db;
+  background: transparent;
+  color: #3498db;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.button:hover {
+  background: #3498db;
+  color: white;
+}
+
+.button.active {
+  background: #3498db;
+  color: white;
+}

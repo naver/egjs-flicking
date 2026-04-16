@@ -1,0 +1,82 @@
+---
+title: "Animation Threshold"
+id: animation-threshold
+slug: /demos/advanced/animation-threshold
+sidebar_position: 16
+description: animationThreshold 옵션으로 애니메이션을 실행할 최소 이동 거리를 설정합니다
+keywords: [flicking, carousel, animationThreshold, animation, threshold, 애니메이션, 임계값]
+---
+
+import AnimationThreshold from '@site/src/demo/advanced/AnimationThreshold';
+
+# Animation Threshold
+
+[`animationThreshold`](../../api/interfaces/FlickingOptions#animationthreshold) 옵션으로 애니메이션을 실행할 최소 이동 거리(px)를 설정합니다. 이동 거리가 이 값보다 작으면 애니메이션 없이 즉시 이동합니다.
+
+Prev/Next 버튼으로 패널을 이동하면서 이벤트 로그와 애니메이션 동작을 비교해보세요.
+
+<AnimationThreshold />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`animationThreshold`](../../api/interfaces/FlickingOptions#animationthreshold) | `number` | `0.5` | 애니메이션 실행 최소 이동 거리 (px) |
+
+### 값별 비교
+
+| 값 | 동작 |
+|----|------|
+| `0` | 항상 애니메이션 실행 (0px 이동도 포함) |
+| `0.5` | 0.5px 미만 이동은 즉시 처리 (기본값) |
+| 큰 값 (예: `300`) | 지정 거리 미만 이동은 모두 즉시 처리 |
+
+## 상세 설명
+
+### animationThreshold 동작 원리
+
+Flicking이 `moveTo()`, `next()`, `prev()` 등으로 이동할 때, **목표 위치까지의 거리가 `animationThreshold`보다 작으면 `duration`을 0으로 설정해 즉시 이동**합니다.
+
+기본값 `0.5`의 주목적은 소수점 계산 오차나 미세 거리(1px 미만)에서 animation duration이 비정상적으로 늘어나는 현상을 방지하는 것입니다.
+
+```javascript
+// 기본값: 0.5px 미만은 즉시 이동
+const flicking = new Flicking("#el", {
+  animationThreshold: 0.5
+});
+
+// 항상 애니메이션 (소수점 오차도 포함)
+const flicking = new Flicking("#el", {
+  animationThreshold: 0
+});
+
+// 300px 미만 이동은 즉시 처리
+const flicking = new Flicking("#el", {
+  animationThreshold: 300,
+  duration: 1000
+});
+```
+
+### 사용 시나리오
+
+:::info 언제 기본값을 변경하나요?
+- **`0`으로 설정**: 미세 이동에서도 정확하게 `willChange`/`moveEnd` 이벤트를 수신해야 할 때
+- **큰 값으로 설정**: 근접한 패널 간 이동 시 즉각적인 응답이 필요할 때 (예: 프로그래매틱 제어가 많은 UI)
+- **기본값 유지**: 일반적인 캐러셀에서는 기본값으로 충분합니다
+:::
+
+:::warning willChange 이벤트 발생 여부
+`animationThreshold`로 인해 애니메이션이 건너뛰어지면 `willChange` 이벤트가 발생하지 않을 수 있습니다. 이벤트 기반 로직이 있다면 이 점을 고려하세요.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`duration`](../../api/interfaces/FlickingOptions#duration): 애니메이션 지속 시간
+- [`easing`](../../api/interfaces/FlickingOptions#easing): 애니메이션 가속도 곡선
+
+### 관련 데모
+- [Duration](../basic/duration): 애니메이션 지속 시간 설정
+- [Interruptable](../basic/interruptable): 애니메이션 중 입력 처리

@@ -1,0 +1,18 @@
+id: infinite-scroll
+category: advanced
+demo: advanced/InfiniteScroll
+
+intent: "needPanel 이벤트를 활용하여 패널을 동적으로 추가하는 무한 스크롤 패턴을 보여준다"
+
+focus:
+  - 초기 5개 패널 렌더링
+  - needPanelThreshold 100으로 설정됨
+  - 마지막 패널로 이동하면 새 패널이 추가됨
+  - 드래그로 이동 후 패널이 추가됨
+  - 이벤트 로그에 needPanel 이벤트 기록
+
+api:
+  options: [align, needPanelThreshold]
+  events: [needPanel]
+
+frameworks: [vanilla, react, vue]

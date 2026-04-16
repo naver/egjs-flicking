@@ -1,0 +1,82 @@
+---
+title: "Animation Threshold"
+id: animation-threshold
+slug: /demos/advanced/animation-threshold
+sidebar_position: 16
+description: Set the minimum movement distance to trigger an animation using the animationThreshold option
+keywords: [flicking, carousel, animationThreshold, animation, threshold]
+---
+
+import AnimationThreshold from '@site/src/demo/advanced/AnimationThreshold';
+
+# Animation Threshold
+
+Use the [`animationThreshold`](../../api/interfaces/FlickingOptions#animationthreshold) option to set the minimum movement distance (px) to trigger an animation. If the movement distance is less than this value, the panel moves instantly without animation.
+
+Try moving panels with the Prev/Next buttons and compare the event logs and animation behavior.
+
+<AnimationThreshold />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`animationThreshold`](../../api/interfaces/FlickingOptions#animationthreshold) | `number` | `0.5` | Minimum movement distance to trigger animation (px) |
+
+### Value Comparison
+
+| Value | Behavior |
+|-------|----------|
+| `0` | Always run animation (including 0px movement) |
+| `0.5` | Movements under 0.5px are processed instantly (default) |
+| Large value (e.g., `300`) | All movements under the specified distance are processed instantly |
+
+## Details
+
+### How animationThreshold Works
+
+When Flicking moves via `moveTo()`, `next()`, `prev()`, etc., **if the distance to the target position is less than `animationThreshold`, the `duration` is set to 0 for instant movement**.
+
+The main purpose of the default value `0.5` is to prevent the animation duration from becoming abnormally long due to floating-point calculation errors or micro-distances (less than 1px).
+
+```javascript
+// Default: movements under 0.5px are instant
+const flicking = new Flicking("#el", {
+  animationThreshold: 0.5
+});
+
+// Always animate (including floating-point errors)
+const flicking = new Flicking("#el", {
+  animationThreshold: 0
+});
+
+// Movements under 300px are processed instantly
+const flicking = new Flicking("#el", {
+  animationThreshold: 300,
+  duration: 1000
+});
+```
+
+### Use Cases
+
+:::info When should you change the default?
+- **Set to `0`**: When you need to precisely receive `willChange`/`moveEnd` events even for micro-movements
+- **Set to a large value**: When immediate response is needed for movements between adjacent panels (e.g., UIs with heavy programmatic control)
+- **Keep the default**: The default value is sufficient for typical carousels
+:::
+
+:::warning willChange Event Firing
+If animation is skipped due to `animationThreshold`, the `willChange` event may not fire. Consider this if you have event-based logic.
+:::
+
+## Related Links
+
+### Related Options
+- [`duration`](../../api/interfaces/FlickingOptions#duration): Animation duration
+- [`easing`](../../api/interfaces/FlickingOptions#easing): Animation easing curve
+
+### Related Demos
+- [Duration](../basic/duration): Animation duration setting
+- [Interruptable](../basic/interruptable): Input handling during animation

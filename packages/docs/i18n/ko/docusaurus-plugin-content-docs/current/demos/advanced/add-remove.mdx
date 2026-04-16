@@ -1,0 +1,74 @@
+---
+title: "Add / Remove"
+id: add-remove
+slug: /demos/advanced/add-remove
+sidebar_position: 8
+description: prepend, append, remove API로 패널을 동적으로 추가/제거합니다
+keywords: [flicking, carousel, prepend, append, remove, 동적, 패널 추가, 패널 제거]
+---
+
+import AddRemove from '@site/src/demo/advanced/AddRemove';
+
+# Add / Remove
+
+`prepend()`, `append()`, `remove()` API 메소드로 패널을 동적으로 추가하거나 제거합니다.
+
+<AddRemove />
+
+## 요약
+
+### 주요 API 메소드
+
+| 메소드 | 시그니처 | 설명 |
+|--------|----------|------|
+| [`append`](../../api/classes/Flicking#append) | `append(element): Panel[]` | 마지막 패널 뒤에 추가 |
+| [`prepend`](../../api/classes/Flicking#prepend) | `prepend(element): Panel[]` | 첫 번째 패널 앞에 추가 |
+| [`remove`](../../api/classes/Flicking#remove) | `remove(index, count?): Panel[]` | 지정 인덱스의 패널 제거 |
+
+### 동작 비교
+
+| 메소드 | 인덱스 변화 | 적합한 상황 |
+|--------|------------|-------------|
+| `prepend` | 기존 패널 인덱스 +1 증가 | 최신 항목을 앞에 추가 |
+| `append` | 기존 패널 인덱스 유지 | 피드 끝에 새 항목 추가 |
+| `remove` | 제거된 패널 뒤 인덱스 -1 감소 | 항목 삭제 |
+
+## 상세 설명
+
+### 프레임워크별 패턴 차이
+
+**React / Vue**: 프레임워크의 상태 관리로 패널 배열을 조작합니다. Flicking이 상태 변화를 감지하여 자동으로 패널을 업데이트합니다.
+
+**Vanilla JS**: Flicking 인스턴스의 `prepend()`, `append()`, `remove()` 메소드를 직접 호출합니다. `element` 파라미터에 HTMLElement 또는 outerHTML 문자열을 전달할 수 있습니다.
+
+### 연관 옵션
+
+- **`renderOnlyVisible`과의 관계**: 패널이 많을 때 `renderOnlyVisible: true`와 함께 사용하면 동적 추가에도 성능 유지
+- **`needPanelThreshold`와의 관계**: `needPanel` 이벤트와 조합하여 무한 스크롤 패턴 구현 가능
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- 소셜 미디어 피드: 새 게시물을 앞에 `prepend`, 오래된 게시물을 뒤에 `append`
+- 쇼핑몰 상품 목록: 필터링에 따라 패널 제거/추가
+- 대시보드 위젯: 위젯 추가/제거
+:::
+
+### 주의사항
+
+:::warning 주의
+- `prepend` 시 기존 패널의 인덱스가 모두 1씩 증가합니다. 인덱스에 의존하는 로직이 있다면 주의하세요.
+- `remove` 후 현재 보고 있는 패널이 제거되면 인접 패널로 자동 이동합니다.
+- React/Vue에서는 각 패널에 고유한 `key`를 부여해야 정상 동작합니다.
+:::
+
+## 관련 링크
+
+### 관련 API
+- [`append`](../../api/classes/Flicking#append): 패널 뒤에 추가
+- [`prepend`](../../api/classes/Flicking#prepend): 패널 앞에 추가
+- [`remove`](../../api/classes/Flicking#remove): 패널 제거
+
+### 관련 데모
+- [Infinite Scroll](./infinite-scroll): `needPanel` 이벤트로 자동 패널 추가
+- [Lazy Load](./lazy-load): `renderOnlyVisible`과 함께 사용하는 최적화 패턴

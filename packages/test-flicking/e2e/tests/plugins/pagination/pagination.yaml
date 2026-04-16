@@ -1,0 +1,16 @@
+id: pagination
+category: plugins
+demo: plugins/Pagination
+
+intent: "Pagination 플러그인으로 bullet 형태의 페이지 인디케이터를 추가할 수 있음을 보여준다"
+
+focus:
+  - 5개 패널이 렌더링됨
+  - pagination bullet 요소들이 렌더링됨
+  - bullet 클릭으로 해당 패널로 이동
+
+api:
+  options: [circular]
+  plugins: [Pagination]
+
+frameworks: [vanilla, react, vue]

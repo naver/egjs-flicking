@@ -1,0 +1,77 @@
+---
+title: "Fullpage Scroll"
+id: fullpage-scroll
+slug: /demos/advanced/fullpage-scroll
+sidebar_position: 10
+description: moveType, bound, align 옵션 조합으로 풀페이지 스크롤 UI를 구성합니다
+keywords: [flicking, carousel, fullpage, strict, 풀페이지, 스크롤]
+---
+
+import FullpageScroll from '@site/src/demo/advanced/FullpageScroll';
+
+# Fullpage Scroll
+
+[`moveType: "strict"`](../../api/interfaces/FlickingOptions#movetype), [`bound`](../../api/interfaces/FlickingOptions#bound), [`align`](../../api/interfaces/FlickingOptions#align) 옵션을 조합하여 풀페이지 스크롤 UI를 구성합니다.
+
+<FullpageScroll />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 설정값 | 역할 |
+|------|------|--------|------|
+| [`moveType`](../../api/interfaces/FlickingOptions#movetype) | `string` | `"strict"` | 한 번에 한 페이지만 이동 |
+| [`bound`](../../api/interfaces/FlickingOptions#bound) | `boolean` | `true` | 양 끝에서 빈 공간 방지 |
+| [`align`](../../api/interfaces/FlickingOptions#align) | `string` | `"prev"` | 페이지를 뷰포트 시작점에 정렬 |
+| [`horizontal`](../../api/interfaces/FlickingOptions#horizontal) | `boolean` | `false` | 세로 방향 스크롤 |
+
+### 방향별 비교
+
+| 방향 | horizontal | 결과 | 필수 설정 |
+|------|-----------|------|-----------|
+| 세로 (Fullpage) | `false` | 위/아래 스와이프 | 뷰포트에 height 필수 |
+| 가로 (Slider) | `true` | 좌/우 스와이프 | 기본 동작 |
+
+## 상세 설명
+
+### moveType: "strict"의 역할
+
+`moveType: "strict"`는 아무리 세게 스와이프해도 정확히 한 패널(한 페이지)만 이동합니다. 이것이 풀페이지 스크롤의 핵심이며, `"snap"`(기본값)은 세기에 따라 여러 패널을 건너뛸 수 있어 풀페이지에 부적합합니다.
+
+### 세로 방향 설정
+
+`horizontal: false`로 설정하면 세로 방향 스크롤이 됩니다. 이때 뷰포트 요소에 반드시 높이(`height`)를 지정해야 합니다. 풀스크린이라면 `100vh`, 특정 영역이라면 고정 높이를 사용합니다.
+
+### 연관 옵션
+
+- **`moveType`이 핵심**: `"strict"`만 정확히 1페이지씩 이동을 보장
+- **`bound`와의 조합**: 마지막 페이지에서 빈 공간이 보이지 않도록 방지
+- **`align: "prev"`와의 조합**: 각 페이지를 뷰포트 시작점에 맞춰 빈틈 없이 배치
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- 랜딩 페이지: 섹션별 풀페이지 전환
+- 프레젠테이션 뷰: 슬라이드 넘기기
+- 모바일 앱 온보딩: 단계별 소개 화면
+:::
+
+### 주의사항
+
+:::warning 주의
+- 세로 방향(`horizontal: false`)에서 뷰포트에 `height`를 반드시 설정해야 합니다. 설정하지 않으면 높이가 0이 되어 아무것도 보이지 않습니다.
+- 세로 스크롤 시 브라우저의 기본 스크롤과 충돌할 수 있습니다. `preventDefaultOnDrag: true`를 함께 사용하면 해결됩니다.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`moveType`](../../api/interfaces/FlickingOptions#movetype): 이동 방식
+- [`bound`](../../api/interfaces/FlickingOptions#bound): 경계 제한
+- [`horizontal`](../../api/interfaces/FlickingOptions#horizontal): 스크롤 방향
+- [`preventDefaultOnDrag`](../../api/interfaces/FlickingOptions#preventdefaultondrag): 드래그 시 기본동작 방지
+
+### 관련 데모
+- [Movement Types](../basic/movement-types): moveType 옵션 상세 비교
+- [Carousel](./carousel): 다른 옵션 조합 패턴

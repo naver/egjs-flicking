@@ -1,0 +1,109 @@
+# @egjs/flicking
+
+> A reliable, flexible, and extendable carousel library used by 30+ million people daily. Supports vanilla JS and major frameworks (React, Vue3, Angular, Svelte, Preact) with circular mode, SSR, rich plugin system, and full TypeScript support.
+
+Flicking is a production-ready carousel/slider with comprehensive API, event system, framework integrations, and a plugin system. Use `@egjs/flicking` for vanilla JS and `@egjs/react-flicking`, `@egjs/vue3-flicking` for framework-specific wrappers. Plugins (AutoPlay, Fade, Parallax, etc.) are provided separately via `@egjs/flicking-plugins`.
+
+## Getting Started
+
+- [Quick Start](https://naver.github.io/egjs-flicking/llm-docs/guide/quickstart.md): Installation and basic setup for vanilla JS, React, and Vue3
+- [HTML Structure & Styling](https://naver.github.io/egjs-flicking/llm-docs/guide/structure-and-styling.md): Required DOM structure (`.flicking-viewport` > `.flicking-camera` > panels) and CSS classes
+- [Controlling Flicking](https://naver.github.io/egjs-flicking/llm-docs/guide/controlling-flicking.md): Programmatic control — `next()`, `prev()`, `moveTo()`, `index`, `currentPanel`
+
+## Framework Guides
+
+- [React Guide](https://naver.github.io/egjs-flicking/llm-docs/guide/react-guide.md): `@egjs/react-flicking` — `<Flicking>`, `<ViewportSlot>`, event props, panel update patterns
+- [Vue3 Guide](https://naver.github.io/egjs-flicking/llm-docs/guide/vue3-guide.md): `@egjs/vue3-flicking` — Composition API, `v-for` panels, reactive options
+
+## Plugins
+
+All plugins are imported from `@egjs/flicking-plugins`. Pass plugin instances to the `plugins` option.
+
+- [AutoPlay demo](https://naver.github.io/egjs-flicking/llm-docs/demos/plugins/autoplay.md): Automatic panel cycling — `new AutoPlay({ duration, direction, stopOnHover })`
+- [Fade demo](https://naver.github.io/egjs-flicking/llm-docs/demos/plugins/fade.md): Crossfade transition effect — `new Fade()`
+- [Parallax demo](https://naver.github.io/egjs-flicking/llm-docs/demos/plugins/parallax.md): Parallax scrolling on panel contents — `new Parallax()`
+- [Arrow demo](https://naver.github.io/egjs-flicking/llm-docs/demos/plugins/arrow.md): Prev/next arrow buttons — `new Arrow()`
+- [Pagination demo](https://naver.github.io/egjs-flicking/llm-docs/demos/plugins/pagination.md): Dot/fraction/scroll pagination — `new Pagination({ type })`
+- [Perspective demo](https://naver.github.io/egjs-flicking/llm-docs/demos/plugins/perspective.md): 3D perspective effect — `new Perspective()`
+- [Sync demo](https://naver.github.io/egjs-flicking/llm-docs/demos/plugins/sync.md): Synchronize multiple Flicking instances — `new Sync({ type, synchronizedFlickingOptions })`
+
+## Key Options Reference
+
+- [FlickingOptions](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/FlickingOptions.md): All configuration options with descriptions and demo links
+- Important options: `circular` (loop mode), `align` (PREV/CENTER/NEXT or px/%), `moveType` (snap/freeScroll), `bound`, `panelsPerView`, `autoResize`, `duration`, `easing`, `defaultIndex`, `threshold`, `inputType`
+- **Option constraints**: `circular: true` and `bound: true` cannot be used together. `circular` requires enough panels to fill the viewport.
+
+## API Essentials
+
+- [Flicking class](https://naver.github.io/egjs-flicking/llm-docs/api/classes/Flicking.md): Main carousel class — constructor, properties (`index`, `currentPanel`, `panels`, `camera`), methods (`next`, `prev`, `moveTo`, `addPlugins`, `resize`, `destroy`)
+- [FlickingOptions](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/FlickingOptions.md): All init options with types and defaults
+- [FlickingEvents](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/FlickingEvents.md): Event names and payload types (`ready`, `moveStart`, `move`, `moveEnd`, `changed`, `willChange`, `select`, `needPanel`, `reachEdge`, `visibleChange`)
+- [FlickingErrors](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/FlickingErrors.md): Error codes and messages — use `err.code` to identify error type
+
+## Demos
+
+**Basic options:**
+- [Alignment](https://naver.github.io/egjs-flicking/llm-docs/demos/basic/alignment.md): `align` option — PREV, CENTER, NEXT, or custom offset
+- [Circular mode](https://naver.github.io/egjs-flicking/llm-docs/demos/basic/circular.md): Infinite loop with `circular: true`
+- [Movement types](https://naver.github.io/egjs-flicking/llm-docs/demos/basic/movement-types.md): `moveType: "snap"` vs `moveType: "freeScroll"`
+- [Bound](https://naver.github.io/egjs-flicking/llm-docs/demos/basic/bound.md): Edge resistance with `bound: true`
+- [Panels per view](https://naver.github.io/egjs-flicking/llm-docs/demos/basic/panels-per-view.md): Multiple visible panels
+- [Vertical](https://naver.github.io/egjs-flicking/llm-docs/demos/basic/vertical.md): Vertical scrolling carousel
+
+**Advanced patterns:**
+- [Add/Remove panels](https://naver.github.io/egjs-flicking/llm-docs/demos/advanced/add-remove.md): Dynamic panel manipulation
+- [Virtual scroll](https://naver.github.io/egjs-flicking/llm-docs/demos/advanced/virtual-scroll.md): Large datasets with `virtualEnabled`
+- [Infinite scroll](https://naver.github.io/egjs-flicking/llm-docs/demos/advanced/infinite-scroll.md): `needPanel` event for data fetching
+- [Prev/Next buttons](https://naver.github.io/egjs-flicking/llm-docs/demos/reactive/prev-next.md): Custom navigation buttons using Reactive API
+- [Progress bar](https://naver.github.io/egjs-flicking/llm-docs/demos/reactive/progress-bar.md): Scroll progress indicator using Reactive API
+- [Lazy load](https://naver.github.io/egjs-flicking/llm-docs/demos/advanced/lazy-load.md): Deferred image/content loading
+- [Carousel](https://naver.github.io/egjs-flicking/llm-docs/demos/advanced/carousel.md): Multi-panel carousel layout
+- [Coverflow](https://naver.github.io/egjs-flicking/llm-docs/demos/reactive/coverflow.md): iTunes-style coverflow effect using Reactive API
+- [Cross Flicking](https://naver.github.io/egjs-flicking/llm-docs/demos/advanced/cross-flicking.md): Nested horizontal + vertical Flicking
+
+## Optional
+
+### Advanced API Reference
+
+- [Panel](https://naver.github.io/egjs-flicking/llm-docs/api/classes/Panel.md): Panel instance — `index`, `element`, `size`, `position`, `progress`
+- [Camera](https://naver.github.io/egjs-flicking/llm-docs/api/classes/Camera.md): Viewport and position management
+- [Control](https://naver.github.io/egjs-flicking/llm-docs/api/classes/Control.md): Base input control
+- [SnapControl](https://naver.github.io/egjs-flicking/llm-docs/api/classes/SnapControl.md): Snap-to-panel behavior
+- [FreeControl](https://naver.github.io/egjs-flicking/llm-docs/api/classes/FreeControl.md): Free-scroll behavior
+- [StrictControl](https://naver.github.io/egjs-flicking/llm-docs/api/classes/StrictControl.md): Strict one-panel-at-a-time control
+- [VirtualManager](https://naver.github.io/egjs-flicking/llm-docs/api/classes/VirtualManager.md): Virtual panel management
+- [CrossFlicking](https://naver.github.io/egjs-flicking/llm-docs/api/classes/CrossFlicking.md): Bidirectional nested carousel
+- [FlickingError](https://naver.github.io/egjs-flicking/llm-docs/api/classes/FlickingError.md): Error class with `code` property
+- [BoundCameraMode](https://naver.github.io/egjs-flicking/llm-docs/api/classes/BoundCameraMode.md): Camera mode for bounded movement
+- [CircularCameraMode](https://naver.github.io/egjs-flicking/llm-docs/api/classes/CircularCameraMode.md): Camera mode for circular/loop
+- [LinearCameraMode](https://naver.github.io/egjs-flicking/llm-docs/api/classes/LinearCameraMode.md): Camera mode for linear movement
+
+### Event Interfaces
+
+- [ChangedEvent](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/ChangedEvent.md): Panel change complete
+- [WillChangeEvent](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/WillChangeEvent.md): Before panel change
+- [MoveStartEvent](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/MoveStartEvent.md): Movement start
+- [MoveEvent](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/MoveEvent.md): Movement in progress
+- [MoveEndEvent](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/MoveEndEvent.md): Movement end
+- [HoldStartEvent](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/HoldStartEvent.md): User touch/mouse down
+- [HoldEndEvent](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/HoldEndEvent.md): User touch/mouse up
+- [NeedPanelEvent](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/NeedPanelEvent.md): Triggered when more panels are needed (infinite scroll)
+- [SelectEvent](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/SelectEvent.md): Panel click/tap
+- [VisibleChangeEvent](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/VisibleChangeEvent.md): Visible panels changed
+- [ReachEdgeEvent](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/ReachEdgeEvent.md): Reached first or last panel
+
+### Constants
+
+- [ALIGN](https://naver.github.io/egjs-flicking/llm-docs/api/variables/ALIGN.md): `"prev"` | `"center"` | `"next"`
+- [MOVE_TYPE](https://naver.github.io/egjs-flicking/llm-docs/api/variables/MOVE_TYPE.md): `"snap"` | `"freeScroll"`
+- [DIRECTION](https://naver.github.io/egjs-flicking/llm-docs/api/variables/DIRECTION.md): `"PREV"` | `"NEXT"`
+- [EVENTS](https://naver.github.io/egjs-flicking/llm-docs/api/variables/EVENTS.md): All event name string constants
+- [CODE](https://naver.github.io/egjs-flicking/llm-docs/api/variables/CODE.md): All error code constants
+
+### Packages
+
+- [GitHub Repository](https://github.com/naver/egjs-flicking): Source code, issues, contributions
+- [npm: @egjs/flicking](https://www.npmjs.com/package/@egjs/flicking): Core vanilla JS library
+- [npm: @egjs/flicking-plugins](https://www.npmjs.com/package/@egjs/flicking-plugins): AutoPlay, Fade, Parallax, Arrow, Pagination, Perspective, Sync
+- [npm: @egjs/react-flicking](https://www.npmjs.com/package/@egjs/react-flicking): React wrapper
+- [npm: @egjs/vue3-flicking](https://www.npmjs.com/package/@egjs/vue3-flicking): Vue3 wrapper

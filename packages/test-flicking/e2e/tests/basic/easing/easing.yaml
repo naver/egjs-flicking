@@ -1,0 +1,15 @@
+id: easing
+category: basic
+demo: basic/Easing
+
+intent: "easing 옵션으로 패널 전환 애니메이션 곡선을 커스터마이징할 수 있음을 보여준다"
+
+focus:
+  - 3개의 Flicking 인스턴스가 렌더링됨 (linear/easeOutCubic/easeInOutQuad)
+  - 각 인스턴스에 easing 함수가 설정됨
+  - 모든 인스턴스에서 드래그로 패널 이동 가능
+
+api:
+  options: [easing, duration]
+
+frameworks: [vanilla, react, vue]

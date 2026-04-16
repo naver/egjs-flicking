@@ -1,0 +1,75 @@
+---
+title: "Cross Flicking"
+id: cross-flicking
+slug: /demos/advanced/cross-flicking
+sidebar_position: 15
+description: nested 옵션으로 가로/세로 중첩 Flicking을 구성합니다
+keywords: [flicking, carousel, nested, cross, 중첩, 가로세로]
+---
+
+import CrossFlicking from '@site/src/demo/advanced/CrossFlicking';
+
+# Cross Flicking
+
+[`nested`](../../api/interfaces/FlickingOptions#nested) 옵션으로 외부(세로) Flicking 안에 내부(가로) Flicking을 중첩하는 2D 크로스 네비게이션을 구성합니다.
+
+<CrossFlicking />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 위치 | 값 | 역할 |
+|------|------|-----|------|
+| [`horizontal`](../../api/interfaces/FlickingOptions#horizontal) | 외부 | `false` | 세로 방향 (그룹 간 이동) |
+| [`nested`](../../api/interfaces/FlickingOptions#nested) | 내부 | `true` | 끝 도달 시 외부로 이벤트 전파 |
+| [`moveType`](../../api/interfaces/FlickingOptions#movetype) | 양쪽 | `"strict"` | 정확히 1단위씩 이동 |
+
+### 구조
+
+| 구성 | 방향 | 역할 |
+|------|------|------|
+| 외부 Flicking | 세로 (↕) | 그룹 간 이동 |
+| 내부 Flicking | 가로 (↔) | 그룹 내 패널 이동 |
+
+## 상세 설명
+
+### nested 옵션의 역할
+
+`nested: true`를 내부 Flicking에 설정하면, 내부 Flicking이 끝에 도달한 후 같은 방향으로 스와이프할 때 이벤트가 외부 Flicking으로 전파됩니다. 이 데모에서는 외부와 내부의 방향이 다르므로(세로/가로) 입력이 자연스럽게 분리됩니다.
+
+### 방향 분리
+
+가로 스와이프는 내부 Flicking이 처리하고, 세로 스와이프는 외부 Flicking이 처리합니다. 같은 방향 중첩(예: 가로 안에 가로)에서는 `nested: true`가 이벤트 전파를 관리합니다.
+
+### 연관 옵션
+
+- **`nested`와 `horizontal`의 관계**: 서로 다른 방향이면 충돌 없이 동작, 같은 방향이면 `nested: true`로 전파 제어
+- **`moveType: "strict"`와의 조합**: 그룹/패널 단위 이동이 명확해짐
+- **`bound: true`와의 조합**: 각 레벨에서 빈 공간 방지
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- 카테고리별 콘텐츠 (세로로 카테고리, 가로로 항목)
+- 사진 앨범 (세로로 앨범, 가로로 사진)
+- 대시보드 (세로로 섹션, 가로로 카드)
+:::
+
+### 주의사항
+
+:::warning 주의
+- 외부 Flicking이 세로(`horizontal: false`)일 때, 반드시 뷰포트에 높이를 지정해야 합니다.
+- 내부 Flicking에 `nested: true`를 설정하지 않으면, 내부에서 이벤트가 소비되어 외부로 전파되지 않습니다.
+- 같은 방향으로 중첩할 경우 스와이프 제스처 구분이 어려울 수 있습니다.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`nested`](../../api/interfaces/FlickingOptions#nested): 중첩 Flicking 이벤트 전파
+- [`horizontal`](../../api/interfaces/FlickingOptions#horizontal): 스크롤 방향
+
+### 관련 데모
+- [Nested](../basic/nested): nested 옵션 자체의 on/off 비교
+- [Fullpage Scroll](./fullpage-scroll): 세로 방향 풀페이지 패턴

@@ -1,0 +1,14 @@
+id: adaptive
+category: basic
+demo: basic/Adaptive
+
+intent: "adaptive 옵션으로 현재 패널 높이에 맞게 뷰포트 높이가 자동 조절됨을 보여준다"
+
+focus:
+  - 2개의 Flicking 인스턴스가 렌더링됨 (adaptive false/true)
+  - adaptive:true에서 드래그 후 다른 높이의 패널로 이동하면 뷰포트 높이 변화
+
+api:
+  options: [adaptive, align]
+
+frameworks: [vanilla, react, vue]

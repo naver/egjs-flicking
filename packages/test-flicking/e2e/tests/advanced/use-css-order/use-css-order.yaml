@@ -1,0 +1,16 @@
+id: use-css-order
+category: advanced
+demo: advanced/UseCSSOrder
+
+intent: "circular 모드에서 useCSSOrder 옵션으로 DOM 순서를 유지하면서 CSS order로 시각적 정렬하는 효과를 비교한다"
+
+focus:
+  - useCSSOrder 옵션 확인 (false/true)
+  - Next 버튼으로 패널 이동
+  - circular에서 Prev 버튼으로 역방향 이동
+  - "useCSSOrder:true에서 Next 이동 시 CSS order 속성 변경"
+
+api:
+  options: [circular, align, useCSSOrder]
+
+frameworks: [vanilla, react, vue]

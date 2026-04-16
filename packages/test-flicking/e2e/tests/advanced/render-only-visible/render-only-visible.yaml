@@ -1,0 +1,16 @@
+id: render-only-visible
+category: advanced
+demo: advanced/RenderOnlyVisible
+
+intent: "renderOnlyVisible 옵션으로 비가시 패널을 DOM에서 제거하는 효과를 비교한다"
+
+focus:
+  - renderOnlyVisible 옵션 확인 (true/false)
+  - "renderOnlyVisible:true는 DOM 패널이 전체(20개)보다 적음"
+  - DOM 카운터가 올바른 수를 표시
+  - 드래그 후에도 DOM 수가 적게 유지
+
+api:
+  options: [renderOnlyVisible, align]
+
+frameworks: [vanilla, react, vue]

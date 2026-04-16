@@ -1,0 +1,87 @@
+---
+title: "Arrow"
+id: arrow
+slug: /demos/plugins/arrow
+sidebar_position: 5
+description: 이전/다음 패널로 이동하는 화살표 네비게이션 버튼을 추가하는 플러그인
+keywords: [flicking, plugin, arrow, navigation, prev, next]
+---
+
+import Arrow from '@site/src/demo/plugins/Arrow';
+
+# Arrow
+
+이전/다음 패널로 이동하는 화살표 네비게이션 버튼을 추가합니다.
+
+<Arrow />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `parentEl` | `HTMLElement` | - | 화살표 버튼의 부모 요소. 기본적으로 뷰포트 내부에 배치 |
+
+### 필수 CSS
+
+```js
+import "@egjs/flicking-plugins/dist/arrow.css";
+```
+
+## 상세 설명
+
+### 동작 원리
+
+Arrow 플러그인은 `.flicking-arrow-prev`와 `.flicking-arrow-next` 클래스를 가진 요소를 찾아 이전/다음 패널로 이동하는 클릭 이벤트를 바인딩합니다.
+
+### HTML 구조
+
+화살표 요소를 뷰포트 내부에 배치해야 합니다.
+
+```html
+<div class="flicking-viewport">
+  <div class="flicking-camera">
+    <!-- 패널들 -->
+  </div>
+  <span class="flicking-arrow-prev"></span>
+  <span class="flicking-arrow-next"></span>
+</div>
+```
+
+### 프레임워크별 사용법
+
+**React** — `ViewportSlot`을 사용하여 뷰포트 내부에 화살표를 배치합니다:
+```jsx
+<Flicking plugins={plugins}>
+  {/* 패널들 */}
+  <ViewportSlot>
+    <span className="flicking-arrow-prev"></span>
+    <span className="flicking-arrow-next"></span>
+  </ViewportSlot>
+</Flicking>
+```
+
+**Vue** — `#viewport` 슬롯을 사용합니다:
+```html
+<Flicking :plugins="plugins">
+  <!-- 패널들 -->
+  <template #viewport>
+    <span class="flicking-arrow-prev"></span>
+    <span class="flicking-arrow-next"></span>
+  </template>
+</Flicking>
+```
+
+### 주의사항
+
+:::warning 주의
+- 반드시 `@egjs/flicking-plugins/dist/arrow.css`를 import해야 화살표가 올바르게 표시됩니다.
+- 화살표 요소는 `.flicking-viewport` 내부에 위치해야 합니다.
+:::
+
+## 관련 링크
+
+### 관련 데모
+- [Pagination](./pagination): 페이지 인디케이터
+- [Prev/Next](../reactive/prev-next): 커스텀 네비게이션

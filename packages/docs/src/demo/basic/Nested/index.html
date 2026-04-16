@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <!-- nested: false -->
+  <div class="demo-container">
+    <div class="demo-label">nested: false (parent does not move at inner boundary)</div>
+    <div class="demo-hint">The outer Flicking does not move when the inner one reaches its end</div>
+    <div id="outer-false" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="outer-panel outer-1">
+          <div class="flicking-viewport inner-viewport">
+            <div class="flicking-camera">
+              <div class="inner-panel">Inner 1</div>
+              <div class="inner-panel">Inner 2</div>
+              <div class="inner-panel">Inner 3</div>
+            </div>
+          </div>
+        </div>
+        <div class="outer-panel outer-2">
+          <div class="flicking-viewport inner-viewport">
+            <div class="flicking-camera">
+              <div class="inner-panel">Inner 1</div>
+              <div class="inner-panel">Inner 2</div>
+              <div class="inner-panel">Inner 3</div>
+            </div>
+          </div>
+        </div>
+        <div class="outer-panel outer-3">
+          <div class="flicking-viewport inner-viewport">
+            <div class="flicking-camera">
+              <div class="inner-panel">Inner 1</div>
+              <div class="inner-panel">Inner 2</div>
+              <div class="inner-panel">Inner 3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- nested: true -->
+  <div class="demo-container">
+    <div class="demo-label">nested: true (propagates to parent at inner boundary)</div>
+    <div class="demo-hint">The outer Flicking moves when the inner one reaches its end</div>
+    <div id="outer-true" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="outer-panel outer-1">
+          <div class="flicking-viewport inner-viewport">
+            <div class="flicking-camera">
+              <div class="inner-panel">Inner 1</div>
+              <div class="inner-panel">Inner 2</div>
+              <div class="inner-panel">Inner 3</div>
+            </div>
+          </div>
+        </div>
+        <div class="outer-panel outer-2">
+          <div class="flicking-viewport inner-viewport">
+            <div class="flicking-camera">
+              <div class="inner-panel">Inner 1</div>
+              <div class="inner-panel">Inner 2</div>
+              <div class="inner-panel">Inner 3</div>
+            </div>
+          </div>
+        </div>
+        <div class="outer-panel outer-3">
+          <div class="flicking-viewport inner-viewport">
+            <div class="flicking-camera">
+              <div class="inner-panel">Inner 1</div>
+              <div class="inner-panel">Inner 2</div>
+              <div class="inner-panel">Inner 3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

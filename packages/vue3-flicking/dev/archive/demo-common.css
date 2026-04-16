@@ -1,0 +1,208 @@
+/* 공통 데모 스타일 */
+
+/* 기본 레이아웃 */
+.demo-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 타이포그래피 */
+h1 {
+  color: #333;
+  margin: 40px 0 20px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+h1:first-child {
+  margin-top: 0;
+}
+
+h2 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+}
+
+h3 {
+  color: #666;
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+/* 섹션 */
+.section {
+  margin-bottom: 30px;
+}
+
+/* 패널 스타일 */
+.panel {
+  width: 200px;
+  height: 200px;
+  margin-right: 20px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+  font-weight: bold;
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.panel:nth-child(2) {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.panel:nth-child(3) {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.panel:nth-child(4) {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.panel:nth-child(5) {
+  background: linear-gradient(135deg, #feca57 0%, #ff9f43 100%);
+}
+
+.panel:nth-child(6) {
+  background: linear-gradient(135deg, #fa8bff 0%, #2bd2ff 100%);
+}
+
+.panel:nth-child(7) {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ffa502 100%);
+}
+
+.panel:nth-child(n + 8) {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+/* 컨트롤 버튼 */
+.controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.button,
+.btn,
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.button:hover,
+.btn:hover:not(:disabled),
+button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.button:active,
+.btn:active:not(:disabled),
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn:disabled,
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* 상태 표시 */
+.status {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.status p {
+  margin: 5px 0;
+  color: #666;
+}
+
+/* 폼 요소 */
+label {
+  display: inline-block;
+  margin: 10px 20px 10px 0;
+  cursor: pointer;
+}
+
+input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+/* 페이지네이션 */
+.pagination {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.pagination-btn:hover {
+  background-color: #0056b3;
+}
+
+.pagination-btn:active {
+  transform: translateY(1px);
+}
+
+.pagination-btn.active {
+  background-color: #28a745;
+}
+
+/* 프로그레스 바 */
+.progress-container {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #007bff, #28a745);
+  transition: width 0.3s ease;
+  border-radius: 10px;
+}
+
+.progress-text {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #666;
+  font-weight: bold;
+}

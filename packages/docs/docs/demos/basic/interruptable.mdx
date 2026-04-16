@@ -1,0 +1,80 @@
+---
+title: "Interruptable"
+id: interruptable
+slug: /demos/basic/interruptable
+sidebar_position: 18
+description: Control whether user input is allowed during animation using the interruptable option
+keywords: [flicking, carousel, interruptable, animation, interrupt]
+---
+
+import Interruptable from '@site/src/demo/basic/Interruptable';
+
+# Interruptable
+
+The [`interruptable`](../../api/interfaces/FlickingOptions#interruptable) option controls whether user drag input is allowed while a panel animation is in progress.
+
+Press the button to start a 2-second animation, then try dragging during it to see the difference.
+
+<Interruptable />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`interruptable`](../../api/interfaces/FlickingOptions#interruptable) | `boolean` | `true` | Allow user input during animation |
+| [`changeOnHold`](../../api/interfaces/FlickingOptions#changeonhold) | `boolean` | `false` | Whether to immediately update the panel index during drag |
+
+### Comparison by Value
+
+| Value | Behavior | Suitable For |
+|-------|----------|--------------|
+| `true` | Responds immediately to drag during animation (default) | General carousels, fast browsing |
+| `false` | Ignores drag until animation completes | Presentations, ensuring complete animation playback |
+
+## Details
+
+### How Interruptable Works
+
+When `interruptable: true` (default), Flicking accepts user input during animation and immediately transitions to a new drag. If a user drags while a panel is being moved by a button, the new drag starts from the current position at that moment.
+
+When `interruptable: false`, it waits until the animation is fully complete before accepting the next input. Useful for slideshows or presentations where each transition effect needs to be shown completely.
+
+```javascript
+// Default: drag is possible during animation
+const flicking = new Flicking("#el", {
+  interruptable: true
+});
+
+// Allow input only after animation completes
+const flicking = new Flicking("#el", {
+  interruptable: false,
+  duration: 1000
+});
+```
+
+### changeOnHold
+
+The `changeOnHold` option determines whether to immediately update the current panel index when a user pauses during a drag and "holds" a panel. With the default `false`, the index changes when the snap completes after release.
+
+### Use Cases
+
+:::info When to use?
+- **interruptable: true** (default): General image galleries, product lists, and other carousels where users freely browse
+- **interruptable: false**: Presentation slides, onboarding screens where each slide transition animation must be shown completely
+:::
+
+:::warning Caution
+When `interruptable: false` with a long `duration`, users may feel frustrated waiting for input. Use only when necessary.
+:::
+
+## Related Links
+
+### Related Options
+- [`duration`](../../api/interfaces/FlickingOptions#duration): Animation duration
+- [`changeOnHold`](../../api/interfaces/FlickingOptions#changeonhold): Immediately update panel index during drag
+
+### Related Demos
+- [Duration](./duration): Setting animation duration
+- [Easing](./easing): Animation acceleration curve

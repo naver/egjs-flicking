@@ -1,0 +1,42 @@
+.flicking-panel {
+  width: 150px;
+  height: 120px;
+  margin-right: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.pagination-btn {
+  width: 36px;
+  height: 36px;
+  border: 2px solid #3498db;
+  background: transparent;
+  color: #3498db;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.pagination-btn:hover {
+  background: #3498db;
+  color: white;
+}
+
+.pagination-btn.active {
+  background: #3498db;
+  color: white;
+}

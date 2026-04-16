@@ -1,0 +1,78 @@
+---
+title: "Alignment"
+id: alignment
+slug: /demos/basic/alignment
+sidebar_position: 2
+description: Control the alignment position of panels within the viewport using the align option
+keywords: [flicking, carousel, align, alignment, prev, center, next]
+---
+
+import AlignOptions from '@site/src/demo/basic/AlignOptions';
+
+# Alignment
+
+The [`align`](../../api/interfaces/FlickingOptions#align) option controls the alignment position of panels within the viewport. It determines whether panels are positioned at the left, center, or right.
+
+<AlignOptions />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`align`](../../api/interfaces/FlickingOptions#align) | `"prev" \| "center" \| "next" \| number \| string` | `"center"` | Panel alignment position |
+
+### Comparison by Value
+
+| Value | Behavior | Suitable For |
+|-------|----------|--------------|
+| `"prev"` | Current panel aligns to the left (or top in vertical) of the viewport | Galleries, list-style UI |
+| `"center"` | Current panel aligns to the center of the viewport | Spotlight, product showcase |
+| `"next"` | Current panel aligns to the right (or bottom in vertical) of the viewport | RTL interfaces, special layouts |
+| Number/String | Aligns to a specified position (`0.25`, `"100px"`, `"50% - 25px"`) | Precise custom positioning |
+
+## Details
+
+### "prev" in Detail
+The start point (left or top) of the panel aligns to the start point of the viewport. This creates a natural flow as if flipping through a list. Most intuitive in LTR (left-to-right) interfaces.
+
+### "center" in Detail
+The center of the panel aligns to the center of the viewport. This draws visual focus to the current panel and can create an effect where previous/next panels are slightly visible on either side.
+
+### "next" in Detail
+The end point (right or bottom) of the panel aligns to the end point of the viewport. Used for RTL (right-to-left) language interfaces or special design requirements.
+
+### Number/String Values in Detail
+- `0` to `1` number: Ratio of viewport width (0=left, 0.5=center, 1=right)
+- `"100px"`: 100px from the left of the viewport
+- `"50% - 25px"`: Expression calculation supported
+
+### Related Options
+- **Relationship with panelsPerView**: When `panelsPerView` is set, the alignment reference point becomes the center of the visible panel group rather than individual panels
+- **Relationship with circular**: The combination of `circular: true` and `align: "center"` is the most common carousel pattern
+
+### Use Cases
+
+:::info When to use?
+- **"prev"**: Image galleries, article lists, thumbnail navigation
+- **"center"**: Product details, hero sliders, card carousels
+- **"next"**: Arabic/Hebrew UI, reverse timelines
+:::
+
+### Notes
+
+:::warning Caution
+- When using `panelsPerView`, the alignment behavior changes. Alignment is based on panel groups, not individual panels.
+- If the panel size is larger than the viewport, it may not appear as expected.
+:::
+
+## Related Links
+
+### Related Options
+- [`panelsPerView`](../../api/interfaces/FlickingOptions#panelsperview): Number of panels per screen (affects alignment calculation)
+- [`circular`](../../api/interfaces/FlickingOptions#circular): Circular mode
+
+### Related Demos
+- [Circular](./circular): Circular mode with alignment combination
+- [Panels Per View](./panels-per-view): Multi-panel display with alignment

@@ -1,0 +1,87 @@
+---
+title: "Prevent Click"
+id: prevent-click
+slug: /demos/basic/prevent-click
+sidebar_position: 19
+description: Prevent unintended click events that occur after dragging using the preventClickOnDrag option
+keywords: [flicking, carousel, preventClickOnDrag, preventDefaultOnDrag, click, drag, click prevention]
+---
+
+import PreventClick from '@site/src/demo/basic/PreventClick';
+
+# Prevent Click
+
+The [`preventClickOnDrag`](../../api/interfaces/FlickingOptions#preventclickondrag) option prevents unintended click events that occur after dragging. This is especially important when panels contain links or buttons.
+
+Try dragging a panel and releasing to see the difference in click handling.
+
+<PreventClick />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`preventClickOnDrag`](../../api/interfaces/FlickingOptions#preventclickondrag) | `boolean` | `true` | Prevent click events after drag |
+| [`preventDefaultOnDrag`](../../api/interfaces/FlickingOptions#preventdefaultondrag) | `boolean` | `false` | Prevent browser default behavior during drag |
+
+### Comparison by Value
+
+| Option | Value | Behavior | Suitable For |
+|--------|-------|----------|--------------|
+| `preventClickOnDrag` | `true` | Ignores click events after drag (default) | General carousels with links/buttons in panels |
+| `preventClickOnDrag` | `false` | Click events fire even after drag | When managing click events manually |
+| `preventDefaultOnDrag` | `true` | Prevents default behavior like text selection during drag | When text selection prevention is needed |
+| `preventDefaultOnDrag` | `false` | Allows default behavior (default) | Most general carousels |
+
+## Details
+
+### How preventClickOnDrag Works
+
+When a touch/mouse drag ends, the browser naturally fires a `click` event. When lifting your finger after dragging the carousel to flip panels, links or buttons inside the panel may be clicked unintentionally.
+
+With `preventClickOnDrag: true` (default), click events from interactions involving a drag are ignored. Simple taps/clicks (without drag) work normally.
+
+```javascript
+// Default: prevent click after drag (recommended)
+const flicking = new Flicking("#el", {
+  preventClickOnDrag: true
+});
+
+// Allow click even after drag
+const flicking = new Flicking("#el", {
+  preventClickOnDrag: false
+});
+```
+
+### preventDefaultOnDrag
+
+Calls `preventDefault()` during drag to prevent browser default behavior (text selection, image dragging, etc.).
+
+```javascript
+const flicking = new Flicking("#el", {
+  preventDefaultOnDrag: true  // Text selection disabled during drag
+});
+```
+
+### Use Cases
+
+:::info When to use?
+- **When panels contain links/buttons**: Set `preventClickOnDrag: true` to prevent unintended navigation after drag.
+- **Text-heavy panels**: Set `preventDefaultOnDrag: true` to prevent text selection during drag for better usability.
+:::
+
+:::warning Using preventClickOnDrag: false
+Since clicks fire even after drag, short drags may trigger unintended link navigation or button clicks. Use only when managing click events manually (e.g., measuring drag distance to determine click intent).
+:::
+
+## Related Links
+
+### Related Options
+- [`inputType`](../../api/interfaces/FlickingOptions#inputtype): Input device type settings
+- [`threshold`](../../api/interfaces/FlickingOptions#threshold): Minimum drag distance for panel transition
+
+### Related Demos
+- [Input Type](./input-type): Input device type restriction
+- [Threshold](./threshold): Panel transition threshold settings

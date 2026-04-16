@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="demo-container">
+    <div class="demo-label">resizeOnContentsReady: true</div>
+    <div class="demo-info">Auto-recalculates panel size & position after image load → correct scrolling</div>
+    <div id="flick-auto" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel"><img alt="Panel 1" /><div class="panel-label">Panel 1</div></div>
+        <div class="flicking-panel"><img alt="Panel 2" /><div class="panel-label">Panel 2</div></div>
+        <div class="flicking-panel"><img alt="Panel 3" /><div class="panel-label">Panel 3</div></div>
+        <div class="flicking-panel"><img alt="Panel 4" /><div class="panel-label">Panel 4</div></div>
+      </div>
+    </div>
+    <div class="status-display">
+      Flicking internal panel widths: <strong id="auto-sizes">-</strong>
+    </div>
+  </div>
+
+  <div class="demo-container">
+    <div class="demo-label">resizeOnContentsReady: false (default)</div>
+    <div class="demo-info">Panel sizes not recalculated → size mismatch, incorrect scroll position</div>
+    <div id="flick-manual" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel"><img alt="Panel 1" /><div class="panel-label">Panel 1</div></div>
+        <div class="flicking-panel"><img alt="Panel 2" /><div class="panel-label">Panel 2</div></div>
+        <div class="flicking-panel"><img alt="Panel 3" /><div class="panel-label">Panel 3</div></div>
+        <div class="flicking-panel"><img alt="Panel 4" /><div class="panel-label">Panel 4</div></div>
+      </div>
+    </div>
+    <div class="status-display">
+      Flicking internal panel widths: <strong id="manual-sizes">-</strong>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="move-btn button" data-index="0">Panel 1</button>
+    <button class="move-btn button" data-index="1">Panel 2</button>
+    <button class="move-btn button" data-index="2">Panel 3</button>
+    <button class="move-btn button" data-index="3">Panel 4</button>
+  </div>
+</body>
+</html>

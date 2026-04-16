@@ -1,0 +1,21 @@
+#cross .flicking-viewport {
+  width: 400px;
+  height: 500px;
+}
+
+#cross .panel {
+  width: 400px;
+  margin-top: 0px;
+  font-size: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 500px;
+  color: white;
+}
+
+#cross .panel img {
+  width: 100%;
+  height: 100%;
+}

@@ -1,0 +1,67 @@
+---
+title: "Prev / Next"
+id: prev-next
+slug: /demos/reactive/prev-next
+sidebar_position: 3
+description: Build previous/next navigation buttons using the Reactive API
+keywords: [flicking, carousel, prev, next, navigation, reactive, isReachStart, isReachEnd]
+---
+
+import PrevNext from '@site/src/demo/reactive/PrevNext';
+
+# Prev / Next
+
+Use `isReachStart`, `isReachEnd`, and `moveTo` from the Reactive API to build navigation buttons that automatically disable at the carousel boundaries.
+
+<PrevNext />
+
+## Summary
+
+### Key API
+
+| Property / Method | Type | Description |
+|-------------------|------|-------------|
+| [`isReachStart`](../../api/interfaces/FlickingReactiveState#isreachstart) | `boolean` | Whether the first panel is active |
+| [`isReachEnd`](../../api/interfaces/FlickingReactiveState#isreachend) | `boolean` | Whether the last panel is active |
+| [`currentPanelIndex`](../../api/interfaces/FlickingReactiveState#currentpanelindex) | `number` | Currently active panel index |
+| [`moveTo`](../../api/interfaces/FlickingReactiveMethod#moveto) | `(i: number) => Promise` | Move to a specific panel |
+
+### Button States
+
+| Position | Prev Button | Next Button |
+|----------|-------------|-------------|
+| First panel (`isReachStart`) | disabled | enabled |
+| Middle panel | enabled | enabled |
+| Last panel (`isReachEnd`) | enabled | disabled |
+
+## Details
+
+### How It Works
+
+- Disable the Prev button when `isReachStart` is `true`
+- Disable the Next button when `isReachEnd` is `true`
+- Prev click: `moveTo(currentPanelIndex - 1)`
+- Next click: `moveTo(currentPanelIndex + 1)`
+- Button states auto-sync when the user drags to a new panel
+
+### Related Options
+
+- **`circular: true`**: In circular mode, `isReachStart` and `isReachEnd` are always `false`, so both buttons remain enabled at all times.
+
+### Use Cases
+
+:::info When to use
+- Desktop carousels where drag is less discoverable
+- Accessibility (a11y) keyboard/button navigation
+- Touch-disabled environments
+:::
+
+## Related Links
+
+### Related API
+- [`isReachStart`](../../api/interfaces/FlickingReactiveState#isreachstart): Start boundary flag
+- [`isReachEnd`](../../api/interfaces/FlickingReactiveState#isreachend): End boundary flag
+
+### Related Demos
+- [Pagination](./pagination): Dot pagination
+- [Progress Bar](./progress-bar): Scroll progress indicator

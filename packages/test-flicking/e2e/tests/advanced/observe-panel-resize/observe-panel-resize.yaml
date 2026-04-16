@@ -1,0 +1,16 @@
+id: observe-panel-resize
+category: advanced
+demo: advanced/ObservePanelResize
+
+intent: "observePanelResize 옵션으로 패널 크기 변경 시 레이아웃을 자동으로 재계산하는 것을 보여준다"
+
+focus:
+  - 2개 viewport + Expand 버튼 렌더링
+  - observePanelResize 옵션 확인 (false/true)
+  - Expand 클릭 시 버튼 텍스트가 Shrink로 변경
+  - "observePanelResize:true에서 패널 크기 변경 후 레이아웃 재계산"
+
+api:
+  options: [observePanelResize, align]
+
+frameworks: [vanilla, react, vue]

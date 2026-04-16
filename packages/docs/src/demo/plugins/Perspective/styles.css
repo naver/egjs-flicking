@@ -1,0 +1,12 @@
+.flicking-panel {
+  width: 200px;
+  height: 150px;
+  margin-right: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}

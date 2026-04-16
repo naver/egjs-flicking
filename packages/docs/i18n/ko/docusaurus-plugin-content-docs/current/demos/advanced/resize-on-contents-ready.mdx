@@ -1,0 +1,104 @@
+---
+title: "Resize On Contents Ready"
+id: resize-on-contents-ready
+slug: /demos/advanced/resize-on-contents-ready
+sidebar_position: 5
+description: resizeOnContentsReady 옵션으로 이미지/비디오 로드 후 자동으로 패널 크기와 위치를 재계산합니다
+keywords: [flicking, carousel, resize, image, video, load, 리사이즈, 이미지, 로드]
+---
+
+import ResizeOnContentsReady from '@site/src/demo/advanced/ResizeOnContentsReady';
+
+# Resize On Contents Ready
+
+[`resizeOnContentsReady`](../../api/interfaces/FlickingOptions#resizeoncontentsready) 옵션으로 이미지/비디오 로드 후 자동으로 패널 크기와 위치를 재계산합니다.
+
+<ResizeOnContentsReady />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`resizeOnContentsReady`](../../api/interfaces/FlickingOptions#resizeoncontentsready) | `boolean` | `false` | 콘텐츠 로드 시 패널 크기 자동 재계산 |
+
+### 모드별 비교
+
+| resizeOnContentsReady | 이미지 로드 후 동작 |
+|----------------------|-------------------|
+| `false` | Flicking 내부 패널 크기가 초기화 시점 그대로 → 스크롤 범위, 스냅 위치 불일치 |
+| `true` | 패널 크기 재계산 → 스크롤 범위, 스냅 위치 정상 |
+
+## 상세 설명
+
+### 동작 원리
+
+1. Flicking 초기화 시점에 패널 크기 계산
+2. 이미지/비디오가 아직 로드되지 않아 크기가 0 또는 placeholder 크기
+3. 이미지 로드 완료 후 실제 크기로 변경
+4. `resizeOnContentsReady: true`면 [`@egjs/imready`](https://github.com/nicegist/egjs-imready)를 통해 자동으로 패널 크기 재계산 및 위치 업데이트
+
+```tsx
+<Flicking
+  resizeOnContentsReady={true}
+>
+  <div className="panel">
+    <img src="image.jpg" /> {/* 로드 완료 시 패널 크기 자동 재계산 */}
+  </div>
+</Flicking>
+```
+
+### 재계산 대상
+
+`resizeOnContentsReady`가 이미지/비디오 로드를 감지하면 다음을 업데이트합니다:
+
+- **패널 크기** (`panel.resize()`)
+- **뒤따르는 패널 위치** (`updatePosition()`)
+- **카메라 스크롤 범위** (`camera.updateRange()`)
+- **스냅 포인트** (`camera.updateAnchors()`)
+
+### 감지 대상 콘텐츠
+
+패널 내의 다음 요소의 load 이벤트를 감지합니다:
+
+- `<img>` 이미지
+- `<video>` 비디오
+
+### 사용 시나리오
+
+:::info 언제 resizeOnContentsReady를 사용하나요?
+
+**사용 권장:**
+- 패널 크기가 이미지/비디오에 의존하는 경우
+- CSS로 패널 크기가 미리 고정되지 않은 경우
+- 네트워크에서 이미지를 로드하는 경우
+
+**사용하지 않아도 되는 경우:**
+- 패널 크기가 CSS로 미리 고정된 경우 (예: `width: 200px`)
+- 텍스트만 있는 패널
+- 이미지가 base64 인라인으로 포함된 경우
+:::
+
+### 수동 resize 대안
+
+`resizeOnContentsReady: false`일 때 수동으로 resize를 호출할 수 있습니다:
+
+```javascript
+// 이미지 로드 완료 후 수동 resize
+img.addEventListener("load", () => {
+  flicking.resize();
+});
+```
+
+## 관련 링크
+
+### 관련 옵션
+- [`adaptive`](../../api/interfaces/FlickingOptions#adaptive): 뷰포트 높이 자동 조정
+- [`autoResize`](../../api/interfaces/FlickingOptions#autoresize): 윈도우 리사이즈 시 자동 resize
+
+### 관련 메서드
+- [`resize`](../../api/classes/Flicking#resize): 수동 레이아웃 재계산
+
+### 관련 데모
+- [Adaptive](../basic/adaptive): adaptive 옵션 데모

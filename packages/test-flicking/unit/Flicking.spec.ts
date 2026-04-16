@@ -1,0 +1,2752 @@
+import { vi } from "vitest";
+import { BoundCameraMode, CircularCameraMode, LinearCameraMode } from "~/camera";
+import { ALIGN, DIRECTION, MOVE_TYPE } from "~/constants/values";
+import { FreeControl, SnapControl, StrictControl } from "~/control";
+import Viewport from "~/core/Viewport";
+import VirtualManager from "~/core/VirtualManager";
+import * as ERROR from "~/error/codes";
+import FlickingError from "~/error/FlickingError";
+import { EVENTS } from "~/event";
+import { AfterResizeEvent, BeforeResizeEvent } from "~/event/types";
+import Flicking from "~/Flicking";
+import { Plugin } from "~/types/external";
+
+import El from "./helper/El";
+import { cleanup, createFlicking, range, simulate, tick, waitEvent, waitTime } from "./helper/test-util";
+
+describe("Flicking", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  describe("Initializing with correct structure", () => {
+    it("can be created", async () => {
+      const err = await createFlicking(El.DEFAULT_HORIZONTAL)
+        .then(() => null)
+        .catch(e => e);
+      expect(err).toBeNull();
+    });
+
+    it("should throw an Error when no element is given", async () => {
+      const err = await createFlicking(null)
+        .then(() => null)
+        .catch(e => e);
+
+      expect(err).toBeInstanceOf(FlickingError);
+      expect(err.code).toBe(ERROR.CODE.WRONG_TYPE);
+    });
+
+    it("should throw an Error when element with given selector is not found", async () => {
+      const selector = "#definitely-not-a-flicking-selector";
+      const err = await createFlicking(selector)
+        .then(() => null)
+        .catch(e => e);
+
+      expect(err).toBeInstanceOf(FlickingError);
+      expect(err.code).toBe(ERROR.CODE.ELEMENT_NOT_FOUND);
+    });
+
+    it("should not throw an Error when there's no panel elements", async () => {
+      const err = await createFlicking(El.viewport().add(El.camera()))
+        .then(() => null)
+        .catch(e => e);
+
+      expect(err).toBeNull();
+    });
+
+    it("won't throw error even if all panel has width: 0", async () => {
+      const err = await createFlicking(
+        El.viewport().add(El.camera().add(El.panel("0px")).add(El.panel("0px")).add(El.panel("0px")))
+      )
+        .then(() => null)
+        .catch(e => e);
+
+      expect(err).toBe(null);
+    });
+
+    it("should set current panel even if all panel's size is 0", async () => {
+      const flicking = await createFlicking(
+        El.viewport().add(El.camera().add(El.panel("0px")).add(El.panel("0px")).add(El.panel("0px")))
+      );
+
+      expect(flicking.currentPanel).not.toBeNull();
+      expect(flicking.currentPanel).toBe(flicking.panels[0]);
+    });
+
+    [15, 30, 50, 100].forEach(width => {
+      it(`should set current panel same as the panel at the initial anchor point (each panel width: ${width}%)`, async () => {
+        const flicking = await createFlicking(
+          El.viewport().add(
+            El.camera()
+              .add(El.panel(`${width}%`))
+              .add(El.panel(`${width}%`))
+              .add(El.panel(`${width}%`))
+              .add(El.panel(`${width}%`))
+              .add(El.panel(`${width}%`))
+              .add(El.panel(`${width}%`))
+              .add(El.panel(`${width}%`))
+          ),
+          {
+            bound: true // when bound is true, the number of anchors may be less than the number of panels
+          }
+        );
+
+        expect(flicking.currentPanel).toBe(flicking.camera.findNearestAnchor(0).panel);
+        expect(flicking.currentPanel).toBe(flicking.camera.anchorPoints[0].panel);
+      });
+    });
+  });
+
+  describe("Properties", () => {
+    it("should have VERSION string", () => {
+      expect(Flicking.VERSION).toBeDefined();
+      expect(typeof Flicking.VERSION).toBe("string");
+    });
+
+    describe("viewport", () => {
+      it("exists when the flicking is created", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        expect(flicking.viewport).toBeDefined();
+        expect(flicking.viewport).toBeInstanceOf(Viewport);
+      });
+    });
+
+    describe("virtual", () => {
+      it("should be an instance of VirtualManager", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        expect(flicking.virtual).toBeInstanceOf(VirtualManager);
+      });
+
+      it("should have virtual options in it", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        expect(typeof flicking.virtual.panelClass).toBe("string");
+        expect(typeof flicking.virtual.cache).toBe("boolean");
+        expect(typeof flicking.virtual.initialPanelCount).toBe("number");
+        expect(typeof flicking.virtual.renderPanel).toBe("function");
+      });
+    });
+  });
+
+  describe("Options", () => {
+    describe("align", () => {
+      it("is center by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        expect(flicking.align).toBe(ALIGN.CENTER);
+      });
+
+      it("should override renderer & camera's align", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          align: ALIGN.NEXT
+        });
+
+        expect(flicking.align).toBe(ALIGN.NEXT);
+        expect(flicking.renderer.align).toBe(ALIGN.NEXT);
+        expect(flicking.camera.align).toBe(ALIGN.NEXT);
+      });
+
+      it("can be changed at anytime", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          align: ALIGN.CENTER
+        });
+
+        flicking.align = ALIGN.PREV;
+
+        expect(flicking.align).toBe(ALIGN.PREV);
+        expect(flicking.renderer.align).toBe(ALIGN.PREV);
+        expect(flicking.camera.align).toBe(ALIGN.PREV);
+      });
+
+      it("should update camera position when changed", async () => {
+        const flicking = await createFlicking(El.HALF_HORIZONTAL, {
+          align: ALIGN.CENTER
+        });
+
+        const prevPos = flicking.camera.position;
+        flicking.align = ALIGN.PREV;
+
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        const newPos = flicking.camera.position;
+        expect(newPos).not.toBe(prevPos);
+        expect(newPos).toBe(0);
+      });
+    });
+
+    describe("defaultIndex", () => {
+      it("should be 0 by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        expect(flicking.defaultIndex).toBe(0);
+      });
+
+      it("should accept any number, even if it's bigger than actual panel length", async () => {
+        // Empty flicking
+        const flicking = await createFlicking(El.viewport().add(El.camera()), { defaultIndex: 2 });
+        expect(flicking.renderer.panels.length).toBe(0);
+        expect(flicking.defaultIndex).toBe(2);
+      });
+
+      it("should locate camera at position of panel which has index equal to defaultIndex", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+        expect(flicking.camera.position).not.toBe(0);
+        expect(flicking.camera.position).toBe(flicking.renderer.getPanel(1).position);
+      });
+
+      it("should locate camera at first panel's position instead if index is out of range", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 99999 });
+        expect(flicking.camera.position).toBe(flicking.renderer.getPanel(0).position);
+      });
+
+      it("can be changed before init", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1, autoInit: false });
+
+        flicking.defaultIndex = 0;
+        await flicking.init();
+
+        expect(flicking.index).toBe(0);
+      });
+
+      it("should initialized with panel which has index equal to defaultIndex when panels are not visible.", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL.setWidth(0), { defaultIndex: 1 });
+
+        expect(flicking.index).toBe(1);
+      });
+    });
+
+    describe("horizontal", () => {
+      it("is true by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.horizontal).toBe(true);
+      });
+
+      it("can be changed on creating new instance", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          horizontal: false
+        });
+
+        expect(flicking.horizontal).toBe(false);
+      });
+
+      it("can be changed anytime", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          horizontal: true
+        });
+
+        flicking.horizontal = false;
+
+        expect(flicking.horizontal).toBe(false);
+      });
+
+      it("should set scroll direction to vertical when changed to vertical", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          horizontal: true
+        });
+
+        flicking.horizontal = false;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        const prevIndex = flicking.index;
+        await simulate(flicking.element, { deltaY: -500 });
+
+        expect(flicking.index).not.toBe(prevIndex);
+        expect(flicking.index).not.toBe(0);
+      });
+
+      it("should set scroll direction to horizontal when changed to horizontal", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          horizontal: false
+        });
+
+        flicking.horizontal = true;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        const prevIndex = flicking.index;
+        await simulate(flicking.element, { deltaX: -500 });
+
+        expect(flicking.index).not.toBe(prevIndex);
+        expect(flicking.index).not.toBe(0);
+      });
+    });
+
+    describe("circular", () => {
+      it("is false by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.circular).toBe(false);
+      });
+
+      it("should change camera mode to linear(by default) when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { circular: true });
+
+        expect(flicking.camera.mode).toBeInstanceOf(CircularCameraMode);
+
+        flicking.circular = false;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(flicking.camera.mode).toBeInstanceOf(LinearCameraMode);
+      });
+
+      it("should untoggle every panel when changed", async () => {
+        const flicking = await createFlicking(El.HALF_HORIZONTAL, { circular: true });
+        const wasToggled = flicking.panels.some(panel => panel.toggled);
+
+        flicking.circular = false;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        const isToggled = flicking.panels.some(panel => panel.toggled);
+        expect(wasToggled).toBe(true);
+        expect(isToggled).toBe(false);
+      });
+    });
+
+    describe("circularFallback", () => {
+      it("is 'linear' by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.circularFallback).toBe("linear");
+      });
+    });
+
+    describe("bound", () => {
+      it("is false by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.bound).toBe(false);
+      });
+
+      it("should change camera mode to linear(by default) when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { bound: true });
+
+        expect(flicking.camera.mode).toBeInstanceOf(BoundCameraMode);
+
+        flicking.bound = false;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(flicking.camera.mode).toBeInstanceOf(LinearCameraMode);
+      });
+
+      it("should update camera position to panel pos when changed to false", async () => {
+        const flicking = await createFlicking(El.HALF_HORIZONTAL, { bound: true });
+
+        expect(flicking.camera.position).not.toBe(flicking.panels[0].position);
+
+        flicking.bound = false;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(flicking.camera.position).toBe(flicking.panels[0].position);
+      });
+
+      it("should update camera position to bounded pos when changed to true", async () => {
+        const flicking = await createFlicking(El.HALF_HORIZONTAL, { bound: false });
+
+        expect(flicking.camera.position).toBe(flicking.panels[0].position);
+
+        flicking.bound = true;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(flicking.camera.position).not.toBe(flicking.panels[0].position);
+        expect(flicking.camera.position).toBe(flicking.camera.anchorPoints[0].position);
+      });
+
+      it("should maintain camera position when changed to true if camera is not in bound pos", async () => {
+        const flicking = await createFlicking(El.HALF_HORIZONTAL, { bound: false, defaultIndex: 1 });
+
+        expect(flicking.camera.position).toBe(flicking.panels[1].position);
+
+        flicking.bound = true;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(flicking.camera.position).toBe(flicking.panels[1].position);
+      });
+    });
+
+    describe("adaptive", () => {
+      it("is false by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.adaptive).toBe(false);
+      });
+
+      it("update height to current panel when changed to true", async () => {
+        // 400px height
+        const flicking = await createFlicking(El.VARIOUS_HORIZONTAL, { defaultIndex: 1, adaptive: false });
+        expect(flicking.viewport.height).not.toBe(400);
+
+        flicking.adaptive = true;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(flicking.viewport.height).toBe(400);
+      });
+    });
+
+    describe("panelsPerView", () => {
+      it("is -1 by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.panelsPerView).toBe(-1);
+      });
+
+      it("should update panel width when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { panelsPerView: 5 });
+
+        flicking.panelsPerView -= 1;
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(flicking.panelsPerView).toBe(4);
+        expect(flicking.panels[0].element.style.width).toBe(`${flicking.viewport.width / 4}px`);
+        expect(flicking.panels[0].size).toBe(flicking.viewport.width / 4);
+      });
+    });
+
+    describe("noPanelStyleOverride", () => {
+      it("is false by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.noPanelStyleOverride).toBe(false);
+      });
+
+      it("should not update panel style if true", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          panelsPerView: 5,
+          noPanelStyleOverride: true
+        });
+
+        expect(flicking.panels[0].element.style.width).toBe("100%");
+      });
+
+      it("should update panel style if false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          panelsPerView: 5,
+          noPanelStyleOverride: false
+        });
+
+        expect(flicking.panels[0].element.style.width).toBe(`${flicking.viewport.width / 5}px`);
+      });
+    });
+
+    describe("resizeOnContentsReady", () => {
+      it("is false by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.resizeOnContentsReady).toBe(false);
+      });
+
+      it("should set all initial panels with images to be loading at init if it's set to true", async () => {
+        const flicking = await createFlicking(
+          El.viewport("200px", "200px").add(
+            El.camera().add(El.imgPanel("100%", "100%"), El.imgPanel("100%", "100%"), El.imgPanel("100%", "100%"))
+          ),
+          { resizeOnContentsReady: true }
+        );
+
+        expect(flicking.panels.every(panel => panel.loading)).toBe(true);
+      });
+    });
+
+    describe("nested", () => {
+      it("is false by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_VERTICAL);
+
+        expect(flicking.nested).toBe(false);
+      });
+
+      [true, false].forEach(nested => {
+        it(`should check index of two flickings when nested option is ${nested}`, async () => {
+          const nestedPanel = El.panel()
+            .setWidth("100%")
+            .setHeight(300)
+            .add(
+              El.camera().add(
+                El.panel().setWidth("100%").setHeight(300),
+                El.panel().setWidth("100%").setHeight(300),
+                El.panel().setWidth("100%").setHeight(300)
+              )
+            );
+          const parentFlicking = await createFlicking(
+            El.viewport("500px", "100%").add(
+              El.camera().add(
+                El.panel().setWidth("100%").setHeight(300),
+                nestedPanel,
+                El.panel().setWidth("100%").setHeight(300)
+              )
+            )
+          );
+          const childFlicking = new Flicking(nestedPanel.el, { nested });
+
+          await simulate(nestedPanel.el, { deltaX: -2500 });
+
+          expect(childFlicking.index).toBe(2);
+          expect(parentFlicking.index).toBe(nested ? 2 : 0);
+        });
+      });
+
+      it("should update axes option when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { nested: false });
+        const axesOptions = flicking.control.controller.axes.options;
+        const prevVal = axesOptions.nested;
+
+        flicking.nested = true;
+
+        expect(prevVal).toBe(false);
+        expect(axesOptions.nested).toBe(true);
+      });
+    });
+
+    describe("needPanelThreshold", () => {
+      it("is 0 by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.needPanelThreshold).toBe(0);
+      });
+    });
+
+    describe("preventEventsBeforeInit", () => {
+      it("is true by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.preventEventsBeforeInit).toBe(true);
+      });
+
+      it("should prevent events before ready", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          autoInit: false,
+          preventEventsBeforeInit: true
+        });
+        const eventsTriggered = [];
+
+        Object.values(EVENTS).forEach(evt => flicking.on(evt, e => eventsTriggered.push(e)));
+        flicking.once(EVENTS.READY, () => {
+          flicking.off();
+        });
+        await flicking.init();
+
+        expect(eventsTriggered.length).toBe(1);
+        expect(eventsTriggered[0].eventType).toBe(EVENTS.READY);
+      });
+
+      it("should not prevent events before ready if false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          autoInit: false,
+          preventEventsBeforeInit: false
+        });
+        const eventsTriggered = [];
+
+        Object.values(EVENTS).forEach(evt => flicking.on(evt, e => eventsTriggered.push(e)));
+        flicking.once(EVENTS.READY, () => {
+          flicking.off();
+        });
+        await flicking.init();
+
+        expect(eventsTriggered.length).toBeGreaterThan(1);
+        expect(eventsTriggered[0].eventType).not.toBe(EVENTS.READY);
+      });
+    });
+
+    describe("deceleration", () => {
+      it("is 0.0075 by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.deceleration).toBe(0.0075);
+      });
+
+      it("should update axes option when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { deceleration: 0.1 });
+        const axesOptions = flicking.control.controller.axes.options;
+        const prevVal = axesOptions.deceleration;
+
+        flicking.deceleration = 0.2;
+
+        expect(prevVal).toBe(0.1);
+        expect(axesOptions.deceleration).toBe(0.2);
+      });
+    });
+
+    describe("duration", () => {
+      it("is 500 by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.duration).toBe(500);
+      });
+    });
+
+    describe("easing", () => {
+      it("is (x => 1 - (1 - x)^3) by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        const defaultEasing = flicking.easing;
+
+        expect(defaultEasing(0)).toBe(0);
+        expect(defaultEasing(0.5)).toBe(1 - 0.5 ** 3);
+        expect(defaultEasing(1)).toBe(1);
+      });
+
+      it("should update axes easing when changed", async () => {
+        const prevEasing = vi.fn();
+        const nextEasing = vi.fn();
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { easing: prevEasing });
+        const axesOptions = flicking.control.controller.axes.options;
+        const prevVal = axesOptions.easing;
+
+        flicking.easing = nextEasing;
+
+        expect(prevVal).toBe(prevEasing);
+        expect(axesOptions.easing).toBe(nextEasing);
+      });
+    });
+
+    describe("inputType", () => {
+      it("is ['mouse', 'touch'] by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.inputType).toEqual(["mouse", "touch"]);
+      });
+
+      it("should update axes inputType when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          inputType: ["mouse"]
+        });
+        const panOptions = flicking.control.controller.panInput.options;
+        const prevVal = panOptions.inputType;
+
+        flicking.inputType = ["touch"];
+
+        expect(prevVal).toEqual(["mouse"]);
+        expect(panOptions.inputType).toEqual(["touch"]);
+      });
+    });
+
+    describe("moveType", () => {
+      it("is 'snap' by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.moveType).toBe("snap");
+      });
+
+      it("should change control to SnapControl when 'snap' is given", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.SNAP });
+
+        expect(flicking.control).toBeInstanceOf(SnapControl);
+      });
+
+      it("should change control to FreeControl when 'freeScroll' is given", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.FREE_SCROLL });
+
+        expect(flicking.control).toBeInstanceOf(FreeControl);
+      });
+
+      it("should change control to StrictControl when 'strict' is given", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.STRICT });
+
+        expect(flicking.control).toBeInstanceOf(StrictControl);
+      });
+
+      it("should change internal control instance when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.SNAP });
+
+        expect(flicking.control).toBeInstanceOf(SnapControl);
+
+        flicking.moveType = MOVE_TYPE.FREE_SCROLL;
+
+        expect(flicking.control).toBeInstanceOf(FreeControl);
+
+        flicking.moveType = MOVE_TYPE.STRICT;
+
+        expect(flicking.control).toBeInstanceOf(StrictControl);
+      });
+    });
+
+    describe("threshold", () => {
+      it("is 40 by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.threshold).toBe(40);
+      });
+
+      it("should change panel when moving above threshold", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 50 });
+        const beforeIndex = flicking.index;
+
+        await simulate(flicking.element, { deltaX: -51, duration: 3000 });
+
+        expect(flicking.index).not.toBe(beforeIndex);
+      });
+
+      it("should change panel when moving same as threshold", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 50 });
+        const beforeIndex = flicking.index;
+
+        await simulate(flicking.element, { deltaX: -50, duration: 3000 });
+
+        expect(flicking.index).not.toBe(beforeIndex);
+      });
+
+      it("should not change panel when moving below threshold", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 50 });
+        const beforeIndex = flicking.index;
+
+        await simulate(flicking.element, { deltaX: -49, duration: 3000 });
+
+        expect(flicking.index).toBe(beforeIndex);
+      });
+
+      it("should change panel when moving above threshold (vertical)", async () => {
+        const flicking = await createFlicking(El.DEFAULT_VERTICAL, {
+          threshold: 50,
+          defaultIndex: 2,
+          horizontal: false,
+          align: "prev"
+        });
+        const beforeIndex = flicking.index;
+
+        await simulate(flicking.element, { deltaY: 1000, duration: 3000 });
+
+        expect(flicking.index).not.toBe(beforeIndex);
+      });
+
+      it("should not change panel when moving below threshold (vertical)", async () => {
+        const flicking = await createFlicking(El.DEFAULT_VERTICAL, {
+          threshold: 50,
+          defaultIndex: 2,
+          horizontal: false,
+          align: "prev"
+        });
+        const beforeIndex = flicking.index;
+
+        await simulate(flicking.element, { deltaY: 49, duration: 3000 });
+
+        expect(flicking.index).toBe(beforeIndex);
+      });
+    });
+
+    describe("dragThreshold", () => {
+      it("is 1 by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.dragThreshold).toBe(1);
+      });
+
+      it("should trigger move event when moving above dragThreshold", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { dragThreshold: 50 });
+        const moveSpy = vi.fn();
+        flicking.on(EVENTS.MOVE, moveSpy);
+
+        await simulate(flicking.element, { deltaX: -51, duration: 3000 });
+
+        expect(moveSpy).toHaveBeenCalled();
+      });
+
+      it("should not trigger move event when moving below dragThreshold", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { dragThreshold: 50 });
+        const moveSpy = vi.fn();
+        flicking.on(EVENTS.MOVE, moveSpy);
+
+        await simulate(flicking.element, { deltaX: -49, duration: 3000 });
+
+        expect(moveSpy).not.toHaveBeenCalled();
+      });
+
+      it("should update axes option when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          dragThreshold: 50
+        });
+        const panOptions = flicking.control.controller.panInput.options;
+        const prevVal = panOptions.threshold;
+
+        flicking.dragThreshold = 30;
+
+        expect(prevVal).toBe(50);
+        expect(panOptions.threshold).toBe(30);
+      });
+    });
+
+    describe("interruptable", () => {
+      it("is true by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.interruptable).toBe(true);
+      });
+
+      it("should update axes option when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          interruptable: false
+        });
+        const axesOptions = flicking.control.controller.axes.options;
+        const prevVal = axesOptions.interruptable;
+
+        flicking.interruptable = true;
+
+        expect(prevVal).toBe(false);
+        expect(axesOptions.interruptable).toBe(true);
+      });
+    });
+
+    describe("bounce", () => {
+      it("is '20%' by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.bounce).toBe("20%");
+      });
+
+      it("should limit input to left bounce", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { bounce: 25 });
+        const cameraPositionOnDefaultPanel = flicking.camera.position;
+        let cameraPositionOnHoldEnd = 0;
+        flicking.on(EVENTS.HOLD_END, () => {
+          cameraPositionOnHoldEnd = flicking.camera.position;
+        });
+
+        await simulate(flicking.element, {
+          deltaX: 999999999
+        });
+
+        expect(cameraPositionOnHoldEnd - cameraPositionOnDefaultPanel).toBe(-25);
+      });
+
+      it("should limit input to right bounce", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { bounce: 25, defaultIndex: 2 });
+        const cameraPositionOnDefaultPanel = flicking.camera.position;
+        let cameraPositionOnHoldEnd = 0;
+        flicking.on(EVENTS.HOLD_END, () => {
+          cameraPositionOnHoldEnd = flicking.camera.position;
+        });
+
+        await simulate(flicking.element, {
+          deltaX: -999999999
+        });
+
+        expect(cameraPositionOnHoldEnd - cameraPositionOnDefaultPanel).toBe(25);
+      });
+
+      it("should limit input to up bounce", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { bounce: 25, horizontal: false });
+        const cameraPositionOnDefaultPanel = flicking.camera.position;
+        let cameraPositionOnHoldEnd = 0;
+        flicking.on(EVENTS.HOLD_END, () => {
+          cameraPositionOnHoldEnd = flicking.camera.position;
+        });
+
+        await simulate(flicking.element, {
+          deltaY: 999999999
+        });
+
+        expect(cameraPositionOnHoldEnd - cameraPositionOnDefaultPanel).toBe(-25);
+      });
+
+      it("should limit input to down bounce", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          bounce: 25,
+          defaultIndex: 2,
+          horizontal: false
+        });
+        const cameraPositionOnDefaultPanel = flicking.camera.position;
+        let cameraPositionOnHoldEnd = 0;
+        flicking.on(EVENTS.HOLD_END, () => {
+          cameraPositionOnHoldEnd = flicking.camera.position;
+        });
+
+        await simulate(flicking.element, {
+          deltaY: -999999999
+        });
+
+        expect(cameraPositionOnHoldEnd - cameraPositionOnDefaultPanel).toBe(25);
+      });
+
+      it("should update axes bounce value when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { bounce: 25, defaultIndex: 2 });
+        flicking.bounce = 50;
+
+        const cameraPositionOnDefaultPanel = flicking.camera.position;
+        let cameraPositionOnHoldEnd = 0;
+        flicking.on(EVENTS.HOLD_END, () => {
+          cameraPositionOnHoldEnd = flicking.camera.position;
+        });
+
+        await simulate(flicking.element, {
+          deltaX: -999999999
+        });
+
+        expect(cameraPositionOnHoldEnd - cameraPositionOnDefaultPanel).toBe(50);
+      });
+    });
+
+    describe("iOSEdgeSwipeThreshold", () => {
+      it("is 30 by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.iOSEdgeSwipeThreshold).toBe(30);
+      });
+
+      it("should update axes option when changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          iOSEdgeSwipeThreshold: 30
+        });
+        const panOptions = flicking.control.controller.panInput.options;
+        const prevVal = panOptions.iOSEdgeSwipeThreshold;
+
+        flicking.iOSEdgeSwipeThreshold = 60;
+
+        expect(prevVal).toBe(30);
+        expect(panOptions.iOSEdgeSwipeThreshold).toBe(60);
+      });
+    });
+
+    describe("renderOnlyVisible", () => {
+      it("is false by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.renderOnlyVisible).toBe(false);
+      });
+    });
+
+    describe("virtual", () => {
+      it("has cache as false by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.virtual.cache).toBe(false);
+      });
+
+      it("has initialPanelCount as -1 by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.virtual.initialPanelCount).toBe(-1);
+      });
+
+      it("has panelClass as 'flicking-panel' by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.virtual.panelClass).toBe("flicking-panel");
+      });
+
+      it("has renderPanel as a function that returns an empty string by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.virtual.renderPanel(null, 0)).toBe("");
+      });
+    });
+
+    describe("autoInit", () => {
+      it("is true by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.autoInit).toBe(true);
+      });
+
+      it("should set initialized to true", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.initialized).toBe(true);
+      });
+
+      it("should not set initialized to true when it's set to false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false });
+
+        expect(flicking.initialized).toBe(false);
+      });
+    });
+
+    describe("autoResize", () => {
+      it("is true by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        expect(flicking.autoResize).toBe(true);
+      });
+    });
+
+    describe("useResizeObserver", () => {
+      it("should receive window resize event and emit resize event if set to false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoResize: true, useResizeObserver: false });
+        const resizeSpy = vi.fn();
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
+
+        window.dispatchEvent(new Event("resize"));
+
+        return new Promise<void>(resolve => {
+          flicking.once(EVENTS.AFTER_RESIZE, () => {
+            expect(resizeSpy).toHaveBeenCalledTimes(1);
+            resolve();
+          });
+        });
+      });
+
+      it("should not attach resize event until init() is called if set to false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          autoInit: false,
+          autoResize: true,
+          useResizeObserver: false
+        });
+        const resizeSpy = vi.fn();
+        flicking.on(EVENTS.BEFORE_RESIZE, resizeSpy);
+
+        window.dispatchEvent(new Event("resize"));
+        expect(resizeSpy).not.toHaveBeenCalled();
+
+        await flicking.init(); // resize() called inside, so reset resizeSpy history
+        resizeSpy.mockClear();
+        window.dispatchEvent(new Event("resize"));
+
+        expect(resizeSpy).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe("observePanelResize", () => {
+      it(`should call resize when size of panel is changed`, async () => {
+        const flicking = await createFlicking(
+          El.viewport("1000px", "1000px").add(
+            El.camera("1000px", "1000px").add(
+              El.panel("800px", "1000px"),
+              El.panel("800px", "1000px"),
+              El.panel("800px", "1000px")
+            )
+          ),
+          { autoResize: true, useResizeObserver: true, observePanelResize: true }
+        );
+        const afterResizeSpy = vi.fn();
+        const beforeResizeSpy = vi.fn();
+
+        // wait for initial resize
+        await waitTime(100);
+
+        flicking.on(EVENTS.AFTER_RESIZE, afterResizeSpy);
+        flicking.on(EVENTS.BEFORE_RESIZE, beforeResizeSpy);
+        flicking.panels[2].element.style.height = "3000px";
+
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(afterResizeSpy).toHaveBeenCalledTimes(1);
+        expect(beforeResizeSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("should observe size of panel element if panel element is added later", async () => {
+        const flicking = await createFlicking(
+          El.viewport("1000px", "1000px").add(
+            El.camera("1000px", "1000px").add(
+              El.panel("800px", "1000px"),
+              El.panel("800px", "1000px"),
+              El.panel("800px", "1000px")
+            )
+          ),
+          { autoResize: true, useResizeObserver: true, observePanelResize: true }
+        );
+        const afterResizeSpy = vi.fn();
+        const beforeResizeSpy = vi.fn();
+
+        // wait for initial resize
+        await waitTime(100);
+
+        flicking.on(EVENTS.AFTER_RESIZE, afterResizeSpy);
+        flicking.on(EVENTS.BEFORE_RESIZE, beforeResizeSpy);
+
+        flicking.append(flicking.panels[0].element.outerHTML);
+
+        flicking.panels[3].element.style.height = "3000px";
+
+        await waitEvent(flicking, EVENTS.AFTER_RESIZE);
+
+        expect(afterResizeSpy).toHaveBeenCalledTimes(1);
+        expect(beforeResizeSpy).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe("preventClickOnDrag", () => {
+      it("should trigger click event when Flicking's not dragged at all", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventClickOnDrag: true });
+        const clickSpy = vi.fn();
+        const testPanel = flicking.panels[0];
+
+        testPanel.element.addEventListener("click", clickSpy);
+
+        await simulate(flicking.element, { deltaX: 0, deltaY: 0 });
+        testPanel.element.click();
+
+        expect(clickSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("should trigger click event when Flicking's dragged under 1px", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          preventClickOnDrag: true,
+          inputType: ["pointer"]
+        });
+        const clickSpy = vi.fn();
+        const holdStartSpy = vi.fn();
+        const moveSpy = vi.fn();
+        const testPanel = flicking.panels[0];
+        flicking.on(EVENTS.HOLD_START, holdStartSpy);
+        flicking.on(EVENTS.MOVE, moveSpy);
+
+        testPanel.element.addEventListener("click", clickSpy);
+
+        flicking.element.dispatchEvent(
+          new PointerEvent("pointerdown", {
+            pointerId: 1,
+            buttons: 1,
+            clientX: 0,
+            clientY: 0,
+            cancelable: true
+          })
+        );
+
+        window.dispatchEvent(
+          new PointerEvent("pointermove", {
+            pointerId: 1,
+            buttons: 1,
+            clientX: 0.5,
+            clientY: 0,
+            movementX: 0,
+            movementY: 0,
+            cancelable: true
+          })
+        );
+
+        testPanel.element.click();
+
+        expect(holdStartSpy).toHaveBeenCalledTimes(1);
+        expect(moveSpy).not.toHaveBeenCalled();
+        expect(clickSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("shouldn't trigger click event when Flicking's dragged a little", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventClickOnDrag: true });
+        const clickSpy = vi.fn();
+        const testPanel = flicking.panels[0];
+
+        testPanel.element.addEventListener("click", clickSpy);
+
+        await simulate(flicking.element, { deltaX: -50, deltaY: 0 });
+        testPanel.element.click();
+
+        expect(clickSpy).not.toHaveBeenCalled();
+      });
+
+      it("shouldn't bother click event on outside of camera element", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventClickOnDrag: true });
+        const clickSpy = vi.fn();
+        const testEl = document.createElement("div");
+
+        flicking.element.appendChild(testEl);
+
+        testEl.addEventListener("click", clickSpy);
+
+        await simulate(flicking.element, { deltaX: -50, deltaY: 0 });
+        testEl.click();
+
+        expect(clickSpy).toHaveBeenCalled();
+      });
+
+      it("shouldn't bother click event when input is disabled", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventClickOnDrag: true });
+        const clickSpy = vi.fn();
+        const testPanel = flicking.panels[0];
+
+        flicking.disableInput();
+        testPanel.element.addEventListener("click", clickSpy);
+
+        await simulate(flicking.element, { deltaX: -50, deltaY: 0 });
+        testPanel.element.click();
+
+        expect(clickSpy).toHaveBeenCalled();
+      });
+    });
+
+    describe("preventDefaultOnDrag", () => {
+      it("should check preventDefault is applied if preventDefaultOnDrag is true", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventDefaultOnDrag: true });
+        const viewport = flicking.viewport;
+
+        // Given
+        const mouseDown = new MouseEvent("mousedown", { buttons: 1, cancelable: true });
+
+        // When
+        viewport.element.dispatchEvent(mouseDown);
+
+        // Then
+        expect(mouseDown.defaultPrevented).toBe(true);
+      });
+
+      it("should check preventDefault is not applied if preventDefaultOnDrag is false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventDefaultOnDrag: false });
+        const viewport = flicking.viewport;
+
+        // Given
+        const mouseDown = new MouseEvent("mousedown", { buttons: 1, cancelable: true });
+
+        // When
+        viewport.element.dispatchEvent(mouseDown);
+
+        // Then
+        expect(mouseDown.defaultPrevented).toBe(false);
+      });
+    });
+
+    describe(`moveType: "strict"`, () => {
+      it(`should trigger no bounce with bounce: 0 and moveType: "strict"`, async () => {
+        // Given
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: "strict",
+          changeOnHold: true,
+          bounce: 0
+        });
+        const willChangeSpy = vi.fn();
+
+        flicking.on("willChange", willChangeSpy);
+
+        // When
+        await simulate(flicking.element, { deltaX: 100 });
+
+        // Then
+        expect(willChangeSpy).toHaveBeenCalledTimes(0);
+      });
+    });
+    describe(`animationThreshold"`, () => {
+      it(`should trigger animation works unconditionally with no animationThreshold`, async () => {
+        // Given
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          animationThreshold: 0
+        });
+
+        const moveEndSpy = vi.fn();
+        flicking.on("moveEnd", moveEndSpy);
+
+        // When
+        simulate(flicking.element, { deltaX: 1, duration: 1000 }, 1000);
+        await waitTime(10);
+
+        // Then
+        expect(moveEndSpy).toHaveBeenCalledTimes(0);
+      });
+      it(`should trigger no animation with animationThreshold > delta`, async () => {
+        // Given
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          animationThreshold: 2
+        });
+
+        const moveEndSpy = vi.fn();
+        flicking.on("moveEnd", moveEndSpy);
+
+        // When
+        simulate(flicking.element, { deltaX: 1, duration: 1000 }, 1000);
+        await waitTime(10);
+
+        // Then
+        expect(moveEndSpy).toHaveBeenCalledTimes(1);
+      });
+    });
+    describe("changeOnHold", () => {
+      it("should be false by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        expect(flicking.changeOnHold).toBe(false);
+      });
+
+      it("should trigger changed with the same index of willChange", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          moveType: "strict",
+          changeOnHold: true
+        });
+        const willChangeSpy = vi.fn();
+        const changedSpy = vi.fn();
+
+        flicking.on("willChange", willChangeSpy);
+        flicking.on("changed", changedSpy);
+
+        flicking.moveTo(1, 500);
+        tick(250);
+        await simulate(flicking.element, { deltaX: -5000 });
+
+        const willChangeIndex = willChangeSpy.mock.calls[0][0].index;
+        const changedIndex = changedSpy.mock.calls[0][0].index;
+
+        expect(willChangeSpy).toHaveBeenCalledTimes(2);
+        expect(changedSpy).toHaveBeenCalledTimes(2);
+        expect(willChangeIndex).toBe(changedIndex);
+        expect(flicking.index).toBe(2);
+      });
+    });
+  });
+
+  describe("Initial rendering", () => {
+    it("should place camera at correct position with default options", async () => {
+      const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false });
+
+      flicking.init(); // Not awaiting on purpose
+
+      expect(flicking.panels[0].position).not.toBe(0);
+      expect(flicking.camera.position).toBe(flicking.panels[0].position);
+      expect(flicking.camera.element.style.transform).toBe("translate(0px)");
+    });
+    it("should have zero size with not appended elements", async () => {
+      const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false });
+
+      flicking.viewport.element.remove();
+      flicking.init(); // Not awaiting on purpose
+
+      expect(flicking.viewport.width).toBe(0);
+      expect(flicking.viewport.height).toBe(0);
+      expect(flicking.panels.every(panel => panel.size === 0)).toBe(true);
+    });
+
+    it("should place camera & panels at correct position on circular rendering", async () => {
+      const flicking = await createFlicking(
+        El.viewport("1000px", "100%").add(
+          El.camera().add(
+            El.panel().setWidth("300px").setHeight(300),
+            El.panel().setWidth("300px").setHeight(300),
+            El.panel().setWidth("300px").setHeight(300),
+            El.panel().setWidth("300px").setHeight(300),
+            El.panel().setWidth("300px").setHeight(300)
+          )
+        ),
+        { autoInit: false, circular: true }
+      );
+
+      flicking.init(); // Not awaiting on purpose
+
+      const camera = flicking.camera;
+      const firstPanel = flicking.panels[0];
+      const lastPanel = flicking.panels[flicking.panels.length - 1];
+      const translatePos = camera.position - camera.alignPosition - camera.offset;
+
+      expect(firstPanel.position).not.toBe(0);
+      expect(flicking.camera.position).toBe(firstPanel.position);
+      expect(lastPanel.toggled).toBe(true);
+      expect(lastPanel.toggleDirection).toBe(DIRECTION.PREV);
+      expect(lastPanel.position + lastPanel.offset).toBe(firstPanel.position - lastPanel.sizeIncludingMargin);
+      expect(flicking.camera.element.style.transform).toBe(`translate(${-translatePos}px)`);
+    });
+
+    it("should place camera & panels at correct position on renderOnlyVisible rendering", async () => {
+      const flicking = await createFlicking(
+        El.viewport("1000px", "100%").add(
+          El.camera().add(
+            El.panel().setWidth("30%").setHeight(300),
+            El.panel().setWidth("30%").setHeight(300),
+            El.panel().setWidth("30%").setHeight(300),
+            El.panel().setWidth("30%").setHeight(300),
+            El.panel().setWidth("30%").setHeight(300)
+          )
+        ),
+        { autoInit: false, renderOnlyVisible: true }
+      );
+
+      flicking.init(); // Not awaiting on purpose
+
+      const camera = flicking.camera;
+      const translatePos = camera.position - camera.alignPosition - camera.offset;
+
+      expect(flicking.panels[0].position).not.toBe(0);
+      expect(flicking.camera.position).toBe(flicking.panels[0].position);
+      expect(flicking.panels.map(panel => panel.rendered)).toEqual([true, true, true, false, false]);
+      expect(flicking.camera.element.style.transform).toBe(`translate(${-translatePos}px)`);
+    });
+
+    it("should place camera & panels at correct position on circular & renderOnlyVisible rendering", async () => {
+      const flicking = await createFlicking(
+        El.viewport("1000px", "100%").add(
+          El.camera().add(
+            El.panel().setWidth("50%").setHeight(300),
+            El.panel().setWidth("50%").setHeight(300),
+            El.panel().setWidth("50%").setHeight(300),
+            El.panel().setWidth("50%").setHeight(300),
+            El.panel().setWidth("50%").setHeight(300)
+          )
+        ),
+        { autoInit: false, circular: true, renderOnlyVisible: true }
+      );
+
+      flicking.init(); // Not awaiting on purpose
+
+      const camera = flicking.camera;
+      const translatePos = camera.position - camera.alignPosition - camera.offset;
+
+      expect(flicking.panels[0].position).not.toBe(0);
+      expect(flicking.camera.position).toBe(flicking.panels[0].position);
+      expect(flicking.camera.element.style.transform).toBe(`translate(${-translatePos}px)`);
+      expect(flicking.panels.map(panel => panel.rendered)).toEqual([true, true, false, false, true]);
+    });
+  });
+
+  describe("Events", () => {
+    describe(EVENTS.READY, () => {
+      it("should be emitted when Flicking is initialized", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          autoInit: false
+        });
+        const readySpy = vi.fn();
+        flicking.on(EVENTS.READY, readySpy);
+
+        expect(readySpy).not.toHaveBeenCalled();
+        await flicking.init();
+        expect(readySpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("won't be emitted after Flicking is initialized", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          autoInit: false
+        });
+        const readySpy = vi.fn();
+        flicking.on(EVENTS.READY, readySpy);
+
+        expect(readySpy).not.toHaveBeenCalled();
+        await flicking.init();
+        await flicking.init();
+        await flicking.init();
+        await flicking.init();
+        await flicking.init();
+        expect(readySpy).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe(EVENTS.BEFORE_RESIZE, () => {
+      it("should be emitted on initialization when resize if preventEventsBeforeInit is false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          autoInit: false,
+          preventEventsBeforeInit: false
+        });
+        const resizeSpy = vi.fn();
+        flicking.on(EVENTS.BEFORE_RESIZE, resizeSpy);
+
+        expect(resizeSpy).not.toHaveBeenCalled();
+        await flicking.init();
+        expect(resizeSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("should be emitted when resize() is called", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const resizeSpy = vi.fn();
+        flicking.on(EVENTS.BEFORE_RESIZE, resizeSpy);
+
+        expect(resizeSpy).not.toHaveBeenCalled();
+        await flicking.resize();
+        expect(resizeSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("should have previous size in it", async () => {
+        const viewportEl = El.viewport().setWidth(300).setHeight(300).add(El.camera());
+        const flicking = await createFlicking(viewportEl);
+        const resizeSpy = vi.fn();
+
+        flicking.on(EVENTS.BEFORE_RESIZE, resizeSpy);
+
+        viewportEl.setWidth(500).setHeight(500);
+        await flicking.resize();
+
+        const event = resizeSpy.mock.calls[0][0] as BeforeResizeEvent;
+        expect(resizeSpy).toHaveBeenCalledTimes(1);
+        expect(event.width).toBeDefined();
+        expect(event.height).toBeDefined();
+        expect(event.width).toBe(300);
+        expect(event.height).toBe(300);
+      });
+
+      it("should have previous size in it", async () => {
+        const viewportEl = El.viewport().setWidth(300).setHeight(300).add(El.camera());
+        const flicking = await createFlicking(viewportEl);
+        const resizeSpy = vi.fn();
+
+        flicking.on(EVENTS.BEFORE_RESIZE, resizeSpy);
+
+        viewportEl.setWidth(500).setHeight(500);
+        await flicking.resize();
+
+        const event = resizeSpy.mock.calls[0][0] as BeforeResizeEvent;
+        expect(resizeSpy).toHaveBeenCalledTimes(1);
+        expect(event.width).toBeDefined();
+        expect(event.height).toBeDefined();
+        expect(event.width).toBe(300);
+        expect(event.height).toBe(300);
+      });
+      it("should be resize calculation must be done, even if resize is executed twice (consecutive)", async () => {
+        const viewportEl = El.viewport().setWidth(300).setHeight(300).add(El.camera());
+        const flicking = await createFlicking(viewportEl);
+        const resizeSpy = vi.fn();
+
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
+        viewportEl.setWidth(500).setHeight(500);
+        flicking.resize();
+        viewportEl.setWidth(400).setHeight(400);
+        flicking.resize();
+        await waitTime(1000);
+
+        const firstEvent = resizeSpy.mock.calls[0][0] as AfterResizeEvent;
+        const lastEvent = resizeSpy.mock.calls[resizeSpy.mock.calls.length - 1][0] as AfterResizeEvent;
+        expect(resizeSpy).toHaveBeenCalledTimes(2);
+        expect(firstEvent.width).toBe(500);
+        expect(firstEvent.height).toBe(500);
+        expect(lastEvent.width).toBe(400);
+        expect(lastEvent.height).toBe(400);
+      });
+      it(`should be triggered before ${EVENTS.AFTER_RESIZE}`, async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const beforeResizeSpy = vi.fn();
+        const afterResizeSpy = vi.fn();
+
+        flicking.on(EVENTS.BEFORE_RESIZE, beforeResizeSpy);
+        flicking.on(EVENTS.BEFORE_RESIZE, afterResizeSpy);
+        await flicking.resize();
+
+        expect(beforeResizeSpy).toHaveBeenCalledTimes(1);
+        expect(afterResizeSpy).toHaveBeenCalledTimes(1);
+        expect(beforeResizeSpy.mock.invocationCallOrder[0]).toBeLessThan(afterResizeSpy.mock.invocationCallOrder[0]);
+      });
+    });
+
+    describe(EVENTS.AFTER_RESIZE, () => {
+      it("should be emitted on initialization when resize if preventEventsBeforeInit is false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          autoInit: false,
+          preventEventsBeforeInit: false
+        });
+        const resizeSpy = vi.fn();
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
+
+        expect(resizeSpy).not.toHaveBeenCalled();
+        await flicking.init();
+        expect(resizeSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("should be emitted when resize() is called", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const resizeSpy = vi.fn();
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
+
+        expect(resizeSpy).not.toHaveBeenCalled();
+        await flicking.resize();
+        expect(resizeSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("should have new size in it", async () => {
+        const viewportEl = El.viewport().setWidth(300).setHeight(300).add(El.camera());
+        const flicking = await createFlicking(viewportEl);
+        const resizeSpy = vi.fn();
+
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
+
+        viewportEl.setWidth(500).setHeight(500);
+        await flicking.resize();
+
+        const event = resizeSpy.mock.calls[0][0] as AfterResizeEvent;
+        expect(resizeSpy).toHaveBeenCalledTimes(1);
+        expect(event.width).toBe(500);
+        expect(event.height).toBe(500);
+      });
+
+      it("should have correct size value of viewport in it", async () => {
+        const viewportSize = {
+          width: 500,
+          height: 300
+        };
+
+        const flicking = await createFlicking(
+          El.viewport().setWidth(viewportSize.width).setHeight(viewportSize.height).add(El.camera())
+        );
+        const resizeSpy = vi.fn();
+
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
+        await flicking.resize();
+
+        const event = resizeSpy.mock.calls[0][0] as AfterResizeEvent;
+        expect(resizeSpy).toHaveBeenCalledTimes(1);
+        expect(event.width).toBe(viewportSize.width);
+        expect(event.height).toBe(viewportSize.height);
+      });
+
+      it("should have correct offset on extream resize", async () => {
+        const viewportSize = {
+          width: 400,
+          height: 800
+        };
+
+        const flicking = await createFlicking(
+          El.viewport()
+            .setWidth(viewportSize.width)
+            .setHeight(viewportSize.height)
+            .add(
+              El.camera().add(
+                El.panel().setWidth("100%").setHeight(800),
+                El.panel().setWidth("100%").setHeight(800),
+                El.panel().setWidth("100%").setHeight(800),
+                El.panel().setWidth("100%").setHeight(800),
+                El.panel().setWidth("100%").setHeight(800)
+              )
+            ),
+          { renderOnlyVisible: true, defaultIndex: 3, horizontal: false }
+        );
+
+        const prevOffset = flicking.camera.offset;
+
+        // resize 1/4 height
+        flicking.panels.forEach(panel => {
+          panel.element.style.height = "200px";
+        });
+        flicking.element.style.height = "200px";
+
+        await flicking.resize();
+
+        // 800 * 3 2400 => 200 * 3 600
+        expect(prevOffset).toBe(2400);
+        expect(flicking.camera.offset).toBe(600);
+      });
+
+      it("should have size 0 on initialization", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          autoInit: false,
+          preventEventsBeforeInit: false
+        });
+        const resizeSpy = vi.fn();
+
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
+        await flicking.init();
+
+        const event = resizeSpy.mock.calls[0][0] as AfterResizeEvent;
+        expect(resizeSpy).toHaveBeenCalledTimes(1);
+        expect(event.prev.width).toBe(0);
+        expect(event.prev.height).toBe(0);
+      });
+
+      it("should set sizeChanged to true when the size is changed", async () => {
+        const prevSize = { width: 100, height: 200 };
+        const newSize = { width: 530, height: 740 };
+        const viewport = El.viewport().add(El.camera());
+        viewport.setWidth(prevSize.width).setHeight(prevSize.height);
+
+        const flicking = await createFlicking(viewport);
+        const resizeSpy = vi.fn();
+
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
+        viewport.setWidth(newSize.width).setHeight(newSize.height);
+        await flicking.resize();
+
+        const event = resizeSpy.mock.calls[0][0] as AfterResizeEvent;
+        expect(resizeSpy).toHaveBeenCalledTimes(1);
+
+        expect(event.width).toBe(newSize.width);
+        expect(event.height).toBe(newSize.height);
+        expect(event.prev.width).toBe(prevSize.width);
+        expect(event.prev.height).toBe(prevSize.height);
+        expect(event.sizeChanged).toBe(true);
+      });
+
+      it("should set sizeChanged to false when the size is not changed", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const resizeSpy = vi.fn();
+
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
+        await flicking.resize();
+
+        const event = resizeSpy.mock.calls[0][0] as AfterResizeEvent;
+        expect(resizeSpy).toHaveBeenCalledTimes(1);
+
+        expect(event.width).toBe(event.prev.width);
+        expect(event.height).toBe(event.prev.height);
+        expect(event.width).not.toBe(0);
+        expect(event.height).not.toBe(0);
+        expect(event.sizeChanged).toBe(false);
+      });
+
+      it("should provide viewport element in it", async () => {
+        const viewport = El.viewport().add(El.camera());
+        const flicking = await createFlicking(viewport);
+        const resizeSpy = vi.fn();
+
+        flicking.on(EVENTS.AFTER_RESIZE, resizeSpy);
+        await flicking.resize();
+
+        const event = resizeSpy.mock.calls[0][0] as AfterResizeEvent;
+        expect(resizeSpy).toHaveBeenCalledTimes(1);
+        expect(event.element).toEqual(viewport.el);
+      });
+    });
+
+    describe(EVENTS.NEED_PANEL, () => {
+      it("should be in animating state when it's triggered", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const needPanelSpy = vi.fn();
+        const wasAnimating: boolean[] = [];
+
+        flicking.on(EVENTS.NEED_PANEL, () => {
+          wasAnimating.push(flicking.animating);
+          needPanelSpy();
+        });
+
+        await simulate(flicking.element, { deltaX: -5000 });
+
+        expect(needPanelSpy).toHaveBeenCalled();
+        expect(wasAnimating.every(animating => animating)).toBe(true);
+      });
+
+      it("should not trigger another needPanel event when panel is appended by it", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        let callCount = 0;
+
+        flicking.on(EVENTS.NEED_PANEL, e => {
+          if (e.direction === DIRECTION.PREV) return;
+
+          callCount += 1;
+          flicking.append(El.panel("100%").el);
+        });
+
+        await simulate(flicking.element, { deltaX: -2000 });
+
+        expect(callCount).toBe(1);
+      });
+    });
+
+    describe(EVENTS.WILL_CHANGE, () => {
+      it("can be stopped", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        let willChangePosition = 0;
+
+        flicking.on(EVENTS.WILL_CHANGE, evt => {
+          willChangePosition = flicking.camera.position;
+          evt.stop();
+        });
+        await simulate(flicking.element, { deltaX: -300 });
+
+        expect(willChangePosition).not.toBe(0);
+        expect(flicking.control.controller.position).toBe(willChangePosition);
+      });
+
+      it("should have correct direction", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { circular: true });
+        const directions = [];
+
+        flicking.on(EVENTS.WILL_CHANGE, evt => {
+          directions.push(evt.direction);
+        });
+        void flicking.prev(500);
+        tick(1000);
+        void flicking.next(500);
+        tick(1000);
+        void flicking.next(500);
+        tick(1000);
+
+        expect(directions[0]).toBe(DIRECTION.PREV);
+        expect(directions[1]).toBe(DIRECTION.NEXT);
+        expect(directions[2]).toBe(DIRECTION.NEXT);
+      });
+    });
+
+    describe(EVENTS.WILL_RESTORE, () => {
+      it("can be stopped", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        let willChangePosition = 0;
+
+        flicking.on(EVENTS.WILL_RESTORE, evt => {
+          willChangePosition = flicking.camera.position;
+          evt.stop();
+        });
+        await simulate(flicking.element, { deltaX: -10 });
+
+        expect(willChangePosition).not.toBe(0);
+        expect(flicking.control.controller.position).toBe(willChangePosition);
+      });
+    });
+
+    describe(EVENTS.MOVE_END, () => {
+      it("should set Flicking not to be animating", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const moveEndSpy = vi.fn();
+        const wasAnimating: boolean[] = [];
+
+        flicking.on(EVENTS.MOVE_END, moveEndSpy);
+        flicking.on(EVENTS.MOVE_END, () => {
+          wasAnimating.push(flicking.animating);
+        });
+
+        await simulate(flicking.element, { deltaX: -500 });
+
+        expect(moveEndSpy).toHaveBeenCalled();
+        expect(wasAnimating.every(animating => !animating)).toBe(true);
+      });
+    });
+
+    describe("Input & Move Event Order", () => {
+      const eventsFired: string[] = [];
+      const attachEventOrderRecognizer = (flicking: Flicking) => {
+        [
+          EVENTS.HOLD_START,
+          EVENTS.HOLD_END,
+          EVENTS.MOVE_START,
+          EVENTS.MOVE,
+          EVENTS.MOVE_END,
+          EVENTS.WILL_CHANGE,
+          EVENTS.WILL_RESTORE,
+          EVENTS.CHANGED,
+          EVENTS.RESTORED
+        ].forEach(event => {
+          flicking.on(event, e => {
+            if (eventsFired.length === 0 || eventsFired[eventsFired.length - 1] !== e.eventType) {
+              eventsFired.push(e.eventType);
+            }
+          });
+        });
+      };
+
+      beforeEach(() => {
+        eventsFired.splice(0, eventsFired.length);
+      });
+
+      it(`should be ${EVENTS.HOLD_START} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.HOLD_END} -> ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when panel changed with user input`, async () => {
+        const expectedEventOrder = [
+          EVENTS.HOLD_START,
+          EVENTS.MOVE_START,
+          EVENTS.MOVE,
+          EVENTS.HOLD_END,
+          EVENTS.WILL_CHANGE,
+          EVENTS.MOVE,
+          EVENTS.MOVE_END,
+          EVENTS.CHANGED
+        ];
+
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 10 });
+        attachEventOrderRecognizer(flicking);
+
+        await simulate(flicking.element, { deltaX: -50 });
+
+        expect(eventsFired).toEqual(expectedEventOrder);
+      });
+
+      it(`should be ${EVENTS.HOLD_START} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.HOLD_END} -> ${EVENTS.WILL_RESTORE} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.RESTORED} when panel restored with user input`, async () => {
+        const expectedEventOrder = [
+          EVENTS.HOLD_START,
+          EVENTS.MOVE_START,
+          EVENTS.MOVE,
+          EVENTS.HOLD_END,
+          EVENTS.WILL_RESTORE,
+          EVENTS.MOVE,
+          EVENTS.MOVE_END,
+          EVENTS.RESTORED
+        ];
+
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 50 });
+        attachEventOrderRecognizer(flicking);
+
+        await simulate(flicking.element, { deltaX: -49 });
+
+        expect(eventsFired).toEqual(expectedEventOrder);
+      });
+
+      describe("moveTo's event order", () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method`, async () => {
+          const expectedEventOrder = [
+            EVENTS.WILL_CHANGE,
+            EVENTS.MOVE_START,
+            EVENTS.MOVE,
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
+          ];
+
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+          attachEventOrderRecognizer(flicking);
+
+          const movePromise = flicking.moveTo(2, 10);
+          tick(1000);
+          await movePromise;
+
+          expect(eventsFired).toEqual(expectedEventOrder);
+        });
+
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method and duration is 0`, async () => {
+          const expectedEventOrder = [
+            EVENTS.WILL_CHANGE,
+            EVENTS.MOVE_START,
+            EVENTS.MOVE,
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
+          ];
+
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+          attachEventOrderRecognizer(flicking);
+
+          void flicking.moveTo(2, 0);
+
+          expect(eventsFired).toEqual(expectedEventOrder);
+        });
+      });
+
+      describe("prev's event order", () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method`, async () => {
+          const expectedEventOrder = [
+            EVENTS.WILL_CHANGE,
+            EVENTS.MOVE_START,
+            EVENTS.MOVE,
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
+          ];
+
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
+          attachEventOrderRecognizer(flicking);
+
+          const prevPromise = flicking.prev(10);
+          tick(1000);
+          await prevPromise;
+
+          expect(eventsFired).toEqual(expectedEventOrder);
+        });
+
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method and duration is 0`, async () => {
+          const expectedEventOrder = [
+            EVENTS.WILL_CHANGE,
+            EVENTS.MOVE_START,
+            EVENTS.MOVE,
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
+          ];
+
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
+          attachEventOrderRecognizer(flicking);
+
+          void flicking.prev(0);
+
+          expect(eventsFired).toEqual(expectedEventOrder);
+        });
+      });
+
+      describe("next's event order", () => {
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method`, async () => {
+          const expectedEventOrder = [
+            EVENTS.WILL_CHANGE,
+            EVENTS.MOVE_START,
+            EVENTS.MOVE,
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
+          ];
+
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+          attachEventOrderRecognizer(flicking);
+
+          const nextPromise = flicking.next(10);
+          tick(1000);
+          await nextPromise;
+
+          expect(eventsFired).toEqual(expectedEventOrder);
+        });
+
+        it(`should be ${EVENTS.WILL_CHANGE} -> ${EVENTS.MOVE_START} -> ${EVENTS.MOVE} -> ${EVENTS.MOVE_END} -> ${EVENTS.CHANGED} when called with method and duration is 0`, async () => {
+          const expectedEventOrder = [
+            EVENTS.WILL_CHANGE,
+            EVENTS.MOVE_START,
+            EVENTS.MOVE,
+            EVENTS.MOVE_END,
+            EVENTS.CHANGED
+          ];
+
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+          attachEventOrderRecognizer(flicking);
+
+          void flicking.next(0);
+
+          expect(eventsFired).toEqual(expectedEventOrder);
+        });
+      });
+    });
+
+    describe("Common parameters", () => {
+      const eventsFired: any[] = [];
+      const collectEvents = (flicking: Flicking) => {
+        Object.values(EVENTS).forEach(event => {
+          flicking.on(event, e => eventsFired.push(e));
+        });
+      };
+
+      beforeEach(() => {
+        eventsFired.splice(0, eventsFired.length);
+      });
+
+      describe("direction", () => {
+        it(`is always ${DIRECTION.NEXT} when calling next()`, async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+          collectEvents(flicking);
+
+          void flicking.next(100);
+          tick(1000);
+
+          expect(eventsFired).not.toHaveLength(0);
+          expect(eventsFired.filter(e => e.direction).every(e => e.direction === DIRECTION.NEXT)).toBe(true);
+        });
+
+        it(`is always ${DIRECTION.PREV} when calling prev()`, async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
+          collectEvents(flicking);
+
+          void flicking.prev(100);
+          tick(1000);
+
+          expect(eventsFired).not.toHaveLength(0);
+          expect(eventsFired.filter(e => e.direction).every(e => e.direction === DIRECTION.PREV)).toBe(true);
+        });
+
+        it(`is always ${DIRECTION.NEXT} when moving to next panel with user input, not going over current panel area`, async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+            align: ALIGN.CENTER,
+            threshold: 10
+          });
+          collectEvents(flicking);
+
+          await simulate(flicking.element, { deltaX: -20 });
+
+          expect(eventsFired).not.toHaveLength(0);
+          expect(eventsFired.filter(e => e.direction).every(e => e.direction === DIRECTION.NEXT)).toBe(true);
+        });
+
+        it(`is always ${DIRECTION.PREV} when moving to next panel with user input, not going over current panel area`, async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+            align: ALIGN.CENTER,
+            threshold: 10,
+            defaultIndex: 2
+          });
+          collectEvents(flicking);
+
+          await simulate(flicking.element, { deltaX: 20 });
+
+          expect(eventsFired).not.toHaveLength(0);
+          expect(eventsFired.filter(e => e.direction).every(e => e.direction === DIRECTION.PREV)).toBe(true);
+        });
+      });
+
+      describe("isTrusted", () => {
+        it("is always false in events triggered by next()", async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+          collectEvents(flicking);
+
+          void flicking.next(500);
+          tick(1000);
+
+          expect(eventsFired).not.toHaveLength(0);
+          expect(eventsFired.filter(e => e.isTrusted != null).every(e => e.isTrusted === false)).toBe(true);
+        });
+
+        it("is always false in events triggered by prev()", async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
+          collectEvents(flicking);
+
+          void flicking.prev(500);
+          tick(1000);
+
+          expect(eventsFired).not.toHaveLength(0);
+          expect(eventsFired.filter(e => e.isTrusted != null).every(e => e.isTrusted === false)).toBe(true);
+        });
+
+        it("is always true in events triggered by user input", async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 10 });
+          collectEvents(flicking);
+
+          await simulate(flicking.element, { deltaX: -20 });
+
+          expect(eventsFired).not.toHaveLength(0);
+          expect(eventsFired.filter(e => e.isTrusted != null).every(e => e.isTrusted === true)).toBe(true);
+        });
+      });
+    });
+  });
+
+  describe("Methods", () => {
+    describe("init", () => {
+      it("should set initialized to true", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false });
+
+        expect(flicking.initialized).toBe(false);
+        await flicking.init();
+        expect(flicking.initialized).toBe(true);
+      });
+
+      it("should call init of the camera/renderer/control", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false });
+        const controlSpy = vi.spyOn(flicking.control, "init");
+        const cameraSpy = vi.spyOn(flicking.camera, "init");
+        const rendererSpy = vi.spyOn(flicking.renderer, "init");
+
+        await flicking.init();
+
+        expect(controlSpy).toHaveBeenCalledTimes(1);
+        expect(cameraSpy).toHaveBeenCalledTimes(1);
+        expect(rendererSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("should move to default index", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false, defaultIndex: 1 });
+
+        const beforeIdx = flicking.index;
+        await flicking.init();
+        const afterIdx = flicking.index;
+
+        expect(beforeIdx).toBe(-1);
+        expect(afterIdx).toBe(1);
+      });
+    });
+
+    describe("destroy", () => {
+      it("should set initialized to false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: true });
+
+        expect(flicking.initialized).toBe(true);
+        flicking.destroy();
+        expect(flicking.initialized).toBe(false);
+      });
+
+      it("should remove window resize event handler", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false, autoResize: false });
+        const resizeSpy = vi.spyOn(flicking, "resize");
+        flicking.autoResize = true;
+        await flicking.init();
+
+        resizeSpy.mockClear();
+        flicking.destroy();
+
+        window.dispatchEvent(new Event("resize"));
+        expect(resizeSpy).not.toHaveBeenCalled();
+      });
+
+      it("should call off of it", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const offSpy = vi.spyOn(flicking, "off");
+
+        flicking.destroy();
+
+        expect(offSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("should call destroy of the control/camera/renderer", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const controlSpy = vi.spyOn(flicking.control, "destroy");
+        const cameraSpy = vi.spyOn(flicking.camera, "destroy");
+        const rendererSpy = vi.spyOn(flicking.renderer, "destroy");
+
+        flicking.destroy();
+
+        expect(controlSpy).toHaveBeenCalledTimes(1);
+        expect(cameraSpy).toHaveBeenCalledTimes(1);
+        expect(rendererSpy).toHaveBeenCalledTimes(1);
+      });
+      it("should call destroy after resize", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        let hasError = false;
+        flicking.resize().catch(() => {
+          // Any remaining resize operations that occur after destroy should not operate.
+          hasError = true;
+        });
+        flicking.destroy();
+
+        await waitTime(1000);
+
+        // Then
+        expect(hasError).toBe(false);
+      });
+    });
+
+    describe("getElement()", () => {
+      it("should return viewport element", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        expect(flicking.element).toBeInstanceOf(HTMLElement);
+        expect(flicking.element).toBe(flicking.viewport.element);
+      });
+    });
+
+    describe("enableInput()", () => {
+      it("should enable input", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { threshold: 40 });
+        flicking.disableInput();
+
+        flicking.enableInput();
+        const beforeIdx = flicking.index;
+        await simulate(flicking.element, { deltaX: -100 });
+        const afterIdx = flicking.index;
+
+        expect(beforeIdx).toBe(0);
+        expect(afterIdx).toBe(1);
+      });
+
+      it("should return this", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const returnVal = flicking.enableInput();
+
+        expect(returnVal).toEqual(flicking);
+      });
+    });
+
+    describe("disableInput()", () => {
+      it("should disable input", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        flicking.disableInput();
+
+        const beforeIdx = flicking.index;
+        await simulate(flicking.element, { deltaX: -100 });
+        const afterIdx = flicking.index;
+
+        expect(beforeIdx).toBe(afterIdx);
+        expect(beforeIdx).toBe(0);
+      });
+
+      it("should return this", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const returnVal = flicking.disableInput();
+
+        expect(returnVal).toEqual(flicking);
+      });
+    });
+
+    describe("next()", () => {
+      const next = async (flicking: Flicking, duration?: number) => {
+        const nextPromise = flicking.next(duration);
+        tick(10000);
+        return nextPromise;
+      };
+
+      it("should move to the next panel that has index + 1", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        const prevIndex = flicking.index;
+        await next(flicking);
+        const nextIndex = flicking.index;
+
+        expect(prevIndex).toBe(0);
+        expect(nextIndex).toBe(1);
+      });
+
+      it("should use the Flicking's current duration option value if the duration is not given", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { duration: 1000 });
+        const moveToSpy = vi.spyOn(flicking.control, "moveToPanel");
+
+        await next(flicking);
+        flicking.duration = 2000;
+
+        await next(flicking);
+
+        expect(moveToSpy).toHaveBeenCalledTimes(2);
+        expect(moveToSpy.mock.calls[0]).toEqual([flicking.getPanel(1), { duration: 1000, direction: DIRECTION.NEXT }]);
+        expect(moveToSpy.mock.calls[1]).toEqual([flicking.getPanel(2), { duration: 2000, direction: DIRECTION.NEXT }]);
+      });
+
+      it("should throw FlickingError with code INDEX_OUT_OF_RANGE if called on the last index", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
+
+        const err = await next(flicking).catch(e => e);
+
+        expect(err).toBeInstanceOf(FlickingError);
+        expect(err).toHaveProperty("code", ERROR.CODE.INDEX_OUT_OF_RANGE);
+      });
+
+      it("should throw FlickingError with code ANIMATION_ALREADY_PLAYING if it is animating", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        void flicking.next(1000);
+        const err = await next(flicking).catch(e => e);
+
+        expect(err).toBeInstanceOf(FlickingError);
+        expect(err).toHaveProperty("code", ERROR.CODE.ANIMATION_ALREADY_PLAYING);
+      });
+    });
+
+    describe("prev()", () => {
+      const prev = async (flicking: Flicking, duration?: number) => {
+        const nextPromise = flicking.prev(duration);
+        tick(10000);
+        return nextPromise;
+      };
+
+      it("should move to the previous panel that has index - 1", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
+
+        const prevIndex = flicking.index;
+        await prev(flicking);
+        const nextIndex = flicking.index;
+
+        expect(prevIndex).toBe(2);
+        expect(nextIndex).toBe(1);
+      });
+
+      it("should use the Flicking's current duration option value if the duration is not given", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { duration: 1000, defaultIndex: 2 });
+        const moveToSpy = vi.spyOn(flicking.control, "moveToPanel");
+
+        await prev(flicking);
+        flicking.duration = 2000;
+        await prev(flicking);
+
+        expect(moveToSpy).toHaveBeenCalledTimes(2);
+        expect(moveToSpy.mock.calls[0]).toEqual([flicking.getPanel(1), { duration: 1000, direction: DIRECTION.PREV }]);
+        expect(moveToSpy.mock.calls[1]).toEqual([flicking.getPanel(0), { duration: 2000, direction: DIRECTION.PREV }]);
+      });
+
+      it("should throw FlickingError with code INDEX_OUT_OF_RANGE if called on the first index", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 0 });
+
+        const err = await prev(flicking).catch(e => e);
+
+        expect(err).toBeInstanceOf(FlickingError);
+        expect(err).toHaveProperty("code", ERROR.CODE.INDEX_OUT_OF_RANGE);
+      });
+
+      it("should throw FlickingError with code ANIMATION_ALREADY_PLAYING if it is animating", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
+
+        void flicking.prev(1000);
+        const err = await prev(flicking).catch(e => e);
+
+        expect(err).toBeInstanceOf(FlickingError);
+        expect(err).toHaveProperty("code", ERROR.CODE.ANIMATION_ALREADY_PLAYING);
+      });
+    });
+
+    describe("moveTo", () => {
+      const moveTo = async (flicking: Flicking, index: number, duration?: number) => {
+        const nextPromise = flicking.moveTo(index, duration);
+        tick(10000);
+        return nextPromise;
+      };
+
+      it("should move to the panel with the given index", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
+
+        const prevIndex = flicking.index;
+        await moveTo(flicking, 0);
+        const nextIndex = flicking.index;
+
+        expect(prevIndex).toBe(2);
+        expect(nextIndex).toBe(0);
+      });
+
+      it("should throw FlickingError with code INDEX_OUT_OF_RANGE if moving to negative index", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        const err = await moveTo(flicking, -1).catch(e => e);
+
+        expect(err).toBeInstanceOf(FlickingError);
+        expect(err).toHaveProperty("code", ERROR.CODE.INDEX_OUT_OF_RANGE);
+      });
+
+      it("should throw FlickingError with code INDEX_OUT_OF_RANGE if moving to index >= panel count", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        const err = await moveTo(flicking, 3).catch(e => e);
+
+        expect(err).toBeInstanceOf(FlickingError);
+        expect(err).toHaveProperty("code", ERROR.CODE.INDEX_OUT_OF_RANGE);
+      });
+
+      it("should throw FlickingError with code ANIMATION_ALREADY_PLAYING if it is animating", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        void flicking.moveTo(1, 1000);
+        const err = await moveTo(flicking, 2).catch(e => e);
+
+        expect(err).toBeInstanceOf(FlickingError);
+        expect(err).toHaveProperty("code", ERROR.CODE.ANIMATION_ALREADY_PLAYING);
+      });
+
+      it("can move to the panel more than count limit when using strict move type", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { moveType: "strict" });
+
+        await moveTo(flicking, 2);
+
+        expect(flicking.index).toBe(2);
+        expect(flicking.camera.position).toBe(flicking.panels[2].position);
+      });
+
+      it("can move to the panel when user input is holding", async () => {
+        const flicking = await createFlicking(El.VARIOUS_HORIZONTAL, { moveType: "strict" });
+        const holdStartSpy = vi.fn();
+        const holdEndSpy = vi.fn();
+        flicking.on(EVENTS.HOLD_START, holdStartSpy);
+        flicking.on(EVENTS.HOLD_END, holdEndSpy);
+
+        flicking.element.dispatchEvent(
+          new TouchEvent("touchstart", {
+            touches: [
+              new Touch({
+                target: flicking.element,
+                identifier: Date.now()
+              })
+            ],
+            cancelable: true
+          })
+        );
+
+        await moveTo(flicking, 3);
+
+        expect(holdStartSpy).toHaveBeenCalledTimes(1);
+        expect(holdEndSpy).toHaveBeenCalledTimes(1);
+        expect(flicking.index).toBe(3);
+      });
+    });
+
+    describe("updateAnimation", () => {
+      it("should change the destination of the animation being played", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const changedSpy = vi.fn();
+        const moveEndSpy = vi.fn();
+        flicking.on(EVENTS.CHANGED, changedSpy);
+        flicking.on(EVENTS.MOVE_END, moveEndSpy);
+
+        void flicking.moveTo(1, 3000);
+        tick(1000);
+
+        flicking.updateAnimation(2);
+        tick(2500);
+
+        const status = flicking.getStatus();
+
+        expect(changedSpy).toHaveBeenCalledTimes(1);
+        expect(moveEndSpy).toHaveBeenCalledTimes(1);
+        expect(status.position.panel).toBe(2);
+        expect(status.index).toBe(2);
+      });
+
+      it("should throw FlickingError with code INDEX_OUT_OF_RANGE if updating to index >= panel count", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        void flicking.moveTo(1, 3000);
+        tick(1000);
+
+        expect(() => flicking.updateAnimation(3)).toThrow(FlickingError);
+      });
+    });
+
+    describe("stopAnimation", () => {
+      it("should stop the animation being played with the moveEnd event", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const moveEndSpy = vi.fn();
+        flicking.on(EVENTS.MOVE_END, moveEndSpy);
+
+        void flicking.moveTo(2, 3000);
+        tick(500);
+
+        flicking.stopAnimation();
+        const status = flicking.getStatus();
+
+        expect(moveEndSpy).toHaveBeenCalledTimes(1);
+        expect(status.position.panel).not.toBe(2);
+        expect(status.index).not.toBe(2);
+      });
+    });
+
+    describe("getStatus()", () => {
+      it("should return correct index", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus();
+
+        expect(status.index).toBe(1);
+      });
+
+      it("should return correct index after moving", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 0 });
+
+        void flicking.moveTo(2, 0);
+        const status = flicking.getStatus();
+
+        expect(status.index).toBe(2);
+      });
+
+      it("should return panel's outerHTML if `includePanelHTML` is true", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        const panels = flicking.panels;
+        const status = flicking.getStatus({ includePanelHTML: true });
+
+        expect(status.panels).toBeDefined();
+        expect(status.panels.length).toBeGreaterThan(0);
+        expect(status.panels.length).toBe(panels.length);
+        expect(status.panels.every((panel, panelIdx) => panel.html === panels[panelIdx].element.outerHTML));
+      });
+
+      it("should include index to a returned object if index = true", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ index: true });
+
+        expect(status.index).toBeDefined();
+        expect(typeof status.index).toBe("number");
+      });
+
+      it("should not include index to a returned object if index = false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ index: false });
+
+        expect(status.index).toBeUndefined();
+      });
+
+      it("should include position to a returned object if position = true", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ position: true });
+
+        expect(status.position).toBeDefined();
+        expect(typeof status.position.panel).toBe("number");
+        expect(typeof status.position.progressInPanel).toBe("number");
+      });
+
+      it("should not include position to a returned object if position = false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ position: false });
+
+        expect(status.position).toBeUndefined();
+      });
+
+      it("should include a panel outerHTML array to a returned object if includePanelHTML = true", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ includePanelHTML: true });
+
+        expect(status.panels).toBeDefined();
+        expect(status.panels).toBeInstanceOf(Array);
+        expect(status.panels.length).toBe(flicking.panelCount);
+        expect(status.panels.every(panel => typeof panel.html === "string")).toBe(true);
+      });
+
+      it("should not include a panel outerHTML array to a returned object if includePanelHTML = false", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ includePanelHTML: false });
+
+        expect(status.panels.every(panel => panel.html === undefined)).toBe(true);
+      });
+
+      it("should include a panel outerHTML array of the visible panels to a returned object if includePanelHTML = true and visiblePanelsOnly = true", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+        const status = flicking.getStatus({ includePanelHTML: true, visiblePanelsOnly: true });
+
+        expect(status.panels).toBeDefined();
+        expect(status.panels).toBeInstanceOf(Array);
+
+        expect(status.panels.length).toBe(flicking.visiblePanels.length);
+        expect(status.panels.length).not.toBe(flicking.panels.length);
+        expect(status.panels.every(panel => typeof panel.html === "string")).toBe(true);
+      });
+
+      it("should not include a panel outerHTML array of the visible panels to a returned object if includePanelHTML = false and visiblePanelsOnly = true", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+
+        const status = flicking.getStatus({ includePanelHTML: false });
+
+        expect(status.panels.every(panel => panel.html === undefined)).toBe(true);
+      });
+
+      it("should include visible offsets to the return value if visiblePanelsOnly = true", async () => {
+        const flicking = await createFlicking(
+          El.viewport("1000px", "400px").add(El.camera().add(...range(10).map(() => El.panel("100%", "100%")))),
+          { defaultIndex: 5 }
+        );
+
+        const visiblePanels = flicking.visiblePanels;
+        const status = flicking.getStatus({ visiblePanelsOnly: true });
+
+        expect(status.visibleOffset).toBeDefined();
+        expect(status.visibleOffset).toBeGreaterThan(0);
+        expect(status.visibleOffset).toBe(visiblePanels[0].index);
+      });
+
+      it("should not include visible offsets to the return value if visiblePanelsOnly = true", async () => {
+        const flicking = await createFlicking(
+          El.viewport("1000px", "400px").add(El.camera().add(...range(10).map(() => El.panel("100%", "100%")))),
+          { defaultIndex: 5 }
+        );
+
+        const status = flicking.getStatus({ visiblePanelsOnly: false });
+
+        expect(status.visibleOffset).toBeUndefined();
+      });
+    });
+
+    describe("setStatus()", () => {
+      it("can restore index", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
+        const status = flicking.getStatus();
+
+        void flicking.moveTo(0, 0);
+        const indexBefore = flicking.index;
+        flicking.setStatus(status);
+
+        expect(indexBefore).toBe(0);
+        expect(flicking.index).toBe(2);
+        expect(flicking.camera.position).toBe(flicking.panels[2].position);
+      });
+
+      it("should restore previous state of panels if panel outerHTML is included", async () => {
+        const classToAdd = "this-is-test-class";
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const status = flicking.getStatus({ includePanelHTML: true });
+
+        flicking.currentPanel.element.classList.add(classToAdd);
+        flicking.setStatus(status);
+
+        expect(flicking.currentPanel.element.classList.contains(classToAdd)).toBe(false);
+      });
+
+      it("should move to the given camera position if moveType is freeScroll", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.FREE_SCROLL });
+        const status = flicking.getStatus({ index: false, position: true });
+        const prevPosition = flicking.camera.position;
+
+        flicking.setStatus({ ...status, position: { panel: flicking.panelCount - 1, progressInPanel: 1 } });
+
+        expect(flicking.camera.position).not.toBe(prevPosition);
+        expect(flicking.camera.position).toBe(flicking.camera.range.max);
+      });
+
+      it("should not move to the given camera position if moveType is not freeScroll", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { moveType: MOVE_TYPE.SNAP });
+        const status = flicking.getStatus({ index: false, position: true });
+        const prevPosition = flicking.camera.position;
+
+        flicking.setStatus({ ...status, position: { panel: flicking.panelCount - 1, progressInPanel: 1 } });
+
+        expect(flicking.camera.position).toBe(prevPosition);
+        expect(flicking.camera.position).not.toBe(flicking.camera.range.max);
+      });
+
+      it("should restore index using the visible offset if given", async () => {
+        const flicking = await createFlicking(
+          El.viewport("1000px", "400px").add(El.camera().add(...range(10).map(() => El.panel("100%", "100%")))),
+          { defaultIndex: 5 }
+        );
+
+        const visiblePanels = flicking.visiblePanels;
+        const status = flicking.getStatus({ visiblePanelsOnly: true });
+
+        flicking.setStatus(status);
+
+        expect(visiblePanels.length).not.toBe(10);
+        expect(flicking.index).not.toBe(5);
+        expect(flicking.index).toBe(5 - status.visibleOffset);
+      });
+
+      it("should move to the given camera position using the visible offset if given", async () => {
+        const flicking = await createFlicking(
+          El.viewport("1000px", "400px").add(El.camera().add(...range(10).map(() => El.panel("100%", "100%")))),
+          { moveType: MOVE_TYPE.FREE_SCROLL, defaultIndex: 5 }
+        );
+        const status = flicking.getStatus({
+          index: false,
+          position: true,
+          includePanelHTML: true,
+          visiblePanelsOnly: true
+        });
+        const prevPosition = flicking.camera.position;
+        const prevRange = flicking.camera.range;
+
+        flicking.setStatus(status);
+
+        expect(flicking.camera.position).not.toBe(prevPosition);
+        expect(flicking.camera.range).not.toEqual(prevRange);
+      });
+    });
+
+    describe("resize()", () => {
+      it("should update camera offset", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          adaptive: true,
+          circular: true
+        });
+        const offsetBefore = flicking.camera.offset;
+        const toggled = flicking.panels.map(panel => panel.toggled);
+
+        await flicking.resize();
+
+        const offsetAfter = flicking.camera.offset;
+        const toggledAfter = flicking.panels.map(panel => panel.toggled);
+
+        expect(toggled).not.toEqual(toggledAfter);
+        expect(offsetBefore).not.toBe(offsetAfter);
+      });
+    });
+
+    describe("plugin-related methods", () => {
+      class TestPlugin implements Plugin {
+        public init = vi.fn();
+        public destroy = vi.fn();
+        public update = vi.fn();
+      }
+
+      describe("addPlugins()", () => {
+        it("can add new plugin to a `plugins` array", async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+          const plugin = new TestPlugin();
+
+          flicking.addPlugins(plugin);
+
+          expect(flicking.activePlugins.includes(plugin)).toBe(true);
+        });
+
+        it("can add multiple plugins to a `plugins` array", async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+          const plugins = range(100).map(() => new TestPlugin());
+
+          flicking.addPlugins(...plugins);
+
+          expect(plugins.every(plugin => flicking.activePlugins.includes(plugin))).toBe(true);
+        });
+
+        it("should call `init` of the plugin when Flicking's already initialized", async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: true });
+          const plugin = new TestPlugin();
+
+          const initCalledBefore = plugin.init.mock.calls.length > 0;
+          flicking.addPlugins(plugin);
+
+          expect(initCalledBefore).toBe(false);
+          expect(plugin.init).toHaveBeenCalledTimes(1);
+        });
+
+        it("shouldn't call `init` of the plugin when Flicking's not initialized", async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false });
+          const plugin = new TestPlugin();
+
+          const initCalledBefore = plugin.init.mock.calls.length > 0;
+          flicking.addPlugins(plugin);
+
+          expect(initCalledBefore).toBe(false);
+          expect(plugin.init).not.toHaveBeenCalled();
+        });
+
+        it("should call `init` on Flicking's init() called", async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false });
+          const plugin = new TestPlugin();
+
+          flicking.addPlugins(plugin);
+          const initCalledBefore = plugin.init.mock.calls.length > 0;
+
+          await flicking.init();
+
+          expect(initCalledBefore).toBe(false);
+          expect(plugin.init).toHaveBeenCalledTimes(1);
+        });
+      });
+
+      describe("removePlugins()", () => {
+        it("should remove a plugin from `plugins` array", async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+          const plugin = new TestPlugin();
+
+          flicking.addPlugins(plugin);
+          flicking.removePlugins(plugin);
+
+          expect(flicking.activePlugins.includes(plugin)).toBe(false);
+        });
+
+        it("can be called with plugin that is not added before but will not throw any error", async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+          const plugin = new TestPlugin();
+
+          flicking.removePlugins(plugin);
+
+          expect(flicking.activePlugins.includes(plugin)).toBe(false);
+        });
+
+        it("can remove a plugin from `plugins` array even if the plugin's not initialized", async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { autoInit: false });
+          const plugin = new TestPlugin();
+
+          flicking.addPlugins(plugin);
+          flicking.removePlugins(plugin);
+
+          expect(plugin.init).not.toHaveBeenCalled();
+          expect(flicking.activePlugins.includes(plugin)).toBe(false);
+        });
+      });
+    });
+  });
+});

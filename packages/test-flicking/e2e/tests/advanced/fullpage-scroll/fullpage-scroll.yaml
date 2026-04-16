@@ -1,0 +1,17 @@
+id: fullpage-scroll
+category: advanced
+demo: advanced/FullpageScroll
+
+intent: "Flicking을 풀페이지 스크롤 네비게이션으로 활용하며 수직/수평 전환을 보여준다"
+
+focus:
+  - 5개 페이지 패널이 렌더링됨
+  - 수직/수평 전환 토글 버튼이 존재
+  - 수직 모드에서 수직 드래그로 다음 페이지 이동
+  - 수평 모드에서 수평 드래그로 다음 페이지 이동
+  - strict moveType으로 한 칸만 이동
+
+api:
+  options: [horizontal, moveType, bound, align]
+
+frameworks: [vanilla, react, vue]

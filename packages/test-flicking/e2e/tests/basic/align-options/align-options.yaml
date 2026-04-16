@@ -1,0 +1,15 @@
+id: align-options
+category: basic
+demo: basic/AlignOptions
+
+intent: "align 옵션(prev/center/next)에 따라 패널 정렬 위치가 달라짐을 보여준다"
+
+focus:
+  - 3개의 Flicking 인스턴스가 렌더링됨 (prev/center/next)
+  - 각 인스턴스의 align 옵션이 올바르게 설정됨
+  - 드래그로 패널 이동이 가능함
+
+api:
+  options: [align]
+
+frameworks: [vanilla, react, vue]

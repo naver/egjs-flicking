@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <!-- observePanelResize: false (default) -->
+  <div class="demo-container">
+    <div class="demo-label">observePanelResize: false (default)</div>
+    <div id="flick-default" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel panel-1" style="width:40%">
+          <div class="panel-inner"><span>Panel 1</span><button class="expand-btn">Expand</button></div>
+        </div>
+        <div class="flicking-panel panel-2" style="width:40%">
+          <div class="panel-inner"><span>Panel 2</span><button class="expand-btn">Expand</button></div>
+        </div>
+        <div class="flicking-panel panel-3" style="width:40%">
+          <div class="panel-inner"><span>Panel 3</span><button class="expand-btn">Expand</button></div>
+        </div>
+        <div class="flicking-panel panel-4" style="width:40%">
+          <div class="panel-inner"><span>Panel 4</span><button class="expand-btn">Expand</button></div>
+        </div>
+        <div class="flicking-panel panel-5" style="width:40%">
+          <div class="panel-inner"><span>Panel 5</span><button class="expand-btn">Expand</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-hint">Flicking does not detect panel resizing, causing misaligned layout</div>
+  </div>
+
+  <!-- observePanelResize: true -->
+  <div class="demo-container">
+    <div class="demo-label">observePanelResize: true</div>
+    <div id="flick-observe" class="flicking-viewport">
+      <div class="flicking-camera">
+        <div class="flicking-panel panel-1" style="width:40%">
+          <div class="panel-inner"><span>Panel 1</span><button class="expand-btn">Expand</button></div>
+        </div>
+        <div class="flicking-panel panel-2" style="width:40%">
+          <div class="panel-inner"><span>Panel 2</span><button class="expand-btn">Expand</button></div>
+        </div>
+        <div class="flicking-panel panel-3" style="width:40%">
+          <div class="panel-inner"><span>Panel 3</span><button class="expand-btn">Expand</button></div>
+        </div>
+        <div class="flicking-panel panel-4" style="width:40%">
+          <div class="panel-inner"><span>Panel 4</span><button class="expand-btn">Expand</button></div>
+        </div>
+        <div class="flicking-panel panel-5" style="width:40%">
+          <div class="panel-inner"><span>Panel 5</span><button class="expand-btn">Expand</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-hint">Flicking automatically recalculates layout when panels are resized</div>
+  </div>
+
+</body>
+</html>

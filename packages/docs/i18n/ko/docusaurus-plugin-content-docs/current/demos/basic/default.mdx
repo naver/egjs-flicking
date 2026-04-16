@@ -1,0 +1,90 @@
+---
+title: "Default"
+id: default
+slug: /demos/basic/default
+sidebar_position: 1
+description: Flicking의 기본 사용법과 필수 구조를 보여주는 데모
+keywords: [flicking, carousel, basic, default, 기본, 시작하기]
+---
+
+import Default from '@site/src/demo/basic/Default';
+
+# Default
+
+Flicking의 가장 기본적인 사용법입니다. 필수 HTML 구조와 CSS, 기본 옵션값을 확인할 수 있습니다.
+
+<Default />
+
+## 요약
+
+### 기본 옵션값
+
+아무 옵션 없이 생성하면 다음 기본값이 적용됩니다:
+
+| 옵션 | 기본값 | 설명 |
+|------|--------|------|
+| [`align`](../../api/interfaces/FlickingOptions#align) | `"center"` | 패널 정렬 위치 |
+| [`horizontal`](../../api/interfaces/FlickingOptions#horizontal) | `true` | 가로 방향 이동 |
+| [`circular`](../../api/interfaces/FlickingOptions#circular) | `false` | 순환 모드 비활성화 |
+| [`bound`](../../api/interfaces/FlickingOptions#bound) | `false` | 경계 제한 없음 |
+| [`duration`](../../api/interfaces/FlickingOptions#duration) | `500` | 애니메이션 500ms |
+| [`moveType`](../../api/interfaces/FlickingOptions#movetype) | `"snap"` | 스냅 이동 방식 |
+
+### 필수 요소
+
+| 요소 | 필수 여부 | 설명 |
+|------|-----------|------|
+| `.flicking-viewport` | 필수 | Flicking 인스턴스가 연결되는 뷰포트 요소 |
+| `.flicking-camera` | 필수 | 패널들을 담는 컨테이너. 실제로 이동하는 요소 |
+| 패널 요소들 | 필수 | `.flicking-camera`의 직계 자식들 |
+| `flicking.css` | 필수 | 기본 스타일시트 |
+
+## 상세 설명
+
+### HTML 구조
+Flicking을 사용하려면 반드시 다음 구조가 필요합니다:
+
+```html
+<div class="flicking-viewport">
+  <div class="flicking-camera">
+    <div class="panel">Panel 1</div>
+    <div class="panel">Panel 2</div>
+    <div class="panel">Panel 3</div>
+  </div>
+</div>
+```
+
+- **flicking-viewport**: 보이는 영역을 정의합니다. `overflow: hidden`이 적용됩니다.
+- **flicking-camera**: 패널들을 감싸며, 드래그/애니메이션 시 이 요소가 이동합니다.
+- **패널**: 각 슬라이드 콘텐츠입니다. camera의 직계 자식이어야 합니다.
+
+### CSS Import
+Flicking CSS를 반드시 import 해야 합니다:
+
+```javascript
+// JavaScript
+import "@egjs/flicking/dist/flicking.css";
+
+// React
+import "@egjs/react-flicking/dist/flicking.css";
+
+// Vue
+import "@egjs/vue3-flicking/dist/flicking.css";
+```
+
+### 주의사항
+
+:::warning 필수
+`flicking.css`를 import하지 않으면 패널이 올바르게 배치되지 않습니다. viewport와 camera의 기본 스타일이 정의되어 있습니다.
+:::
+
+:::warning 구조 주의
+패널 요소는 반드시 `.flicking-camera`의 **직계 자식**이어야 합니다. 중간에 다른 wrapper 요소가 있으면 동작하지 않습니다.
+:::
+
+## 관련 링크
+
+### 관련 데모
+- [Alignment](./alignment): 패널 정렬 옵션
+- [Circular](./circular): 순환 모드
+- [Movement Types](./movement-types): 이동 방식

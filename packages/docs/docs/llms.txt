@@ -1,0 +1,126 @@
+# Flicking
+
+> A reliable, flexible, and extendable carousel library used by 30+ million people daily. Supports multiple frameworks (React, Vue3, Angular, Svelte, Preact) with circular mode, SSR, and rich customization.
+
+Flicking is a production-ready carousel/slider with comprehensive API, event system, and framework integrations. This documentation covers installation, usage guides, complete API reference, and interactive examples.
+
+## Getting Started
+
+- [Quick Start](/guide/quickstart) - Installation and basic setup for JavaScript, React, Vue3
+- [HTML Structure & Styling](/guide/structure-and-styling) - Required DOM structure and CSS classes
+- [Controlling Flicking](/guide/controlling-flicking) - Methods for programmatic carousel control
+
+## Framework Guides
+
+- [React Guide](/guide/react-guide) - React integration, hooks, and component patterns
+- [Vue3 Guide](/guide/vue3-guide) - Vue3 integration with Composition API
+
+## API Essentials
+
+The most important API references you need to work with Flicking:
+
+- [Flicking](/api/classes/Flicking) - Main carousel class with all properties and methods
+- [FlickingOptions](/api/interfaces/FlickingOptions) - Configuration options with demo links for each option
+- [FlickingErrors](/api/interfaces/FlickingErrors) - Error types and handling
+- [FlickingEvents](/api/interfaces/FlickingEvents) - Event system reference
+
+## Demos
+
+*Note: Interactive demo section is under active development*
+
+- [Alignment](/demos/basic/alignment) - Panel alignment demonstrations
+- [Circular Mode](/demos/basic/circular) - Infinite loop examples
+- [Movement Types](/demos/basic/movement-types) - Snap vs free-scroll behaviors
+
+## Optional
+
+### Advanced API Reference
+
+Detailed API documentation for advanced usage and internal components:
+
+**Core Classes:**
+- [Panel](/api/classes/Panel) - Individual slide/panel representation
+- [Camera](/api/classes/Camera) - Viewport and positioning system
+- [Control](/api/classes/Control) - Base input control system
+- [FreeControl](/api/classes/FreeControl) - Free-scroll control mode
+- [SnapControl](/api/classes/SnapControl) - Snap control mode
+- [StrictControl](/api/classes/StrictControl) - Strict control mode
+- [BoundCameraMode](/api/classes/BoundCameraMode) - Bounded camera movement
+- [CircularCameraMode](/api/classes/CircularCameraMode) - Infinite circular/loop mode
+- [LinearCameraMode](/api/classes/LinearCameraMode) - Standard linear movement
+- [CrossFlicking](/api/classes/CrossFlicking) - Multi-dimensional carousel
+- [FlickingError](/api/classes/FlickingError) - Error handling and codes
+- [Viewport](/api/classes/Viewport) - Viewport management
+- [Renderer](/api/classes/Renderer) - Rendering system
+- [VirtualManager](/api/classes/VirtualManager) - Virtual scrolling manager
+
+**Events:**
+- [ChangedEvent](/api/interfaces/ChangedEvent) - Panel change event
+- [MoveStartEvent](/api/interfaces/MoveStartEvent) - Movement start event
+- [MoveEndEvent](/api/interfaces/MoveEndEvent) - Movement end event
+- [MoveEvent](/api/interfaces/MoveEvent) - Movement progress event
+- [HoldStartEvent](/api/interfaces/HoldStartEvent) - User interaction start
+- [HoldEndEvent](/api/interfaces/HoldEndEvent) - User interaction end
+- [WillChangeEvent](/api/interfaces/WillChangeEvent) - Before panel change
+- [ReadyEvent](/api/types/ReadyEvent) - Initialization complete
+
+**Configuration:**
+- [CrossFlickingOptions](/api/interfaces/CrossFlickingOptions) - CrossFlicking configuration
+- [PanelOptions](/api/interfaces/PanelOptions) - Panel-specific options
+- [CameraOptions](/api/interfaces/CameraOptions) - Camera configuration
+- [FreeControlOptions](/api/interfaces/FreeControlOptions) - Free control options
+- [SnapControlOptions](/api/interfaces/SnapControlOptions) - Snap control options
+- [StrictControlOptions](/api/interfaces/StrictControlOptions) - Strict control options
+- [VirtualOptions](/api/interfaces/VirtualOptions) - Virtual scrolling options
+
+**TypeScript Types:**
+- [ElementLike](/api/types/ElementLike) - Element type definitions
+- [MoveTypeOptions](/api/types/MoveTypeOptions) - Movement behavior types
+- [FlickingReactiveObject](/api/types/FlickingReactiveObject) - Reactive API object type
+- [InitializationErrors](/api/types/InitializationErrors) - Initialization error codes
+- [MovementErrors](/api/types/MovementErrors) - Movement error codes
+- [DOMManipulationErrors](/api/types/DOMManipulationErrors) - DOM operation errors
+- [AnimationUpdateErrors](/api/types/AnimationUpdateErrors) - Animation error codes
+
+**Utility Functions:**
+- [connectFlickingReactiveAPI](/api/functions/connectFlickingReactiveAPI) - Connect reactive API adapter
+- [getElement](/api/functions/getElement) - Element retrieval utility
+- [getElementSize](/api/functions/getElementSize) - Element dimension calculation
+- [parseAlign](/api/functions/parseAlign) - Parse alignment values
+- [parseBounce](/api/functions/parseBounce) - Parse bounce configuration
+- [parseCSSSizeValue](/api/functions/parseCSSSizeValue) - Parse CSS size strings
+- [clamp](/api/functions/clamp) - Clamp value between min/max
+- [circulateIndex](/api/functions/circulateIndex) - Circular index calculation
+- [circulatePosition](/api/functions/circulatePosition) - Circular position calculation
+
+**Constants:**
+- [ALIGN](/api/variables/ALIGN) - Alignment constants (PREV, CENTER, NEXT)
+- [DIRECTION](/api/variables/DIRECTION) - Direction constants (PREV, NEXT)
+- [MOVE_TYPE](/api/variables/MOVE_TYPE) - Movement types (SNAP, FREE_SCROLL)
+- [MOVE_DIRECTION](/api/variables/MOVE_DIRECTION) - Movement direction tracking
+- [CLASS](/api/variables/CLASS) - CSS class name constants
+- [CODE](/api/variables/CODE) - Error code constants
+- [EVENTS](/api/variables/EVENTS) - Event name constants
+- [ORDER](/api/variables/ORDER) - Panel ordering constants
+- [CIRCULAR_FALLBACK](/api/variables/CIRCULAR_FALLBACK) - Circular fallback behavior
+
+**Reactive Integration:**
+- [FlickingReactiveData](/api/interfaces/FlickingReactiveData) - Reactive state data interface
+- [FlickingReactiveMethod](/api/interfaces/FlickingReactiveMethod) - Reactive methods interface
+- [FlickingReactiveState](/api/interfaces/FlickingReactiveState) - Reactive state interface
+- [FlickingReactiveAPIOptions](/api/interfaces/FlickingReactiveAPIOptions) - Reactive API options
+- [flickingReactiveAPIAdapter](/api/variables/flickingReactiveAPIAdapter) - Default reactive adapter
+
+### Resources and Packages
+
+Additional resources and package information
+
+- [GitHub Repository](https://github.com/naver/egjs-flicking) - Source code, issues, contributions
+- [NPM Package](https://www.npmjs.com/package/@egjs/flicking) - Core library
+- [Flicking Plugins](https://www.npmjs.com/package/@egjs/flicking-plugins) - Autoplay, Fade, Parallax effects
+
+**Framework Packages:**
+- [@egjs/react-flicking](https://www.npmjs.com/package/@egjs/react-flicking) - React wrapper
+- [@egjs/vue3-flicking](https://www.npmjs.com/package/@egjs/vue3-flicking) - Vue3 wrapper
+
+**Browser Support:** Modern browsers (Chrome, Firefox, Safari, Edge), IE11+ with polyfills, Mobile (iOS 7+, Android 4+)

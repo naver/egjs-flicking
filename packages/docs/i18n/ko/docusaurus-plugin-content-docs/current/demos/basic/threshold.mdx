@@ -1,0 +1,79 @@
+---
+title: "Threshold"
+id: threshold
+slug: /demos/basic/threshold
+sidebar_position: 11
+description: threshold 옵션으로 패널 전환에 필요한 최소 드래그 거리를 설정합니다
+keywords: [flicking, carousel, threshold, drag, sensitivity, 임계값, 민감도]
+---
+
+import Threshold from '@site/src/demo/basic/Threshold';
+
+# Threshold
+
+[`threshold`](../../api/interfaces/FlickingOptions#threshold) 옵션으로 패널 전환에 필요한 최소 드래그 거리를 픽셀 단위로 설정합니다. 이 값보다 짧게 드래그하면 원래 패널로 복귀합니다.
+
+<Threshold />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`threshold`](../../api/interfaces/FlickingOptions#threshold) | `number` | `40` | 패널 전환 최소 드래그 거리 (px) |
+
+### 값별 비교
+
+| 값 | 동작 | 적합한 상황 |
+|----|------|-------------|
+| `10` | 짧은 드래그로 쉽게 전환 | 빠른 탐색, 민감한 반응 필요 시 |
+| `40` | 적당한 드래그 필요 (기본값) | 일반 캐러셀 |
+| `100` | 긴 드래그 필요, 짧은 드래그는 복귀 | 실수 방지, 신중한 전환 필요 시 |
+
+## 상세 설명
+
+### threshold 동작 원리
+사용자가 드래그 후 손을 뗄 때, 이동 거리가 threshold보다 크면 다음/이전 패널로 전환되고, 작으면 원래 패널로 복귀합니다.
+
+```javascript
+// 낮은 값: 민감한 전환
+threshold: 10  // 10px 이상 드래그 시 전환
+
+// 기본값
+threshold: 40  // 40px 이상 드래그 시 전환
+
+// 높은 값: 신중한 전환
+threshold: 100  // 100px 이상 드래그 시 전환
+```
+
+### 연관 옵션
+- **moveType: "strict"와의 관계**: "strict" 모드에서 threshold는 한 패널 전환 여부를 결정하는 데 특히 중요합니다.
+- **dragThreshold와의 차이**: `dragThreshold`는 드래그 인식 최소 거리이고, `threshold`는 패널 전환 최소 거리입니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **낮은 값 (10~20px)**: 빠른 콘텐츠 탐색, 스와이프 민감도를 높이고 싶을 때
+- **기본값 (40px)**: 일반적인 캐러셀, 이미지 갤러리
+- **높은 값 (80~100px)**: 실수로 인한 전환 방지, 중요한 콘텐츠를 보여줄 때
+:::
+
+### 주의사항
+
+:::warning 너무 낮은 threshold
+threshold가 너무 낮으면 의도치 않은 패널 전환이 발생할 수 있습니다. 특히 터치 디바이스에서 스크롤과 스와이프가 혼동될 수 있습니다.
+:::
+
+:::warning 너무 높은 threshold
+threshold가 너무 높으면 사용자가 스와이프가 동작하지 않는다고 느낄 수 있습니다. 일반적으로 패널 너비의 10~20% 정도가 적절합니다.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`moveType`](../../api/interfaces/FlickingOptions#movetype): 이동 동작 모드 (strict와 함께 사용 시 중요)
+- [`dragThreshold`](../../api/interfaces/FlickingOptions#dragthreshold): 드래그 인식 최소 거리
+
+### 관련 데모
+- [Movement Types](./movement-types): strict 모드에서 threshold 활용

@@ -1,0 +1,17 @@
+id: virtual-scroll
+category: advanced
+demo: advanced/VirtualScroll
+
+intent: "virtual 옵션으로 대량 패널을 최소 DOM 요소로 렌더링하는 효과를 비교한다"
+
+focus:
+  - virtual 인스턴스의 DOM 요소 수가 전체(1000)보다 훨씬 적음
+  - virtual 인스턴스의 전체 패널 수는 1000개
+  - 드래그 후에도 DOM 수 적게 유지
+  - API로 500번째 패널 이동 후에도 DOM 수 적게 유지
+  - align:prev, panelsPerView:3 옵션 확인
+
+api:
+  options: [align, panelsPerView, virtual]
+
+frameworks: [vanilla, react, vue]

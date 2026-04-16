@@ -1,0 +1,15 @@
+id: threshold
+category: basic
+demo: basic/Threshold
+
+intent: "threshold 옵션으로 패널 이동에 필요한 최소 드래그 거리를 조절할 수 있음을 보여준다"
+
+focus:
+  - 3개의 Flicking 인스턴스가 렌더링됨 (10/40/100)
+  - threshold:100 인스턴스에서 짧은 드래그는 패널 이동 안 됨
+  - threshold:10 인스턴스에서 짧은 드래그로도 패널 이동
+
+api:
+  options: [threshold]
+
+frameworks: [vanilla, react, vue]

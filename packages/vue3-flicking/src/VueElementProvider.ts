@@ -10,7 +10,9 @@ class VueElementProvider implements ElementProvider {
   private _el: VuePanel;
   private _cachedElement: HTMLElement;
 
-  public get rendered() { return !this._el.hide; }
+  public get rendered() {
+    return !this._el.hide;
+  }
   public get element() {
     const el = this._el.$el.nextSibling as HTMLElement;
 

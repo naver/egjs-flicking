@@ -1,0 +1,40 @@
+.flicking-panel {
+  width: 250px;
+  height: 180px;
+  margin-right: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.flicking-panel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.flicking-panel .placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: #ddd;
+  color: #999;
+  font-size: 14px;
+}
+
+.info-bar {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+}

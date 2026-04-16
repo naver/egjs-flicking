@@ -1,0 +1,16 @@
+id: prevent-click
+category: basic
+demo: basic/PreventClick
+
+intent: "preventClickOnDrag 옵션으로 드래그 후 발생하는 클릭 이벤트를 차단할 수 있음을 보여준다"
+
+focus:
+  - 2개의 Flicking 인스턴스가 렌더링됨 (preventClickOnDrag true/false)
+  - 순수 클릭 시 두 인스턴스 모두 카운트 증가
+  - "preventClickOnDrag:true - 드래그 후 클릭 이벤트 차단"
+  - "preventClickOnDrag:false - 드래그 후에도 클릭 이벤트 발생"
+
+api:
+  options: [preventClickOnDrag]
+
+frameworks: [vanilla, react, vue]

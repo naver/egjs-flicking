@@ -1,0 +1,17 @@
+id: interruptable
+category: basic
+demo: basic/Interruptable
+
+intent: "interruptable 옵션으로 애니메이션 중 사용자 드래그 인터럽트 허용 여부를 제어할 수 있음을 보여준다"
+
+focus:
+  - 2개의 Flicking 인스턴스가 렌더링됨 (interruptable true/false)
+  - Next 버튼 클릭 시 다음 패널로 이동
+  - "interruptable:true에서 애니메이션 중 드래그로 중단 시 원래 위치로 복귀"
+  - "interruptable:false에서 애니메이션 중 드래그가 무시되어 이동 완료"
+
+api:
+  options: [interruptable, duration]
+  methods: [next]
+
+frameworks: [vanilla, react, vue]

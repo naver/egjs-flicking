@@ -1,0 +1,15 @@
+id: bound
+category: basic
+demo: basic/Bound
+
+intent: "bound 옵션으로 첫/끝 패널 경계에서 멈추도록 제한할 수 있음을 보여준다"
+
+focus:
+  - 3개의 Flicking 인스턴스가 렌더링됨 (bound false/true/true+bounce)
+  - bound:true에서 마지막 패널 너머로 이동 불가
+  - 각 인스턴스의 옵션이 올바르게 설정됨
+
+api:
+  options: [bound, bounce, align]
+
+frameworks: [vanilla, react, vue]

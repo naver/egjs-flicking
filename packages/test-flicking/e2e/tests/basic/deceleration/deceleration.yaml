@@ -1,0 +1,15 @@
+id: deceleration
+category: basic
+demo: basic/Deceleration
+
+intent: "deceleration 옵션으로 드래그 후 관성 감속 속도를 조절할 수 있음을 보여준다"
+
+focus:
+  - 3개의 Flicking 인스턴스가 렌더링됨 (0.001/0.0075/0.05)
+  - 각 인스턴스의 deceleration 옵션이 올바르게 설정됨
+  - 모든 인스턴스에서 드래그로 패널 이동 가능
+
+api:
+  options: [deceleration]
+
+frameworks: [vanilla, react, vue]

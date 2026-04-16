@@ -1,0 +1,16 @@
+id: duration
+category: basic
+demo: basic/Duration
+
+intent: "duration 옵션으로 패널 전환 애니메이션 시간을 조절할 수 있음을 보여준다"
+
+focus:
+  - 3개의 Flicking 인스턴스가 렌더링됨 (100ms/500ms/1500ms)
+  - 각 인스턴스의 duration 옵션이 올바르게 설정됨
+  - "duration:100은 드래그 후 빠르게 이동 완료"
+  - "duration:1500은 드래그 후 느리게 이동 (200ms 시점에서 애니메이션 중)"
+
+api:
+  options: [duration]
+
+frameworks: [vanilla, react, vue]

@@ -1,0 +1,75 @@
+---
+title: "Cross Flicking"
+id: cross-flicking
+slug: /demos/advanced/cross-flicking
+sidebar_position: 15
+description: Configure nested horizontal/vertical Flicking using the nested option
+keywords: [flicking, carousel, nested, cross, nesting, horizontal vertical]
+---
+
+import CrossFlicking from '@site/src/demo/advanced/CrossFlicking';
+
+# Cross Flicking
+
+Use the [`nested`](../../api/interfaces/FlickingOptions#nested) option to create a 2D cross-navigation by nesting an inner (horizontal) Flicking inside an outer (vertical) Flicking.
+
+<CrossFlicking />
+
+## Summary
+
+### Key Options
+
+| Option | Scope | Value | Role |
+|--------|-------|-------|------|
+| [`horizontal`](../../api/interfaces/FlickingOptions#horizontal) | Outer | `false` | Vertical direction (navigation between groups) |
+| [`nested`](../../api/interfaces/FlickingOptions#nested) | Inner | `true` | Propagate events to outer when end is reached |
+| [`moveType`](../../api/interfaces/FlickingOptions#movetype) | Both | `"strict"` | Move exactly one unit at a time |
+
+### Structure
+
+| Component | Direction | Role |
+|-----------|-----------|------|
+| Outer Flicking | Vertical (↕) | Navigation between groups |
+| Inner Flicking | Horizontal (↔) | Navigation within a group |
+
+## Details
+
+### Role of the nested Option
+
+When `nested: true` is set on the inner Flicking, swiping in the same direction after reaching the end of the inner Flicking propagates the event to the outer Flicking. In this demo, the outer and inner directions are different (vertical/horizontal), so input is naturally separated.
+
+### Direction Separation
+
+Horizontal swipes are handled by the inner Flicking, and vertical swipes are handled by the outer Flicking. For same-direction nesting (e.g., horizontal inside horizontal), `nested: true` manages event propagation.
+
+### Related Options
+
+- **Relationship between `nested` and `horizontal`**: Different directions work without conflict; for the same direction, `nested: true` controls propagation
+- **Combination with `moveType: "strict"`**: Makes group/panel unit navigation clear
+- **Combination with `bound: true`**: Prevents empty space at each level
+
+### Use Cases
+
+:::info When should you use this?
+- Category-based content (vertical for categories, horizontal for items)
+- Photo albums (vertical for albums, horizontal for photos)
+- Dashboards (vertical for sections, horizontal for cards)
+:::
+
+### Notes
+
+:::warning Caution
+- When the outer Flicking is vertical (`horizontal: false`), you must specify a height on the viewport.
+- If `nested: true` is not set on the inner Flicking, events are consumed internally and not propagated to the outer Flicking.
+- When nesting in the same direction, it may be difficult to distinguish swipe gestures.
+:::
+
+## Related Links
+
+### Related Options
+- [`nested`](../../api/interfaces/FlickingOptions#nested): Nested Flicking event propagation
+- [`horizontal`](../../api/interfaces/FlickingOptions#horizontal): Scroll direction
+
+### Related Demos
+- [Nested](../basic/nested): On/off comparison of the nested option itself
+- [Fullpage Scroll](./fullpage-scroll): Vertical fullpage pattern

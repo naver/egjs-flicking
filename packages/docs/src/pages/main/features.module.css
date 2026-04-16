@@ -1,0 +1,10 @@
+.column-one-fifth {
+  flex: none;
+  width: 20%;
+}
+
+@media screen and (max-width: 768px) {
+  .column-one-fifth {
+    width: 100%;
+  }
+}

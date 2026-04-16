@@ -1,0 +1,104 @@
+---
+title: "Resize On Contents Ready"
+id: resize-on-contents-ready
+slug: /demos/advanced/resize-on-contents-ready
+sidebar_position: 5
+description: Automatically recalculate panel size and position after image/video load using the resizeOnContentsReady option
+keywords: [flicking, carousel, resize, image, video, load, contents ready]
+---
+
+import ResizeOnContentsReady from '@site/src/demo/advanced/ResizeOnContentsReady';
+
+# Resize On Contents Ready
+
+Use the [`resizeOnContentsReady`](../../api/interfaces/FlickingOptions#resizeoncontentsready) option to automatically recalculate panel size and position after images/videos have loaded.
+
+<ResizeOnContentsReady />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`resizeOnContentsReady`](../../api/interfaces/FlickingOptions#resizeoncontentsready) | `boolean` | `false` | Automatically recalculate panel size when content loads |
+
+### Mode Comparison
+
+| resizeOnContentsReady | Behavior After Image Load |
+|----------------------|---------------------------|
+| `false` | Flicking's internal panel size stays as it was at initialization — scroll range and snap positions become misaligned |
+| `true` | Panel size is recalculated — scroll range and snap positions are correct |
+
+## Details
+
+### How It Works
+
+1. Panel sizes are calculated at Flicking initialization
+2. Images/videos have not loaded yet, so sizes are 0 or placeholder size
+3. After image load completes, the actual size changes
+4. With `resizeOnContentsReady: true`, panel sizes are automatically recalculated and positions updated via [`@egjs/imready`](https://github.com/nicegist/egjs-imready)
+
+```tsx
+<Flicking
+  resizeOnContentsReady={true}
+>
+  <div className="panel">
+    <img src="image.jpg" /> {/* Panel size automatically recalculated when load completes */}
+  </div>
+</Flicking>
+```
+
+### What Gets Recalculated
+
+When `resizeOnContentsReady` detects image/video load, the following are updated:
+
+- **Panel size** (`panel.resize()`)
+- **Subsequent panel positions** (`updatePosition()`)
+- **Camera scroll range** (`camera.updateRange()`)
+- **Snap points** (`camera.updateAnchors()`)
+
+### Detected Content Types
+
+Load events are detected for the following elements within panels:
+
+- `<img>` images
+- `<video>` videos
+
+### Use Cases
+
+:::info When should you use resizeOnContentsReady?
+
+**Recommended:**
+- When panel size depends on images/videos
+- When panel size is not pre-fixed with CSS
+- When loading images from the network
+
+**Not necessary:**
+- When panel size is pre-fixed with CSS (e.g., `width: 200px`)
+- Text-only panels
+- When images are included as base64 inline
+:::
+
+### Manual resize Alternative
+
+When `resizeOnContentsReady: false`, you can manually call resize:
+
+```javascript
+// Manual resize after image load completes
+img.addEventListener("load", () => {
+  flicking.resize();
+});
+```
+
+## Related Links
+
+### Related Options
+- [`adaptive`](../../api/interfaces/FlickingOptions#adaptive): Auto-adjust viewport height
+- [`autoResize`](../../api/interfaces/FlickingOptions#autoresize): Auto resize on window resize
+
+### Related Methods
+- [`resize`](../../api/classes/Flicking#resize): Manual layout recalculation
+
+### Related Demos
+- [Adaptive](../basic/adaptive): Adaptive option demo

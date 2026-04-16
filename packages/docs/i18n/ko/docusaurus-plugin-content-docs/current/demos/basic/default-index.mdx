@@ -1,0 +1,76 @@
+---
+title: "Default Index"
+id: default-index
+slug: /demos/basic/default-index
+sidebar_position: 14
+description: defaultIndex 옵션으로 초기화 시 표시할 패널의 인덱스를 설정합니다
+keywords: [flicking, carousel, defaultIndex, initial, start, 초기, 시작]
+---
+
+import DefaultIndex from '@site/src/demo/basic/DefaultIndex';
+
+# Default Index
+
+[`defaultIndex`](../../api/interfaces/FlickingOptions#defaultindex) 옵션으로 초기화 시 표시할 패널의 인덱스를 설정합니다. 0-based 인덱스로 지정합니다.
+
+<DefaultIndex />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`defaultIndex`](../../api/interfaces/FlickingOptions#defaultindex) | `number` | `0` | 초기 활성 패널 인덱스 (0-based) |
+
+### 값별 비교
+
+| 값 | 동작 | 적합한 상황 |
+|----|------|-------------|
+| `0` | 첫 번째 패널에서 시작 (기본값) | 일반적인 캐러셀 |
+| `n` | (n+1)번째 패널에서 시작 | 특정 패널로 바로 이동, 딥링크 |
+| `마지막 인덱스` | 마지막 패널에서 시작 | 역순 탐색, 최신 항목 먼저 |
+
+## 상세 설명
+
+### defaultIndex 동작 원리
+Flicking이 초기화(`init()`)될 때 지정된 인덱스의 패널로 이동합니다. 애니메이션 없이 즉시 해당 패널이 표시됩니다.
+
+```javascript
+// 첫 번째 패널에서 시작 (기본값)
+defaultIndex: 0
+
+// 세 번째 패널에서 시작
+defaultIndex: 2
+
+// 마지막 패널에서 시작 (패널이 5개일 때)
+defaultIndex: 4
+```
+
+### 연관 옵션
+- **circular와의 관계**: `circular: true`에서도 defaultIndex는 정상 동작합니다. 지정된 패널이 초기 활성 패널이 됩니다.
+- **align과의 관계**: `align: "center"`와 함께 사용하면 초기 패널이 중앙에 위치합니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **defaultIndex: 0**: 일반적인 순차 탐색 캐러셀
+- **특정 인덱스**: URL 파라미터로 특정 슬라이드 공유 (딥링크), 이전 상태 복원
+- **마지막 인덱스**: 최신 항목을 먼저 보여주는 UI, 채팅/피드
+:::
+
+### 주의사항
+
+:::warning 인덱스 범위
+패널 수보다 큰 인덱스를 지정하면 마지막 패널로 이동합니다. 음수 인덱스는 첫 번째 패널로 처리될 수 있습니다.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`circular`](../../api/interfaces/FlickingOptions#circular): 무한 루프 모드
+- [`align`](../../api/interfaces/FlickingOptions#align): 패널 정렬
+
+### 관련 데모
+- [Circular](./circular): 무한 루프 모드
+- [Alignment](./alignment): 패널 정렬

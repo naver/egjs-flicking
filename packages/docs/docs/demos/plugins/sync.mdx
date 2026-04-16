@@ -1,0 +1,93 @@
+---
+title: "Sync"
+id: sync
+slug: /demos/plugins/sync
+sidebar_position: 7
+description: A plugin that synchronizes multiple Flicking instances (camera/index synchronization)
+keywords: [flicking, plugin, sync, synchronize, thumbnail, gallery]
+---
+
+import Sync from '@site/src/demo/plugins/Sync';
+
+# Sync
+
+Synchronizes multiple Flicking instances. Commonly used to link a main image with a thumbnail gallery.
+
+<Sync />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `type` | `"camera" \| "index"` | `"camera"` | Synchronization mode. `camera` syncs camera position, `index` syncs by panel index |
+| `synchronizedFlickingOptions` | `SyncOption[]` | `[]` | List of Flicking instances and options to synchronize |
+
+### SyncOption
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `flicking` | `Flicking` | Flicking instance to synchronize |
+| `isSlidable` | `boolean` | Whether dragging to slide is enabled |
+| `isClickable` | `boolean` | Whether clicking to move to that panel is enabled |
+| `activeClass` | `string` | CSS class to add to the active panel |
+
+## Details
+
+### Synchronization Types
+
+| Type | Description | Use Case |
+|------|-------------|----------|
+| `camera` | Moves the camera position of all Flickings simultaneously | Displaying the same content in different views |
+| `index` | When a panel is changed in one Flicking, the other Flickings move to the same index | Main image + thumbnail |
+
+### Framework-specific Usage
+
+**React** — Access instances using `useRef` and `useEffect`:
+```jsx
+const mainRef = useRef(null);
+const thumbRef = useRef(null);
+const [plugins, setPlugins] = useState([]);
+
+useEffect(() => {
+  setPlugins([new Sync({
+    type: "index",
+    synchronizedFlickingOptions: [
+      { flicking: mainRef.current, isSlidable: true },
+      { flicking: thumbRef.current, isClickable: true, activeClass: "active" }
+    ]
+  })]);
+}, []);
+```
+
+**Vue** — Access instances using `ref()` and `onMounted`:
+```js
+const mainRef = ref(null);
+const thumbRef = ref(null);
+const plugins = ref([]);
+
+onMounted(() => {
+  plugins.value = [new Sync({
+    type: "index",
+    synchronizedFlickingOptions: [
+      { flicking: mainRef.value, isSlidable: true },
+      { flicking: thumbRef.value, isClickable: true, activeClass: "active" }
+    ]
+  })];
+});
+```
+
+### Notes
+
+:::warning Caution
+- The Sync plugin must be created after the Flicking instances are mounted. In React, use `useEffect`; in Vue, use `onMounted`.
+- For the `index` type, the synchronized Flickings must have the same number of panels to work correctly.
+- The plugin only needs to be added (`addPlugins`) to one of the synchronized Flickings.
+:::
+
+## Related Links
+
+### Related Demos
+- [Arrow](./arrow): Use with arrow navigation
+- [Pagination](./pagination): Use with page indicator

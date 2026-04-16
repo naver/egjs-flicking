@@ -1,0 +1,16 @@
+id: disable-input
+category: basic
+demo: basic/DisableInput
+
+intent: "disableOnInit 옵션과 enableInput/disableInput 메서드로 사용자 입력을 제어할 수 있음을 보여준다"
+
+focus:
+  - disableOnInit:false 인스턴스는 드래그 가능
+  - disableOnInit:true 인스턴스는 초기에 드래그 불가
+  - 토글 버튼으로 입력 비활성화 후 드래그 불가
+
+api:
+  options: [disableOnInit]
+  methods: [enableInput, disableInput]
+
+frameworks: [vanilla, react, vue]

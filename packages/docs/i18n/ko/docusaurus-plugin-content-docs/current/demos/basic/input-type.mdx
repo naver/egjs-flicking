@@ -1,0 +1,100 @@
+---
+title: "Input Type"
+id: input-type
+slug: /demos/basic/input-type
+sidebar_position: 12
+description: inputType 옵션으로 활성화할 입력 장치 타입을 설정합니다
+keywords: [flicking, carousel, inputType, touch, mouse, 입력, 터치, 마우스]
+---
+
+import InputType from '@site/src/demo/basic/InputType';
+
+# Input Type
+
+[`inputType`](../../api/interfaces/FlickingOptions#inputtype) 옵션으로 활성화할 입력 장치 타입을 배열로 설정합니다. 특정 입력 장치만 허용하거나 제한할 수 있습니다.
+
+<InputType />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`inputType`](../../api/interfaces/FlickingOptions#inputtype) | `string[]` | `["touch", "mouse"]` | 활성화할 입력 장치 타입 |
+
+### 값별 비교
+
+| 값 | 동작 | 적합한 상황 |
+|----|------|-------------|
+| `["touch", "mouse"]` | 터치와 마우스 모두 허용 (기본값) | 일반적인 사용, 크로스 플랫폼 |
+| `["touch"]` | 터치만 허용, 마우스 드래그 무시 | 터치 전용 UI, 마우스 드래그 방지 |
+| `["mouse"]` | 마우스만 허용, 터치 무시 | 데스크톱 전용 UI |
+
+## 상세 설명
+
+### inputType 동작 원리
+배열에 포함된 입력 타입만 Flicking 조작에 사용됩니다. 포함되지 않은 입력 타입은 무시됩니다.
+
+```javascript
+// 모든 입력 허용 (기본값)
+inputType: ["touch", "mouse"]
+
+// 터치만 허용
+inputType: ["touch"]
+
+// 마우스만 허용
+inputType: ["mouse"]
+
+// 모든 입력 비활성화
+inputType: []
+```
+
+### 지원되는 입력 타입
+- `"touch"`: 터치스크린 입력 (스마트폰, 태블릿)
+- `"mouse"`: 마우스 드래그 입력 (데스크톱)
+
+### iOSEdgeSwipeThreshold
+
+iOS Safari에서는 화면 가장자리를 스와이프하면 브라우저의 뒤로가기/앞으로가기 제스처가 발동됩니다. [`iOSEdgeSwipeThreshold`](../../api/interfaces/FlickingOptions#iosedgeswipethreshold) 옵션으로 이 영역의 너비(px)를 지정하면, 해당 범위 내에서 시작된 터치는 Flicking이 처리하지 않고 브라우저에 넘겨줍니다.
+
+```javascript
+const flicking = new Flicking("#el", {
+  inputType: ["touch", "mouse"],
+  iOSEdgeSwipeThreshold: 30 // 기본값: 좌우 각 30px 영역은 브라우저 제스처에 양보
+});
+```
+
+:::info iOS 환경에서만 적용
+`iOSEdgeSwipeThreshold`는 iOS 기기에서만 동작합니다. 일반적으로 기본값(30px)으로 충분하며, 전체 화면 가로 슬라이더처럼 가장자리 패널을 자주 드래그하는 UI에서는 값을 줄이거나 `0`으로 설정할 수 있습니다.
+:::
+
+### 연관 옵션
+- **disableOnInit과의 관계**: `disableOnInit: true`는 모든 입력을 비활성화하지만, `inputType: []`도 동일한 효과를 냅니다. 차이점은 disableOnInit은 나중에 enable()로 활성화할 수 있습니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **["touch", "mouse"]**: 일반적인 웹 앱, 다양한 디바이스 지원
+- **["touch"]**: 모바일 전용 UI, 데스크톱에서 버튼/화살표로만 제어하고 싶을 때
+- **["mouse"]**: 데스크톱 전용 앱, 터치 입력이 다른 용도로 사용될 때
+:::
+
+### 주의사항
+
+:::warning 입력 제한 시 대안 제공
+특정 입력 타입을 제한하면 해당 디바이스 사용자가 조작할 수 없습니다. 네비게이션 버튼이나 키보드 제어 등 대안을 함께 제공하세요.
+:::
+
+:::warning 접근성 고려
+일반적으로 기본값 `["touch", "mouse"]`를 사용하는 것이 접근성 측면에서 권장됩니다. 특별한 이유가 없다면 입력 타입을 제한하지 마세요.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`disableOnInit`](../../api/interfaces/FlickingOptions#disableoninit): 초기 입력 비활성화
+- [`iOSEdgeSwipeThreshold`](../../api/interfaces/FlickingOptions#iosedgeswipethreshold): iOS 가장자리 스와이프 제외 영역 너비
+
+### 관련 데모
+- [Disable Input](./disable-input): 입력 비활성화

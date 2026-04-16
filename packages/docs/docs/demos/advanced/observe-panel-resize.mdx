@@ -1,0 +1,82 @@
+---
+title: "Observe Panel Resize"
+id: observe-panel-resize
+slug: /demos/advanced/observe-panel-resize
+sidebar_position: 18
+description: Automatically detect panel element size changes and recalculate layout using the observePanelResize option
+keywords: [flicking, carousel, observePanelResize, ResizeObserver, resize, panel resize, dynamic size]
+---
+
+import ObservePanelResize from '@site/src/demo/advanced/ObservePanelResize';
+
+# Observe Panel Resize
+
+Use the [`observePanelResize`](../../api/interfaces/FlickingOptions#observepanelresize) option to attach a `ResizeObserver` to each panel element, so that Flicking automatically recalculates the layout when a panel's size changes.
+
+Try clicking the "Expand" button inside a panel to see the difference between the two carousels.
+
+<ObservePanelResize />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`observePanelResize`](../../api/interfaces/FlickingOptions#observepanelresize) | `boolean` | `false` | Detect panel element size changes via ResizeObserver |
+
+### Dependent Option
+
+`observePanelResize` only works when [`useResizeObserver`](../../api/interfaces/FlickingOptions#useresizeobserver) is `true`. Since the default value of `useResizeObserver` is `true`, it can be used without additional configuration.
+
+### Value Comparison
+
+| Value | Behavior | Best For |
+|-------|----------|----------|
+| `false` | Only detects viewport size changes (default) | Typical carousels with fixed panel sizes |
+| `true` | Also detects per-panel size changes, auto-recalculates | Dynamic content, image loading, accordion panels |
+
+## Details
+
+### How observePanelResize Works
+
+By default, Flicking's `autoResize` only detects size changes on the **viewport (container) element**. Even if the content inside a panel changes and the panel itself resizes, Flicking is unaware of it.
+
+Setting `observePanelResize: true` attaches a `ResizeObserver` to each panel element. As soon as a panel's size changes, `beforeResize` / `afterResize` events are fired and the layout is recalculated.
+
+```javascript
+const flicking = new Flicking("#el", {
+  observePanelResize: true
+  // useResizeObserver: true (default, can be omitted)
+});
+```
+
+### Use Cases
+
+:::info When should you use this?
+- **Panels with images**: When panels grow to their actual size after image load completes
+- **Accordion/toggle panels**: When panel height changes due to user interaction
+- **Dynamic content**: When content is added to panels after an API response, changing their size
+- **With `adaptive: true`**: When viewport height adapts to the active panel height and panel content changes dynamically
+:::
+
+:::warning Performance Consideration
+`observePanelResize: true` attaches a ResizeObserver to every panel, which can introduce some overhead when there are many panels. For typical carousels with fixed panel sizes, keep the default (`false`).
+:::
+
+:::warning Difference from resizeOnContentsReady
+[`resizeOnContentsReady`](../../api/interfaces/FlickingOptions#resizeoncontentsready) is an option that waits once for image/media load completion during initialization. `observePanelResize` continuously monitors panel sizes even after initialization. Choose based on your use case as they serve different purposes.
+:::
+
+## Related Links
+
+### Related Options
+- [`useResizeObserver`](../../api/interfaces/FlickingOptions#useresizeobserver): Whether to use ResizeObserver (dependent option)
+- [`autoResize`](../../api/interfaces/FlickingOptions#autoresize): Auto recalculate on viewport size change
+- [`resizeOnContentsReady`](../../api/interfaces/FlickingOptions#resizeoncontentsready): Resize after initial content load completes
+- [`adaptive`](../../api/interfaces/FlickingOptions#adaptive): Auto-adjust viewport height
+
+### Related Demos
+- [Adaptive](../basic/adaptive): Auto-adjust viewport height
+- [Auto Resize](./auto-resize): Resize detection method settings
+- [Resize Debounce](./resize-debounce): Control resize call frequency

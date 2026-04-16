@@ -1,0 +1,17 @@
+id: animation-threshold
+category: advanced
+demo: advanced/AnimationThreshold
+
+intent: "animationThreshold 옵션으로 드래그 거리에 따른 애니메이션 발동 기준을 설정할 수 있음을 보여준다"
+
+focus:
+  - 2개 viewport + Prev/Next 버튼이 렌더링됨
+  - animationThreshold 옵션 값 확인 (0.5/300)
+  - Next 버튼 클릭으로 다음 패널 이동
+  - Next 클릭 시 이벤트 로그 기록
+  - "animationThreshold:300에서 짧은 드래그는 애니메이션 없이 즉시 이동"
+
+api:
+  options: [duration, animationThreshold, align]
+
+frameworks: [vanilla, react, vue]

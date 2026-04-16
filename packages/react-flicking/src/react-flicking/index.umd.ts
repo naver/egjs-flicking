@@ -3,8 +3,8 @@
  * egjs projects are licensed under the MIT license
  */
 import Flicking from "./Flicking";
-import ViewportSlot from "./ViewportSlot";
 import { useFlickingReactiveAPI } from "./reactive";
+import ViewportSlot from "./ViewportSlot";
 
 (Flicking as any).ViewportSlot = ViewportSlot;
 (Flicking as any).useFlickingReactiveAPI = useFlickingReactiveAPI;

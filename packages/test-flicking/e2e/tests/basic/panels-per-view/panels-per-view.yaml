@@ -1,0 +1,14 @@
+id: panels-per-view
+category: basic
+demo: basic/PanelsPerView
+
+intent: "panelsPerView 옵션으로 뷰포트에 표시할 패널 수를 자동 조절할 수 있음을 보여준다"
+
+focus:
+  - 3개의 Flicking 인스턴스가 렌더링됨 (-1/3/1)
+  - panelsPerView:3 인스턴스에서 패널 너비가 뷰포트의 약 1/3
+
+api:
+  options: [panelsPerView, align]
+
+frameworks: [vanilla, react, vue]

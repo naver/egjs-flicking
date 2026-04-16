@@ -1,0 +1,70 @@
+---
+title: "Resize Debounce"
+id: resize-debounce
+slug: /demos/advanced/resize-debounce
+sidebar_position: 8
+description: resizeDebounce와 maxResizeDebounce 옵션으로 리사이즈 호출 빈도를 제어합니다
+keywords: [flicking, carousel, resize, resizeDebounce, maxResizeDebounce, debounce, 성능]
+---
+
+import ResizeDebounce from '@site/src/demo/advanced/ResizeDebounce';
+
+# Resize Debounce
+
+[`resizeDebounce`](../../api/interfaces/FlickingOptions#resizedebounce)와 [`maxResizeDebounce`](../../api/interfaces/FlickingOptions#maxresizedebounce) 옵션으로 리사이즈 호출 빈도를 제어합니다.
+
+컨테이너 오른쪽 하단을 드래그하면서 두 캐러셀의 resize 호출 빈도를 비교해 보세요.
+
+<ResizeDebounce />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`resizeDebounce`](../../api/interfaces/FlickingOptions#resizedebounce) | `number` | `0` | resize 호출 디바운스 지연 (ms) |
+| [`maxResizeDebounce`](../../api/interfaces/FlickingOptions#maxresizedebounce) | `number` | `100` | 디바운스 최대 지연 보장 (ms) |
+
+### 동작 비교
+
+| 설정 | 동작 | 적합한 상황 |
+|------|------|-------------|
+| `resizeDebounce: 0` | 크기 변경 즉시 resize 호출 | 일반적인 사용 (기본값) |
+| `resizeDebounce: 300` | 300ms 동안 변경이 없으면 호출 | 빈번한 크기 변경 시 성능 최적화 |
+| `resizeDebounce: 300` + `maxResizeDebounce: 800` | 300ms 디바운스 + 최대 800ms마다 보장 | 연속 변경 중에도 주기적 업데이트 필요 |
+
+## 상세 설명
+
+### resizeDebounce
+
+`resizeDebounce`는 resize 호출을 지정된 시간만큼 지연시킵니다. 지연 중 크기가 다시 변경되면 타이머가 리셋됩니다.
+
+### maxResizeDebounce
+
+`maxResizeDebounce`는 디바운스 지연의 최대치를 보장합니다. `resizeDebounce`가 설정되어 있고 연속적인 크기 변경이 일어나더라도, 최소한 `maxResizeDebounce` 밀리초마다 한 번은 resize가 실행됩니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **채팅/라이브 피드**: `resizeDebounce`로 빈번한 resize 콜 절감
+- **드래그 가능한 레이아웃**: `resizeDebounce` + `maxResizeDebounce`로 중간 업데이트 보장
+- **일반적인 반응형**: 기본값(`resizeDebounce: 0`)으로 즉시 반응
+:::
+
+### 주의사항
+
+:::warning 주의
+- `resizeDebounce` 값이 너무 크면 사용자가 크기 변경 후 패널이 늦게 재배치되어 보일 수 있습니다
+- `maxResizeDebounce`는 `resizeDebounce`가 0보다 클 때만 의미가 있습니다
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`resizeDebounce`](../../api/interfaces/FlickingOptions#resizedebounce): 리사이즈 디바운스
+- [`maxResizeDebounce`](../../api/interfaces/FlickingOptions#maxresizedebounce): 최대 디바운스
+
+### 관련 데모
+- [Auto Resize](./auto-resize): 리사이즈 감지 방식 설정
+- [Optimize Size Update](./optimize-size-update): 불필요한 축 변경 무시

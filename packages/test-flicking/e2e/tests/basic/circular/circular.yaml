@@ -1,0 +1,15 @@
+id: circular
+category: basic
+demo: basic/Circular
+
+intent: "circular 옵션으로 첫/끝 패널이 연결되어 무한 루프 탐색이 가능함을 보여준다"
+
+focus:
+  - 두 개의 Flicking 인스턴스가 렌더링됨 (circular false / true)
+  - "circular: true 인스턴스는 마지막 패널에서 다음으로 이동 시 첫 패널로 순환"
+  - "circular: true 인스턴스는 첫 패널에서 이전으로 이동 시 마지막 패널로 순환"
+
+api:
+  options: [circular]
+
+frameworks: [vanilla, react, vue]

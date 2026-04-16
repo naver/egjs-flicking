@@ -1,0 +1,65 @@
+---
+title: "AutoPlay"
+id: autoplay
+slug: /demos/plugins/autoplay
+sidebar_position: 2
+description: 일정 간격으로 자동으로 패널을 전환하는 플러그인
+keywords: [flicking, plugin, autoplay, auto, play, timer]
+---
+
+import Autoplay from '@site/src/demo/plugins/Autoplay';
+
+# AutoPlay
+
+일정 간격으로 패널을 자동 전환합니다. 마우스 호버 시 일시 정지 기능을 지원합니다.
+
+<Autoplay />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `duration` | `number` | `2000` | 패널 전환 간격 (ms) |
+| `direction` | `"NEXT" \| "PREV"` | `"NEXT"` | 자동 전환 방향 |
+| `stopOnHover` | `boolean` | `false` | 마우스 호버 시 자동 재생 일시 정지 |
+| `animationDuration` | `number` | - | 패널 전환 애니메이션 시간 (ms) |
+
+## 상세 설명
+
+### 동작 원리
+
+AutoPlay 플러그인은 설정된 `duration` 간격마다 지정된 방향으로 패널을 자동 전환합니다. 사용자가 드래그하면 자동 재생이 일시 중단되고, 드래그 종료 후 다시 시작됩니다.
+
+### 사용법
+
+```js
+import { AutoPlay } from "@egjs/flicking-plugins";
+
+flicking.addPlugins(new AutoPlay({
+  duration: 2000,
+  direction: "NEXT",
+  stopOnHover: true
+}));
+```
+
+### 제어 메서드
+
+| 메서드 | 설명 |
+|--------|------|
+| `plugin.stop()` | 자동 재생 중지 |
+| `plugin.play()` | 자동 재생 시작 |
+
+### 주의사항
+
+:::warning 주의
+- 끊김 없는 자동 재생을 위해 `circular: true` 옵션과 함께 사용하세요.
+- `stopOnHover: true`를 설정하면 모바일에서는 터치 시 일시 정지됩니다.
+:::
+
+## 관련 링크
+
+### 관련 데모
+- [Fade](./fade): 페이드 효과와 함께 사용
+- [Pagination](./pagination): 페이지 인디케이터와 함께 사용

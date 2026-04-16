@@ -1,0 +1,1 @@
+node config/validate-commit-msg.js

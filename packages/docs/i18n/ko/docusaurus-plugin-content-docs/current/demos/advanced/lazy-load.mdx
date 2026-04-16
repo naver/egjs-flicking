@@ -1,0 +1,85 @@
+---
+title: "Lazy Load"
+id: lazy-load
+slug: /demos/advanced/lazy-load
+sidebar_position: 6
+description: renderOnlyVisible 옵션과 visibleChange 이벤트로 보이는 패널만 이미지를 로드합니다
+keywords: [flicking, carousel, lazy load, renderOnlyVisible, visibleChange, 성능, 최적화]
+---
+
+import LazyLoad from '@site/src/demo/advanced/LazyLoad';
+
+# Lazy Load
+
+[`renderOnlyVisible`](../../api/interfaces/FlickingOptions#renderonlyvisible) 옵션과 `visibleChange` 이벤트를 조합하여, 보이는 패널만 이미지를 로드하는 성능 최적화 패턴입니다.
+
+<LazyLoad />
+
+## 요약
+
+### 주요 옵션/이벤트
+
+| 항목 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`renderOnlyVisible`](../../api/interfaces/FlickingOptions#renderonlyvisible) | `boolean` | `false` | 보이는 패널만 렌더링 |
+| [`visibleChange`](../../api/interfaces/FlickingEvents#visiblechange) | `VisibleChangeEvent` | - | 화면에 보이는 패널이 변경될 때 발생 |
+
+### 이벤트 속성
+
+| 속성 | 타입 | 설명 |
+|------|------|------|
+| `added` | `Panel[]` | 새로 화면에 진입한 패널 |
+| `removed` | `Panel[]` | 화면에서 벗어난 패널 |
+| `visiblePanels` | `Panel[]` | 현재 화면에 보이는 패널 전체 |
+
+### 동작 비교
+
+| 방식 | 이미지 로드 시점 | 적합한 상황 |
+|------|-----------------|-------------|
+| 일반 로딩 | 모든 패널 한 번에 로드 | 패널이 적을 때 (10개 이하) |
+| Lazy 로딩 | 화면에 진입할 때 로드 | 패널이 많을 때 (수십~수백 개) |
+
+## 상세 설명
+
+### 동작 원리
+
+1. `renderOnlyVisible: true`로 보이는 패널만 렌더링
+2. `visibleChange` 이벤트의 `added` 배열에서 새로 보이는 패널 감지
+3. 해당 패널의 이미지를 로드하고, 로드 여부를 기록
+4. 한번 로드된 이미지는 다시 로드하지 않음 (Set으로 추적)
+
+### 초기 로드
+
+Flicking이 초기화된 직후에는 `visibleChange`가 아직 발생하지 않으므로, `ready` 이벤트에서 초기 visible 패널의 이미지를 로드해야 합니다.
+
+### 연관 옵션
+
+- **`renderOnlyVisible`과의 관계**: 이 옵션이 핵심. 보이지 않는 패널의 렌더링을 생략하여 DOM 부담을 줄임
+- **`bound`와의 관계**: `bound: true`와 함께 쓰면 끝에서 빈 공간 없이 자연스러운 스크롤 가능
+- **`align`과의 관계**: `align: "prev"`로 리스트형 레이아웃에 적합
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- 대량 이미지가 포함된 갤러리 (50개 이상)
+- 무한 스크롤 피드에서 이미지 최적화
+- 모바일 환경에서 네트워크 부담 경감
+:::
+
+### 주의사항
+
+:::warning 주의
+- `renderOnlyVisible`은 프레임워크(React, Vue) 환경에서 사용을 권장합니다
+- `visibleChange` 이벤트의 `added` 패널은 `Panel` 객체이며, `index` 속성으로 식별할 수 있습니다
+- 초기 로드 시 `ready` 이벤트에서 별도로 visible 패널을 처리해야 합니다
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`renderOnlyVisible`](../../api/interfaces/FlickingOptions#renderonlyvisible): 보이는 패널만 렌더링
+- [`bound`](../../api/interfaces/FlickingOptions#bound): 경계 제한
+
+### 관련 데모
+- [Render Only Visible](./render-only-visible): renderOnlyVisible 옵션 자체의 on/off 비교
+- [Virtual Scroll](./virtual-scroll): virtual 모드를 사용한 대량 패널 처리

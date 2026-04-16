@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Plugin Build Test</title>
+  <link rel="stylesheet" href="https://unpkg.com/@egjs/flicking@4/dist/flicking.css">
+  <link rel="stylesheet" href="./dist/flicking-plugins.css">
+  <style>
+    .flicking-viewport { width: 400px; margin: 50px auto; }
+    .panel { width: 100px; height: 100px; background: #f0f0f0; margin: 0 10px; display: flex; align-items: center; justify-content: center; }
+  </style>
+</head>
+<body>
+  <h1 style="text-align: center;">Plugin Build Test</h1>
+
+  <div id="flicking" class="flicking-viewport">
+    <div class="flicking-camera">
+      <div class="panel">Panel 0</div>
+      <div class="panel">Panel 1</div>
+      <div class="panel">Panel 2</div>
+    </div>
+  </div>
+
+  <div id="arrow"></div>
+  <div id="pagination"></div>
+
+  <script src="https://unpkg.com/@egjs/flicking@4/dist/flicking.js"></script>
+  <script src="./dist/plugins.js"></script>
+  <script>
+    console.log("Testing plugins build...");
+    console.log("Flicking.Plugins:", Flicking.Plugins);
+    console.log("Available plugins:", Object.keys(Flicking.Plugins));
+
+    // Test plugin initialization
+    const flicking = new Flicking("#flicking", {
+      circular: true
+    });
+
+    // Test Arrow plugin
+    const arrow = new Flicking.Plugins.Arrow();
+    arrow.init(flicking);
+    console.log("✓ Arrow plugin initialized");
+
+    // Test Pagination plugin
+    const pagination = new Flicking.Plugins.Pagination({ type: "bullet" });
+    pagination.init(flicking);
+    console.log("✓ Pagination plugin initialized");
+
+    // Test AutoPlay plugin
+    const autoplay = new Flicking.Plugins.AutoPlay({ duration: 2000, direction: "NEXT" });
+    autoplay.init(flicking);
+    console.log("✓ AutoPlay plugin initialized");
+
+    console.log("✅ All plugins working correctly!");
+    document.body.insertAdjacentHTML('beforeend', '<div style="text-align:center; margin-top:20px; color:green; font-weight:bold;">✅ Build verification successful! Check console for details.</div>');
+  </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+{
+  "name": "@egjs/flicking-plugins",
+  "version": "4.7.1",
+  "description": "Ready-to-use plugins for @egjs/flicking",
+  "module": "./dist/plugins.esm.js",
+  "main": "./dist/plugins.js",
+  "types": "./declaration/index.d.ts",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "dev": "vite --config vite.dev.config.ts",
+    "dev:preview": "vite --config vite.dev.config.ts --mode production",
+    "start": "vite build --watch",
+    "build": "run-s build:bundle build:css build:declaration printsizes",
+    "build:bundle": "rm -rf ./dist && concurrently \"vite build\" \"VITE_BUILD_FORMAT=umd vite build\" \"VITE_BUILD_FORMAT=umd-min vite build\"",
+    "build:css": "run-s build:css-process build:css-bundle",
+    "build:css-process": "node ../../config/build-plugins-css.js",
+    "build:css-bundle": "cat dist/arrow.css dist/pagination.css > dist/flicking-plugins.css && postcss dist/flicking-plugins.css --use postcss-clean --no-map --output dist/flicking-plugins.min.css",
+    "build:declaration": "tsc -p tsconfig.declaration.json",
+    "printsizes": "print-sizes ./dist --exclude=\\.map",
+    "lint": "biome check src/"
+  },
+  "keywords": [
+    "flicking",
+    "plugins",
+    "carousel",
+    "slide",
+    "swipe",
+    "parallax",
+    "fade",
+    "autoplay",
+    "egjs"
+  ],
+  "author": {
+    "name": "NAVER Corp."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/naver/egjs-flicking",
+    "directory": "packages/flicking-plugins"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@egjs/flicking": "^4.1.0"
+  },
+  "devDependencies": {
+    "@egjs/flicking": "~4.15.0"
+  }
+}

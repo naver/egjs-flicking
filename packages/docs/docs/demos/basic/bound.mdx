@@ -1,0 +1,83 @@
+---
+title: "Bound"
+id: bound
+slug: /demos/basic/bound
+sidebar_position: 7
+description: Restrict the camera from going beyond the first/last panel boundaries using the bound option
+keywords: [flicking, carousel, bound, bounce, boundary]
+---
+
+import Bound from '@site/src/demo/basic/Bound';
+
+# Bound
+
+The [`bound`](../../api/interfaces/FlickingOptions#bound) option restricts the camera from going beyond the first and last panel boundaries. It can be used together with the [`bounce`](../../api/interfaces/FlickingOptions#bounce) option to control the elastic effect at the boundaries.
+
+<Bound />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`bound`](../../api/interfaces/FlickingOptions#bound) | `boolean` | `false` | Enable boundary restriction |
+| [`bounce`](../../api/interfaces/FlickingOptions#bounce) | `number \| string \| [number \| string, number \| string]` | `"20%"` | Bounce area size |
+
+### Comparison by Value
+
+| Value | Behavior | Suitable For |
+|-------|----------|--------------|
+| `bound: false` | Can drag into empty space beyond first/last panel | Infinite scroll feel, free exploration |
+| `bound: true` | Stops at first/last panel boundary with bounce effect | Finite content, clear start/end indication |
+
+## Details
+
+### bound: false in Detail
+This is the default. You can continue to drag beyond the last panel, and empty space will be visible. When you release, it snaps to the nearest panel.
+
+### bound: true in Detail
+The camera cannot go beyond the start of the first panel or the end of the last panel. When reaching the boundary, a bounce effect is displayed to indicate to the user that the end has been reached.
+
+### bounce in Detail
+The size of the elastic area displayed at the boundary. Larger values give more of a pull feel.
+
+```javascript
+// Various bounce values
+bounce: "20%"      // Default, 20% of viewport
+bounce: "50%"      // Larger bounce
+bounce: "100px"    // Fixed pixel value
+bounce: 0          // No bounce
+bounce: ["10%", "30%"]  // Different values for start/end
+```
+
+### Related Options
+- **Relationship with circular**: `circular: true` and `bound: true` are mutually exclusive. If both are true, circular takes priority and bound is ignored.
+- **Relationship with moveType: "freeScroll"**: Using `bound: true` together with freeScroll mode prevents scrolling beyond the boundaries.
+
+### Use Cases
+
+:::info When to use?
+- **bound: false**: When you want an infinite scroll feel, when not using circular
+- **bound: true**: When you want to clearly indicate the start and end of content, when boundary restriction is needed in freeScroll mode
+:::
+
+### Notes
+
+:::warning Cannot be used with circular
+When `circular: true` and `bound: true` are set simultaneously, circular takes priority. Set `circular: false` if you want the bound effect.
+:::
+
+:::warning Bounce value caution
+If the bounce value is too large, users may be confused about whether they have reached the end. Generally, around 20-30% is appropriate.
+:::
+
+## Related Links
+
+### Related Options
+- [`circular`](../../api/interfaces/FlickingOptions#circular): Infinite loop mode (mutually exclusive with bound)
+- [`moveType`](../../api/interfaces/FlickingOptions#movetype): Movement behavior mode (freeScroll + bound combination recommended)
+
+### Related Demos
+- [Circular](./circular): Infinite loop mode
+- [Movement Types](./movement-types): freeScroll + bound combination

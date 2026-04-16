@@ -2,30 +2,28 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import * as React from "react";
-import ListDiffer from "@egjs/list-differ";
+
 import {
-  CrossFlicking as VanillaCrossFlicking,
-  NormalRenderingStrategy,
-  CrossFlickingEvent,
-  HoldStartEvent,
-  HoldEndEvent,
-  MoveStartEvent,
-  MoveEvent,
-  MoveEndEvent,
-  WillChangeEvent,
   ChangedEvent,
+  CrossFlickingEvent,
   EVENTS,
+  HoldEndEvent,
+  HoldStartEvent,
+  MoveEndEvent,
+  MoveEvent,
+  MoveStartEvent,
+  NormalRenderingStrategy,
   SIDE_EVENTS,
-  CrossFlickingOptions,
-  FlickingOptions,
+  CrossFlicking as VanillaCrossFlicking,
+  WillChangeEvent
 } from "@egjs/flicking";
+import ListDiffer from "@egjs/list-differ";
 
 import { DEFAULT_PROPS } from "./consts";
-import { FlickingProps } from "./types";
-import ReactRenderer, { ReactRendererOptions } from "./ReactRenderer";
-import ReactElementProvider from "./ReactElementProvider";
 import Flicking from "./Flicking";
+import ReactElementProvider from "./ReactElementProvider";
+import ReactRenderer, { ReactRendererOptions } from "./ReactRenderer";
+import { FlickingProps } from "./types";
 
 export interface CrossFlickingProps extends FlickingProps {
   onSideHoldStart: (e: CrossFlickingEvent<HoldStartEvent<Flicking>>) => any;
@@ -49,28 +47,17 @@ export const CROSSFLICKING_DEFAULT_PROPS: CrossFlickingProps = {
   onSideWillChange: (e: CrossFlickingEvent<WillChangeEvent>) => {},
   onSideChanged: (e: CrossFlickingEvent<ChangedEvent>) => {},
   onSideWillRestore: (e: CrossFlickingEvent<WillChangeEvent>) => {},
-  onSideRestored: (e: CrossFlickingEvent<ChangedEvent>) => {},
+  onSideRestored: (e: CrossFlickingEvent<ChangedEvent>) => {}
 };
 
 class CrossFlicking extends Flicking {
   public static defaultProps: CrossFlickingProps = CROSSFLICKING_DEFAULT_PROPS;
 
-  public constructor(
-    props: Partial<
-      FlickingProps &
-        FlickingOptions &
-        CrossFlickingOptions &
-        CrossFlickingProps
-    >
-  ) {
-    super(props);
-  }
-
   public componentDidMount() {
     const props: { [key: string]: any } = {};
 
     for (const name in this.props) {
-      if ((name in CROSSFLICKING_DEFAULT_PROPS) || (name in VanillaCrossFlicking.prototype)) {
+      if (name in CROSSFLICKING_DEFAULT_PROPS || name in VanillaCrossFlicking.prototype) {
         props[name] = this.props[name];
       }
     }
@@ -78,19 +65,19 @@ class CrossFlicking extends Flicking {
     const rendererOptions: ReactRendererOptions = {
       reactFlicking: this,
       strategy: new NormalRenderingStrategy({
-        providerCtor: ReactElementProvider,
-      }),
+        providerCtor: ReactElementProvider
+      })
     };
 
     const flicking = new VanillaCrossFlicking(this._viewportElement, {
       ...props,
-      externalRenderer: new ReactRenderer(rendererOptions),
+      externalRenderer: new ReactRenderer(rendererOptions)
     });
 
     this._vanillaFlicking = flicking;
 
     const children = this._getChildren();
-    this._jsxDiffer = new ListDiffer(children, (panel) => panel.key!);
+    this._jsxDiffer = new ListDiffer(children, panel => panel.key!);
     this._pluginsDiffer = new ListDiffer<any>();
     this._prevChildren = children;
 
@@ -121,13 +108,17 @@ class CrossFlicking extends Flicking {
     const panels = this._getPanels();
 
     return (
-      <Viewport {...attributes} className={viewportClasses.join(" ")} ref={(e?: HTMLElement) => {
-        e && (this._viewportElement = e);
-      }}>
+      <Viewport
+        {...attributes}
+        className={viewportClasses.join(" ")}
+        ref={(e?: HTMLElement) => {
+          e && (this._viewportElement = e);
+        }}
+      >
         <Camera className={cameraClasses.join(" ")} {...cameraProps}>
-          { panels }
+          {panels}
         </Camera>
-        { this._getViewportSlot() }
+        {this._getViewportSlot()}
       </Viewport>
     );
   }

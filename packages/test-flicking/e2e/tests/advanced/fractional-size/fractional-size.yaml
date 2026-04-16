@@ -1,0 +1,15 @@
+id: fractional-size
+category: advanced
+demo: advanced/FractionalSize
+
+intent: "useFractionalSize 옵션으로 소수점 단위 크기 계산을 활성화하여 레이아웃 정밀도를 높이는 것을 보여준다"
+
+focus:
+  - 2개 인스턴스 + useFractionalSize 옵션 확인 (false/true)
+  - 초기 인덱스가 defaultIndex(2)로 설정됨
+  - 두 인스턴스 모두 드래그로 패널 이동 가능
+
+api:
+  options: [useFractionalSize, defaultIndex]
+
+frameworks: [vanilla, react, vue]

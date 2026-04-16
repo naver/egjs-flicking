@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <!-- renderOnlyVisible: true -->
+  <div class="demo-container">
+    <div class="demo-label">renderOnlyVisible: true</div>
+    <div class="demo-info">Non-visible panels are removed from the DOM. Try scrolling.</div>
+    <div id="flick-visible" class="flicking-viewport">
+      <div class="flicking-camera"></div>
+    </div>
+    <div class="dom-counter">
+      DOM panel count: <strong id="visible-count">0</strong> / 20 panels
+    </div>
+  </div>
+
+  <!-- renderOnlyVisible: false -->
+  <div class="demo-container">
+    <div class="demo-label">renderOnlyVisible: false (default)</div>
+    <div class="demo-info">All panels are always present in the DOM.</div>
+    <div id="flick-normal" class="flicking-viewport">
+      <div class="flicking-camera"></div>
+    </div>
+    <div class="dom-counter">
+      DOM panel count: <strong id="normal-count">0</strong> / 20 panels
+    </div>
+  </div>
+</body>
+</html>

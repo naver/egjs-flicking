@@ -1,0 +1,79 @@
+---
+title: "Threshold"
+id: threshold
+slug: /demos/basic/threshold
+sidebar_position: 11
+description: Set the minimum drag distance required for panel transition using the threshold option
+keywords: [flicking, carousel, threshold, drag, sensitivity]
+---
+
+import Threshold from '@site/src/demo/basic/Threshold';
+
+# Threshold
+
+The [`threshold`](../../api/interfaces/FlickingOptions#threshold) option sets the minimum drag distance in pixels required for panel transition. Dragging less than this value will return to the original panel.
+
+<Threshold />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`threshold`](../../api/interfaces/FlickingOptions#threshold) | `number` | `40` | Minimum drag distance for panel transition (px) |
+
+### Comparison by Value
+
+| Value | Behavior | Suitable For |
+|-------|----------|--------------|
+| `10` | Easy transition with short drag | Fast browsing, when sensitive response is needed |
+| `40` | Moderate drag required (default) | General carousels |
+| `100` | Long drag required, short drags return to original | Preventing accidental transitions, when careful transitions are needed |
+
+## Details
+
+### How Threshold Works
+When a user releases after dragging, if the movement distance is greater than the threshold, the panel transitions to the next/previous panel; if less, it returns to the original panel.
+
+```javascript
+// Low value: sensitive transition
+threshold: 10  // Transitions when dragged 10px or more
+
+// Default
+threshold: 40  // Transitions when dragged 40px or more
+
+// High value: careful transition
+threshold: 100  // Transitions when dragged 100px or more
+```
+
+### Related Options
+- **Relationship with moveType: "strict"**: In "strict" mode, threshold is particularly important in determining whether to transition one panel.
+- **Difference from dragThreshold**: `dragThreshold` is the minimum distance for drag recognition, while `threshold` is the minimum distance for panel transition.
+
+### Use Cases
+
+:::info When to use?
+- **Low value (10-20px)**: Fast content browsing, when you want to increase swipe sensitivity
+- **Default (40px)**: General carousels, image galleries
+- **High value (80-100px)**: Preventing accidental transitions, when showing important content
+:::
+
+### Notes
+
+:::warning Too low threshold
+If the threshold is too low, unintended panel transitions may occur. On touch devices in particular, scrolling and swiping may be confused.
+:::
+
+:::warning Too high threshold
+If the threshold is too high, users may feel that swiping is not working. Generally, around 10-20% of the panel width is appropriate.
+:::
+
+## Related Links
+
+### Related Options
+- [`moveType`](../../api/interfaces/FlickingOptions#movetype): Movement behavior mode (important when used with strict)
+- [`dragThreshold`](../../api/interfaces/FlickingOptions#dragthreshold): Minimum distance for drag recognition
+
+### Related Demos
+- [Movement Types](./movement-types): Using threshold in strict mode

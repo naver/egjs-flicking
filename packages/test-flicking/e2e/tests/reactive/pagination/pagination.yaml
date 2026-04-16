@@ -1,0 +1,15 @@
+id: pagination
+category: reactive
+demo: reactive/Pagination
+
+intent: "Reactive API(currentPanelIndex subscription)를 이용한 번호 버튼 페이지네이션 UI를 보여준다"
+
+focus:
+  - 5개 패널이 렌더링됨
+  - 5개 pagination 버튼(1-5)이 존재함
+  - 버튼 클릭으로 해당 패널로 이동
+
+api:
+  options: []
+
+frameworks: [vanilla, react, vue]

@@ -1,0 +1,15 @@
+id: cross-flicking
+category: advanced
+demo: advanced/CrossFlicking
+
+intent: "수직 외부 Flicking 안에 수평 내부 Flicking을 중첩하여 크로스 방향 탐색을 보여준다"
+
+focus:
+  - 외부 수직 + 내부 수평 인스턴스 존재
+  - 내부 수평 Flicking에서 드래그로 패널 이동
+  - 외부 수직 Flicking에서 수직 드래그로 그룹 이동
+
+api:
+  options: [horizontal, moveType, nested, bound, align]
+
+frameworks: [vanilla, react, vue]

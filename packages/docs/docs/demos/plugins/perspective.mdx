@@ -1,0 +1,57 @@
+---
+title: "Perspective"
+id: perspective
+slug: /demos/plugins/perspective
+sidebar_position: 4
+description: A plugin that applies 3D perspective rotation effects to panels
+keywords: [flicking, plugin, perspective, 3D, rotate, transform]
+---
+
+import Perspective from '@site/src/demo/plugins/Perspective';
+
+# Perspective
+
+Applies 3D perspective rotation and scale transformation effects based on panel position.
+
+<Perspective />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `rotate` | `number` | `1` | Rotation intensity. Positive values rotate right panels inward, negative values rotate outward |
+| `scale` | `number` | `2` | Scale transformation intensity |
+| `perspective` | `number` | `1000` | CSS perspective value (px). Smaller values produce stronger distortion |
+
+## Details
+
+### How It Works
+
+The Perspective plugin automatically applies `rotateY` and `scale` transformations based on each panel's visible ratio. Panels closer to the center face forward, while panels farther away appear rotated.
+
+### Usage
+
+```js
+import { Perspective } from "@egjs/flicking-plugins";
+
+// Basic usage
+flicking.addPlugins(new Perspective({ rotate: 1, perspective: 1000 }));
+
+// Strong distortion
+flicking.addPlugins(new Perspective({ rotate: -1, scale: 2, perspective: 600 }));
+```
+
+### Notes
+
+:::warning Caution
+- Using with `circular: true` enables a seamless 3D rotation effect.
+- If there are too few panels, empty spaces may appear during circulation. At least 4-5 panels are recommended.
+:::
+
+## Related Links
+
+### Related Demos
+- [Coverflow](../reactive/coverflow): 3D effect based on Reactive API
+- [Parallax](./parallax): Parallax scroll effect

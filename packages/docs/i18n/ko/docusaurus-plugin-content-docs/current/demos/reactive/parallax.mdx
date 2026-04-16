@@ -1,0 +1,64 @@
+---
+title: "Parallax"
+id: parallax
+slug: /demos/reactive/parallax
+sidebar_position: 4
+description: Reactive API의 indexProgress를 활용한 패럴랙스 스크롤 효과 만들기
+keywords: [flicking, carousel, parallax, reactive, indexProgress, transform, 패럴랙스, 캐러셀, 시차 효과]
+---
+
+import Parallax from '@site/src/demo/reactive/Parallax';
+
+# Parallax
+
+Reactive API의 `indexProgress`를 사용하여 패널이 카메라 중앙에서 멀어질수록 내부 요소들이 서로 다른 속도로 움직이는 패럴랙스 효과를 만듭니다.
+
+<Parallax />
+
+## 요약
+
+### 주요 API
+
+| 속성 | 타입 | 설명 |
+|------|------|------|
+| [`indexProgress`](../../api/interfaces/FlickingReactiveState#indexprogress) | `number` | 소수점 패널 인덱스로 표현된 카메라 위치 |
+
+### 효과 매핑
+
+| 패널 위치 | translateX | 투명도(Opacity) |
+|-----------|------------|-----------------|
+| 현재 (childProgress = 0) | 0px | 1.0 |
+| 인접 (childProgress = ±1) | ±offset | 0.0 |
+
+## 상세 설명
+
+### 동작 원리
+
+각 패널에는 스켈레톤 바 요소가 포함되어 있습니다. 각 패널의 `childProgress`는 `panelIndex - indexProgress`로 계산됩니다. 이 값은 두 가지 시각 효과를 제어합니다:
+
+1. **수평 이동**: 각 바는 `childProgress * offset`만큼 이동하며, 각 바마다 서로 다른 offset 값(100-180px)을 가지므로 층층이 쌓인 깊이감 효과가 생깁니다.
+2. **투명도**: `|childProgress|` 값에 따라 현재 패널(1)에서 인접 패널(0)로 서서히 사라집니다.
+
+바마다 다른 offset 값이 패럴랙스 특유의 시각 효과를 만들어냅니다: "카메라"에 가까운 요소가 먼 요소보다 더 빠르게 움직이는 것처럼 보입니다.
+
+### 관련 옵션
+
+- **`moveType: "freeScroll"`**: 자유 스크롤로 더 부드럽고 연속적인 패럴랙스 효과를 만듭니다.
+- **기본 `moveType` (snap)**: 패럴랙스 효과가 동작하지만 패널 위치에 스냅됩니다.
+
+### 사용 시나리오
+
+:::info 이런 경우에 사용하세요
+- 레이어 요소가 있는 카드 기반 콘텐츠
+- 스토리텔링 / 에디토리얼 캐러셀
+- 깊이감 효과가 있는 제품 쇼케이스
+:::
+
+## 관련 링크
+
+### 관련 API
+- [`indexProgress`](../../api/interfaces/FlickingReactiveState#indexprogress): 소수점 패널 인덱스 진행률
+
+### 관련 데모
+- [Coverflow](./coverflow): indexProgress를 활용한 3D 회전 효과
+- [Progress Bar](./progress-bar): 스크롤 진행률 표시기

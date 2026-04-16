@@ -1,0 +1,112 @@
+---
+title: "Optimize Size Update"
+id: optimize-size-update
+slug: /demos/advanced/optimize-size-update
+sidebar_position: 9
+description: optimizeSizeUpdate 옵션으로 불필요한 축의 패널 렌더링을 건너뛰어 성능을 최적화합니다
+keywords: [flicking, carousel, resize, optimizeSizeUpdate, renderOnlyVisible, autoResize, 성능, 최적화]
+---
+
+import OptimizeSizeUpdate from '@site/src/demo/advanced/OptimizeSizeUpdate';
+
+# Optimize Size Update
+
+[`optimizeSizeUpdate`](../../api/interfaces/FlickingOptions#optimizesizeupdate) 옵션으로 Flicking 방향과 무관한 축의 크기 변경 시 패널의 강제 렌더링(`forceRenderAllPanels`)을 건너뛰어 성능을 최적화합니다.
+
+패널을 스와이프하면서, 두 캐러셀의 **깜빡임 현상** 차이를 비교해 보세요.
+`optimizeSizeUpdate: false`에서는 높이 변경마다 200개 패널이 전부 DOM에 삽입되었다가 제거되므로 깜빡임이 발생하지만,
+`true`에서는 높이만 변경된 경우 이 과정이 건너뛰어져 깜빡임 없이 부드럽게 동작합니다.
+
+<OptimizeSizeUpdate />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`optimizeSizeUpdate`](../../api/interfaces/FlickingOptions#optimizesizeupdate) | `boolean` | `false` | 방향에 따라 불필요한 축 변경 시 패널 강제 렌더링 건너뜀 |
+
+### 방향별 동작
+
+| Flicking 방향 | optimizeSizeUpdate: true 시 패널 강제 렌더링 조건 |
+|----------------|---------------------------------------------|
+| `horizontal` (기본값) | **너비가 변경**된 경우에만 전체 패널 렌더링 |
+| `vertical` | **높이가 변경**된 경우에만 전체 패널 렌더링 |
+
+## 상세 설명
+
+### 동작 흐름: autoResize가 높이 변경을 감지할 때
+
+`autoResize: true` + `renderOnlyVisible: true` 환경에서 viewport의 높이만 변경될 때 다음 흐름이 발생합니다:
+
+```
+1. viewport 높이 변경 (패널 높이 차이, 외부 레이아웃 변화 등)
+
+2. autoResize의 ResizeObserver가 높이 변경 감지
+   → flicking.resize() 호출
+
+3. resize() 내부에서 forceRenderAllPanels()
+   → 숨겨진 모든 패널이 DOM에 삽입 (cameraEl.appendChild)
+   → 브라우저가 잠시 모든 패널을 렌더링 → 불필요한 DOM 조작!
+
+4. renderer.render()
+   → 비가시 패널 다시 DOM에서 제거
+
+optimizeSizeUpdate: true 적용 시:
+   → horizontal Flicking에서 너비가 변경되지 않았으면
+   → forceRenderAllPanels()를 건너뜀 → DOM 조작 방지
+```
+
+### optimizeSizeUpdate의 동작 원리
+
+Flicking의 `resize()` 내부에서는 모든 패널의 크기를 정확히 측정하기 위해 `forceRenderAllPanels()`를 호출합니다. 이 메서드는 모든 패널을 DOM에 렌더링하여 크기를 측정할 수 있게 합니다.
+
+[`renderOnlyVisible`](../../api/interfaces/FlickingOptions#renderonlyvisible)이나 가상 렌더링을 사용하는 경우, 보이지 않는 패널은 평소 DOM에서 제거되어 있습니다. `resize()` 시 이 패널들을 모두 DOM에 넣었다가 다시 제거하는 과정이 패널 수가 많을수록 비용이 커집니다.
+
+`optimizeSizeUpdate: true`로 설정하면, Flicking 방향과 관련 없는 축만 변경된 경우 이 강제 렌더링을 건너뜁니다.
+
+```
+resize() 내부 흐름:
+
+1. viewport.resize()                          ← 항상 실행
+2. forceRenderAllPanels()                     ← optimizeSizeUpdate가 제어하는 부분
+   - false: 항상 전체 패널을 DOM에 렌더링
+   - true: 관련 축(가로→너비, 세로→높이)이 변경된 경우에만 렌더링
+3. updatePanelSize() → render()               ← 항상 실행
+```
+
+### 의존 조건
+
+:::info 효과가 있는 조건
+이 옵션은 **`autoResize: true`** 환경에서 **`renderOnlyVisible: true`** 또는 **가상 렌더링(virtual rendering)**과 함께 사용할 때 효과가 있습니다.
+일반 렌더링 모드에서는 모든 패널이 항상 DOM에 존재하므로 `forceRenderAllPanels()`가 실질적인 비용이 없습니다.
+:::
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **`autoResize: true` + `renderOnlyVisible: true` + 패널 수가 많은 캐러셀**: viewport 높이만 변경될 때 불필요한 DOM 조작을 줄여 성능 향상
+- **세로 스크롤 내 가로 슬라이더**: 스크롤로 인한 높이 변경 시 숨겨진 패널의 불필요한 렌더링 방지
+- **가상 렌더링 환경**: 가상 패널의 불필요한 렌더/언마운트 방지
+:::
+
+### 주의사항
+
+:::warning 주의
+- `autoResize: true`일 때만 동작합니다
+- `renderOnlyVisible`이나 가상 렌더링을 사용하지 않는 경우 효과가 없습니다
+- 패널의 크기가 컨테이너 높이에 의존하는 경우(예: `height: 100%`) 이 옵션을 사용하면 패널 크기가 갱신되지 않을 수 있습니다
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`optimizeSizeUpdate`](../../api/interfaces/FlickingOptions#optimizesizeupdate): 사이즈 업데이트 최적화
+- [`autoResize`](../../api/interfaces/FlickingOptions#autoresize): 자동 리사이즈 (의존 옵션)
+- [`renderOnlyVisible`](../../api/interfaces/FlickingOptions#renderonlyvisible): 보이는 패널만 렌더링
+
+### 관련 데모
+- [Auto Resize](./auto-resize): 리사이즈 감지 방식 설정
+- [Resize Debounce](./resize-debounce): 리사이즈 호출 빈도 제어
+- [Render Only Visible](./render-only-visible): 보이는 패널만 렌더링

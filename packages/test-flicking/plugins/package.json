@@ -1,0 +1,13 @@
+{
+  "name": "@test/plugins",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@egjs/flicking": "workspace:*",
+    "@egjs/flicking-plugins": "workspace:*",
+    "vitest": "^4.0.0"
+  }
+}

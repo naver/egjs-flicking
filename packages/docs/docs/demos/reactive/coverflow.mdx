@@ -1,0 +1,83 @@
+---
+title: "Coverflow"
+id: coverflow
+slug: /demos/reactive/coverflow
+sidebar_position: 5
+description: Create a 3D coverflow effect using the Reactive API's indexProgress
+keywords: [flicking, carousel, coverflow, 3D, reactive, indexProgress, transform, rotateY]
+---
+
+import Coverflow from '@site/src/demo/reactive/Coverflow';
+
+# Coverflow
+
+Use `indexProgress` from the Reactive API to apply 3D rotation and scaling effects that create an album-art style coverflow interface.
+
+<Coverflow />
+
+## Summary
+
+### Key API
+
+| Property | Type | Description |
+|----------|------|-------------|
+| [`indexProgress`](../../api/interfaces/FlickingReactiveState#indexprogress) | `number` | Camera position as a fractional panel index |
+| [`useFlickingReactiveAPI`](../../api/types/FlickingReactiveObject) | Hook (React) | Subscribe to reactive state in React |
+| [`connectFlickingReactiveAPI`](../../api/functions/connectFlickingReactiveAPI) | Function (Vanilla) | Subscribe to reactive state in Vanilla JS |
+
+### Effect Mapping
+
+| Panel Position | rotateY | scale | transformOrigin |
+|---------------|---------|-------|-----------------|
+| Current (childProgress ~ 0) | 0deg | 0.9 | 50% 50% |
+| Adjacent (childProgress ~ +/-1) | -/+50deg | 0.7 | shifted toward center |
+| Far (childProgress ~ +/-2) | -/+100deg | 0.5 | shifted toward center |
+
+## Details
+
+### What is indexProgress?
+
+`indexProgress` represents the current camera position as a fractional panel index. For example, `2.5` means the camera is exactly halfway between panel 2 and panel 3. It updates in real-time during drag, enabling smooth visual transitions.
+
+### How It Works
+
+For circular mode, each panel's `childProgress` is calculated with wrapping:
+
+```js
+const childProgress = (index - indexProgress + length * 1.5) % length - length * 0.5;
+```
+
+This value drives three CSS transform properties:
+- **`rotateY`**: Panels rotate around the Y-axis, angling away from center
+- **`scale`**: Panels shrink as they move further from center
+- **`transformOrigin`**: Shifts to create a natural perspective pivot point
+
+### Related Options
+
+- **`circular: true`**: Essential for seamless coverflow looping without dead ends.
+- **`align: "center"`**: Places the active panel at the visual center of the coverflow.
+
+### Use Cases
+
+:::info When to use
+- Album / portfolio gallery
+- Product showcase
+- Media player UI
+:::
+
+### Important Notes
+
+:::warning Note
+- Set CSS `perspective` on the viewport and `transform-style: preserve-3d` on the camera for 3D effects to render.
+- Use at least 5 panels to avoid gaps when using circular mode.
+:::
+
+## Related Links
+
+### Related API
+- [`indexProgress`](../../api/interfaces/FlickingReactiveState#indexprogress): Fractional panel index progress
+- [`connectFlickingReactiveAPI`](../../api/functions/connectFlickingReactiveAPI): Connect Flicking to Reactive API
+
+### Related Demos
+- [Parallax](./parallax): Parallax scrolling effect using indexProgress
+- [Progress Bar](./progress-bar): Scroll progress indicator

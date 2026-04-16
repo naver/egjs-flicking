@@ -8,16 +8,24 @@ class NonStrictPanel extends React.Component<{ children?: React.ReactElement }> 
   private _hide: boolean = false;
   private _elRef: React.RefObject<HTMLElement> = React.createRef();
 
-  public get nativeElement() { return this._elRef.current!; }
-  public get rendered() { return !this._hide; }
-  public get elRef() { return this._elRef; }
+  public get nativeElement() {
+    return this._elRef.current!;
+  }
+  public get rendered() {
+    return !this._hide;
+  }
+  public get elRef() {
+    return this._elRef;
+  }
 
   public render() {
-    return this._hide
-      ? <></>
-      : React.cloneElement(React.Children.only(this.props.children) as React.ReactElement, {
+    return this._hide ? (
+      <></>
+    ) : (
+      React.cloneElement(React.Children.only(this.props.children) as React.ReactElement, {
         ref: this._elRef
-      });
+      })
+    );
   }
 
   public show() {

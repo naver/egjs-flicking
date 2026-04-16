@@ -1,0 +1,95 @@
+---
+title: "Parallax"
+id: parallax
+slug: /demos/plugins/parallax
+sidebar_position: 3
+description: 패널 내부 요소에 시차(Parallax) 스크롤 효과를 적용하는 플러그인
+keywords: [flicking, plugin, parallax, scroll, effect]
+---
+
+import Parallax from '@site/src/demo/plugins/Parallax';
+
+# Parallax
+
+패널 내부 요소에 시차 스크롤(Parallax) 효과를 적용합니다. 패널의 `outsetProgress`에 따라 대상 요소를 수평 이동시켜 깊이감을 만듭니다.
+
+<Parallax />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `selector` | `string` | `""` | 효과를 적용할 요소의 CSS 선택자 (`querySelector` 사용) |
+| `scale` | `number` | `1` | 시차 이동 강도 배율 |
+
+### 이동량 공식
+
+```
+position = ((parentWidth - elemWidth) / 2) × outsetProgress × scale
+transform: translate(-50%) translate(${position}px)
+```
+
+| 조건 | 이동 방향 | 설명 |
+|------|-----------|------|
+| 요소 > 부모 | 스크롤 반대 | 콘텐츠가 패널보다 느리게 이동 (이미지 패럴랙스) |
+| 요소 < 부모 | 스크롤 같은 방향 | 콘텐츠가 패널보다 빠르게 이동 (깊이 효과) |
+
+## 상세 설명
+
+### 동작 원리
+
+플러그인은 `translate(-50%) translate(${position}px)`를 대상 요소에 적용합니다. `translate(-50%)`가 항상 포함되므로, 대상 요소는 반드시 `position: absolute; left: 50%`로 배치해야 정상적으로 중앙 정렬됩니다.
+
+- **`parentWidth - elemWidth`**: 부모와 요소의 너비 차이가 이동 가능 범위를 결정합니다
+- **`outsetProgress`**: 패널이 정렬 위치에서 벗어난 정도 (중앙 = 0, 좌측 이탈 = -1, 우측 이탈 = 1)
+- **`scale`**: 이동량을 증폭합니다
+
+### 사용법
+
+`querySelector`로 **패널당 첫 번째 매칭 요소 하나만** 대상으로 합니다. 여러 요소에 각각 다른 시차 효과를 주려면 **인스턴스를 분리**하세요.
+
+```js
+import { Parallax } from "@egjs/flicking-plugins";
+
+// 단일 대상: 패널 내 이미지에 시차 효과
+flicking.addPlugins(new Parallax("img"));
+
+// 다중 대상: 요소별 고유 셀렉터로 개별 제어
+flicking.addPlugins(
+  new Parallax(".bar-0", 2),
+  new Parallax(".bar-1", 2),
+  new Parallax(".bar-2", 2)
+);
+```
+
+### CSS 설정
+
+```css
+/* 패널: overflow: hidden + position: relative 필수 */
+.flicking-panel {
+  position: relative;
+  overflow: hidden;
+}
+
+/* 대상 요소: position: absolute + left: 50% 필수 */
+/* translate(-50%)가 항상 적용되므로 이 조합으로 중앙 정렬됩니다 */
+.parallax-target {
+  position: absolute;
+  left: 50%;
+}
+```
+
+:::warning 주의
+- 대상 요소에 `position: absolute; left: 50%`가 없으면 `translate(-50%)`에 의해 레이아웃이 깨집니다.
+- 요소 너비와 부모 너비가 같으면 이동량이 0이 되어 효과가 보이지 않습니다.
+- `selector`를 빈 문자열로 두면 패널 자체에 효과가 적용됩니다.
+:::
+
+## 관련 링크
+
+### 관련 데모
+- [Parallax (Reactive API)](../reactive/parallax): `indexProgress`를 사용한 패럴랙스 (opacity 효과 포함)
+- [Fade](./fade): 페이드 효과
+- [Perspective](./perspective): 3D 원근 효과

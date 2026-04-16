@@ -1,0 +1,16 @@
+id: arrow
+category: plugins
+demo: plugins/Arrow
+
+intent: "Arrow 플러그인으로 좌우 화살표 버튼을 통한 패널 네비게이션을 보여준다"
+
+focus:
+  - 화살표 버튼(.flicking-arrow-prev, .flicking-arrow-next)이 렌더링됨
+  - next 화살표 클릭 시 다음 패널로 이동
+  - prev 화살표 클릭 시 이전 패널로 이동
+
+api:
+  options: [circular]
+  plugins: [Arrow]
+
+frameworks: [vanilla, react, vue]

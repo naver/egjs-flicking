@@ -1,0 +1,87 @@
+---
+title: "Arrow"
+id: arrow
+slug: /demos/plugins/arrow
+sidebar_position: 5
+description: A plugin that adds arrow navigation buttons to move to the previous/next panel
+keywords: [flicking, plugin, arrow, navigation, prev, next]
+---
+
+import Arrow from '@site/src/demo/plugins/Arrow';
+
+# Arrow
+
+Adds arrow navigation buttons to move to the previous/next panel.
+
+<Arrow />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `parentEl` | `HTMLElement` | - | Parent element for the arrow buttons. By default, placed inside the viewport |
+
+### Required CSS
+
+```js
+import "@egjs/flicking-plugins/dist/arrow.css";
+```
+
+## Details
+
+### How It Works
+
+The Arrow plugin finds elements with the `.flicking-arrow-prev` and `.flicking-arrow-next` classes and binds click events to move to the previous/next panel.
+
+### HTML Structure
+
+Arrow elements must be placed inside the viewport.
+
+```html
+<div class="flicking-viewport">
+  <div class="flicking-camera">
+    <!-- Panels -->
+  </div>
+  <span class="flicking-arrow-prev"></span>
+  <span class="flicking-arrow-next"></span>
+</div>
+```
+
+### Framework-specific Usage
+
+**React** — Use `ViewportSlot` to place arrows inside the viewport:
+```jsx
+<Flicking plugins={plugins}>
+  {/* Panels */}
+  <ViewportSlot>
+    <span className="flicking-arrow-prev"></span>
+    <span className="flicking-arrow-next"></span>
+  </ViewportSlot>
+</Flicking>
+```
+
+**Vue** — Use the `#viewport` slot:
+```html
+<Flicking :plugins="plugins">
+  <!-- Panels -->
+  <template #viewport>
+    <span class="flicking-arrow-prev"></span>
+    <span class="flicking-arrow-next"></span>
+  </template>
+</Flicking>
+```
+
+### Notes
+
+:::warning Caution
+- You must import `@egjs/flicking-plugins/dist/arrow.css` for the arrows to display correctly.
+- Arrow elements must be located inside `.flicking-viewport`.
+:::
+
+## Related Links
+
+### Related Demos
+- [Pagination](./pagination): Page indicator
+- [Prev/Next](../reactive/prev-next): Custom navigation

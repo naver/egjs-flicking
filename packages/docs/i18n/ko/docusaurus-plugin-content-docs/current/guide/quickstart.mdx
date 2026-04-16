@@ -1,0 +1,348 @@
+---
+title: "빠른 시작"
+id: quickstart
+slug: /guide/quickstart
+sidebar_position: 1
+description: 5분 안에 Flicking 시작하기
+keywords: [flicking, carousel, quickstart, 설치, 시작하기]
+---
+
+# 빠른 시작
+
+5분 안에 Flicking을 시작해 보세요. 이 가이드에서는 JavaScript, React, Vue3에서의 설치 방법과 첫 번째 캐러셀 생성을 다룹니다.
+
+## 설치
+
+### 패키지 매니저 사용 (권장)
+
+npm 또는 yarn을 사용하여 Flicking을 설치하세요:
+
+<Tabs groupId="framework" defaultValue="js">
+  <TabItem value="js" label="JavaScript">
+
+```bash
+npm install @egjs/flicking
+# or
+yarn add @egjs/flicking
+```
+
+  </TabItem>
+  <TabItem value="react" label="React">
+
+```bash
+npm install @egjs/react-flicking
+# or
+yarn add @egjs/react-flicking
+```
+
+  </TabItem>
+  <TabItem value="vue3" label="Vue3">
+
+```bash
+npm install @egjs/vue3-flicking
+# or
+yarn add @egjs/vue3-flicking
+```
+
+  </TabItem>
+</Tabs>
+
+### CDN 사용 (JavaScript 전용)
+
+간단한 프로토타이핑이나 단순한 프로젝트에는 CDN 링크를 사용할 수 있습니다:
+
+```html
+<!-- JavaScript -->
+<script src="https://unpkg.com/@egjs/flicking/dist/flicking.pkgd.min.js"></script>
+
+<!-- CSS -->
+<link rel="stylesheet" href="https://unpkg.com/@egjs/flicking/dist/flicking.css" />
+```
+
+:::info
+CDN 사용은 테스트에는 편리하지만, 프로덕션 환경에서는 패키지 매니저 사용을 권장합니다.
+:::
+
+---
+
+## 첫 번째 캐러셀 만들기
+
+### 기본 설정
+
+<Tabs groupId="framework" defaultValue="js">
+  <TabItem value="js" label="JavaScript">
+
+**HTML 구조:**
+```html
+<div id="carousel" class="flicking-viewport">
+  <div class="flicking-camera">
+    <div class="panel">패널 1</div>
+    <div class="panel">패널 2</div>
+    <div class="panel">패널 3</div>
+  </div>
+</div>
+```
+
+**JavaScript:**
+```javascript
+import Flicking from "@egjs/flicking";
+import "@egjs/flicking/dist/flicking.css";
+
+// Flicking 초기화
+const flicking = new Flicking("#carousel", {
+  align: "center",
+  circular: true
+});
+```
+
+:::danger 필수 사항
+- **기본 CSS**: `@egjs/flicking/dist/flicking.css`를 반드시 임포트해야 합니다
+- **HTML 구조**: `.flicking-viewport`와 `.flicking-camera` 래퍼 div가 필요합니다
+- **고정 클래스명**: `.flicking-viewport`와 `.flicking-camera`는 변경할 수 없습니다
+- **자유로운 패널 클래스**: 패널 클래스명은 자유롭게 선택 가능합니다 (`.panel`, `.slide`, `.item` 등)
+- **패널 감지**: `.flicking-camera`의 직계 자식 요소가 패널이 됩니다
+:::
+
+  </TabItem>
+  <TabItem value="react" label="React">
+
+```jsx
+import Flicking from "@egjs/react-flicking";
+import "@egjs/react-flicking/dist/flicking.css";
+
+function App() {
+  return (
+    <Flicking align="center" circular={true}>
+      <div className="panel">패널 1</div>
+      <div className="panel">패널 2</div>
+      <div className="panel">패널 3</div>
+    </Flicking>
+  );
+}
+
+export default App;
+```
+
+:::danger 필수 사항
+- **기본 CSS**: `@egjs/react-flicking/dist/flicking.css`를 반드시 임포트해야 합니다
+- **자동 구조 생성**: `<Flicking>` 컴포넌트가 필요한 구조를 자동으로 생성합니다
+- **패널 감지**: `<Flicking>`의 직계 자식 요소가 패널이 됩니다
+:::
+
+  </TabItem>
+  <TabItem value="vue3" label="Vue3">
+
+```vue
+<template>
+  <Flicking :options="{ align: 'center', circular: true }">
+    <div class="panel">패널 1</div>
+    <div class="panel">패널 2</div>
+    <div class="panel">패널 3</div>
+  </Flicking>
+</template>
+
+<script setup>
+import Flicking from "@egjs/vue3-flicking";
+import "@egjs/vue3-flicking/dist/flicking.css";
+</script>
+```
+
+:::danger 필수 사항
+- **기본 CSS**: `@egjs/vue3-flicking/dist/flicking.css`를 반드시 임포트해야 합니다
+- **자동 구조 생성**: `<Flicking>` 컴포넌트가 필요한 구조를 자동으로 생성합니다
+- **패널 감지**: `<Flicking>`의 직계 자식 요소가 패널이 됩니다
+:::
+
+  </TabItem>
+</Tabs>
+
+:::tip 캐러셀을 스타일링하고 싶으신가요?
+Flicking은 최대한의 스타일링 자유도를 제공하기 위해 최소한의 기본 스타일만 제공합니다. 필수 기본 CSS는 디자인이 아닌 기능만 담당합니다. [HTML 구조 & 스타일링](./structure-and-styling)에서 Flicking의 아키텍처와 캐러셀 스타일링 방법을 알아보세요. 이 가이드에서 다루는 내용:
+- Flicking의 3레이어 구조 작동 방식
+- 기본 CSS가 필요한 이유
+- 일반적인 스타일링 패턴과 모범 사례
+:::
+
+---
+
+## 메서드 사용하기
+
+메서드를 사용하여 Flicking을 프로그래밍 방식으로 제어할 수 있습니다:
+
+<Tabs groupId="framework" defaultValue="js">
+  <TabItem value="js" label="JavaScript">
+
+```javascript
+const flicking = new Flicking("#carousel");
+
+// 특정 패널로 이동
+flicking.moveTo(2);
+
+// 다음 패널로 이동
+flicking.next();
+
+// 이전 패널로 이동
+flicking.prev();
+```
+
+  </TabItem>
+  <TabItem value="react" label="React">
+
+```jsx
+import { useRef } from "react";
+import Flicking from "@egjs/react-flicking";
+
+function App() {
+  const flickingRef = useRef(null);
+
+  const handleClick = () => {
+    // ref를 통해 Flicking 인스턴스에 접근
+    flickingRef.current?.moveTo(2);
+  };
+
+  return (
+    <>
+      <Flicking ref={flickingRef}>
+        <div>패널 1</div>
+        <div>패널 2</div>
+        <div>패널 3</div>
+      </Flicking>
+      <button onClick={handleClick}>패널 3으로 이동</button>
+    </>
+  );
+}
+```
+
+  </TabItem>
+  <TabItem value="vue3" label="Vue3">
+
+```vue
+<template>
+  <div>
+    <Flicking ref="flickingRef">
+      <div>패널 1</div>
+      <div>패널 2</div>
+      <div>패널 3</div>
+    </Flicking>
+    <button @click="handleClick">패널 3으로 이동</button>
+  </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+import Flicking from "@egjs/vue3-flicking";
+
+const flickingRef = ref(null);
+
+const handleClick = () => {
+  // ref를 통해 Flicking 인스턴스에 접근
+  flickingRef.value?.moveTo(2);
+};
+</script>
+```
+
+  </TabItem>
+</Tabs>
+
+사용 가능한 모든 메서드는 [Flicking 메서드](../api/classes/Flicking#methods)를 참조하세요.
+
+---
+
+## 이벤트 리스닝
+
+이벤트를 리스닝하여 사용자 인터랙션을 처리하세요:
+
+<Tabs groupId="framework" defaultValue="js">
+  <TabItem value="js" label="JavaScript">
+
+```javascript
+const flicking = new Flicking("#carousel");
+
+// changed 이벤트 리스닝 (패널 변경 후 발생)
+flicking.on("changed", (e) => {
+  console.log("현재 패널 인덱스:", e.index);
+});
+
+// willChange 이벤트 리스닝 (패널 변경 전 발생)
+flicking.on("willChange", (e) => {
+  console.log("이동할 패널:", e.index);
+});
+```
+
+  </TabItem>
+  <TabItem value="react" label="React">
+
+```jsx
+<Flicking
+  onChanged={(e) => {
+    console.log("현재 패널 인덱스:", e.index);
+  }}
+  onWillChange={(e) => {
+    console.log("이동할 패널:", e.index);
+  }}>
+  {/* 패널 */}
+</Flicking>
+```
+
+:::tip 이벤트 핸들러 Props
+React 이벤트 핸들러는 `on` 접두사와 camelCase를 사용합니다: `onChanged`, `onWillChange` 등.
+자세한 내용은 [React 가이드](./react-guide)를 참조하세요.
+:::
+
+  </TabItem>
+  <TabItem value="vue3" label="Vue3">
+
+```vue
+<Flicking
+  @changed="handleChanged"
+  @will-change="handleWillChange">
+  <!-- 패널 -->
+</Flicking>
+
+<script setup>
+const handleChanged = (e) => {
+  console.log("현재 패널 인덱스:", e.index);
+};
+
+const handleWillChange = (e) => {
+  console.log("이동할 패널:", e.index);
+};
+</script>
+```
+
+:::tip 이벤트 바인딩
+Vue3에서는 `@` 디렉티브와 kebab-case를 사용합니다: `@changed`, `@will-change` 등.
+자세한 내용은 [Vue3 가이드](./vue3-guide)를 참조하세요.
+:::
+
+  </TabItem>
+</Tabs>
+
+사용 가능한 모든 이벤트는 [이벤트 인터페이스](../api/interfaces/ChangedEvent)를 참조하세요.
+
+---
+
+## 다음 단계
+
+기본 캐러셀이 작동하면 더 많은 기능을 살펴보세요:
+
+- **[HTML 구조 & 스타일링](./structure-and-styling)**: Flicking의 아키텍처를 이해하고 캐러셀을 커스터마이징하세요
+- **프레임워크 가이드** ([React](./react-guide) / [Vue3](./vue3-guide)): 프레임워크별 기능과 모범 사례
+- **[API 레퍼런스](../api/classes/Flicking)**: 전체 API 문서
+- **[데모](../demos/basic/circular)**: 인터랙티브 예제
+
+---
+
+## 문제 해결
+
+### 패널이 올바르게 표시되지 않나요?
+
+CSS 파일을 임포트했는지 확인하세요:
+
+```javascript
+import "@egjs/flicking/dist/flicking.css";  // JavaScript
+import "@egjs/react-flicking/dist/flicking.css";  // React
+import "@egjs/vue3-flicking/dist/flicking.css";  // Vue3
+```
+
+**추가 도움이 필요하신가요?** [GitHub Issues](https://github.com/naver/egjs-flicking/issues)를 확인하거나 [API 문서](../api/classes/Flicking)를 참조하세요.

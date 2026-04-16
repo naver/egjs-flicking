@@ -1,0 +1,65 @@
+---
+title: "Pagination"
+id: pagination
+slug: /demos/reactive/pagination
+sidebar_position: 2
+description: Build dot pagination using the Reactive API
+keywords: [flicking, carousel, pagination, dot, reactive, currentPanelIndex, totalPanelCount]
+---
+
+import Pagination from '@site/src/demo/reactive/Pagination';
+
+# Pagination
+
+Use `currentPanelIndex`, `totalPanelCount`, and `moveTo` from the Reactive API to build a dot pagination UI that stays in sync with the carousel.
+
+<Pagination />
+
+## Summary
+
+### Key API
+
+| Property / Method | Type | Description |
+|-------------------|------|-------------|
+| [`currentPanelIndex`](../../api/interfaces/FlickingReactiveState#currentpanelindex) | `number` | Currently active panel index |
+| [`totalPanelCount`](../../api/interfaces/FlickingReactiveState#totalpanelcount) | `number` | Total number of panels |
+| [`moveTo`](../../api/interfaces/FlickingReactiveMethod#moveto) | `(i: number) => Promise` | Move to a specific panel |
+
+### Behavior
+
+| State | Dot Style |
+|-------|-----------|
+| Current panel | Active (highlighted) |
+| Other panels | Default, click to navigate |
+
+## Details
+
+### How It Works
+
+1. Render dot buttons based on `totalPanelCount`
+2. Highlight the dot matching `currentPanelIndex`
+3. On dot click, call `moveTo(index)` to navigate
+4. When the user drags to a new panel, `currentPanelIndex` updates automatically and the dots re-sync
+
+### Related Options
+
+- **`align: "center"`**: Center alignment makes pagination feel most intuitive.
+- **`circular: true`**: In circular mode, dots cycle seamlessly as the first and last panels connect.
+
+### Use Cases
+
+:::info When to use
+- Banner / hero slider position indicator
+- Image gallery page indicator
+- Mobile onboarding step dots
+:::
+
+## Related Links
+
+### Related API
+- [`currentPanelIndex`](../../api/interfaces/FlickingReactiveState#currentpanelindex): Active panel index
+- [`moveTo`](../../api/interfaces/FlickingReactiveMethod#moveto): Navigate to panel
+
+### Related Demos
+- [Prev / Next](./prev-next): Previous/Next button navigation
+- [Progress Bar](./progress-bar): Scroll progress indicator

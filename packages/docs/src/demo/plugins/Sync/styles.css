@@ -1,0 +1,40 @@
+.main-panel {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+}
+
+.main-panel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb-panel {
+  width: 80px;
+  height: 60px;
+  margin-right: 5px;
+  overflow: hidden;
+  opacity: 0.5;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    opacity 0.3s,
+    border-color 0.3s;
+}
+
+.thumb-panel.active {
+  opacity: 1;
+  border-color: #3498db;
+}
+
+.thumb-panel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb-flicking {
+  margin-top: 10px;
+}

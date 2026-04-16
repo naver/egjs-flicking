@@ -1,0 +1,38 @@
+.skeleton-panel {
+  width: 280px;
+  height: 180px;
+  margin-right: 10px;
+  border-radius: 12px;
+  background: #3498db;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-bar {
+  position: absolute;
+  left: 50%;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 6px;
+}
+
+.bar-0 {
+  top: 44px;
+  width: 240px;
+}
+.bar-1 {
+  top: 64px;
+  width: 95px;
+}
+.bar-2 {
+  top: 84px;
+  width: 190px;
+}
+.bar-3 {
+  top: 104px;
+  width: 140px;
+}
+.bar-4 {
+  top: 124px;
+  width: 190px;
+}

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["es2020", "dom"],
+    "target": "ESNext",
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "noUnusedLocals": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "types": ["react"],
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["../../flicking/src/*"],
+      "@egjs/axes": ["../../flicking/node_modules/@egjs/axes"],
+      "@egjs/list-differ": ["../../flicking/node_modules/@egjs/list-differ"]
+    }
+  },
+  "include": ["../../flicking/src/**/*.ts", "./**/*.ts", "./**/*.tsx"],
+  "exclude": ["libs", "node_modules/**/*"]
+}

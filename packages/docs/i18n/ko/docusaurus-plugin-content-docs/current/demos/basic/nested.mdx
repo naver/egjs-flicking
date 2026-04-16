@@ -1,0 +1,84 @@
+---
+title: "Nested"
+id: nested
+slug: /demos/basic/nested
+sidebar_position: 17
+description: nested 옵션으로 중첩된 Flicking에서 경계 도달 시 부모로 제어를 전환합니다
+keywords: [flicking, carousel, nested, parent, child, 중첩, 부모]
+---
+
+import Nested from '@site/src/demo/basic/Nested';
+
+# Nested
+
+[`nested`](../../api/interfaces/FlickingOptions#nested) 옵션으로 중첩된 Flicking에서 자식이 경계에 도달하면 부모 Flicking으로 제어를 전환합니다. 같은 방향의 중첩 Flicking에서 자연스러운 UX를 제공합니다.
+
+<Nested />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`nested`](../../api/interfaces/FlickingOptions#nested) | `boolean` | `false` | 경계 도달 시 부모로 제어 전환 |
+
+### 값별 비교
+
+| 값 | 동작 | 적합한 상황 |
+|----|------|-------------|
+| `false` | 내부 경계에서 멈춤, 부모 이동 안 됨 (기본값) | 독립적인 내부 캐러셀 |
+| `true` | 내부 경계 도달 후 부모로 제어 전환 | 같은 방향의 중첩 캐러셀 |
+
+## 상세 설명
+
+### nested 동작 원리
+`nested: true`로 설정된 자식 Flicking이 첫 번째 또는 마지막 패널에 도달한 후 같은 방향으로 계속 드래그하면, 부모 Flicking이 대신 이동합니다.
+
+```jsx
+// 부모 Flicking
+<Flicking>
+  <div className="panel">
+    {/* 자식 Flicking - nested 설정 */}
+    <Flicking nested={true} bound={true}>
+      <div>내부 1</div>
+      <div>내부 2</div>
+    </Flicking>
+  </div>
+</Flicking>
+```
+
+### 언제 필요한가?
+- **필요한 경우**: 부모와 자식이 **같은 방향**(둘 다 horizontal: true 또는 둘 다 false)
+- **불필요한 경우**: 부모와 자식이 **다른 방향**(하나는 수평, 하나는 수직) - 자동으로 구분됨
+
+### 연관 옵션
+- **bound와의 관계**: `bound: true`와 함께 사용하면 내부 경계가 명확해져 nested 동작이 더 자연스럽습니다.
+- **horizontal과의 관계**: 부모/자식의 horizontal 값이 다르면 nested 옵션 없이도 자연스럽게 동작합니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **nested: true**: 카테고리별 상품 캐러셀 (외부: 카테고리, 내부: 상품)
+- **nested: false**: 독립적으로 동작해야 하는 내부 캐러셀
+:::
+
+### 주의사항
+
+:::warning 자식 Flicking에 설정
+`nested` 옵션은 자식(내부) Flicking에 설정합니다. 부모에는 설정할 필요가 없습니다.
+:::
+
+:::warning 다른 방향이면 불필요
+부모가 수평이고 자식이 수직(또는 반대)이면 nested 옵션 없이도 자연스럽게 동작합니다.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`bound`](../../api/interfaces/FlickingOptions#bound): 경계 제한 (nested와 함께 사용 권장)
+- [`horizontal`](../../api/interfaces/FlickingOptions#horizontal): 이동 방향
+
+### 관련 데모
+- [Bound](./bound): 경계 제한 모드
+- [Vertical](./vertical): 수직 모드 (다른 방향 조합)

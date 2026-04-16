@@ -1,0 +1,102 @@
+---
+title: "Auto Init"
+id: auto-init
+slug: /demos/basic/auto-init
+sidebar_position: 15
+description: Control whether Flicking automatically initializes on instance creation using the autoInit option
+keywords: [flicking, carousel, autoInit, init, initialization, deferred]
+---
+
+import AutoInit from '@site/src/demo/basic/AutoInit';
+
+# Auto Init
+
+The [`autoInit`](../../api/interfaces/FlickingOptions#autoinit) option controls whether `init()` is automatically called when a Flicking instance is created. Set it to `false` when deferred initialization is needed.
+
+<AutoInit />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`autoInit`](../../api/interfaces/FlickingOptions#autoinit) | `boolean` | `true` | Automatically call init() on creation |
+| [`preventEventsBeforeInit`](../../api/interfaces/FlickingOptions#preventeventsbeforeinit) | `boolean` | `true` | Prevent events from firing before init() is called |
+
+### Comparison by Value
+
+| Value | Behavior | Suitable For |
+|-------|----------|--------------|
+| `true` | Initializes immediately on instance creation (default) | General usage |
+| `false` | Requires manual init() call | Deferred initialization, initializing after dynamically adding panels |
+
+## Details
+
+### How autoInit Works
+When `autoInit: true`, `init()` is automatically executed when `new Flicking()` is called. `init()` performs panel size calculation, event binding, initial position setup, and more.
+
+```javascript
+// Automatic initialization (default)
+const flicking = new Flicking("#el", { autoInit: true });
+// Already initialized, ready to use
+
+// Manual initialization
+const flicking = new Flicking("#el", { autoInit: false });
+// Not yet initialized, dragging disabled
+flicking.init(); // Now initialized
+```
+
+### State Before Initialization
+When created with `autoInit: false`, until `init()` is called:
+- Drag/touch input is ignored
+- Panel positions are not calculated
+- Event listeners are not bound
+
+### preventEventsBeforeInit
+
+This option is relevant when using deferred initialization with `autoInit: false`. When set to the default `true`, Flicking events such as `ready`, `willChange`, and `changed` will not fire until `init()` is called. This prevents event handlers from being unintentionally triggered before initialization.
+
+If set to `false`, some events may fire before initialization, so it is recommended to keep the default unless there is a specific reason.
+
+```javascript
+const flicking = new Flicking("#el", {
+  autoInit: false,
+  preventEventsBeforeInit: true // Default: prevent events before init()
+});
+
+flicking.on("ready", () => {
+  console.log("Only runs after init() is called");
+});
+
+flicking.init(); // Events start being received from here
+```
+
+### Use Cases
+
+:::info When to use?
+- **autoInit: true**: Regular carousels, static panels
+- **autoInit: false**:
+  - Creating panels after loading data from an API
+  - Hidden Flicking inside tabs/modals
+  - When initialization is needed after DOM dimensions are finalized
+:::
+
+### Notes
+
+:::warning Calling methods before initialization
+Calling `moveTo()`, `prev()`, etc. while `autoInit: false` may cause errors. Make sure to call `init()` first.
+:::
+
+:::warning Initializing hidden elements
+Initializing while in `display: none` state may cause incorrect size calculations. Either call `init()` when the element is visible, or call `resize()` after it becomes visible.
+:::
+
+## Related Links
+
+### Related Options
+- [`defaultIndex`](../../api/interfaces/FlickingOptions#defaultindex): Initial panel index
+- [`preventEventsBeforeInit`](../../api/interfaces/FlickingOptions#preventeventsbeforeinit): Prevent events before init()
+
+### Related Demos
+- [Default Index](./default-index): Initial panel setup

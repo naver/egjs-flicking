@@ -1,0 +1,90 @@
+---
+title: "Default"
+id: default
+slug: /demos/basic/default
+sidebar_position: 1
+description: A demo showing the basic usage and required structure of Flicking
+keywords: [flicking, carousel, basic, default, getting started]
+---
+
+import Default from '@site/src/demo/basic/Default';
+
+# Default
+
+The most basic usage of Flicking. You can check the required HTML structure, CSS, and default option values.
+
+<Default />
+
+## Summary
+
+### Default Option Values
+
+When created without any options, the following defaults are applied:
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| [`align`](../../api/interfaces/FlickingOptions#align) | `"center"` | Panel alignment position |
+| [`horizontal`](../../api/interfaces/FlickingOptions#horizontal) | `true` | Horizontal movement |
+| [`circular`](../../api/interfaces/FlickingOptions#circular) | `false` | Circular mode disabled |
+| [`bound`](../../api/interfaces/FlickingOptions#bound) | `false` | No boundary restriction |
+| [`duration`](../../api/interfaces/FlickingOptions#duration) | `500` | Animation 500ms |
+| [`moveType`](../../api/interfaces/FlickingOptions#movetype) | `"snap"` | Snap movement type |
+
+### Required Elements
+
+| Element | Required | Description |
+|---------|----------|-------------|
+| `.flicking-viewport` | Required | The viewport element to which the Flicking instance is attached |
+| `.flicking-camera` | Required | The container that holds the panels. The element that actually moves |
+| Panel elements | Required | Direct children of `.flicking-camera` |
+| `flicking.css` | Required | Base stylesheet |
+
+## Details
+
+### HTML Structure
+Flicking requires the following structure:
+
+```html
+<div class="flicking-viewport">
+  <div class="flicking-camera">
+    <div class="panel">Panel 1</div>
+    <div class="panel">Panel 2</div>
+    <div class="panel">Panel 3</div>
+  </div>
+</div>
+```
+
+- **flicking-viewport**: Defines the visible area. `overflow: hidden` is applied.
+- **flicking-camera**: Wraps the panels and moves during drag/animation.
+- **Panels**: Each slide's content. Must be direct children of the camera.
+
+### CSS Import
+You must import the Flicking CSS:
+
+```javascript
+// JavaScript
+import "@egjs/flicking/dist/flicking.css";
+
+// React
+import "@egjs/react-flicking/dist/flicking.css";
+
+// Vue
+import "@egjs/vue3-flicking/dist/flicking.css";
+```
+
+### Notes
+
+:::warning Required
+If you do not import `flicking.css`, panels will not be positioned correctly. It contains the default styles for the viewport and camera.
+:::
+
+:::warning Structure caution
+Panel elements must be **direct children** of `.flicking-camera`. It will not work if there are other wrapper elements in between.
+:::
+
+## Related Links
+
+### Related Demos
+- [Alignment](./alignment): Panel alignment options
+- [Circular](./circular): Circular mode
+- [Movement Types](./movement-types): Movement types

@@ -1,0 +1,16 @@
+.flicking-panel {
+  width: 50%;
+  height: 200px;
+  margin: 0 5px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.flicking-viewport {
+  padding-bottom: 40px;
+}

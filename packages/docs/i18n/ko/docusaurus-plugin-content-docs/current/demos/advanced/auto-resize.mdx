@@ -1,0 +1,71 @@
+---
+title: "Auto Resize"
+id: auto-resize
+slug: /demos/advanced/auto-resize
+sidebar_position: 7
+description: autoResize와 useResizeObserver 옵션으로 뷰포트 크기 변경 감지 방식을 제어합니다
+keywords: [flicking, carousel, resize, autoResize, useResizeObserver, ResizeObserver]
+---
+
+import AutoResize from '@site/src/demo/advanced/AutoResize';
+
+# Auto Resize
+
+[`autoResize`](../../api/interfaces/FlickingOptions#autoresize)와 [`useResizeObserver`](../../api/interfaces/FlickingOptions#useresizeobserver) 옵션으로 뷰포트 크기 변경 감지 방식을 제어합니다.
+
+슬라이더로 컨테이너 너비를 변경하면서, 두 캐러셀의 리사이즈 반응 차이를 비교해 보세요.
+
+<AutoResize />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`autoResize`](../../api/interfaces/FlickingOptions#autoresize) | `boolean` | `true` | 뷰포트 크기 변경 시 자동 `resize()` 호출 |
+| [`useResizeObserver`](../../api/interfaces/FlickingOptions#useresizeobserver) | `boolean` | `true` | ResizeObserver 사용 여부 (false면 window resize) |
+
+### 옵션 조합 비교
+
+| 조합 | 동작 | 적합한 상황 |
+|------|------|-------------|
+| `autoResize: true` + `useResizeObserver: true` | 요소 크기 변경 즉시 감지 | 일반적인 사용 (기본값) |
+| `autoResize: true` + `useResizeObserver: false` | window resize만 감지 | 요소 크기는 고정, 창 크기만 변하는 경우 |
+| `autoResize: false` | 수동 `resize()` 호출 필요 | 크기 변경 시점을 직접 제어하고 싶을 때 |
+
+## 상세 설명
+
+### autoResize
+
+`autoResize: true`(기본값)이면 뷰포트 크기가 변경될 때 자동으로 `resize()` 메소드를 호출합니다. `false`로 설정하면 개발자가 직접 `flicking.resize()`를 호출해야 합니다.
+
+### useResizeObserver
+
+`useResizeObserver: true`(기본값)이면 `ResizeObserver` API로 요소 단위 크기 변경을 감지합니다. `false`이면 `window`의 `resize` 이벤트만 감지하므로, 부모 요소 크기가 변해도 감지하지 못할 수 있습니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **반응형 레이아웃**: 기본값 그대로 사용 (autoResize + ResizeObserver)
+- **탭 전환 UI**: `autoResize: false`로 탭이 활성화될 때만 수동 resize
+- **성능 민감 환경**: `useResizeObserver: false`로 window resize만 감지
+:::
+
+### 주의사항
+
+:::warning 주의
+- `autoResize: false`로 설정한 경우, 뷰포트 크기 변경 후 반드시 `resize()`를 호출해야 합니다
+- `useResizeObserver: false`이면 CSS 레이아웃 변경(flex, grid 등)에 의한 크기 변경을 감지하지 못합니다
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`autoResize`](../../api/interfaces/FlickingOptions#autoresize): 자동 리사이즈
+- [`useResizeObserver`](../../api/interfaces/FlickingOptions#useresizeobserver): ResizeObserver 사용
+
+### 관련 데모
+- [Resize Debounce](./resize-debounce): 리사이즈 호출 빈도 제어
+- [Optimize Size Update](./optimize-size-update): 불필요한 축 변경 무시
+- [Observe Panel Resize](./observe-panel-resize): 패널 크기 변경 감지

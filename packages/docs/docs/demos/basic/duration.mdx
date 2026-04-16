@@ -1,0 +1,77 @@
+---
+title: "Duration"
+id: duration
+slug: /demos/basic/duration
+sidebar_position: 8
+description: Control the duration of the panel snap animation using the duration option
+keywords: [flicking, carousel, duration, animation, speed]
+---
+
+import Duration from '@site/src/demo/basic/Duration';
+
+# Duration
+
+The [`duration`](../../api/interfaces/FlickingOptions#duration) option sets the duration of the panel snap animation in milliseconds.
+
+<Duration />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`duration`](../../api/interfaces/FlickingOptions#duration) | `number` | `500` | Animation duration (ms) |
+
+### Comparison by Value
+
+| Value | Behavior | Suitable For |
+|-------|----------|--------------|
+| `100` or less | Near-instant snap | UI requiring fast response, games |
+| `300-500` | Natural speed | General carousels, image galleries |
+| `1000` or more | Slow transition | Presentations, emphasis effects |
+
+## Details
+
+### How Duration Works
+After finishing a drag and releasing, the panel snaps to the target position. `duration` is the time it takes for this snap animation to complete.
+
+```javascript
+// Various duration values
+duration: 100   // Fast snap (0.1s)
+duration: 500   // Default (0.5s)
+duration: 1500  // Slow snap (1.5s)
+duration: 0     // Move instantly without animation
+```
+
+### Related Options
+- **Relationship with easing**: `duration` determines the animation time, while `easing` determines the animation curve. Combine both to create various transition effects.
+- **Relationship with moveType**: With `moveType: "freeScroll"`, inertial scrolling is applied and may behave differently from duration.
+
+### Use Cases
+
+:::info When to use?
+- **Short duration (100-300ms)**: UI where fast response matters, tab switching, game interfaces
+- **Default duration (400-600ms)**: General carousels, image galleries
+- **Long duration (800ms+)**: Presentations, onboarding, emphasizing transition effects
+:::
+
+### Notes
+
+:::warning Using duration: 0
+Setting `duration: 0` causes instant movement without animation. Be cautious as the lack of visual feedback may confuse users.
+:::
+
+:::warning Too long duration
+A duration over 1 second may make users feel like they are waiting. Unless intentional, around 500ms is recommended.
+:::
+
+## Related Links
+
+### Related Options
+- [`easing`](../../api/interfaces/FlickingOptions#easing): Animation curve
+- [`moveType`](../../api/interfaces/FlickingOptions#movetype): Movement behavior mode
+
+### Related Demos
+- [Easing](./easing): Adjusting the animation curve
+- [Movement Types](./movement-types): Movement behavior modes

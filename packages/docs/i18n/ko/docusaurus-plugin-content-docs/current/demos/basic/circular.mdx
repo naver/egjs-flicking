@@ -1,0 +1,77 @@
+---
+title: "Circular"
+id: circular
+slug: /demos/basic/circular
+sidebar_position: 3
+description: circular 옵션으로 첫 번째와 마지막 패널을 연결하여 무한 루프 탐색을 활성화합니다
+keywords: [flicking, carousel, circular, infinite, loop, 순환, 무한]
+---
+
+import Circular from '@site/src/demo/basic/Circular';
+
+# Circular
+
+[`circular`](../../api/interfaces/FlickingOptions#circular) 옵션으로 첫 번째와 마지막 패널을 연결하여 무한 루프 탐색을 활성화합니다. 마지막 패널에서 다음으로 이동하면 첫 패널로, 첫 패널에서 이전으로 이동하면 마지막 패널로 이동합니다.
+
+<Circular />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`circular`](../../api/interfaces/FlickingOptions#circular) | `boolean` | `false` | 무한 루프 모드 활성화 |
+| [`circularFallback`](../../api/interfaces/FlickingOptions#circularfallback) | `"linear" \| "bound"` | `"linear"` | circular 활성화 불가 시 대체 동작 |
+
+### 값별 비교
+
+| 값 | 동작 | 적합한 상황 |
+|----|------|-------------|
+| `false` | 첫/마지막 패널에서 더 이상 이동 불가 | 유한한 콘텐츠, 시작/끝이 명확한 UI |
+| `true` | 첫↔마지막 패널이 연결되어 무한 탐색 | 캐러셀, 갤러리, 연속 브라우징 |
+
+## 상세 설명
+
+### circular: false 상세
+기본값입니다. 첫 번째 패널에서 이전으로 이동하거나 마지막 패널에서 다음으로 이동할 수 없습니다. 유한한 콘텐츠를 표시할 때 적합합니다.
+
+### circular: true 상세
+첫 번째와 마지막 패널이 내부적으로 연결됩니다. 사용자는 어느 방향으로든 계속 스크롤할 수 있습니다. 패널이 복제되는 것이 아니라, 위치가 재계산되어 자연스럽게 연결됩니다.
+
+### circularFallback 상세
+`circular: true`이지만 활성화 조건을 만족하지 못할 때 대체 동작을 지정합니다:
+- `"linear"`: 일반 모드로 동작 (첫/마지막에서 멈춤)
+- `"bound"`: bound 모드로 동작 (경계에서 바운스)
+
+### 연관 옵션
+- **bound와의 관계**: `circular: true`와 `bound: true`를 함께 설정하면 circular가 우선됩니다. bound는 무시됩니다.
+- **align과의 관계**: `circular: true` + `align: "center"` 조합이 가장 일반적인 캐러셀 패턴입니다.
+- **panelsPerView와의 관계**: `panelsPerView` 설정 시 전체 패널 크기 계산에 영향을 주어 circular 활성화 조건에 영향을 줄 수 있습니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **circular: true**: 이미지 갤러리, 제품 캐러셀, 배너 슬라이더, 끊김 없는 브라우징
+- **circular: false**: 온보딩 화면, 단계별 위저드, 명확한 시작/끝이 있는 콘텐츠
+:::
+
+### 주의사항
+
+:::warning 활성화 조건
+circular 모드는 **전체 패널 크기 ≥ 뷰포트 크기**일 때만 활성화됩니다. 조건을 만족하지 못하면 `circularFallback`에 지정된 모드로 자동 전환됩니다.
+:::
+
+:::warning bound와 함께 사용 불가
+`circular: true`와 `bound: true`는 상호 배타적입니다. 둘 다 true이면 circular가 우선되고 bound는 무시됩니다.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`bound`](../../api/interfaces/FlickingOptions#bound): 경계 제한 모드 (circular와 상호 배타)
+- [`align`](../../api/interfaces/FlickingOptions#align): 패널 정렬 방식
+
+### 관련 데모
+- [Alignment](./alignment): 정렬 옵션과 circular 조합
+- [Bound](./bound): 경계 제한 모드

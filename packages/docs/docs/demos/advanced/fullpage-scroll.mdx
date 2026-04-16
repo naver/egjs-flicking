@@ -1,0 +1,77 @@
+---
+title: "Fullpage Scroll"
+id: fullpage-scroll
+slug: /demos/advanced/fullpage-scroll
+sidebar_position: 10
+description: Build a fullpage scroll UI by combining moveType, bound, and align options
+keywords: [flicking, carousel, fullpage, strict, scroll]
+---
+
+import FullpageScroll from '@site/src/demo/advanced/FullpageScroll';
+
+# Fullpage Scroll
+
+Combine the [`moveType: "strict"`](../../api/interfaces/FlickingOptions#movetype), [`bound`](../../api/interfaces/FlickingOptions#bound), and [`align`](../../api/interfaces/FlickingOptions#align) options to build a fullpage scroll UI.
+
+<FullpageScroll />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Value | Role |
+|--------|------|-------|------|
+| [`moveType`](../../api/interfaces/FlickingOptions#movetype) | `string` | `"strict"` | Move only one page at a time |
+| [`bound`](../../api/interfaces/FlickingOptions#bound) | `boolean` | `true` | Prevent empty space at both ends |
+| [`align`](../../api/interfaces/FlickingOptions#align) | `string` | `"prev"` | Align pages to the viewport start |
+| [`horizontal`](../../api/interfaces/FlickingOptions#horizontal) | `boolean` | `false` | Vertical scrolling |
+
+### Direction Comparison
+
+| Direction | horizontal | Result | Required Setting |
+|-----------|-----------|--------|------------------|
+| Vertical (Fullpage) | `false` | Swipe up/down | Height must be set on viewport |
+| Horizontal (Slider) | `true` | Swipe left/right | Default behavior |
+
+## Details
+
+### Role of moveType: "strict"
+
+`moveType: "strict"` ensures that no matter how hard you swipe, only exactly one panel (one page) moves at a time. This is the key to fullpage scroll — `"snap"` (the default) can skip multiple panels depending on swipe strength, making it unsuitable for fullpage.
+
+### Vertical Direction Setup
+
+Setting `horizontal: false` enables vertical scrolling. In this case, you must specify a height (`height`) on the viewport element. Use `100vh` for fullscreen, or a fixed height for a specific area.
+
+### Related Options
+
+- **`moveType` is the key**: Only `"strict"` guarantees exactly 1-page movement
+- **Combination with `bound`**: Prevents empty space from showing on the last page
+- **Combination with `align: "prev"`**: Aligns each page flush with the viewport start
+
+### Use Cases
+
+:::info When should you use this?
+- Landing pages: Fullpage transitions between sections
+- Presentation views: Slide navigation
+- Mobile app onboarding: Step-by-step introduction screens
+:::
+
+### Notes
+
+:::warning Caution
+- For vertical direction (`horizontal: false`), `height` must be set on the viewport. Without it, the height becomes 0 and nothing will be visible.
+- Vertical scrolling may conflict with the browser's default scroll. Using `preventDefaultOnDrag: true` together resolves this.
+:::
+
+## Related Links
+
+### Related Options
+- [`moveType`](../../api/interfaces/FlickingOptions#movetype): Movement type
+- [`bound`](../../api/interfaces/FlickingOptions#bound): Boundary restriction
+- [`horizontal`](../../api/interfaces/FlickingOptions#horizontal): Scroll direction
+- [`preventDefaultOnDrag`](../../api/interfaces/FlickingOptions#preventdefaultondrag): Prevent default behavior on drag
+
+### Related Demos
+- [Movement Types](../basic/movement-types): Detailed comparison of moveType options
+- [Carousel](./carousel): Other option combination patterns

@@ -1,0 +1,88 @@
+---
+title: "Movement Types"
+id: movement-types
+slug: /demos/basic/movement-types
+sidebar_position: 4
+description: Control panel movement and snap behavior using the moveType option
+keywords: [flicking, carousel, moveType, snap, freeScroll, strict, movement]
+---
+
+import MoveType from '@site/src/demo/basic/MoveType';
+
+# Movement Types
+
+The [`moveType`](../../api/interfaces/FlickingOptions#movetype) option controls panel movement and snap behavior. Three modes are available: snap, freeScroll, and strict.
+
+<MoveType />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`moveType`](../../api/interfaces/FlickingOptions#movetype) | `"snap" \| "freeScroll" \| "strict" \| object` | `"snap"` | Movement behavior mode |
+
+### Comparison by Value
+
+| Value | Behavior | Suitable For |
+|-------|----------|--------------|
+| `"snap"` | Snaps by panel unit. Can skip multiple panels depending on drag distance | General carousels, image galleries |
+| `"freeScroll"` | Free scrolling without snapping. Inertia applied | Horizontal scroll lists, tab bars |
+| `"strict"` | Moves exactly one panel at a time | Onboarding, step-by-step guides, fullscreen sliders |
+
+## Details
+
+### "snap" in Detail
+This is the default. After dragging, it snaps to the nearest panel when released. Multiple panels can be skipped depending on drag speed and distance.
+
+**snap with count**: You can limit the number of panels to move at once.
+```javascript
+moveType: { type: "snap", count: 2 }  // Move up to 2 panels at a time
+```
+
+### "freeScroll" in Detail
+Moves freely like native scrolling without snapping to panels. Inertia based on drag speed is applied. The current panel index is determined by the panel closest to the center of the screen.
+
+**stopAtEdge option**: Sets whether to stop at the boundary.
+```javascript
+moveType: ["freeScroll", { stopAtEdge: true }]
+```
+
+### "strict" in Detail
+Moves exactly one panel per flick. No matter how fast you drag, only one panel moves at a time. Use when you need to prevent users from skipping content.
+
+### Related Options
+- **Relationship with bound**: In freeScroll mode, it is recommended to use `bound: true` together. Otherwise, it may scroll beyond the boundaries.
+- **Relationship with threshold**: `threshold` is the minimum drag distance required for panel transition. Particularly important in `strict` mode.
+- **Relationship with duration**: Controls the duration of the snap animation.
+
+### Use Cases
+
+:::info When to use?
+- **"snap"**: General carousels, image galleries, product sliders
+- **"freeScroll"**: Horizontal scroll menus, tab bars, tag lists, UI that needs a native scroll feel
+- **"strict"**: Onboarding screens, tutorials, step-by-step guides, preventing content skipping
+:::
+
+### Notes
+
+:::warning When using freeScroll
+`freeScroll` mode scrolls beyond boundaries by default. Set `bound: true` together to restrict the boundaries.
+:::
+
+:::warning strict mode
+`strict` mode restricts user freedom. Use only when sequential navigation is required, such as onboarding.
+:::
+
+## Related Links
+
+### Related Options
+- [`bound`](../../api/interfaces/FlickingOptions#bound): Boundary restriction (recommended with freeScroll)
+- [`threshold`](../../api/interfaces/FlickingOptions#threshold): Minimum drag distance for panel transition
+- [`duration`](../../api/interfaces/FlickingOptions#duration): Animation duration
+
+### Related Demos
+- [Alignment](./alignment): Panel alignment
+- [Bound](./bound): Boundary restriction mode
+- [Threshold](./threshold): Drag threshold

@@ -1,0 +1,29 @@
+.flicking-viewport {
+  border: 2px solid #ddd;
+  transition: height 0.3s;
+}
+.flicking-panel {
+  width: 80%;
+}
+/* each panel has a different height */
+.panel-1 {
+  background: #3e8ed0;
+  height: 80px;
+}
+.panel-2 {
+  background: #00d1b2;
+  height: 150px;
+}
+.panel-3 {
+  background: #f14668;
+  height: 100px;
+}
+.panel-4 {
+  background: #ffe08a;
+  color: #333;
+  height: 200px;
+}
+.panel-5 {
+  background: #48c78e;
+  height: 120px;
+}

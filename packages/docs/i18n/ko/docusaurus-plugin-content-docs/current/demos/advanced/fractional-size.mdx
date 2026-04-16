@@ -1,0 +1,91 @@
+---
+title: "Fractional Size"
+id: fractional-size
+slug: /demos/advanced/fractional-size
+sidebar_position: 3
+description: useFractionalSize 옵션으로 소수점 크기의 패널에서 발생하는 1px 오차를 방지합니다
+keywords: [flicking, carousel, useFractionalSize, subpixel, precision, 소수점, 정밀도, 오차]
+---
+
+import FractionalSize from '@site/src/demo/advanced/FractionalSize';
+
+# Fractional Size
+
+[`useFractionalSize`](../../api/interfaces/FlickingOptions#usefractionalsize) 옵션으로 소수점 크기의 패널에서 발생하는 1px 오차를 방지합니다.
+
+<FractionalSize />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`useFractionalSize`](../../api/interfaces/FlickingOptions#usefractionalsize) | `boolean` | `false` | 소수점 정밀도로 크기 계산 |
+
+### 모드별 비교
+
+| 설정 | 크기 측정 방식 | 정밀도 | 성능 |
+|------|--------------|--------|------|
+| `false` (기본값) | `offsetWidth` / `clientWidth` | 정수 (반올림) | 빠름 |
+| `true` | `parseFloat(computedStyle.width)` | 소수점 | 약간 느림 |
+
+## 상세 설명
+
+### 1px 오차 문제
+
+패널 너비가 소수점일 때 (예: `200px` 뷰포트에서 `199.5px` 패널), `offsetWidth`가 `200px`으로 반올림합니다.
+Flicking은 이 반올림된 값으로 스냅 위치를 계산하므로, 패널이 실제 CSS 위치에서 점점 어긋납니다.
+
+```
+뷰포트: 200px, 패널: 199.5px, defaultIndex: 2
+
+offsetWidth (정수):
+  패널 크기 = 200px (199.5에서 반올림)
+  패널 2 위치 = 2 × 200 = 400px   ← 실제 399px에서 1px 오차
+
+computedStyle (소수점):
+  패널 크기 = 199.5px (정확)
+  패널 2 위치 = 2 × 199.5 = 399px ← 정확
+```
+
+오차는 인덱스에 비례하여 증가합니다: 패널 4는 2px, 패널 6은 3px 어긋납니다.
+
+### 동작 원리
+
+```javascript
+// false (기본값): offsetWidth 사용 (정수)
+const width = panel.offsetWidth; // 200 (199.5에서 반올림)
+
+// true: parseFloat(computedStyle.width) 사용 (소수점)
+const width = parseFloat(getComputedStyle(panel).width); // 199.5 (정확)
+```
+
+`useFractionalSize: true`를 설정하면 Flicking이 내부적으로 소수점 정밀도로 크기를 계산합니다.
+
+### 사용 시나리오
+
+:::info 언제 useFractionalSize를 사용하나요?
+
+**사용 권장:**
+- 패널 너비를 % 단위로 설정한 경우 (33.33%, 16.66% 등)
+- 패널 정렬이 미세하게 어긋나는 경우
+- 고해상도 디스플레이에서 정밀한 렌더링이 필요한 경우
+
+**사용하지 않아도 되는 경우:**
+- 패널 너비가 정수 px인 경우 (200px, 300px 등)
+- 미세한 정렬 오차가 문제되지 않는 경우
+- 성능이 중요한 경우
+:::
+
+### 주의사항
+
+:::warning 성능 고려
+`parseFloat(computedStyle.width)`는 `offsetWidth`보다 약간 느립니다. 패널 수가 매우 많거나 빈번한 리사이즈가 발생하는 경우 성능 영향을 고려하세요.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`autoResize`](../../api/interfaces/FlickingOptions#autoresize): 자동 리사이즈
+- [`useResizeObserver`](../../api/interfaces/FlickingOptions#useresizeobserver): ResizeObserver 사용 여부

@@ -10,8 +10,9 @@
     "**/*.sass"
   ],
   "scripts": {
-    "start": "vue-cli-service serve ./demo/main.ts",
-    "build": "rm -rf dist && rollup -c && npm run declaration",
+    "dev": "vite --config vite.dev.config.ts",
+    "dev:preview": "vite --config vite.dev.config.ts --mode production",
+    "build": "rm -rf dist && concurrently \"VITE_BUILD_FORMAT=esm vite build\" \"VITE_BUILD_FORMAT=cjs vite build\" && pnpm declaration",
     "postbuild": "cpx 'node_modules/@egjs/flicking/dist/*.{css,css.map}' dist/",
     "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json"
   },
@@ -27,31 +28,24 @@
     "url": "https://github.com/naver/egjs-flicking/issues"
   },
   "license": "MIT",
-  "browserslist": [
-    "last 2 version",
-    "ie 9-11",
-    "not op_mini all"
-  ],
   "dependencies": {
     "@cfcs/vue3": "^0.1.0",
     "@egjs/component": "^3.0.2",
     "@egjs/flicking": "~4.15.0",
+    "@egjs/list-differ": "^1.0.1",
     "vue-router": "^4.5.1"
   },
   "peerDependencies": {
     "vue": "^3.0.0"
   },
   "devDependencies": {
-    "@egjs/build-helper": "^0.1.2",
     "@egjs/flicking-plugins": "^4.2.2",
-    "@rollup/plugin-commonjs": "^19.0.2",
-    "@vue/cli-plugin-typescript": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
+    "@vitejs/plugin-vue": "^6.0.4",
     "@vue/compiler-sfc": "^3.2.6",
     "cpx": "^1.5.0",
-    "rollup-plugin-vue": "^6.0.0",
     "tslib": "^2.3.1",
     "typescript": "4.8.4",
+    "vite": "^7.2.6",
     "vue": "^3.2.22"
   }
 }

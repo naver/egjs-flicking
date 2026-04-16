@@ -3,23 +3,23 @@
  * egjs projects are licensed under the MIT license
  */
 import {
-  SelectEvent,
-  NeedPanelEvent,
-  VisibleChangeEvent,
-  HoldStartEvent,
-  HoldEndEvent,
-  MoveStartEvent,
-  MoveEvent,
-  MoveEndEvent,
-  WillChangeEvent,
-  ChangedEvent,
-  WillRestoreEvent,
-  RestoredEvent,
-  ReadyEvent,
-  BeforeResizeEvent,
   AfterResizeEvent,
+  BeforeResizeEvent,
+  ChangedEvent,
+  HoldEndEvent,
+  HoldStartEvent,
+  MoveEndEvent,
+  MoveEvent,
+  MoveStartEvent,
+  NeedPanelEvent,
+  PanelChangeEvent,
   ReachEdgeEvent,
-  PanelChangeEvent
+  ReadyEvent,
+  RestoredEvent,
+  SelectEvent,
+  VisibleChangeEvent,
+  WillChangeEvent,
+  WillRestoreEvent
 } from "@egjs/flicking";
 
 import { FlickingProps } from "./types";

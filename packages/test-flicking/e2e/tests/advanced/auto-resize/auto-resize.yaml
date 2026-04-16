@@ -1,0 +1,15 @@
+id: auto-resize
+category: advanced
+demo: advanced/AutoResize
+
+intent: "autoResize와 useResizeObserver 옵션으로 Flicking이 컨테이너 크기 변경에 자동 대응하는 것을 보여준다"
+
+focus:
+  - 2개 viewport + 슬라이더 렌더링
+  - useResizeObserver 옵션 확인 (true/false)
+  - 슬라이더로 너비 변경 시 Flicking 크기 반영
+
+api:
+  options: [autoResize, useResizeObserver]
+
+frameworks: [vanilla, react, vue]

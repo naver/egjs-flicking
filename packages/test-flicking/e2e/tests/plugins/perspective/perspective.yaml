@@ -1,0 +1,16 @@
+id: perspective
+category: plugins
+demo: plugins/Perspective
+
+intent: "Perspective 플러그인으로 3D 원근 회전 효과를 적용할 수 있음을 보여준다"
+
+focus:
+  - 5개 패널이 렌더링됨
+  - 패널에 3D transform(rotateY)이 적용됨
+  - 드래그 시 transform 값이 변화
+
+api:
+  options: [circular, align]
+  plugins: [Perspective]
+
+frameworks: [vanilla, react, vue]
