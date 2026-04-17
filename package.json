@@ -46,8 +46,8 @@
     "publish:beta:react": "pnpm --filter @egjs/react-flicking build && pnpm --filter @egjs/react-flicking publish --no-git-checks --tag beta",
     "publish:beta:vue": "pnpm --filter @egjs/vue3-flicking build && pnpm --filter @egjs/vue3-flicking publish --no-git-checks --tag beta",
     "publish:beta:plugins": "pnpm --filter @egjs/flicking-plugins build && pnpm --filter @egjs/flicking-plugins publish --no-git-checks --tag beta",
-    "release": "release-helper release --base @egjs/flicking --beforeRelease",
-    "release:changelog": "release-helper changelog --type all --base @egjs/flicking"
+    "release": "node config/release.js",
+    "release:dry-run": "node config/release.js --dry-run"
   },
   "repository": {
     "type": "git",
@@ -87,7 +87,7 @@
     "@babel/preset-env": "^7.16.0",
     "@biomejs/biome": "2.3.11",
     "@egjs/flicking-plugins": "~4.7.1",
-    "@egjs/release-helper": "1.0.0-alpha.17",
+
     "@microsoft/api-extractor": "^7.55.1",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^11.1.0",

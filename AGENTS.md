@@ -70,9 +70,9 @@ pnpm publish:stable:{pkg}     # 개별 빌드 + 정식 퍼블리시 (flicking|re
 pnpm publish:beta             # 전체 빌드 + 베타 퍼블리시
 pnpm publish:beta:{pkg}       # 개별 빌드 + 베타 퍼블리시
 
-# 릴리즈 (Release: changelog + commit + tag + GitHub Release)
+# 릴리즈 (Release: changelog + commit + tag + push)
 pnpm release          # 전체 릴리즈 파이프라인
-pnpm release:changelog # changelog만 생성
+pnpm release:dry-run  # 실행하지 않고 명령어만 출력
 
 # 문서 배포 (Deploy: 문서 사이트)
 pnpm docs:build       # API 문서 생성 + Docusaurus 빌드
