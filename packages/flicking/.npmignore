@@ -3,10 +3,10 @@ dev/
 vite.dev.config.ts
 
 # config
+api-extractor.json
 tsconfig.json
 tsconfig.declaration.json
-tsconfig.paths.json
-tsconfig.build.json
+tsdoc.json
 vite.config.ts
 
 # editor

@@ -22,14 +22,14 @@
     "@cfcs/core": "^0.1.0",
     "@cfcs/react": "^0.1.0",
     "@egjs/component": "^3.0.2",
-    "@egjs/flicking": "~4.15.0",
+    "@egjs/flicking": "workspace:~",
     "@egjs/list-differ": "^1.0.1"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-proposal-decorators": "^7.29.0",
     "@egjs/build-helper": "0.0.5",
-    "@egjs/flicking-plugins": "^4.2.2",
+    "@egjs/flicking-plugins": "workspace:~",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^7.1.1",

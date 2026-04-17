@@ -1,34 +1,16 @@
-#configs
-config
-bower.json
+# dev
+dev/
+vite.dev.config.ts
 
-#tests
-test
-karma.conf.js
-
-#build tools
-webpack.*.js
-.travis.yml
-.codeclimate.yml
-rollup.config.js
-tsconfig.declaration.json
+# config
 tsconfig.json
+tsconfig.declaration.json
+vite.config.ts
 
-#linters
-.eslintrc*
-tslint*
-
-#docs
-demo/
-jsdoc.json
-
-#editor settings
-.idea
+# editor
 .editorconfig
+.idea
 
+# test & CI
 coverage/
-node_modules/
 .github
-.babelrc
-mocha.opts
-.nuxt

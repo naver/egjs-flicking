@@ -1,0 +1,3 @@
+{
+  "beforeReleaseScripts": ["pnpm publish:build"]
+}

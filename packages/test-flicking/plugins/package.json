@@ -6,8 +6,8 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@egjs/flicking": "workspace:*",
-    "@egjs/flicking-plugins": "workspace:*",
+    "@egjs/flicking": "workspace:~",
+    "@egjs/flicking-plugins": "workspace:~",
     "vitest": "^4.0.0"
   }
 }

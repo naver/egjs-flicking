@@ -62,7 +62,19 @@ pnpm lint             # lint + format 검사
 pnpm lint:fix         # 자동 수정
 pnpm format           # 포맷팅만 적용
 
-# 문서
+# 퍼블리시 (Publish: npm 패키지 배포, 상세 → dev-guide/PUBLISH_GUIDE.md)
+pnpm publish:version          # 래퍼 버전 동기화 [patch|minor|major]
+pnpm publish:build            # 전체 빌드
+pnpm publish:stable           # 전체 빌드 + 정식 퍼블리시
+pnpm publish:stable:{pkg}     # 개별 빌드 + 정식 퍼블리시 (flicking|react|vue|plugins)
+pnpm publish:beta             # 전체 빌드 + 베타 퍼블리시
+pnpm publish:beta:{pkg}       # 개별 빌드 + 베타 퍼블리시
+
+# 릴리즈 (Release: changelog + commit + tag + GitHub Release)
+pnpm release          # 전체 릴리즈 파이프라인
+pnpm release:changelog # changelog만 생성
+
+# 문서 배포 (Deploy: 문서 사이트)
 pnpm docs:build       # API 문서 생성 + Docusaurus 빌드
 pnpm docs:deploy      # 빌드 + gh-pages 배포 (upstream)
 pnpm api-docs:generate && pnpm api-docs:docusaurus  # API 문서만 재생성
@@ -98,6 +110,7 @@ pnpm api-docs:generate && pnpm api-docs:docusaurus  # API 문서만 재생성
 | llms.txt | `dev-guide/LLMS_TXT_GUIDE.md` | llms.txt 작성 규칙, 링크 패턴, 체크리스트 | llms.txt 구조·링크 규칙 변경 시 |
 | E2E 테스트 | `dev-guide/E2E_TEST_GUIDE.md` | 데모 기반 E2E 테스트 구조, 스펙/테스트 작성법 | E2E 테스트 환경·구조 변경 시 |
 | E2E 리뷰 | `dev-guide/E2E_REVIEW_PROCESS.md` | 케이스별 리뷰 절차, 품질 등급, 현황 테이블 | E2E 케이스 리뷰 진행 시 |
+| 퍼블리시 | `dev-guide/PUBLISH_GUIDE.md` | 버전 정책, 배포 파이프라인, workspace: 프로토콜 | 배포 환경·버전 정책 변경 시 |
 | 하네스 | `dev-guide/HARNESS_GUIDE.md` | Claude Code 스킬, 훅, 서브에이전트 시스템 | 스킬·훅·에이전트 추가/변경 시 |
 
 ## 문서 유지보수 원칙
@@ -121,6 +134,7 @@ pnpm api-docs:generate && pnpm api-docs:docusaurus  # API 문서만 재생성
 | 데모 구조·컴포넌트 변경 | `dev-guide/DEMO_GUIDE.md` |
 | E2E 테스트 환경·구조 변경 | `dev-guide/E2E_TEST_GUIDE.md` |
 | E2E 케이스 리뷰 진행 | `dev-guide/E2E_REVIEW_PROCESS.md` |
+| 배포 환경·버전 정책 변경 | `dev-guide/PUBLISH_GUIDE.md` |
 | 스킬·훅·에이전트 변경 | `dev-guide/HARNESS_GUIDE.md` |
 
 ### 금지 사항

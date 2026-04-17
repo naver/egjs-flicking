@@ -1,5 +1,6 @@
 {
   "name": "api-docs-generator",
+  "private": true,
   "version": "1.0.0",
   "main": "main.ts",
   "scripts": {

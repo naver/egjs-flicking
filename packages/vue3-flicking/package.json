@@ -31,7 +31,7 @@
   "dependencies": {
     "@cfcs/vue3": "^0.1.0",
     "@egjs/component": "^3.0.2",
-    "@egjs/flicking": "~4.15.0",
+    "@egjs/flicking": "workspace:~",
     "@egjs/list-differ": "^1.0.1",
     "vue-router": "^4.5.1"
   },
@@ -39,7 +39,7 @@
     "vue": "^3.0.0"
   },
   "devDependencies": {
-    "@egjs/flicking-plugins": "^4.2.2",
+    "@egjs/flicking-plugins": "workspace:~",
     "@vitejs/plugin-vue": "^6.0.4",
     "@vue/compiler-sfc": "^3.2.6",
     "cpx": "^1.5.0",

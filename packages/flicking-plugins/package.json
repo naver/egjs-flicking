@@ -45,6 +45,6 @@
     "@egjs/flicking": "^4.1.0"
   },
   "devDependencies": {
-    "@egjs/flicking": "~4.15.0"
+    "@egjs/flicking": "workspace:~"
   }
 }
