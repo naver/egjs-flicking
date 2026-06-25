@@ -214,13 +214,10 @@ const vueCode = `<template>
   </Flicking>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
-export default {
-  components: { Flicking }
-};
 </script>`;
 ```
 
@@ -229,7 +226,6 @@ export default {
 - **인스턴스 접근**: `ref="flicking"`으로 연결
 - **`<style>` 블록 불필요** — SandpackEditor가 자동 주입
 - **플러그인 UI 요소**: `<template #viewport>` 슬롯 사용
-- **`<script setup>` 또는 Options API** — 상태가 있으면 `<script setup>`, 단순하면 Options API
 
 ```tsx
 // 플러그인 예시 (Arrow)

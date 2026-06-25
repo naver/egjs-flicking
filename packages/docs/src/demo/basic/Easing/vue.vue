@@ -38,18 +38,11 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
 const linear = x => x;
 const easeOutCubic = x => 1 - (1 - x) ** 3;
 const easeInOutQuad = x => (x < 0.5 ? 2 * x * x : 1 - (-2 * x + 2) ** 2 / 2);
-
-export default {
-  components: { Flicking },
-  data() {
-    return { linear, easeOutCubic, easeInOutQuad };
-  }
-};
 </script>

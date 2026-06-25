@@ -43,25 +43,21 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
+import { ref } from "vue";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
-export default {
-  components: { Flicking },
-  data() {
-    return { isDisabled: false };
-  },
-  methods: {
-    toggleInput() {
-      const flicking = this.$refs.flicking;
-      if (this.isDisabled) {
-        flicking.enableInput();
-      } else {
-        flicking.disableInput();
-      }
-      this.isDisabled = !this.isDisabled;
-    }
+const flicking = ref(null);
+const isDisabled = ref(false);
+
+const toggleInput = () => {
+  const flickingInstance = flicking.value;
+  if (isDisabled.value) {
+    flickingInstance.enableInput();
+  } else {
+    flickingInstance.disableInput();
   }
+  isDisabled.value = !isDisabled.value;
 };
 </script>

@@ -49,36 +49,29 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
+import { nextTick, ref } from "vue";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
 const COLORS = ["#3e8ed0", "#00d1b2", "#f14668", "#ffe08a", "#48c78e", "#9c27b0", "#ff5722"];
+const visibleFlicking = ref(null);
+const normalFlicking = ref(null);
+const visibleDomCount = ref(0);
+const normalDomCount = ref(0);
 
-export default {
-  components: { Flicking },
-  data() {
-    return {
-      COLORS,
-      visibleDomCount: 0,
-      normalDomCount: 0
-    };
-  },
-  methods: {
-    updateCounts() {
-      this.$nextTick(() => {
-        if (this.$refs.visibleFlicking) {
-          const el = this.$refs.visibleFlicking.$el;
-          const camera = el.querySelector(".flicking-camera");
-          if (camera) this.visibleDomCount = camera.children.length;
-        }
-        if (this.$refs.normalFlicking) {
-          const el = this.$refs.normalFlicking.$el;
-          const camera = el.querySelector(".flicking-camera");
-          if (camera) this.normalDomCount = camera.children.length;
-        }
-      });
+const updateCounts = () => {
+  nextTick(() => {
+    if (visibleFlicking.value) {
+      const el = visibleFlicking.value.$el;
+      const camera = el.querySelector(".flicking-camera");
+      if (camera) visibleDomCount.value = camera.children.length;
     }
-  }
+    if (normalFlicking.value) {
+      const el = normalFlicking.value.$el;
+      const camera = el.querySelector(".flicking-camera");
+      if (camera) normalDomCount.value = camera.children.length;
+    }
+  });
 };
 </script>

@@ -44,7 +44,7 @@
       <div class="resize-count">Resize count: {{ countB }}</div>
       <div class="resize-count" style="color: #aaa">Does not detect element size changes (only detects window resize)</div>
       <button v-if="!autoResize" class="button" style="margin-top: 6px"
-        @click="$refs.flickB?.resize()">
+        @click="flickB?.resize()">
         Manual resize()
       </button>
     </div>
@@ -61,14 +61,14 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
+import { ref } from "vue";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
-export default {
-  components: { Flicking },
-  data() {
-    return { width: 100, autoResize: true, countA: 0, countB: 0 };
-  }
-};
+const flickB = ref(null);
+const width = ref(100);
+const autoResize = ref(true);
+const countA = ref(0);
+const countB = ref(0);
 </script>

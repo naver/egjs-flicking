@@ -45,45 +45,40 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
+import { ref } from "vue";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
 const t = Date.now();
 
-export default {
-  components: { Flicking },
-  data() {
-    return {
-      images: [
-        `https://picsum.photos/300/150?t=${t}&r=1`,
-        `https://picsum.photos/200/150?t=${t}&r=2`,
-        `https://picsum.photos/400/150?t=${t}&r=3`,
-        `https://picsum.photos/250/150?t=${t}&r=4`
-      ],
-      autoSizes: "-",
-      manualSizes: "-"
-    };
-  },
-  methods: {
-    updateSizes() {
-      setTimeout(() => {
-        try {
-          if (this.$refs.autoFlicking) {
-            this.autoSizes = this.$refs.autoFlicking.panels.map(p => Math.round(p.size)).join(", ");
-          }
-          if (this.$refs.manualFlicking) {
-            this.manualSizes = this.$refs.manualFlicking.panels.map(p => Math.round(p.size)).join(", ");
-          }
-        } catch (e) {
-          /* ignore */
-        }
-      }, 500);
-    },
-    moveToPanel(index) {
-      if (this.$refs.autoFlicking) this.$refs.autoFlicking.moveTo(index, 500).catch(() => {});
-      if (this.$refs.manualFlicking) this.$refs.manualFlicking.moveTo(index, 500).catch(() => {});
+const images = [
+  `https://picsum.photos/300/150?t=${t}&r=1`,
+  `https://picsum.photos/200/150?t=${t}&r=2`,
+  `https://picsum.photos/400/150?t=${t}&r=3`,
+  `https://picsum.photos/250/150?t=${t}&r=4`
+];
+const autoFlicking = ref(null);
+const manualFlicking = ref(null);
+const autoSizes = ref("-");
+const manualSizes = ref("-");
+
+const updateSizes = () => {
+  setTimeout(() => {
+    try {
+      if (autoFlicking.value) {
+        autoSizes.value = autoFlicking.value.panels.map(p => Math.round(p.size)).join(", ");
+      }
+      if (manualFlicking.value) {
+        manualSizes.value = manualFlicking.value.panels.map(p => Math.round(p.size)).join(", ");
+      }
+    } catch (e) {
+      /* ignore */
     }
-  }
+  }, 500);
+};
+const moveToPanel = index => {
+  if (autoFlicking.value) autoFlicking.value.moveTo(index, 500).catch(() => {});
+  if (manualFlicking.value) manualFlicking.value.moveTo(index, 500).catch(() => {});
 };
 </script>

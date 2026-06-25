@@ -16,8 +16,8 @@
         <div class="flicking-panel panel-5">5</div>
       </Flicking>
       <div class="controls">
-        <button @click="$refs.flick1.prev().catch(() => {})">Prev</button>
-        <button @click="$refs.flick1.next().catch(() => {})">Next</button>
+        <button @click="flick1.prev().catch(() => {})">Prev</button>
+        <button @click="flick1.next().catch(() => {})">Next</button>
         <span class="event-log">{{ log1 || '—' }}</span>
       </div>
     </div>
@@ -38,22 +38,21 @@
         <div class="flicking-panel panel-5">5</div>
       </Flicking>
       <div class="controls">
-        <button @click="$refs.flick2.prev().catch(() => {})">Prev</button>
-        <button @click="$refs.flick2.next().catch(() => {})">Next</button>
+        <button @click="flick2.prev().catch(() => {})">Prev</button>
+        <button @click="flick2.next().catch(() => {})">Next</button>
         <span class="event-log">{{ log2 || '—' }}</span>
       </div>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
+import { ref } from "vue";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
-export default {
-  components: { Flicking },
-  data() {
-    return { log1: "", log2: "" };
-  }
-};
+const flick1 = ref(null);
+const flick2 = ref(null);
+const log1 = ref("");
+const log2 = ref("");
 </script>

@@ -34,22 +34,18 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
+import { ref } from "vue";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
-export default {
-  components: { Flicking },
-  data() {
-    return { isInitialized: false };
-  },
-  methods: {
-    handleInit() {
-      if (!this.isInitialized) {
-        this.$refs.flicking.init();
-        this.isInitialized = true;
-      }
-    }
+const flicking = ref(null);
+const isInitialized = ref(false);
+
+const handleInit = () => {
+  if (!isInitialized.value) {
+    flicking.value.init();
+    isInitialized.value = true;
   }
 };
 </script>

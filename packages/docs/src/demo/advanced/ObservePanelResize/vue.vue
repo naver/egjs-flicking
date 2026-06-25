@@ -46,20 +46,14 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
+import { ref } from "vue";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
 const bgs = ["panel-1", "panel-2", "panel-3", "panel-4", "panel-5"];
 const makePanels = () => bgs.map(bg => ({ bg, wide: false }));
 
-export default {
-  components: { Flicking },
-  data() {
-    return {
-      panels: makePanels(),
-      panels2: makePanels()
-    };
-  }
-};
+const panels = ref(makePanels());
+const panels2 = ref(makePanels());
 </script>

@@ -42,17 +42,11 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
+import { ref } from "vue";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
-export default {
-  components: { Flicking },
-  data() {
-    return {
-      heights: ["panel-h120", "panel-h130", "panel-h140", "panel-h150", "panel-h160"],
-      heightLabels: [120, 130, 140, 150, 160]
-    };
-  }
-};
+const heights = ref(["panel-h120", "panel-h130", "panel-h140", "panel-h150", "panel-h160"]);
+const heightLabels = ref([120, 130, 140, 150, 160]);
 </script>
