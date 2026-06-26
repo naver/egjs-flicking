@@ -66,8 +66,9 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
+import { ref } from "vue";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
 function formatTime() {
@@ -80,18 +81,14 @@ function formatTime() {
   });
 }
 
-export default {
-  components: { Flicking },
-  data() {
-    return { width: 100, logsA: [], logsB: [] };
-  },
-  methods: {
-    addLogA() {
-      this.logsA = [`[${formatTime()}] resize()`, ...this.logsA].slice(0, 30);
-    },
-    addLogB() {
-      this.logsB = [`[${formatTime()}] resize()`, ...this.logsB].slice(0, 30);
-    }
-  }
+const width = ref(100);
+const logsA = ref([]);
+const logsB = ref([]);
+
+const addLogA = () => {
+  logsA.value = [`[${formatTime()}] resize()`, ...logsA.value].slice(0, 30);
+};
+const addLogB = () => {
+  logsB.value = [`[${formatTime()}] resize()`, ...logsB.value].slice(0, 30);
 };
 </script>

@@ -40,49 +40,43 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
+import { nextTick, ref } from "vue";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
 const COLORS = ["#3e8ed0", "#00d1b2", "#f14668", "#ffe08a", "#48c78e", "#9c27b0", "#ff5722"];
-
-export default {
-  components: { Flicking },
-  data() {
-    return {
-      normalDomCount: 0,
-      virtualDomCount: 0,
-      normalPanels: Array.from({ length: 100 }, (_, i) => ({
-        index: i,
-        color: COLORS[i % COLORS.length]
-      })),
-      virtualOptions: {
-        align: "prev",
-        panelsPerView: 3,
-        virtual: {
-          renderPanel: (panel, index) => {
-            return `<div class="panel-inner color-${index % 7}">Panel ${index + 1}</div>`;
-          },
-          initialPanelCount: 1000,
-          cache: true,
-          panelClass: "flicking-panel"
-        }
-      }
-    };
-  },
-  methods: {
-    updateDomCounts() {
-      this.$nextTick(() => {
-        if (this.$refs.normalFlicking) {
-          const panels = this.$refs.normalFlicking.$el.querySelectorAll(".flicking-panel");
-          this.normalDomCount = panels.length;
-        }
-        if (this.$refs.virtualFlicking) {
-          const panels = this.$refs.virtualFlicking.$el.querySelectorAll(".flicking-panel");
-          this.virtualDomCount = panels.length;
-        }
-      });
-    }
+const normalFlicking = ref(null);
+const virtualFlicking = ref(null);
+const normalDomCount = ref(0);
+const virtualDomCount = ref(0);
+const normalPanels = Array.from({ length: 100 }, (_, i) => ({
+  index: i,
+  color: COLORS[i % COLORS.length]
+}));
+const virtualOptions = {
+  align: "prev",
+  panelsPerView: 3,
+  virtual: {
+    renderPanel: (panel, index) => {
+      return `<div class="panel-inner color-${index % 7}">Panel ${index + 1}</div>`;
+    },
+    initialPanelCount: 1000,
+    cache: true,
+    panelClass: "flicking-panel"
   }
+};
+
+const updateDomCounts = () => {
+  nextTick(() => {
+    if (normalFlicking.value) {
+      const panels = normalFlicking.value.$el.querySelectorAll(".flicking-panel");
+      normalDomCount.value = panels.length;
+    }
+    if (virtualFlicking.value) {
+      const panels = virtualFlicking.value.$el.querySelectorAll(".flicking-panel");
+      virtualDomCount.value = panels.length;
+    }
+  });
 };
 </script>

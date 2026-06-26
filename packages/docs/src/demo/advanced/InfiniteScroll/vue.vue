@@ -29,35 +29,28 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
+import { ref } from "vue";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
-export default {
-  components: { Flicking },
-  data() {
-    return {
-      colors: ["#3e8ed0", "#00d1b2", "#f14668", "#ffe08a", "#48c78e", "#9c27b0", "#ff5722"],
-      panels: [0, 1, 2, 3, 4],
-      logs: [],
-      nextId: 5
-    };
-  },
-  methods: {
-    addLog(message) {
-      this.logs = [...this.logs.slice(-4), message];
-    },
-    handleNeedPanel(e) {
-      this.addLog(`needPanel: direction=${e.direction}`);
+const colors = ["#3e8ed0", "#00d1b2", "#f14668", "#ffe08a", "#48c78e", "#9c27b0", "#ff5722"];
+const panels = ref([0, 1, 2, 3, 4]);
+const logs = ref([]);
+let nextId = 5;
 
-      if (e.direction === "NEXT") {
-        // NEXT: append panels
-        const newPanels = [this.nextId, this.nextId + 1, this.nextId + 2];
-        this.nextId += 3;
-        this.panels = [...this.panels, ...newPanels];
-        this.addLog(`Added: Panel ${newPanels.map(p => p + 1).join(", ")}`);
-      }
-    }
+const addLog = message => {
+  logs.value = [...logs.value.slice(-4), message];
+};
+const handleNeedPanel = e => {
+  addLog(`needPanel: direction=${e.direction}`);
+
+  if (e.direction === "NEXT") {
+    // NEXT: append panels
+    const newPanels = [nextId, nextId + 1, nextId + 2];
+    nextId += 3;
+    panels.value = [...panels.value, ...newPanels];
+    addLog(`Added: Panel ${newPanels.map(p => p + 1).join(", ")}`);
   }
 };
 </script>

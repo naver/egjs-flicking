@@ -30,14 +30,11 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
+import { ref } from "vue";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
-export default {
-  components: { Flicking },
-  data() {
-    return { count1: 0, count2: 0 };
-  }
-};
+const count1 = ref(0);
+const count2 = ref(0);
 </script>

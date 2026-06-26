@@ -30,16 +30,10 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
+import { ref } from "vue";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
-export default {
-  components: { Flicking },
-  data() {
-    return {
-      colors: ["#3e8ed0", "#00d1b2", "#48c78e", "#f14668", "#ffe08a"]
-    };
-  }
-};
+const colors = ref(["#3e8ed0", "#00d1b2", "#48c78e", "#f14668", "#ffe08a"]);
 </script>

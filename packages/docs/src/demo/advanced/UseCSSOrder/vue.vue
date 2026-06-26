@@ -16,8 +16,8 @@
         <div class="flicking-panel panel-5" data-id="5">Panel 5</div>
       </Flicking>
       <div class="controls">
-        <button @click="$refs.flick1.prev().catch(() => {})">Prev</button>
-        <button @click="$refs.flick1.next().catch(() => {})">Next</button>
+        <button @click="flick1.prev().catch(() => {})">Prev</button>
+        <button @click="flick1.next().catch(() => {})">Next</button>
       </div>
       <div class="dom-order-display">DOM order: {{ domOrder1 }}</div>
     </div>
@@ -38,32 +38,34 @@
         <div class="flicking-panel panel-5" data-id="5">Panel 5</div>
       </Flicking>
       <div class="controls">
-        <button @click="$refs.flick2.prev().catch(() => {})">Prev</button>
-        <button @click="$refs.flick2.next().catch(() => {})">Next</button>
+        <button @click="flick2.prev().catch(() => {})">Prev</button>
+        <button @click="flick2.next().catch(() => {})">Next</button>
       </div>
       <div class="dom-order-display">DOM order: {{ domOrder2 }}</div>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
+import { ref } from "vue";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
-export default {
-  components: { Flicking },
-  data() {
-    return { domOrder1: "1 2 3 4 5", domOrder2: "1 2 3 4 5" };
-  },
-  methods: {
-    updateDomOrder(n) {
-      const ref = this.$refs[`flick${n}`];
-      if (!ref) return;
-      const camera = ref.$el?.querySelector(".flicking-camera");
-      if (!camera) return;
-      const ids = [...camera.children].map(el => el.dataset.id).join(" → ");
-      this[`domOrder${n}`] = ids;
-    }
+const flick1 = ref(null);
+const flick2 = ref(null);
+const domOrder1 = ref("1 2 3 4 5");
+const domOrder2 = ref("1 2 3 4 5");
+
+const updateDomOrder = n => {
+  const flickRef = n === 1 ? flick1.value : flick2.value;
+  if (!flickRef) return;
+  const camera = flickRef.$el?.querySelector(".flicking-camera");
+  if (!camera) return;
+  const ids = [...camera.children].map(el => el.dataset.id).join(" → ");
+  if (n === 1) {
+    domOrder1.value = ids;
+  } else {
+    domOrder2.value = ids;
   }
 };
 </script>

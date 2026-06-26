@@ -34,19 +34,18 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Flicking from "@egjs/vue3-flicking";
+import { ref } from "vue";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
-export default {
-  components: { Flicking },
-  methods: {
-    next1() {
-      this.$refs.flick1.next().catch(() => {});
-    },
-    next2() {
-      this.$refs.flick2.next().catch(() => {});
-    }
-  }
+const flick1 = ref(null);
+const flick2 = ref(null);
+
+const next1 = () => {
+  flick1.value.next().catch(() => {});
+};
+const next2 = () => {
+  flick2.value.next().catch(() => {});
 };
 </script>
