@@ -185,6 +185,31 @@ pnpm publish:beta:react
 
 `pnpm release`는 `config/release.js`를 사용한다. npm publish는 포함되어 있지 않다. GitHub Release는 push 후 `gh release create`로 별도 생성한다.
 
+### 릴리즈 노트(GitHub Release) 작성
+
+`pnpm release`는 **GitHub Release를 만들지 않는다.** changelog·tag·push만 하고, 마지막에 `gh release create` 명령어를 출력만 한다. 릴리즈 노트는 `gh release create`로 직접 생성해야 한다.
+
+`gh release create`의 본문은 플래그에 따라 결정된다:
+
+| 방식 | 본문 내용 | 직접 작성 |
+|------|-----------|-----------|
+| `--generate-notes` | GitHub이 자동 생성 — 직전 릴리즈 이후 머지된 **PR 제목 목록** + 기여자 + Full Changelog 링크 | 불필요 (단, PR 제목 나열뿐이라 빈약) |
+| `--notes-file FILE` / `--notes "..."` | 파일/문자열에 **직접 작성한 내용** | 필요 |
+| 둘 다 지정 | 직접 작성 내용(위) + 자동 PR 목록(아래) 결합 | 필요 |
+
+**권장**: 하이라이트·breaking change·deprecate 안내 등은 자동 생성으로 표현되지 않으므로, 짧게라도 직접 작성한다.
+
+```bash
+# 직접 작성 노트 + 자동 PR 목록
+gh release create "4.17.0" --title "4.17.0 Release" \
+  --notes-file release-notes.md --generate-notes
+
+# 이미 만든 릴리즈 노트 수정
+gh release edit "4.17.0" --notes-file release-notes.md
+```
+
+> GitHub Release 본문은 다음 `pnpm docs:deploy` 때 `fetch-releases.js`가 가져와 문서 사이트 `/releases`에 자동 게시한다. 즉 GitHub Release = 문서 사이트 릴리즈 노트이므로 블로그에 따로 쓸 필요가 없다. (상세 → `DOCS_GUIDE.md`)
+
 ## 배포 워크플로우
 
 ### 정식 배포
