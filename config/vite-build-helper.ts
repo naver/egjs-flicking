@@ -86,6 +86,12 @@ function getBuildOptions(options: ViteConfigOptions): BuildOptions {
 
   return {
     sourcemap,
+    // Down-level modern syntax (optional chaining `?.`, nullish coalescing `??`,
+    // etc.) so the published bundles run in environments that do not transpile
+    // node_modules — e.g. the Sandpack docs demos and older browsers. Vite's
+    // default target ("modules"/es2020) would leave `?.`/`??` in the output.
+    // (esbuild's floor is es2015; full ES5/IE11 would require @vitejs/plugin-legacy.)
+    target: "es2015",
     lib: {
       entry: input,
       name: name,
