@@ -20,9 +20,13 @@
 
 ```
 1. 코어 package.json의 version을 변경한다.
-2. pnpm publish:version {patch|minor|major} 로 래퍼 버전을 동기화한다.
-3. pnpm publish:stable 로 전체 빌드 + npm 퍼블리시한다.
-4. (선택) pnpm release 로 changelog, tag, GitHub Release를 생성한다.
+2. pnpm publish:version {patch|minor|major} 로 래퍼(react/vue) 버전을 동기화한다.
+   ※ 플러그인은 동기화 대상이 아니다. flicking-plugins를 함께 배포하려면
+     packages/flicking-plugins/package.json의 version을 수동으로 변경한다.
+3. pnpm install 로 lockfile·심링크를 갱신한다. (버전 변경 후 필수)
+   생략하면 래퍼 publish 단계에서 ERR_PNPM_CANNOT_RESOLVE_WORKSPACE_PROTOCOL로 중단된다.
+4. pnpm publish:stable 로 전체 빌드 + npm 퍼블리시한다.
+5. (선택) pnpm release 로 changelog, tag, GitHub Release를 생성한다.
 ```
 
 ```bash
@@ -191,12 +195,17 @@ pnpm publish:beta:react
 
 ```bash
 # 1. 코어 버전 수동 변경: 4.16.0 → 4.17.0
-# 2. 래퍼 동기화 + 배포
+#    (플러그인도 배포하려면 flicking-plugins version도 수동 변경)
+# 2. 래퍼 동기화
 #    publish:version minor 결과:
 #      react-flicking  4.16.0 → 4.17.0 (minor +1)
 #      vue3-flicking   4.16.0 → 4.17.0 (minor +1)
-pnpm publish:version minor && pnpm publish:stable
-# 3. 릴리즈 (선택)
+pnpm publish:version minor
+# 3. 버전 변경분으로 lockfile·심링크 갱신 (필수)
+pnpm install
+# 4. 빌드 + 배포
+pnpm publish:stable
+# 5. 릴리즈 (선택)
 pnpm release
 gh release create "4.17.0" --title "4.17.0 Release" --generate-notes
 ```
