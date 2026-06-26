@@ -402,8 +402,10 @@ pnpm docs:deploy            # v5 docs + static/release/4.x/ 포함
 pnpm docs:deploy
   ├── pnpm api-docs:docusaurus    # .d.ts 생성 → api-extractor → api-docs-generator
   ├── pnpm --filter docs build    # fetch-releases.js → generate-llm-docs.js → docusaurus build
-  └── gh-pages -d packages/docs/build --add --remote upstream
+  └── gh-pages -d packages/docs/build --add --dotfiles --remote upstream
 ```
+
+> **`--dotfiles`는 필수다.** `gh-pages` CLI는 기본적으로 dotfile을 배포에서 제외하므로, 이 플래그가 없으면 Docusaurus가 생성한 `.nojekyll`이 gh-pages 브랜치에 올라가지 않는다. 그러면 GitHub Pages가 사이트를 Jekyll로 빌드하려 시도하고, `llm-docs/**/*.md` 등의 마크다운을 Liquid로 파싱하다 실패하여 **배포가 통째로 실패**한다. `.nojekyll`이 루트에 있어야 Jekyll이 비활성화되고 정적 파일이 그대로 서빙된다.
 
 > `api-docs:docusaurus` 내부 구현(파싱·렌더링 레이어 등)은 `packages/api-docs-generator/DOCUMENTATION.md`를 참조한다.
 
