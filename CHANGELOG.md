@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.16.1](https://github.com/naver/egjs-flicking/compare/4.16.0...4.16.1) (2026-06-26)
+### :sparkles: Packages
+* `@egjs/flicking` 4.16.1
+* `@egjs/flicking-plugins` 4.8.1
+* `@egjs/react-flicking` 4.16.3
+* `@egjs/vue3-flicking` 4.16.1
+
+### :bug: Bug Fixes
+* **build:** down-level bundles to es2015 ([c1341c5](https://github.com/naver/egjs-flicking/commit/c1341c51afbb06aa6a3616bb00bcddd161662a74))
+* **docs:** publish .nojekyll on gh-pages deploy ([349712d](https://github.com/naver/egjs-flicking/commit/349712d498ccadaf1447d48a8e3feb96ae2e3134))
+
 ## [4.16.0](https://github.com/naver/egjs-flicking/compare/4.15.0...4.16.0) (2026-06-26)
 ### :sparkles: Packages
 * `@egjs/flicking` 4.16.0
