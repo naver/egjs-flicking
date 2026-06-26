@@ -1,0 +1,82 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([["2392"],{21353(e,i,n){n.r(i),n.d(i,{metadata:()=>l,default:()=>h,frontMatter:()=>t,contentTitle:()=>d,toc:()=>p,assets:()=>o});var l=JSON.parse('{"id":"demos/basic/circular","title":"Circular","description":"Connect the first and last panels to enable infinite loop navigation using the circular option","source":"@site/docs/demos/basic/circular.mdx","sourceDirName":"demos/basic","slug":"/demos/basic/circular","permalink":"/egjs-flicking/docs/demos/basic/circular","draft":false,"unlisted":false,"editUrl":"https://github.com/naver/egjs-flicking/edit/master/docs/docs/demos/basic/circular.mdx","tags":[],"version":"current","sidebarPosition":3,"frontMatter":{"title":"Circular","id":"circular","slug":"/demos/basic/circular","sidebar_position":3,"description":"Connect the first and last panels to enable infinite loop navigation using the circular option","keywords":["flicking","carousel","circular","infinite","loop"]},"sidebar":"demosSidebar","previous":{"title":"Alignment","permalink":"/egjs-flicking/docs/demos/basic/alignment"},"next":{"title":"Movement Types","permalink":"/egjs-flicking/docs/demos/basic/movement-types"}}'),s=n(65723),a=n(54187),c=n(90761);let r=()=>(0,s.jsx)(c.A,{react:'import Flicking from "@egjs/react-flicking";\nimport "@egjs/react-flicking/dist/flicking.css";\nimport "./styles.css";\n\nexport default function App() {\n  return (\n    <div>\n      {/* circular: false (default) */}\n      <div className="demo-container">\n        <div className="demo-label">circular: false (default)</div>\n        <Flicking circular={false} align="center">\n          <div className="flicking-panel panel-1">1</div>\n          <div className="flicking-panel panel-2">2</div>\n          <div className="flicking-panel panel-3">3</div>\n          <div className="flicking-panel panel-4">4</div>\n          <div className="flicking-panel panel-5">5</div>\n        </Flicking>\n      </div>\n\n      {/* circular: true - infinite loop */}\n      <div className="demo-container">\n        <div className="demo-label">circular: true (infinite loop)</div>\n        <Flicking circular={true} align="center">\n          <div className="flicking-panel panel-1">1</div>\n          <div className="flicking-panel panel-2">2</div>\n          <div className="flicking-panel panel-3">3</div>\n          <div className="flicking-panel panel-4">4</div>\n          <div className="flicking-panel panel-5">5</div>\n        </Flicking>\n      </div>\n    </div>\n  );\n}\n',vue3:'<template>\n  <div>\n    \x3c!-- circular: false (default) --\x3e\n    <div class="demo-container">\n      <div class="demo-label">circular: false (default)</div>\n      <Flicking :options="{ circular: false, align: \'center\' }">\n        <div class="flicking-panel panel-1">1</div>\n        <div class="flicking-panel panel-2">2</div>\n        <div class="flicking-panel panel-3">3</div>\n        <div class="flicking-panel panel-4">4</div>\n        <div class="flicking-panel panel-5">5</div>\n      </Flicking>\n    </div>\n\n    \x3c!-- circular: true - infinite loop --\x3e\n    <div class="demo-container">\n      <div class="demo-label">circular: true (infinite loop)</div>\n      <Flicking :options="{ circular: true, align: \'center\' }">\n        <div class="flicking-panel panel-1">1</div>\n        <div class="flicking-panel panel-2">2</div>\n        <div class="flicking-panel panel-3">3</div>\n        <div class="flicking-panel panel-4">4</div>\n        <div class="flicking-panel panel-5">5</div>\n      </Flicking>\n    </div>\n  </div>\n</template>\n\n<script setup>\nimport Flicking from "@egjs/vue3-flicking";\nimport "@egjs/vue3-flicking/dist/flicking.css";\n<\/script>\n',js:'import Flicking from "@egjs/flicking";\nimport "@egjs/flicking/dist/flicking.css";\nimport "./styles.css";\n\n// circular: false (default)\nnew Flicking("#flick-normal", {\n  circular: false,\n  align: "center"\n});\n\n// circular: true (infinite loop)\nnew Flicking("#flick-circular", {\n  circular: true,\n  align: "center"\n});\n',jsHtml:'<!DOCTYPE html>\n<html>\n<head>\n  <link rel="stylesheet" href="/styles.css" />\n</head>\n<body>\n  \x3c!-- circular: false (default) --\x3e\n  <div class="demo-container">\n    <div class="demo-label">circular: false (default)</div>\n    <div id="flick-normal" class="flicking-viewport">\n      <div class="flicking-camera">\n        <div class="flicking-panel panel-1">1</div>\n        <div class="flicking-panel panel-2">2</div>\n        <div class="flicking-panel panel-3">3</div>\n        <div class="flicking-panel panel-4">4</div>\n        <div class="flicking-panel panel-5">5</div>\n      </div>\n    </div>\n  </div>\n\n  \x3c!-- circular: true (infinite loop) --\x3e\n  <div class="demo-container">\n    <div class="demo-label">circular: true (infinite loop)</div>\n    <div id="flick-circular" class="flicking-viewport">\n      <div class="flicking-camera">\n        <div class="flicking-panel panel-1">1</div>\n        <div class="flicking-panel panel-2">2</div>\n        <div class="flicking-panel panel-3">3</div>\n        <div class="flicking-panel panel-4">4</div>\n        <div class="flicking-panel panel-5">5</div>\n      </div>\n    </div>\n  </div>\n\n</body>\n</html>\n',css:".flicking-panel {\n  width: 60%;\n  height: 120px;\n}\n"}),t={title:"Circular",id:"circular",slug:"/demos/basic/circular",sidebar_position:3,description:"Connect the first and last panels to enable infinite loop navigation using the circular option",keywords:["flicking","carousel","circular","infinite","loop"]},d="Circular",o={},p=[{value:"Summary",id:"summary",level:2},{value:"Key Options",id:"key-options",level:3},{value:"Comparison by Value",id:"comparison-by-value",level:3},{value:"Details",id:"details",level:2},{value:"circular: false in Detail",id:"circular-false-in-detail",level:3},{value:"circular: true in Detail",id:"circular-true-in-detail",level:3},{value:"circularFallback in Detail",id:"circularfallback-in-detail",level:3},{value:"Related Options",id:"related-options",level:3},{value:"Use Cases",id:"use-cases",level:3},{value:"Notes",id:"notes",level:3},{value:"Related Links",id:"related-links",level:2},{value:"Related Options",id:"related-options-1",level:3},{value:"Related Demos",id:"related-demos",level:3}];function u(e){let i={a:"a",admonition:"admonition",code:"code",h1:"h1",h2:"h2",h3:"h3",header:"header",li:"li",p:"p",strong:"strong",table:"table",tbody:"tbody",td:"td",th:"th",thead:"thead",tr:"tr",ul:"ul",...(0,a.R)(),...e.components};return(0,s.jsxs)(s.Fragment,{children:[(0,s.jsx)(i.header,{children:(0,s.jsx)(i.h1,{id:"circular",children:"Circular"})}),"\n",(0,s.jsxs)(i.p,{children:["The ",(0,s.jsx)(i.a,{href:"../../api/interfaces/FlickingOptions#circular",children:(0,s.jsx)(i.code,{children:"circular"})})," option connects the first and last panels to enable infinite loop navigation. Moving next from the last panel goes to the first panel, and moving previous from the first panel goes to the last panel."]}),"\n",(0,s.jsx)(r,{}),"\n",(0,s.jsx)(i.h2,{id:"summary",children:"Summary"}),"\n",(0,s.jsx)(i.h3,{id:"key-options",children:"Key Options"}),"\n",(0,s.jsxs)(i.table,{children:[(0,s.jsx)(i.thead,{children:(0,s.jsxs)(i.tr,{children:[(0,s.jsx)(i.th,{children:"Option"}),(0,s.jsx)(i.th,{children:"Type"}),(0,s.jsx)(i.th,{children:"Default"}),(0,s.jsx)(i.th,{children:"Description"})]})}),(0,s.jsxs)(i.tbody,{children:[(0,s.jsxs)(i.tr,{children:[(0,s.jsx)(i.td,{children:(0,s.jsx)(i.a,{href:"../../api/interfaces/FlickingOptions#circular",children:(0,s.jsx)(i.code,{children:"circular"})})}),(0,s.jsx)(i.td,{children:(0,s.jsx)(i.code,{children:"boolean"})}),(0,s.jsx)(i.td,{children:(0,s.jsx)(i.code,{children:"false"})}),(0,s.jsx)(i.td,{children:"Enable infinite loop mode"})]}),(0,s.jsxs)(i.tr,{children:[(0,s.jsx)(i.td,{children:(0,s.jsx)(i.a,{href:"../../api/interfaces/FlickingOptions#circularfallback",children:(0,s.jsx)(i.code,{children:"circularFallback"})})}),(0,s.jsx)(i.td,{children:(0,s.jsx)(i.code,{children:'"linear" | "bound"'})}),(0,s.jsx)(i.td,{children:(0,s.jsx)(i.code,{children:'"linear"'})}),(0,s.jsx)(i.td,{children:"Fallback behavior when circular cannot be activated"})]})]})]}),"\n",(0,s.jsx)(i.h3,{id:"comparison-by-value",children:"Comparison by Value"}),"\n",(0,s.jsxs)(i.table,{children:[(0,s.jsx)(i.thead,{children:(0,s.jsxs)(i.tr,{children:[(0,s.jsx)(i.th,{children:"Value"}),(0,s.jsx)(i.th,{children:"Behavior"}),(0,s.jsx)(i.th,{children:"Suitable For"})]})}),(0,s.jsxs)(i.tbody,{children:[(0,s.jsxs)(i.tr,{children:[(0,s.jsx)(i.td,{children:(0,s.jsx)(i.code,{children:"false"})}),(0,s.jsx)(i.td,{children:"Cannot move beyond the first/last panel"}),(0,s.jsx)(i.td,{children:"Finite content, UI with clear start/end"})]}),(0,s.jsxs)(i.tr,{children:[(0,s.jsx)(i.td,{children:(0,s.jsx)(i.code,{children:"true"})}),(0,s.jsx)(i.td,{children:"First and last panels are connected for infinite navigation"}),(0,s.jsx)(i.td,{children:"Carousels, galleries, continuous browsing"})]})]})]}),"\n",(0,s.jsx)(i.h2,{id:"details",children:"Details"}),"\n",(0,s.jsx)(i.h3,{id:"circular-false-in-detail",children:"circular: false in Detail"}),"\n",(0,s.jsx)(i.p,{children:"This is the default. You cannot move previous from the first panel or next from the last panel. Suitable for displaying finite content."}),"\n",(0,s.jsx)(i.h3,{id:"circular-true-in-detail",children:"circular: true in Detail"}),"\n",(0,s.jsx)(i.p,{children:"The first and last panels are internally connected. Users can scroll continuously in either direction. Panels are not duplicated; instead, their positions are recalculated to create a seamless connection."}),"\n",(0,s.jsx)(i.h3,{id:"circularfallback-in-detail",children:"circularFallback in Detail"}),"\n",(0,s.jsxs)(i.p,{children:["Specifies the fallback behavior when ",(0,s.jsx)(i.code,{children:"circular: true"})," but the activation conditions are not met:"]}),"\n",(0,s.jsxs)(i.ul,{children:["\n",(0,s.jsxs)(i.li,{children:[(0,s.jsx)(i.code,{children:'"linear"'}),": Operates in normal mode (stops at first/last)"]}),"\n",(0,s.jsxs)(i.li,{children:[(0,s.jsx)(i.code,{children:'"bound"'}),": Operates in bound mode (bounces at boundaries)"]}),"\n"]}),"\n",(0,s.jsx)(i.h3,{id:"related-options",children:"Related Options"}),"\n",(0,s.jsxs)(i.ul,{children:["\n",(0,s.jsxs)(i.li,{children:[(0,s.jsx)(i.strong,{children:"Relationship with bound"}),": When ",(0,s.jsx)(i.code,{children:"circular: true"})," and ",(0,s.jsx)(i.code,{children:"bound: true"})," are set together, circular takes priority. bound is ignored."]}),"\n",(0,s.jsxs)(i.li,{children:[(0,s.jsx)(i.strong,{children:"Relationship with align"}),": The combination of ",(0,s.jsx)(i.code,{children:"circular: true"})," + ",(0,s.jsx)(i.code,{children:'align: "center"'})," is the most common carousel pattern."]}),"\n",(0,s.jsxs)(i.li,{children:[(0,s.jsx)(i.strong,{children:"Relationship with panelsPerView"}),": Setting ",(0,s.jsx)(i.code,{children:"panelsPerView"})," affects the total panel size calculation, which can influence the circular activation condition."]}),"\n"]}),"\n",(0,s.jsx)(i.h3,{id:"use-cases",children:"Use Cases"}),"\n",(0,s.jsx)(i.admonition,{title:"When to use?",type:"info",children:(0,s.jsxs)(i.ul,{children:["\n",(0,s.jsxs)(i.li,{children:[(0,s.jsx)(i.strong,{children:"circular: true"}),": Image galleries, product carousels, banner sliders, seamless browsing"]}),"\n",(0,s.jsxs)(i.li,{children:[(0,s.jsx)(i.strong,{children:"circular: false"}),": Onboarding screens, step-by-step wizards, content with clear start/end"]}),"\n"]})}),"\n",(0,s.jsx)(i.h3,{id:"notes",children:"Notes"}),"\n",(0,s.jsx)(i.admonition,{title:"Activation condition",type:"warning",children:(0,s.jsxs)(i.p,{children:["Circular mode is only activated when ",(0,s.jsx)(i.strong,{children:"total panel size >= viewport size"}),". If the condition is not met, it automatically falls back to the mode specified in ",(0,s.jsx)(i.code,{children:"circularFallback"}),"."]})}),"\n",(0,s.jsx)(i.admonition,{title:"Cannot be used with bound",type:"warning",children:(0,s.jsxs)(i.p,{children:[(0,s.jsx)(i.code,{children:"circular: true"})," and ",(0,s.jsx)(i.code,{children:"bound: true"})," are mutually exclusive. If both are true, circular takes priority and bound is ignored."]})}),"\n",(0,s.jsx)(i.h2,{id:"related-links",children:"Related Links"}),"\n",(0,s.jsx)(i.h3,{id:"related-options-1",children:"Related Options"}),"\n",(0,s.jsxs)(i.ul,{children:["\n",(0,s.jsxs)(i.li,{children:[(0,s.jsx)(i.a,{href:"../../api/interfaces/FlickingOptions#bound",children:(0,s.jsx)(i.code,{children:"bound"})}),": Boundary restriction mode (mutually exclusive with circular)"]}),"\n",(0,s.jsxs)(i.li,{children:[(0,s.jsx)(i.a,{href:"../../api/interfaces/FlickingOptions#align",children:(0,s.jsx)(i.code,{children:"align"})}),": Panel alignment method"]}),"\n"]}),"\n",(0,s.jsx)(i.h3,{id:"related-demos",children:"Related Demos"}),"\n",(0,s.jsxs)(i.ul,{children:["\n",(0,s.jsxs)(i.li,{children:[(0,s.jsx)(i.a,{href:"./alignment",children:"Alignment"}),": Alignment options with circular combination"]}),"\n",(0,s.jsxs)(i.li,{children:[(0,s.jsx)(i.a,{href:"./bound",children:"Bound"}),": Boundary restriction mode"]}),"\n"]})]})}function h(e={}){let{wrapper:i}={...(0,a.R)(),...e.components};return i?(0,s.jsx)(i,{...e,children:(0,s.jsx)(u,{...e})}):u(e)}},90761(e,i,n){n.d(i,{A:()=>h});var l=n(65723),s=n(7210),a=n(78863);n(22155);var c=n(19612);let r="^4.11.4",t={react:{"@egjs/react-flicking":r,"@egjs/flicking":r},vue3:{"@egjs/vue3-flicking":r,"@egjs/flicking":r},vanilla:{"@egjs/flicking":r}},d=`<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <div id="flick" class="flicking-viewport">
+      <div class="flicking-camera"></div>
+    </div>
+  </div>
+</body>
+</html>`,o=`import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App.tsx";
+
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <App />
+  </StrictMode>);`,p=`
+.flicking-viewport.vertical {
+  display: block;
+  width: 100%;
+}
+
+.flicking-panel {
+  width: 200px;
+  height: 150px;
+  margin-right: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.panel-1 { background: #3e8ed0; }
+.panel-2 { background: #00d1b2; }
+.panel-3 { background: #f14668; }
+.panel-4 { background: #ffe08a; color: #333; }
+.panel-5 { background: #48c78e; }
+
+.demo-container {
+  margin-bottom: 24px;
+}
+
+.demo-label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.button {
+  padding: 8px 16px;
+  margin: 4px;
+  border: 2px solid #3498db;
+  background: transparent;
+  color: #3498db;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.button:hover {
+  background: #3498db;
+  color: white;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  gap: 8px;
+}
+`;function u({code:e,html:i,template:n="react",dependencies:s={},files:a={},css:r=""}){return(0,l.jsx)(c.OZ,{template:"vue3"===n?"vue":"vanilla"===n?"vanilla":"react",files:(()=>{let l=r?`${p}
+${r}`:p,s={"/styles.css":{code:l},...a};if("react"===n)return{"/App.tsx":{code:e},"/index.js":{code:o,hidden:!0},...s};if("vue3"===n){let i;return{"/src/App.vue":{code:(i=e.replace(/\n*<style>[\s\S]*?<\/style>/,""),`${i}
+
+<style>
+${l}
+</style>`)},...a}}return{"/src/index.js":{code:e},"/index.js":{code:'import "./src/index.js";',hidden:!0},"/src/styles.css":{code:l},"/index.html":{code:i||d},...a}})(),customSetup:{dependencies:{...t[n],...s}},options:{showLineNumbers:!0,editorHeight:400,externalResources:[],visibleFiles:"react"===n?["/App.tsx","/styles.css"]:"vue3"===n?["/src/App.vue"]:["/src/index.js","/index.html","/src/styles.css"],activeFile:"react"===n?"/App.tsx":"vue3"===n?"/src/App.vue":"/src/index.js"}})}function h({react:e,vue3:i,js:n,jsHtml:c,css:r,dependencies:t}){return(0,l.jsxs)(a.A,{groupId:"framework",defaultValue:"js",children:[(0,l.jsx)(s.A,{value:"js",label:"JavaScript",children:(0,l.jsx)(u,{template:"vanilla",code:n,html:c,css:r,dependencies:t})}),(0,l.jsx)(s.A,{value:"react",label:"React",children:(0,l.jsx)(u,{template:"react",code:e,css:r,dependencies:t})}),(0,l.jsx)(s.A,{value:"vue3",label:"Vue@3",children:(0,l.jsx)(u,{template:"vue3",code:i,css:r,dependencies:t})})]})}}}]);

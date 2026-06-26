@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://naver.github.io/egjs-flicking/releases</id>
+    <title>Flicking Blog</title>
+    <updated>2026-06-26T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://naver.github.io/egjs-flicking/releases"/>
+    <subtitle>Flicking Blog</subtitle>
+    <icon>https://naver.github.io/egjs-flicking/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[4.16.0]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2026/06/26/release-4.16.0</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2026/06/26/release-4.16.0"/>
+        <updated>2026-06-26T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Packages]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="packages">Packages<a href="https://naver.github.io/egjs-flicking/releases/2026/06/26/release-4.16.0#packages" class="hash-link" aria-label="Direct link to Packages" title="Direct link to Packages" translate="no">​</a></h2>
+<table><thead><tr><th>Package</th><th>Version</th></tr></thead><tbody><tr><td><code>@egjs/flicking</code></td><td>4.16.0</td></tr><tr><td><code>@egjs/react-flicking</code></td><td>4.16.2</td></tr><tr><td><code>@egjs/vue3-flicking</code></td><td>4.16.0</td></tr><tr><td><code>@egjs/flicking-plugins</code></td><td>4.8.0</td></tr></tbody></table>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="highlights">Highlights<a href="https://naver.github.io/egjs-flicking/releases/2026/06/26/release-4.16.0#highlights" class="hash-link" aria-label="Direct link to Highlights" title="Direct link to Highlights" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_ZFAD" id="react-19-support-egjsreact-flicking">React 19 support (<code>@egjs/react-flicking</code>)<a href="https://naver.github.io/egjs-flicking/releases/2026/06/26/release-4.16.0#react-19-support-egjsreact-flicking" class="hash-link" aria-label="Direct link to react-19-support-egjsreact-flicking" title="Direct link to react-19-support-egjsreact-flicking" translate="no">​</a></h3>
+<ul>
+<li class="">The ESM/CJS builds now keep <code>react/jsx-runtime</code> and <code>react/jsx-dev-runtime</code> external, so the consumer's own React provides them.</li>
+<li class="">Type declarations now reference <code>React.JSX.IntrinsicElements</code> (with <code>React</code> imported) instead of the removed global <code>JSX</code> namespace.</li>
+<li class="">Compatible with React 16 / 17 / 18 / 19.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_ZFAD" id="documentation-overhaul">Documentation overhaul<a href="https://naver.github.io/egjs-flicking/releases/2026/06/26/release-4.16.0#documentation-overhaul" class="hash-link" aria-label="Direct link to Documentation overhaul" title="Direct link to Documentation overhaul" translate="no">​</a></h3>
+<ul>
+<li class="">Rebuilt the documentation site end to end.</li>
+<li class="">Added an automated TypeScript-to-MDX API reference pipeline.</li>
+<li class="">Added an LLM-friendly docs pipeline (<code>llms.txt</code> and pure-markdown mirrors).</li>
+<li class="">Release notes are now reflected on the docs site automatically.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_ZFAD" id="development-environment-overhaul">Development environment overhaul<a href="https://naver.github.io/egjs-flicking/releases/2026/06/26/release-4.16.0#development-environment-overhaul" class="hash-link" aria-label="Direct link to Development environment overhaul" title="Direct link to Development environment overhaul" translate="no">​</a></h3>
+<ul>
+<li class="">Consolidated the previously separate <code>@egjs/react-flicking</code>, <code>@egjs/vue3-flicking</code>, and <code>@egjs/flicking-plugins</code> repositories into a single pnpm workspace monorepo, alongside the <code>@egjs/flicking</code> core.</li>
+<li class="">Restructured the publish pipeline and replaced <code>release-helper</code> with a custom release/versioning script.</li>
+<li class="">Reworked the local dev workflow (HMR dev servers, <code>@dev/*</code> import aliases, issue-reproduction scratch pattern).</li>
+<li class="">Migrated the test suites and the Vue 3 demo to the Composition API.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="discontinued-packages">Discontinued packages<a href="https://naver.github.io/egjs-flicking/releases/2026/06/26/release-4.16.0#discontinued-packages" class="hash-link" aria-label="Direct link to Discontinued packages" title="Direct link to Discontinued packages" translate="no">​</a></h2>
+<ul>
+<li class="">The <strong>Svelte</strong>, <strong>Angular</strong>, and <strong>Vue 2</strong> wrappers are no longer maintained and have been removed during the monorepo consolidation.</li>
+<li class="">Their previously published versions remain installable on npm but will not receive further updates.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="note-on-egjsreact-flicking-versioning">Note on <code>@egjs/react-flicking</code> versioning<a href="https://naver.github.io/egjs-flicking/releases/2026/06/26/release-4.16.0#note-on-egjsreact-flicking-versioning" class="hash-link" aria-label="Direct link to note-on-egjsreact-flicking-versioning" title="Direct link to note-on-egjsreact-flicking-versioning" translate="no">​</a></h2>
+<ul>
+<li class=""><code>@egjs/react-flicking</code> ships as <strong>4.16.2</strong> in this release.</li>
+<li class="">The initial <code>4.16.0</code> build bundled a stale <code>react/jsx-runtime</code>, which broke under React 19; <code>4.16.1</code> and <code>4.16.2</code> resolve the runtime and type-declaration issues respectively.</li>
+<li class=""><code>4.16.0</code> is deprecated — please install <code>4.16.2</code> or later.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/releases/2026/06/26/release-4.16.0#whats-changed" class="hash-link" aria-label="Direct link to What's Changed" title="Direct link to What's Changed" translate="no">​</a></h2>
+<ul>
+<li class="">demo: change vue 3 demo to composition api by @daybrush in <a href="https://github.com/naver/egjs-flicking/pull/942" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/942</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/naver/egjs-flicking/compare/4.15.0...4.16.0" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/compare/4.15.0...4.16.0</a></p>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.15.0]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2025/11/25/release-4.15.0</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2025/11/25/release-4.15.0"/>
+        <updated>2025-11-25T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[What's Changed]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/releases/2025/11/25/release-4.15.0#whats-changed" class="hash-link" aria-label="Direct link to What's Changed" title="Direct link to What's Changed" translate="no">​</a></h2>
+<ul>
+<li class="">feat: add animationThreshold, useCSSOrder option by @daybrush in <a href="https://github.com/naver/egjs-flicking/pull/938" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/938</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/naver/egjs-flicking/compare/4.14.1...4.15.0" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/compare/4.14.1...4.15.0</a></p>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.14.1]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2025/10/02/release-4.14.1</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2025/10/02/release-4.14.1"/>
+        <updated>2025-10-02T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[What's Changed]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/releases/2025/10/02/release-4.14.1#whats-changed" class="hash-link" aria-label="Direct link to What's Changed" title="Direct link to What's Changed" translate="no">​</a></h2>
+<ul>
+<li class="">fix: remove findDOMNode in react-flicking by @malangfox in <a href="https://github.com/naver/egjs-flicking/pull/931" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/931</a></li>
+<li class="">fix: add virtualEnabled check in react-flicking by @malangfox in <a href="https://github.com/naver/egjs-flicking/pull/934" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/934</a></li>
+<li class="">fix: sync camera anchors by @daybrush in <a href="https://github.com/naver/egjs-flicking/pull/935" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/935</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/naver/egjs-flicking/compare/4.14.0...4.14.1" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/compare/4.14.0...4.14.1</a></p>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.14.0]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2025/06/30/release-4.14.0</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2025/06/30/release-4.14.0"/>
+        <updated>2025-06-30T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[What's Changed]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/releases/2025/06/30/release-4.14.0#whats-changed" class="hash-link" aria-label="Direct link to What's Changed" title="Direct link to What's Changed" translate="no">​</a></h2>
+<ul>
+<li class="">docs: add docs sample by @daybrush in <a href="https://github.com/naver/egjs-flicking/pull/924" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/924</a></li>
+<li class="">Feat/state api by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/923" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/923</a></li>
+<li class="">fix: fix change folder, name by @daybrush in <a href="https://github.com/naver/egjs-flicking/pull/926" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/926</a></li>
+<li class="">docs: add 2 demo by @daybrush in <a href="https://github.com/naver/egjs-flicking/pull/928" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/928</a></li>
+<li class="">fix: panel flashes when using virtual option in react by @malangfox in <a href="https://github.com/naver/egjs-flicking/pull/916" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/916</a></li>
+<li class="">Docs/reactive api by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/927" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/927</a></li>
+</ul>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.13.1]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2025/05/16/release-4.13.1</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2025/05/16/release-4.13.1"/>
+        <updated>2025-05-16T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[What's Changed]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/releases/2025/05/16/release-4.13.1#whats-changed" class="hash-link" aria-label="Direct link to What's Changed" title="Direct link to What's Changed" translate="no">​</a></h2>
+<ul>
+<li class="">docs: add sample codes to plugins by @malangfox in <a href="https://github.com/naver/egjs-flicking/pull/904" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/904</a></li>
+<li class="">fix: check other props for react state change by @malangfox in <a href="https://github.com/naver/egjs-flicking/pull/906" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/906</a></li>
+<li class="">add preventDefaultOnDrag to quickstart's example by @Ronkiro in <a href="https://github.com/naver/egjs-flicking/pull/896" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/896</a></li>
+<li class="">feat: add resizeObservePanel option by @malangfox in <a href="https://github.com/naver/egjs-flicking/pull/884" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/884</a></li>
+<li class="">Fix/resize logic by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/918" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/918</a></li>
+<li class="">refactor: change resizePanelObserve to observePanelResize by @malangfox in <a href="https://github.com/naver/egjs-flicking/pull/919" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/919</a></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="new-contributors">New Contributors<a href="https://naver.github.io/egjs-flicking/releases/2025/05/16/release-4.13.1#new-contributors" class="hash-link" aria-label="Direct link to New Contributors" title="Direct link to New Contributors" translate="no">​</a></h2>
+<ul>
+<li class="">@Ronkiro made their first contribution in <a href="https://github.com/naver/egjs-flicking/pull/896" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/896</a></li>
+<li class="">@cjw783 made their first contribution in <a href="https://github.com/naver/egjs-flicking/pull/918" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/918</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/naver/egjs-flicking/compare/4.12.0...4.13.1" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/compare/4.12.0...4.13.1</a></p>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.12.0]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2024/12/06/release-4.12.0</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2024/12/06/release-4.12.0"/>
+        <updated>2024-12-06T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[New Feature]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="new-feature">New Feature<a href="https://naver.github.io/egjs-flicking/releases/2024/12/06/release-4.12.0#new-feature" class="hash-link" aria-label="Direct link to New Feature" title="Direct link to New Feature" translate="no">​</a></h2>
+<ul>
+<li class="">Added a new preset <a href="https://naver.github.io/egjs-flicking/ko/Presets" target="_blank" rel="noopener noreferrer" class="">CrossFlicking</a> (#901)</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2024/12/06/release-4.12.0#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
+<ul>
+<li class="">Fixed an error where the initial Panel is set to the last Panel when <code>display: none</code> is applied to the viewport. (#903)</li>
+</ul>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.11.4]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2024/08/01/release-4.11.4</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2024/08/01/release-4.11.4"/>
+        <updated>2024-08-01T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Bug Fix]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2024/08/01/release-4.11.4#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
+<ul>
+<li class="">Fixed an error that disabled flicking blocks native scroll.</li>
+</ul>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.11.3]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2024/05/31/release-4.11.3</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2024/05/31/release-4.11.3"/>
+        <updated>2024-05-31T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Bug Fix]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2024/05/31/release-4.11.3#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
+<ul>
+<li class="">Fixed an error when <code>destroy()</code> is called immediately after <code>resize()</code> (#859)</li>
+<li class="">Fixed a bug that events return the wrong direction on circular Flicking (#854)</li>
+<li class="">Fixed an error when using bound and custom align props together (#850)</li>
+<li class="">Fixed a bug that the <code>threshold</code> option does not apply to <code>movetype: "snap"</code> (#844)</li>
+</ul>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.11.2]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2023/12/20/release-4.11.2</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2023/12/20/release-4.11.2"/>
+        <updated>2023-12-20T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Bug Fix]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2023/12/20/release-4.11.2#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
+<ul>
+<li class="">fixed a bug that strict movetype moving wrong panel on circular flicking (#842)</li>
+</ul>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.11.1]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2023/11/17/release-4.11.1</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2023/11/17/release-4.11.1"/>
+        <updated>2023-11-17T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Bug Fix]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2023/11/17/release-4.11.1#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
+<ul>
+<li class="">Fixed a bug that nan occurs when calculating the size if element does not exist. (#833)</li>
+<li class="">Fixed a bug that layout is broken when <code>direction: rtl</code> is applied to camera element. (#836)</li>
+</ul>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.11.0]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2023/08/02/release-4.11.0</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2023/08/02/release-4.11.0"/>
+        <updated>2023-08-02T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[New Feature]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="new-feature">New Feature<a href="https://naver.github.io/egjs-flicking/releases/2023/08/02/release-4.11.0#new-feature" class="hash-link" aria-label="Direct link to New Feature" title="Direct link to New Feature" translate="no">​</a></h2>
+<ul>
+<li class="">Added a new option <code>preventDefaultOnDrag</code> (#820)</li>
+</ul>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.10.8]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2023/06/22/release-4.10.8</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2023/06/22/release-4.10.8"/>
+        <updated>2023-06-22T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Bug Fix]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2023/06/22/release-4.10.8#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
+<ul>
+<li class="">Fixed a bug that mouse input not working when mouse and touch input were available at the same time. (<a href="https://github.com/naver/egjs-axes/pull/213" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-axes/pull/213</a>)</li>
+</ul>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.10.7]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2023/04/12/release-4.10.7</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2023/04/12/release-4.10.7"/>
+        <updated>2023-04-12T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Bug Fix]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2023/04/12/release-4.10.7#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
+<ul>
+<li class="">Fixed a bug that <code>setStatus</code> not working properly when <code>index</code> is 0 (#795)</li>
+</ul>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.10.6]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2023/02/13/release-4.10.6</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2023/02/13/release-4.10.6"/>
+        <updated>2023-02-13T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Bug Fix]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2023/02/13/release-4.10.6#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
+<ul>
+<li class="">Fixed position of the panel was calculated incorrectly when the <code>duration</code> is 0 and <code>moveType</code> is "strict". (#771)</li>
+<li class="">Fixed CSS transform was not applied correctly during the SSR rendering process. (#773)</li>
+</ul>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.10.5]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2023/02/01/release-4.10.5</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2023/02/01/release-4.10.5"/>
+        <updated>2023-02-01T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Bug Fix]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2023/02/01/release-4.10.5#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
+<ul>
+<li class="">Fixed a bug that the <code>resize</code> event listener was not properly removed when the instance was destroyed. (#779)</li>
+<li class="">Fixed the issue that the panel moved to an inappropriate position when a panel is clicked during sliding. (#777)</li>
+</ul>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.10.4]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2022/12/02/release-4.10.4</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2022/12/02/release-4.10.4"/>
+        <updated>2022-12-02T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Bug Fix]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2022/12/02/release-4.10.4#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
+<ul>
+<li class="">Fixed a bug that <code>move</code> event can occur even after <code>holdEnd</code> event at Internet Explorer (<a href="https://github.com/naver/egjs-axes/issues/208" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-axes/issues/208</a>)</li>
+</ul>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.10.3]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2022/11/25/release-4.10.3</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2022/11/25/release-4.10.3"/>
+        <updated>2022-11-25T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Bug Fix]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2022/11/25/release-4.10.3#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
+<ul>
+<li class="">Fixed a bug that <code>resizeOnContentsReady</code> option cause error with lazy image loading inside panel (#745)</li>
+</ul>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.10.2]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2022/11/03/release-4.10.2</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2022/11/03/release-4.10.2"/>
+        <updated>2022-11-03T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Bug Fix]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2022/11/03/release-4.10.2#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
+<ul>
+<li class="">Fixed component dependency for frameworks (#741)</li>
+<li class="">Fixed a bug that some setters doesn't update UI (#743)</li>
+</ul>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.10.1]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2022/10/26/release-4.10.1</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2022/10/26/release-4.10.1"/>
+        <updated>2022-10-26T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Bug Fix]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2022/10/26/release-4.10.1#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
+<ul>
+<li class="">Fixed a bug that <code>preventClickOnDrag</code> option prevents click event for movement less than 1 pixel (#738)</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="others">Others<a href="https://naver.github.io/egjs-flicking/releases/2022/10/26/release-4.10.1#others" class="hash-link" aria-label="Direct link to Others" title="Direct link to Others" translate="no">​</a></h2>
+<ul>
+<li class=""><code>@egjs/react-flicking</code> , <code>@egjs/preact-flicking</code> 4.10.2<!-- -->
+<ul>
+<li class="">Added a new property <code>renderOnSamekey</code> (#735)</li>
+<li class="">Fixed a bug that update occurs between rendering (#739)</li>
+</ul>
+</li>
+</ul>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[4.10.0]]></title>
+        <id>https://naver.github.io/egjs-flicking/releases/2022/09/15/release-4.10.0</id>
+        <link href="https://naver.github.io/egjs-flicking/releases/2022/09/15/release-4.10.0"/>
+        <updated>2022-09-15T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[New Feature]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="new-feature">New Feature<a href="https://naver.github.io/egjs-flicking/releases/2022/09/15/release-4.10.0#new-feature" class="hash-link" aria-label="Direct link to New Feature" title="Direct link to New Feature" translate="no">​</a></h2>
+<ul>
+<li class="">Added a new method <code>updateAnimation</code> (#728)</li>
+<li class="">Added a new method <code>stopAnimation</code> (#728)</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="others">Others<a href="https://naver.github.io/egjs-flicking/releases/2022/09/15/release-4.10.0#others" class="hash-link" aria-label="Direct link to Others" title="Direct link to Others" translate="no">​</a></h2>
+<ul>
+<li class=""><code>@egjs/ngx-flicking</code>
+<ul>
+<li class="">setup vanilla flicking within the root zone and remove event listeners once the view is removed (#727)</li>
+</ul>
+</li>
+</ul>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+</feed>

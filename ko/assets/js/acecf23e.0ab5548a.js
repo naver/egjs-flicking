@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([["3220"],{1912(s){s.exports=JSON.parse('{"blogBasePath":"/egjs-flicking/ko/releases","blogTitle":"Releases","authorsListPath":"/egjs-flicking/ko/releases/authors"}')}}]);

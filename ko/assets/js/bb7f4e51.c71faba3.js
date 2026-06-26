@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([["5152"],{72952(e){e.exports=JSON.parse('{"tags":[{"label":"release","permalink":"/egjs-flicking/ko/releases/tags/release","count":97}]}')}}]);

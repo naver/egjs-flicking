@@ -1,0 +1,82 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([["464"],{79225(e,n,i){i.r(n),i.d(n,{metadata:()=>l,default:()=>h,frontMatter:()=>c,contentTitle:()=>r,toc:()=>p,assets:()=>o});var l=JSON.parse('{"id":"demos/basic/default-index","title":"Default Index","description":"Set the panel index to display on initialization using the defaultIndex option","source":"@site/docs/demos/basic/default-index.mdx","sourceDirName":"demos/basic","slug":"/demos/basic/default-index","permalink":"/egjs-flicking/docs/demos/basic/default-index","draft":false,"unlisted":false,"editUrl":"https://github.com/naver/egjs-flicking/edit/master/docs/docs/demos/basic/default-index.mdx","tags":[],"version":"current","sidebarPosition":14,"frontMatter":{"title":"Default Index","id":"default-index","slug":"/demos/basic/default-index","sidebar_position":14,"description":"Set the panel index to display on initialization using the defaultIndex option","keywords":["flicking","carousel","defaultIndex","initial","start"]},"sidebar":"demosSidebar","previous":{"title":"Disable Input","permalink":"/egjs-flicking/docs/demos/basic/disable-input"},"next":{"title":"Auto Init","permalink":"/egjs-flicking/docs/demos/basic/auto-init"}}'),d=i(65723),a=i(54187),s=i(90761);let t=()=>(0,d.jsx)(s.A,{react:'import Flicking from "@egjs/react-flicking";\nimport "@egjs/react-flicking/dist/flicking.css";\nimport "./styles.css";\n\nexport default function App() {\n  return (\n    <div>\n      {/* defaultIndex: 0 (default) */}\n      <div className="demo-container">\n        <div className="demo-label">defaultIndex: 0 (default, first panel)</div>\n        <Flicking defaultIndex={0} align="center">\n          <div className="flicking-panel panel-1">1</div>\n          <div className="flicking-panel panel-2">2</div>\n          <div className="flicking-panel panel-3">3</div>\n          <div className="flicking-panel panel-4">4</div>\n          <div className="flicking-panel panel-5">5</div>\n        </Flicking>\n      </div>\n\n      {/* defaultIndex: 2 */}\n      <div className="demo-container">\n        <div className="demo-label">defaultIndex: 2 (starts at 3rd panel)</div>\n        <Flicking defaultIndex={2} align="center">\n          <div className="flicking-panel panel-1">1</div>\n          <div className="flicking-panel panel-2">2</div>\n          <div className="flicking-panel panel-3">3</div>\n          <div className="flicking-panel panel-4">4</div>\n          <div className="flicking-panel panel-5">5</div>\n        </Flicking>\n      </div>\n\n      {/* defaultIndex: 4 (last) */}\n      <div className="demo-container">\n        <div className="demo-label">defaultIndex: 4 (starts at last panel)</div>\n        <Flicking defaultIndex={4} align="center">\n          <div className="flicking-panel panel-1">1</div>\n          <div className="flicking-panel panel-2">2</div>\n          <div className="flicking-panel panel-3">3</div>\n          <div className="flicking-panel panel-4">4</div>\n          <div className="flicking-panel panel-5">5</div>\n        </Flicking>\n      </div>\n    </div>\n  );\n}\n',vue3:'<template>\n  <div>\n    \x3c!-- defaultIndex: 0 (default) --\x3e\n    <div class="demo-container">\n      <div class="demo-label">defaultIndex: 0 (default, first panel)</div>\n      <Flicking :options="{ defaultIndex: 0, align: \'center\' }">\n        <div class="flicking-panel panel-1">1</div>\n        <div class="flicking-panel panel-2">2</div>\n        <div class="flicking-panel panel-3">3</div>\n        <div class="flicking-panel panel-4">4</div>\n        <div class="flicking-panel panel-5">5</div>\n      </Flicking>\n    </div>\n\n    \x3c!-- defaultIndex: 2 --\x3e\n    <div class="demo-container">\n      <div class="demo-label">defaultIndex: 2 (starts at 3rd panel)</div>\n      <Flicking :options="{ defaultIndex: 2, align: \'center\' }">\n        <div class="flicking-panel panel-1">1</div>\n        <div class="flicking-panel panel-2">2</div>\n        <div class="flicking-panel panel-3">3</div>\n        <div class="flicking-panel panel-4">4</div>\n        <div class="flicking-panel panel-5">5</div>\n      </Flicking>\n    </div>\n\n    \x3c!-- defaultIndex: 4 (last) --\x3e\n    <div class="demo-container">\n      <div class="demo-label">defaultIndex: 4 (starts at last panel)</div>\n      <Flicking :options="{ defaultIndex: 4, align: \'center\' }">\n        <div class="flicking-panel panel-1">1</div>\n        <div class="flicking-panel panel-2">2</div>\n        <div class="flicking-panel panel-3">3</div>\n        <div class="flicking-panel panel-4">4</div>\n        <div class="flicking-panel panel-5">5</div>\n      </Flicking>\n    </div>\n  </div>\n</template>\n\n<script setup>\nimport Flicking from "@egjs/vue3-flicking";\nimport "@egjs/vue3-flicking/dist/flicking.css";\n<\/script>\n',js:'import Flicking from "@egjs/flicking";\nimport "@egjs/flicking/dist/flicking.css";\nimport "./styles.css";\n\n// defaultIndex: 0 (default)\nnew Flicking("#flick-first", {\n  defaultIndex: 0,\n  align: "center"\n});\n\n// defaultIndex: 2\nnew Flicking("#flick-middle", {\n  defaultIndex: 2,\n  align: "center"\n});\n\n// defaultIndex: 4 (last)\nnew Flicking("#flick-last", {\n  defaultIndex: 4,\n  align: "center"\n});\n',jsHtml:'<!DOCTYPE html>\n<html>\n<head>\n  <link rel="stylesheet" href="/styles.css" />\n</head>\n<body>\n  \x3c!-- defaultIndex: 0 (default) --\x3e\n  <div class="demo-container">\n    <div class="demo-label">defaultIndex: 0 (default, first panel)</div>\n    <div id="flick-first" class="flicking-viewport">\n      <div class="flicking-camera">\n        <div class="flicking-panel panel-1">1</div>\n        <div class="flicking-panel panel-2">2</div>\n        <div class="flicking-panel panel-3">3</div>\n        <div class="flicking-panel panel-4">4</div>\n        <div class="flicking-panel panel-5">5</div>\n      </div>\n    </div>\n  </div>\n\n  \x3c!-- defaultIndex: 2 --\x3e\n  <div class="demo-container">\n    <div class="demo-label">defaultIndex: 2 (starts at 3rd panel)</div>\n    <div id="flick-middle" class="flicking-viewport">\n      <div class="flicking-camera">\n        <div class="flicking-panel panel-1">1</div>\n        <div class="flicking-panel panel-2">2</div>\n        <div class="flicking-panel panel-3">3</div>\n        <div class="flicking-panel panel-4">4</div>\n        <div class="flicking-panel panel-5">5</div>\n      </div>\n    </div>\n  </div>\n\n  \x3c!-- defaultIndex: 4 (last) --\x3e\n  <div class="demo-container">\n    <div class="demo-label">defaultIndex: 4 (starts at last panel)</div>\n    <div id="flick-last" class="flicking-viewport">\n      <div class="flicking-camera">\n        <div class="flicking-panel panel-1">1</div>\n        <div class="flicking-panel panel-2">2</div>\n        <div class="flicking-panel panel-3">3</div>\n        <div class="flicking-panel panel-4">4</div>\n        <div class="flicking-panel panel-5">5</div>\n      </div>\n    </div>\n  </div>\n\n</body>\n</html>\n',css:".flicking-panel {\n  width: 50%;\n  height: 120px;\n}\n"}),c={title:"Default Index",id:"default-index",slug:"/demos/basic/default-index",sidebar_position:14,description:"Set the panel index to display on initialization using the defaultIndex option",keywords:["flicking","carousel","defaultIndex","initial","start"]},r="Default Index",o={},p=[{value:"Summary",id:"summary",level:2},{value:"Key Options",id:"key-options",level:3},{value:"Comparison by Value",id:"comparison-by-value",level:3},{value:"Details",id:"details",level:2},{value:"How defaultIndex Works",id:"how-defaultindex-works",level:3},{value:"Related Options",id:"related-options",level:3},{value:"Use Cases",id:"use-cases",level:3},{value:"Notes",id:"notes",level:3},{value:"Related Links",id:"related-links",level:2},{value:"Related Options",id:"related-options-1",level:3},{value:"Related Demos",id:"related-demos",level:3}];function f(e){let n={a:"a",admonition:"admonition",code:"code",h1:"h1",h2:"h2",h3:"h3",header:"header",li:"li",p:"p",pre:"pre",strong:"strong",table:"table",tbody:"tbody",td:"td",th:"th",thead:"thead",tr:"tr",ul:"ul",...(0,a.R)(),...e.components};return(0,d.jsxs)(d.Fragment,{children:[(0,d.jsx)(n.header,{children:(0,d.jsx)(n.h1,{id:"default-index",children:"Default Index"})}),"\n",(0,d.jsxs)(n.p,{children:["The ",(0,d.jsx)(n.a,{href:"../../api/interfaces/FlickingOptions#defaultindex",children:(0,d.jsx)(n.code,{children:"defaultIndex"})})," option sets the index of the panel to display on initialization. Specified as a 0-based index."]}),"\n",(0,d.jsx)(t,{}),"\n",(0,d.jsx)(n.h2,{id:"summary",children:"Summary"}),"\n",(0,d.jsx)(n.h3,{id:"key-options",children:"Key Options"}),"\n",(0,d.jsxs)(n.table,{children:[(0,d.jsx)(n.thead,{children:(0,d.jsxs)(n.tr,{children:[(0,d.jsx)(n.th,{children:"Option"}),(0,d.jsx)(n.th,{children:"Type"}),(0,d.jsx)(n.th,{children:"Default"}),(0,d.jsx)(n.th,{children:"Description"})]})}),(0,d.jsx)(n.tbody,{children:(0,d.jsxs)(n.tr,{children:[(0,d.jsx)(n.td,{children:(0,d.jsx)(n.a,{href:"../../api/interfaces/FlickingOptions#defaultindex",children:(0,d.jsx)(n.code,{children:"defaultIndex"})})}),(0,d.jsx)(n.td,{children:(0,d.jsx)(n.code,{children:"number"})}),(0,d.jsx)(n.td,{children:(0,d.jsx)(n.code,{children:"0"})}),(0,d.jsx)(n.td,{children:"Initial active panel index (0-based)"})]})})]}),"\n",(0,d.jsx)(n.h3,{id:"comparison-by-value",children:"Comparison by Value"}),"\n",(0,d.jsxs)(n.table,{children:[(0,d.jsx)(n.thead,{children:(0,d.jsxs)(n.tr,{children:[(0,d.jsx)(n.th,{children:"Value"}),(0,d.jsx)(n.th,{children:"Behavior"}),(0,d.jsx)(n.th,{children:"Suitable For"})]})}),(0,d.jsxs)(n.tbody,{children:[(0,d.jsxs)(n.tr,{children:[(0,d.jsx)(n.td,{children:(0,d.jsx)(n.code,{children:"0"})}),(0,d.jsx)(n.td,{children:"Starts at the first panel (default)"}),(0,d.jsx)(n.td,{children:"General carousels"})]}),(0,d.jsxs)(n.tr,{children:[(0,d.jsx)(n.td,{children:(0,d.jsx)(n.code,{children:"n"})}),(0,d.jsx)(n.td,{children:"Starts at the (n+1)th panel"}),(0,d.jsx)(n.td,{children:"Navigating directly to a specific panel, deep linking"})]}),(0,d.jsxs)(n.tr,{children:[(0,d.jsx)(n.td,{children:(0,d.jsx)(n.code,{children:"last index"})}),(0,d.jsx)(n.td,{children:"Starts at the last panel"}),(0,d.jsx)(n.td,{children:"Reverse browsing, showing newest items first"})]})]})]}),"\n",(0,d.jsx)(n.h2,{id:"details",children:"Details"}),"\n",(0,d.jsx)(n.h3,{id:"how-defaultindex-works",children:"How defaultIndex Works"}),"\n",(0,d.jsxs)(n.p,{children:["When Flicking is initialized (",(0,d.jsx)(n.code,{children:"init()"}),"), it moves to the panel at the specified index. The panel is displayed immediately without animation."]}),"\n",(0,d.jsx)(n.pre,{children:(0,d.jsx)(n.code,{className:"language-javascript",children:"// Start at the first panel (default)\ndefaultIndex: 0\n\n// Start at the third panel\ndefaultIndex: 2\n\n// Start at the last panel (when there are 5 panels)\ndefaultIndex: 4\n"})}),"\n",(0,d.jsx)(n.h3,{id:"related-options",children:"Related Options"}),"\n",(0,d.jsxs)(n.ul,{children:["\n",(0,d.jsxs)(n.li,{children:[(0,d.jsx)(n.strong,{children:"Relationship with circular"}),": defaultIndex works correctly even with ",(0,d.jsx)(n.code,{children:"circular: true"}),". The specified panel becomes the initial active panel."]}),"\n",(0,d.jsxs)(n.li,{children:[(0,d.jsx)(n.strong,{children:"Relationship with align"}),": When used with ",(0,d.jsx)(n.code,{children:'align: "center"'}),", the initial panel is positioned at the center."]}),"\n"]}),"\n",(0,d.jsx)(n.h3,{id:"use-cases",children:"Use Cases"}),"\n",(0,d.jsx)(n.admonition,{title:"When to use?",type:"info",children:(0,d.jsxs)(n.ul,{children:["\n",(0,d.jsxs)(n.li,{children:[(0,d.jsx)(n.strong,{children:"defaultIndex: 0"}),": General sequential browsing carousels"]}),"\n",(0,d.jsxs)(n.li,{children:[(0,d.jsx)(n.strong,{children:"Specific index"}),": Sharing a specific slide via URL parameters (deep linking), restoring previous state"]}),"\n",(0,d.jsxs)(n.li,{children:[(0,d.jsx)(n.strong,{children:"Last index"}),": UI that shows the newest items first, chat/feed"]}),"\n"]})}),"\n",(0,d.jsx)(n.h3,{id:"notes",children:"Notes"}),"\n",(0,d.jsx)(n.admonition,{title:"Index range",type:"warning",children:(0,d.jsx)(n.p,{children:"If you specify an index larger than the number of panels, it moves to the last panel. Negative indices may be treated as the first panel."})}),"\n",(0,d.jsx)(n.h2,{id:"related-links",children:"Related Links"}),"\n",(0,d.jsx)(n.h3,{id:"related-options-1",children:"Related Options"}),"\n",(0,d.jsxs)(n.ul,{children:["\n",(0,d.jsxs)(n.li,{children:[(0,d.jsx)(n.a,{href:"../../api/interfaces/FlickingOptions#circular",children:(0,d.jsx)(n.code,{children:"circular"})}),": Infinite loop mode"]}),"\n",(0,d.jsxs)(n.li,{children:[(0,d.jsx)(n.a,{href:"../../api/interfaces/FlickingOptions#align",children:(0,d.jsx)(n.code,{children:"align"})}),": Panel alignment"]}),"\n"]}),"\n",(0,d.jsx)(n.h3,{id:"related-demos",children:"Related Demos"}),"\n",(0,d.jsxs)(n.ul,{children:["\n",(0,d.jsxs)(n.li,{children:[(0,d.jsx)(n.a,{href:"./circular",children:"Circular"}),": Infinite loop mode"]}),"\n",(0,d.jsxs)(n.li,{children:[(0,d.jsx)(n.a,{href:"./alignment",children:"Alignment"}),": Panel alignment"]}),"\n"]})]})}function h(e={}){let{wrapper:n}={...(0,a.R)(),...e.components};return n?(0,d.jsx)(n,{...e,children:(0,d.jsx)(f,{...e})}):f(e)}},90761(e,n,i){i.d(n,{A:()=>h});var l=i(65723),d=i(7210),a=i(78863);i(22155);var s=i(19612);let t="^4.11.4",c={react:{"@egjs/react-flicking":t,"@egjs/flicking":t},vue3:{"@egjs/vue3-flicking":t,"@egjs/flicking":t},vanilla:{"@egjs/flicking":t}},r=`<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <div id="flick" class="flicking-viewport">
+      <div class="flicking-camera"></div>
+    </div>
+  </div>
+</body>
+</html>`,o=`import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App.tsx";
+
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <App />
+  </StrictMode>);`,p=`
+.flicking-viewport.vertical {
+  display: block;
+  width: 100%;
+}
+
+.flicking-panel {
+  width: 200px;
+  height: 150px;
+  margin-right: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.panel-1 { background: #3e8ed0; }
+.panel-2 { background: #00d1b2; }
+.panel-3 { background: #f14668; }
+.panel-4 { background: #ffe08a; color: #333; }
+.panel-5 { background: #48c78e; }
+
+.demo-container {
+  margin-bottom: 24px;
+}
+
+.demo-label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.button {
+  padding: 8px 16px;
+  margin: 4px;
+  border: 2px solid #3498db;
+  background: transparent;
+  color: #3498db;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.button:hover {
+  background: #3498db;
+  color: white;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  gap: 8px;
+}
+`;function f({code:e,html:n,template:i="react",dependencies:d={},files:a={},css:t=""}){return(0,l.jsx)(s.OZ,{template:"vue3"===i?"vue":"vanilla"===i?"vanilla":"react",files:(()=>{let l=t?`${p}
+${t}`:p,d={"/styles.css":{code:l},...a};if("react"===i)return{"/App.tsx":{code:e},"/index.js":{code:o,hidden:!0},...d};if("vue3"===i){let n;return{"/src/App.vue":{code:(n=e.replace(/\n*<style>[\s\S]*?<\/style>/,""),`${n}
+
+<style>
+${l}
+</style>`)},...a}}return{"/src/index.js":{code:e},"/index.js":{code:'import "./src/index.js";',hidden:!0},"/src/styles.css":{code:l},"/index.html":{code:n||r},...a}})(),customSetup:{dependencies:{...c[i],...d}},options:{showLineNumbers:!0,editorHeight:400,externalResources:[],visibleFiles:"react"===i?["/App.tsx","/styles.css"]:"vue3"===i?["/src/App.vue"]:["/src/index.js","/index.html","/src/styles.css"],activeFile:"react"===i?"/App.tsx":"vue3"===i?"/src/App.vue":"/src/index.js"}})}function h({react:e,vue3:n,js:i,jsHtml:s,css:t,dependencies:c}){return(0,l.jsxs)(a.A,{groupId:"framework",defaultValue:"js",children:[(0,l.jsx)(d.A,{value:"js",label:"JavaScript",children:(0,l.jsx)(f,{template:"vanilla",code:i,html:s,css:t,dependencies:c})}),(0,l.jsx)(d.A,{value:"react",label:"React",children:(0,l.jsx)(f,{template:"react",code:e,css:t,dependencies:c})}),(0,l.jsx)(d.A,{value:"vue3",label:"Vue@3",children:(0,l.jsx)(f,{template:"vue3",code:n,css:t,dependencies:c})})]})}}}]);

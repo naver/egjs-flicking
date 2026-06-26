@@ -1,0 +1,82 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([["9361"],{54802(e,n,i){i.r(n),i.d(n,{metadata:()=>t,default:()=>x,frontMatter:()=>d,contentTitle:()=>a,toc:()=>h,assets:()=>o});var t=JSON.parse('{"id":"demos/reactive/pagination","title":"Pagination","description":"Reactive API\uB97C \uD65C\uC6A9\uD55C \uB3C4\uD2B8 \uD398\uC774\uC9C0\uB124\uC774\uC158 \uAD6C\uD604","source":"@site/i18n/ko/docusaurus-plugin-content-docs/current/demos/reactive/pagination.mdx","sourceDirName":"demos/reactive","slug":"/demos/reactive/pagination","permalink":"/egjs-flicking/ko/docs/demos/reactive/pagination","draft":false,"unlisted":false,"editUrl":"https://github.com/naver/egjs-flicking/edit/master/docs/docs/demos/reactive/pagination.mdx","tags":[],"version":"current","sidebarPosition":2,"frontMatter":{"title":"Pagination","id":"pagination","slug":"/demos/reactive/pagination","sidebar_position":2,"description":"Reactive API\uB97C \uD65C\uC6A9\uD55C \uB3C4\uD2B8 \uD398\uC774\uC9C0\uB124\uC774\uC158 \uAD6C\uD604","keywords":["flicking","carousel","pagination","dot","reactive","currentPanelIndex","totalPanelCount","\uD398\uC774\uC9C0\uB124\uC774\uC158","\uCE90\uB7EC\uC140","\uB3C4\uD2B8"]},"sidebar":"demosSidebar","previous":{"title":"Progress Bar","permalink":"/egjs-flicking/ko/docs/demos/reactive/progress-bar"},"next":{"title":"Prev / Next","permalink":"/egjs-flicking/ko/docs/demos/reactive/prev-next"}}'),c=i(65723),l=i(54187),s=i(90761);let r=()=>(0,c.jsx)(s.A,{react:'import Flicking, { useFlickingReactiveAPI } from "@egjs/react-flicking";\nimport React from "react";\nimport "@egjs/react-flicking/dist/flicking.css";\nimport "./styles.css";\n\nconst COLORS = ["#3498db", "#e74c3c", "#2ecc71", "#9b59b6", "#f39c12"];\n\nexport default function App() {\n  const flickingRef = React.useRef(null);\n  const { currentPanelIndex, totalPanelCount, moveTo } = useFlickingReactiveAPI(flickingRef);\n\n  return (\n    <div>\n      <Flicking ref={flickingRef}>\n        {[0, 1, 2, 3, 4].map(index => (\n          <div key={index} className="flicking-panel" style={{ backgroundColor: COLORS[index % COLORS.length] }}>\n            {index + 1}\n          </div>\n        ))}\n      </Flicking>\n\n      <div className="pagination">\n        {Array.from({ length: totalPanelCount }, (_, i) => (\n          <button\n            key={i}\n            className={`pagination-btn ${currentPanelIndex === i ? "active" : ""}`}\n            onClick={() => moveTo(i)}\n          >\n            {i + 1}\n          </button>\n        ))}\n      </div>\n    </div>\n  );\n}\n',vue3:'<script setup>\nimport Flicking, { useFlickingReactiveAPI } from "@egjs/vue3-flicking";\nimport { ref } from "vue";\nimport "@egjs/vue3-flicking/dist/flicking.css";\n\nconst COLORS = ["#3498db", "#e74c3c", "#2ecc71", "#9b59b6", "#f39c12"];\n\nconst flickingRef = ref(null);\nconst { currentPanelIndex, totalPanelCount, moveTo } = useFlickingReactiveAPI(flickingRef);\n<\/script>\n\n<template>\n  <div>\n    <Flicking ref="flickingRef">\n      <div\n        v-for="index in 5"\n        :key="index - 1"\n        class="flicking-panel"\n        :style="{ backgroundColor: COLORS[(index - 1) % COLORS.length] }"\n      >\n        {{ index }}\n      </div>\n    </Flicking>\n\n    <div class="pagination">\n      <button\n        v-for="i in totalPanelCount"\n        :key="i - 1"\n        :class="[\'pagination-btn\', { active: currentPanelIndex === i - 1 }]"\n        @click="moveTo(i - 1)"\n      >\n        {{ i }}\n      </button>\n    </div>\n  </div>\n</template>\n',js:'import Flicking, { connectFlickingReactiveAPI } from "@egjs/flicking";\nimport "@egjs/flicking/dist/flicking.css";\nimport "./styles.css";\n\nconst flicking = new Flicking("#flick");\nconst reactiveAPI = connectFlickingReactiveAPI(flicking);\n\n// Create pagination buttons\nconst pagination = document.querySelector(".pagination");\nconst buttons = [];\n\nfor (let i = 0; i < reactiveAPI.totalPanelCount; i++) {\n  const btn = document.createElement("button");\n  btn.className = `pagination-btn${i === 0 ? " active" : ""}`;\n  btn.textContent = i + 1;\n  btn.addEventListener("click", () => reactiveAPI.moveTo(i));\n  buttons.push(btn);\n  pagination.appendChild(btn);\n}\n\n// Update active button on index change\nreactiveAPI.subscribe("currentPanelIndex", index => {\n  buttons.forEach((btn, i) => {\n    btn.classList.toggle("active", i === index);\n  });\n});\n',jsHtml:'<!DOCTYPE html>\n<html>\n<head>\n  <link rel="stylesheet" href="/styles.css" />\n</head>\n<body>\n  <div id="flick" class="flicking-viewport">\n    <div class="flicking-camera">\n      <div class="flicking-panel" style="background: #3498db">1</div>\n      <div class="flicking-panel" style="background: #e74c3c">2</div>\n      <div class="flicking-panel" style="background: #2ecc71">3</div>\n      <div class="flicking-panel" style="background: #9b59b6">4</div>\n      <div class="flicking-panel" style="background: #f39c12">5</div>\n    </div>\n  </div>\n  <div class="pagination"></div>\n</body>\n</html>\n',css:".flicking-panel {\n  width: 150px;\n  height: 120px;\n  margin-right: 10px;\n  border-radius: 8px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-size: 24px;\n  font-weight: bold;\n  color: white;\n}\n\n.pagination {\n  display: flex;\n  justify-content: center;\n  gap: 8px;\n  margin-top: 16px;\n}\n\n.pagination-btn {\n  width: 36px;\n  height: 36px;\n  border: 2px solid #3498db;\n  background: transparent;\n  color: #3498db;\n  border-radius: 50%;\n  cursor: pointer;\n  font-size: 14px;\n  font-weight: bold;\n  transition: all 0.2s;\n}\n\n.pagination-btn:hover {\n  background: #3498db;\n  color: white;\n}\n\n.pagination-btn.active {\n  background: #3498db;\n  color: white;\n}\n"}),d={title:"Pagination",id:"pagination",slug:"/demos/reactive/pagination",sidebar_position:2,description:"Reactive API\uB97C \uD65C\uC6A9\uD55C \uB3C4\uD2B8 \uD398\uC774\uC9C0\uB124\uC774\uC158 \uAD6C\uD604",keywords:["flicking","carousel","pagination","dot","reactive","currentPanelIndex","totalPanelCount","\uD398\uC774\uC9C0\uB124\uC774\uC158","\uCE90\uB7EC\uC140","\uB3C4\uD2B8"]},a="Pagination",o={},h=[{value:"\uC694\uC57D",id:"\uC694\uC57D",level:2},{value:"\uC8FC\uC694 API",id:"\uC8FC\uC694-api",level:3},{value:"\uB3D9\uC791",id:"\uB3D9\uC791",level:3},{value:"\uC0C1\uC138 \uC124\uBA85",id:"\uC0C1\uC138-\uC124\uBA85",level:2},{value:"\uB3D9\uC791 \uC6D0\uB9AC",id:"\uB3D9\uC791-\uC6D0\uB9AC",level:3},{value:"\uAD00\uB828 \uC635\uC158",id:"\uAD00\uB828-\uC635\uC158",level:3},{value:"\uC0AC\uC6A9 \uC2DC\uB098\uB9AC\uC624",id:"\uC0AC\uC6A9-\uC2DC\uB098\uB9AC\uC624",level:3},{value:"\uAD00\uB828 \uB9C1\uD06C",id:"\uAD00\uB828-\uB9C1\uD06C",level:2},{value:"\uAD00\uB828 API",id:"\uAD00\uB828-api",level:3},{value:"\uAD00\uB828 \uB370\uBAA8",id:"\uAD00\uB828-\uB370\uBAA8",level:3}];function p(e){let n={a:"a",admonition:"admonition",code:"code",h1:"h1",h2:"h2",h3:"h3",header:"header",li:"li",ol:"ol",p:"p",strong:"strong",table:"table",tbody:"tbody",td:"td",th:"th",thead:"thead",tr:"tr",ul:"ul",...(0,l.R)(),...e.components};return(0,c.jsxs)(c.Fragment,{children:[(0,c.jsx)(n.header,{children:(0,c.jsx)(n.h1,{id:"pagination",children:"Pagination"})}),"\n",(0,c.jsxs)(n.p,{children:["Reactive API\uC758 ",(0,c.jsx)(n.code,{children:"currentPanelIndex"}),", ",(0,c.jsx)(n.code,{children:"totalPanelCount"}),", ",(0,c.jsx)(n.code,{children:"moveTo"}),"\uB97C \uC0AC\uC6A9\uD558\uC5EC \uCE90\uB7EC\uC140\uACFC \uC2E4\uC2DC\uAC04\uC73C\uB85C \uB3D9\uAE30\uD654\uB418\uB294 \uB3C4\uD2B8 \uD398\uC774\uC9C0\uB124\uC774\uC158 UI\uB97C \uAD6C\uD604\uD569\uB2C8\uB2E4."]}),"\n",(0,c.jsx)(r,{}),"\n",(0,c.jsx)(n.h2,{id:"\uC694\uC57D",children:"\uC694\uC57D"}),"\n",(0,c.jsx)(n.h3,{id:"\uC8FC\uC694-api",children:"\uC8FC\uC694 API"}),"\n",(0,c.jsxs)(n.table,{children:[(0,c.jsx)(n.thead,{children:(0,c.jsxs)(n.tr,{children:[(0,c.jsx)(n.th,{children:"\uC18D\uC131 / \uBA54\uC11C\uB4DC"}),(0,c.jsx)(n.th,{children:"\uD0C0\uC785"}),(0,c.jsx)(n.th,{children:"\uC124\uBA85"})]})}),(0,c.jsxs)(n.tbody,{children:[(0,c.jsxs)(n.tr,{children:[(0,c.jsx)(n.td,{children:(0,c.jsx)(n.a,{href:"../../api/interfaces/FlickingReactiveState#currentpanelindex",children:(0,c.jsx)(n.code,{children:"currentPanelIndex"})})}),(0,c.jsx)(n.td,{children:(0,c.jsx)(n.code,{children:"number"})}),(0,c.jsx)(n.td,{children:"\uD604\uC7AC \uD65C\uC131\uD654\uB41C \uD328\uB110 \uC778\uB371\uC2A4"})]}),(0,c.jsxs)(n.tr,{children:[(0,c.jsx)(n.td,{children:(0,c.jsx)(n.a,{href:"../../api/interfaces/FlickingReactiveState#totalpanelcount",children:(0,c.jsx)(n.code,{children:"totalPanelCount"})})}),(0,c.jsx)(n.td,{children:(0,c.jsx)(n.code,{children:"number"})}),(0,c.jsx)(n.td,{children:"\uC804\uCCB4 \uD328\uB110 \uC218"})]}),(0,c.jsxs)(n.tr,{children:[(0,c.jsx)(n.td,{children:(0,c.jsx)(n.a,{href:"../../api/interfaces/FlickingReactiveMethod#moveto",children:(0,c.jsx)(n.code,{children:"moveTo"})})}),(0,c.jsx)(n.td,{children:(0,c.jsx)(n.code,{children:"(i: number) => Promise"})}),(0,c.jsx)(n.td,{children:"\uD2B9\uC815 \uD328\uB110\uB85C \uC774\uB3D9"})]})]})]}),"\n",(0,c.jsx)(n.h3,{id:"\uB3D9\uC791",children:"\uB3D9\uC791"}),"\n",(0,c.jsxs)(n.table,{children:[(0,c.jsx)(n.thead,{children:(0,c.jsxs)(n.tr,{children:[(0,c.jsx)(n.th,{children:"\uC0C1\uD0DC"}),(0,c.jsx)(n.th,{children:"\uB3C4\uD2B8 \uC2A4\uD0C0\uC77C"})]})}),(0,c.jsxs)(n.tbody,{children:[(0,c.jsxs)(n.tr,{children:[(0,c.jsx)(n.td,{children:"\uD604\uC7AC \uD328\uB110"}),(0,c.jsx)(n.td,{children:"\uD65C\uC131\uD654 (\uAC15\uC870 \uD45C\uC2DC)"})]}),(0,c.jsxs)(n.tr,{children:[(0,c.jsx)(n.td,{children:"\uB2E4\uB978 \uD328\uB110"}),(0,c.jsx)(n.td,{children:"\uAE30\uBCF8, \uD074\uB9AD\uD558\uC5EC \uC774\uB3D9"})]})]})]}),"\n",(0,c.jsx)(n.h2,{id:"\uC0C1\uC138-\uC124\uBA85",children:"\uC0C1\uC138 \uC124\uBA85"}),"\n",(0,c.jsx)(n.h3,{id:"\uB3D9\uC791-\uC6D0\uB9AC",children:"\uB3D9\uC791 \uC6D0\uB9AC"}),"\n",(0,c.jsxs)(n.ol,{children:["\n",(0,c.jsxs)(n.li,{children:[(0,c.jsx)(n.code,{children:"totalPanelCount"}),"\uB97C \uAE30\uBC18\uC73C\uB85C \uB3C4\uD2B8 \uBC84\uD2BC\uC744 \uB80C\uB354\uB9C1"]}),"\n",(0,c.jsxs)(n.li,{children:[(0,c.jsx)(n.code,{children:"currentPanelIndex"}),"\uC5D0 \uD574\uB2F9\uD558\uB294 \uB3C4\uD2B8\uB97C \uAC15\uC870 \uD45C\uC2DC"]}),"\n",(0,c.jsxs)(n.li,{children:["\uB3C4\uD2B8 \uD074\uB9AD \uC2DC ",(0,c.jsx)(n.code,{children:"moveTo(index)"}),"\uB97C \uD638\uCD9C\uD558\uC5EC \uD574\uB2F9 \uD328\uB110\uB85C \uC774\uB3D9"]}),"\n",(0,c.jsxs)(n.li,{children:["\uC0AC\uC6A9\uC790\uAC00 \uB4DC\uB798\uADF8\uD558\uC5EC \uC0C8 \uD328\uB110\uB85C \uC774\uB3D9\uD558\uBA74 ",(0,c.jsx)(n.code,{children:"currentPanelIndex"}),"\uAC00 \uC790\uB3D9\uC73C\uB85C \uC5C5\uB370\uC774\uD2B8\uB418\uACE0 \uB3C4\uD2B8\uAC00 \uB2E4\uC2DC \uB3D9\uAE30\uD654"]}),"\n"]}),"\n",(0,c.jsx)(n.h3,{id:"\uAD00\uB828-\uC635\uC158",children:"\uAD00\uB828 \uC635\uC158"}),"\n",(0,c.jsxs)(n.ul,{children:["\n",(0,c.jsxs)(n.li,{children:[(0,c.jsx)(n.strong,{children:(0,c.jsx)(n.code,{children:'align: "center"'})}),": \uC911\uC559 \uC815\uB82C\uC740 \uD398\uC774\uC9C0\uB124\uC774\uC158\uC744 \uAC00\uC7A5 \uC9C1\uAD00\uC801\uC73C\uB85C \uB290\uB07C\uAC8C \uD569\uB2C8\uB2E4."]}),"\n",(0,c.jsxs)(n.li,{children:[(0,c.jsx)(n.strong,{children:(0,c.jsx)(n.code,{children:"circular: true"})}),": \uC21C\uD658 \uBAA8\uB4DC\uC5D0\uC11C\uB294 \uCCAB \uBC88\uC9F8\uC640 \uB9C8\uC9C0\uB9C9 \uD328\uB110\uC774 \uC5F0\uACB0\uB418\uC5B4 \uB3C4\uD2B8\uAC00 \uB9E4\uB044\uB7FD\uAC8C \uC21C\uD658\uD569\uB2C8\uB2E4."]}),"\n"]}),"\n",(0,c.jsx)(n.h3,{id:"\uC0AC\uC6A9-\uC2DC\uB098\uB9AC\uC624",children:"\uC0AC\uC6A9 \uC2DC\uB098\uB9AC\uC624"}),"\n",(0,c.jsx)(n.admonition,{title:"\uC774\uB7F0 \uACBD\uC6B0\uC5D0 \uC0AC\uC6A9\uD558\uC138\uC694",type:"info",children:(0,c.jsxs)(n.ul,{children:["\n",(0,c.jsx)(n.li,{children:"\uBC30\uB108 / \uD788\uC5B4\uB85C \uC2AC\uB77C\uC774\uB354 \uC704\uCE58 \uD45C\uC2DC\uAE30"}),"\n",(0,c.jsx)(n.li,{children:"\uC774\uBBF8\uC9C0 \uAC24\uB7EC\uB9AC \uD398\uC774\uC9C0 \uD45C\uC2DC\uAE30"}),"\n",(0,c.jsx)(n.li,{children:"\uBAA8\uBC14\uC77C \uC628\uBCF4\uB529 \uB2E8\uACC4 \uB3C4\uD2B8"}),"\n"]})}),"\n",(0,c.jsx)(n.h2,{id:"\uAD00\uB828-\uB9C1\uD06C",children:"\uAD00\uB828 \uB9C1\uD06C"}),"\n",(0,c.jsx)(n.h3,{id:"\uAD00\uB828-api",children:"\uAD00\uB828 API"}),"\n",(0,c.jsxs)(n.ul,{children:["\n",(0,c.jsxs)(n.li,{children:[(0,c.jsx)(n.a,{href:"../../api/interfaces/FlickingReactiveState#currentpanelindex",children:(0,c.jsx)(n.code,{children:"currentPanelIndex"})}),": \uD65C\uC131 \uD328\uB110 \uC778\uB371\uC2A4"]}),"\n",(0,c.jsxs)(n.li,{children:[(0,c.jsx)(n.a,{href:"../../api/interfaces/FlickingReactiveMethod#moveto",children:(0,c.jsx)(n.code,{children:"moveTo"})}),": \uD328\uB110\uB85C \uC774\uB3D9"]}),"\n"]}),"\n",(0,c.jsx)(n.h3,{id:"\uAD00\uB828-\uB370\uBAA8",children:"\uAD00\uB828 \uB370\uBAA8"}),"\n",(0,c.jsxs)(n.ul,{children:["\n",(0,c.jsxs)(n.li,{children:[(0,c.jsx)(n.a,{href:"./prev-next",children:"Prev / Next"}),": \uC774\uC804/\uB2E4\uC74C \uBC84\uD2BC \uB124\uBE44\uAC8C\uC774\uC158"]}),"\n",(0,c.jsxs)(n.li,{children:[(0,c.jsx)(n.a,{href:"./progress-bar",children:"Progress Bar"}),": \uC2A4\uD06C\uB864 \uC9C4\uD589\uB960 \uD45C\uC2DC\uAE30"]}),"\n"]})]})}function x(e={}){let{wrapper:n}={...(0,l.R)(),...e.components};return n?(0,c.jsx)(n,{...e,children:(0,c.jsx)(p,{...e})}):p(e)}},90761(e,n,i){i.d(n,{A:()=>x});var t=i(65723),c=i(7210),l=i(78863);i(22155);var s=i(19612);let r="^4.11.4",d={react:{"@egjs/react-flicking":r,"@egjs/flicking":r},vue3:{"@egjs/vue3-flicking":r,"@egjs/flicking":r},vanilla:{"@egjs/flicking":r}},a=`<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <div id="flick" class="flicking-viewport">
+      <div class="flicking-camera"></div>
+    </div>
+  </div>
+</body>
+</html>`,o=`import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App.tsx";
+
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <App />
+  </StrictMode>);`,h=`
+.flicking-viewport.vertical {
+  display: block;
+  width: 100%;
+}
+
+.flicking-panel {
+  width: 200px;
+  height: 150px;
+  margin-right: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.panel-1 { background: #3e8ed0; }
+.panel-2 { background: #00d1b2; }
+.panel-3 { background: #f14668; }
+.panel-4 { background: #ffe08a; color: #333; }
+.panel-5 { background: #48c78e; }
+
+.demo-container {
+  margin-bottom: 24px;
+}
+
+.demo-label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.button {
+  padding: 8px 16px;
+  margin: 4px;
+  border: 2px solid #3498db;
+  background: transparent;
+  color: #3498db;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.button:hover {
+  background: #3498db;
+  color: white;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  gap: 8px;
+}
+`;function p({code:e,html:n,template:i="react",dependencies:c={},files:l={},css:r=""}){return(0,t.jsx)(s.OZ,{template:"vue3"===i?"vue":"vanilla"===i?"vanilla":"react",files:(()=>{let t=r?`${h}
+${r}`:h,c={"/styles.css":{code:t},...l};if("react"===i)return{"/App.tsx":{code:e},"/index.js":{code:o,hidden:!0},...c};if("vue3"===i){let n;return{"/src/App.vue":{code:(n=e.replace(/\n*<style>[\s\S]*?<\/style>/,""),`${n}
+
+<style>
+${t}
+</style>`)},...l}}return{"/src/index.js":{code:e},"/index.js":{code:'import "./src/index.js";',hidden:!0},"/src/styles.css":{code:t},"/index.html":{code:n||a},...l}})(),customSetup:{dependencies:{...d[i],...c}},options:{showLineNumbers:!0,editorHeight:400,externalResources:[],visibleFiles:"react"===i?["/App.tsx","/styles.css"]:"vue3"===i?["/src/App.vue"]:["/src/index.js","/index.html","/src/styles.css"],activeFile:"react"===i?"/App.tsx":"vue3"===i?"/src/App.vue":"/src/index.js"}})}function x({react:e,vue3:n,js:i,jsHtml:s,css:r,dependencies:d}){return(0,t.jsxs)(l.A,{groupId:"framework",defaultValue:"js",children:[(0,t.jsx)(c.A,{value:"js",label:"JavaScript",children:(0,t.jsx)(p,{template:"vanilla",code:i,html:s,css:r,dependencies:d})}),(0,t.jsx)(c.A,{value:"react",label:"React",children:(0,t.jsx)(p,{template:"react",code:e,css:r,dependencies:d})}),(0,t.jsx)(c.A,{value:"vue3",label:"Vue@3",children:(0,t.jsx)(p,{template:"vue3",code:n,css:r,dependencies:d})})]})}}}]);
