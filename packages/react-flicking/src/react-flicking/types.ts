@@ -24,11 +24,12 @@ import {
   WillChangeEvent,
   WillRestoreEvent
 } from "@egjs/flicking";
+import * as React from "react";
 import ReactFlicking from "./Flicking";
 
 export interface FlickingProps {
-  viewportTag: keyof JSX.IntrinsicElements;
-  cameraTag: keyof JSX.IntrinsicElements;
+  viewportTag: keyof React.JSX.IntrinsicElements;
+  cameraTag: keyof React.JSX.IntrinsicElements;
   cameraClass: string;
   renderOnSameKey: boolean;
   plugins: Plugin[];

@@ -15,6 +15,16 @@ const external = {
 // usage: VITE_BUILD_FORMAT=umd vite build
 const buildFormat = process.env.VITE_BUILD_FORMAT || "esm";
 
+// Keep the automatic JSX runtime imports (react/jsx-runtime) external so the
+// consumer's own React provides them. Bundling a stale copy breaks React 19,
+// whose internals (__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) were
+// removed. UMD has no jsx-runtime global and React 19 ships no UMD build, so we
+// keep it bundled there only.
+if (buildFormat !== "umd") {
+  external["react/jsx-runtime"] = "react/jsx-runtime";
+  external["react/jsx-dev-runtime"] = "react/jsx-dev-runtime";
+}
+
 let input = "src/react-flicking/index.ts";
 let formats: any[] = ["es"];
 
