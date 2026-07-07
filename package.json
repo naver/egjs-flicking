@@ -86,8 +86,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.16.0",
     "@biomejs/biome": "2.3.11",
-    "@egjs/flicking-plugins": "~4.7.1",
-
+    "@egjs/flicking-plugins": "workspace:~",
     "@microsoft/api-extractor": "^7.55.1",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^11.1.0",
