@@ -1,47 +1,48 @@
-.outer-viewport {
-  height: 250px;
-}
-
-.outer-panel {
+.cross-viewport {
   width: 100%;
-  height: 250px;
+  max-width: 360px;
+  height: 320px;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.inner-panel {
-  width: 200px;
-  height: 200px;
-  margin: 10px;
-  border-radius: 8px;
+/* Each main panel doubles as a vertical side viewport (built by CrossFlicking). */
+.cross-viewport > .flicking-camera > .flicking-panel {
+  width: 100%;
+  height: 320px;
+  margin: 0;
+}
+
+.cross-viewport .cross-panel {
+  width: 100%;
+  height: 320px;
+  margin: 0;
+  border-radius: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.inner-panel .panel-subtitle {
-  font-size: 12px;
-  font-weight: normal;
-  opacity: 0.8;
-}
-
-.group-label {
+  gap: 8px;
+  color: #fff;
   text-align: center;
-  font-size: 14px;
-  color: #666;
-  padding: 8px 0;
-  font-weight: bold;
 }
 
-.info-bar {
-  margin-top: 8px;
-  padding: 8px 12px;
-  background: #f5f5f5;
-  border-radius: 4px;
+.cross-viewport .panel-category {
   font-size: 13px;
-  color: #333;
-  text-align: center;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.cross-viewport .panel-title {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.cross-viewport .panel-hint {
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.8;
 }
