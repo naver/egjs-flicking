@@ -607,7 +607,11 @@ abstract class Renderer {
     const cameraElement = flicking.camera.element;
 
     panels.forEach(panel => {
-      cameraElement.removeChild(panel.element);
+      // With `renderOnlyVisible`, non-visible panels are detached from the camera element,
+      // so only remove elements that are actually mounted to avoid a `removeChild` error.
+      if (panel.element.parentNode === cameraElement) {
+        cameraElement.removeChild(panel.element);
+      }
     });
   }
 
