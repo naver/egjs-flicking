@@ -38,6 +38,33 @@
             <category>release</category>
         </item>
         <item>
+            <title><![CDATA[4.16.3]]></title>
+            <link>https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.3</link>
+            <guid>https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.3</guid>
+            <pubDate>Thu, 09 Jul 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Highlights]]></description>
+            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="highlights">Highlights<a href="https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.3#highlights" class="hash-link" aria-label="Direct link to Highlights" title="Direct link to Highlights" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Fix</strong>: resolved an <code>insertBefore</code> <code>NotFoundError</code> thrown when inserting/prepending panels while a detached (unseen) panel is used as the insertion reference under <code>renderOnlyVisible</code> (reproducible by clicking Prepend twice in the Add/Remove demo) (#949)<!-- -->
+<ul>
+<li class="">Companion fix to 4.16.2's <code>removePanel</code> guard — the same detachment issue on the insert path.</li>
+</ul>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="published-packages">Published packages<a href="https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.3#published-packages" class="hash-link" aria-label="Direct link to Published packages" title="Direct link to Published packages" translate="no">​</a></h2>
+<ul>
+<li class=""><code>@egjs/flicking@4.16.3</code></li>
+<li class=""><code>@egjs/react-flicking@4.16.5</code></li>
+<li class=""><code>@egjs/vue3-flicking@4.16.3</code></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.3#whats-changed" class="hash-link" aria-label="Direct link to What's Changed" title="Direct link to What's Changed" translate="no">​</a></h2>
+<ul>
+<li class="">fix: error on insert for unseen panel by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/949" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/949</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/naver/egjs-flicking/compare/4.16.2...4.16.3" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/compare/4.16.2...4.16.3</a></p>]]></content:encoded>
+            <category>release</category>
+        </item>
+        <item>
             <title><![CDATA[4.16.0]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2026/06/26/release-4.16.0</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2026/06/26/release-4.16.0</guid>
@@ -310,27 +337,6 @@
 <ul>
 <li class="">Fixed component dependency for frameworks (#741)</li>
 <li class="">Fixed a bug that some setters doesn't update UI (#743)</li>
-</ul>]]></content:encoded>
-            <category>release</category>
-        </item>
-        <item>
-            <title><![CDATA[4.10.1]]></title>
-            <link>https://naver.github.io/egjs-flicking/releases/2022/10/26/release-4.10.1</link>
-            <guid>https://naver.github.io/egjs-flicking/releases/2022/10/26/release-4.10.1</guid>
-            <pubDate>Wed, 26 Oct 2022 00:00:00 GMT</pubDate>
-            <description><![CDATA[Bug Fix]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2022/10/26/release-4.10.1#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
-<ul>
-<li class="">Fixed a bug that <code>preventClickOnDrag</code> option prevents click event for movement less than 1 pixel (#738)</li>
-</ul>
-<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="others">Others<a href="https://naver.github.io/egjs-flicking/releases/2022/10/26/release-4.10.1#others" class="hash-link" aria-label="Direct link to Others" title="Direct link to Others" translate="no">​</a></h2>
-<ul>
-<li class=""><code>@egjs/react-flicking</code> , <code>@egjs/preact-flicking</code> 4.10.2<!-- -->
-<ul>
-<li class="">Added a new property <code>renderOnSamekey</code> (#735)</li>
-<li class="">Fixed a bug that update occurs between rendering (#739)</li>
-</ul>
-</li>
 </ul>]]></content:encoded>
             <category>release</category>
         </item>
