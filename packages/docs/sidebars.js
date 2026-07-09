@@ -9,6 +9,7 @@ module.exports = {
       collapsed: false,
       items: ["guide/react-guide", "guide/vue3-guide"]
     },
+    "guide/llms",
     "guide/controlling-flicking",
     "guide/ssr",
     "guide/reactive-api"
