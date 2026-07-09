@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.16.3](https://github.com/naver/egjs-flicking/compare/4.16.2...4.16.3) (2026-07-09)
+### :sparkles: Packages
+* `@egjs/flicking` 4.16.3
+* `@egjs/react-flicking` 4.16.5
+* `@egjs/vue3-flicking` 4.16.3
+
+### :bug: Bug Fixes
+* error on insert for unseen panel ([ecc9fb4](https://github.com/naver/egjs-flicking/commit/ecc9fb4afbdd362812bf4496283255f824ba19b3))
+
+### :memo: Documentation
+* **guide:** add release-branch & demo-e2e rules ([e4c4a56](https://github.com/naver/egjs-flicking/commit/e4c4a56d0349bf49b40091c8e48a0f513db5e676))
+
 ## [4.16.2](https://github.com/naver/egjs-flicking/compare/4.16.1...4.16.2) (2026-07-09)
 ### :sparkles: Packages
 * `@egjs/flicking` 4.16.2
