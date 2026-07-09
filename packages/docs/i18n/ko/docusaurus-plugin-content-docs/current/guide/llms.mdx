@@ -1,0 +1,47 @@
+---
+title: "LLMs.txt"
+id: llms
+slug: /guide/llms
+sidebar_position: 5
+description: AI 도구에서 Flicking의 llms.txt를 활용해 더 정확한 코드를 생성하는 방법
+keywords: [flicking, llms.txt, ai, llm, cursor, claude code, copilot, 문서]
+---
+
+# LLMs.txt
+
+이 가이드에서는 AI 도구(LLM)가 Flicking 문서를 참조하여 더 정확한 Flicking 코드를 생성하도록 만드는 방법을 다룹니다.
+
+## LLMs.txt란?
+
+Flicking은 문서를 대규모 언어 모델(LLM)에 제공하기 위해 [llms.txt](https://llmstxt.org/)를 지원합니다. AI 도구가 라이브러리의 옵션, 이벤트, 플러그인, 프레임워크 래퍼(React, Vue3)를 이해하게 되므로, 생성되는 코드가 Flicking의 실제 API와 컨벤션을 따르게 됩니다.
+
+Flicking의 llms.txt 파일은 다음 주소에서 제공됩니다:
+
+**[https://naver.github.io/egjs-flicking/llms.txt](https://naver.github.io/egjs-flicking/llms.txt)**
+
+이 파일은 선별된 마크다운 인덱스입니다. 라이브러리에 대한 짧은 요약과 함께 가장 유용한 가이드, 데모, 옵션, API 페이지로 연결되는 링크를 담고 있으며, 각 링크는 페이지별로 정제된 `.md` 파일을 가리킵니다. AI 도구는 이 인덱스를 읽고 필요한 페이지만 가져오므로, HTML·스크립트·스타일을 일일이 파싱할 필요가 없습니다.
+
+## 사용 방법
+
+AI 도구가 llms.txt URL을 참조하도록 지정하세요. URL을 탐색하거나 가져올 수 있는 도구라면, 대화를 시작할 때 아래 내용을 붙여넣거나, 도구의 규칙/메모리 파일(`.cursor/rules`, `CLAUDE.md`, `.github/copilot-instructions.md` 등)에 추가해 모든 요청에 적용되도록 하세요:
+
+```
+https://naver.github.io/egjs-flicking/llms.txt 를 읽고, @egjs/flicking
+(그리고 @egjs/react-flicking / @egjs/vue3-flicking)으로 코드를 작성할 때
+참고 자료로 사용해 줘. API, 옵션, 이벤트, 데모는 이 파일에 나열된
+.md 링크를 따라가서 확인해 줘.
+```
+
+이후 AI는 llms.txt 안의 링크를 따라가, 작업과 관련된 가이드·옵션·API 페이지를 불러옵니다.
+
+### 예시
+
+예를 들어 데모를 만들 때 다음과 같이 요청할 수 있습니다:
+
+```
+@egjs/react-flicking으로 한 번에 3개의 패널이 보이고, 가운데 정렬과 자동 재생이
+적용된 순환(circular) 이미지 캐러셀을 만들어 줘. 올바른 옵션, 컴포넌트 구조,
+플러그인 사용법은 https://naver.github.io/egjs-flicking/llms.txt 를 참고해 줘.
+```
+
+llms.txt의 안내를 따라 AI는 올바른 옵션(`circular`, `panelsPerView`, `align`)과 `@egjs/flicking-plugins`의 `AutoPlay` 플러그인을 선택합니다. API를 추측하는 대신 Flicking의 실제 API를 따르게 됩니다.

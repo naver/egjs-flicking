@@ -22,6 +22,12 @@ const features = [
     link: { label: "API Docs", to: "docs/api/classes/Flicking" }
   },
   {
+    title: "LLMs.txt",
+    icon: "img/icons/books.svg",
+    desc: "AI-ready docs via llms.txt.\nLet Cursor, Claude Code, or Copilot write accurate Flicking code.",
+    link: { label: "LLMs.txt Guide", to: "docs/guide/llms" }
+  },
+  {
     title: "SSR Ready",
     icon: "img/icons/nuxt.svg",
     desc: "Designed for Server-Side Rendering. Works with Next.js and Nuxt.",
@@ -42,9 +48,9 @@ const features = [
 ];
 
 export default () => (
-  <div className="columns">
+  <div className="columns is-multiline">
     {features.map(f => (
-      <div key={f.title} className={`column is-flex ${styles["column-one-fifth"]}`}>
+      <div key={f.title} className={`column is-flex ${styles["column-one-three"]}`}>
         <div className="box is-flex-grow-1">
           <div className="block is-flex is-flex-direction-row is-align-items-center">
             <figure className="image is-32x32 mx-5">
@@ -53,7 +59,14 @@ export default () => (
             <span className="subtitle has-text-black">{f.title}</span>
           </div>
           <div className="block">
-            <p>{f.desc}</p>
+            <p>
+              {f.desc.split("\n").map((line, i) => (
+                <React.Fragment key={i}>
+                  {i > 0 && <br />}
+                  {line}
+                </React.Fragment>
+              ))}
+            </p>
             {f.link && (
               <p>
                 <Link to={useBaseUrl(f.link.to)}>{f.link.label}</Link>
