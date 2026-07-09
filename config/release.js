@@ -134,6 +134,12 @@ for (const rel of PUBLIC_PKGS) {
   tags.push(`${pkg.name}@${pkg.version}`);
 }
 for (const tag of tags) {
+  // 버전이 바뀌지 않은 패키지(예: 이번에 배포하지 않는 플러그인)의 태그는
+  // 이미 존재하므로 건너뛴다. git tag가 실패해 릴리즈가 중단되는 것을 방지한다.
+  if (existingTags.includes(tag)) {
+    console.log(`  ⏭  ${tag} (이미 존재 — 건너뜀)`);
+    continue;
+  }
   exec(`git tag "${tag}" -m "${tag}"`);
 }
 console.log("");
