@@ -19,15 +19,7 @@ jobs:
       - name: install browsers
         run: pnpm --filter @test/unit exec playwright install --with-deps chromium
       - name: run unit test
-        run: pnpm --filter @test/unit run coverage
-      - name: send coverage
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          flag-name: unit
-          base-path: ./packages/test-flicking/unit
-          path-to-lcov: ./packages/test-flicking/unit/coverage/lcov.info
-          parallel: true
+        run: pnpm test
   plugins:
     runs-on: ubuntu-latest
     steps:
@@ -80,13 +72,3 @@ jobs:
         run: pnpm --filter @test/e2e exec playwright install --with-deps chromium
       - name: run e2e
         run: pnpm test:e2e
-  teardown:
-    needs: [unit, plugins, cfc, e2e]
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-    - name: Coveralls Finished
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        parallel-finished: true
