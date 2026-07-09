@@ -4,21 +4,22 @@ jobs:
   unit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - uses: actions/setup-node@v4
         with:
           # 최신 노드 버전 사용
           node-version: "22.x"
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
-      - name: install-root
+      - name: install
         run: pnpm install
-      - name: install-unit
-        working-directory: ./packages/test-flicking/unit
-        run: pnpm install
+      - name: install browsers
+        run: pnpm --filter @test/unit exec playwright install --with-deps chromium
       - name: run unit test
-        working-directory: ./packages/test-flicking/unit
-        run: pnpm run coverage
+        run: pnpm --filter @test/unit run coverage
       - name: send coverage
         uses: coverallsapp/github-action@master
         with:
@@ -30,77 +31,58 @@ jobs:
   plugins:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - uses: actions/setup-node@v4
         with:
           # 최신 노드 버전 사용
           node-version: "22.x"
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
-      - name: install-root
-        run: pnpm install
-      - name: install-plugins
-        working-directory: ./packages/test-flicking/plugins
+      - name: install
         run: pnpm install
       - name: run plugins test
-        working-directory: ./packages/test-flicking/plugins
-        run: pnpm run coverage
-      - name: send coverage
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          flag-name: plugins
-          base-path: ./packages/test-flicking/plugins
-          path-to-lcov: ./packages/test-flicking/plugins/coverage/lcov.info
-          parallel: true
+        run: pnpm test:plugins
   cfc:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - uses: actions/setup-node@v4
         with:
           # 최신 노드 버전 사용
           node-version: "22.x"
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
-      - name: install-root
-        run: pnpm install
-      - name: install-cfc
-        working-directory: ./packages/test-flicking/cfc
+      - name: install
         run: pnpm install
       - name: run cfc test
-        working-directory: ./packages/test-flicking/cfc
-        run: pnpm run coverage
-      - name: send coverage
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          flag-name: cfc
-          base-path: ./packages/test-flicking/cfc
-          path-to-lcov: ./packages/test-flicking/cfc/coverage/lcov.info
-          parallel: true
+        run: pnpm test:cfc
   e2e:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: "22.x"
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
-      - name: install-root
+      - name: install
         run: pnpm install
-      - name: install-e2e
-        working-directory: ./packages/test-flicking/e2e
-        run: pnpm install
-      - name: install-browsers
-        working-directory: ./packages/test-flicking/e2e
-        run: npx playwright install --with-deps chromium
+      - name: install browsers
+        run: pnpm --filter @test/e2e exec playwright install --with-deps chromium
       - name: run e2e
-        working-directory: ./packages/test-flicking/e2e
-        run: pnpm test
+        run: pnpm test:e2e
   teardown:
     needs: [unit, plugins, cfc, e2e]
+    if: always()
     runs-on: ubuntu-latest
     steps:
     - name: Coveralls Finished
