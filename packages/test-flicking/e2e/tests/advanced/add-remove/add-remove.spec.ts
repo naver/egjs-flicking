@@ -40,6 +40,22 @@ for (const framework of spec.frameworks) {
       expect(state.panelCount).toBe(6);
     });
 
+    // focus: Prepend 연타 시 renderOnlyVisible로 detach된 패널 참조 insertBefore 에러 없음 (회귀)
+    test("Prepend 연타 시 에러 없이 패널 추가", async ({ page }) => {
+      const pageErrors: string[] = [];
+      page.on("pageerror", e => pageErrors.push(e.message));
+
+      const prependBtn = page.locator("button", { hasText: "Prepend" });
+      for (let i = 0; i < 3; i++) {
+        await prependBtn.click();
+        await page.waitForTimeout(300);
+      }
+
+      expect(pageErrors, pageErrors.join("\n")).toHaveLength(0);
+      const state = await getFlickingState(page);
+      expect(state.panelCount).toBe(8);
+    });
+
     // focus: Remove 버튼 클릭 시 패널 삭제
     test("Remove로 패널 삭제", async ({ page }) => {
       const removeLastBtn = page.locator("button", { hasText: "Remove Last" });
