@@ -3,15 +3,15 @@ title: "Cross Flicking"
 id: cross-flicking
 slug: /demos/advanced/cross-flicking
 sidebar_position: 15
-description: nested 옵션으로 가로/세로 중첩 Flicking을 구성합니다
-keywords: [flicking, carousel, nested, cross, 중첩, 가로세로]
+description: CrossFlicking 프리셋 클래스로 2D 크로스 캐러셀을 구성합니다
+keywords: [flicking, carousel, cross, crossflicking, 2d, 가로세로, sideOptions]
 ---
 
 import CrossFlicking from '@site/src/demo/advanced/CrossFlicking';
 
 # Cross Flicking
 
-[`nested`](../../api/interfaces/FlickingOptions#nested) 옵션으로 외부(세로) Flicking 안에 내부(가로) Flicking을 중첩하는 2D 크로스 네비게이션을 구성합니다.
+[`CrossFlicking`](../../api/classes/CrossFlicking)은 가로·세로 `Flicking`을 하나의 2D 캐러셀로 결합한 프리셋 클래스입니다. **가로로** 스와이프하면 그룹 간 전환, **세로로** 스와이프하면 그룹 내 항목 탐색이 이루어집니다.
 
 <CrossFlicking />
 
@@ -19,57 +19,102 @@ import CrossFlicking from '@site/src/demo/advanced/CrossFlicking';
 
 ### 주요 옵션
 
-| 옵션 | 위치 | 값 | 역할 |
-|------|------|-----|------|
-| [`horizontal`](../../api/interfaces/FlickingOptions#horizontal) | 외부 | `false` | 세로 방향 (그룹 간 이동) |
-| [`nested`](../../api/interfaces/FlickingOptions#nested) | 내부 | `true` | 끝 도달 시 외부로 이벤트 전파 |
-| [`moveType`](../../api/interfaces/FlickingOptions#movetype) | 양쪽 | `"strict"` | 정확히 1단위씩 이동 |
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`sideOptions`](../../api/interfaces/CrossFlickingOptions#sideoptions) | `Partial<FlickingOptions>` | `{}` | 자동 생성되는 세로(side) Flicking 인스턴스에 적용되는 옵션 |
+| [`preserveIndex`](../../api/interfaces/CrossFlickingOptions#preserveindex) | `boolean` | `true` | 그룹 전환 시 각 그룹의 side 인덱스를 유지 |
+| [`disableSlideOnHold`](../../api/interfaces/CrossFlickingOptions#disableslideonhold) | `boolean` | `true` | 한 방향으로 드래그하는 동안 수직 축을 잠금 |
+| [`disableIndexSync`](../../api/interfaces/CrossFlickingOptions#disableindexsync) | `boolean` | `false` | main/side 간 자동 인덱스 동기화 비활성화 |
+
+`CrossFlicking`은 모든 [`FlickingOptions`](../../api/interfaces/FlickingOptions)(예: `moveType`, `bound`)도 받으며, 이들은 가로 방향 main 축에 적용됩니다.
 
 ### 구조
 
-| 구성 | 방향 | 역할 |
+| 레벨 | 방향 | 역할 |
 |------|------|------|
-| 외부 Flicking | 세로 (↕) | 그룹 간 이동 |
-| 내부 Flicking | 가로 (↔) | 그룹 내 패널 이동 |
+| Main Flicking (`CrossFlicking`) | 가로 (↔) | 그룹 간 이동 |
+| Side Flicking (자동 생성) | 세로 (↕) | 그룹 내 이동 |
+
+각 **그룹**은 camera의 직속 자식으로, 그 자식들이 세로 side 패널이 되는 래퍼 `<div>`입니다.
 
 ## 상세 설명
 
-### nested 옵션의 역할
+### CrossFlicking 동작 방식
 
-`nested: true`를 내부 Flicking에 설정하면, 내부 Flicking이 끝에 도달한 후 같은 방향으로 스와이프할 때 이벤트가 외부 Flicking으로 전파됩니다. 이 데모에서는 외부와 내부의 방향이 다르므로(세로/가로) 입력이 자연스럽게 분리됩니다.
+`CrossFlicking`은 초기화 시 DOM에서 그룹 구조를 읽어 각 그룹을 독립적인 세로 `Flicking`으로 재구성합니다. 외부 인스턴스는 그룹 간 가로 이동을 처리하고, 각 그룹은 자체 세로 이동을 관리하여 — 하나의 클래스로 격자형 2D 네비게이션을 만들어냅니다.
 
-### 방향 분리
+### 프레임워크별 작성법
 
-가로 스와이프는 내부 Flicking이 처리하고, 세로 스와이프는 외부 Flicking이 처리합니다. 같은 방향 중첩(예: 가로 안에 가로)에서는 `nested: true`가 이벤트 전파를 관리합니다.
+모든 프레임워크에서 데모는 코어 `CrossFlicking` 클래스를 명령형으로 구동합니다. 패널을 래퍼 `<div>`로 묶고 뷰포트 요소를 생성자에 전달합니다.
+
+```js
+import { CrossFlicking } from "@egjs/flicking"; // 또는 "@egjs/vue3-flicking"
+
+new CrossFlicking("#cross", {
+  align: "prev",
+  moveType: "strict",
+  bound: true,
+  sideOptions: { moveType: "strict", bound: true }
+});
+```
+
+```html
+<div id="cross" class="flicking-viewport">
+  <div class="flicking-camera">
+    <div><!-- 그룹: Nature -->
+      <div class="cross-panel">Forest</div>
+      <div class="cross-panel">Meadow</div>
+    </div>
+    <div><!-- 그룹: Ocean -->
+      <div class="cross-panel">Reef</div>
+      <div class="cross-panel">Wave</div>
+    </div>
+  </div>
+</div>
+```
+
+:::warning React / Vue
+`@egjs/react-flicking`도 `CrossFlicking`/`CrossGroup` 컴포넌트를 export하지만, 현재 React StrictMode에서 정상 동작하지 않습니다(비동기 init이 끝나기 전에 인스턴스가 destroy됨). 이 문제가 해결되기 전까지는 이 데모처럼 `useEffect`/`onMounted`에서 코어 클래스를 직접 구동하세요. Vue3에는 전용 래퍼가 없으므로 코어 클래스가 유일한 방법입니다.
+:::
+
+### 이벤트
+
+Main 축 이벤트(`changed`, `willChange`)는 활성 그룹의 side 인덱스를 가리키는 `sideIndex` 필드를 추가로 전달합니다. Side 축 이벤트는 `side` 접두어가 붙으며, 어느 그룹이 이동했는지 식별하는 `mainIndex`를 전달합니다.
+
+| 이벤트 | 페이로드 | 설명 |
+|--------|----------|------|
+| [`changed`](../../api/interfaces/FlickingEvents#changed) | `{ index, sideIndex }` | 가로(그룹) 인덱스 변경됨 |
+| `sideChanged` | `{ index, mainIndex }` | 그룹의 세로(항목) 인덱스 변경됨 |
+| `sideWillChange` | `{ index, mainIndex }` | 그룹의 세로 인덱스가 변경되기 직전 |
 
 ### 연관 옵션
 
-- **`nested`와 `horizontal`의 관계**: 서로 다른 방향이면 충돌 없이 동작, 같은 방향이면 `nested: true`로 전파 제어
-- **`moveType: "strict"`와의 조합**: 그룹/패널 단위 이동이 명확해짐
-- **`bound: true`와의 조합**: 각 레벨에서 빈 공간 방지
+- **`moveType: "strict"`와의 조합**: 스와이프 한 번에 정확히 그룹/항목 하나씩 이동하여 격자 네비게이션이 명확해집니다.
+- **`bound: true`와의 조합**: 양쪽 축 가장자리에서 빈 공간을 방지합니다.
+- **`sideOptions`**: 가로 인스턴스와 별개로 세로 인스턴스를 설정합니다.
 
 ### 사용 시나리오
 
 :::info 언제 사용하나요?
-- 카테고리별 콘텐츠 (세로로 카테고리, 가로로 항목)
-- 사진 앨범 (세로로 앨범, 가로로 사진)
-- 대시보드 (세로로 섹션, 가로로 카드)
+- 카테고리 기반 갤러리 (가로로 카테고리, 세로로 항목)
+- 스토리/릴 뷰어 (가로로 작성자, 세로로 게시물)
+- 대시보드 (가로로 섹션, 세로로 카드)
 :::
 
 ### 주의사항
 
 :::warning 주의
-- 외부 Flicking이 세로(`horizontal: false`)일 때, 반드시 뷰포트에 높이를 지정해야 합니다.
-- 내부 Flicking에 `nested: true`를 설정하지 않으면, 내부에서 이벤트가 소비되어 외부로 전파되지 않습니다.
-- 같은 방향으로 중첩할 경우 스와이프 제스처 구분이 어려울 수 있습니다.
+- 세로 side 인스턴스는 고정된 레이아웃 높이가 필요하므로, 뷰포트에 명시적인 높이를 지정하세요.
+- `CrossFlicking`은 초기화 시 그룹 DOM을 재구성합니다. 원본 마크업이 그대로 유지된다고 가정하지 말고 그룹을 래퍼 요소로 작성하세요.
+- Vue에는 `CrossFlicking`/`CrossGroup` 컴포넌트 래퍼가 없습니다 — `ref` + `onMounted`로 코어 클래스를 사용하고, 언마운트 시 `destroy()`를 호출하세요.
 :::
 
 ## 관련 링크
 
-### 관련 옵션
-- [`nested`](../../api/interfaces/FlickingOptions#nested): 중첩 Flicking 이벤트 전파
-- [`horizontal`](../../api/interfaces/FlickingOptions#horizontal): 스크롤 방향
+### 관련 API
+- [`CrossFlicking`](../../api/classes/CrossFlicking): 2D 크로스 방향 캐러셀 프리셋 클래스
+- [`CrossFlickingOptions`](../../api/interfaces/CrossFlickingOptions): CrossFlicking 설정
 
 ### 관련 데모
-- [Nested](../basic/nested): nested 옵션 자체의 on/off 비교
+- [Nested](../basic/nested): 같은 방향 중첩을 위한 `nested` 옵션의 on/off 비교
 - [Fullpage Scroll](./fullpage-scroll): 세로 방향 풀페이지 패턴

@@ -3,15 +3,15 @@ title: "Cross Flicking"
 id: cross-flicking
 slug: /demos/advanced/cross-flicking
 sidebar_position: 15
-description: Configure nested horizontal/vertical Flicking using the nested option
-keywords: [flicking, carousel, nested, cross, nesting, horizontal vertical]
+description: Build a 2D cross-directional carousel with the CrossFlicking preset class
+keywords: [flicking, carousel, cross, crossflicking, 2d, horizontal vertical, sideOptions]
 ---
 
 import CrossFlicking from '@site/src/demo/advanced/CrossFlicking';
 
 # Cross Flicking
 
-Use the [`nested`](../../api/interfaces/FlickingOptions#nested) option to create a 2D cross-navigation by nesting an inner (horizontal) Flicking inside an outer (vertical) Flicking.
+[`CrossFlicking`](../../api/classes/CrossFlicking) is a preset class that combines a horizontal and vertical `Flicking` into a single 2D carousel. Swipe **horizontally** to switch between groups and **vertically** to browse items within a group.
 
 <CrossFlicking />
 
@@ -19,57 +19,102 @@ Use the [`nested`](../../api/interfaces/FlickingOptions#nested) option to create
 
 ### Key Options
 
-| Option | Scope | Value | Role |
-|--------|-------|-------|------|
-| [`horizontal`](../../api/interfaces/FlickingOptions#horizontal) | Outer | `false` | Vertical direction (navigation between groups) |
-| [`nested`](../../api/interfaces/FlickingOptions#nested) | Inner | `true` | Propagate events to outer when end is reached |
-| [`moveType`](../../api/interfaces/FlickingOptions#movetype) | Both | `"strict"` | Move exactly one unit at a time |
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`sideOptions`](../../api/interfaces/CrossFlickingOptions#sideoptions) | `Partial<FlickingOptions>` | `{}` | Options applied to the auto-created vertical (side) Flicking instances |
+| [`preserveIndex`](../../api/interfaces/CrossFlickingOptions#preserveindex) | `boolean` | `true` | Keep each group's own side index when switching groups |
+| [`disableSlideOnHold`](../../api/interfaces/CrossFlickingOptions#disableslideonhold) | `boolean` | `true` | Lock the perpendicular axis while dragging one direction |
+| [`disableIndexSync`](../../api/interfaces/CrossFlickingOptions#disableindexsync) | `boolean` | `false` | Disable automatic index synchronization between main/side |
+
+`CrossFlicking` also accepts every [`FlickingOptions`](../../api/interfaces/FlickingOptions) (e.g. `moveType`, `bound`) which apply to the horizontal main axis.
 
 ### Structure
 
-| Component | Direction | Role |
-|-----------|-----------|------|
-| Outer Flicking | Vertical (↕) | Navigation between groups |
-| Inner Flicking | Horizontal (↔) | Navigation within a group |
+| Level | Direction | Role |
+|-------|-----------|------|
+| Main Flicking (`CrossFlicking`) | Horizontal (↔) | Navigation between groups |
+| Side Flicking (auto-created) | Vertical (↕) | Navigation within a group |
+
+Each **group** is a direct child of the camera — a wrapper `<div>` whose children become the vertical side panels.
 
 ## Details
 
-### Role of the nested Option
+### How CrossFlicking Works
 
-When `nested: true` is set on the inner Flicking, swiping in the same direction after reaching the end of the inner Flicking propagates the event to the outer Flicking. In this demo, the outer and inner directions are different (vertical/horizontal), so input is naturally separated.
+`CrossFlicking` reads the group structure from the DOM at initialization, then rebuilds each group into an independent vertical `Flicking`. The outer instance handles horizontal movement between groups, while each group manages its own vertical movement — producing a grid-like 2D navigation from a single class.
 
-### Direction Separation
+### Authoring per Framework
 
-Horizontal swipes are handled by the inner Flicking, and vertical swipes are handled by the outer Flicking. For same-direction nesting (e.g., horizontal inside horizontal), `nested: true` manages event propagation.
+Across all frameworks the demo drives the core `CrossFlicking` class imperatively: group the panels with a wrapper `<div>` and pass the viewport element to the constructor.
+
+```js
+import { CrossFlicking } from "@egjs/flicking"; // or "@egjs/vue3-flicking"
+
+new CrossFlicking("#cross", {
+  align: "prev",
+  moveType: "strict",
+  bound: true,
+  sideOptions: { moveType: "strict", bound: true }
+});
+```
+
+```html
+<div id="cross" class="flicking-viewport">
+  <div class="flicking-camera">
+    <div><!-- group: Nature -->
+      <div class="cross-panel">Forest</div>
+      <div class="cross-panel">Meadow</div>
+    </div>
+    <div><!-- group: Ocean -->
+      <div class="cross-panel">Reef</div>
+      <div class="cross-panel">Wave</div>
+    </div>
+  </div>
+</div>
+```
+
+:::warning React / Vue
+`@egjs/react-flicking` also exports `CrossFlicking`/`CrossGroup` components, but they currently break under React StrictMode (the instance is destroyed before its async init completes). Until that is fixed, drive the core class from `useEffect`/`onMounted` as this demo does. Vue3 has no dedicated wrapper, so the core class is the only option there.
+:::
+
+### Events
+
+Main-axis events (`changed`, `willChange`) carry an extra `sideIndex` field pointing to the active group's side index. Side-axis events are prefixed with `side` and carry `mainIndex` to identify which group moved.
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| [`changed`](../../api/interfaces/FlickingEvents#changed) | `{ index, sideIndex }` | The horizontal (group) index changed |
+| `sideChanged` | `{ index, mainIndex }` | A group's vertical (item) index changed |
+| `sideWillChange` | `{ index, mainIndex }` | A group's vertical index is about to change |
 
 ### Related Options
 
-- **Relationship between `nested` and `horizontal`**: Different directions work without conflict; for the same direction, `nested: true` controls propagation
-- **Combination with `moveType: "strict"`**: Makes group/panel unit navigation clear
-- **Combination with `bound: true`**: Prevents empty space at each level
+- **Combination with `moveType: "strict"`**: Moves exactly one group/item per swipe for clear grid navigation.
+- **Combination with `bound: true`**: Prevents empty space at the edges of both axes.
+- **`sideOptions`**: Configure the vertical instances independently from the horizontal one.
 
 ### Use Cases
 
 :::info When should you use this?
-- Category-based content (vertical for categories, horizontal for items)
-- Photo albums (vertical for albums, horizontal for photos)
-- Dashboards (vertical for sections, horizontal for cards)
+- Category-based galleries (horizontal for categories, vertical for items)
+- Story/reel viewers (horizontal for authors, vertical for posts)
+- Dashboards (horizontal for sections, vertical for cards)
 :::
 
 ### Notes
 
 :::warning Caution
-- When the outer Flicking is vertical (`horizontal: false`), you must specify a height on the viewport.
-- If `nested: true` is not set on the inner Flicking, events are consumed internally and not propagated to the outer Flicking.
-- When nesting in the same direction, it may be difficult to distinguish swipe gestures.
+- Give the viewport an explicit height, since the vertical side instances need a fixed layout height.
+- `CrossFlicking` rebuilds the group DOM on initialization; author groups as wrapper elements rather than expecting the original markup to remain unchanged.
+- Vue has no `CrossFlicking`/`CrossGroup` component wrapper — use the core class through `ref` + `onMounted`, and call `destroy()` on unmount.
 :::
 
 ## Related Links
 
-### Related Options
-- [`nested`](../../api/interfaces/FlickingOptions#nested): Nested Flicking event propagation
-- [`horizontal`](../../api/interfaces/FlickingOptions#horizontal): Scroll direction
+### Related APIs
+- [`CrossFlicking`](../../api/classes/CrossFlicking): 2D cross-directional carousel preset class
+- [`CrossFlickingOptions`](../../api/interfaces/CrossFlickingOptions): CrossFlicking configuration
 
 ### Related Demos
-- [Nested](../basic/nested): On/off comparison of the nested option itself
+- [Nested](../basic/nested): On/off comparison of the `nested` option for same-direction nesting
 - [Fullpage Scroll](./fullpage-scroll): Vertical fullpage pattern

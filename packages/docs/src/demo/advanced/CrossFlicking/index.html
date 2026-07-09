@@ -5,10 +5,83 @@
 </head>
 <body>
   <div id="app">
-    <div id="outer" class="flicking-viewport vertical outer-viewport">
-      <div class="flicking-camera"></div>
+    <!--
+      Structure: viewport > camera > group > panel
+      Each direct child of the camera is a group (a vertical column of panels).
+      Swipe horizontally to switch groups, vertically to move within a group.
+    -->
+    <div id="cross" class="cross-viewport flicking-viewport">
+      <div class="flicking-camera">
+        <div class="cross-group">
+          <div class="cross-panel" style="background: linear-gradient(135deg, #0f9b70, #1e5631)">
+            <span class="panel-category">Nature</span>
+            <span class="panel-title">Forest</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+          <div class="cross-panel" style="background: linear-gradient(135deg, #56ab2f, #a8e063)">
+            <span class="panel-category">Nature</span>
+            <span class="panel-title">Meadow</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+          <div class="cross-panel" style="background: linear-gradient(135deg, #3ca55c, #b5ac49)">
+            <span class="panel-category">Nature</span>
+            <span class="panel-title">Canyon</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+        </div>
+        <div class="cross-group">
+          <div class="cross-panel" style="background: linear-gradient(135deg, #2193b0, #6dd5ed)">
+            <span class="panel-category">Ocean</span>
+            <span class="panel-title">Reef</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+          <div class="cross-panel" style="background: linear-gradient(135deg, #1a2980, #26d0ce)">
+            <span class="panel-category">Ocean</span>
+            <span class="panel-title">Wave</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+          <div class="cross-panel" style="background: linear-gradient(135deg, #000046, #1cb5e0)">
+            <span class="panel-category">Ocean</span>
+            <span class="panel-title">Deep</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+        </div>
+        <div class="cross-group">
+          <div class="cross-panel" style="background: linear-gradient(135deg, #ff9966, #ff5e62)">
+            <span class="panel-category">Sunset</span>
+            <span class="panel-title">Dawn</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+          <div class="cross-panel" style="background: linear-gradient(135deg, #f7971e, #ffd200)">
+            <span class="panel-category">Sunset</span>
+            <span class="panel-title">Dusk</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+          <div class="cross-panel" style="background: linear-gradient(135deg, #cb2d3e, #ef473a)">
+            <span class="panel-category">Sunset</span>
+            <span class="panel-title">Ember</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+        </div>
+        <div class="cross-group">
+          <div class="cross-panel" style="background: linear-gradient(135deg, #654ea3, #eaafc8)">
+            <span class="panel-category">Space</span>
+            <span class="panel-title">Nebula</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+          <div class="cross-panel" style="background: linear-gradient(135deg, #4776e6, #8e54e9)">
+            <span class="panel-category">Space</span>
+            <span class="panel-title">Aurora</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+          <div class="cross-panel" style="background: linear-gradient(135deg, #200122, #6f0000)">
+            <span class="panel-category">Space</span>
+            <span class="panel-title">Cosmos</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="info-bar">Current group: Group A (vertical: switch groups / horizontal: navigate within group)</div>
   </div>
 </body>
 </html>
