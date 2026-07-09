@@ -59,7 +59,7 @@ All plugins are imported from `@egjs/flicking-plugins`. Pass plugin instances to
 - [Lazy load](https://naver.github.io/egjs-flicking/llm-docs/demos/advanced/lazy-load.md): Deferred image/content loading
 - [Carousel](https://naver.github.io/egjs-flicking/llm-docs/demos/advanced/carousel.md): Multi-panel carousel layout
 - [Coverflow](https://naver.github.io/egjs-flicking/llm-docs/demos/reactive/coverflow.md): iTunes-style coverflow effect using Reactive API
-- [Cross Flicking](https://naver.github.io/egjs-flicking/llm-docs/demos/advanced/cross-flicking.md): Nested horizontal + vertical Flicking
+- [Cross Flicking](https://naver.github.io/egjs-flicking/llm-docs/demos/advanced/cross-flicking.md): `CrossFlicking` preset — swipe horizontally to switch groups, vertically to browse items
 
 ## Optional
 

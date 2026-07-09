@@ -220,9 +220,11 @@ reactiveAPI.subscribe("currentPanelIndex", index => {
   transition: all 0.2s;
 }
 
-.pagination-btn:hover {
-  background: #3498db;
-  color: white;
+@media (hover: hover) {
+  .pagination-btn:hover {
+    background: #3498db;
+    color: white;
+  }
 }
 
 .pagination-btn.active {

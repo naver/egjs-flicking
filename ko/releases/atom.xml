@@ -2,26 +2,49 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://naver.github.io/egjs-flicking/ko/releases</id>
     <title>Flicking Blog</title>
-    <updated>2026-06-26T00:00:00.000Z</updated>
+    <updated>2026-07-09T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://naver.github.io/egjs-flicking/ko/releases"/>
     <subtitle>Flicking Blog</subtitle>
     <icon>https://naver.github.io/egjs-flicking/ko/img/favicon.ico</icon>
     <entry>
+        <title type="html"><![CDATA[4.16.2]]></title>
+        <id>https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.2</id>
+        <link href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.2"/>
+        <updated>2026-07-09T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Highlights]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="highlights">Highlights<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.2#highlights" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Fix</strong>: resolved an error thrown when calling <code>removePanel</code> on a not-yet-rendered (unseen) panel with <code>renderOnlyVisible</code> (#946)</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="published-packages">Published packages<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.2#published-packages" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
+<ul>
+<li class=""><code>@egjs/flicking@4.16.2</code></li>
+<li class=""><code>@egjs/react-flicking@4.16.4</code></li>
+<li class=""><code>@egjs/vue3-flicking@4.16.2</code></li>
+</ul>
+<p>Internal changes: repaired the CI test workflow for the pnpm monorepo, reorganized docs demos (CrossFlicking preset, reactive demos replacing legacy advanced demos), and realigned e2e specs. See the PR list below for details.</p>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.2#whats-changed" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
+<ul>
+<li class="">chore(ci): fix broken test workflow for pnpm monorepo by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/947" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/947</a></li>
+<li class="">fix: error on removePanel for unseen panel by @malangfox in <a href="https://github.com/naver/egjs-flicking/pull/946" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/946</a></li>
+<li class="">docs: llms 가이드 추가 by @daybrush in <a href="https://github.com/naver/egjs-flicking/pull/943" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/943</a></li>
+<li class="">release: core 4.16.2 (버그 수정 + CI 정비 + 데모/문서 개편) by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/948" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/948</a></li>
+<li class="">fix(docs): replace CrossFlicking demo &amp; docs by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/944" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/944</a></li>
+<li class="">Fix/reactive api demo by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/945" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/945</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/naver/egjs-flicking/compare/4.16.1...4.16.2" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/compare/4.16.1...4.16.2</a></p>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[4.16.0]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2026/06/26/release-4.16.0</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2026/06/26/release-4.16.0"/>
         <updated>2026-06-26T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[Packages]]></summary>
-        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="packages">Packages<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/06/26/release-4.16.0#packages" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
-<table><thead><tr><th>Package</th><th>Version</th></tr></thead><tbody><tr><td><code>@egjs/flicking</code></td><td>4.16.0</td></tr><tr><td><code>@egjs/react-flicking</code></td><td>4.16.2</td></tr><tr><td><code>@egjs/vue3-flicking</code></td><td>4.16.0</td></tr><tr><td><code>@egjs/flicking-plugins</code></td><td>4.8.0</td></tr></tbody></table>
+        <summary type="html"><![CDATA[Packages (install the latest patch)]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="packages-install-the-latest-patch">Packages (install the latest patch)<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/06/26/release-4.16.0#packages-install-the-latest-patch" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
+<table><thead><tr><th>Package</th><th>Version</th></tr></thead><tbody><tr><td><code>@egjs/flicking</code></td><td>4.16.1</td></tr><tr><td><code>@egjs/react-flicking</code></td><td>4.16.3</td></tr><tr><td><code>@egjs/vue3-flicking</code></td><td>4.16.1</td></tr><tr><td><code>@egjs/flicking-plugins</code></td><td>4.8.1</td></tr></tbody></table>
 <h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="highlights">Highlights<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/06/26/release-4.16.0#highlights" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_ZFAD" id="react-19-support-egjsreact-flicking">React 19 support (<code>@egjs/react-flicking</code>)<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/06/26/release-4.16.0#react-19-support-egjsreact-flicking" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h3>
-<ul>
-<li class="">The ESM/CJS builds now keep <code>react/jsx-runtime</code> and <code>react/jsx-dev-runtime</code> external, so the consumer's own React provides them.</li>
-<li class="">Type declarations now reference <code>React.JSX.IntrinsicElements</code> (with <code>React</code> imported) instead of the removed global <code>JSX</code> namespace.</li>
-<li class="">Compatible with React 16 / 17 / 18 / 19.</li>
-</ul>
 <h3 class="anchor anchorTargetStickyNavbar_ZFAD" id="documentation-overhaul">Documentation overhaul<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/06/26/release-4.16.0#documentation-overhaul" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h3>
 <ul>
 <li class="">Rebuilt the documentation site end to end.</li>
@@ -31,7 +54,7 @@
 </ul>
 <h3 class="anchor anchorTargetStickyNavbar_ZFAD" id="development-environment-overhaul">Development environment overhaul<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/06/26/release-4.16.0#development-environment-overhaul" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h3>
 <ul>
-<li class="">Consolidated the previously separate <code>@egjs/react-flicking</code>, <code>@egjs/vue3-flicking</code>, and <code>@egjs/flicking-plugins</code> repositories into a single pnpm workspace monorepo, alongside the <code>@egjs/flicking</code> core.</li>
+<li class="">Consolidated the previously separated <code>@egjs/flicking-plugins</code> repository into a single pnpm workspace monorepo, alongside the <code>@egjs/flicking</code> core.</li>
 <li class="">Restructured the publish pipeline and replaced <code>release-helper</code> with a custom release/versioning script.</li>
 <li class="">Reworked the local dev workflow (HMR dev servers, <code>@dev/*</code> import aliases, issue-reproduction scratch pattern).</li>
 <li class="">Migrated the test suites and the Vue 3 demo to the Composition API.</li>
@@ -41,11 +64,11 @@
 <li class="">The <strong>Svelte</strong>, <strong>Angular</strong>, and <strong>Vue 2</strong> wrappers are no longer maintained and have been removed during the monorepo consolidation.</li>
 <li class="">Their previously published versions remain installable on npm but will not receive further updates.</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="note-on-egjsreact-flicking-versioning">Note on <code>@egjs/react-flicking</code> versioning<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/06/26/release-4.16.0#note-on-egjsreact-flicking-versioning" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="patch-releases">Patch releases<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/06/26/release-4.16.0#patch-releases" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
+<p>The Vite-based build migration introduced two regressions that were fixed in same-day patches. Install the latest patch of each package (table above).</p>
 <ul>
-<li class=""><code>@egjs/react-flicking</code> ships as <strong>4.16.2</strong> in this release.</li>
-<li class="">The initial <code>4.16.0</code> build bundled a stale <code>react/jsx-runtime</code>, which broke under React 19; <code>4.16.1</code> and <code>4.16.2</code> resolve the runtime and type-declaration issues respectively.</li>
-<li class=""><code>4.16.0</code> is deprecated — please install <code>4.16.2</code> or later.</li>
+<li class=""><strong>React 19 — <code>@egjs/react-flicking</code> 4.16.1 / 4.16.2:</strong> the initial <code>4.16.0</code> build bundled a stale <code>react/jsx-runtime</code> (runtime crash <code>Cannot read properties of undefined (reading 'ReactCurrentDispatcher')</code> on React 19) and referenced the removed global <code>JSX</code> namespace (typecheck error <code>TS2503</code>). <code>4.16.1</code> and <code>4.16.2</code> fix these respectively. <code>@egjs/react-flicking@4.16.0</code> is deprecated.</li>
+<li class=""><strong>ES2015 down-level — flicking 4.16.1 / react-flicking 4.16.3 / vue3-flicking 4.16.1 / flicking-plugins 4.8.1:</strong> the new build initially emitted ES2020 syntax (<code>?.</code> / <code>??</code>). Bundles are now down-leveled to ES2015, restoring the docs demos (which do not transpile dependencies) and older-browser compatibility.</li>
 </ul>
 <h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/06/26/release-4.16.0#whats-changed" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -305,27 +328,6 @@
 <ul>
 <li class="">Added a new property <code>renderOnSamekey</code> (#735)</li>
 <li class="">Fixed a bug that update occurs between rendering (#739)</li>
-</ul>
-</li>
-</ul>]]></content>
-        <category label="release" term="release"/>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[4.10.0]]></title>
-        <id>https://naver.github.io/egjs-flicking/ko/releases/2022/09/15/release-4.10.0</id>
-        <link href="https://naver.github.io/egjs-flicking/ko/releases/2022/09/15/release-4.10.0"/>
-        <updated>2022-09-15T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[New Feature]]></summary>
-        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="new-feature">New Feature<a href="https://naver.github.io/egjs-flicking/ko/releases/2022/09/15/release-4.10.0#new-feature" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
-<ul>
-<li class="">Added a new method <code>updateAnimation</code> (#728)</li>
-<li class="">Added a new method <code>stopAnimation</code> (#728)</li>
-</ul>
-<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="others">Others<a href="https://naver.github.io/egjs-flicking/ko/releases/2022/09/15/release-4.10.0#others" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
-<ul>
-<li class=""><code>@egjs/ngx-flicking</code>
-<ul>
-<li class="">setup vanilla flicking within the root zone and remove event listeners once the view is removed (#727)</li>
 </ul>
 </li>
 </ul>]]></content>

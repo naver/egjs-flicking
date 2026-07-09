@@ -1436,6 +1436,49 @@ onMounted(() => {
 
 ---
 
+--- guide/llms.md ---
+
+# LLMs.txt
+
+This guide explains how to make Flicking's documentation available to AI tools (LLMs) so they generate more accurate Flicking code.
+
+## What is LLMs.txt?
+
+We support [llms.txt](https://llmstxt.org/) for making the Flicking documentation available to large language models (LLMs). This helps AI tools understand the library's options, events, plugins, and framework wrappers (React, Vue3), so the code they generate follows Flicking's real API and conventions.
+
+Flicking exposes a single llms.txt file at:
+
+**[https://naver.github.io/egjs-flicking/llms.txt](https://naver.github.io/egjs-flicking/llms.txt)**
+
+It's a curated Markdown index — a short summary of the library plus links to the most useful guides, demos, options, and API pages, each pointing to a clean per-page `.md` file. An AI tool reads this index and fetches only the pages it needs, without wading through HTML, scripts, or styles.
+
+## How to Use
+
+Point your AI tool at the llms.txt URL. In any tool that can browse or fetch a URL, paste the following at the start of a chat — or add it to the tool's rules/memory file (`.cursor/rules`, `CLAUDE.md`, `.github/copilot-instructions.md`, etc.) so it applies to every request:
+
+```
+Read https://naver.github.io/egjs-flicking/llms.txt and use it as the reference
+when writing code with @egjs/flicking (and @egjs/react-flicking / @egjs/vue3-flicking).
+Follow the .md links it lists for API, options, events, and demos.
+```
+
+The AI then follows the links inside llms.txt to load the specific guides, options, and API pages relevant to your task.
+
+### Example
+
+For instance, to build a demo you can ask:
+
+```
+Using @egjs/react-flicking, create a circular image carousel that shows 3 panels
+at once with center alignment and autoplay. Reference
+https://naver.github.io/egjs-flicking/llms.txt for the correct options, component
+structure, and plugin usage.
+```
+
+Guided by llms.txt, the AI picks the right options (`circular`, `panelsPerView`, `align`) and the `AutoPlay` plugin from `@egjs/flicking-plugins` — following Flicking's actual API instead of guessing.
+
+---
+
 --- guide/controlling-flicking.md ---
 
 # Controlling Flicking
@@ -11291,7 +11334,7 @@ btnHorizontal.addEventListener("click", () => {
 
 # Cross Flicking
 
-Use the [`nested`](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/FlickingOptions.md#nested) option to create a 2D cross-navigation by nesting an inner (horizontal) Flicking inside an outer (vertical) Flicking.
+[`CrossFlicking`](https://naver.github.io/egjs-flicking/llm-docs/api/classes/CrossFlicking.md) is a preset class that combines a horizontal and vertical `Flicking` into a single 2D carousel. Swipe **horizontally** to switch between groups and **vertically** to browse items within a group.
 
 
 
@@ -11299,105 +11342,179 @@ Use the [`nested`](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces
 
 ### Key Options
 
-| Option | Scope | Value | Role |
-|--------|-------|-------|------|
-| [`horizontal`](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/FlickingOptions.md#horizontal) | Outer | `false` | Vertical direction (navigation between groups) |
-| [`nested`](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/FlickingOptions.md#nested) | Inner | `true` | Propagate events to outer when end is reached |
-| [`moveType`](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/FlickingOptions.md#movetype) | Both | `"strict"` | Move exactly one unit at a time |
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`sideOptions`](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/CrossFlickingOptions.md#sideoptions) | `Partial<FlickingOptions>` | `{}` | Options applied to the auto-created vertical (side) Flicking instances |
+| [`preserveIndex`](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/CrossFlickingOptions.md#preserveindex) | `boolean` | `true` | Keep each group's own side index when switching groups |
+| [`disableSlideOnHold`](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/CrossFlickingOptions.md#disableslideonhold) | `boolean` | `true` | Lock the perpendicular axis while dragging one direction |
+| [`disableIndexSync`](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/CrossFlickingOptions.md#disableindexsync) | `boolean` | `false` | Disable automatic index synchronization between main/side |
+
+`CrossFlicking` also accepts every [`FlickingOptions`](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/FlickingOptions.md) (e.g. `moveType`, `bound`) which apply to the horizontal main axis.
 
 ### Structure
 
-| Component | Direction | Role |
-|-----------|-----------|------|
-| Outer Flicking | Vertical (↕) | Navigation between groups |
-| Inner Flicking | Horizontal (↔) | Navigation within a group |
+| Level | Direction | Role |
+|-------|-----------|------|
+| Main Flicking (`CrossFlicking`) | Horizontal (↔) | Navigation between groups |
+| Side Flicking (auto-created) | Vertical (↕) | Navigation within a group |
+
+Each **group** is a direct child of the camera — a wrapper `<div>` whose children become the vertical side panels.
 
 ## Details
 
-### Role of the nested Option
+### How CrossFlicking Works
 
-When `nested: true` is set on the inner Flicking, swiping in the same direction after reaching the end of the inner Flicking propagates the event to the outer Flicking. In this demo, the outer and inner directions are different (vertical/horizontal), so input is naturally separated.
+`CrossFlicking` reads the group structure from the DOM at initialization, then rebuilds each group into an independent vertical `Flicking`. The outer instance handles horizontal movement between groups, while each group manages its own vertical movement — producing a grid-like 2D navigation from a single class.
 
-### Direction Separation
+### Authoring per Framework
 
-Horizontal swipes are handled by the inner Flicking, and vertical swipes are handled by the outer Flicking. For same-direction nesting (e.g., horizontal inside horizontal), `nested: true` manages event propagation.
+Across all frameworks the demo drives the core `CrossFlicking` class imperatively: group the panels with a wrapper `<div>` and pass the viewport element to the constructor.
+
+```js
+import { CrossFlicking } from "@egjs/flicking"; // or "@egjs/vue3-flicking"
+
+new CrossFlicking("#cross", {
+  align: "prev",
+  moveType: "strict",
+  bound: true,
+  sideOptions: { moveType: "strict", bound: true }
+});
+```
+
+```html
+<div id="cross" class="flicking-viewport">
+  <div class="flicking-camera">
+    <div><!-- group: Nature -->
+      <div class="cross-panel">Forest
+      <div class="cross-panel">Meadow
+    
+    <div><!-- group: Ocean -->
+      <div class="cross-panel">Reef
+      <div class="cross-panel">Wave
+    
+  
+
+```
+
+> **Warning: React / Vue**
+`@egjs/react-flicking` also exports `CrossFlicking`/`CrossGroup` components, but they currently break under React StrictMode (the instance is destroyed before its async init completes). Until that is fixed, drive the core class from `useEffect`/`onMounted` as this demo does. Vue3 has no dedicated wrapper, so the core class is the only option there.
+
+### Events
+
+Main-axis events (`changed`, `willChange`) carry an extra `sideIndex` field pointing to the active group's side index. Side-axis events are prefixed with `side` and carry `mainIndex` to identify which group moved.
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| [`changed`](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/FlickingEvents.md#changed) | `{ index, sideIndex }` | The horizontal (group) index changed |
+| `sideChanged` | `{ index, mainIndex }` | A group's vertical (item) index changed |
+| `sideWillChange` | `{ index, mainIndex }` | A group's vertical index is about to change |
 
 ### Related Options
 
-- **Relationship between `nested` and `horizontal`**: Different directions work without conflict; for the same direction, `nested: true` controls propagation
-- **Combination with `moveType: "strict"`**: Makes group/panel unit navigation clear
-- **Combination with `bound: true`**: Prevents empty space at each level
+- **Combination with `moveType: "strict"`**: Moves exactly one group/item per swipe for clear grid navigation.
+- **Combination with `bound: true`**: Prevents empty space at the edges of both axes.
+- **`sideOptions`**: Configure the vertical instances independently from the horizontal one.
 
 ### Use Cases
 
 > **Info: When should you use this?**
-- Category-based content (vertical for categories, horizontal for items)
-- Photo albums (vertical for albums, horizontal for photos)
-- Dashboards (vertical for sections, horizontal for cards)
+- Category-based galleries (horizontal for categories, vertical for items)
+- Story/reel viewers (horizontal for authors, vertical for posts)
+- Dashboards (horizontal for sections, vertical for cards)
 
 ### Notes
 
 > **Warning: Caution**
-- When the outer Flicking is vertical (`horizontal: false`), you must specify a height on the viewport.
-- If `nested: true` is not set on the inner Flicking, events are consumed internally and not propagated to the outer Flicking.
-- When nesting in the same direction, it may be difficult to distinguish swipe gestures.
+- Give the viewport an explicit height, since the vertical side instances need a fixed layout height.
+- `CrossFlicking` rebuilds the group DOM on initialization; author groups as wrapper elements rather than expecting the original markup to remain unchanged.
+- Vue has no `CrossFlicking`/`CrossGroup` component wrapper — use the core class through `ref` + `onMounted`, and call `destroy()` on unmount.
 
 ## Related Links
 
-### Related Options
-- [`nested`](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/FlickingOptions.md#nested): Nested Flicking event propagation
-- [`horizontal`](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/FlickingOptions.md#horizontal): Scroll direction
+### Related APIs
+- [`CrossFlicking`](https://naver.github.io/egjs-flicking/llm-docs/api/classes/CrossFlicking.md): 2D cross-directional carousel preset class
+- [`CrossFlickingOptions`](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/CrossFlickingOptions.md): CrossFlicking configuration
 
 ### Related Demos
-- [Nested](https://naver.github.io/egjs-flicking/llm-docs/demos/basic/nested.md): On/off comparison of the nested option itself
+- [Nested](https://naver.github.io/egjs-flicking/llm-docs/demos/basic/nested.md): On/off comparison of the `nested` option for same-direction nesting
 - [Fullpage Scroll](https://naver.github.io/egjs-flicking/llm-docs/demos/advanced/fullpage-scroll.md): Vertical fullpage pattern
 
 ## Code
 
 ### React
 ```jsx
-import Flicking from "@egjs/react-flicking";
-import "@egjs/react-flicking/dist/flicking.css";
+import { CrossFlicking } from "@egjs/flicking";
+import "@egjs/flicking/dist/flicking.css";
 import "./styles.css";
-import { useState } from "react";
+import { useEffect, useRef } from "react";
 
-const GROUPS = [
-  { name: "Group A", colors: ["#e74c3c", "#c0392b", "#e67e22"] },
-  { name: "Group B", colors: ["#3498db", "#2980b9", "#1abc9c"] },
-  { name: "Group C", colors: ["#2ecc71", "#27ae60", "#16a085"] }
+// The panel structure is declared in JSX; the core CrossFlicking class is attached to it on mount.
+// react-flicking's CrossFlicking/CrossGroup components are avoided for now because they break
+// under React StrictMode (destroyed before their async init completes).
+const CATEGORIES = [
+  {
+    name: "Nature",
+    items: [
+      { title: "Forest", gradient: "linear-gradient(135deg, #0f9b70, #1e5631)" },
+      { title: "Meadow", gradient: "linear-gradient(135deg, #56ab2f, #a8e063)" },
+      { title: "Canyon", gradient: "linear-gradient(135deg, #3ca55c, #b5ac49)" }
+    ]
+  },
+  {
+    name: "Ocean",
+    items: [
+      { title: "Reef", gradient: "linear-gradient(135deg, #2193b0, #6dd5ed)" },
+      { title: "Wave", gradient: "linear-gradient(135deg, #1a2980, #26d0ce)" },
+      { title: "Deep", gradient: "linear-gradient(135deg, #000046, #1cb5e0)" }
+    ]
+  },
+  {
+    name: "Sunset",
+    items: [
+      { title: "Dawn", gradient: "linear-gradient(135deg, #ff9966, #ff5e62)" },
+      { title: "Dusk", gradient: "linear-gradient(135deg, #f7971e, #ffd200)" },
+      { title: "Ember", gradient: "linear-gradient(135deg, #cb2d3e, #ef473a)" }
+    ]
+  },
+  {
+    name: "Space",
+    items: [
+      { title: "Nebula", gradient: "linear-gradient(135deg, #654ea3, #eaafc8)" },
+      { title: "Aurora", gradient: "linear-gradient(135deg, #4776e6, #8e54e9)" },
+      { title: "Cosmos", gradient: "linear-gradient(135deg, #200122, #6f0000)" }
+    ]
+  }
 ];
 
 export default function App() {
-  const [outerIndex, setOuterIndex] = useState(0);
+  const viewportRef = useRef(null);
+  const flickingRef = useRef(null);
+
+  useEffect(() => {
+    // The ref keeps a single instance across StrictMode's double-invoke.
+    if (flickingRef.current) return;
+    flickingRef.current = new CrossFlicking(viewportRef.current, {
+      align: "prev",
+      moveType: "strict",
+      bound: true,
+      sideOptions: { moveType: "strict", bound: true }
+    });
+  }, []);
 
   return (
-    <div>
-      <Flicking
-        horizontal={false}
-        moveType="strict"
-        bound={true}
-        align="prev"
-        onChanged={e => setOuterIndex(e.index)}
-        className="outer-viewport"
-      >
-        {GROUPS.map((group, gi) => (
-          <div className="outer-panel" key={gi}>
-            <div className="group-label">{group.name} (swipe vertically to switch groups)</div>
-            <Flicking nested={true} moveType="strict" bound={true} align="prev">
-              {group.colors.map((color, pi) => (
-                <div className="inner-panel" key={pi} style={{ background: color }}>
-                  <span>
-                    {group.name}-{pi + 1}
-                  </span>
-                  <span className="panel-subtitle">swipe horizontally</span>
-                </div>
-              ))}
-            </Flicking>
+    <div ref={viewportRef} className="cross-viewport flicking-viewport">
+      <div className="flicking-camera">
+        {CATEGORIES.map((category, ci) => (
+          <div className="cross-group" key={ci}>
+            {category.items.map((it, ii) => (
+              <div className="cross-panel" key={ii} style={{ background: it.gradient }}>
+                <span className="panel-category">{category.name}</span>
+                <span className="panel-title">{it.title}</span>
+                <span className="panel-hint">↕ browse items · ↔ switch category</span>
+              </div>
+            ))}
           </div>
         ))}
-      </Flicking>
-      <div className="info-bar">
-        Current group: {GROUPS[outerIndex]?.name || "?"} (vertical: switch groups / horizontal: navigate within group)
       </div>
     </div>
   );
@@ -11407,113 +11524,91 @@ export default function App() {
 ### Vue3
 ```vue
 <template>
-  <div>
-    <Flicking
-      :options="{
-        horizontal: false,
-        moveType: 'strict',
-        bound: true,
-        align: 'prev'
-      }"
-      class="outer-viewport"
-      @changed="onOuterChanged"
-    >
-      <div v-for="(group, gi) in GROUPS" :key="gi" class="outer-panel">
-        <div class="group-label">{{ group.name }} (swipe vertically to switch groups)</div>
-        <Flicking :options="{ nested: true, moveType: 'strict', bound: true, align: 'prev' }">
-          <div v-for="(color, pi) in group.colors" :key="pi"
-               class="inner-panel" :style="{ background: color }">
-            <span>{{ group.name }}-{{ pi + 1 }}</span>
-            <span class="panel-subtitle">swipe horizontally</span>
-          </div>
-        </Flicking>
+  <div ref="viewport" class="cross-viewport flicking-viewport">
+    <div class="flicking-camera">
+      <div v-for="(category, ci) in CATEGORIES" :key="ci" class="cross-group">
+        <div v-for="(it, ii) in category.items" :key="ii"
+             class="cross-panel" :style="{ background: it.gradient }">
+          <span class="panel-category">{{ category.name }}</span>
+          <span class="panel-title">{{ it.title }}</span>
+          <span class="panel-hint">↕ browse items · ↔ switch category</span>
+        </div>
       </div>
-    </Flicking>
-    <div class="info-bar">
-      Current group: {{ GROUPS[outerIndex]?.name }} (vertical: switch groups / horizontal: navigate within group)
     </div>
   </div>
 </template>
 
 <script setup>
-import Flicking from "@egjs/vue3-flicking";
-import { ref } from "vue";
+import { CrossFlicking } from "@egjs/vue3-flicking";
 import "@egjs/vue3-flicking/dist/flicking.css";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 
-const GROUPS = [
-  { name: "Group A", colors: ["#e74c3c", "#c0392b", "#e67e22"] },
-  { name: "Group B", colors: ["#3498db", "#2980b9", "#1abc9c"] },
-  { name: "Group C", colors: ["#2ecc71", "#27ae60", "#16a085"] }
+// Vue3 has no dedicated CrossFlicking wrapper, so the core class is used imperatively.
+const CATEGORIES = [
+  {
+    name: "Nature",
+    items: [
+      { title: "Forest", gradient: "linear-gradient(135deg, #0f9b70, #1e5631)" },
+      { title: "Meadow", gradient: "linear-gradient(135deg, #56ab2f, #a8e063)" },
+      { title: "Canyon", gradient: "linear-gradient(135deg, #3ca55c, #b5ac49)" }
+    ]
+  },
+  {
+    name: "Ocean",
+    items: [
+      { title: "Reef", gradient: "linear-gradient(135deg, #2193b0, #6dd5ed)" },
+      { title: "Wave", gradient: "linear-gradient(135deg, #1a2980, #26d0ce)" },
+      { title: "Deep", gradient: "linear-gradient(135deg, #000046, #1cb5e0)" }
+    ]
+  },
+  {
+    name: "Sunset",
+    items: [
+      { title: "Dawn", gradient: "linear-gradient(135deg, #ff9966, #ff5e62)" },
+      { title: "Dusk", gradient: "linear-gradient(135deg, #f7971e, #ffd200)" },
+      { title: "Ember", gradient: "linear-gradient(135deg, #cb2d3e, #ef473a)" }
+    ]
+  },
+  {
+    name: "Space",
+    items: [
+      { title: "Nebula", gradient: "linear-gradient(135deg, #654ea3, #eaafc8)" },
+      { title: "Aurora", gradient: "linear-gradient(135deg, #4776e6, #8e54e9)" },
+      { title: "Cosmos", gradient: "linear-gradient(135deg, #200122, #6f0000)" }
+    ]
+  }
 ];
 
-const outerIndex = ref(0);
-const onOuterChanged = e => {
-  outerIndex.value = e.index;
-};
+const viewport = ref(null);
+let flicking = null;
+
+onMounted(() => {
+  flicking = new CrossFlicking(viewport.value, {
+    align: "prev",
+    moveType: "strict",
+    bound: true,
+    sideOptions: { moveType: "strict", bound: true }
+  });
+});
+
+onBeforeUnmount(() => {
+  if (flicking) flicking.destroy();
+});
 </script>
 ```
 
 ### JavaScript
 ```js
-import Flicking from "@egjs/flicking";
+import { CrossFlicking } from "@egjs/flicking";
 import "@egjs/flicking/dist/flicking.css";
 import "./styles.css";
 
-const GROUPS = [
-  { name: "Group A", colors: ["#e74c3c", "#c0392b", "#e67e22"] },
-  { name: "Group B", colors: ["#3498db", "#2980b9", "#1abc9c"] },
-  { name: "Group C", colors: ["#2ecc71", "#27ae60", "#16a085"] }
-];
-
-const outerCamera = document.querySelector("#outer .flicking-camera");
-
-GROUPS.forEach((group, gi) => {
-  const outerPanel = document.createElement("div");
-  outerPanel.className = "outer-panel";
-
-  const label = document.createElement("div");
-  label.className = "group-label";
-  label.textContent = `${group.name} (swipe vertically to switch groups)`;
-  outerPanel.appendChild(label);
-
-  const innerViewport = document.createElement("div");
-  innerViewport.className = "flicking-viewport";
-  innerViewport.id = `inner-${gi}`;
-  const innerCamera = document.createElement("div");
-  innerCamera.className = "flicking-camera";
-  innerViewport.appendChild(innerCamera);
-
-  group.colors.forEach((color, pi) => {
-    const panel = document.createElement("div");
-    panel.className = "inner-panel";
-    panel.style.background = color;
-    panel.innerHTML = `<span>${group.name}-${pi + 1}</span><span class="panel-subtitle">swipe horizontally</span>`;
-    innerCamera.appendChild(panel);
-  });
-
-  outerPanel.appendChild(innerViewport);
-  outerCamera.appendChild(outerPanel);
-});
-
-const outerFlicking = new Flicking("#outer", {
-  horizontal: false,
+// The panel structure lives in index.html; attaching CrossFlicking is all that's needed.
+new CrossFlicking("#cross", {
+  align: "prev",
   moveType: "strict",
   bound: true,
-  align: "prev"
-});
-
-GROUPS.forEach((_, gi) => {
-  new Flicking(`#inner-${gi}`, {
-    nested: true,
-    moveType: "strict",
-    bound: true,
-    align: "prev"
-  });
-});
-
-const infoBar = document.querySelector(".info-bar");
-outerFlicking.on("changed", e => {
-  infoBar.textContent = `Current group: ${GROUPS[e.index].name} (vertical: switch groups / horizontal: navigate within group)`;
+  sideOptions: { moveType: "strict", bound: true }
 });
 ```
 
@@ -11526,10 +11621,83 @@ outerFlicking.on("changed", e => {
 </head>
 <body>
   <div id="app">
-    <div id="outer" class="flicking-viewport vertical outer-viewport">
-      <div class="flicking-camera"></div>
+    <!--
+      Structure: viewport > camera > group > panel
+      Each direct child of the camera is a group (a vertical column of panels).
+      Swipe horizontally to switch groups, vertically to move within a group.
+    -->
+    <div id="cross" class="cross-viewport flicking-viewport">
+      <div class="flicking-camera">
+        <div class="cross-group">
+          <div class="cross-panel" style="background: linear-gradient(135deg, #0f9b70, #1e5631)">
+            <span class="panel-category">Nature</span>
+            <span class="panel-title">Forest</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+          <div class="cross-panel" style="background: linear-gradient(135deg, #56ab2f, #a8e063)">
+            <span class="panel-category">Nature</span>
+            <span class="panel-title">Meadow</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+          <div class="cross-panel" style="background: linear-gradient(135deg, #3ca55c, #b5ac49)">
+            <span class="panel-category">Nature</span>
+            <span class="panel-title">Canyon</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+        </div>
+        <div class="cross-group">
+          <div class="cross-panel" style="background: linear-gradient(135deg, #2193b0, #6dd5ed)">
+            <span class="panel-category">Ocean</span>
+            <span class="panel-title">Reef</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+          <div class="cross-panel" style="background: linear-gradient(135deg, #1a2980, #26d0ce)">
+            <span class="panel-category">Ocean</span>
+            <span class="panel-title">Wave</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+          <div class="cross-panel" style="background: linear-gradient(135deg, #000046, #1cb5e0)">
+            <span class="panel-category">Ocean</span>
+            <span class="panel-title">Deep</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+        </div>
+        <div class="cross-group">
+          <div class="cross-panel" style="background: linear-gradient(135deg, #ff9966, #ff5e62)">
+            <span class="panel-category">Sunset</span>
+            <span class="panel-title">Dawn</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+          <div class="cross-panel" style="background: linear-gradient(135deg, #f7971e, #ffd200)">
+            <span class="panel-category">Sunset</span>
+            <span class="panel-title">Dusk</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+          <div class="cross-panel" style="background: linear-gradient(135deg, #cb2d3e, #ef473a)">
+            <span class="panel-category">Sunset</span>
+            <span class="panel-title">Ember</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+        </div>
+        <div class="cross-group">
+          <div class="cross-panel" style="background: linear-gradient(135deg, #654ea3, #eaafc8)">
+            <span class="panel-category">Space</span>
+            <span class="panel-title">Nebula</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+          <div class="cross-panel" style="background: linear-gradient(135deg, #4776e6, #8e54e9)">
+            <span class="panel-category">Space</span>
+            <span class="panel-title">Aurora</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+          <div class="cross-panel" style="background: linear-gradient(135deg, #200122, #6f0000)">
+            <span class="panel-category">Space</span>
+            <span class="panel-title">Cosmos</span>
+            <span class="panel-hint">↕ browse items · ↔ switch category</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="info-bar">Current group: Group A (vertical: switch groups / horizontal: navigate within group)</div>
   </div>
 </body>
 </html>
@@ -11537,52 +11705,53 @@ outerFlicking.on("changed", e => {
 
 ### CSS
 ```css
-.outer-viewport {
-  height: 250px;
-}
-
-.outer-panel {
+.cross-viewport {
   width: 100%;
-  height: 250px;
+  max-width: 360px;
+  height: 320px;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.inner-panel {
-  width: 200px;
-  height: 200px;
-  margin: 10px;
-  border-radius: 8px;
+/* Each main panel doubles as a vertical side viewport (built by CrossFlicking). */
+.cross-viewport > .flicking-camera > .flicking-panel {
+  width: 100%;
+  height: 320px;
+  margin: 0;
+}
+
+.cross-viewport .cross-panel {
+  width: 100%;
+  height: 320px;
+  margin: 0;
+  border-radius: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.inner-panel .panel-subtitle {
-  font-size: 12px;
-  font-weight: normal;
-  opacity: 0.8;
-}
-
-.group-label {
+  gap: 8px;
+  color: #fff;
   text-align: center;
-  font-size: 14px;
-  color: #666;
-  padding: 8px 0;
-  font-weight: bold;
 }
 
-.info-bar {
-  margin-top: 8px;
-  padding: 8px 12px;
-  background: #f5f5f5;
-  border-radius: 4px;
+.cross-viewport .panel-category {
   font-size: 13px;
-  color: #333;
-  text-align: center;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.cross-viewport .panel-title {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.cross-viewport .panel-hint {
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.8;
 }
 ```
 
@@ -13021,9 +13190,11 @@ reactiveAPI.subscribe("currentPanelIndex", index => {
   transition: all 0.2s;
 }
 
-.pagination-btn:hover {
-  background: #3498db;
-  color: white;
+@media (hover: hover) {
+  .pagination-btn:hover {
+    background: #3498db;
+    color: white;
+  }
 }
 
 .pagination-btn.active {
