@@ -16,6 +16,7 @@
     "dev:vue": "pnpm --filter @egjs/vue3-flicking dev",
     "dev:plugins": "pnpm --filter @egjs/flicking-plugins dev",
     "dev:all": "concurrently -n \"flicking,react,vue,plugins\" -c \"blue,green,yellow,magenta\" \"pnpm dev:flicking\" \"pnpm dev:react\" \"pnpm dev:vue\" \"pnpm dev:plugins\"",
+    "demos:local": "pnpm --filter @test/e2e dev",
     "preview": "run-s preview:build preview:run",
     "preview:build": "pnpm publish:build",
     "preview:run": "concurrently -n \"flicking,react,vue,plugins\" -c \"blue,green,yellow,magenta\" \"pnpm --filter flicking dev:preview\" \"pnpm --filter react-flicking dev:preview\" \"pnpm --filter vue3-flicking dev:preview\" \"pnpm --filter flicking-plugins dev:preview\"",

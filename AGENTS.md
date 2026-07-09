@@ -17,7 +17,7 @@ egjs-flicking은 Naver가 개발하는 JavaScript 캐러셀/슬라이더 라이�
 ## 핵심 규칙
 
 ### dev/ 파일 수정
-- **`dev/{subdir}/App.*` 하나만 교체한다.** 모든 `dev/` 하위 디렉토리(scratch, basic-sample, plugin-check 등)의 `index.html`, `main.*`은 절대 수정하지 않는다.
+- **`dev/{subdir}/App.*` 하나만 교체한다.** 모든 `dev/` 하위 디렉토리(scratch, basic-sample 등)의 `index.html`, `main.*`은 절대 수정하지 않는다.
 - dev 파일에서는 `@egjs/` 대신 `@dev/` alias를 사용한다.
 
 ### Import Alias (dev 파일 전용)
@@ -49,6 +49,7 @@ pnpm dev:flicking     # flicking만 (3000)
 pnpm dev:react        # react-flicking (3001)
 pnpm dev:vue          # vue3-flicking (3002)
 pnpm dev:plugins      # flicking-plugins (3003)
+pnpm demos:local      # 문서 데모를 로컬 코어로 실행하는 갤러리 (3010, → DEV_GUIDE.md)
 
 # 테스트
 pnpm test             # unit 테스트 (Vitest Browser Mode + Playwright)

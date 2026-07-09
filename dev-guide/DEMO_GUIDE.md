@@ -33,7 +33,6 @@ packages/docs/
       advanced/                 # 고급 패턴 데모
       plugins/                  # 플러그인 데모
       reactive/                 # Reactive API 데모
-      presets/                  # 프리셋 데모 (CrossFlicking 등)
       issues/                   # 이슈 재현/검증용 데모
       components/               # 공용 스타일
         demo-defaults.ts        # defaultStyles (Sandpack에 자동 주입)
