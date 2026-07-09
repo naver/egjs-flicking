@@ -35,6 +35,17 @@ pnpm dev:plugins      # flicking-plugins만
 - **vue3-flicking**: http://localhost:3002
 - **flicking-plugins**: http://localhost:3003
 
+### 4. 문서 데모를 로컬 코어로 실행 (`demos:local`)
+
+```bash
+pnpm demos:local      # http://localhost:3010 데모 갤러리
+```
+
+`packages/docs/src/demo/`의 모든 데모(vanilla/react/vue)를 **로컬 코어 소스(`packages/flicking/src`)로** 실행하는 갤러리입니다. 루트 `/`에서 카테고리별 목록이 열리고, HMR을 지원합니다.
+
+- 문서 사이트의 Sandpack 데모는 npm CDN 배포판(`^4.11.4`)을 받아 실행하므로 **미배포 로컬 수정이 반영되지 않는다.** 로컬 코드 기준으로 데모 동작을 확인하려면 이 명령을 쓴다.
+- e2e 테스트(`packages/test-flicking/e2e`)와 **동일한 하네스·vite alias**를 공유한다. 갤러리는 e2e 하네스가 생성하는 `.generated/index.html`이며, 어서션만 없는 브라우징용이다.
+
 ## dev/ 디렉토리 구조
 
 각 패키지의 `dev/` 디렉토리는 **개발자 전용 환경**입니다.

@@ -49,6 +49,7 @@ pnpm dev:flicking     # flicking만 (3000)
 pnpm dev:react        # react-flicking (3001)
 pnpm dev:vue          # vue3-flicking (3002)
 pnpm dev:plugins      # flicking-plugins (3003)
+pnpm demos:local      # 문서 데모를 로컬 코어로 실행하는 갤러리 (3010, → DEV_GUIDE.md)
 
 # 테스트
 pnpm test             # unit 테스트 (Vitest Browser Mode + Playwright)

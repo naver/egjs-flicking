@@ -180,6 +180,70 @@ function writeFile(filePath, content) {
   fs.writeFileSync(filePath, content, "utf-8");
 }
 
+// 로컬 코어 소스로 실행되는 데모 갤러리 인덱스 페이지를 생성한다.
+// entries: ["vanilla/advanced/AddRemove", "react/advanced/AddRemove", ...]
+function generateIndexHTML(entries) {
+  // category/name 별로 프레임워크 링크를 묶는다.
+  const byDemo = new Map();
+  for (const entry of entries) {
+    const [framework, category, name] = entry.split("/");
+    const key = `${category}/${name}`;
+    if (!byDemo.has(key)) byDemo.set(key, { category, name, frameworks: [] });
+    byDemo.get(key).frameworks.push(framework);
+  }
+
+  // category 별로 그룹핑
+  const byCategory = new Map();
+  for (const { category, name, frameworks } of byDemo.values()) {
+    if (!byCategory.has(category)) byCategory.set(category, []);
+    byCategory.get(category).push({ name, frameworks });
+  }
+
+  const FRAMEWORK_ORDER = ["vanilla", "react", "vue"];
+  const sections = [...byCategory.entries()]
+    .map(([category, demos]) => {
+      const rows = demos
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(({ name, frameworks }) => {
+          const links = FRAMEWORK_ORDER.filter(f => frameworks.includes(f))
+            .map(f => `<a href="/${f}/${category}/${name}.html">${f}</a>`)
+            .join("");
+          return `<li><span class="demo-name">${name}</span><span class="links">${links}</span></li>`;
+        })
+        .join("\n");
+      return `<section><h2>${category}</h2><ul>${rows}</ul></section>`;
+    })
+    .join("\n");
+
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flicking 데모 갤러리 (로컬 코어)</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 2rem; background: #0d1117; color: #e6edf3; }
+    h1 { font-size: 1.4rem; margin: 0 0 0.25rem; }
+    .subtitle { color: #7d8590; margin: 0 0 2rem; font-size: 0.9rem; }
+    .subtitle code { background: #161b22; padding: 0.1rem 0.4rem; border-radius: 4px; }
+    section { margin-bottom: 2rem; }
+    h2 { font-size: 1rem; text-transform: capitalize; border-bottom: 1px solid #30363d; padding-bottom: 0.4rem; color: #58a6ff; }
+    ul { list-style: none; padding: 0; margin: 0; }
+    li { display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0.2rem; border-bottom: 1px solid #21262d; }
+    .demo-name { font-weight: 500; }
+    .links a { margin-left: 0.5rem; font-size: 0.8rem; padding: 0.15rem 0.6rem; border: 1px solid #30363d; border-radius: 6px; color: #e6edf3; text-decoration: none; }
+    .links a:hover { background: #1f6feb; border-color: #1f6feb; }
+  </style>
+</head>
+<body>
+  <h1>Flicking 데모 갤러리</h1>
+  <p class="subtitle">모든 데모가 <strong>로컬 코어 소스</strong>(<code>packages/flicking/src</code>)로 실행됩니다. Sandpack(공개 문서)의 CDN 배포판과 달리 미배포 수정도 즉시 반영됩니다.</p>
+  ${sections}
+</body>
+</html>`;
+}
+
 function generateDemo(category, name) {
   const demoDir = path.join(DEMO_ROOT, category, name);
   if (!isValidDemo(demoDir)) return null;
@@ -214,7 +278,7 @@ function main() {
     fs.rmSync(OUTPUT_DIR, { recursive: true });
   }
 
-  let totalCount = 0;
+  const allEntries = [];
 
   for (const category of CATEGORIES) {
     const categoryDir = path.join(DEMO_ROOT, category);
@@ -231,12 +295,15 @@ function main() {
 
       const generated = generateDemo(category, name);
       if (generated) {
-        totalCount += generated.length;
+        allEntries.push(...generated);
       }
     }
   }
 
-  console.log(`[generate-test-harness] ${totalCount} HTML entries generated in .generated/`);
+  // 데모 갤러리 인덱스 (vite dev 서버 루트 `/` 에서 열림)
+  writeFile(path.join(OUTPUT_DIR, "index.html"), generateIndexHTML(allEntries));
+
+  console.log(`[generate-test-harness] ${allEntries.length} HTML entries generated in .generated/ (+ index.html)`);
 }
 
 main();
