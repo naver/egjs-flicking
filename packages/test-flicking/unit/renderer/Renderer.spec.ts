@@ -237,6 +237,30 @@ describe("Renderer", () => {
         expect(panelChangeSpy.mock.calls[0][0].removed.length).toBe(1);
         expect(panelChangeSpy.mock.calls[0][0].removed[0]).toEqual(prevPanels[1]);
       });
+
+      it("should actually remove a panel whose element is detached (renderOnlyVisible)", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const renderer = new RendererImpl().init(flicking);
+        const prevPanelCount = renderer.panelCount;
+        const targetPanel = renderer.panels[prevPanelCount - 1];
+        const targetElement = targetPanel.element;
+
+        targetPanel.markForHide();
+        expect(targetPanel.rendered).toBe(false);
+        expect(targetElement.parentNode).toBe(null);
+
+        let removed: Panel[] = [];
+        expect(() => {
+          removed = renderer.batchRemove({ index: prevPanelCount - 1, deleteCount: 1, hasDOMInElements: true });
+        }).not.toThrow();
+
+        expect(removed.length).toBe(1);
+        expect(removed[0]).toBe(targetPanel);
+        expect(targetPanel.removed).toBe(true);
+        expect(renderer.panelCount).toBe(prevPanelCount - 1);
+        expect(renderer.panels.includes(targetPanel)).toBe(false);
+        expect(flicking.camera.element.contains(targetElement)).toBe(false);
+      });
     });
 
     describe("updatePanelSize", () => {
