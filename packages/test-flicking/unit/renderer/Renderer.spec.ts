@@ -185,6 +185,29 @@ describe("Renderer", () => {
 
         expect(checkPanelContentsReadySpy).toHaveBeenCalledWith(newPanels);
       });
+
+      it("should insert a panel even when the reference(nextSibling) element is detached (renderOnlyVisible)", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const renderer = new RendererImpl().init(flicking);
+        const prevPanelCount = renderer.panelCount;
+
+        // renderOnlyVisible detaches non-visible panels; make the prepend reference (first panel) detached
+        const refPanel = renderer.panels[0];
+        const refElement = refPanel.element;
+        refPanel.markForHide();
+        expect(refElement.parentNode).toBe(null);
+
+        const newElement = El.panel().el;
+
+        let inserted: Panel[] = [];
+        expect(() => {
+          inserted = renderer.batchInsert({ index: 0, elements: [newElement], hasDOMInElements: true });
+        }).not.toThrow();
+
+        expect(inserted.length).toBe(1);
+        expect(renderer.panelCount).toBe(prevPanelCount + 1);
+        expect(flicking.camera.element.contains(newElement)).toBe(true);
+      });
     });
 
     describe("batchRemove", () => {

@@ -594,7 +594,13 @@ abstract class Renderer {
     const fragment = document.createDocumentFragment();
 
     panels.forEach(panel => fragment.appendChild(panel.element));
-    cameraElement.insertBefore(fragment, nextSiblingElement);
+
+    // With `renderOnlyVisible`, the reference(nextSibling) panel may be detached from the camera
+    // element. insertBefore requires the reference to be a mounted child, so fall back to appending
+    // when it isn't to avoid a `NotFoundError`.
+    const referenceElement =
+      nextSiblingElement && nextSiblingElement.parentNode === cameraElement ? nextSiblingElement : null;
+    cameraElement.insertBefore(fragment, referenceElement);
   }
 
   /**
