@@ -1,5 +1,30 @@
 # 퍼블리시 & 버전 관리 가이드
 
+## 릴리즈 브랜치 취합
+
+여러 PR이 master를 타겟으로 열려 있을 때, 개별 PR을 master에 직접 머지하지 않고 **하나의 릴리즈 브랜치에 모아 검증한 뒤 master에 단일 반영**한다.
+
+### 브랜치명 컨벤션
+
+```
+release/{scope}-{version}
+```
+
+- `scope`: 릴리즈를 주도하는 패키지 — `core` | `react` | `vue` | `plugins`
+- `version`: 목표 버전
+- 예: `release/core-4.16.2`
+
+### 절차
+
+1. master에서 릴리즈 브랜치 생성 (`git checkout -b release/core-4.16.2`)
+2. 취합할 각 PR 브랜치를 `--no-ff`로 머지 (SHA 보존 — 원본 PR 자동 종료에 필요)
+3. 릴리즈 브랜치에서 전체 검증 (unit / plugins / cfc / e2e)
+4. 릴리즈 브랜치 → master PR을 열고, 본문에 `Closes #A #B …`로 취합한 PR을 명시
+5. PR 통과 후 master에 머지 → 취합된 PR들이 "Merged"로 자동 종료
+6. 이후 아래 [배포 절차](#배포-절차)로 퍼블리시
+
+> 취합한 PR을 **수동으로 close하지 않는다.** `Closes` + SHA 보존 머지(`--no-ff`)로 두면 master 머지 시 "Merged"로 자동 종료되어 이력이 깔끔하다. 수동 close는 "Closed"로 남아 병합 이력이 흐려진다.
+
 ## 빠른 시작
 
 ### 사전 준비 (최초 1회)

@@ -176,9 +176,21 @@ await page.evaluate(async () => {
 4. `pnpm test:headed` 로 브라우저에서 확인
 5. `pnpm test` 로 전체 통과 확인
 
+## 데모 변경 시 E2E 동반 수정
+
+E2E 하네스가 `packages/docs/src/demo/`를 그대로 소비하므로 **데모 변경은 매칭 E2E 스펙을 깨뜨린다.** 데모를 수정·삭제하는 PR은 대응 E2E 스펙을 **같은 PR에서 함께** 고친다.
+
+| 데모 변경 | E2E 조치 |
+|-----------|----------|
+| 구조·API 변경 (패널/인스턴스 구성, 옵션 등) | 해당 `{id}.spec.ts` 어서션을 새 구조에 맞게 갱신 (필요 시 `{id}.yaml`도) |
+| 데모 삭제 | 대응 `tests/{category}/{id}/` 스펙 삭제 (없는 데모를 가리키는 orphan 스펙은 실패). 대체 데모가 있으면 커버리지를 그쪽으로 이관 |
+| 데모 이동·이름 변경 | `{id}.yaml`의 `demo:` 경로와 스펙 디렉토리를 함께 이동 |
+
+검증: 특정 데모만 빠르게 `pnpm test <id>`, 전체 정합은 `pnpm test`.
+
 ## 주의사항
 
-- 데모 파일(`packages/docs/src/demo/`)은 직접 import됨 → 데모 수정 시 E2E에 영향
+- 데모 파일(`packages/docs/src/demo/`)은 직접 import됨 → 데모 수정 시 E2E에 영향 (→ 위 [데모 변경 시 E2E 동반 수정](#데모-변경-시-e2e-동반-수정))
 - Vanilla 데모의 `index.html` body가 HTML 엔트리에 삽입됨 → HTML 구조 변경 시 regenerate 필요
 - Vue SFC는 `./styles.css`를 자체 import하지 않음 → test harness가 별도 import 처리
 - 기본 패널 스타일(`demo-defaults.ts`)이 HTML `<style>` 태그로 주입됨
