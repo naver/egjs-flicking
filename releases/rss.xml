@@ -4,15 +4,42 @@
         <title>Flicking Blog</title>
         <link>https://naver.github.io/egjs-flicking/releases</link>
         <description>Flicking Blog</description>
-        <lastBuildDate>Thu, 09 Jul 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 09 Jul 2026 08:31:14 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
         <item>
+            <title><![CDATA[4.16.3]]></title>
+            <link>https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.3</link>
+            <guid>https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.3</guid>
+            <pubDate>Thu, 09 Jul 2026 08:31:14 GMT</pubDate>
+            <description><![CDATA[Highlights]]></description>
+            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="highlights">Highlights<a href="https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.3#highlights" class="hash-link" aria-label="Direct link to Highlights" title="Direct link to Highlights" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Fix</strong>: resolved an <code>insertBefore</code> <code>NotFoundError</code> thrown when inserting/prepending panels while a detached (unseen) panel is used as the insertion reference under <code>renderOnlyVisible</code> (reproducible by clicking Prepend twice in the Add/Remove demo) (#949)<!-- -->
+<ul>
+<li class="">Companion fix to 4.16.2's <code>removePanel</code> guard — the same detachment issue on the insert path.</li>
+</ul>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="published-packages">Published packages<a href="https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.3#published-packages" class="hash-link" aria-label="Direct link to Published packages" title="Direct link to Published packages" translate="no">​</a></h2>
+<ul>
+<li class=""><code>@egjs/flicking@4.16.3</code></li>
+<li class=""><code>@egjs/react-flicking@4.16.5</code></li>
+<li class=""><code>@egjs/vue3-flicking@4.16.3</code></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.3#whats-changed" class="hash-link" aria-label="Direct link to What's Changed" title="Direct link to What's Changed" translate="no">​</a></h2>
+<ul>
+<li class="">fix: error on insert for unseen panel by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/949" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/949</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/naver/egjs-flicking/compare/4.16.2...4.16.3" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/compare/4.16.2...4.16.3</a></p>]]></content:encoded>
+            <category>release</category>
+        </item>
+        <item>
             <title><![CDATA[4.16.2]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.2</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.2</guid>
-            <pubDate>Thu, 09 Jul 2026 00:00:00 GMT</pubDate>
+            <pubDate>Thu, 09 Jul 2026 07:31:44 GMT</pubDate>
             <description><![CDATA[Highlights]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="highlights">Highlights<a href="https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.2#highlights" class="hash-link" aria-label="Direct link to Highlights" title="Direct link to Highlights" translate="no">​</a></h2>
 <ul>
@@ -38,37 +65,10 @@
             <category>release</category>
         </item>
         <item>
-            <title><![CDATA[4.16.3]]></title>
-            <link>https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.3</link>
-            <guid>https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.3</guid>
-            <pubDate>Thu, 09 Jul 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Highlights]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="highlights">Highlights<a href="https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.3#highlights" class="hash-link" aria-label="Direct link to Highlights" title="Direct link to Highlights" translate="no">​</a></h2>
-<ul>
-<li class=""><strong>Fix</strong>: resolved an <code>insertBefore</code> <code>NotFoundError</code> thrown when inserting/prepending panels while a detached (unseen) panel is used as the insertion reference under <code>renderOnlyVisible</code> (reproducible by clicking Prepend twice in the Add/Remove demo) (#949)<!-- -->
-<ul>
-<li class="">Companion fix to 4.16.2's <code>removePanel</code> guard — the same detachment issue on the insert path.</li>
-</ul>
-</li>
-</ul>
-<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="published-packages">Published packages<a href="https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.3#published-packages" class="hash-link" aria-label="Direct link to Published packages" title="Direct link to Published packages" translate="no">​</a></h2>
-<ul>
-<li class=""><code>@egjs/flicking@4.16.3</code></li>
-<li class=""><code>@egjs/react-flicking@4.16.5</code></li>
-<li class=""><code>@egjs/vue3-flicking@4.16.3</code></li>
-</ul>
-<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/releases/2026/07/09/release-4.16.3#whats-changed" class="hash-link" aria-label="Direct link to What's Changed" title="Direct link to What's Changed" translate="no">​</a></h2>
-<ul>
-<li class="">fix: error on insert for unseen panel by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/949" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/949</a></li>
-</ul>
-<p><strong>Full Changelog</strong>: <a href="https://github.com/naver/egjs-flicking/compare/4.16.2...4.16.3" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/compare/4.16.2...4.16.3</a></p>]]></content:encoded>
-            <category>release</category>
-        </item>
-        <item>
             <title><![CDATA[4.16.0]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2026/06/26/release-4.16.0</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2026/06/26/release-4.16.0</guid>
-            <pubDate>Fri, 26 Jun 2026 00:00:00 GMT</pubDate>
+            <pubDate>Fri, 26 Jun 2026 06:08:11 GMT</pubDate>
             <description><![CDATA[Packages (install the latest patch)]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="packages-install-the-latest-patch">Packages (install the latest patch)<a href="https://naver.github.io/egjs-flicking/releases/2026/06/26/release-4.16.0#packages-install-the-latest-patch" class="hash-link" aria-label="Direct link to Packages (install the latest patch)" title="Direct link to Packages (install the latest patch)" translate="no">​</a></h2>
 <table><thead><tr><th>Package</th><th>Version</th></tr></thead><tbody><tr><td><code>@egjs/flicking</code></td><td>4.16.1</td></tr><tr><td><code>@egjs/react-flicking</code></td><td>4.16.3</td></tr><tr><td><code>@egjs/vue3-flicking</code></td><td>4.16.1</td></tr><tr><td><code>@egjs/flicking-plugins</code></td><td>4.8.1</td></tr></tbody></table>
@@ -109,7 +109,7 @@
             <title><![CDATA[4.15.0]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2025/11/25/release-4.15.0</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2025/11/25/release-4.15.0</guid>
-            <pubDate>Tue, 25 Nov 2025 00:00:00 GMT</pubDate>
+            <pubDate>Tue, 25 Nov 2025 07:36:27 GMT</pubDate>
             <description><![CDATA[What's Changed]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/releases/2025/11/25/release-4.15.0#whats-changed" class="hash-link" aria-label="Direct link to What's Changed" title="Direct link to What's Changed" translate="no">​</a></h2>
 <ul>
@@ -122,7 +122,7 @@
             <title><![CDATA[4.14.1]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2025/10/02/release-4.14.1</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2025/10/02/release-4.14.1</guid>
-            <pubDate>Thu, 02 Oct 2025 00:00:00 GMT</pubDate>
+            <pubDate>Thu, 02 Oct 2025 06:37:37 GMT</pubDate>
             <description><![CDATA[What's Changed]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/releases/2025/10/02/release-4.14.1#whats-changed" class="hash-link" aria-label="Direct link to What's Changed" title="Direct link to What's Changed" translate="no">​</a></h2>
 <ul>
@@ -137,7 +137,7 @@
             <title><![CDATA[4.14.0]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2025/06/30/release-4.14.0</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2025/06/30/release-4.14.0</guid>
-            <pubDate>Mon, 30 Jun 2025 00:00:00 GMT</pubDate>
+            <pubDate>Mon, 30 Jun 2025 08:21:19 GMT</pubDate>
             <description><![CDATA[What's Changed]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/releases/2025/06/30/release-4.14.0#whats-changed" class="hash-link" aria-label="Direct link to What's Changed" title="Direct link to What's Changed" translate="no">​</a></h2>
 <ul>
@@ -154,7 +154,7 @@
             <title><![CDATA[4.13.1]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2025/05/16/release-4.13.1</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2025/05/16/release-4.13.1</guid>
-            <pubDate>Fri, 16 May 2025 00:00:00 GMT</pubDate>
+            <pubDate>Fri, 16 May 2025 08:08:20 GMT</pubDate>
             <description><![CDATA[What's Changed]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/releases/2025/05/16/release-4.13.1#whats-changed" class="hash-link" aria-label="Direct link to What's Changed" title="Direct link to What's Changed" translate="no">​</a></h2>
 <ul>
@@ -177,7 +177,7 @@
             <title><![CDATA[4.12.0]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2024/12/06/release-4.12.0</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2024/12/06/release-4.12.0</guid>
-            <pubDate>Fri, 06 Dec 2024 00:00:00 GMT</pubDate>
+            <pubDate>Fri, 06 Dec 2024 10:15:56 GMT</pubDate>
             <description><![CDATA[New Feature]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="new-feature">New Feature<a href="https://naver.github.io/egjs-flicking/releases/2024/12/06/release-4.12.0#new-feature" class="hash-link" aria-label="Direct link to New Feature" title="Direct link to New Feature" translate="no">​</a></h2>
 <ul>
@@ -193,7 +193,7 @@
             <title><![CDATA[4.11.4]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2024/08/01/release-4.11.4</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2024/08/01/release-4.11.4</guid>
-            <pubDate>Thu, 01 Aug 2024 00:00:00 GMT</pubDate>
+            <pubDate>Thu, 01 Aug 2024 07:47:42 GMT</pubDate>
             <description><![CDATA[Bug Fix]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2024/08/01/release-4.11.4#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
 <ul>
@@ -205,7 +205,7 @@
             <title><![CDATA[4.11.3]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2024/05/31/release-4.11.3</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2024/05/31/release-4.11.3</guid>
-            <pubDate>Fri, 31 May 2024 00:00:00 GMT</pubDate>
+            <pubDate>Fri, 31 May 2024 06:24:03 GMT</pubDate>
             <description><![CDATA[Bug Fix]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2024/05/31/release-4.11.3#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
 <ul>
@@ -220,7 +220,7 @@
             <title><![CDATA[4.11.2]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2023/12/20/release-4.11.2</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2023/12/20/release-4.11.2</guid>
-            <pubDate>Wed, 20 Dec 2023 00:00:00 GMT</pubDate>
+            <pubDate>Wed, 20 Dec 2023 03:03:09 GMT</pubDate>
             <description><![CDATA[Bug Fix]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2023/12/20/release-4.11.2#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
 <ul>
@@ -232,7 +232,7 @@
             <title><![CDATA[4.11.1]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2023/11/17/release-4.11.1</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2023/11/17/release-4.11.1</guid>
-            <pubDate>Fri, 17 Nov 2023 00:00:00 GMT</pubDate>
+            <pubDate>Fri, 17 Nov 2023 04:27:48 GMT</pubDate>
             <description><![CDATA[Bug Fix]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2023/11/17/release-4.11.1#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
 <ul>
@@ -245,7 +245,7 @@
             <title><![CDATA[4.11.0]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2023/08/02/release-4.11.0</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2023/08/02/release-4.11.0</guid>
-            <pubDate>Wed, 02 Aug 2023 00:00:00 GMT</pubDate>
+            <pubDate>Wed, 02 Aug 2023 07:45:32 GMT</pubDate>
             <description><![CDATA[New Feature]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="new-feature">New Feature<a href="https://naver.github.io/egjs-flicking/releases/2023/08/02/release-4.11.0#new-feature" class="hash-link" aria-label="Direct link to New Feature" title="Direct link to New Feature" translate="no">​</a></h2>
 <ul>
@@ -257,7 +257,7 @@
             <title><![CDATA[4.10.8]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2023/06/22/release-4.10.8</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2023/06/22/release-4.10.8</guid>
-            <pubDate>Thu, 22 Jun 2023 00:00:00 GMT</pubDate>
+            <pubDate>Thu, 22 Jun 2023 02:10:01 GMT</pubDate>
             <description><![CDATA[Bug Fix]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2023/06/22/release-4.10.8#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
 <ul>
@@ -269,7 +269,7 @@
             <title><![CDATA[4.10.7]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2023/04/12/release-4.10.7</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2023/04/12/release-4.10.7</guid>
-            <pubDate>Wed, 12 Apr 2023 00:00:00 GMT</pubDate>
+            <pubDate>Wed, 12 Apr 2023 06:53:10 GMT</pubDate>
             <description><![CDATA[Bug Fix]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2023/04/12/release-4.10.7#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
 <ul>
@@ -281,7 +281,7 @@
             <title><![CDATA[4.10.6]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2023/02/13/release-4.10.6</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2023/02/13/release-4.10.6</guid>
-            <pubDate>Mon, 13 Feb 2023 00:00:00 GMT</pubDate>
+            <pubDate>Mon, 13 Feb 2023 06:29:15 GMT</pubDate>
             <description><![CDATA[Bug Fix]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2023/02/13/release-4.10.6#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
 <ul>
@@ -294,7 +294,7 @@
             <title><![CDATA[4.10.5]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2023/02/01/release-4.10.5</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2023/02/01/release-4.10.5</guid>
-            <pubDate>Wed, 01 Feb 2023 00:00:00 GMT</pubDate>
+            <pubDate>Wed, 01 Feb 2023 02:31:00 GMT</pubDate>
             <description><![CDATA[Bug Fix]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2023/02/01/release-4.10.5#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
 <ul>
@@ -307,7 +307,7 @@
             <title><![CDATA[4.10.4]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2022/12/02/release-4.10.4</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2022/12/02/release-4.10.4</guid>
-            <pubDate>Fri, 02 Dec 2022 00:00:00 GMT</pubDate>
+            <pubDate>Fri, 02 Dec 2022 08:01:40 GMT</pubDate>
             <description><![CDATA[Bug Fix]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2022/12/02/release-4.10.4#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
 <ul>
@@ -319,7 +319,7 @@
             <title><![CDATA[4.10.3]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2022/11/25/release-4.10.3</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2022/11/25/release-4.10.3</guid>
-            <pubDate>Fri, 25 Nov 2022 00:00:00 GMT</pubDate>
+            <pubDate>Fri, 25 Nov 2022 08:26:20 GMT</pubDate>
             <description><![CDATA[Bug Fix]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2022/11/25/release-4.10.3#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
 <ul>
@@ -331,7 +331,7 @@
             <title><![CDATA[4.10.2]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2022/11/03/release-4.10.2</link>
             <guid>https://naver.github.io/egjs-flicking/releases/2022/11/03/release-4.10.2</guid>
-            <pubDate>Thu, 03 Nov 2022 00:00:00 GMT</pubDate>
+            <pubDate>Thu, 03 Nov 2022 08:07:45 GMT</pubDate>
             <description><![CDATA[Bug Fix]]></description>
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2022/11/03/release-4.10.2#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
 <ul>

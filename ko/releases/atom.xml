@@ -2,16 +2,43 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://naver.github.io/egjs-flicking/ko/releases</id>
     <title>Flicking Blog</title>
-    <updated>2026-07-09T00:00:00.000Z</updated>
+    <updated>2026-07-09T08:31:14.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://naver.github.io/egjs-flicking/ko/releases"/>
     <subtitle>Flicking Blog</subtitle>
     <icon>https://naver.github.io/egjs-flicking/ko/img/favicon.ico</icon>
     <entry>
+        <title type="html"><![CDATA[4.16.3]]></title>
+        <id>https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.3</id>
+        <link href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.3"/>
+        <updated>2026-07-09T08:31:14.000Z</updated>
+        <summary type="html"><![CDATA[Highlights]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="highlights">Highlights<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.3#highlights" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Fix</strong>: resolved an <code>insertBefore</code> <code>NotFoundError</code> thrown when inserting/prepending panels while a detached (unseen) panel is used as the insertion reference under <code>renderOnlyVisible</code> (reproducible by clicking Prepend twice in the Add/Remove demo) (#949)<!-- -->
+<ul>
+<li class="">Companion fix to 4.16.2's <code>removePanel</code> guard — the same detachment issue on the insert path.</li>
+</ul>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="published-packages">Published packages<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.3#published-packages" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
+<ul>
+<li class=""><code>@egjs/flicking@4.16.3</code></li>
+<li class=""><code>@egjs/react-flicking@4.16.5</code></li>
+<li class=""><code>@egjs/vue3-flicking@4.16.3</code></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.3#whats-changed" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
+<ul>
+<li class="">fix: error on insert for unseen panel by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/949" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/949</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/naver/egjs-flicking/compare/4.16.2...4.16.3" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/compare/4.16.2...4.16.3</a></p>]]></content>
+        <category label="release" term="release"/>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[4.16.2]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.2</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.2"/>
-        <updated>2026-07-09T00:00:00.000Z</updated>
+        <updated>2026-07-09T07:31:44.000Z</updated>
         <summary type="html"><![CDATA[Highlights]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="highlights">Highlights<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.2#highlights" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -37,37 +64,10 @@
         <category label="release" term="release"/>
     </entry>
     <entry>
-        <title type="html"><![CDATA[4.16.3]]></title>
-        <id>https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.3</id>
-        <link href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.3"/>
-        <updated>2026-07-09T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[Highlights]]></summary>
-        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="highlights">Highlights<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.3#highlights" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
-<ul>
-<li class=""><strong>Fix</strong>: resolved an <code>insertBefore</code> <code>NotFoundError</code> thrown when inserting/prepending panels while a detached (unseen) panel is used as the insertion reference under <code>renderOnlyVisible</code> (reproducible by clicking Prepend twice in the Add/Remove demo) (#949)<!-- -->
-<ul>
-<li class="">Companion fix to 4.16.2's <code>removePanel</code> guard — the same detachment issue on the insert path.</li>
-</ul>
-</li>
-</ul>
-<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="published-packages">Published packages<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.3#published-packages" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
-<ul>
-<li class=""><code>@egjs/flicking@4.16.3</code></li>
-<li class=""><code>@egjs/react-flicking@4.16.5</code></li>
-<li class=""><code>@egjs/vue3-flicking@4.16.3</code></li>
-</ul>
-<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.3#whats-changed" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
-<ul>
-<li class="">fix: error on insert for unseen panel by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/949" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/949</a></li>
-</ul>
-<p><strong>Full Changelog</strong>: <a href="https://github.com/naver/egjs-flicking/compare/4.16.2...4.16.3" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/compare/4.16.2...4.16.3</a></p>]]></content>
-        <category label="release" term="release"/>
-    </entry>
-    <entry>
         <title type="html"><![CDATA[4.16.0]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2026/06/26/release-4.16.0</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2026/06/26/release-4.16.0"/>
-        <updated>2026-06-26T00:00:00.000Z</updated>
+        <updated>2026-06-26T06:08:11.000Z</updated>
         <summary type="html"><![CDATA[Packages (install the latest patch)]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="packages-install-the-latest-patch">Packages (install the latest patch)<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/06/26/release-4.16.0#packages-install-the-latest-patch" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <table><thead><tr><th>Package</th><th>Version</th></tr></thead><tbody><tr><td><code>@egjs/flicking</code></td><td>4.16.1</td></tr><tr><td><code>@egjs/react-flicking</code></td><td>4.16.3</td></tr><tr><td><code>@egjs/vue3-flicking</code></td><td>4.16.1</td></tr><tr><td><code>@egjs/flicking-plugins</code></td><td>4.8.1</td></tr></tbody></table>
@@ -108,7 +108,7 @@
         <title type="html"><![CDATA[4.15.0]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2025/11/25/release-4.15.0</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2025/11/25/release-4.15.0"/>
-        <updated>2025-11-25T00:00:00.000Z</updated>
+        <updated>2025-11-25T07:36:27.000Z</updated>
         <summary type="html"><![CDATA[What's Changed]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/ko/releases/2025/11/25/release-4.15.0#whats-changed" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -121,7 +121,7 @@
         <title type="html"><![CDATA[4.14.1]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2025/10/02/release-4.14.1</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2025/10/02/release-4.14.1"/>
-        <updated>2025-10-02T00:00:00.000Z</updated>
+        <updated>2025-10-02T06:37:37.000Z</updated>
         <summary type="html"><![CDATA[What's Changed]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/ko/releases/2025/10/02/release-4.14.1#whats-changed" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -136,7 +136,7 @@
         <title type="html"><![CDATA[4.14.0]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2025/06/30/release-4.14.0</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2025/06/30/release-4.14.0"/>
-        <updated>2025-06-30T00:00:00.000Z</updated>
+        <updated>2025-06-30T08:21:19.000Z</updated>
         <summary type="html"><![CDATA[What's Changed]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/ko/releases/2025/06/30/release-4.14.0#whats-changed" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -153,7 +153,7 @@
         <title type="html"><![CDATA[4.13.1]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2025/05/16/release-4.13.1</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2025/05/16/release-4.13.1"/>
-        <updated>2025-05-16T00:00:00.000Z</updated>
+        <updated>2025-05-16T08:08:20.000Z</updated>
         <summary type="html"><![CDATA[What's Changed]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/ko/releases/2025/05/16/release-4.13.1#whats-changed" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -176,7 +176,7 @@
         <title type="html"><![CDATA[4.12.0]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2024/12/06/release-4.12.0</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2024/12/06/release-4.12.0"/>
-        <updated>2024-12-06T00:00:00.000Z</updated>
+        <updated>2024-12-06T10:15:56.000Z</updated>
         <summary type="html"><![CDATA[New Feature]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="new-feature">New Feature<a href="https://naver.github.io/egjs-flicking/ko/releases/2024/12/06/release-4.12.0#new-feature" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -192,7 +192,7 @@
         <title type="html"><![CDATA[4.11.4]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2024/08/01/release-4.11.4</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2024/08/01/release-4.11.4"/>
-        <updated>2024-08-01T00:00:00.000Z</updated>
+        <updated>2024-08-01T07:47:42.000Z</updated>
         <summary type="html"><![CDATA[Bug Fix]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/ko/releases/2024/08/01/release-4.11.4#bug-fix" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -204,7 +204,7 @@
         <title type="html"><![CDATA[4.11.3]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2024/05/31/release-4.11.3</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2024/05/31/release-4.11.3"/>
-        <updated>2024-05-31T00:00:00.000Z</updated>
+        <updated>2024-05-31T06:24:03.000Z</updated>
         <summary type="html"><![CDATA[Bug Fix]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/ko/releases/2024/05/31/release-4.11.3#bug-fix" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -219,7 +219,7 @@
         <title type="html"><![CDATA[4.11.2]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2023/12/20/release-4.11.2</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2023/12/20/release-4.11.2"/>
-        <updated>2023-12-20T00:00:00.000Z</updated>
+        <updated>2023-12-20T03:03:09.000Z</updated>
         <summary type="html"><![CDATA[Bug Fix]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/ko/releases/2023/12/20/release-4.11.2#bug-fix" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -231,7 +231,7 @@
         <title type="html"><![CDATA[4.11.1]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2023/11/17/release-4.11.1</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2023/11/17/release-4.11.1"/>
-        <updated>2023-11-17T00:00:00.000Z</updated>
+        <updated>2023-11-17T04:27:48.000Z</updated>
         <summary type="html"><![CDATA[Bug Fix]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/ko/releases/2023/11/17/release-4.11.1#bug-fix" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -244,7 +244,7 @@
         <title type="html"><![CDATA[4.11.0]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2023/08/02/release-4.11.0</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2023/08/02/release-4.11.0"/>
-        <updated>2023-08-02T00:00:00.000Z</updated>
+        <updated>2023-08-02T07:45:32.000Z</updated>
         <summary type="html"><![CDATA[New Feature]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="new-feature">New Feature<a href="https://naver.github.io/egjs-flicking/ko/releases/2023/08/02/release-4.11.0#new-feature" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -256,7 +256,7 @@
         <title type="html"><![CDATA[4.10.8]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2023/06/22/release-4.10.8</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2023/06/22/release-4.10.8"/>
-        <updated>2023-06-22T00:00:00.000Z</updated>
+        <updated>2023-06-22T02:10:01.000Z</updated>
         <summary type="html"><![CDATA[Bug Fix]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/ko/releases/2023/06/22/release-4.10.8#bug-fix" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -268,7 +268,7 @@
         <title type="html"><![CDATA[4.10.7]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2023/04/12/release-4.10.7</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2023/04/12/release-4.10.7"/>
-        <updated>2023-04-12T00:00:00.000Z</updated>
+        <updated>2023-04-12T06:53:10.000Z</updated>
         <summary type="html"><![CDATA[Bug Fix]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/ko/releases/2023/04/12/release-4.10.7#bug-fix" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -280,7 +280,7 @@
         <title type="html"><![CDATA[4.10.6]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2023/02/13/release-4.10.6</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2023/02/13/release-4.10.6"/>
-        <updated>2023-02-13T00:00:00.000Z</updated>
+        <updated>2023-02-13T06:29:15.000Z</updated>
         <summary type="html"><![CDATA[Bug Fix]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/ko/releases/2023/02/13/release-4.10.6#bug-fix" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -293,7 +293,7 @@
         <title type="html"><![CDATA[4.10.5]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2023/02/01/release-4.10.5</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2023/02/01/release-4.10.5"/>
-        <updated>2023-02-01T00:00:00.000Z</updated>
+        <updated>2023-02-01T02:31:00.000Z</updated>
         <summary type="html"><![CDATA[Bug Fix]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/ko/releases/2023/02/01/release-4.10.5#bug-fix" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -306,7 +306,7 @@
         <title type="html"><![CDATA[4.10.4]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2022/12/02/release-4.10.4</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2022/12/02/release-4.10.4"/>
-        <updated>2022-12-02T00:00:00.000Z</updated>
+        <updated>2022-12-02T08:01:40.000Z</updated>
         <summary type="html"><![CDATA[Bug Fix]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/ko/releases/2022/12/02/release-4.10.4#bug-fix" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -318,7 +318,7 @@
         <title type="html"><![CDATA[4.10.3]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2022/11/25/release-4.10.3</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2022/11/25/release-4.10.3"/>
-        <updated>2022-11-25T00:00:00.000Z</updated>
+        <updated>2022-11-25T08:26:20.000Z</updated>
         <summary type="html"><![CDATA[Bug Fix]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/ko/releases/2022/11/25/release-4.10.3#bug-fix" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
@@ -330,7 +330,7 @@
         <title type="html"><![CDATA[4.10.2]]></title>
         <id>https://naver.github.io/egjs-flicking/ko/releases/2022/11/03/release-4.10.2</id>
         <link href="https://naver.github.io/egjs-flicking/ko/releases/2022/11/03/release-4.10.2"/>
-        <updated>2022-11-03T00:00:00.000Z</updated>
+        <updated>2022-11-03T08:07:45.000Z</updated>
         <summary type="html"><![CDATA[Bug Fix]]></summary>
         <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/ko/releases/2022/11/03/release-4.10.2#bug-fix" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
