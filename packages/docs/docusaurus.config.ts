@@ -1,7 +1,12 @@
+import fs from "node:fs";
 import path from "node:path";
 import type { Config } from "@docusaurus/types";
 import { themes } from "prism-react-renderer";
 import remarkBreaks from "remark-breaks";
+
+const flickingVersion = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, "../flicking/package.json"), "utf-8")
+).version;
 
 export default {
   title: "Flicking",
@@ -97,7 +102,7 @@ export default {
           label: "Version",
           position: "right",
           items: [
-            { label: "Current", to: "/docs/guide/quickstart" },
+            { label: `Current (${flickingVersion})`, to: "/docs/guide/quickstart" },
             { label: "3.x", href: "https://naver.github.io/egjs-flicking/release/3.8.2/doc/index.html" }
           ]
         },
