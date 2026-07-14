@@ -59,7 +59,11 @@ async function main() {
   for (const release of releases) {
     if (release.draft) continue;
 
+    // 파일명은 가독성을 위해 날짜만 사용하고(':' 는 파일명에 부적합),
+    // frontmatter의 date는 전체 타임스탬프를 사용해 같은 날 여러 릴리즈의
+    // 선후 순서를 초 단위까지 구분한다. (날짜만 쓰면 정렬이 동점 처리됨)
     const date = release.published_at.slice(0, 10);
+    const publishedAt = release.published_at;
     const tag = release.tag_name;
     const filename = `release-${date}-${tag}.md`;
 
@@ -68,7 +72,7 @@ async function main() {
     const preview = fullChangelogIdx > 0 ? body.slice(0, fullChangelogIdx).trimEnd() : body;
     const rest = fullChangelogIdx > 0 ? body.slice(fullChangelogIdx) : "";
 
-    const parts = ["---", `title: "${tag}"`, `date: ${date}`, `tags: [release]`, "---", "", preview];
+    const parts = ["---", `title: "${tag}"`, `date: ${publishedAt}`, `tags: [release]`, "---", "", preview];
 
     if (rest) {
       parts.push("", "<!-- truncate -->", "", rest);

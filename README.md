@@ -23,7 +23,7 @@
 </p>
 
 <h3 align="center">
-  <a href="https://naver.github.io/egjs-flicking/">Demo</a> / <a href="https://naver.github.io/egjs-flicking/docs/api/Flicking">Documentation</a> / <a href="https://naver.github.io/egjs/"><img height="20" src="https://naver.github.io/egjs/img/logo.svg"/> Other components</a>
+  <a href="https://naver.github.io/egjs-flicking/docs/demos/basic/default">Demo</a> / <a href="https://naver.github.io/egjs-flicking/docs/guide/quickstart">Guide</a> / <a href="https://naver.github.io/egjs-flicking/docs/api/classes/Flicking">API</a> / <a href="https://naver.github.io/egjs/"><img height="20" src="https://naver.github.io/egjs/img/logo.svg"/> Other components</a>
 </h3>
 
 <p align="center">
@@ -44,7 +44,7 @@
   </tbody>
 </table>
 <h6 align="center">
-  🖱️Click each images to see its source or check our <a href="https://naver.github.io/egjs-flicking/">full demos</a>.
+  🖱️Click each images to see its source or check our <a href="https://naver.github.io/egjs-flicking/docs/demos/basic/default">full demos</a>.
 </h6>
 
 ## ✨ Features
@@ -118,9 +118,12 @@ This repository is a monorepo that contains Flicking and all its related package
 
 egjs is investing in an **AI-native** development experience — use-case-centered documentation, stronger TypeScript types, clearer error messages, and predictable internals to help both humans and AI agents use Flicking correctly.
 
+See the [llms.txt guide](https://naver.github.io/egjs-flicking/docs/guide/llms) for how to feed Flicking's documentation to LLMs and AI agents.
+
 ## 📖 Documentation & Demos
-- [Demos](https://naver.github.io/egjs-flicking/) — includes an embedded **live code editor** for interactive exploration
-- [API Documentation](https://naver.github.io/egjs-flicking/docs/api/Flicking)
+- [Demos](https://naver.github.io/egjs-flicking/docs/demos/basic/default) — includes an embedded **live code editor** for interactive exploration
+- [Guide](https://naver.github.io/egjs-flicking/docs/guide/quickstart)
+- [API](https://naver.github.io/egjs-flicking/docs/api/classes/Flicking)
 
 ## 🙌 Contributing
 See [CONTRIBUTING.md](https://github.com/naver/egjs-flicking/blob/master/CONTRIBUTING.md). Please file issues on [GitHub](https://github.com/naver/egjs-flicking/issues).
