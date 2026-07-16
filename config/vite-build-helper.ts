@@ -113,7 +113,16 @@ function getBuildOptions(options: ViteConfigOptions): BuildOptions {
     rollupOptions: {
       external: Object.keys(external),
       output: {
-        globals: external
+        globals: external,
+        // Vite emits ESM-style CJS for each package (`exports.default = X` with
+        // `__esModule: true`). A default import of one egjs package from
+        // another (`import Flicking from "@egjs/flicking"`) must therefore be
+        // read through `.default` in the CJS/UMD bundles. "auto" injects the
+        // runtime `_interopDefault` check; without it the require result (the
+        // whole namespace object) is used as the class, so `VanillaFlicking.
+        // prototype` is undefined and SSR throws
+        // "Cannot use 'in' operator to search for 'autoResize' in undefined".
+        interop: "auto"
       }
     },
     minify: minify ? "terser" : false
