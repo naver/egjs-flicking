@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.16.4](https://github.com/naver/egjs-flicking/compare/4.16.3...4.16.4) (2026-07-20)
+### :sparkles: Packages
+* `@egjs/flicking` 4.16.4
+* `@egjs/react-flicking` 4.16.6
+* `@egjs/vue3-flicking` 4.16.4
+
+### :bug: Bug Fixes
+* restore @egjs/imready dependency range to ^1.3.1 ([51800dc](https://github.com/naver/egjs-flicking/commit/51800dce0e73e125fd0608e45a0db60151211a44))
+* build core CJS from index.cjs.ts entry ([ed5d4a9](https://github.com/naver/egjs-flicking/commit/ed5d4a926b34c89ac5d636557e1f64b65bca85ed))
+
+### :memo: Documentation
+* **publish:** add deploy workflow role-split principles ([7ab73e3](https://github.com/naver/egjs-flicking/commit/7ab73e35c889ef17a76a2eefb9a1945f59a705e6))
+* improve README links and version display ([a1f96b0](https://github.com/naver/egjs-flicking/commit/a1f96b09e573ec67b02c2717b35ae7b915277076))
+
+### :white_check_mark: Tests
+* guard core CJS require returns class ([e8218d6](https://github.com/naver/egjs-flicking/commit/e8218d6c716bcbe981eb42b46bc867ef9f134e88))
+
 ## [4.16.3](https://github.com/naver/egjs-flicking/compare/4.16.2...4.16.3) (2026-07-09)
 ### :sparkles: Packages
 * `@egjs/flicking` 4.16.3
