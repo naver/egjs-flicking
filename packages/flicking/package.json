@@ -16,9 +16,9 @@
   "scripts": {
     "dev": "vite --config vite.dev.config.ts",
     "dev:preview": "vite --config vite.dev.config.ts --mode production",
-    "build": "run-s build:bundle build:css build:declaration printsizes",
+    "build": "run-s build:bundle build:css build:declaration verify:cjs printsizes",
     "build:bundle": "rm -rf ./dist && run-s build:bundle:common build:bundle:umd",
-    "build:bundle:common": "vite build",
+    "build:bundle:common": "concurrently \"VITE_BUILD_FORMAT=esm vite build\" \"VITE_BUILD_FORMAT=cjs vite build\"",
     "build:bundle:umd": "concurrently \"VITE_BUILD_FORMAT=umd vite build\" \"VITE_BUILD_FORMAT=umd VITE_MINIFY=true vite build\" \"VITE_BUILD_FORMAT=umd VITE_RESOLVE=true vite build\" \"VITE_BUILD_FORMAT=umd VITE_RESOLVE=true VITE_MINIFY=true vite build\"",
     "build:css": "run-s build:css-clear build:sass build:css-prefix build:css-min",
     "build:css-clear": "rm -rf ./dist/*.css",
@@ -26,6 +26,7 @@
     "build:css-prefix": "postcss dist/*.css --replace --use autoprefixer --no-map",
     "build:css-min": "postcss dist/*.css --ext .min.css --use postcss-clean -d dist/ --no-map",
     "build:declaration": "tsc -p tsconfig.declaration.json",
+    "verify:cjs": "node ../../config/verify-cjs-export.js",
     "css": "postcss css/*.css --use autoprefixer postcss-clean -d dist/ -m",
     "printsizes": "print-sizes ./dist --exclude=\\.map"
   },
