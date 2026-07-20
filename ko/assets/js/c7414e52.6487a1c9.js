@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([["5313"],{54087(e){e.exports=JSON.parse('{"metadata":{"permalink":"/egjs-flicking/ko/releases","page":1,"postsPerPage":100,"totalPages":1,"totalCount":100,"blogDescription":"Blog","blogTitle":"Releases"}}')}}]);

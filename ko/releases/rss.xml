@@ -4,10 +4,39 @@
         <title>Flicking Blog</title>
         <link>https://naver.github.io/egjs-flicking/ko/releases</link>
         <description>Flicking Blog</description>
-        <lastBuildDate>Thu, 09 Jul 2026 08:31:14 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 20 Jul 2026 08:18:08 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>ko</language>
+        <item>
+            <title><![CDATA[4.16.4]]></title>
+            <link>https://naver.github.io/egjs-flicking/ko/releases/2026/07/20/release-4.16.4</link>
+            <guid>https://naver.github.io/egjs-flicking/ko/releases/2026/07/20/release-4.16.4</guid>
+            <pubDate>Mon, 20 Jul 2026 08:18:08 GMT</pubDate>
+            <description><![CDATA[Highlights]]></description>
+            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="highlights">Highlights<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/20/release-4.16.4#highlights" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
+<p>This patch fixes a <strong>CommonJS / SSR regression introduced in 4.16</strong>.</p>
+<ul>
+<li class=""><strong>fix(core): CJS <code>require("@egjs/flicking")</code> returns the <code>Flicking</code> class again</strong> — 4.16's Vite migration accidentally dropped the hybrid CJS entry (<code>index.cjs.ts</code>), so <code>require()</code> returned a namespace object (<code>{ default, ... }</code>) instead of the class. This broke direct CommonJS <code>require</code> (<code>new F()</code>, <code>F.prototype</code>) and wrapper SSR (<code>renderToString</code>). The CJS build now uses <code>index.cjs.ts</code> again, producing output identical to 4.15. A <code>verify:cjs</code> build-time guard prevents the regression from recurring. (#953, closes #952)</li>
+<li class=""><strong>fix(core): restore <code>@egjs/imready</code> dependency range to <code>^1.3.1</code></strong> — the monorepo migration lowered the range floor to <code>^1.1.1</code>; restored to match 4.15 and avoid unintended downgrades. (#954)</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_ZFAD" id="packages">Packages<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/20/release-4.16.4#packages" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h3>
+<ul>
+<li class=""><code>@egjs/flicking</code> 4.16.4</li>
+<li class=""><code>@egjs/react-flicking</code> 4.16.6</li>
+<li class=""><code>@egjs/vue3-flicking</code> 4.16.4</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/ko/releases/2026/07/20/release-4.16.4#whats-changed" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
+<ul>
+<li class="">docs: improve README links and version display by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/950" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/950</a></li>
+<li class="">fix: build core CJS from index.cjs.ts entry by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/953" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/953</a></li>
+<li class="">fix: restore @egjs/imready dependency range to ^1.3.1 by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/954" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/954</a></li>
+<li class="">docs(publish): add deploy workflow role-split principles by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/955" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/955</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/naver/egjs-flicking/compare/4.16.3...4.16.4" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/compare/4.16.3...4.16.4</a></p>]]></content:encoded>
+            <category>release</category>
+        </item>
         <item>
             <title><![CDATA[4.16.3]]></title>
             <link>https://naver.github.io/egjs-flicking/ko/releases/2026/07/09/release-4.16.3</link>
@@ -324,19 +353,6 @@
             <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/ko/releases/2022/11/25/release-4.10.3#bug-fix" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
 <ul>
 <li class="">Fixed a bug that <code>resizeOnContentsReady</code> option cause error with lazy image loading inside panel (#745)</li>
-</ul>]]></content:encoded>
-            <category>release</category>
-        </item>
-        <item>
-            <title><![CDATA[4.10.2]]></title>
-            <link>https://naver.github.io/egjs-flicking/ko/releases/2022/11/03/release-4.10.2</link>
-            <guid>https://naver.github.io/egjs-flicking/ko/releases/2022/11/03/release-4.10.2</guid>
-            <pubDate>Thu, 03 Nov 2022 08:07:45 GMT</pubDate>
-            <description><![CDATA[Bug Fix]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/ko/releases/2022/11/03/release-4.10.2#bug-fix" class="hash-link" aria-label="제목으로 바로 가기" title="제목으로 바로 가기" translate="no">​</a></h2>
-<ul>
-<li class="">Fixed component dependency for frameworks (#741)</li>
-<li class="">Fixed a bug that some setters doesn't update UI (#743)</li>
 </ul>]]></content:encoded>
             <category>release</category>
         </item>
