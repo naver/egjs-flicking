@@ -75,7 +75,13 @@ release/{scope}-{version}
 3. pnpm install 로 lockfile·심링크를 갱신한다. (버전 변경 후 필수)
    생략하면 래퍼 publish 단계에서 ERR_PNPM_CANNOT_RESOLVE_WORKSPACE_PROTOCOL로 중단된다.
 4. pnpm publish:stable 로 전체 빌드 + npm 퍼블리시한다.
-5. (선택) pnpm release 로 changelog, tag, GitHub Release를 생성한다.
+5. pnpm release 로 changelog·tag·push, gh release create 로 GitHub Release를 생성한다.
+6. pnpm docs:deploy 로 문서 사이트를 배포한다. (릴리즈 후 필수)
+   문서 사이트의 릴리즈 노트(/releases)·버전 표시는 빌드 시 GitHub Release를
+   가져와 갱신하므로, 릴리즈 노트 작성 후 문서를 배포하지 않으면 낡은 채 남는다.
+   ※ 배포 명령은 정본(naver/egjs-flicking)을 가리키는 리모트에 따라 고른다.
+     docs:deploy 는 upstream, docs:deploy-origin 은 origin에 배포한다.
+     상세 → DOCS_GUIDE.md "배포"
 ```
 
 ```bash
@@ -279,9 +285,12 @@ pnpm publish:version minor
 pnpm install
 # 4. 빌드 + 배포
 pnpm publish:stable
-# 5. 릴리즈 (선택)
+# 5. 릴리즈
 pnpm release
 gh release create "4.17.0" --title "4.17.0 Release" --generate-notes
+# 6. 문서 사이트 배포 (릴리즈 후 필수 — /releases·버전 표시 갱신)
+#    정본을 가리키는 리모트에 따라 docs:deploy(upstream) 또는 docs:deploy-origin(origin)
+pnpm docs:deploy
 ```
 
 #### 코어 patch 정식 배포
