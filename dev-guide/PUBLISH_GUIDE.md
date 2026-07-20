@@ -79,8 +79,9 @@ release/{scope}-{version}
 6. pnpm docs:deploy 로 문서 사이트를 배포한다. (릴리즈 후 필수)
    문서 사이트의 릴리즈 노트(/releases)·버전 표시는 빌드 시 GitHub Release를
    가져와 갱신하므로, 릴리즈 노트 작성 후 문서를 배포하지 않으면 낡은 채 남는다.
-   ※ 이 클론처럼 origin이 정본(naver/egjs-flicking)이고 upstream 리모트가 없으면
-     pnpm docs:deploy-origin 을 사용한다. 상세 → DOCS_GUIDE.md "배포"
+   ※ 배포 명령은 정본(naver/egjs-flicking)을 가리키는 리모트에 따라 고른다.
+     docs:deploy 는 upstream, docs:deploy-origin 은 origin에 배포한다.
+     상세 → DOCS_GUIDE.md "배포"
 ```
 
 ```bash
@@ -288,7 +289,7 @@ pnpm publish:stable
 pnpm release
 gh release create "4.17.0" --title "4.17.0 Release" --generate-notes
 # 6. 문서 사이트 배포 (릴리즈 후 필수 — /releases·버전 표시 갱신)
-#    origin이 정본이고 upstream 리모트가 없으면 docs:deploy-origin 사용
+#    정본을 가리키는 리모트에 따라 docs:deploy(upstream) 또는 docs:deploy-origin(origin)
 pnpm docs:deploy
 ```
 
