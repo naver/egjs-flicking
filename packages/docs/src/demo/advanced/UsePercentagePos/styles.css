@@ -1,0 +1,44 @@
+/* %-based panel sizes so panels scale together with the viewport */
+.flicking-panel {
+  width: 60%;
+  height: 120px;
+  margin-right: 2%;
+}
+
+.controls {
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 0 16px;
+}
+
+.controls .value-label {
+  margin-left: auto;
+  font-size: 13px;
+  color: #666;
+}
+
+.demo-section {
+  margin-bottom: 16px;
+}
+
+.demo-section .demo-label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.demo-hint {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.transform-bar {
+  margin-top: 6px;
+  padding: 6px 12px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: monospace;
+  color: #333;
+}

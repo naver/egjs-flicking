@@ -1,0 +1,18 @@
+id: use-percentage-pos
+category: advanced
+demo: advanced/UsePercentagePos
+
+intent: "usePercentagePos 옵션이 카메라 transform을 px 대신 %로 적용해, 뷰포트 너비가 변해도 resize 반영 전까지 패널 상대 위치가 유지됨을 보여준다"
+
+focus:
+  - 2개 viewport + 컨트롤(너비 토글, resize 버튼) 렌더링
+  - usePercentagePos 옵션 확인 (false/true)
+  - false는 transform이 px 단위, true는 % 단위로 적용
+  - 너비 축소 시 % 데모는 활성 패널 정렬 유지, px 데모는 어긋남
+  - resize() 호출 후 px 데모 정렬 복구
+
+api:
+  options: [usePercentagePos, autoResize]
+  methods: [resize]
+
+frameworks: [vanilla, react, vue]

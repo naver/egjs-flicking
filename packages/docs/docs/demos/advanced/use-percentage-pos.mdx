@@ -1,0 +1,74 @@
+---
+title: "Percentage Position"
+id: use-percentage-pos
+slug: /demos/advanced/use-percentage-pos
+sidebar_position: 19
+description: Apply the camera position as a percentage value to keep panels in place when the viewport size changes
+keywords: [flicking, carousel, usePercentagePos, percentage, responsive, resize, transform, translate]
+---
+
+import UsePercentagePos from '@site/src/demo/advanced/UsePercentagePos';
+
+# Percentage Position
+
+Apply the camera element's `transform` position as a percentage value (`%`) instead of `px` using the [`usePercentagePos`](../../api/interfaces/FlickingOptions#usepercentagepos) option.
+
+The demo below disables [`autoResize`](../../api/interfaces/FlickingOptions#autoresize) to simulate the moment before [`resize()`](../../api/classes/Flicking#resize) is applied. Toggle the container width and compare the two carousels — the px-positioned one gets misaligned until `resize()` is called, while the %-positioned one keeps its relative position.
+
+<UsePercentagePos />
+
+## Summary
+
+### Key Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| [`usePercentagePos`](../../api/interfaces/FlickingOptions#usepercentagepos) | `boolean` | `false` | Apply the camera position as a percentage value (`%`) instead of `px` |
+
+### Behavior Comparison
+
+| Setting | Camera transform | On viewport size change (before resize) |
+|---------|------------------|------------------------------------------|
+| `usePercentagePos: false` | `translate(-832px)` | Camera stays at the same px position, so panels get misaligned |
+| `usePercentagePos: true` | `translate(-104%)` | Camera keeps its relative position, so panels stay in place |
+
+## Details
+
+### How It Works
+
+When enabled, Flicking calculates the camera position as a percentage relative to the viewport size and applies it as `transform: translate(-104%)` instead of `translate(-832px)`.
+
+Since a percentage position scales together with the viewport, the camera keeps its relative position even before the internal sizes are recalculated by [`resize()`](../../api/classes/Flicking#resize). When the panels are also sized with relative units (`%`-based widths and margins like this demo), the whole layout stays visually aligned during viewport size changes.
+
+### Related Options
+
+- **`autoResize`와의 관계**: In real-world usage you'd keep [`autoResize`](../../api/interfaces/FlickingOptions#autoresize) enabled. `usePercentagePos` prevents the temporary misalignment between the moment the layout changes and the moment the (possibly debounced) resize call is applied. This demo disables it only to make that in-between moment observable.
+- **`resizeDebounce`와의 관계**: With a large [`resizeDebounce`](../../api/interfaces/FlickingOptions#resizedebounce) value, the gap until resize is applied gets longer. `usePercentagePos` keeps panels in place during that gap.
+
+### Use Cases
+
+:::info When should you use this?
+- **Responsive (%-based) layouts**: Panels keep their position while the container size changes, such as during window resizes or CSS transitions
+- **Debounced resize**: Prevents visible misalignment during the debounce delay when using `resizeDebounce`
+:::
+
+### Notes
+
+:::warning Caution
+- The percentage position keeps panels visually aligned only when the panel sizes are also relative to the viewport (e.g., `%`-based widths). Panels with fixed px sizes will still be misaligned until `resize()` is called.
+- This option only changes how the camera position is *applied*. The internal sizes are not updated automatically — `resize()` still has to be called (or `autoResize` kept enabled) to update the input areas and movement boundaries.
+:::
+
+## Related Links
+
+### Related Options
+- [`autoResize`](../../api/interfaces/FlickingOptions#autoresize): Automatic resize detection
+- [`resizeDebounce`](../../api/interfaces/FlickingOptions#resizedebounce): Resize call debounce
+- [`useFractionalSize`](../../api/interfaces/FlickingOptions#usefractionalsize): CSS-computed fractional sizes
+
+### Related Methods
+- [`resize`](../../api/classes/Flicking#resize): Recalculate the internal sizes
+
+### Related Demos
+- [Resize Debounce](./resize-debounce): Control resize call frequency
+- [Auto Resize](./auto-resize): Resize detection method settings
