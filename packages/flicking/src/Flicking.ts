@@ -509,6 +509,17 @@ export interface FlickingOptions {
   useFractionalSize: boolean;
 
   /**
+   * Whether to apply the camera element's `transform` position as a percentage value (`%`) instead of `px`.
+   * @remarks
+   * The percentage value is calculated relative to the viewport size.
+   * When enabled, the camera element keeps its relative position even if the viewport size changes before {@link Flicking.resize | resize()} is applied.
+   * This can prevent a temporary panel position mismatch when Flicking is resized with a responsive(%-based) layout.
+   * @defaultValue false
+   * @since 4.17.0
+   */
+  usePercentagePos: boolean;
+
+  /**
    * This is an option for the frameworks (React, Vue, Angular, ...).
    * Don't set it as it's automatically managed by Flicking.
    * @defaultValue null
@@ -622,6 +633,7 @@ class Flicking extends Component<FlickingEvents> {
   private _observePanelResize: FlickingOptions["observePanelResize"];
   private _maxResizeDebounce: FlickingOptions["maxResizeDebounce"];
   private _useFractionalSize: FlickingOptions["useFractionalSize"];
+  private _usePercentagePos: FlickingOptions["usePercentagePos"];
   private _externalRenderer: FlickingOptions["externalRenderer"];
   private _renderExternal: FlickingOptions["renderExternal"];
   private _optimizeSizeUpdate: FlickingOptions["optimizeSizeUpdate"];
@@ -1069,6 +1081,14 @@ class Flicking extends Component<FlickingEvents> {
     return this._useFractionalSize;
   }
 
+  /**
+   * Current value of the {@link FlickingOptions.usePercentagePos | usePercentagePos} option.
+   * @since 4.17.0
+   */
+  public get usePercentagePos(): FlickingOptions["usePercentagePos"] {
+    return this._usePercentagePos;
+  }
+
   /** Current value of the {@link FlickingOptions.externalRenderer | externalRenderer} option. */
   public get externalRenderer(): FlickingOptions["externalRenderer"] {
     return this._externalRenderer;
@@ -1448,6 +1468,17 @@ class Flicking extends Component<FlickingEvents> {
     this._optimizeSizeUpdate = val;
   }
 
+  /**
+   * Sets {@link FlickingOptions.usePercentagePos}.
+   * @privateRemarks
+   * Setting this value immediately re-applies the camera element's transform with the new unit.
+   * The transform is not re-applied when Flicking is not initialized or the renderer is rendering.
+   */
+  public set usePercentagePos(val: FlickingOptions["usePercentagePos"]) {
+    this._usePercentagePos = val;
+    this._camera.applyTransform();
+  }
+
   /** Creates a new Flicking instance
    * @param root - A root HTMLElement to initialize Flicking on it. When it's a typeof `string`, it should be a css selector string
    * @param options - A {@link FlickingOptions} object
@@ -1504,6 +1535,7 @@ class Flicking extends Component<FlickingEvents> {
       observePanelResize = false,
       maxResizeDebounce = 100,
       useFractionalSize = false,
+      usePercentagePos = false,
       externalRenderer = null,
       renderExternal = null,
       optimizeSizeUpdate = false,
@@ -1553,6 +1585,7 @@ class Flicking extends Component<FlickingEvents> {
     this._maxResizeDebounce = maxResizeDebounce;
     this._observePanelResize = observePanelResize;
     this._useFractionalSize = useFractionalSize;
+    this._usePercentagePos = usePercentagePos;
     this._externalRenderer = externalRenderer;
     this._renderExternal = renderExternal;
     this._optimizeSizeUpdate = optimizeSizeUpdate;

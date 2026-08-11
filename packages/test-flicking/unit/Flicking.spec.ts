@@ -1260,6 +1260,43 @@ describe("Flicking", () => {
         expect(flicking.index).toBe(2);
       });
     });
+
+    describe("usePercentagePos", () => {
+      it("is false by default", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        expect(flicking.usePercentagePos).toBe(false);
+      });
+
+      it("should apply camera position as px when disabled", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+        const camera = flicking.camera;
+        const translatePos = camera.position - camera.alignPosition - camera.offset;
+
+        expect(camera.element.style.transform).toBe(`translate(${-translatePos}px)`);
+      });
+
+      it("should apply camera position as percentage relative to the viewport size when enabled", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          usePercentagePos: true,
+          defaultIndex: 1
+        });
+        const camera = flicking.camera;
+        const translatePos = camera.position - camera.alignPosition - camera.offset;
+
+        expect(camera.element.style.transform).toBe(`translate(${(-translatePos / camera.size) * 100}%)`);
+      });
+
+      it("should re-apply the camera transform when changed after init", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+        const camera = flicking.camera;
+        const translatePos = camera.position - camera.alignPosition - camera.offset;
+
+        flicking.usePercentagePos = true;
+
+        expect(flicking.usePercentagePos).toBe(true);
+        expect(camera.element.style.transform).toBe(`translate(${(-translatePos / camera.size) * 100}%)`);
+      });
+    });
   });
 
   describe("Initial rendering", () => {
