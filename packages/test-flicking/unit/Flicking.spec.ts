@@ -1296,6 +1296,82 @@ describe("Flicking", () => {
         expect(flicking.usePercentagePos).toBe(true);
         expect(camera.element.style.transform).toBe(`translate(${(-translatePos / camera.size) * 100}%)`);
       });
+
+      it("should apply percentage position on the y-axis on vertical mode", async () => {
+        const flicking = await createFlicking(El.DEFAULT_VERTICAL, {
+          usePercentagePos: true,
+          horizontal: false,
+          defaultIndex: 1
+        });
+        const camera = flicking.camera;
+        const translatePos = camera.position - camera.alignPosition - camera.offset;
+
+        // CSSOM이 "translate(0, ...)"의 0을 "0px"로 정규화해서 반환한다
+        expect(camera.element.style.transform).toBe(`translate(0px, ${(-translatePos / camera.size) * 100}%)`);
+      });
+
+      it("should apply percentage position with a flipped sign on RTL", async () => {
+        const flicking = await createFlicking(
+          El.viewport("1000px", "100%")
+            .setDirection("rtl")
+            .add(El.camera().add(El.panel("300px", "300px"), El.panel("300px", "300px"), El.panel("300px", "300px"))),
+          { usePercentagePos: true, defaultIndex: 1 }
+        );
+        const camera = flicking.camera;
+        const translatePos = camera.position - camera.alignPosition - camera.offset;
+
+        expect(camera.element.style.transform).toBe(`translate(${(translatePos / camera.size) * 100}%)`);
+      });
+
+      it("should apply percentage position including the circular offset on circular mode", async () => {
+        const flicking = await createFlicking(
+          El.viewport("1000px", "100%").add(
+            El.camera().add(
+              El.panel("300px", "300px"),
+              El.panel("300px", "300px"),
+              El.panel("300px", "300px"),
+              El.panel("300px", "300px"),
+              El.panel("300px", "300px")
+            )
+          ),
+          { usePercentagePos: true, circular: true }
+        );
+        const camera = flicking.camera;
+        // camera.offset은 circularOffset이 반영된 값이므로 circular 모드에서도 동일한 수식이 성립한다
+        const translatePos = camera.position - camera.alignPosition - camera.offset;
+
+        expect(flicking.circularEnabled).toBe(true);
+        expect(camera.element.style.transform).toBe(`translate(${(-translatePos / camera.size) * 100}%)`);
+      });
+
+      it("should update percentage position after moving to another panel", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { usePercentagePos: true });
+        const camera = flicking.camera;
+        const prevTransform = camera.element.style.transform;
+
+        await flicking.moveTo(2, 0);
+
+        const translatePos = camera.position - camera.alignPosition - camera.offset;
+        expect(camera.element.style.transform).not.toBe(prevTransform);
+        expect(camera.element.style.transform).toBe(`translate(${(-translatePos / camera.size) * 100}%)`);
+      });
+
+      it("should keep the same relative position after a proportional resize", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          usePercentagePos: true,
+          defaultIndex: 1
+        });
+        const camera = flicking.camera;
+        const prevTransform = camera.element.style.transform;
+
+        expect(prevTransform).toBe("translate(-100%)");
+
+        // 패널이 뷰포트 사이즈에 비례(100% 너비)하므로, 뷰포트 사이즈가 변해도 % 포지션은 동일해야 한다
+        flicking.element.style.width = "500px";
+        await flicking.resize();
+
+        expect(camera.element.style.transform).toBe(prevTransform);
+      });
     });
   });
 
@@ -1505,8 +1581,10 @@ describe("Flicking", () => {
         const firstEvent = resizeSpy.mock.calls[0][0] as AfterResizeEvent;
         const lastEvent = resizeSpy.mock.calls[resizeSpy.mock.calls.length - 1][0] as AfterResizeEvent;
         expect(resizeSpy).toHaveBeenCalledTimes(2);
-        expect(firstEvent.width).toBe(500);
-        expect(firstEvent.height).toBe(500);
+        // 뷰포트 사이즈 측정은 forceRenderAllPanels() 이후에 수행되므로,
+        // 첫 번째 resize도 그 사이에 변경된 최신 사이즈(400)를 반영한다.
+        expect(firstEvent.width).toBe(400);
+        expect(firstEvent.height).toBe(400);
         expect(lastEvent.width).toBe(400);
         expect(lastEvent.height).toBe(400);
       });
@@ -2688,6 +2766,47 @@ describe("Flicking", () => {
 
         expect(toggled).not.toEqual(toggledAfter);
         expect(offsetBefore).not.toBe(offsetAfter);
+      });
+
+      it("should reflect the viewport size changed during the async panel re-rendering", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const renderer = flicking.renderer;
+        const originalForceRender = renderer.forceRenderAllPanels.bind(renderer);
+        const afterResizeSpy = vi.fn();
+
+        flicking.on(EVENTS.AFTER_RESIZE, afterResizeSpy);
+        // forceRenderAllPanels(프레임워크 리렌더링 대기) 도중 뷰포트 사이즈가 변경되는 상황을 재현
+        vi.spyOn(renderer, "forceRenderAllPanels").mockImplementation(async () => {
+          await originalForceRender();
+          flicking.element.style.width = "600px";
+        });
+
+        await flicking.resize();
+
+        const event = afterResizeSpy.mock.calls[0][0] as AfterResizeEvent;
+        expect(flicking.viewport.width).toBe(600);
+        expect(flicking.panels[0].size).toBe(600);
+        expect(event.width).toBe(600);
+      });
+
+      it("should keep the previous viewport size until the panel re-rendering finishes", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const renderer = flicking.renderer;
+        const originalForceRender = renderer.forceRenderAllPanels.bind(renderer);
+        let widthDuringRender = 0;
+
+        // 실제 뷰포트 엘리먼트의 사이즈가 변경된 상태에서 resize()가 호출된 상황을 재현
+        flicking.element.style.width = "600px";
+        vi.spyOn(renderer, "forceRenderAllPanels").mockImplementation(async () => {
+          // 리렌더링 시점에는 이전 뷰포트 사이즈가 유지되어야 한다
+          widthDuringRender = flicking.viewport.width;
+          await originalForceRender();
+        });
+
+        await flicking.resize();
+
+        expect(widthDuringRender).toBe(1000);
+        expect(flicking.viewport.width).toBe(600);
       });
     });
 
