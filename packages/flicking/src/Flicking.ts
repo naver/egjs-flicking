@@ -516,6 +516,7 @@ export interface FlickingOptions {
    * This can prevent a temporary panel position mismatch when Flicking is resized with a responsive(%-based) layout.
    * @defaultValue false
    * @since 4.17.0
+   * @see {@link https://naver.github.io/egjs-flicking/docs/demos/advanced/use-percentage-pos | Demo: Percentage Position}
    */
   usePercentagePos: boolean;
 
@@ -1993,13 +1994,19 @@ class Flicking extends Component<FlickingEvents> {
       })
     );
 
-    viewport.resize();
-
+    // 뷰포트 사이즈 갱신(viewport.resize())은 forceRenderAllPanels() 이후에 수행한다.
+    // forceRenderAllPanels()는 프레임워크 리렌더링을 기다리는 비동기 구간이라 그 사이 뷰포트 사이즈가
+    // 한 번 더 변경될 수 있고, 리렌더링 도중에는 이전 뷰포트 사이즈가 유지되어야 하기 때문.
     // 뷰포트 사이즈가 변경되었을 때 내부의 패널 사이즈들도 전부 업데이트 되어야 하므로 패널들을 전부 리렌더링한다.
     // optimizeSizeUpdate가 true일 경우에는 플리킹 방향에 대응되는 뷰포트 사이즈 요소가 변경되었을 때만 패널들을 리렌더링한다.
     // 자세한 사항은 optimizeSizeUpdate 옵션의 설명을 참고.
     if (this._optimizeSizeUpdate) {
-      if ((this.horizontal && viewport.width !== prevWidth) || (!this.horizontal && viewport.height !== prevHeight)) {
+      // 뷰포트 사이즈를 갱신하지 않고 현재 사이즈만 측정해서 리렌더링 필요 여부를 판단한다.
+      const measuredSize = viewport.measureSize();
+      if (
+        (this.horizontal && measuredSize.width !== prevWidth) ||
+        (!this.horizontal && measuredSize.height !== prevHeight)
+      ) {
         await renderer.forceRenderAllPanels();
       }
     } else {
@@ -2009,12 +2016,19 @@ class Flicking extends Component<FlickingEvents> {
     if (!this._initialized) {
       return;
     }
+    // 리렌더링이 끝난 이후에 뷰포트 사이즈를 갱신하고, 이후 계산을 모두 최신 값 기준으로 수행한다.
+    viewport.resize();
     renderer.updatePanelSize();
     camera.updateAlignPos();
     camera.updateRange();
     camera.updateAnchors();
     camera.updateAdaptiveHeight();
     camera.updatePanelOrder();
+    if (!control.animating) {
+      // 리사이즈로 패널 크기·위치가 변경된 새 좌표계에 맞춰 카메라 포지션을 transform 적용 전에 갱신한다.
+      // render는 비동기라 이후에 갱신하면 "새 레이아웃 + 이전 포지션" 프레임이 그려져 화면이 흔들린다.
+      control.updatePosition(prevProgressInPanel);
+    }
     camera.updateOffset();
     await renderer.render();
 
@@ -2025,6 +2039,7 @@ class Flicking extends Component<FlickingEvents> {
     if (control.animating) {
       // TODO:
     } else {
+      // 렌더 이후로 1번더 좌표를 갱신한다.
       control.updatePosition(prevProgressInPanel);
       control.updateInput();
     }

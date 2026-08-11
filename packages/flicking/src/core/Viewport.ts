@@ -109,35 +109,63 @@ class Viewport {
   }
 
   /**
+   * Measure the current size of the viewport element without updating {@link Viewport.width | width}/{@link Viewport.height | height}
+   * @internal
+   * @privateRemarks
+   * Used inside {@link Flicking.resize} to determine whether the panels should be re-rendered (optimizeSizeUpdate)
+   * while keeping the previous viewport size until the re-rendering finishes.
+   * The new size is committed afterwards by calling {@link Viewport.resize | resize()}.
+   * @returns Current width/height of the viewport element, without paddings
+   */
+  public measureSize(): { width: number; height: number } {
+    const { width, height, padding } = this._measure();
+
+    return {
+      width: width - padding.left - padding.right,
+      height: height - padding.top - padding.bottom
+    };
+  }
+
+  /**
    * Update width/height to the current viewport element's size
    */
   public resize() {
+    const { width, height, padding, isBorderBoxSizing } = this._measure();
+
+    this._width = width;
+    this._height = height;
+    this._padding = padding;
+    this._isBorderBoxSizing = isBorderBoxSizing;
+  }
+
+  private _measure() {
     const el = this._el;
     const elStyle = getStyle(el);
     const { useFractionalSize } = this._flicking;
 
-    this._width = getElementSize({
-      el,
-      horizontal: true,
-      useFractionalSize,
-      useOffset: false,
-      style: elStyle
-    });
-    this._height = getElementSize({
-      el,
-      horizontal: false,
-      useFractionalSize,
-      useOffset: false,
-      style: elStyle
-    });
-
-    this._padding = {
-      left: elStyle.paddingLeft ? parseFloat(elStyle.paddingLeft) : 0,
-      right: elStyle.paddingRight ? parseFloat(elStyle.paddingRight) : 0,
-      top: elStyle.paddingTop ? parseFloat(elStyle.paddingTop) : 0,
-      bottom: elStyle.paddingBottom ? parseFloat(elStyle.paddingBottom) : 0
+    return {
+      width: getElementSize({
+        el,
+        horizontal: true,
+        useFractionalSize,
+        useOffset: false,
+        style: elStyle
+      }),
+      height: getElementSize({
+        el,
+        horizontal: false,
+        useFractionalSize,
+        useOffset: false,
+        style: elStyle
+      }),
+      padding: {
+        left: elStyle.paddingLeft ? parseFloat(elStyle.paddingLeft) : 0,
+        right: elStyle.paddingRight ? parseFloat(elStyle.paddingRight) : 0,
+        top: elStyle.paddingTop ? parseFloat(elStyle.paddingTop) : 0,
+        bottom: elStyle.paddingBottom ? parseFloat(elStyle.paddingBottom) : 0
+      },
+      isBorderBoxSizing: elStyle.boxSizing === "border-box"
     };
-    this._isBorderBoxSizing = elStyle.boxSizing === "border-box";
   }
 }
 
