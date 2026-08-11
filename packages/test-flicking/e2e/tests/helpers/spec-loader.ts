@@ -22,6 +22,8 @@ export interface DemoSpec {
   };
   /** 테스트 대상 프레임워크 */
   frameworks: Array<"vanilla" | "react" | "vue">;
+  /** test harness 제약으로 검증하지 못한 항목과 사유 */
+  limitations?: string[];
 }
 
 const TESTS_DIR = path.resolve(import.meta.dirname, "..");

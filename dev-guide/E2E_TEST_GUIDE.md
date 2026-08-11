@@ -109,9 +109,12 @@ api:
   plugins: [Arrow]        # 사용하는 플러그인
 
 frameworks: [vanilla, react, vue]
+
+limitations:                # (선택) test harness 제약으로 검증 못한 항목 + 사유
+  - "debounce 타이밍 차이: 슬라이더 입력이 실제 사용자 조작과 달라 지연 폭 비교 불가"
 ```
 
-**스펙이 담는 것**: 데모의 존재 이유, 테스트 포커스, 관련 API
+**스펙이 담는 것**: 데모의 존재 이유, 테스트 포커스, 관련 API, 검증 불가 항목
 **스펙이 담지 않는 것**: 옵션 상세 설명(MDX에 있음), selector/assertion 상세(테스트 코드에 있음)
 
 ## 테스트 작성법
@@ -172,9 +175,11 @@ await page.evaluate(async () => {
 1. `tests/{category}/{id}/` 디렉토리 생성
 2. `tests/{category}/{id}/{id}.yaml` 스펙 작성 (intent, focus, api, frameworks)
 3. `tests/{category}/{id}/{id}.spec.ts` 테스트 작성 (스펙의 focus를 테스트로 구현)
-3. `pnpm generate` 실행하여 HTML 엔트리 생성 확인
-4. `pnpm test:headed` 로 브라우저에서 확인
-5. `pnpm test` 로 전체 통과 확인
+4. `pnpm generate` 실행하여 HTML 엔트리 생성 확인
+5. `pnpm test:headed` 로 브라우저에서 확인
+6. `pnpm test` 로 전체 통과 확인
+
+기존 케이스의 테스트를 보강하는 작업은 [E2E_CASE_PROGRAM.md](./E2E_CASE_PROGRAM.md)의 절차와 품질 기준을 따른다.
 
 ## 데모 변경 시 E2E 동반 수정
 
