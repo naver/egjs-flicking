@@ -2,14 +2,22 @@ id: threshold
 category: basic
 demo: basic/Threshold
 
-intent: "threshold 옵션으로 패널 이동에 필요한 최소 드래그 거리를 조절할 수 있음을 보여준다"
+intent: "threshold 옵션으로 패널을 넘기는 데 필요한 최소 드래그 거리를 조절할 수 있음을 보여준다"
 
 focus:
-  - 3개의 Flicking 인스턴스가 렌더링됨 (10/40/100)
-  - threshold:100 인스턴스에서 짧은 드래그는 패널 이동 안 됨
-  - threshold:10 인스턴스에서 짧은 드래그로도 패널 이동
+  - threshold가 다른 3개 인스턴스(10/40/100)가 렌더링된다
+  - threshold 미만으로 드래그하면 패널이 바뀌지 않고 원래 패널로 되돌아온다
+  - threshold 이상으로 드래그하면 인접 패널로 이동한다
+  - 같은 거리를 드래그해도 threshold가 큰 인스턴스는 이동하지 않는다
+  - 되돌아온 인스턴스도 이후 충분한 드래그에는 정상적으로 이동한다
 
 api:
   options: [threshold]
 
 frameworks: [vanilla, react, vue]
+
+limitations:
+  # SnapControl.moveToPosition은 raw 드래그 거리가 아니라 릴리스 시점의 관성이 실린
+  # delta를 threshold와 비교한다. 따라서 임계값 바로 근처(예: threshold 100에 99px)는
+  # 드래그 속도에 따라 결과가 갈리므로 단언하지 않고, 여유를 둔 거리로만 검증한다.
+  - "임계값 경계(±10px 이내)는 드래그 속도에 따라 결과가 달라져 검증 대상에서 제외"
