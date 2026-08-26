@@ -42,8 +42,8 @@ Since a percentage position scales together with the viewport, the camera keeps 
 
 ### Related Options
 
-- **`autoResize`와의 관계**: In real-world usage you'd keep [`autoResize`](../../api/interfaces/FlickingOptions#autoresize) enabled. `usePercentagePos` prevents the temporary misalignment between the moment the layout changes and the moment the (possibly debounced) resize call is applied. This demo disables it only to make that in-between moment observable.
-- **`resizeDebounce`와의 관계**: With a large [`resizeDebounce`](../../api/interfaces/FlickingOptions#resizedebounce) value, the gap until resize is applied gets longer. `usePercentagePos` keeps panels in place during that gap.
+- **Relationship with `autoResize`**: In real-world usage you'd keep [`autoResize`](../../api/interfaces/FlickingOptions#autoresize) enabled. `usePercentagePos` prevents the temporary misalignment between the moment the layout changes and the moment the (possibly debounced) resize call is applied. This demo disables it only to make that in-between moment observable.
+- **Relationship with `resizeDebounce`**: With a large [`resizeDebounce`](../../api/interfaces/FlickingOptions#resizedebounce) value, the gap until resize is applied gets longer. `usePercentagePos` keeps panels in place during that gap.
 
 ### Use Cases
 
