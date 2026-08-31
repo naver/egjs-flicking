@@ -40,7 +40,15 @@ export interface Status {
   panels: Array<{
     /** An index of the panel */
     index: number;
-    /** An `outerHTML` of the panel element */
+    /**
+     * An `outerHTML` of the panel element.
+     * @remarks
+     * This is informational only. {@link Flicking.setStatus} does **not** re-parse it to rebuild
+     * panels, since an `outerHTML`→`innerHTML` round-trip can revive a mutation-XSS payload that
+     * was inert on first render. Panels are restored by cloning a node snapshot captured at
+     * {@link Flicking.getStatus} time; after a JSON round-trip drops that snapshot, panel DOM is
+     * left untouched and only index/position restore.
+     */
     html?: string;
   }>;
 }

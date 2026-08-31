@@ -2633,6 +2633,81 @@ describe("Flicking", () => {
         expect(flicking.camera.position).not.toBe(prevPosition);
         expect(flicking.camera.range).not.toEqual(prevRange);
       });
+
+      describe("Security", () => {
+        // Inert on first parse (img is <style> raw text in foreign content), but revives into a
+        // real <img> element once serialized to outerHTML and re-parsed via innerHTML (mXSS).
+        const MXSS_PAYLOAD =
+          '<math><mtext><table><mglyph><style><img src="x" onerror="window.__statusXss = true"></style></mglyph></table></mtext></math>';
+
+        const createFlickingWithPayload = () => {
+          const payloadPanel = El.panel().setWidth("100%").setHeight(300);
+          payloadPanel.el.innerHTML = MXSS_PAYLOAD;
+          return createFlicking(
+            El.viewport("1000px", "100%").add(El.camera().add(payloadPanel, El.panel().setWidth("100%").setHeight(300)))
+          );
+        };
+
+        beforeEach(() => {
+          (window as any).__statusXss = false;
+        });
+
+        it("should not revive an mXSS payload when restoring within the same session", async () => {
+          const flicking = await createFlickingWithPayload();
+
+          const status = flicking.getStatus({ includePanelHTML: true });
+          flicking.setStatus(status);
+          await waitTime(200);
+
+          // cloneNode of the inert snapshot keeps it inert: no <img> element is ever created
+          expect(flicking.element.querySelector("img")).toBeNull();
+          expect((window as any).__statusXss).toBe(false);
+        });
+
+        it("should not revive an mXSS payload when restoring a JSON-serialized status", async () => {
+          const flicking = await createFlickingWithPayload();
+
+          const status = flicking.getStatus({ includePanelHTML: true });
+          // JSON round-trip drops the live element snapshot, leaving only the serialized html string
+          const restored = JSON.parse(JSON.stringify(status));
+          flicking.setStatus(restored);
+          await waitTime(200);
+
+          // The html string is never re-parsed, so the inert payload stays inert: no <img> revived
+          expect(flicking.element.querySelector("img")).toBeNull();
+          expect((window as any).__statusXss).toBe(false);
+        });
+
+        it("should not rebuild panels from a JSON-serialized status (only index/position restore)", async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 1 });
+          const originalFirstPanelEl = flicking.panels[0].element;
+
+          const status = flicking.getStatus({ includePanelHTML: true });
+          void flicking.moveTo(0, 0);
+          const restored = JSON.parse(JSON.stringify(status));
+          flicking.setStatus(restored);
+
+          // Panel DOM is left intact (not recreated from the html string) ...
+          expect(flicking.panels[0].element).toBe(originalFirstPanelEl);
+          // ... while index is still restored.
+          expect(flicking.index).toBe(1);
+        });
+
+        it("should keep the status a plain JSON-serializable object", async () => {
+          const flicking = await createFlickingWithPayload();
+
+          const status = flicking.getStatus({ includePanelHTML: true });
+
+          // The node snapshot is held off the status object (in a WeakMap), so the status carries
+          // only serializable data and survives a JSON round-trip intact.
+          expect(Object.keys(status.panels[0]).sort()).toEqual(["html", "index"]);
+          expect(() => JSON.stringify(status)).not.toThrow();
+
+          const restored = JSON.parse(JSON.stringify(status));
+          expect(restored.panels[0].index).toBe(status.panels[0].index);
+          expect(restored.panels[0].html).toBe(status.panels[0].html);
+        });
+      });
     });
 
     describe("resize()", () => {

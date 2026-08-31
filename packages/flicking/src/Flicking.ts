@@ -560,6 +560,13 @@ export interface GetStatusParams {
   visiblePanelsOnly?: boolean;
 }
 
+// A cloned snapshot of each panel element captured by getStatus, keyed by the status panel entry.
+// setStatus restores panels by cloning these instead of re-parsing the serialized html string,
+// which would revive mutation-XSS payloads. Kept off the Status object so it stays a plain
+// JSON-serializable value; a JSON round-trip yields fresh entries that aren't in this map, so
+// panel DOM is left untouched. Weak keys let the snapshots be GC'd with their status entries.
+const panelSnapshots = new WeakMap<Status["panels"][0], HTMLElement>();
+
 class Flicking extends Component<FlickingEvents> {
   /**
    * Version info string
@@ -1810,6 +1817,9 @@ class Flicking extends Component<FlickingEvents> {
 
         if (includePanelHTML) {
           panelInfo.html = panel.element.outerHTML;
+          // Keep a cloned snapshot of the actual node (off the Status object, in panelSnapshots)
+          // so setStatus can restore panels by cloning it instead of re-parsing the html string.
+          panelSnapshots.set(panelInfo, panel.element.cloneNode(true) as HTMLElement);
         }
 
         return panelInfo;
@@ -1854,8 +1864,14 @@ class Flicking extends Component<FlickingEvents> {
     const renderer = this._renderer;
     const control = this._control;
 
-    // Can't add/remove panels on external rendering
-    if (panels[0]?.html && !this._renderExternal) {
+    // Rebuild panels only from the captured node snapshots by cloning them, never by re-parsing
+    // the serialized `html` string — an `outerHTML`→`innerHTML` round-trip can revive a
+    // mutation-XSS payload that was inert on first render. After a JSON round-trip the status
+    // entries are fresh objects absent from panelSnapshots, so panel DOM is left untouched (only
+    // index/position below are restored) instead of being reconstructed from the string.
+    // (Also can't add/remove panels on external rendering.)
+    const snapshots = panels.map(panel => panelSnapshots.get(panel));
+    if (snapshots[0] && !this._renderExternal) {
       renderer.batchRemove({
         index: 0,
         deleteCount: this.panels.length,
@@ -1863,7 +1879,7 @@ class Flicking extends Component<FlickingEvents> {
       });
       renderer.batchInsert({
         index: 0,
-        elements: parseElement(panels.map(panel => panel.html!)),
+        elements: snapshots.map(snapshot => snapshot!.cloneNode(true) as HTMLElement),
         hasDOMInElements: true
       });
     }
