@@ -84,5 +84,43 @@ describe("NativeRenderer", () => {
         expect(returnVal.every(panel => panel.size !== 0)).toBe(true);
       });
     });
+
+    describe("render (useCSSOrder)", () => {
+      it("should keep DOM order and inject CSS order matching the rendering order", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL_WITH_PANELS(5), {
+          circular: true,
+          useCSSOrder: true
+        });
+
+        const cameraChildren = [...flicking.camera.element.children];
+
+        // DOM order stays identical to the original panel order
+        expect(cameraChildren).toEqual(flicking.panels.map(panel => panel.element));
+
+        // CSS `order` follows the visual rendering order instead
+        flicking.renderer.strategy.getRenderingElementsByOrder(flicking).forEach((el, orderIndex) => {
+          expect(el.style.order).toBe(`${orderIndex}`);
+        });
+      });
+
+      it("should not throw when combined with renderOnlyVisible and keep only visible panels in DOM", async () => {
+        // Previously threw a TypeError, as the rendered-only panel array was accessed with global panel indexes
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL_WITH_PANELS(5), {
+          circular: true,
+          useCSSOrder: true,
+          renderOnlyVisible: true
+        });
+
+        const cameraChildren = [...flicking.camera.element.children];
+
+        expect(cameraChildren.length).toBeGreaterThan(0);
+        expect(cameraChildren.length).toBeLessThan(flicking.panelCount);
+
+        // CSS `order` is injected only on the rendered panels, following the visual rendering order
+        flicking.renderer.strategy.getRenderingElementsByOrder(flicking).forEach((el, orderIndex) => {
+          expect(el.style.order).toBe(`${orderIndex}`);
+        });
+      });
+    });
   });
 });

@@ -67,7 +67,8 @@ module.exports = {
         "demos/advanced/cross-flicking",
         "demos/advanced/animation-threshold",
         "demos/advanced/use-css-order",
-        "demos/advanced/observe-panel-resize"
+        "demos/advanced/observe-panel-resize",
+        "demos/advanced/use-percentage-pos"
         // Additional advanced demos will be added
       ]
     },

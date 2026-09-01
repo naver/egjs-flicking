@@ -10024,6 +10024,50 @@
             },
             {
               "kind": "Property",
+              "canonicalReference": "@egjs/flicking!Flicking#usePercentagePos:member",
+              "docComment": "/**\n * Current value of the {@link FlickingOptions.usePercentagePos | usePercentagePos} option.\n *\n * @since\n *\n * 4.17.0\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get usePercentagePos(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "FlickingOptions",
+                  "canonicalReference": "@egjs/flicking!FlickingOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"usePercentagePos\"]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset usePercentagePos(val: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "FlickingOptions",
+                  "canonicalReference": "@egjs/flicking!FlickingOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[\"usePercentagePos\"]);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "usePercentagePos",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
               "canonicalReference": "@egjs/flicking!Flicking#useResizeObserver:member",
               "docComment": "/**\n * Current value of the {@link FlickingOptions.useResizeObserver | useResizeObserver} option.\n *\n * @since\n *\n * 4.4.0\n */\n",
               "excerptTokens": [
@@ -12533,6 +12577,33 @@
               "isOptional": false,
               "releaseTag": "Public",
               "name": "useFractionalSize",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@egjs/flicking!FlickingOptions#usePercentagePos:member",
+              "docComment": "/**\n * Whether to apply the camera element's `transform` position as a percentage value (`%`) instead of `px`.\n *\n * @remarks\n *\n * The percentage value is calculated relative to the viewport size. When enabled, the camera element keeps its relative position even if the viewport size changes before {@link Flicking.resize | resize()} is applied. This can prevent a temporary panel position mismatch when Flicking is resized with a responsive(%-based) layout.\n *\n * @defaultValue false\n *\n * @since\n *\n * 4.17.0\n *\n * @see\n *\n * {@link https://naver.github.io/egjs-flicking/docs/demos/advanced/use-percentage-pos | Demo: Percentage Position}\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "usePercentagePos: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "usePercentagePos",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2

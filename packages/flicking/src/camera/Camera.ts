@@ -583,10 +583,13 @@ class Camera {
     if (renderer.rendering || !flicking.initialized) return this;
 
     const actualPosition = this._position - this._alignPos - this._offset + this._circularOffset;
+    // vertical이거나 horizontal일때 LTR인 경우 sign은 -1이다.
+    const sign = !flicking.horizontal || this._panelOrder !== ORDER.RTL ? -1 : 1;
+    const posText = flicking.usePercentagePos
+      ? `${((sign * actualPosition) / this.size) * 100}%`
+      : `${sign * actualPosition}px`;
 
-    el.style[this._transform] = flicking.horizontal
-      ? `translate(${this._panelOrder === ORDER.RTL ? actualPosition : -actualPosition}px)`
-      : `translate(0, ${-actualPosition}px)`;
+    el.style[this._transform] = flicking.horizontal ? `translate(${posText})` : `translate(0, ${posText})`;
 
     return this;
   }

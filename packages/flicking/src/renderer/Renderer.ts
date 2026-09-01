@@ -633,12 +633,12 @@ abstract class Renderer {
 
     if (flicking.useCSSOrder) {
       // `useCSSOrder`를 사용하는 경우 DOM은 변화가 없지만 대신 css `order`값을 주입
-      const renderedPanels = flicking.renderer.panels.filter(panel => panel.rendered);
+      const panels = flicking.panels;
 
       this._strategy.getRenderingIndexesByOrder(flicking).forEach((domIndex, index) => {
-        if (renderedPanels[domIndex].element) {
+        if (panels[domIndex]?.element) {
           // 방어 코드 추가
-          renderedPanels[domIndex].element.style.order = `${index}`;
+          panels[domIndex].element.style.order = `${index}`;
         }
       });
     }

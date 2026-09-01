@@ -1,0 +1,74 @@
+---
+title: "Percentage Position"
+id: use-percentage-pos
+slug: /demos/advanced/use-percentage-pos
+sidebar_position: 19
+description: 카메라 위치를 퍼센트 값으로 적용해 뷰포트 크기가 바뀌어도 패널 위치를 유지합니다
+keywords: [flicking, carousel, usePercentagePos, percentage, responsive, resize, transform, translate, 퍼센트, 반응형, 리사이즈]
+---
+
+import UsePercentagePos from '@site/src/demo/advanced/UsePercentagePos';
+
+# Percentage Position
+
+[`usePercentagePos`](../../api/interfaces/FlickingOptions#usepercentagepos) 옵션으로 카메라 엘리먼트의 `transform` 위치를 `px` 대신 퍼센트 값(`%`)으로 적용합니다.
+
+아래 데모는 [`resize()`](../../api/classes/Flicking#resize)가 적용되기 직전의 상황을 재현하기 위해 [`autoResize`](../../api/interfaces/FlickingOptions#autoresize)를 꺼둔 상태입니다. 컨테이너 너비를 토글해 두 캐러셀을 비교해 보세요. px로 위치를 잡은 쪽은 `resize()`가 호출되기 전까지 어긋나지만, %로 위치를 잡은 쪽은 상대 위치를 그대로 유지합니다.
+
+<UsePercentagePos />
+
+## 요약
+
+### 주요 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| [`usePercentagePos`](../../api/interfaces/FlickingOptions#usepercentagepos) | `boolean` | `false` | 카메라 위치를 `px` 대신 퍼센트 값(`%`)으로 적용 |
+
+### 동작 비교
+
+| 설정 | 카메라 transform | 뷰포트 크기 변경 시 (resize 전) |
+|------|-----------------|------------------------------|
+| `usePercentagePos: false` | `translate(-832px)` | 카메라가 같은 px 위치에 머물러 패널이 어긋남 |
+| `usePercentagePos: true` | `translate(-104%)` | 카메라가 상대 위치를 유지해 패널이 제자리를 지킴 |
+
+## 상세 설명
+
+### 동작 원리
+
+옵션을 켜면 Flicking은 카메라 위치를 뷰포트 크기에 대한 퍼센트로 계산해, `translate(-832px)` 대신 `transform: translate(-104%)` 형태로 적용합니다.
+
+퍼센트 위치는 뷰포트와 함께 비율이 조정되므로, [`resize()`](../../api/classes/Flicking#resize)로 내부 크기가 다시 계산되기 전에도 카메라가 상대 위치를 유지합니다. 이 데모처럼 패널 크기도 상대 단위(`%` 기반 너비·여백)로 지정되어 있다면, 뷰포트 크기가 변하는 동안 레이아웃 전체가 시각적으로 정렬된 상태를 유지합니다.
+
+### 관련 옵션
+
+- **`autoResize`와의 관계**: 실제 사용 시에는 [`autoResize`](../../api/interfaces/FlickingOptions#autoresize)를 켜둔 채로 사용합니다. `usePercentagePos`는 레이아웃이 바뀌는 시점부터 (디바운스될 수 있는) resize 호출이 적용되는 시점 사이의 일시적인 어긋남을 막아줍니다. 이 데모는 그 사이 구간을 눈으로 확인할 수 있도록 하기 위해서만 옵션을 껐습니다.
+- **`resizeDebounce`와의 관계**: [`resizeDebounce`](../../api/interfaces/FlickingOptions#resizedebounce) 값이 크면 resize가 적용될 때까지의 간격이 길어집니다. `usePercentagePos`는 그 간격 동안 패널 위치를 유지해 줍니다.
+
+### 사용 시나리오
+
+:::info 언제 사용하나요?
+- **반응형(% 기반) 레이아웃**: 윈도우 리사이즈나 CSS 트랜지션처럼 컨테이너 크기가 변하는 동안에도 패널이 위치를 유지합니다
+- **디바운스된 리사이즈**: `resizeDebounce` 사용 시 디바운스 지연 동안 발생하는 어긋남을 방지합니다
+:::
+
+### 주의사항
+
+:::warning 주의
+- 퍼센트 위치는 패널 크기도 뷰포트에 대한 상대 단위(예: `%` 기반 너비)일 때에만 패널을 시각적으로 정렬된 상태로 유지합니다. 고정 px 크기의 패널은 `resize()`가 호출되기 전까지 여전히 어긋납니다.
+- 이 옵션은 카메라 위치를 *적용하는 방식*만 바꿉니다. 내부 크기는 자동으로 갱신되지 않으므로, 입력 영역과 이동 범위를 갱신하려면 여전히 `resize()`를 호출하거나 `autoResize`를 켜두어야 합니다.
+:::
+
+## 관련 링크
+
+### 관련 옵션
+- [`autoResize`](../../api/interfaces/FlickingOptions#autoresize): 자동 리사이즈 감지
+- [`resizeDebounce`](../../api/interfaces/FlickingOptions#resizedebounce): 리사이즈 호출 디바운스
+- [`useFractionalSize`](../../api/interfaces/FlickingOptions#usefractionalsize): CSS 기반 소수점 크기 계산
+
+### 관련 메서드
+- [`resize`](../../api/classes/Flicking#resize): 내부 크기 재계산
+
+### 관련 데모
+- [Resize Debounce](./resize-debounce): 리사이즈 호출 빈도 조절
+- [Auto Resize](./auto-resize): 리사이즈 감지 방식 설정
