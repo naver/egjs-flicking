@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.17.0](https://github.com/naver/egjs-flicking/compare/@egjs/vue3-flicking@4.16.4...4.17.0) (2026-09-01)
+### :sparkles: Packages
+* `@egjs/flicking` 4.17.0
+* `@egjs/react-flicking` 4.17.0
+* `@egjs/vue3-flicking` 4.17.0
+
+### :rocket: New Features
+* usePercentagePos 옵션 추가 & resize 비동기 사이에 사이즈가 갱신되는 문제 수정 (#957) ([83fce74](https://github.com/naver/egjs-flicking/commit/83fce74db4d465d8d771c272d0f703ce7f7b8ded))
+
+### :memo: Documentation
+* **publish:** generalize docs deploy remote note ([a427f8c](https://github.com/naver/egjs-flicking/commit/a427f8cebff6dcd23c77bef42607d945c643a103))
+* **publish:** add mandatory docs:deploy step after release ([9541cdd](https://github.com/naver/egjs-flicking/commit/9541cdd08cf3a297ff5aebc17b240f13ce8f0005))
+
 ## [4.16.4](https://github.com/naver/egjs-flicking/compare/4.16.3...4.16.4) (2026-07-20)
 ### :sparkles: Packages
 * `@egjs/flicking` 4.16.4
