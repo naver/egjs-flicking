@@ -442,6 +442,14 @@ Current value of the [useFractionalSize](https://naver.github.io/egjs-flicking/l
 
 *This property is read-only.*
 
+### usePercentagePos
+
+since v4.17.0
+
+**Type:** `FlickingOptions["usePercentagePos"]`
+
+Current value of the [usePercentagePos](https://naver.github.io/egjs-flicking/llm-docs/api/interfaces/FlickingOptions.md#usepercentagepos) option.
+
 ### useResizeObserver
 
 since v4.4.0

@@ -620,6 +620,22 @@ By enabling this, Flicking will calculate all internal size with CSS width compu
 
 - [Demo: Fractional Size](https://naver.github.io/egjs-flicking/llm-docs/demos/advanced/fractional-size.md)
 
+### usePercentagePos
+
+since v4.17.0
+
+**Type:** `boolean`
+
+Whether to apply the camera element's `transform` position as a percentage value (`%`) instead of `px`.
+
+**Default:** `false`
+
+**Remarks:** The percentage value is calculated relative to the viewport size. When enabled, the camera element keeps its relative position even if the viewport size changes before [resize()](https://naver.github.io/egjs-flicking/llm-docs/api/classes/Flicking.md#resize) is applied. This can prevent a temporary panel position mismatch when Flicking is resized with a responsive(%-based) layout.
+
+**See Also:**
+
+- [Demo: Percentage Position](https://naver.github.io/egjs-flicking/llm-docs/demos/advanced/use-percentage-pos.md)
+
 ### useResizeObserver
 
 since v4.4.0
