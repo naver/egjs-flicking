@@ -33,7 +33,7 @@ import {
 } from "./renderer";
 import { ElementLike, MoveTypeOptions, Plugin, Status } from "./types/external";
 import { LiteralUnion, ValueOf } from "./types/internal";
-import { findIndex, getElement, includes, parseElement } from "./utils";
+import { deserializeNode, findIndex, getElement, includes, parseElement, serializeNode } from "./utils";
 
 /**
  * Options for the Flicking component
@@ -559,13 +559,6 @@ export interface GetStatusParams {
    */
   visiblePanelsOnly?: boolean;
 }
-
-// A cloned snapshot of each panel element captured by getStatus, keyed by the status panel entry.
-// setStatus restores panels by cloning these instead of re-parsing the serialized html string,
-// which would revive mutation-XSS payloads. Kept off the Status object so it stays a plain
-// JSON-serializable value; a JSON round-trip yields fresh entries that aren't in this map, so
-// panel DOM is left untouched. Weak keys let the snapshots be GC'd with their status entries.
-const panelSnapshots = new WeakMap<Status["panels"][0], HTMLElement>();
 
 class Flicking extends Component<FlickingEvents> {
   /**
@@ -1817,9 +1810,13 @@ class Flicking extends Component<FlickingEvents> {
 
         if (includePanelHTML) {
           panelInfo.html = panel.element.outerHTML;
-          // Keep a cloned snapshot of the actual node (off the Status object, in panelSnapshots)
-          // so setStatus can restore panels by cloning it instead of re-parsing the html string.
-          panelSnapshots.set(panelInfo, panel.element.cloneNode(true) as HTMLElement);
+          // Capture a structural (JSON-safe) snapshot of the node tree. setStatus rebuilds panels
+          // from this via DOM APIs instead of parsing the html string, which would revive
+          // mutation-XSS payloads; being JSON-safe, it also restores panels after a reload.
+          const node = serializeNode(panel.element);
+          if (node) {
+            panelInfo.node = node;
+          }
         }
 
         return panelInfo;
@@ -1864,14 +1861,11 @@ class Flicking extends Component<FlickingEvents> {
     const renderer = this._renderer;
     const control = this._control;
 
-    // Rebuild panels only from the captured node snapshots by cloning them, never by re-parsing
-    // the serialized `html` string — an `outerHTML`→`innerHTML` round-trip can revive a
-    // mutation-XSS payload that was inert on first render. After a JSON round-trip the status
-    // entries are fresh objects absent from panelSnapshots, so panel DOM is left untouched (only
-    // index/position below are restored) instead of being reconstructed from the string.
-    // (Also can't add/remove panels on external rendering.)
-    const snapshots = panels.map(panel => panelSnapshots.get(panel));
-    if (snapshots[0] && !this._renderExternal) {
+    // Rebuild panels from the structural node snapshots via DOM APIs, never by parsing the
+    // serialized `html` string — an `outerHTML`→`innerHTML` round-trip can revive a mutation-XSS
+    // payload that was inert on first render. The snapshot survives JSON, so this also restores
+    // panels after a reload/navigation. (Also can't add/remove panels on external rendering.)
+    if (panels[0]?.node && !this._renderExternal) {
       renderer.batchRemove({
         index: 0,
         deleteCount: this.panels.length,
@@ -1879,7 +1873,7 @@ class Flicking extends Component<FlickingEvents> {
       });
       renderer.batchInsert({
         index: 0,
-        elements: snapshots.map(snapshot => snapshot!.cloneNode(true) as HTMLElement),
+        elements: panels.map(panel => deserializeNode(panel.node!) as HTMLElement),
         hasDOMInElements: true
       });
     }

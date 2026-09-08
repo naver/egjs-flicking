@@ -22,6 +22,30 @@ export interface Plugin {
 }
 
 /**
+ * A JSON-safe structural representation of a panel element, captured by {@link Flicking.getStatus}.
+ * @remarks
+ * {@link Flicking.setStatus} rebuilds panels from this using DOM APIs (`createElement`/`setAttribute`),
+ * never by parsing HTML. This preserves the exact node tree — content that is inert on first render
+ * (e.g. an `<img>` that exists only as raw text inside `<style>`) stays inert — so it never revives a
+ * mutation-XSS payload, yet survives JSON serialization so panels restore correctly after a
+ * reload/navigation.
+ */
+export interface SerializedNode {
+  /** Element tag name. Absent for text/comment nodes. */
+  tag?: string;
+  /** Element namespace URI. Present only for non-HTML elements (e.g. SVG/MathML). */
+  ns?: string;
+  /** Element attributes as `[name, value]`, or `[name, value, namespaceURI]` for namespaced ones. */
+  attrs?: Array<[string, string] | [string, string, string]>;
+  /** Child nodes. */
+  children?: SerializedNode[];
+  /** Text node data. */
+  text?: string;
+  /** Comment node data. */
+  comment?: string;
+}
+
+/**
  * Flicking Status returned by {@link Flicking.getStatus}
  */
 export interface Status {
@@ -43,13 +67,16 @@ export interface Status {
     /**
      * An `outerHTML` of the panel element.
      * @remarks
-     * This is informational only. {@link Flicking.setStatus} does **not** re-parse it to rebuild
-     * panels, since an `outerHTML`→`innerHTML` round-trip can revive a mutation-XSS payload that
-     * was inert on first render. Panels are restored by cloning a node snapshot captured at
-     * {@link Flicking.getStatus} time; after a JSON round-trip drops that snapshot, panel DOM is
-     * left untouched and only index/position restore.
+     * Informational only. {@link Flicking.setStatus} does **not** parse it to rebuild panels, since an
+     * `outerHTML`→`innerHTML` round-trip can revive a mutation-XSS payload that was inert on first
+     * render. Panels are rebuilt from {@link node} instead.
      */
     html?: string;
+    /**
+     * A structural snapshot of the panel element used to rebuild it safely (see {@link SerializedNode}).
+     * Present when `includePanelHTML` is `true`; this is what {@link Flicking.setStatus} restores from.
+     */
+    node?: SerializedNode;
   }>;
 }
 

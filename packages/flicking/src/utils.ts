@@ -7,7 +7,7 @@ import { ALIGN, DIRECTION } from "./constants/values";
 import * as ERROR from "./error/codes";
 import FlickingError from "./error/FlickingError";
 import Flicking, { FlickingOptions } from "./Flicking";
-import { ElementLike } from "./types/external";
+import { ElementLike, SerializedNode } from "./types/external";
 import { LiteralUnion, Merged, ValueOf } from "./types/internal";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -197,6 +197,86 @@ export const parseElement = (element: ElementLike | ElementLike[]): HTMLElement[
   });
 
   return elements;
+};
+
+const HTML_NS = "http://www.w3.org/1999/xhtml";
+
+/**
+ * Serialize a DOM node into a JSON-safe structure that {@link deserializeNode} can rebuild without
+ * HTML parsing. Unlike an `outerHTML`→`innerHTML` round-trip, this preserves the exact node tree
+ * (e.g. an `<img>` that exists only as raw text inside `<style>` stays text), so it never elevates
+ * inert content into an executable element — safe against mutation-XSS.
+ */
+export const serializeNode = (node: Node): SerializedNode | null => {
+  if (node.nodeType === Node.ELEMENT_NODE) {
+    const el = node as Element;
+    const serialized: SerializedNode = { tag: el.tagName };
+    const ns = el.namespaceURI;
+
+    if (ns && ns !== HTML_NS) {
+      serialized.ns = ns;
+    }
+    if (el.attributes.length) {
+      serialized.attrs = toArray(el.attributes).map(attr =>
+        attr.namespaceURI ? [attr.name, attr.value, attr.namespaceURI] : [attr.name, attr.value]
+      );
+    }
+
+    const children = toArray(node.childNodes)
+      .map(serializeNode)
+      .filter((child): child is SerializedNode => child != null);
+    if (children.length) {
+      serialized.children = children;
+    }
+
+    return serialized;
+  }
+  if (node.nodeType === Node.TEXT_NODE) {
+    return { text: (node as Text).data };
+  }
+  if (node.nodeType === Node.COMMENT_NODE) {
+    return { comment: (node as Comment).data };
+  }
+
+  return null;
+};
+
+/**
+ * Rebuild a DOM node from {@link serializeNode}'s output using DOM APIs only (no HTML parsing),
+ * faithfully reproducing the original: inert content stays inert, authored content stays as authored.
+ */
+export const deserializeNode = (data: SerializedNode): Node | null => {
+  if (data.text != null) {
+    return document.createTextNode(data.text);
+  }
+  if (data.comment != null) {
+    return document.createComment(data.comment);
+  }
+  if (data.tag == null) {
+    return null;
+  }
+
+  const el = data.ns ? document.createElementNS(data.ns, data.tag) : document.createElement(data.tag);
+
+  if (data.attrs) {
+    data.attrs.forEach(([name, value, ns]) => {
+      if (ns) {
+        el.setAttributeNS(ns, name, value);
+      } else {
+        el.setAttribute(name, value);
+      }
+    });
+  }
+  if (data.children) {
+    data.children.forEach(child => {
+      const childNode = deserializeNode(child);
+      if (childNode) {
+        el.appendChild(childNode);
+      }
+    });
+  }
+
+  return el;
 };
 
 export const getMinusCompensatedIndex = (idx: number, max: number) =>
