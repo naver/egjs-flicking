@@ -226,16 +226,17 @@ export class CrossFlicking extends Flicking {
 
   private _createCrossStructure(sideState: SideState[]) {
     const sideCamera = document.createElement("div");
-    let sidePanels: string = "";
 
     sideCamera.classList.add(CLASS.CAMERA);
+    // 이미 파싱된 DOM을 innerHTML/outerHTML 문자열로 직렬화 후 재파싱하면
+    // mXSS 페이로드가 실행될 수 있으므로 노드 복제로만 구조를 만든다
     sideState.forEach((state, i) => {
       const panel = this.camera.children[i];
-      sidePanels += state.element.innerHTML;
+      toArray(state.element.childNodes).forEach(child => {
+        sideCamera.appendChild(child.cloneNode(true));
+      });
       Array.from(panel.attributes).forEach(attribute => panel.removeAttribute(attribute.name));
     });
-
-    sideCamera.innerHTML = sidePanels;
 
     sideState.forEach((_, i) => {
       const panel = this.camera.children[i];
@@ -244,7 +245,10 @@ export class CrossFlicking extends Flicking {
           panel.classList.add(className);
         }
       });
-      panel.innerHTML = sideCamera.outerHTML;
+      while (panel.firstChild) {
+        panel.removeChild(panel.firstChild);
+      }
+      panel.appendChild(sideCamera.cloneNode(true));
     });
 
     this.element.setAttribute("data-cross-structure", "true");
@@ -271,7 +275,7 @@ export class CrossFlicking extends Flicking {
     return Object.keys(groupPanels).reduce((state: SideState[], key: string) => {
       const start = state.length ? +state[state.length - 1].end + 1 : 0;
       const element = groupPanels[key].reduce((el: HTMLElement, panel: HTMLElement) => {
-        el.innerHTML += panel.outerHTML;
+        el.appendChild(panel.cloneNode(true));
         return el;
       }, document.createElement("div"));
       return [

@@ -2748,6 +2748,136 @@ describe("Flicking", () => {
         expect(flicking.camera.position).not.toBe(prevPosition);
         expect(flicking.camera.range).not.toEqual(prevRange);
       });
+
+      it("should reproduce panel content (attributes + nested structure) when restoring in the same session", async () => {
+        const richPanel = El.panel().setWidth("100%").setHeight(300);
+        richPanel.el.setAttribute("data-id", "p0");
+        richPanel.el.innerHTML = '<h3 class="title">Hello</h3><p>world <b>!</b></p>';
+        const flicking = await createFlicking(
+          El.viewport("1000px", "100%").add(El.camera().add(richPanel, El.panel().setWidth("100%").setHeight(300)))
+        );
+        const expectedHTML = flicking.panels[0].element.innerHTML;
+
+        flicking.setStatus(flicking.getStatus({ includePanelHTML: true }));
+
+        expect(flicking.panels[0].element.getAttribute("data-id")).toBe("p0");
+        expect(flicking.panels[0].element.innerHTML).toBe(expectedHTML);
+      });
+
+      it("should reconstruct every panel's content faithfully from a JSON-serialized status", async () => {
+        const pageA = await createFlicking(
+          El.viewport("1000px", "100%").add(
+            El.camera().add(
+              ...range(3).map(i => {
+                const panel = El.panel().setWidth("100%").setHeight(300);
+                panel.el.innerHTML = `<span class="c${i}">panel ${i}</span>`;
+                return panel;
+              })
+            )
+          ),
+          { defaultIndex: 2 }
+        );
+        const expectedHTML = pageA.panels.map(panel => panel.element.innerHTML);
+        const stored = JSON.stringify(pageA.getStatus({ includePanelHTML: true }));
+
+        // Reload into an empty flicking, then restore from the JSON string.
+        const reloaded = await createFlicking(El.EMPTY);
+        reloaded.setStatus(JSON.parse(stored));
+
+        expect(reloaded.panels.length).toBe(3);
+        expect(reloaded.panels.map(panel => panel.element.innerHTML)).toEqual(expectedHTML);
+        expect(reloaded.index).toBe(2);
+      });
+
+      it("should capture the panel snapshot at getStatus time, not setStatus time", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+        const status = flicking.getStatus({ includePanelHTML: true });
+
+        // Mutate the live panel AFTER capturing the status.
+        flicking.currentPanel.element.classList.add("added-after-getStatus");
+        flicking.setStatus(status);
+
+        expect(flicking.currentPanel.element.classList.contains("added-after-getStatus")).toBe(false);
+      });
+
+      it("should not rebuild panels when includePanelHTML is false, but still restore index", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { defaultIndex: 2 });
+        const firstPanelEl = flicking.panels[0].element;
+        const status = flicking.getStatus(); // no includePanelHTML -> no node snapshot
+
+        void flicking.moveTo(0, 0);
+        flicking.setStatus(status);
+
+        // Panel DOM is left intact (no reconstruction) ...
+        expect(flicking.panels[0].element).toBe(firstPanelEl);
+        expect(flicking.panels.length).toBe(3);
+        // ... while index is restored.
+        expect(flicking.index).toBe(2);
+      });
+
+      describe("Security", () => {
+        // Inert on first parse (img is <style> raw text in foreign content), but revives into a
+        // real <img> element once serialized to outerHTML and re-parsed via innerHTML (mXSS).
+        const MXSS_PAYLOAD =
+          '<math><mtext><table><mglyph><style><img src="x" onerror="window.__statusXss = true"></style></mglyph></table></mtext></math>';
+
+        const createFlickingWithPayload = () => {
+          const payloadPanel = El.panel().setWidth("100%").setHeight(300);
+          payloadPanel.el.innerHTML = MXSS_PAYLOAD;
+          return createFlicking(
+            El.viewport("1000px", "100%").add(El.camera().add(payloadPanel, El.panel().setWidth("100%").setHeight(300)))
+          );
+        };
+
+        beforeEach(() => {
+          (window as any).__statusXss = false;
+        });
+
+        it("should not revive an mXSS payload when restoring within the same session", async () => {
+          const flicking = await createFlickingWithPayload();
+
+          const status = flicking.getStatus({ includePanelHTML: true });
+          flicking.setStatus(status);
+          await waitTime(200);
+
+          // The structural snapshot rebuilds the inert tree faithfully: no <img> element is created
+          expect(flicking.element.querySelector("img")).toBeNull();
+          expect((window as any).__statusXss).toBe(false);
+        });
+
+        it("should reconstruct panels from a JSON-serialized status without reviving payloads", async () => {
+          // Simulate save-on-page-A -> reload -> restore: only the JSON string survives.
+          const pageA = await createFlickingWithPayload();
+          const stored = JSON.stringify(pageA.getStatus({ includePanelHTML: true }));
+
+          // Reload into a brand-new flicking whose panels are NOT in the DOM.
+          const reloaded = await createFlicking(El.EMPTY);
+          expect(reloaded.panels.length).toBe(0);
+
+          reloaded.setStatus(JSON.parse(stored));
+          await waitTime(200);
+
+          // Panels ARE reconstructed from the serialized status (reload restore keeps working) ...
+          expect(reloaded.panels.length).toBe(2);
+          // ... while the inert payload stays inert (no <img> revived, no script runs).
+          expect(reloaded.element.querySelector("img")).toBeNull();
+          expect((window as any).__statusXss).toBe(false);
+        });
+
+        it("should keep the status a plain JSON-serializable object", async () => {
+          const flicking = await createFlickingWithPayload();
+
+          const status = flicking.getStatus({ includePanelHTML: true });
+
+          // The panel carries only serializable data (a structural node snapshot, not a live element),
+          // so the status survives a JSON round-trip intact.
+          expect(Object.keys(status.panels[0]).sort()).toEqual(["html", "index", "node"]);
+          expect(() => JSON.stringify(status)).not.toThrow();
+
+          const restored = JSON.parse(JSON.stringify(status));
+          expect(restored.panels[0].node).toEqual(status.panels[0].node);
+        });
+      });
     });
 
     describe("resize()", () => {

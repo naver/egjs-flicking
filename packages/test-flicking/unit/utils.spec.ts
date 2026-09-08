@@ -5,6 +5,7 @@ import Flicking from "~/Flicking";
 import {
   checkExistence,
   clamp,
+  deserializeNode,
   getDirection,
   getElement,
   getElementSize,
@@ -18,11 +19,12 @@ import {
   parseBounce,
   parseCSSSizeValue,
   parseElement,
+  serializeNode,
   toArray
 } from "~/utils";
 
 import El from "./helper/El";
-import { cleanup, createFlicking, createSandbox, NullClass, range } from "./helper/test-util";
+import { cleanup, createFlicking, createSandbox, NullClass, range, waitTime } from "./helper/test-util";
 
 describe("Util Functions", () => {
   describe("merge", () => {
@@ -469,6 +471,169 @@ describe("Util Functions", () => {
         }
         expect(err).toBeInstanceOf(FlickingError);
         expect(err.code).toBe(ERROR.CODE.WRONG_TYPE);
+      });
+    });
+  });
+
+  describe("serializeNode / deserializeNode", () => {
+    const XLINK_NS = "http://www.w3.org/1999/xlink";
+    const SVG_NS = "http://www.w3.org/2000/svg";
+    const MATH_NS = "http://www.w3.org/1998/Math/MathML";
+
+    const roundTrip = (el: Node): Node | null => deserializeNode(serializeNode(el)!);
+    const jsonRoundTrip = (el: Node): Node | null => deserializeNode(JSON.parse(JSON.stringify(serializeNode(el))));
+
+    describe("serializeNode", () => {
+      it("should serialize an element into tag + attrs + children", () => {
+        const el = document.createElement("div");
+        el.setAttribute("class", "panel");
+        el.setAttribute("data-x", "1");
+        el.appendChild(document.createTextNode("hi"));
+
+        const serialized = serializeNode(el)!;
+
+        expect(serialized.tag).toBe("DIV");
+        expect(serialized.ns).toBeUndefined(); // HTML namespace is the default, so it is omitted
+        expect(serialized.attrs).toEqual([
+          ["class", "panel"],
+          ["data-x", "1"]
+        ]);
+        expect(serialized.children).toEqual([{ text: "hi" }]);
+      });
+
+      it("should serialize a text node and a comment node", () => {
+        expect(serializeNode(document.createTextNode("some text"))).toEqual({ text: "some text" });
+        expect(serializeNode(document.createComment("a comment"))).toEqual({ comment: "a comment" });
+      });
+
+      it("should record the namespace URI for non-HTML elements", () => {
+        const svg = document.createElementNS(SVG_NS, "svg");
+        const serialized = serializeNode(svg)!;
+
+        expect(serialized.tag).toBe("svg");
+        expect(serialized.ns).toBe(SVG_NS);
+      });
+
+      it("should record the namespace URI for namespaced attributes", () => {
+        const a = document.createElementNS(SVG_NS, "a");
+        a.setAttributeNS(XLINK_NS, "xlink:href", "#target");
+
+        const serialized = serializeNode(a)!;
+
+        expect(serialized.attrs).toEqual([["xlink:href", "#target", XLINK_NS]]);
+      });
+
+      it("should omit empty attrs / children", () => {
+        const serialized = serializeNode(document.createElement("span"))!;
+
+        expect(serialized).toEqual({ tag: "SPAN" });
+      });
+
+      it("should return null for unsupported node types", () => {
+        const frag = document.createDocumentFragment();
+
+        expect(serializeNode(frag)).toBeNull();
+      });
+    });
+
+    describe("deserializeNode", () => {
+      it("should return null when the data has no tag / text / comment", () => {
+        expect(deserializeNode({})).toBeNull();
+      });
+
+      it("should build a text node and a comment node", () => {
+        const text = deserializeNode({ text: "hello" })!;
+        const comment = deserializeNode({ comment: "note" })!;
+
+        expect(text.nodeType).toBe(Node.TEXT_NODE);
+        expect((text as Text).data).toBe("hello");
+        expect(comment.nodeType).toBe(Node.COMMENT_NODE);
+        expect((comment as Comment).data).toBe("note");
+      });
+
+      it("should build a non-HTML element with createElementNS", () => {
+        const el = deserializeNode({ tag: "svg", ns: SVG_NS }) as Element;
+
+        expect(el.namespaceURI).toBe(SVG_NS);
+      });
+
+      it("should set namespaced attributes with setAttributeNS", () => {
+        const el = deserializeNode({ tag: "a", ns: SVG_NS, attrs: [["xlink:href", "#t", XLINK_NS]] }) as Element;
+
+        expect(el.getAttributeNS(XLINK_NS, "href")).toBe("#t");
+      });
+    });
+
+    describe("round-trip fidelity", () => {
+      it("should reproduce a nested element tree (attributes, order, text, comment)", () => {
+        const el = document.createElement("div");
+        el.innerHTML = '<span class="a" data-x="1">hi <b>bold</b><!-- c --></span>';
+
+        expect((roundTrip(el) as HTMLElement).outerHTML).toBe(el.outerHTML);
+      });
+
+      it("should preserve SVG namespaces and xlink attributes", () => {
+        const svg = document.createElementNS(SVG_NS, "svg");
+        const use = document.createElementNS(SVG_NS, "use");
+        use.setAttributeNS(XLINK_NS, "xlink:href", "#icon");
+        svg.appendChild(use);
+
+        const rebuilt = roundTrip(svg) as Element;
+
+        expect(rebuilt.namespaceURI).toBe(SVG_NS);
+        expect(rebuilt.firstElementChild!.namespaceURI).toBe(SVG_NS);
+        expect(rebuilt.firstElementChild!.getAttributeNS(XLINK_NS, "href")).toBe("#icon");
+      });
+
+      it("should survive a JSON round-trip identically", () => {
+        const el = document.createElement("section");
+        el.innerHTML = '<h2 id="t">Title</h2><p class="body">text <em>x</em></p>';
+
+        expect((jsonRoundTrip(el) as HTMLElement).outerHTML).toBe(el.outerHTML);
+      });
+    });
+
+    describe("mutation-XSS safety", () => {
+      const MXSS =
+        '<math><mtext><table><mglyph><style><img src="x" onerror="window.__nodeXss = true"></style></mglyph></table></mtext></math>';
+
+      beforeEach(() => {
+        (window as any).__nodeXss = false;
+      });
+
+      it("should keep an inert payload inert (no <img> element revived)", () => {
+        const el = document.createElement("div");
+        el.innerHTML = MXSS;
+        // Precondition: on first parse the img is <style> raw text, not an element
+        expect(el.querySelector("img")).toBeNull();
+
+        const rebuilt = roundTrip(el) as HTMLElement;
+
+        expect(rebuilt.querySelector("img")).toBeNull();
+      });
+
+      it("should keep an inert payload inert across a JSON round-trip", async () => {
+        const el = document.createElement("div");
+        el.innerHTML = MXSS;
+
+        const rebuilt = jsonRoundTrip(el) as HTMLElement;
+        document.body.appendChild(rebuilt);
+        await waitTime(100);
+
+        expect(rebuilt.querySelector("img")).toBeNull();
+        expect((window as any).__nodeXss).toBe(false);
+        rebuilt.remove();
+      });
+
+      it("should faithfully reproduce a genuinely authored element (no stripping)", () => {
+        // An author-inserted <img> IS a real element; structural restore keeps it (unlike sanitizing).
+        const el = document.createElement("div");
+        el.innerHTML = '<img src="/logo.png" alt="logo"><iframe title="f"></iframe>';
+
+        const rebuilt = roundTrip(el) as HTMLElement;
+
+        expect(rebuilt.querySelector("img")!.getAttribute("src")).toBe("/logo.png");
+        expect(rebuilt.querySelector("iframe")!.getAttribute("title")).toBe("f");
       });
     });
   });

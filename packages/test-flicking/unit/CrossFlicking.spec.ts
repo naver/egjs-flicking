@@ -17,6 +17,53 @@ describe("CrossFlicking", () => {
     });
   });
 
+  describe("Security", () => {
+    // 최초 파싱에서는 img가 <style>의 raw text라 무해하지만,
+    // innerHTML/outerHTML 직렬화 후 재파싱하면 실제 <img> 요소로 살아나는 mXSS 페이로드
+    const MXSS_PAYLOAD =
+      '<math><mtext><table><mglyph><style><img src="x" onerror="window.__xssTriggered = true"></style></mglyph></table></mtext></math>';
+
+    beforeEach(() => {
+      (window as any).__xssTriggered = false;
+    });
+
+    it("should not revive mXSS payloads in panel content while creating the cross structure", async () => {
+      const payloadPanel = El.panel().setWidth("100%").setHeight(1000);
+      payloadPanel.el.innerHTML = MXSS_PAYLOAD;
+      const el = El.viewport("1000px", "100%").add(
+        El.camera().add(payloadPanel, El.panel().setWidth("100%").setHeight(1000))
+      );
+
+      // 최초 파싱 시점에는 img가 요소로 존재하지 않아야 한다 (전제 조건)
+      expect(el.el.querySelector("img")).toBeNull();
+
+      const flicking = await createCrossFlicking(el);
+
+      expect(flicking.element.querySelector("img")).toBeNull();
+      expect((window as any).__xssTriggered).toBe(false);
+    });
+
+    it("should not revive mXSS payloads in grouped panels while creating the cross structure", async () => {
+      const payloadPanel = El.panel().setWidth("100%").setHeight(1000).setAttribute("data-cross-groupkey", "0");
+      payloadPanel.el.innerHTML = MXSS_PAYLOAD;
+      const el = El.viewport("1000px", "100%").add(
+        El.camera().add(
+          payloadPanel,
+          El.panel().setWidth("100%").setHeight(1000).setAttribute("data-cross-groupkey", "0"),
+          El.panel().setWidth("100%").setHeight(1000).setAttribute("data-cross-groupkey", "1"),
+          El.panel().setWidth("100%").setHeight(1000).setAttribute("data-cross-groupkey", "1")
+        )
+      );
+
+      expect(el.el.querySelector("img")).toBeNull();
+
+      const flicking = await createCrossFlicking(el);
+
+      expect(flicking.element.querySelector("img")).toBeNull();
+      expect((window as any).__xssTriggered).toBe(false);
+    });
+  });
+
   describe("Options", () => {
     describe("sideOptions", () => {
       it("should apply sideOptions to side flicking instances.", async () => {

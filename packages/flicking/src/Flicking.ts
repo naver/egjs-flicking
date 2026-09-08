@@ -33,7 +33,7 @@ import {
 } from "./renderer";
 import { ElementLike, MoveTypeOptions, Plugin, Status } from "./types/external";
 import { LiteralUnion, ValueOf } from "./types/internal";
-import { findIndex, getElement, includes, parseElement } from "./utils";
+import { deserializeNode, findIndex, getElement, includes, parseElement, serializeNode } from "./utils";
 
 /**
  * Options for the Flicking component
@@ -1844,6 +1844,13 @@ class Flicking extends Component<FlickingEvents> {
 
         if (includePanelHTML) {
           panelInfo.html = panel.element.outerHTML;
+          // Capture a structural (JSON-safe) snapshot of the node tree. setStatus rebuilds panels
+          // from this via DOM APIs instead of parsing the html string, which would revive
+          // mutation-XSS payloads; being JSON-safe, it also restores panels after a reload.
+          const node = serializeNode(panel.element);
+          if (node) {
+            panelInfo.node = node;
+          }
         }
 
         return panelInfo;
@@ -1888,8 +1895,11 @@ class Flicking extends Component<FlickingEvents> {
     const renderer = this._renderer;
     const control = this._control;
 
-    // Can't add/remove panels on external rendering
-    if (panels[0]?.html && !this._renderExternal) {
+    // Rebuild panels from the structural node snapshots via DOM APIs, never by parsing the
+    // serialized `html` string — an `outerHTML`→`innerHTML` round-trip can revive a mutation-XSS
+    // payload that was inert on first render. The snapshot survives JSON, so this also restores
+    // panels after a reload/navigation. (Also can't add/remove panels on external rendering.)
+    if (panels[0]?.node && !this._renderExternal) {
       renderer.batchRemove({
         index: 0,
         deleteCount: this.panels.length,
@@ -1897,7 +1907,7 @@ class Flicking extends Component<FlickingEvents> {
       });
       renderer.batchInsert({
         index: 0,
-        elements: parseElement(panels.map(panel => panel.html!)),
+        elements: panels.map(panel => deserializeNode(panel.node!) as HTMLElement),
         hasDOMInElements: true
       });
     }
