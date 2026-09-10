@@ -90,19 +90,84 @@ release/{scope}-{version}
 
 ### 배포 절차
 
-**`/release` 스킬을 실행하면 아래 전 과정이 순서대로 진행된다.** 중단된 릴리즈도 `pnpm -s release:status --json`의 `stage`로 재개 지점을 찾아 이어서 진행한다.
+**`/release` 스킬을 실행하면 아래 전 과정이 순서대로 진행된다.**
 
+```mermaid
+flowchart TD
+    A([/release 실행]) --> B["0 · release:status --fetch"]
+    B --> G1{"프리플라이트 통과?"}
+    G1 -->|아니오| STOP([중단 · 사용자 조치 요청])
+    G1 -->|예| S1
+
+    subgraph BR["① 릴리즈 브랜치 · 되돌릴 수 있음"]
+        direction TB
+        S1["1 · 버전 결정<br/>publish:version {bump}"] --> S2["2 · release:prepare<br/>CHANGELOG + 릴리즈 커밋"] --> S2V["검증<br/>lint · build · pack"]
+    end
+
+    S2V --> S3
+
+    subgraph GH["② GitHub · 되돌릴 수 있음"]
+        direction TB
+        S3["3 · push → PR → CI"] --> S3M["merge commit으로 master 반영<br/>squash 금지"]
+    end
+
+    S3M --> G2{"승인 게이트 · 1회"}
+    G2 -->|거부| STOP
+    G2 -->|승인| S4
+
+    subgraph NPMZ["③ npm · 되돌릴 수 없음"]
+        S4["4 · publish:stable"]
+    end
+
+    S4 --> S5
+
+    subgraph POST["④ 게시 이후 · 되돌릴 수 있음"]
+        direction TB
+        S5["5 · release:finalize<br/>게시 검증 → 태그 → GitHub Release"] --> S6["6 · docs:deploy:auto"]
+    end
+
+    S6 --> DONE([완료 보고])
 ```
-0. release:status     진행 상태·재개 지점 확인 (npm 로그인 게이트)
-1. 버전 범프          코어 수정 + publish:version {bump} (단독 배포는 해당 package.json만)
-2. release:prepare    릴리즈 브랜치에서 pnpm install + changelog + 릴리즈 커밋
-3. PR → CI → 머지     merge commit으로 master 반영 (squash 금지)
-4. publish:stable     사용자 확인 1회 후 npm 게시
-5. release:finalize   게시 검증 → 태그 → push → GitHub Release
-6. docs:deploy:auto   문서 사이트 배포 (릴리즈 후 필수)
-```
+
+| 단계 | 명령 | 하는 일 |
+|------|------|---------|
+| 0 | `release:status --fetch` | 저장소·레지스트리 상태 관측, 재개 지점 산출 |
+| 1 | `publish:version {bump}` | 코어 버전 수정 후 래퍼 동기화 (단독 배포는 해당 `package.json`만) |
+| 2 | `release:prepare` | `pnpm install` + CHANGELOG + 릴리즈 커밋 |
+| 3 | `gh pr create` → `gh pr merge --merge` | CI 통과 후 master 반영 |
+| 4 | `publish:stable` | 승인 1회 후 npm 게시 |
+| 5 | `release:finalize` | 게시 검증 → 태그 → push → GitHub Release |
+| 6 | `docs:deploy:auto` | 문서 사이트 배포 |
+
+- **③만 되돌릴 수 없다.** 그래서 사용자 승인 게이트도 ③ 바로 앞에 하나만 둔다.
+- 게이트는 둘이다 — 0단계 관측값으로 판단하는 프리플라이트, publish 직전 승인. 그 외에는 멈추지 않는다.
+- 프리플라이트에서 막는 것: npm 미로그인 · gh 미인증 · 더티 트리 · 미푸시 커밋 · 정본 remote 없음 · 정본 write 권한 없음.
+- ④는 게시 이후지만 태그·릴리즈·문서는 다시 만들 수 있어, 실패하면 같은 명령을 재실행하면 된다.
 
 시나리오별 명령어 → [배포 워크플로우](#배포-워크플로우)
+
+### 중단과 재개
+
+어느 단계에서 멈췄든 `/release`를 다시 실행하면 `release:status`가 저장소·레지스트리 상태를 관측해 재개 지점(`stage`)을 계산한다. "어디까지 했는지"를 사람이 기억할 필요가 없다.
+
+```mermaid
+flowchart TD
+    ST["release:status"] --> A{"게시 · 태그 · GitHub Release<br/>모두 존재?"}
+    A -->|예| R1["released<br/>이 버전은 끝<br/>새 릴리즈는 1단계부터"]
+    A -->|아니오| B{"직전 태그 이후<br/>버전이 바뀐 패키지 있음?"}
+    B -->|아니오| R2["bump<br/>→ 1단계 버전 결정"]
+    B -->|예| C{"대상 전부<br/>npm에 게시됨?"}
+    C -->|예| R3["finalize<br/>→ 5단계 태그 · 릴리즈"]
+    C -->|아니오| D{"릴리즈 커밋 존재?"}
+    D -->|아니오| R4["prepare<br/>→ 2단계 changelog · 커밋"]
+    D -->|예| E{"master에 머지됨?"}
+    E -->|아니오| R5["merge<br/>→ 3단계 PR · CI · 머지"]
+    E -->|예| R6["publish<br/>→ 4단계 npm 게시"]
+```
+
+- 코어만 게시되고 래퍼가 실패한 것처럼 **일부만 게시된 상태**는 `publish`로 남는다. 실패한 패키지만 같은 버전으로 다시 올린다.
+- `finalize`는 게시되지 않은 버전에 태그를 만들지 않는다. 미게시면 중단하고 4단계로 돌려보낸다.
+- `pushed`가 false인 채 `stage`가 `publish`면 릴리즈 커밋이 GitHub에 없는 상태다. 게시하지 않고 3단계로 돌아간다.
 
 ---
 

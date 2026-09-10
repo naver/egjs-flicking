@@ -8,6 +8,7 @@ argument-hint: "[patch|minor|major] [react|vue|plugins]"
 $ARGUMENTS 기준으로 정식 배포를 끝까지 진행한다.
 
 버전 정책·배포 원칙·명령어 레퍼런스는 @dev-guide/PUBLISH_GUIDE.md 를 따른다. 이 스킬은 그 절차의 실행기다.
+절차 전체 그림과 재개 판단 트리는 그 문서의 "배포 절차"·"중단과 재개" 다이어그램에 있다.
 
 **순서 원칙**: 되돌릴 수 없는 npm publish를 master 머지 뒤에 둔다. 태그·GitHub Release는 publish 성공 뒤에 만든다. `release:finalize`가 이 순서를 강제하므로 우회하지 않는다.
 
