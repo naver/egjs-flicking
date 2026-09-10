@@ -215,6 +215,7 @@ flowchart TD
 3. 코어 버전이 올라가면 래퍼도 재배포한다 (소비자가 `npm install @egjs/react-flicking@latest`만으로 코어 변경분을 받을 수 있도록).
 4. 래퍼는 독자적으로 버전이 앞설 수 있다 (프레임워크 호환성 수정 등).
 5. 플러그인은 코어와 독립적으로 관리한다.
+6. 루트 `package.json`의 version(`3.0.0`)은 **모노레포 자체 버전**이며 프로덕트 버전과 무관하다. 릴리즈·배포 대상이 아니고 코어 버전과 동기화하지 않는다.
 
 ### 코어 변경 시
 
@@ -307,6 +308,13 @@ pnpm publish:beta:react
 - `release:prepare`는 릴리즈 대상 경로(`CHANGELOG.md`, `pnpm-lock.yaml`, 공개 패키지 `package.json`)만 커밋한다. 작업 중인 다른 파일은 스테이징하지 않는다.
 - `release:finalize`는 대상 패키지가 npm에 게시되어 있는지 먼저 확인하고, 미게시면 중단한다. 태그는 릴리즈 커밋 SHA에 붙인다.
 - `--package`를 주면 래퍼·플러그인 단독 릴리즈로 동작한다. 태그·changelog 기준이 해당 패키지 태그(`@egjs/react-flicking@4.17.1`)가 된다.
+
+태그 규칙:
+
+- 코어 릴리즈는 bare 태그(`4.17.0`)와 버전이 바뀐 패키지 태그(`@egjs/flicking@4.17.0` 등)를 함께 만든다.
+- 단독 릴리즈는 해당 패키지 태그만 만든다 (bare 태그는 코어 릴리즈 전용).
+- 직전 태그 계산도 같은 기준으로 나뉜다 — 코어는 bare 태그 중 최신, 단독은 해당 패키지 태그 중 최신.
+- 이미 존재하는 태그는 건너뛴다. `finalize` 재실행이 안전한 이유다.
 
 `release:status`가 판별하는 환경 상태 (`--fetch`를 주면 정본 master를 먼저 받아온다):
 
@@ -466,134 +474,15 @@ pnpm publish:beta:vue
 pnpm publish:beta
 ```
 
-## release-helper를 대체한 이유
+## 향후 계획
 
-### 기존 방식: `release-helper version`
-
-`@egjs/release-helper`의 `version` 커맨드는 코어 버전 변경 시 의존 패키지들의 버전을 자동 동기화하는 도구였다.
-
-### 발견된 문제
-
-#### 1. 의존성 전파 로직이 동작하지 않음
-
-`version.js`의 Step 2에서 `pnpm list -r --json --depth -1`을 호출하지만, 이 명령은 `dependencies` 필드를 반환하지 않는다. 따라서 의존성 변경 감지에 의한 자동 전파(Step 2)는 **실제로 동작하지 않았다**.
-
-#### 2. devDependencies 변경이 불필요한 버전 bump을 유발
-
-Step 3에서 각 패키지의 `package.json`을 디스크에서 읽고 `dependencies`와 `devDependencies` 모두의 버전을 덮어쓴다. 그리고 `contentChanged`가 true이면 패키지 자체 버전을 강제로 patch bump한다.
-
-```js
-// devDependencies도 순회하면서 버전을 덮어씀
-for (const depName in pkgJson.devDependencies) {
-  pkgJson.devDependencies[depName] = `~${newVersion}`;
-  contentChanged = true;  // ← 이것 때문에 강제 patch bump 발생
-}
-```
-
-결과적으로 다음 패키지들이 의도하지 않게 버전이 올라갔다:
-
-| 패키지 | @egjs/flicking 의존 위치 | 영향 |
-|--------|------------------------|------|
-| `@egjs/flicking-plugins` | devDependencies | 불필요한 patch bump |
-| `docs` | dependencies | 불필요한 patch bump (private이라 배포는 안 됨) |
-| `@test/plugins` | devDependencies | 불필요한 patch bump |
-
-#### 3. workspace: 프로토콜과 호환 불가
-
-Step 3은 의존성 버전을 `~{newVersion}` 형태로 하드코딩한다. `workspace:~`를 사용하면 이를 덮어써서 **workspace 프로토콜이 영구적으로 삭제**된다.
-
-```js
-// "workspace:~" → "~4.17.0" 으로 덮어씀
-pkgJson.dependencies[depName] = `~${newVersion}`;
-```
-
-이후 pnpm install 시 로컬 링크가 아닌 npm registry에서 패키지를 찾으려 시도한다.
-
-#### 4. private 패키지 구분 없음
-
-docs, test 같은 `private: true` 패키지도 동일하게 처리하여 불필요한 변경이 발생한다.
-
-#### 5. peerDependencies는 처리하지 않음
-
-`flicking-plugins`의 `peerDependencies: {"@egjs/flicking": "^4.1.0"}`는 업데이트하지 않는다. 이 자체는 문제가 아니지만, devDependencies만 건드리면서 버전을 올리는 것은 일관성이 없다.
-
-### 대체: `config/sync-version.js` + `workspace:` 프로토콜
-
-| | release-helper version | sync-version.js + workspace: |
-|---|---|---|
-| 의존성 버전 관리 | 하드코딩 (`~4.17.0`) | pnpm이 publish 시 자동 치환 |
-| devDependencies 부작용 | 불필요한 bump 발생 | 영향 없음 |
-| private 패키지 | 구분 없이 처리 | 영향 없음 |
-| workspace 호환성 | 비호환 (덮어씀) | 네이티브 지원 |
-| 버전 동기화 대상 | 모든 패키지 | dependencies에 코어가 있는 래퍼만 |
-| 테스트 | 없음 | `config/sync-version.test.js` |
-
-### release/changelog 커맨드
-
-#### 기존 방식: `release-helper release` / `release-helper changelog`
-
-changelog 생성 → 빌드 → git commit + tag → push → GitHub Release를 자동화하는 도구였다.
-
-#### 발견된 문제
-
-##### 1. 개별 패키지 changelog 버전이 틀림
-
-`changelog.js`에서 개별 패키지를 "independent" 모드로 `@lerna/conventional-commits`에 전달하는데, lerna가 전달받은 `version` 파라미터를 무시하고 **루트 `package.json`의 version을 읽는다**.
-
-```
-루트 package.json version: 3.0.0  (모노레포 자체 버전, 프로덕트와 무관)
-@egjs/flicking version:    4.16.0 (코어 버전)
-
-결과: 개별 패키지 CHANGELOG에 "## 3.0.0" 으로 기록됨 (4.16.0 이어야 함)
-```
-
-루트 changelog("root" 모드)는 코어 버전을 명시적으로 전달받아 정상 동작하지만, 개별 패키지 changelog("independent" 모드)는 모두 잘못된 버전 헤더를 갖는다.
-
-이 문제를 해결하려면 루트 `package.json` version을 코어 버전과 동기화해야 하는데, 루트 버전은 모노레포 자체 버전이므로 개별 프로덕트 버전과 무관해야 한다.
-
-##### 2. 패키지 접두사 태그 필요
-
-`@lerna/conventional-commits`의 "independent" 모드는 `@egjs/flicking@4.15.0` 형태의 태그를 기대하지만, 기존 릴리즈 히스토리에는 `4.15.0` 같은 bare 태그만 존재한다. 패키지 접두사 태그가 없으면 changelog의 변경 범위를 올바르게 계산하지 못한다.
-
-##### 3. `prerelease: false` 하드코딩
-
-`git.js`의 `gitRelease` 함수에서 GitHub Release 생성 시 `prerelease: false`가 하드코딩되어 있다. 설정으로 변경할 수 없다.
-
-##### 4. branch 기본값 불일치
-
-CLI 옵션의 `--branch` 기본값이 `"main"`이지만, egjs-flicking 레포는 `master`를 사용한다. 매번 `--branch master`를 명시해야 한다.
-
-#### 대체: `config/release.js`
-
-| | release-helper release | config/release.js |
-|---|---|---|
-| changelog 버전 | 루트 version 사용 (잘못됨) | 코어 version 사용 (정확) |
-| 패키지 태그 의존성 | @lerna가 패키지 접두사 태그 필요 | 자체 태그 생성 |
-| branch 설정 | `--branch` 옵션 필요 | `--branch master` 기본값 |
-| GitHub Release | Octokit (`GH_TOKEN` 필요) | `gh` CLI 자동 실행 (finalize) |
-| publish 순서 | 강제하지 않음 | 게시 검증 후에만 태그·릴리즈 생성 |
-| 커밋 범위 | `git add .` | 릴리즈 대상 경로만 스테이징 |
-| dry-run | 미지원 | `--dry-run` 지원 |
-| 외부 의존성 | `@lerna/conventional-commits`, `@octokit/rest` | 없음 (git log 기반) |
-| 테스트 | 없음 | `config/release.test.js` (`pnpm test:config`) |
-
-### release-helper를 다시 사용하려면
-
-다음 사항이 수정되면 release-helper로 복귀할 수 있다:
-
-| 기능 | 필요한 수정 |
-|------|-----------|
-| `version` | `workspace:` 프로토콜 보존, devDependencies 변경 시 version bump 방지, private 패키지 제외 |
-| `changelog` | "independent" 모드에서 전달된 `version` 파라미터가 실제로 사용되도록 수정 (루트 version fallback 제거) |
-| `release` | `prerelease` 옵션 설정 가능하게, `--branch` 기본값을 `release-helper.json`에서 설정 가능하게 |
-| `publish` | pnpm `workspace:` 프로토콜 호환 |
-
-### 향후 계획
-
-현재 자체 스크립트(`sync-version.js`, `release.js`)는 과도기 도구이다. 이후 [changesets](https://github.com/changesets/changesets)로 전환하면 자체 스크립트와 release-helper를 모두 대체할 수 있다.
+자체 스크립트(`config/sync-version.js`, `config/release.js`)는 과도기 도구다. [changesets](https://github.com/changesets/changesets)로 전환하면 아래처럼 대체할 수 있다.
 
 | 현재 도구 | changesets 대체 |
 |-----------|----------------|
 | `sync-version.js` | `changeset version` |
-| `release.js` (changelog + commit + tag) | `changeset version` + `changeset tag` |
-| `pnpm publish:stable` | `changeset publish` |
+| `release:prepare` (changelog + 릴리즈 커밋) | `changeset version` |
+| `release:finalize` (태그 + GitHub Release) | `changeset tag` + `gh release create` |
+| `publish:stable` | `changeset publish` |
+
+전환 시 검토할 것 — changesets는 게시 순서를 강제하지 않으므로, [머지 후 publish](#순서-머지-후-publish) 보장과 재개 판단(`release:status`)을 어떻게 유지할지 함께 결정해야 한다.
