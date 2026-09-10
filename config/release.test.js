@@ -4,6 +4,7 @@ import {
   compareVersion,
   decideNextStep,
   decideStage,
+  extractChangelogSection,
   insertChangelogEntry,
   normalizeRepo,
   parseRemotes,
@@ -11,6 +12,7 @@ import {
   pickPushRemote,
   pickPrevTag,
   renderChangelog,
+  renderNotesSkeleton,
 } from "./release.js";
 
 const REMOTES_ORIGIN_CANONICAL = `origin\thttps://github.com/naver/egjs-flicking.git (fetch)
@@ -214,6 +216,62 @@ describe("insertChangelogEntry", () => {
 
   it("파일이 비어 있어도 헤더를 만든다", () => {
     expect(insertChangelogEntry("", "## 4.18.0\n")).toContain("# Change Log");
+  });
+});
+
+describe("extractChangelogSection", () => {
+  const CHANGELOG = `# Change Log
+
+All notable changes to this project will be documented in this file.
+
+## [4.18.0](https://github.com/naver/egjs-flicking/compare/4.17.0...4.18.0) (2026-09-10)
+### :rocket: New Features
+* 새 옵션 추가
+
+## [4.17.0](https://github.com/naver/egjs-flicking/compare/4.16.4...4.17.0) (2026-09-01)
+### :bug: Bug Fixes
+* 이전 릴리즈 수정
+`;
+
+  it("compare 링크 heading에서 해당 섹션만 잘라낸다", () => {
+    const section = extractChangelogSection(CHANGELOG, "4.18.0");
+    expect(section).toContain("새 옵션 추가");
+    expect(section).not.toContain("이전 릴리즈 수정");
+  });
+
+  it("링크 없는 heading도 인식한다", () => {
+    expect(extractChangelogSection("## 4.18.0 (2026-09-10)\n* 변경\n", "4.18.0")).toContain("변경");
+  });
+
+  it("패키지 태그 heading도 인식한다", () => {
+    const cl = "## [@egjs/react-flicking@4.17.1](https://x/compare/a...b) (2026-09-10)\n* 래퍼 수정\n";
+    expect(extractChangelogSection(cl, "@egjs/react-flicking@4.17.1")).toContain("래퍼 수정");
+  });
+
+  it("해당 버전이 없으면 null", () => {
+    expect(extractChangelogSection(CHANGELOG, "4.19.0")).toBeNull();
+  });
+
+  it("섹션이 비어 있으면 null", () => {
+    expect(extractChangelogSection("## 4.18.0\n\n## 4.17.0\n* 이전\n", "4.18.0")).toBeNull();
+  });
+});
+
+describe("renderNotesSkeleton", () => {
+  it("Packages 표를 채우고 Highlights 자리를 남긴다", () => {
+    const md = renderNotesSkeleton([
+      { name: "@egjs/flicking", version: "4.18.0" },
+      { name: "@egjs/react-flicking", version: "4.18.0" },
+    ]);
+
+    expect(md).toContain("| `@egjs/flicking` | 4.18.0 |");
+    expect(md).toContain("| `@egjs/react-flicking` | 4.18.0 |");
+    expect(md).toContain("## Highlights");
+    expect(md).toContain("## Breaking changes");
+  });
+
+  it("패키지가 없어도 표 머리는 유지한다", () => {
+    expect(renderNotesSkeleton()).toContain("| Package | Version |");
   });
 });
 

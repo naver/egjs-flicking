@@ -52,6 +52,7 @@
     "release": "node config/release.js",
     "release:status": "node config/release.js status",
     "release:prepare": "node config/release.js prepare",
+    "release:notes": "node config/release.js notes",
     "release:finalize": "node config/release.js finalize"
   },
   "repository": {

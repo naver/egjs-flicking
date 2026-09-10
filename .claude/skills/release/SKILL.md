@@ -121,12 +121,24 @@ pnpm publish:stable:{pkg}            # 패키지 단독 릴리즈
 
 ## 5. 태그 + GitHub Release
 
-릴리즈 노트에 하이라이트·breaking change·deprecate 안내가 필요하면 **저장소 밖**(스크래치패드)에 초안을 쓰고 사용자 확인을 받는다. 없으면 자동 생성만 쓴다.
+릴리즈 노트는 **매번 직접 작성한다.** 자동 생성 PR 목록만으로 끝내지 않는다 (이 레포의 기존 릴리즈는 모두 Highlights를 갖고 있다).
 
 ```bash
-pnpm release:finalize                              # 자동 생성 노트만
-pnpm release:finalize --notes-file {초안 경로}      # 직접 작성 + 자동 PR 목록
+# 1) 뼈대 생성 — Packages 표는 채워져 나오고, 작성 근거로 CHANGELOG 섹션이 출력된다
+pnpm release:notes --out {스크래치패드}/release-notes.md
+
+# 2) Highlights를 채운 뒤 사용자 확인을 받고 전달
+pnpm release:finalize --notes-file {스크래치패드}/release-notes.md
 ```
+
+초안 작성 규칙:
+
+- 근거는 `release:notes`가 출력한 CHANGELOG 섹션 + `git log {prevTag}..HEAD` + 해당 PR 본문이다. 근거 없는 내용을 쓰지 않는다.
+- **Highlights는 커밋 제목 나열이 아니라 사용자 영향 서술이다.** 항목마다 "무엇이 바뀌었나 — 왜 중요한가 (#PR)" 형태로 쓴다.
+- breaking change·deprecate가 없으면 해당 섹션을 지운다. 있으면 마이그레이션 방법을 한 줄이라도 적는다.
+- 초안은 **저장소 밖**(스크래치패드)에 둔다. 커밋하지 않는다.
+- `finalize`가 `--generate-notes`를 함께 넘기므로 자동 PR 목록은 본문 아래에 결합된다.
+- `--notes-file` 없이 `finalize`를 실행하면 CHANGELOG 섹션이 본문으로 들어간다. 이는 수동 실행용 안전망이며, 스킬 경로에서는 항상 초안을 만든다.
 
 `finalize`는 npm 게시 여부를 먼저 확인하고, 게시되지 않았으면 중단한다. 그 에러가 나면 4단계로 돌아간다.
 

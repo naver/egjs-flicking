@@ -17,10 +17,12 @@
  *   node config/release.js status [--json] [--fetch] [--package react]
  *   node config/release.js prepare [--package react] [--dry-run] [--skip-install] [--allow-master]
  *   node config/release.js finalize [--package react] [--dry-run] [--notes-file FILE] [--remote NAME] [--branch NAME]
+ *   node config/release.js notes [--package react] [--out FILE]
  *   node config/release.js remote
  */
 const { execSync } = require("child_process");
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -199,6 +201,54 @@ function renderChangelog({ tag, prevTag, date, packages = [], categories = {}, r
   return md;
 }
 
+/**
+ * CHANGELOG.md에서 해당 태그의 섹션 본문만 잘라낸다.
+ * heading은 `## [4.18.0](compare...)` 또는 `## 4.18.0` 두 형태를 모두 받는다.
+ */
+function extractChangelogSection(changelog, tag) {
+  const lines = String(changelog).split("\n");
+  const headingOf = line => {
+    const match = line.match(/^## (?:\[([^\]]+)\]\([^)]*\)|(\S+))/);
+    return match ? match[1] || match[2] : null;
+  };
+
+  const start = lines.findIndex(line => headingOf(line) === tag);
+  if (start === -1) return null;
+
+  const rest = lines.slice(start + 1);
+  const nextIdx = rest.findIndex(line => headingOf(line) !== null);
+  const body = (nextIdx === -1 ? rest : rest.slice(0, nextIdx)).join("\n").trim();
+
+  return body || null;
+}
+
+/**
+ * 릴리즈 노트 초안 뼈대. Packages 표는 채워서 주고, 산문은 사람이 채운다.
+ * 형식은 기존 릴리즈(4.16.x)를 따른다 — Highlights + 자동 PR 목록 결합.
+ */
+function renderNotesSkeleton(packages = []) {
+  const rows = packages.map(p => `| \`${p.name}\` | ${p.version} |`).join("\n");
+
+  return `## Packages
+
+| Package | Version |
+|---------|---------|
+${rows}
+
+## Highlights
+
+- **(무엇이 바뀌었는지)** — 사용자에게 어떤 영향인지, 왜 중요한지. (#PR)
+
+## Breaking changes
+
+- (없으면 이 섹션을 지운다)
+
+## Deprecated
+
+- (없으면 이 섹션을 지운다)
+`;
+}
+
 function insertChangelogEntry(existing, entry) {
   const header = "# Change Log\n\nAll notable changes to this project will be documented in this file.\n\n";
   const body = String(existing).replace(/^# Change Log\n+.*\n\n/m, "");
@@ -351,6 +401,30 @@ function cmdRemote() {
   }
 
   console.log(remote);
+}
+
+function cmdNotes({ pkgArg, outFile }) {
+  const target = resolveTarget(pkgArg);
+  const prevTag = pickPrevTag(tryOut("git tag --merged HEAD") || "", target.tagPrefix, target.version);
+  const pkgs = target.scope === "core"
+    ? changedPackages(prevTag)
+    : [{ name: target.name, version: target.version }];
+
+  const skeleton = renderNotesSkeleton(pkgs);
+  const changelogPath = path.join(ROOT, "CHANGELOG.md");
+  const changelog = fs.existsSync(changelogPath) ? fs.readFileSync(changelogPath, "utf8") : "";
+  const section = extractChangelogSection(changelog, target.tag);
+
+  if (outFile) {
+    fs.writeFileSync(path.resolve(ROOT, outFile), skeleton);
+    console.log(`  → 초안 뼈대: ${outFile}`);
+  } else {
+    console.log(skeleton);
+  }
+
+  console.log("\n  ── 작성 근거 (CHANGELOG 섹션) ──\n");
+  console.log(section || "  (CHANGELOG에 해당 버전 섹션이 없다. release:prepare를 먼저 실행한다.)");
+  console.log("");
 }
 
 function cmdStatus({ json, pkgArg, branchName, fetch: doFetch }) {
@@ -618,7 +692,23 @@ function cmdFinalize({ dryRun, notesFile, remoteName, branchName, pkgArg }) {
   // --- 5. GitHub Release ---
   const date = tryOut(`git log -1 --format=%cs ${commit.sha}`) || today();
   const title = `${target.tag} Release (${date})`;
-  const notesArg = notesFile ? ` --notes-file ${notesFile}` : "";
+
+  // 본문 우선순위: 직접 작성한 노트 → CHANGELOG 섹션 → 자동 생성만
+  let notesPath = notesFile;
+  if (!notesPath) {
+    const changelogPath = path.join(ROOT, "CHANGELOG.md");
+    const changelog = fs.existsSync(changelogPath) ? fs.readFileSync(changelogPath, "utf8") : "";
+    const section = extractChangelogSection(changelog, target.tag);
+
+    if (section) {
+      notesPath = path.join(os.tmpdir(), `flicking-release-notes-${target.version}.md`);
+      if (!dryRun) fs.writeFileSync(notesPath, `${section}\n`);
+      console.log("  --notes-file이 없어 CHANGELOG 섹션을 본문으로 사용한다.");
+      console.log("  하이라이트를 직접 쓰려면: node config/release.js notes --out FILE\n");
+    }
+  }
+
+  const notesArg = notesPath ? ` --notes-file ${notesPath}` : "";
   const createCmd =
     `gh release create "${target.tag}" --repo ${CANONICAL_REPO} --title "${title}"${notesArg} --generate-notes`;
 
@@ -645,10 +735,11 @@ function usage() {
     pnpm release:status                진행 상태·재개 지점 확인
     pnpm release:prepare               릴리즈 브랜치: changelog + 버전 커밋
     (PR → CI → master 머지 → pnpm publish:stable)
+    pnpm release:notes --out FILE      릴리즈 노트 초안 뼈대 생성
     pnpm release:finalize              master: 태그 + push + GitHub Release
 
   옵션: --package {core|react|vue|plugins} --dry-run --skip-install --allow-master
-        --notes-file FILE --remote NAME --branch NAME --json --fetch
+        --notes-file FILE --out FILE --remote NAME --branch NAME --json --fetch
 
   전체 절차는 /release 스킬 또는 dev-guide/PUBLISH_GUIDE.md 참조.
 `);
@@ -674,6 +765,7 @@ if (require.main === module) {
     remoteName: getArg("--remote"),
     branchName: getArg("--branch") || "master",
     pkgArg: getArg("--package"),
+    outFile: getArg("--out"),
   };
 
   switch (command) {
@@ -685,6 +777,9 @@ if (require.main === module) {
       break;
     case "finalize":
       cmdFinalize(options);
+      break;
+    case "notes":
+      cmdNotes(options);
       break;
     case "remote":
       cmdRemote();
@@ -705,6 +800,8 @@ module.exports = {
   categorizeCommits,
   renderChangelog,
   insertChangelogEntry,
+  extractChangelogSection,
+  renderNotesSkeleton,
   decideStage,
   decideNextStep,
 };

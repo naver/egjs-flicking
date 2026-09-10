@@ -123,7 +123,7 @@ flowchart TD
 
     subgraph POST["④ 게시 이후 · 되돌릴 수 있음"]
         direction TB
-        S5["5 · release:finalize<br/>게시 검증 → 태그 → GitHub Release"] --> S6["6 · docs:deploy:auto"]
+        S5["5 · 릴리즈 노트 작성 + release:finalize<br/>게시 검증 → 태그 → GitHub Release"] --> S6["6 · docs:deploy:auto"]
     end
 
     S6 --> DONE([완료 보고])
@@ -136,7 +136,7 @@ flowchart TD
 | 2 | `release:prepare` | `pnpm install` + CHANGELOG + 릴리즈 커밋 |
 | 3 | `gh pr create` → `gh pr merge --merge` | CI 통과 후 master 반영 |
 | 4 | `publish:stable` | 승인 1회 후 npm 게시 |
-| 5 | `release:finalize` | 게시 검증 → 태그 → push → GitHub Release |
+| 5 | `release:notes` → `release:finalize` | Highlights 작성 후 게시 검증 → 태그 → GitHub Release |
 | 6 | `docs:deploy:auto` | 문서 사이트 배포 |
 
 - **③만 되돌릴 수 없다.** 그래서 사용자 승인 게이트도 ③ 바로 앞에 하나만 둔다.
@@ -296,6 +296,7 @@ pnpm publish:beta:react
 |--------|-----------|------|
 | `pnpm release:status` | 어디서나 | 버전·태그·게시·릴리즈 상태와 재개 지점(`stage`)을 출력. `--json`으로 기계 판독 |
 | `pnpm release:prepare` | 릴리즈 브랜치 | `pnpm install` + changelog + 릴리즈 커밋 (태그·push 없음) |
+| `pnpm release:notes` | 어디서나 | 릴리즈 노트 초안 뼈대 생성 (`--out FILE`), CHANGELOG 섹션을 근거로 출력 |
 | `pnpm release:finalize` | master (publish 후) | npm 게시 검증 → 태그 → push → GitHub Release |
 | `node config/release.js remote` | 어디서나 | 정본(naver/egjs-flicking)을 가리키는 remote 이름 출력 |
 | `pnpm test:config` | 어디서나 | `sync-version.js` / `release.js` 단위 테스트 |
@@ -323,7 +324,22 @@ pnpm publish:beta:react
 
 ### 릴리즈 노트(GitHub Release) 작성
 
-`release:finalize`가 `gh release create`를 실행해 릴리즈를 만든다. 제목은 `{태그} Release ({릴리즈 커밋 날짜})` 형식으로 고정된다.
+`release:finalize`가 `gh release create`를 실행해 [Releases](https://github.com/naver/egjs-flicking/releases) 항목을 만든다. 제목은 `{태그} Release ({릴리즈 커밋 날짜})` 형식으로 고정된다.
+
+**기본 방침: Highlights를 직접 쓰고 자동 PR 목록을 결합한다.** 기존 릴리즈(4.16.0~4.16.4)가 모두 이 형태이고, 자동 생성만으로 만든 릴리즈는 없다.
+
+```bash
+# 1) 뼈대 생성 — Packages 표는 채워지고, 작성 근거로 CHANGELOG 섹션이 출력된다
+pnpm release:notes --out /tmp/release-notes.md
+
+# 2) Highlights를 채운 뒤 전달 (본문 위 = 직접 작성, 아래 = 자동 PR 목록)
+pnpm release:finalize --notes-file /tmp/release-notes.md
+```
+
+- Highlights는 커밋 제목 나열이 아니라 **사용자 영향 서술**로 쓴다 — "무엇이 바뀌었나 — 왜 중요한가 (#PR)".
+- breaking change·deprecate가 있으면 마이그레이션 방법을 함께 적고, 없으면 해당 섹션을 지운다.
+- 초안 파일은 저장소 밖에 둔다. 커밋 대상이 아니다.
+- `--notes-file` 없이 `finalize`를 실행하면 **CHANGELOG의 해당 버전 섹션이 본문으로 들어간다** (수동 실행용 안전망).
 
 본문은 플래그에 따라 결정된다:
 
@@ -336,12 +352,6 @@ pnpm publish:beta:react
 **권장**: 하이라이트·breaking change·deprecate 안내 등은 자동 생성으로 표현되지 않으므로, 짧게라도 직접 작성한다.
 
 ```bash
-# 자동 생성 노트만
-pnpm release:finalize
-
-# 직접 작성 노트 + 자동 PR 목록 (초안은 저장소 밖에 둔다)
-pnpm release:finalize --notes-file /tmp/release-notes.md
-
 # 이미 만든 릴리즈 노트 수정
 gh release edit "4.17.0" --repo naver/egjs-flicking --notes-file /tmp/release-notes.md
 ```
