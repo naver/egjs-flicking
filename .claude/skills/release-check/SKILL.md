@@ -17,11 +17,11 @@ agent: general-purpose
 3. **CFC 테스트**: `pnpm test:cfc` — 전체 통과 여부
 4. **E2E 테스트**: `pnpm test:e2e` — 전체 통과 여부
 5. **Lint**: `pnpm lint` — 오류 없는지
-6. **빌드**: `pnpm packages:build` — 모든 패키지 빌드 성공
+6. **빌드**: `pnpm publish:build` — 배포 대상 패키지 전체 빌드 성공
 7. **문서 빌드**: `pnpm docs:build` — API 문서 + Docusaurus 빌드 성공
 8. **TSDoc 검증**: `pnpm api-docs:generate` 실행 후 에러/경고 확인. 새로 추가된 공개 API에 `@since` 태그가 있는지, 태그 순서가 가이드에 맞는지 검증 (dev-guide/TSDOC_FORMAT_GUIDE.md 기준)
-9. **버전 일관성**: 각 패키지의 `package.json` 버전이 일치하는지 확인
-10. **CHANGELOG**: 최신 변경사항이 반영되어 있는지 확인
+9. **설정 스크립트 테스트**: `pnpm test:config` — sync-version / release 스크립트 단위 테스트
+10. **릴리즈 상태**: `pnpm -s release:status --json --fetch` — 버전·태그·게시 상태, `clean`·`pushed`·`baseBehind`, `stage`가 예상과 맞는지 확인
 
 ## 보고 형식
 
@@ -34,4 +34,5 @@ agent: general-purpose
 
 ## 릴리즈 절차 상세
 
-@dev-guide/DOCS_GUIDE.md 참조.
+배포 절차 자체는 `/release` 스킬이 수행한다. 이 스킬은 그 2단계(머지 전 검증)에서 전체 스위트를 돌릴 때 쓴다.
+정책·명령어 레퍼런스 → @dev-guide/PUBLISH_GUIDE.md
