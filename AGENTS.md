@@ -35,6 +35,11 @@ egjs-flicking은 Naver가 개발하는 JavaScript 캐러셀/슬라이더 라이�
 - `shared/pre-setup.ts`는 `setupFiles` 배열 **첫 번째**에 위치해야 한다. 순서가 바뀌면 Axes가 잘못된 Input을 선택한다.
 - CSS 레이아웃(`offsetWidth` 등)이 필요한 테스트는 unit(Vitest Browser Mode)에 작성한다. jsdom 환경(plugins, cfc)에서는 실제 크기 계산이 불가능하다.
 
+### 배포
+- **배포는 `/release` 스킬로 실행한다.** 순서는 **master 머지 → npm publish → 태그·GitHub Release → 문서 배포**로 고정이다. 되돌릴 수 없는 publish를 뒤에 둔다.
+- 릴리즈 PR은 merge commit으로 머지한다 (squash 금지 — 릴리즈 커밋 SHA 보존).
+- 상세 → `dev-guide/PUBLISH_GUIDE.md`
+
 ### 문서
 - `llms.txt`의 링크는 HTML(`/docs/...`)이 아닌 `/llm-docs/.../.md`를 가리킨다.
 - 데모 코드는 TSX 내 템플릿 리터럴이 아닌 별도 파일(`react.jsx`, `vue.vue`, `vanilla.js`)로 작성한다.
@@ -56,7 +61,8 @@ pnpm test             # unit 테스트 (Vitest Browser Mode + Playwright)
 pnpm test:plugins     # plugins 테스트 (jsdom)
 pnpm test:cfc         # Cross-Framework 테스트 (jsdom)
 pnpm test:e2e         # E2E 테스트 (Playwright + 데모 기반)
-pnpm test:all         # 전체 순차 실행 (unit + plugins + cfc)
+pnpm test:config      # config/ 스크립트 단위 테스트 (sync-version, release)
+pnpm test:all         # 전체 순차 실행 (unit + plugins + cfc + config)
 
 # 코드 품질 (Biome)
 pnpm lint             # lint + format 검사
@@ -71,13 +77,14 @@ pnpm publish:stable:{pkg}     # 개별 빌드 + 정식 퍼블리시 (flicking|re
 pnpm publish:beta             # 전체 빌드 + 베타 퍼블리시
 pnpm publish:beta:{pkg}       # 개별 빌드 + 베타 퍼블리시
 
-# 릴리즈 (Release: changelog + commit + tag + push)
-pnpm release          # 전체 릴리즈 파이프라인
-pnpm release:dry-run  # 실행하지 않고 명령어만 출력
+# 릴리즈 (Release: changelog·커밋 → publish → 태그·GitHub Release)
+pnpm release:status   # 진행 상태·재개 지점 확인 (--json)
+pnpm release:prepare  # 릴리즈 브랜치: pnpm install + changelog + 릴리즈 커밋
+pnpm release:finalize # master(publish 후): 게시 검증 + 태그 + push + GitHub Release
 
 # 문서 배포 (Deploy: 문서 사이트)
 pnpm docs:build       # API 문서 생성 + Docusaurus 빌드
-pnpm docs:deploy      # 빌드 + gh-pages 배포 (upstream)
+pnpm docs:deploy:auto # 빌드 + gh-pages 배포 (정본 remote 자동 판별)
 pnpm api-docs:generate && pnpm api-docs:docusaurus  # API 문서만 재생성
 ```
 

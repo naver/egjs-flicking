@@ -49,7 +49,10 @@ echo $?  # → 0 (통과)
 |-------|------|---------|------------|
 | `/reproduce` | 이슈 번호/URL | inline | [ISSUE_REPRODUCTION_GUIDE.md](ISSUE_REPRODUCTION_GUIDE.md) |
 | `/add-demo` | 데모 스펙 설명 | inline | [DEMO_GUIDE.md](DEMO_GUIDE.md) + [E2E_TEST_GUIDE.md](E2E_TEST_GUIDE.md) + [TSDOC_FORMAT_GUIDE.md](TSDOC_FORMAT_GUIDE.md) |
-| `/release-check` | (없음) | fork | [DOCS_GUIDE.md](DOCS_GUIDE.md) |
+| `/release` | bump 타입·패키지 (선택) | inline | [PUBLISH_GUIDE.md](PUBLISH_GUIDE.md) |
+| `/release-check` | (없음) | fork | [PUBLISH_GUIDE.md](PUBLISH_GUIDE.md) |
+
+`/release`는 정식 배포 파이프라인 전체를 실행한다. 상태 판별(`pnpm -s release:status --json --fetch`)로 재개 지점을 찾으므로 중단된 릴리즈에 다시 실행해도 안전하다. 사용자 승인은 npm publish 직전 1회만 받는다. → [배포 진행 원칙](PUBLISH_GUIDE.md#배포-진행-원칙)
 
 ## Subagents 인벤토리
 

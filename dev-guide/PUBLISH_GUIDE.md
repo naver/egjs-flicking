@@ -2,7 +2,7 @@
 
 ## 릴리즈 브랜치 취합
 
-여러 PR이 master를 타겟으로 열려 있을 때, 개별 PR을 master에 직접 머지하지 않고 **하나의 릴리즈 브랜치에 모아 검증한 뒤 master에 단일 반영**한다.
+여러 PR이 master를 타겟으로 열려 있을 때, 개별 PR을 master에 직접 머지하지 않고 **하나의 릴리즈 브랜치에 모아 검증한 뒤 master에 단일 반영**한다. 버전 범프와 changelog도 이 브랜치에 포함한다.
 
 ### 브랜치명 컨벤션
 
@@ -18,34 +18,56 @@ release/{scope}-{version}
 
 1. master에서 릴리즈 브랜치 생성 (`git checkout -b release/core-4.16.2`)
 2. 취합할 각 PR 브랜치를 `--no-ff`로 머지 (SHA 보존 — 원본 PR 자동 종료에 필요)
-3. 릴리즈 브랜치에서 전체 검증 (unit / plugins / cfc / e2e)
-4. 릴리즈 브랜치 → master PR을 열고, 본문에 `Closes #A #B …`로 취합한 PR을 명시
-5. PR 통과 후 master에 머지 → 취합된 PR들이 "Merged"로 자동 종료
-6. 이후 아래 [배포 절차](#배포-절차)로 퍼블리시
+3. 버전을 변경하고 `pnpm release:prepare`로 changelog·릴리즈 커밋을 만든다
+4. 릴리즈 브랜치에서 검증 (lint·빌드·pack, 필요 시 `/release-check`로 전체 스위트)
+5. 릴리즈 브랜치 → master PR을 열고, 본문에 `Closes #A #B …`로 취합한 PR을 명시
+6. PR CI 통과 후 **merge commit으로** master에 머지 → 취합된 PR들이 "Merged"로 자동 종료
+7. 이후 아래 [배포 절차](#배포-절차)로 퍼블리시
 
 > 취합한 PR을 **수동으로 close하지 않는다.** `Closes` + SHA 보존 머지(`--no-ff`)로 두면 master 머지 시 "Merged"로 자동 종료되어 이력이 깔끔하다. 수동 close는 "Closed"로 남아 병합 이력이 흐려진다.
 
-## 배포 진행 원칙 (역할 분담)
+> **릴리즈 PR에 squash 머지를 쓰지 않는다.** 릴리즈 커밋 SHA가 바뀌면 태그가 게시본과 다른 커밋을 가리키게 되고, 취합한 PR의 자동 종료도 깨진다.
 
-배포는 아래 원칙으로 진행한다. **어시스턴트는 사전 단계를 모두 끝낸 뒤, 실제 `publish` 명령은 사용자가 직접 실행하도록 안내만 한다.**
+## 배포 진행 원칙
+
+### 순서: 머지 후 publish
+
+되돌릴 수 없는 단계를 파이프라인 맨 뒤에 둔다.
+
+```
+버전 범프 → release:prepare → PR·CI → master 머지 → npm publish → release:finalize → docs 배포
+```
+
+- npm 버전 번호는 회수할 수 없고 git 커밋은 되돌릴 수 있다. 실패 비용이 싼 쪽을 먼저 실행한다.
+- 게시된 tarball이 master에 실재하는 커밋과 1:1로 대응하므로 태그·릴리즈 노트의 대상이 명확해진다.
+- 태그와 GitHub Release는 publish 성공 뒤에만 만든다. `release:finalize`가 npm 레지스트리를 조회해 이 순서를 강제한다.
+- publish 단계에서 실패해도 아직 게시된 것이 없으므로 **같은 버전으로 재시도**한다. 일부만 게시됐다면 실패한 패키지만 같은 버전으로 다시 올린다 (게시된 버전은 재게시 불가).
+
+정식 배포 스크립트(`publish:stable*`)는 pnpm의 git 검사를 켠 상태로 실행한다. 이 순서를 사람이 기억하지 않아도 되도록 스크립트가 막는다:
+
+| 검사 | 위반 시 |
+|------|---------|
+| 작업 트리 clean | `ERR_PNPM_GIT_UNCLEAN` — 즉시 중단 |
+| 현재 브랜치 == `publish-branch`(`.npmrc`에 `master` 명시) | 계속할지 확인 프롬프트, 비대화형이면 중단 |
+| 원격 이력 동기 | `ERR_PNPM_GIT_NOT_LATEST` — 원격이 앞서 있으면 중단 |
+
+- 로컬이 원격보다 **앞선**(미푸시) 경우는 pnpm이 잡지 않는다. `/release` 스킬이 publish 직전 `release:status`의 `pushed`로 막는다.
+- 베타(`publish:beta*`)는 `--no-git-checks`를 유지한다. 릴리즈 브랜치에서 미커밋 버전 범프로 게시하므로 검사에 걸린다.
+
+### 역할 분담
 
 1. **npm 로그인 확인이 최우선 게이트.**
    - 어떤 배포 작업이든 시작 전에 `npm whoami`로 로그인 여부를 먼저 확인한다.
    - 로그인이 안 되어 있으면(**401**) **다른 배포 작업을 일절 진행하지 않고**, 사용자에게 `npm login`(별도 터미널)을 요청한다. 인증은 `~/.npmrc`에 저장되어 현재 세션에도 반영된다.
    - `npm whoami`로 로그인이 확인된 뒤에만 다음 단계로 넘어간다.
 2. **사전 단계는 어시스턴트가 전부 완료한다.**
-   - 버전 범프(package.json) → `pnpm install`(lockfile 갱신) → 빌드/`pnpm pack` 검증(래퍼가 올바른 코어 버전을 의존하는지 등)까지 마쳐, **사용자가 `publish` 명령만 실행하면 되는 상태**로 만든다.
-3. **`publish` 명령은 사용자가 직접 실행한다.**
-   - 어시스턴트는 실행할 명령어만 안내한다(어시스턴트가 직접 `publish`를 실행하지 않는다).
-   - **OTP(`--otp`)는 다루지 않는다.** 2FA는 로그인 단계에서 처리되며 `publish` 시 OTP 입력을 요구하지 않는다. 따라서 안내 명령어에 `--otp`를 넣지 않는다.
-   - 명령 실행 중 오류가 나면 그때 사용자가 문의하면 대응한다.
+   - 버전 범프 → `release:prepare` → 빌드·`pnpm pack` 검증(래퍼가 올바른 코어 버전을 의존하는지) → PR 생성·CI 확인·master 머지까지 진행한다.
+3. **publish는 사용자 확인 1회 후 어시스턴트가 실행한다.**
+   - 게시 대상 패키지·버전·npm 계정·dist-tag를 제시하고 승인을 받는다. 승인 없이 실행하지 않는다.
+   - **OTP(`--otp`)는 다루지 않는다.** 2FA는 로그인 단계에서 처리되며 `publish` 시 OTP 입력을 요구하지 않는다.
+4. **태그·릴리즈·문서 배포는 승인 없이 이어서 진행한다.** 되돌릴 수 있는 단계다.
 
-> 안내 예시: 코어 변경 베타를 준비했다면 아래처럼 실행 순서(코어 → 래퍼)만 제시한다.
-> ```bash
-> pnpm publish:beta:flicking   # core
-> pnpm publish:beta:vue        # vue
-> pnpm publish:beta:react      # react
-> ```
+> 전체 파이프라인은 `/release` 스킬이 수행한다. 상태 판별·재개 규칙 포함 → `.claude/skills/release/SKILL.md`, [HARNESS_GUIDE.md](HARNESS_GUIDE.md)
 
 ## 빠른 시작
 
@@ -55,65 +77,32 @@ release/{scope}-{version}
    ```bash
    npm login
    ```
-2. **gh CLI 설치** (GitHub Release를 생성할 경우) — [GitHub CLI](https://cli.github.com/) 설치 후 인증
+2. **gh CLI 설치** — [GitHub CLI](https://cli.github.com/) 설치 후 인증. PR·CI 확인·GitHub Release에 모두 필요하다.
    ```bash
    brew install gh
    gh auth login
    ```
+3. **정본 remote 확인** — 아래가 remote 이름을 출력하지 못하면 정본을 가리키는 remote를 추가한다.
+   ```bash
+   node config/release.js remote        # 예: origin | upstream
+   git remote add upstream https://github.com/naver/egjs-flicking.git
+   ```
 
 ### 배포 절차
 
-> 아래 절차에서 버전 변경·`pnpm install`·빌드 검증은 어시스턴트가 준비하고, `publish`/`publish:*` 명령은 사용자가 직접 실행한다. → [배포 진행 원칙](#배포-진행-원칙-역할-분담)
-
-#### 정식 배포 (코어 변경)
+**`/release` 스킬을 실행하면 아래 전 과정이 순서대로 진행된다.** 중단된 릴리즈도 `pnpm -s release:status --json`의 `stage`로 재개 지점을 찾아 이어서 진행한다.
 
 ```
-1. 코어 package.json의 version을 변경한다.
-2. pnpm publish:version {patch|minor|major} 로 래퍼(react/vue) 버전을 동기화한다.
-   ※ 플러그인은 동기화 대상이 아니다. flicking-plugins를 함께 배포하려면
-     packages/flicking-plugins/package.json의 version을 수동으로 변경한다.
-3. pnpm install 로 lockfile·심링크를 갱신한다. (버전 변경 후 필수)
-   생략하면 래퍼 publish 단계에서 ERR_PNPM_CANNOT_RESOLVE_WORKSPACE_PROTOCOL로 중단된다.
-4. pnpm publish:stable 로 전체 빌드 + npm 퍼블리시한다.
-5. pnpm release 로 changelog·tag·push, gh release create 로 GitHub Release를 생성한다.
-6. pnpm docs:deploy 로 문서 사이트를 배포한다. (릴리즈 후 필수)
-   문서 사이트의 릴리즈 노트(/releases)·버전 표시는 빌드 시 GitHub Release를
-   가져와 갱신하므로, 릴리즈 노트 작성 후 문서를 배포하지 않으면 낡은 채 남는다.
-   ※ 배포 명령은 정본(naver/egjs-flicking)을 가리키는 리모트에 따라 고른다.
-     docs:deploy 는 upstream, docs:deploy-origin 은 origin에 배포한다.
-     상세 → DOCS_GUIDE.md "배포"
+0. release:status     진행 상태·재개 지점 확인 (npm 로그인 게이트)
+1. 버전 범프          코어 수정 + publish:version {bump} (단독 배포는 해당 package.json만)
+2. release:prepare    릴리즈 브랜치에서 pnpm install + changelog + 릴리즈 커밋
+3. PR → CI → 머지     merge commit으로 master 반영 (squash 금지)
+4. publish:stable     사용자 확인 1회 후 npm 게시
+5. release:finalize   게시 검증 → 태그 → push → GitHub Release
+6. docs:deploy:auto   문서 사이트 배포 (릴리즈 후 필수)
 ```
 
-```bash
-# 예: 코어 4.16.0 → 4.17.0 (minor 업데이트)
-# packages/flicking/package.json의 version을 4.17.0으로 변경 후:
-pnpm publish:version minor && pnpm publish:stable
-```
-
-#### 베타 배포
-
-```
-1. 배포할 패키지의 package.json version을 직접 변경한다. (예: 4.17.0-beta.0)
-2. pnpm publish:beta:{pkg} 로 해당 패키지만 빌드 + 베타 퍼블리시한다.
-```
-
-```bash
-# 예: 코어만 베타 배포
-# packages/flicking/package.json의 version을 4.17.0-beta.0으로 변경 후:
-pnpm publish:beta:flicking
-```
-
-#### 래퍼/플러그인 단독 배포
-
-```
-1. 해당 패키지의 package.json version을 직접 변경한다.
-2. pnpm publish:stable:{pkg} 로 빌드 + 퍼블리시한다.
-```
-
-```bash
-# 예: react-flicking 4.16.0 → 4.16.1
-pnpm publish:stable:react
-```
+시나리오별 명령어 → [배포 워크플로우](#배포-워크플로우)
 
 ---
 
@@ -122,8 +111,8 @@ pnpm publish:stable:react
 | 용어 | 의미 | 해당 명령어 |
 |------|------|------------|
 | **Publish** | npm에 패키지를 올리는 것 | `pnpm publish:*` |
-| **Release** | changelog + commit + tag + GitHub Release 생성 | `pnpm release` |
-| **Deploy** | 문서 사이트를 배포하는 것 | `pnpm docs:deploy` |
+| **Release** | changelog·커밋(prepare) + 태그·GitHub Release(finalize) | `pnpm release:prepare` / `pnpm release:finalize` |
+| **Deploy** | 문서 사이트를 배포하는 것 | `pnpm docs:deploy:auto` |
 
 ## 패키지 의존 관계
 
@@ -183,13 +172,14 @@ react   4.16.0  →  4.17.0  →  4.18.0
 
 ### 래퍼/플러그인 단독 변경
 
-코어와 무관한 변경(프레임워크 호환성 수정, 플러그인 버그 수정 등)은 해당 패키지만 수동으로 버전을 올리고 개별 배포한다.
+코어와 무관한 변경(프레임워크 호환성 수정, 플러그인 버그 수정 등)은 해당 패키지만 수동으로 버전을 올려 개별 배포한다. 단독 배포도 **머지 후 publish** 순서를 따른다 — 버전 정책만 다르고 절차는 같다.
 
 ```bash
-# react-flicking만 패치 배포
-# packages/react-flicking/package.json version 수동 변경 후
-pnpm publish:stable:react
+# react-flicking만 패치 배포: version 수동 변경 → prepare → 머지 → publish → finalize
+pnpm release:prepare --package react
 ```
+
+전체 명령 흐름 → [래퍼/플러그인 단독 정식 배포](#래퍼플러그인-단독-정식-배포)
 
 ## 배포 명령어
 
@@ -210,11 +200,10 @@ pnpm publish:stable:react
 - `publish:stable`과 `publish:beta`는 빌드+배포만 담당한다 (버전 변경 없음).
 - 베타 배포 시에는 각 패키지 버전을 수동으로 관리하고 개별 명령어로 배포한다.
 
-```bash
-# 정식 배포
-pnpm publish:version {patch|minor|major} && pnpm publish:stable
+> **`publish:version && publish:stable`을 이어 붙여 실행하지 않는다.** 정식 배포에서 `publish:stable`은 릴리즈 커밋이 master에 머지된 뒤에만 실행한다. → [순서: 머지 후 publish](#순서-머지-후-publish), [배포 워크플로우](#배포-워크플로우)
 
-# 베타 배포 (각 패키지 버전 수동 변경 후)
+```bash
+# 베타 배포 (각 패키지 버전 수동 변경 후 — 머지 없이 브랜치에서 게시)
 pnpm publish:beta:flicking
 pnpm publish:beta:react
 ```
@@ -231,20 +220,47 @@ pnpm publish:beta:react
 | `pnpm publish:stable:{pkg}` | 개별 빌드 + 퍼블리시 (flicking\|react\|vue\|plugins) |
 | `pnpm publish:beta` | 전체 빌드 + npm 베타 퍼블리시 |
 | `pnpm publish:beta:{pkg}` | 개별 빌드 + 베타 퍼블리시 |
+
+- `publish:stable*`은 git 검사를 켠 채 실행된다(더티 트리·비 master·원격 미동기에서 중단). → [순서: 머지 후 publish](#순서-머지-후-publish)
+- `publish:beta*`만 `--no-git-checks`를 쓴다.
 ### 릴리즈
 
-| 명령어 | 설명 |
-|--------|------|
-| `pnpm release` | changelog + 빌드 + commit + tag + push |
-| `pnpm release:dry-run` | 실행하지 않고 명령어만 출력 (테스트용) |
+`config/release.js`는 [머지 후 publish](#순서-머지-후-publish) 순서를 강제하기 위해 두 단계로 나뉜다.
 
-`pnpm release`는 `config/release.js`를 사용한다. npm publish는 포함되어 있지 않다. GitHub Release는 push 후 `gh release create`로 별도 생성한다.
+| 명령어 | 실행 위치 | 설명 |
+|--------|-----------|------|
+| `pnpm release:status` | 어디서나 | 버전·태그·게시·릴리즈 상태와 재개 지점(`stage`)을 출력. `--json`으로 기계 판독 |
+| `pnpm release:prepare` | 릴리즈 브랜치 | `pnpm install` + changelog + 릴리즈 커밋 (태그·push 없음) |
+| `pnpm release:finalize` | master (publish 후) | npm 게시 검증 → 태그 → push → GitHub Release |
+| `node config/release.js remote` | 어디서나 | 정본(naver/egjs-flicking)을 가리키는 remote 이름 출력 |
+| `pnpm test:config` | 어디서나 | `sync-version.js` / `release.js` 단위 테스트 |
+
+공통 옵션: `--dry-run` · `--package {core|react|vue|plugins}` · `--skip-install` · `--allow-master` · `--notes-file FILE` · `--remote NAME` · `--branch NAME`
+
+- `pnpm release`(인자 없음)는 사용법만 출력한다.
+- `release:prepare`는 릴리즈 대상 경로(`CHANGELOG.md`, `pnpm-lock.yaml`, 공개 패키지 `package.json`)만 커밋한다. 작업 중인 다른 파일은 스테이징하지 않는다.
+- `release:finalize`는 대상 패키지가 npm에 게시되어 있는지 먼저 확인하고, 미게시면 중단한다. 태그는 릴리즈 커밋 SHA에 붙인다.
+- `--package`를 주면 래퍼·플러그인 단독 릴리즈로 동작한다. 태그·changelog 기준이 해당 패키지 태그(`@egjs/react-flicking@4.17.1`)가 된다.
+
+`release:status`가 판별하는 환경 상태 (`--fetch`를 주면 정본 master를 먼저 받아온다):
+
+| 필드 | 의미 |
+|------|------|
+| `clean` / `dirtyFiles` | 릴리즈와 무관한 미커밋 변경 |
+| `pushed` / `unpushedCommits` / `upstream` | 현재 브랜치가 원격에 올라가 있는지 |
+| `baseBehind` / `baseRef` | HEAD가 모르는 정본 master 커밋 수 (>0이면 브랜치 베이스가 낡음, `null`이면 fetch 전이라 판단 불가) |
+| `canonicalRemote` / `canonicalPermission` | 정본을 가리키는 remote와 그 저장소에 대한 내 권한 |
+| `canPushCanonical` | 정본에 write 권한이 있는지 (false면 머지·배포 권한 없음) |
+| `isFork` / `pushRemote` / `prHead` | fork 클론인지, 브랜치를 push할 remote, PR head 표기(`{owner}:{branch}`) |
+| `stage` / `nextStep` | 재개 지점, 실제로 다음에 실행할 것 |
+
+> **fork 클론에서는** 브랜치를 `pushRemote`(fork)로 push하고 `gh pr create --repo naver/egjs-flicking --head {owner}:{branch}`로 PR을 만든다. `canPushCanonical`이 false면 머지·publish 권한이 없으므로 PR 생성까지만 진행하고 이후는 권한자가 이어받는다.
 
 ### 릴리즈 노트(GitHub Release) 작성
 
-`pnpm release`는 **GitHub Release를 만들지 않는다.** changelog·tag·push만 하고, 마지막에 `gh release create` 명령어를 출력만 한다. 릴리즈 노트는 `gh release create`로 직접 생성해야 한다.
+`release:finalize`가 `gh release create`를 실행해 릴리즈를 만든다. 제목은 `{태그} Release ({릴리즈 커밋 날짜})` 형식으로 고정된다.
 
-`gh release create`의 본문은 플래그에 따라 결정된다:
+본문은 플래그에 따라 결정된다:
 
 | 방식 | 본문 내용 | 직접 작성 |
 |------|-----------|-----------|
@@ -255,87 +271,90 @@ pnpm publish:beta:react
 **권장**: 하이라이트·breaking change·deprecate 안내 등은 자동 생성으로 표현되지 않으므로, 짧게라도 직접 작성한다.
 
 ```bash
-# 직접 작성 노트 + 자동 PR 목록
-gh release create "4.17.0" --title "4.17.0 Release" \
-  --notes-file release-notes.md --generate-notes
+# 자동 생성 노트만
+pnpm release:finalize
+
+# 직접 작성 노트 + 자동 PR 목록 (초안은 저장소 밖에 둔다)
+pnpm release:finalize --notes-file /tmp/release-notes.md
 
 # 이미 만든 릴리즈 노트 수정
-gh release edit "4.17.0" --notes-file release-notes.md
+gh release edit "4.17.0" --repo naver/egjs-flicking --notes-file /tmp/release-notes.md
 ```
 
-> GitHub Release 본문은 다음 `pnpm docs:deploy` 때 `fetch-releases.js`가 가져와 문서 사이트 `/releases`에 자동 게시한다. 즉 GitHub Release = 문서 사이트 릴리즈 노트이므로 블로그에 따로 쓸 필요가 없다. (상세 → `DOCS_GUIDE.md`)
+> GitHub Release 본문은 다음 `pnpm docs:deploy:auto` 때 `fetch-releases.js`가 가져와 문서 사이트 `/releases`에 자동 게시한다. 즉 GitHub Release = 문서 사이트 릴리즈 노트이므로 블로그에 따로 쓸 필요가 없다. (상세 → `DOCS_GUIDE.md`)
 
 ## 배포 워크플로우
 
 ### 정식 배포
 
-`publish:version`으로 래퍼 버전을 정책에 따라 자동 동기화한 후 배포한다.
-
-#### 코어 minor 정식 배포
+#### 코어 정식 배포 (minor 예시)
 
 ```bash
-# 1. 코어 버전 수동 변경: 4.16.0 → 4.17.0
-#    (플러그인도 배포하려면 flicking-plugins version도 수동 변경)
-# 2. 래퍼 동기화
-#    publish:version minor 결과:
-#      react-flicking  4.16.0 → 4.17.0 (minor +1)
-#      vue3-flicking   4.16.0 → 4.17.0 (minor +1)
+# 0. 상태 확인 — nextStep이 npm-login이면 npm login부터
+#    clean·pushed·baseBehind·isFork·canPushCanonical도 함께 확인한다
+pnpm -s release:status --json --fetch
+
+# 1. 릴리즈 브랜치 — 정본 master 최신에서 만든다
+REMOTE=$(node config/release.js remote)
+git fetch $REMOTE master
+git checkout -b release/core-4.18.0 $REMOTE/master
+
+# 2. 코어 package.json version 수동 변경: 4.17.0 → 4.18.0
+#    (플러그인도 함께 배포하려면 flicking-plugins version도 수동 변경)
+#    래퍼 동기화 — publish:version minor 결과:
+#      react-flicking  4.17.0 → 4.18.0 (minor +1)
+#      vue3-flicking   4.17.0 → 4.18.0 (minor +1)
 pnpm publish:version minor
-# 3. 버전 변경분으로 lockfile·심링크 갱신 (필수)
-pnpm install
-# 4. 빌드 + 배포
+
+# 3. changelog + 릴리즈 커밋 (내부에서 pnpm install 실행)
+pnpm release:prepare
+
+# 4. 배포 산출물 검증 (테스트는 PR CI가 담당)
+pnpm lint && pnpm publish:build
+pnpm --filter @egjs/react-flicking pack --pack-destination /tmp   # 코어 의존이 ~4.18.0인지 확인
+
+# 5. PR → CI → master 머지 (squash 금지)
+git push -u $REMOTE release/core-4.18.0        # push 없이 gh pr create를 실행하면 비대화형에서 실패한다
+PR=$(gh pr create --repo naver/egjs-flicking --base master --head release/core-4.18.0 \
+  --title "chore(release): Release 4.18.0" --body "취합한 PR: Closes #A #B")
+gh pr checks "$PR" --watch
+gh pr merge "$PR" --merge
+git checkout master && git pull $REMOTE master
+
+# 6. npm 게시 (사용자 확인 1회 후)
 pnpm publish:stable
-# 5. 릴리즈
-pnpm release
-gh release create "4.17.0" --title "4.17.0 Release" --generate-notes
-# 6. 문서 사이트 배포 (릴리즈 후 필수 — /releases·버전 표시 갱신)
-#    정본을 가리키는 리모트에 따라 docs:deploy(upstream) 또는 docs:deploy-origin(origin)
-pnpm docs:deploy
+
+# 7. 태그 + push + GitHub Release
+pnpm release:finalize
+
+# 8. 문서 사이트 배포 (릴리즈 후 필수 — /releases·버전 표시 갱신)
+pnpm docs:deploy:auto
 ```
 
-#### 코어 patch 정식 배포
+patch·major는 2단계의 `publish:version` 인자만 달라진다. major는 플러그인 `peerDependencies`를 수동 수정한 뒤 `pnpm publish:stable:plugins`로 함께 올린다. → [코어 변경 시](#코어-변경-시)
+
+#### 래퍼/플러그인 단독 정식 배포
+
+코어가 바뀌지 않았으므로 `publish:version`을 쓰지 않고, 릴리즈 기준도 해당 패키지 태그가 된다.
 
 ```bash
-# 1. 코어 버전 수동 변경: 4.17.0 → 4.17.1
-# 2. 래퍼 동기화 + 배포
-#    publish:version patch 결과:
-#      react-flicking  4.17.0 → 4.17.1 (patch +1)
-#      vue3-flicking   4.17.0 → 4.17.1 (patch +1)
-pnpm publish:version patch && pnpm publish:stable
-```
+# 1. 해당 package.json version만 수동 변경 후
+git checkout -b release/react-4.17.1
+pnpm release:prepare --package react
 
-#### 코어 major 정식 배포
-
-```bash
-# 1. 코어 버전 수동 변경: 4.17.1 → 5.0.0
-# 2. 래퍼 동기화 + 배포
-#    publish:version major 결과:
-#      react-flicking  4.17.1 → 5.0.0 (major 동기화, minor/patch 리셋)
-#      vue3-flicking   4.17.1 → 5.0.0 (major 동기화, minor/patch 리셋)
-pnpm publish:version major && pnpm publish:stable
-# 3. 플러그인은 peerDependencies 수동 수정 후 개별 배포
-pnpm publish:stable:plugins
-```
-
-#### 래퍼 단독 정식 배포
-
-```bash
-# 1. react-flicking 버전 수동 변경: 4.16.0 → 4.16.1
-# 2. 해당 패키지만 배포 (publish:version 불필요)
+# 2. PR → CI → master 머지 후 게시
 pnpm publish:stable:react
-```
 
-#### 플러그인 단독 정식 배포
-
-```bash
-# 1. flicking-plugins 버전 수동 변경: 4.7.1 → 4.8.0
-# 2. 해당 패키지만 배포 (publish:version 불필요)
-pnpm publish:stable:plugins
+# 3. 태그·릴리즈 (@egjs/react-flicking@4.17.1 태그만 생성)
+pnpm release:finalize --package react
+pnpm docs:deploy:auto
 ```
 
 ### 베타 배포
 
 베타에서는 `publish:version`을 사용하지 않는다. 각 패키지 버전을 수동으로 변경한 후 개별 배포한다.
+
+**베타는 master 머지 대상이 아니다.** 릴리즈 브랜치에서 바로 게시하고, `release:prepare`·`release:finalize`를 쓰지 않는다 (changelog·태그·GitHub Release를 만들지 않는다).
 
 #### 코어만 수정 → 코어만 베타 배포
 
@@ -476,9 +495,12 @@ CLI 옵션의 `--branch` 기본값이 `"main"`이지만, egjs-flicking 레포는
 | changelog 버전 | 루트 version 사용 (잘못됨) | 코어 version 사용 (정확) |
 | 패키지 태그 의존성 | @lerna가 패키지 접두사 태그 필요 | 자체 태그 생성 |
 | branch 설정 | `--branch` 옵션 필요 | `--branch master` 기본값 |
-| GitHub Release | Octokit (`GH_TOKEN` 필요) | `gh` CLI 사용 권장 |
+| GitHub Release | Octokit (`GH_TOKEN` 필요) | `gh` CLI 자동 실행 (finalize) |
+| publish 순서 | 강제하지 않음 | 게시 검증 후에만 태그·릴리즈 생성 |
+| 커밋 범위 | `git add .` | 릴리즈 대상 경로만 스테이징 |
 | dry-run | 미지원 | `--dry-run` 지원 |
 | 외부 의존성 | `@lerna/conventional-commits`, `@octokit/rest` | 없음 (git log 기반) |
+| 테스트 | 없음 | `config/release.test.js` (`pnpm test:config`) |
 
 ### release-helper를 다시 사용하려면
 

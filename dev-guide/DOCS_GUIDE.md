@@ -204,13 +204,13 @@ public oldMethod(): void { ... }
 :::
 ```
 
-### 릴리스 절차
+### 릴리스 절차 (문서 쪽 작업)
 
 1. 소스 코드에 `@since` / `@deprecated` TSDoc 추가
 2. `pnpm api-docs:docusaurus` 재생성
 3. 필요 시 가이드 문서에 admonition 추가
-4. GitHub Release 작성 (릴리스 노트)
-5. 문서 빌드 & 배포 (릴리스 노트 자동 반영)
+
+이후 배포 파이프라인은 `/release` 스킬이 수행한다 — **master 머지 → npm publish → `release:finalize`(태그·GitHub Release) → `pnpm docs:deploy:auto`** 순서다. GitHub Release는 npm 게시 성공 후에 생성되며, 문서 사이트의 릴리스 노트는 그 다음 문서 배포 때 반영된다. → [PUBLISH_GUIDE.md](PUBLISH_GUIDE.md#순서-머지-후-publish)
 
 ## 릴리스 노트 자동 반영
 
@@ -375,7 +375,7 @@ items: [
 **5. 빌드 & 배포**
 
 ```bash
-pnpm docs:deploy            # v5 docs + static/release/4.x/ 포함
+pnpm docs:deploy:auto       # v5 docs + static/release/4.x/ 포함
 ```
 
 ### 아카이브 원칙
@@ -393,17 +393,20 @@ pnpm docs:deploy            # v5 docs + static/release/4.x/ 포함
 |----------|------|
 | `pnpm docs:build` | API 문서 생성(`api-docs:docusaurus`) + Docusaurus 빌드 |
 | `pnpm docs:serve` | 빌드 결과물 로컬 서빙 |
-| `pnpm docs:deploy` | 빌드 + gh-pages 배포 (upstream) |
-| `pnpm docs:deploy-origin` | 빌드 + gh-pages 배포 (origin/fork) |
+| `pnpm docs:deploy:auto` | 빌드 + gh-pages 배포 (정본을 가리키는 remote 자동 판별) |
+| `pnpm docs:deploy` | 빌드 + gh-pages 배포 (upstream 고정) |
+| `pnpm docs:deploy-origin` | 빌드 + gh-pages 배포 (origin 고정) |
 
 ### 배포 파이프라인
 
 ```
-pnpm docs:deploy
+pnpm docs:deploy:auto
   ├── pnpm api-docs:docusaurus    # .d.ts 생성 → api-extractor → api-docs-generator
   ├── pnpm --filter docs build    # fetch-releases.js → generate-llm-docs.js → docusaurus build
-  └── gh-pages -d packages/docs/build --add --dotfiles --remote upstream
+  └── gh-pages -d packages/docs/build --add --dotfiles --remote $(node config/release.js remote)
 ```
+
+> **remote 이름이 아니라 URL로 정본을 판단한다.** `docs:deploy`는 `upstream`, `docs:deploy-origin`은 `origin`으로 고정이라 클론 구성에 따라 엉뚱한 저장소로 배포되거나 실패한다. `docs:deploy:auto`는 `naver/egjs-flicking`을 가리키는 remote를 찾아 배포하므로 fork 클론에서도 안전하다.
 
 > **`--dotfiles`는 필수다.** `gh-pages` CLI는 기본적으로 dotfile을 배포에서 제외하므로, 이 플래그가 없으면 Docusaurus가 생성한 `.nojekyll`이 gh-pages 브랜치에 올라가지 않는다. 그러면 GitHub Pages가 사이트를 Jekyll로 빌드하려 시도하고, `llm-docs/**/*.md` 등의 마크다운을 Liquid로 파싱하다 실패하여 **배포가 통째로 실패**한다. `.nojekyll`이 루트에 있어야 Jekyll이 비활성화되고 정적 파일이 그대로 서빙된다.
 
@@ -412,10 +415,10 @@ pnpm docs:deploy
 ### 배포 절차
 
 ```bash
-# 1. 빌드 + 배포 (upstream)
-pnpm docs:deploy
+# 1. 빌드 + 배포 (정본 remote 자동 판별)
+pnpm docs:deploy:auto
 
-# 또는 fork에서 테스트 배포
+# fork에 테스트 배포할 때만 remote를 고정한다
 pnpm docs:deploy-origin
 ```
 
@@ -427,7 +430,7 @@ pnpm docs:deploy-origin
 pnpm api-docs:docusaurus     # 루트에서 실행 — docs/api/ 생성
 ```
 
-`pnpm docs:build`와 `pnpm docs:deploy`는 파이프라인에 포함되어 있어 별도 실행이 불필요하다.
+`pnpm docs:build`와 `pnpm docs:deploy:auto`는 파이프라인에 포함되어 있어 별도 실행이 불필요하다.
 
 ### 전체 빌드 테스트
 
