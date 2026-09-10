@@ -473,16 +473,3 @@ pnpm publish:beta:vue
 # 2. 래퍼 버전 수동 변경: 4.15.0 → 4.16.0-beta.0
 pnpm publish:beta
 ```
-
-## 향후 계획
-
-자체 스크립트(`config/sync-version.js`, `config/release.js`)는 과도기 도구다. [changesets](https://github.com/changesets/changesets)로 전환하면 아래처럼 대체할 수 있다.
-
-| 현재 도구 | changesets 대체 |
-|-----------|----------------|
-| `sync-version.js` | `changeset version` |
-| `release:prepare` (changelog + 릴리즈 커밋) | `changeset version` |
-| `release:finalize` (태그 + GitHub Release) | `changeset tag` + `gh release create` |
-| `publish:stable` | `changeset publish` |
-
-전환 시 검토할 것 — changesets는 게시 순서를 강제하지 않으므로, [머지 후 publish](#순서-머지-후-publish) 보장과 재개 판단(`release:status`)을 어떻게 유지할지 함께 결정해야 한다.
