@@ -2762,6 +2762,57 @@ describe("Flicking", () => {
           const restored = JSON.parse(JSON.stringify(status));
           expect(restored.panels[0].node).toEqual(status.panels[0].node);
         });
+
+        it("should sanitize when restoring a status that carries only the html string", async () => {
+          const flicking = await createFlickingWithPayload();
+
+          // Simulate a status produced without the structural snapshot (e.g. hand-built or from an
+          // older serialization): only `html` remains, so setStatus takes the sanitized html fallback.
+          const status = flicking.getStatus({ includePanelHTML: true });
+          status.panels.forEach(panel => {
+            delete (panel as { node?: unknown }).node;
+          });
+
+          flicking.setStatus(status);
+          await waitTime(200);
+
+          // The html fallback is sanitized: no live onerror handler survives and no script runs.
+          expect(flicking.element.querySelector("img[onerror]")).toBeNull();
+          expect((window as any).__statusXss).toBe(false);
+        });
+
+        it("should not execute a forged node snapshot when restoring", async () => {
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
+
+          // A tampered status injects executable content directly into the structural `node` snapshot,
+          // which setStatus prefers over `html` — so the node path must sanitize too.
+          const status = flicking.getStatus({ includePanelHTML: true });
+          status.panels = [
+            {
+              index: 0,
+              node: {
+                tag: "DIV",
+                children: [
+                  {
+                    tag: "IMG",
+                    attrs: [
+                      ["src", "x"],
+                      ["onerror", "window.__statusXss = true"]
+                    ]
+                  },
+                  { tag: "SCRIPT", children: [{ text: "window.__statusXss = true" }] }
+                ]
+              }
+            }
+          ] as typeof status.panels;
+
+          flicking.setStatus(status);
+          await waitTime(200);
+
+          expect(flicking.element.querySelector("img[onerror]")).toBeNull();
+          expect(flicking.element.querySelector("script")).toBeNull();
+          expect((window as any).__statusXss).toBe(false);
+        });
       });
     });
 

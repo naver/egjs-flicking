@@ -33,7 +33,15 @@ import {
 } from "./renderer";
 import { ElementLike, MoveTypeOptions, Plugin, Status } from "./types/external";
 import { LiteralUnion, ValueOf } from "./types/internal";
-import { deserializeNode, findIndex, getElement, includes, parseElement, serializeNode } from "./utils";
+import {
+  deserializeNode,
+  findIndex,
+  getElement,
+  includes,
+  parseElement,
+  parseSanitizedElement,
+  serializeNode
+} from "./utils";
 
 /**
  * Options for the Flicking component
@@ -1865,15 +1873,27 @@ class Flicking extends Component<FlickingEvents> {
     // serialized `html` string — an `outerHTML`→`innerHTML` round-trip can revive a mutation-XSS
     // payload that was inert on first render. The snapshot survives JSON, so this also restores
     // panels after a reload/navigation. (Also can't add/remove panels on external rendering.)
-    if (panels[0]?.node && !this._renderExternal) {
+    if ((panels[0]?.node || panels[0]?.html) && !this._renderExternal) {
       renderer.batchRemove({
         index: 0,
         deleteCount: this.panels.length,
         hasDOMInElements: true
       });
+
+      const elements: HTMLElement[] = [];
+      panels.forEach(panel => {
+        if (panel.node) {
+          elements.push(deserializeNode(panel.node) as HTMLElement);
+        } else if (panel.html) {
+          // Fallback for a status that carries only `html` (no structural snapshot): parse it with
+          // sanitization so a revived mutation-XSS payload can't execute.
+          elements.push(...parseSanitizedElement(panel.html));
+        }
+      });
+
       renderer.batchInsert({
         index: 0,
-        elements: panels.map(panel => deserializeNode(panel.node!) as HTMLElement),
+        elements,
         hasDOMInElements: true
       });
     }

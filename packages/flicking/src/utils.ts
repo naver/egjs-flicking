@@ -201,6 +201,18 @@ export const parseElement = (element: ElementLike | ElementLike[]): HTMLElement[
 
 const HTML_NS = "http://www.w3.org/1999/xhtml";
 
+// Elements that can execute script or load remote content on their own
+const XSS_UNSAFE_TAGS = ["SCRIPT", "IFRAME", "OBJECT", "EMBED", "LINK", "META", "BASE"];
+
+// An attribute that can run script: an event handler (on*) or a `javascript:` URL
+const isUnsafeAttribute = (name: string, value: string): boolean => {
+  const lower = name.toLowerCase();
+  if (lower.indexOf("on") === 0) {
+    return true;
+  }
+  return (lower === "src" || lower === "href" || lower === "xlink:href") && /^\s*javascript:/i.test(value);
+};
+
 /**
  * Serialize a DOM node into a JSON-safe structure that {@link deserializeNode} can rebuild without
  * HTML parsing. Unlike an `outerHTML`→`innerHTML` round-trip, this preserves the exact node tree
@@ -242,8 +254,10 @@ export const serializeNode = (node: Node): SerializedNode | null => {
 };
 
 /**
- * Rebuild a DOM node from {@link serializeNode}'s output using DOM APIs only (no HTML parsing),
- * faithfully reproducing the original: inert content stays inert, authored content stays as authored.
+ * Rebuild a DOM node from {@link serializeNode}'s output using DOM APIs only (no HTML parsing).
+ * Inert content stays inert (never elevated into an executable element), and — since a serialized
+ * status can be tampered with before it reaches {@link Flicking.setStatus} — script-capable elements
+ * and event-handler / `javascript:` attributes are dropped so a forged snapshot cannot execute.
  */
 export const deserializeNode = (data: SerializedNode): Node | null => {
   if (data.text != null) {
@@ -255,11 +269,17 @@ export const deserializeNode = (data: SerializedNode): Node | null => {
   if (data.tag == null) {
     return null;
   }
+  if (includes(XSS_UNSAFE_TAGS, data.tag.toUpperCase())) {
+    return null;
+  }
 
   const el = data.ns ? document.createElementNS(data.ns, data.tag) : document.createElement(data.tag);
 
   if (data.attrs) {
     data.attrs.forEach(([name, value, ns]) => {
+      if (isUnsafeAttribute(name, value)) {
+        return;
+      }
       if (ns) {
         el.setAttributeNS(ns, name, value);
       } else {
@@ -277,6 +297,39 @@ export const deserializeNode = (data: SerializedNode): Node | null => {
   }
 
   return el;
+};
+
+const sanitizeElementNode = (node: Element): void => {
+  toArray(node.attributes).forEach(attr => {
+    if (isUnsafeAttribute(attr.name, attr.value)) {
+      node.removeAttribute(attr.name);
+    }
+  });
+
+  toArray(node.children).forEach(child => {
+    if (includes(XSS_UNSAFE_TAGS, child.tagName.toUpperCase())) {
+      child.remove();
+    } else {
+      sanitizeElementNode(child);
+    }
+  });
+};
+
+/**
+ * Parse an HTML string into elements with sanitization, for restoring a {@link Status} that carries
+ * only a serialized `html` string (no structural `node` snapshot). The string is parsed inside a
+ * `<template>` (an inert document, so no script runs and no resource loads), event-handler attributes
+ * and script-capable elements are stripped, and the result is imported — neutralizing mutation-XSS
+ * payloads revived by the `outerHTML`→`innerHTML` round-trip.
+ */
+export const parseSanitizedElement = (html: string): HTMLElement[] => {
+  const template = document.createElement("template");
+  template.innerHTML = html;
+
+  const children = toArray(template.content.children) as Element[];
+  children.forEach(child => sanitizeElementNode(child));
+
+  return children.map(child => document.importNode(child, true) as HTMLElement);
 };
 
 export const getMinusCompensatedIndex = (idx: number, max: number) =>

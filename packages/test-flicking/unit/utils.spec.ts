@@ -19,6 +19,7 @@ import {
   parseBounce,
   parseCSSSizeValue,
   parseElement,
+  parseSanitizedElement,
   serializeNode,
   toArray
 } from "~/utils";
@@ -625,16 +626,104 @@ describe("Util Functions", () => {
         rebuilt.remove();
       });
 
-      it("should faithfully reproduce a genuinely authored element (no stripping)", () => {
-        // An author-inserted <img> IS a real element; structural restore keeps it (unlike sanitizing).
+      it("should preserve safe authored content", () => {
         const el = document.createElement("div");
-        el.innerHTML = '<img src="/logo.png" alt="logo"><iframe title="f"></iframe>';
+        el.innerHTML = '<img src="/logo.png" alt="logo"><a href="/home">home</a><span>text</span>';
 
         const rebuilt = roundTrip(el) as HTMLElement;
 
         expect(rebuilt.querySelector("img")!.getAttribute("src")).toBe("/logo.png");
-        expect(rebuilt.querySelector("iframe")!.getAttribute("title")).toBe("f");
+        expect(rebuilt.querySelector("a")!.getAttribute("href")).toBe("/home");
+        expect(rebuilt.querySelector("span")!.textContent).toBe("text");
       });
+
+      it("should drop script-capable elements from a forged node snapshot", () => {
+        // A tampered status can inject dangerous elements directly into the node tree.
+        const rebuilt = deserializeNode({
+          tag: "DIV",
+          children: [
+            { tag: "IFRAME", attrs: [["src", "https://evil.example"]] },
+            { tag: "SCRIPT", children: [{ text: "window.__nodeXss = true" }] },
+            { tag: "SPAN", children: [{ text: "ok" }] }
+          ]
+        }) as HTMLElement;
+        document.body.appendChild(rebuilt);
+
+        expect(rebuilt.querySelector("iframe")).toBeNull();
+        expect(rebuilt.querySelector("script")).toBeNull();
+        expect(rebuilt.querySelector("span")).not.toBeNull();
+        rebuilt.remove();
+      });
+
+      it("should strip event-handler and javascript: attributes from a forged node snapshot", async () => {
+        const rebuilt = deserializeNode({
+          tag: "DIV",
+          children: [
+            {
+              tag: "IMG",
+              attrs: [
+                ["src", "x"],
+                ["onerror", "window.__nodeXss = true"]
+              ]
+            },
+            { tag: "A", attrs: [["href", "javascript:window.__nodeXss = true"]], children: [{ text: "x" }] }
+          ]
+        }) as HTMLElement;
+        document.body.appendChild(rebuilt);
+        await waitTime(100);
+
+        expect(rebuilt.querySelector("img[onerror]")).toBeNull();
+        expect(rebuilt.querySelector("a")!.getAttribute("href")).toBeNull();
+        expect((window as any).__nodeXss).toBe(false);
+        rebuilt.remove();
+      });
+    });
+  });
+
+  describe("parseSanitizedElement", () => {
+    beforeEach(() => {
+      (window as any).__sanitizeXss = false;
+    });
+
+    it("should parse a plain HTML string into elements", () => {
+      const parsed = parseSanitizedElement('<div class="flicking-panel">Panel</div>');
+
+      expect(parsed).toBeInstanceOf(Array);
+      expect(parsed.length).toBe(1);
+      expect(parsed[0]).toBeInstanceOf(HTMLElement);
+      expect(parsed[0].classList.contains("flicking-panel")).toBe(true);
+      expect(parsed[0].innerHTML).toBe("Panel");
+    });
+
+    it("should strip event-handler attributes", () => {
+      const [el] = parseSanitizedElement('<div onclick="window.__sanitizeXss = true">x</div>');
+
+      expect(el.getAttribute("onclick")).toBeNull();
+    });
+
+    it("should remove script-capable elements", () => {
+      const [el] = parseSanitizedElement('<div><iframe src="x"></iframe><span>ok</span></div>');
+
+      expect(el.querySelector("iframe")).toBeNull();
+      expect(el.querySelector("span")).not.toBeNull();
+    });
+
+    it("should neutralize javascript: URLs", () => {
+      const [el] = parseSanitizedElement('<a href="javascript:window.__sanitizeXss = true">x</a>');
+
+      expect(el.getAttribute("href")).toBeNull();
+    });
+
+    it("should not execute a revived mutation-XSS payload", async () => {
+      const parsed = parseSanitizedElement(
+        '<div><math><mtext><table><mglyph><style><img src="x" onerror="window.__sanitizeXss = true"></style></mglyph></table></mtext></math></div>'
+      );
+      parsed.forEach(el => document.body.appendChild(el));
+      await waitTime(100);
+
+      expect(document.body.querySelector("img[onerror]")).toBeNull();
+      expect((window as any).__sanitizeXss).toBe(false);
+      parsed.forEach(el => el.remove());
     });
   });
 

@@ -28,7 +28,9 @@ export interface Plugin {
  * never by parsing HTML. This preserves the exact node tree — content that is inert on first render
  * (e.g. an `<img>` that exists only as raw text inside `<style>`) stays inert — so it never revives a
  * mutation-XSS payload, yet survives JSON serialization so panels restore correctly after a
- * reload/navigation.
+ * reload/navigation. Because a serialized status can be tampered with before restore, `setStatus`
+ * also drops script-capable elements and event-handler / `javascript:` attributes while rebuilding,
+ * so a forged snapshot cannot execute.
  */
 export interface SerializedNode {
   /** Element tag name. Absent for text/comment nodes. */
@@ -67,9 +69,9 @@ export interface Status {
     /**
      * An `outerHTML` of the panel element.
      * @remarks
-     * Informational only. {@link Flicking.setStatus} does **not** parse it to rebuild panels, since an
+     * {@link Flicking.setStatus} rebuilds panels from {@link node} whenever it is present, since an
      * `outerHTML`→`innerHTML` round-trip can revive a mutation-XSS payload that was inert on first
-     * render. Panels are rebuilt from {@link node} instead.
+     * render. It falls back to parsing this `html` with sanitization only when `node` is absent.
      */
     html?: string;
     /**
