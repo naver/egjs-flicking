@@ -2718,19 +2718,20 @@ describe("Flicking", () => {
           (window as any).__statusXss = false;
         });
 
-        it("should not revive an mXSS payload when restoring within the same session", async () => {
+        it("should not revive an executable mXSS payload when restoring within the same session", async () => {
           const flicking = await createFlickingWithPayload();
 
           const status = flicking.getStatus({ includePanelHTML: true });
           flicking.setStatus(status);
           await waitTime(200);
 
-          // The structural snapshot rebuilds the inert tree faithfully: no <img> element is created
-          expect(flicking.element.querySelector("img")).toBeNull();
+          // The payload may materialize into an <img> on reparse, but sanitization strips its onerror,
+          // so no live handler survives and no script runs.
+          expect(flicking.element.querySelector("img[onerror]")).toBeNull();
           expect((window as any).__statusXss).toBe(false);
         });
 
-        it("should reconstruct panels from a JSON-serialized status without reviving payloads", async () => {
+        it("should reconstruct panels from a JSON-serialized status without executing payloads", async () => {
           // Simulate save-on-page-A -> reload -> restore: only the JSON string survives.
           const pageA = await createFlickingWithPayload();
           const stored = JSON.stringify(pageA.getStatus({ includePanelHTML: true }));
@@ -2744,8 +2745,8 @@ describe("Flicking", () => {
 
           // Panels ARE reconstructed from the serialized status (reload restore keeps working) ...
           expect(reloaded.panels.length).toBe(2);
-          // ... while the inert payload stays inert (no <img> revived, no script runs).
-          expect(reloaded.element.querySelector("img")).toBeNull();
+          // ... while the payload is neutralized (no live onerror handler, no script runs).
+          expect(reloaded.element.querySelector("img[onerror]")).toBeNull();
           expect((window as any).__statusXss).toBe(false);
         });
 
@@ -2754,55 +2755,22 @@ describe("Flicking", () => {
 
           const status = flicking.getStatus({ includePanelHTML: true });
 
-          // The panel carries only serializable data (a structural node snapshot, not a live element),
-          // so the status survives a JSON round-trip intact.
-          expect(Object.keys(status.panels[0]).sort()).toEqual(["html", "index", "node"]);
+          // The panel carries only serializable data (index + html string), so it survives JSON.
+          expect(Object.keys(status.panels[0]).sort()).toEqual(["html", "index"]);
           expect(() => JSON.stringify(status)).not.toThrow();
-
-          const restored = JSON.parse(JSON.stringify(status));
-          expect(restored.panels[0].node).toEqual(status.panels[0].node);
         });
 
-        it("should sanitize when restoring a status that carries only the html string", async () => {
-          const flicking = await createFlickingWithPayload();
-
-          // Simulate a status produced without the structural snapshot (e.g. hand-built or from an
-          // older serialization): only `html` remains, so setStatus takes the sanitized html fallback.
-          const status = flicking.getStatus({ includePanelHTML: true });
-          status.panels.forEach(panel => {
-            delete (panel as { node?: unknown }).node;
-          });
-
-          flicking.setStatus(status);
-          await waitTime(200);
-
-          // The html fallback is sanitized: no live onerror handler survives and no script runs.
-          expect(flicking.element.querySelector("img[onerror]")).toBeNull();
-          expect((window as any).__statusXss).toBe(false);
-        });
-
-        it("should not execute a forged node snapshot when restoring", async () => {
+        it("should sanitize a forged/tampered status html when restoring", async () => {
           const flicking = await createFlicking(El.DEFAULT_HORIZONTAL);
 
-          // A tampered status injects executable content directly into the structural `node` snapshot,
-          // which setStatus prefers over `html` — so the node path must sanitize too.
+          // A tampered status injects executable content directly into the serialized html string.
           const status = flicking.getStatus({ includePanelHTML: true });
           status.panels = [
             {
               index: 0,
-              node: {
-                tag: "DIV",
-                children: [
-                  {
-                    tag: "IMG",
-                    attrs: [
-                      ["src", "x"],
-                      ["onerror", "window.__statusXss = true"]
-                    ]
-                  },
-                  { tag: "SCRIPT", children: [{ text: "window.__statusXss = true" }] }
-                ]
-              }
+              html:
+                '<div class="flicking-panel"><img src="x" onerror="window.__statusXss = true">' +
+                "<script>window.__statusXss = true</script>ok</div>"
             }
           ] as typeof status.panels;
 

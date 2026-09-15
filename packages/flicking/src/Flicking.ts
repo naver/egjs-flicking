@@ -33,15 +33,7 @@ import {
 } from "./renderer";
 import { ElementLike, MoveTypeOptions, Plugin, Status } from "./types/external";
 import { LiteralUnion, ValueOf } from "./types/internal";
-import {
-  deserializeNode,
-  findIndex,
-  getElement,
-  includes,
-  parseElement,
-  parseSanitizedElement,
-  serializeNode
-} from "./utils";
+import { findIndex, getElement, includes, parseElement, parseSanitizedElement } from "./utils";
 
 /**
  * Options for the Flicking component
@@ -1818,13 +1810,6 @@ class Flicking extends Component<FlickingEvents> {
 
         if (includePanelHTML) {
           panelInfo.html = panel.element.outerHTML;
-          // Capture a structural (JSON-safe) snapshot of the node tree. setStatus rebuilds panels
-          // from this via DOM APIs instead of parsing the html string, which would revive
-          // mutation-XSS payloads; being JSON-safe, it also restores panels after a reload.
-          const node = serializeNode(panel.element);
-          if (node) {
-            panelInfo.node = node;
-          }
         }
 
         return panelInfo;
@@ -1869,11 +1854,11 @@ class Flicking extends Component<FlickingEvents> {
     const renderer = this._renderer;
     const control = this._control;
 
-    // Rebuild panels from the structural node snapshots via DOM APIs, never by parsing the
-    // serialized `html` string — an `outerHTML`→`innerHTML` round-trip can revive a mutation-XSS
-    // payload that was inert on first render. The snapshot survives JSON, so this also restores
-    // panels after a reload/navigation. (Also can't add/remove panels on external rendering.)
-    if ((panels[0]?.node || panels[0]?.html) && !this._renderExternal) {
+    // Rebuild panels from the serialized `html` with sanitization. The string is parsed inertly and
+    // event-handler / script-capable content is stripped, so an `outerHTML`→`innerHTML` round-trip
+    // can't revive a mutation-XSS payload that was inert on first render.
+    // (Also can't add/remove panels on external rendering.)
+    if (panels[0]?.html && !this._renderExternal) {
       renderer.batchRemove({
         index: 0,
         deleteCount: this.panels.length,
@@ -1882,11 +1867,7 @@ class Flicking extends Component<FlickingEvents> {
 
       const elements: HTMLElement[] = [];
       panels.forEach(panel => {
-        if (panel.node) {
-          elements.push(deserializeNode(panel.node) as HTMLElement);
-        } else if (panel.html) {
-          // Fallback for a status that carries only `html` (no structural snapshot): parse it with
-          // sanitization so a revived mutation-XSS payload can't execute.
+        if (panel.html) {
           elements.push(...parseSanitizedElement(panel.html));
         }
       });
