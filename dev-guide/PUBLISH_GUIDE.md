@@ -13,16 +13,21 @@ release/{scope}-{version}
 - `scope`: 릴리즈를 주도하는 패키지 — `core` | `react` | `vue` | `plugins`
 - `version`: 목표 버전
 - 예: `release/core-4.16.2`
+- 취합하는 동안은 `release/{scope}-next`로 두고, 버전을 정한 뒤 `git branch -m`으로 이름을 확정한다. 버전은 취합 결과로 정하기 때문이다.
 
 ### 절차
 
-1. master에서 릴리즈 브랜치 생성 (`git checkout -b release/core-4.16.2`)
-2. 취합할 각 PR 브랜치를 `--no-ff`로 머지 (SHA 보존 — 원본 PR 자동 종료에 필요)
-3. 버전을 변경하고 `pnpm release:prepare`로 changelog·릴리즈 커밋을 만든다
-4. 릴리즈 브랜치에서 검증 (lint·빌드·pack, 필요 시 `/release-check`로 전체 스위트)
-5. 릴리즈 브랜치 → master PR을 열고, 본문에 `Closes #A #B …`로 취합한 PR을 명시
-6. PR CI 통과 후 **merge commit으로** master에 머지 → 취합된 PR들이 "Merged"로 자동 종료
-7. 이후 아래 [배포 절차](#배포-절차)로 퍼블리시
+1. 이번 릴리즈에 넣을 PR을 고른다. 고르지 않은 PR은 열어둔 채 다음 릴리즈를 기다린다
+2. 정본 master 최신에서 릴리즈 브랜치 생성 (`git checkout -b release/core-next {remote}/master`)
+3. 고른 각 PR을 `--no-ff`로 머지 (SHA 보존 — 원본 PR 자동 종료에 필요)
+4. 취합된 HEAD의 커밋으로 버전을 정하고, 브랜치 이름을 확정한 뒤 버전을 변경한다
+5. `pnpm release:prepare`로 changelog·릴리즈 커밋을 만든다
+6. 릴리즈 브랜치에서 검증 (lint·빌드·pack, 필요 시 `/release-check`로 전체 스위트)
+7. 릴리즈 브랜치 → master PR을 열고, 본문에 `Closes #A #B …`로 취합한 PR을 명시
+8. PR CI 통과 후 **merge commit으로** master에 머지 → 취합된 PR들이 "Merged"로 자동 종료
+9. 이후 아래 [배포 절차](#배포-절차)로 퍼블리시
+
+> **취합은 버전 결정·`release:prepare`보다 먼저 한다.** prepare는 실행 시점의 `git log {prevTag}..HEAD`로 CHANGELOG를 만든다. 그 뒤에 머지한 PR은 게시본에는 들어가지만 CHANGELOG에서는 에러 없이 빠진다. 버전도 취합 전 커밋만 보고 정하면 대기 PR의 feat가 빠져 bump가 낮게 잡힌다.
 
 > 취합한 PR을 **수동으로 close하지 않는다.** `Closes` + SHA 보존 머지(`--no-ff`)로 두면 master 머지 시 "Merged"로 자동 종료되어 이력이 깔끔하다. 수동 close는 "Closed"로 남아 병합 이력이 흐려진다.
 
@@ -35,7 +40,7 @@ release/{scope}-{version}
 되돌릴 수 없는 단계를 파이프라인 맨 뒤에 둔다.
 
 ```
-버전 범프 → release:prepare → PR·CI → master 머지 → npm publish → release:finalize → docs 배포
+PR 취합 → 버전 범프 → release:prepare → PR·CI → master 머지 → npm publish → release:finalize → docs 배포
 ```
 
 - npm 버전 번호는 회수할 수 없고 git 커밋은 되돌릴 수 있다. 실패 비용이 싼 쪽을 먼저 실행한다.
@@ -61,7 +66,7 @@ release/{scope}-{version}
    - 로그인이 안 되어 있으면(**401**) **다른 배포 작업을 일절 진행하지 않고**, 사용자에게 `npm login`(별도 터미널)을 요청한다. 인증은 `~/.npmrc`에 저장되어 현재 세션에도 반영된다.
    - `npm whoami`로 로그인이 확인된 뒤에만 다음 단계로 넘어간다.
 2. **사전 단계는 어시스턴트가 전부 완료한다.**
-   - 버전 범프 → `release:prepare` → 빌드·`pnpm pack` 검증(래퍼가 올바른 코어 버전을 의존하는지) → PR 생성·CI 확인·master 머지까지 진행한다.
+   - 고른 PR 취합 → 버전 범프 → `release:prepare` → 빌드·`pnpm pack` 검증(래퍼가 올바른 코어 버전을 의존하는지) → PR 생성·CI 확인·master 머지까지 진행한다.
 3. **publish는 사용자 확인 1회 후 어시스턴트가 실행한다.**
    - 게시 대상 패키지·버전·npm 계정·dist-tag를 제시하고 승인을 받는다. 승인 없이 실행하지 않는다.
    - **OTP(`--otp`)는 다루지 않는다.** 2FA는 로그인 단계에서 처리되며 `publish` 시 OTP 입력을 요구하지 않는다.
@@ -99,49 +104,56 @@ flowchart TD
     G1 -->|아니오| STOP([중단 · 사용자 조치 요청])
     G1 -->|예| S1
 
+    S1[/"1 · 취합할 PR 선택<br/>인자로 주지 않았으면 1회 질문"/] --> S2
+
     subgraph BR["① 릴리즈 브랜치 · 되돌릴 수 있음"]
         direction TB
-        S1["1 · 버전 결정<br/>publish:version {bump}"] --> S2["2 · release:prepare<br/>CHANGELOG + 릴리즈 커밋"] --> S2V["검증<br/>lint · build · pack"]
+        S2["2 · 정본 master 최신에서 분기<br/>고른 PR을 --no-ff로 취합"] --> S3["3 · 버전 결정<br/>취합된 HEAD의 커밋 기준"] --> S4["4 · 이름 확정 · 버전 범프<br/>release:prepare"] --> S4V["검증<br/>lint · build · pack"]
     end
 
-    S2V --> S3
+    S2 -.->|충돌| STOP
+    S4V --> S5
 
     subgraph GH["② GitHub · 되돌릴 수 있음"]
         direction TB
-        S3["3 · push → PR → CI"] --> S3M["merge commit으로 master 반영<br/>squash 금지"]
+        S5["5 · push → PR → CI<br/>본문에 Closes #A #B"] --> S5M["merge commit으로 master 반영<br/>squash 금지"]
     end
 
-    S3M --> G2{"승인 게이트 · 1회"}
+    S5M --> G2{"승인 게이트 · 1회"}
     G2 -->|거부| STOP
-    G2 -->|승인| S4
+    G2 -->|승인| S6
 
     subgraph NPMZ["③ npm · 되돌릴 수 없음"]
-        S4["4 · publish:stable"]
+        S6["6 · publish:stable"]
     end
 
-    S4 --> S5
+    S6 --> S7
 
     subgraph POST["④ 게시 이후 · 되돌릴 수 있음"]
         direction TB
-        S5["5 · 릴리즈 노트 작성 + release:finalize<br/>게시 검증 → 태그 → GitHub Release"] --> S6["6 · docs:deploy:auto"]
+        S7["7 · 릴리즈 노트 작성 + release:finalize<br/>게시 검증 → 태그 → GitHub Release"] --> S8["8 · docs:deploy:auto"]
     end
 
-    S6 --> DONE([완료 보고])
+    S8 --> DONE([완료 보고])
 ```
 
 | 단계 | 명령 | 하는 일 |
 |------|------|---------|
 | 0 | `release:status --fetch` | 저장소·레지스트리 상태 관측, 재개 지점 산출 |
-| 1 | `publish:version {bump}` | 코어 버전 수정 후 래퍼 동기화 (단독 배포는 해당 `package.json`만) |
-| 2 | `release:prepare` | `pnpm install` + CHANGELOG + 릴리즈 커밋 |
-| 3 | `gh pr create` → `gh pr merge --merge` | CI 통과 후 master 반영 |
-| 4 | `publish:stable` | 승인 1회 후 npm 게시 |
-| 5 | `release:notes` → `release:finalize` | Highlights 작성 후 게시 검증 → 태그 → GitHub Release |
-| 6 | `docs:deploy:auto` | 문서 사이트 배포 |
+| 1 | `gh pr list --base master` | 이번 릴리즈에 넣을 PR 선택 (인자로 주거나 열린 PR이 없으면 생략) |
+| 2 | `git checkout -b` → `git merge --no-ff` | 정본 master 최신에서 `release/{scope}-next` 분기, 고른 PR 취합 |
+| 3 | `git log {tag}..HEAD` | 취합된 커밋으로 bump 결정 (기준은 범프 전 현재 버전의 태그) |
+| 4 | `publish:version {bump}` → `release:prepare` | 브랜치 이름 확정, 버전 범프 (단독 배포는 해당 `package.json`만), CHANGELOG + 릴리즈 커밋 |
+| 5 | `gh pr create` → `gh pr merge --merge` | CI 통과 후 master 반영 |
+| 6 | `publish:stable` | 승인 1회 후 npm 게시 |
+| 7 | `release:notes` → `release:finalize` | Highlights 작성 후 게시 검증 → 태그 → GitHub Release |
+| 8 | `docs:deploy:auto` | 문서 사이트 배포 |
 
 - **③만 되돌릴 수 없다.** 그래서 사용자 승인 게이트도 ③ 바로 앞에 하나만 둔다.
-- 게이트는 둘이다 — 0단계 관측값으로 판단하는 프리플라이트, publish 직전 승인. 그 외에는 멈추지 않는다.
-- 프리플라이트에서 막는 것: npm 미로그인 · gh 미인증 · 더티 트리 · 미푸시 커밋 · 정본 remote 없음 · 정본 write 권한 없음.
+- 게이트는 둘이다 — 0단계 관측값으로 판단하는 프리플라이트, publish 직전 승인.
+- 그 밖에 멈추는 곳은 셋이다 — 1단계 취합 PR 선택, 2단계 취합 충돌, 3단계 플러그인 동반 배포 여부.
+  - 충돌 해소는 코드 판단이라 스킬이 임의로 풀지 않는다.
+- 프리플라이트에서 막는 것: npm 미로그인 · gh 미인증 · 더티 트리 · 미푸시 커밋(새 릴리즈 시작 시) · 정본 remote 없음 · 정본 write 권한 없음.
 - ④는 게시 이후지만 태그·릴리즈·문서는 다시 만들 수 있어, 실패하면 같은 명령을 재실행하면 된다.
 
 시나리오별 명령어 → [배포 워크플로우](#배포-워크플로우)
@@ -153,21 +165,23 @@ flowchart TD
 ```mermaid
 flowchart TD
     ST["release:status"] --> A{"게시 · 태그 · GitHub Release<br/>모두 존재?"}
-    A -->|예| R1["released<br/>이 버전은 끝<br/>새 릴리즈는 1단계부터"]
+    A -->|예| R1["released<br/>이 버전은 끝 → 새 릴리즈는 1단계부터<br/>release/* 브랜치면 3단계 버전 결정"]
     A -->|아니오| B{"직전 태그 이후<br/>버전이 바뀐 패키지 있음?"}
-    B -->|아니오| R2["bump<br/>→ 1단계 버전 결정"]
+    B -->|아니오| R2["bump<br/>→ released와 같은 규칙"]
     B -->|예| C{"대상 전부<br/>npm에 게시됨?"}
-    C -->|예| R3["finalize<br/>→ 5단계 태그 · 릴리즈"]
+    C -->|예| R3["finalize<br/>→ 7단계 태그 · 릴리즈"]
     C -->|아니오| D{"릴리즈 커밋 존재?"}
-    D -->|아니오| R4["prepare<br/>→ 2단계 changelog · 커밋"]
+    D -->|아니오| R4["prepare<br/>→ 4단계 changelog · 커밋"]
     D -->|예| E{"master에 머지됨?"}
-    E -->|아니오| R5["merge<br/>→ 3단계 PR · CI · 머지"]
-    E -->|예| R6["publish<br/>→ 4단계 npm 게시"]
+    E -->|아니오| R5["merge<br/>→ 5단계 PR · CI · 머지"]
+    E -->|예| R6["publish<br/>→ 6단계 npm 게시"]
 ```
 
+- 범프 전에는 현재 버전이 이미 게시돼 있으므로 새 릴리즈의 출발점은 `released`다.
+  - 현재 브랜치가 이미 `release/*`면 취합까지 끝난 상태다. 버전만 아직 안 바뀌었으므로 3단계부터 잇는다.
 - 코어만 게시되고 래퍼가 실패한 것처럼 **일부만 게시된 상태**는 `publish`로 남는다. 실패한 패키지만 같은 버전으로 다시 올린다.
-- `finalize`는 게시되지 않은 버전에 태그를 만들지 않는다. 미게시면 중단하고 4단계로 돌려보낸다.
-- `pushed`가 false인 채 `stage`가 `publish`면 릴리즈 커밋이 GitHub에 없는 상태다. 게시하지 않고 3단계로 돌아간다.
+- `finalize`는 게시되지 않은 버전에 태그를 만들지 않는다. 미게시면 중단하고 6단계로 돌려보낸다.
+- `pushed`가 false인 채 `stage`가 `publish`면 릴리즈 커밋이 GitHub에 없는 상태다. 게시하지 않고 5단계로 돌아간다.
 
 ---
 
@@ -377,22 +391,31 @@ gh release edit "4.17.0" --repo naver/egjs-flicking --notes-file /tmp/release-no
 #    clean·pushed·baseBehind·isFork·canPushCanonical도 함께 확인한다
 pnpm -s release:status --json --fetch
 
-# 1. 릴리즈 브랜치 — 정본 master 최신에서 만든다
+# 1. 취합할 PR 선택
+gh pr list --repo naver/egjs-flicking --base master --state open
+
+# 2. 릴리즈 브랜치 — 정본 master 최신에서 임시 이름으로 만들고, 고른 PR마다 --no-ff 취합
 REMOTE=$(node config/release.js remote)
 git fetch $REMOTE master
-git checkout -b release/core-4.18.0 $REMOTE/master
+git checkout -b release/core-next $REMOTE/master
+git fetch $REMOTE pull/{N}/head                  # fork PR도 이 ref로 받는다
+git merge --no-ff FETCH_HEAD -m "Merge pull request #{N} from {owner}/{branch}"
 
-# 2. 코어 package.json version 수동 변경: 4.17.0 → 4.18.0
+# 3. 버전 결정 — 직전 릴리즈(범프 전 현재 버전) 태그부터 취합된 HEAD까지
+#    prepare가 CHANGELOG에 쓰는 범위와 같다. release:status의 prevTag는 범프 전엔 한 단계 앞이라 쓰지 않는다
+git log 4.17.0..HEAD --no-merges --pretty=format:"%s"
+
+# 4. 이름 확정 + 버전 범프 + changelog·릴리즈 커밋
+git branch -m release/core-4.18.0
+#    코어 package.json version 수동 변경: 4.17.0 → 4.18.0
 #    (플러그인도 함께 배포하려면 flicking-plugins version도 수동 변경)
 #    래퍼 동기화 — publish:version minor 결과:
 #      react-flicking  4.17.0 → 4.18.0 (minor +1)
 #      vue3-flicking   4.17.0 → 4.18.0 (minor +1)
 pnpm publish:version minor
+pnpm release:prepare                             # 내부에서 pnpm install 실행
 
-# 3. changelog + 릴리즈 커밋 (내부에서 pnpm install 실행)
-pnpm release:prepare
-
-# 4. 배포 산출물 검증 (테스트는 PR CI가 담당)
+#    배포 산출물 검증 (테스트는 PR CI가 담당)
 pnpm lint && pnpm publish:build
 pnpm --filter @egjs/react-flicking pack --pack-destination /tmp   # 코어 의존이 ~4.18.0인지 확인
 
@@ -414,21 +437,21 @@ pnpm release:finalize
 pnpm docs:deploy:auto
 ```
 
-patch·major는 2단계의 `publish:version` 인자만 달라진다. major는 플러그인 `peerDependencies`를 수동 수정한 뒤 `pnpm publish:stable:plugins`로 함께 올린다. → [코어 변경 시](#코어-변경-시)
+patch·major는 4단계의 `publish:version` 인자만 달라진다. major는 플러그인 `peerDependencies`를 수동 수정한 뒤 `pnpm publish:stable:plugins`로 함께 올린다. → [코어 변경 시](#코어-변경-시)
 
 #### 래퍼/플러그인 단독 정식 배포
 
-코어가 바뀌지 않았으므로 `publish:version`을 쓰지 않고, 릴리즈 기준도 해당 패키지 태그가 된다.
+코어가 바뀌지 않았으므로 `publish:version`을 쓰지 않고, 릴리즈 기준도 해당 패키지 태그가 된다. 1~3단계(PR 선택·취합·버전 결정)는 코어와 같고, 브랜치만 `release/react-next`로 만든다.
 
 ```bash
-# 1. 해당 package.json version만 수동 변경 후
-git checkout -b release/react-4.17.1
+# 4. 이름 확정 후 해당 package.json version만 수동 변경
+git branch -m release/react-4.17.1
 pnpm release:prepare --package react
 
-# 2. PR → CI → master 머지 후 게시
+# 5~6. PR → CI → master 머지 후 게시
 pnpm publish:stable:react
 
-# 3. 태그·릴리즈 (@egjs/react-flicking@4.17.1 태그만 생성)
+# 7~8. 태그·릴리즈 (@egjs/react-flicking@4.17.1 태그만 생성)
 pnpm release:finalize --package react
 pnpm docs:deploy:auto
 ```
