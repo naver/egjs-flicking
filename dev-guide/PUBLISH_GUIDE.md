@@ -27,6 +27,8 @@ release/{scope}-{version}
 8. PR CI 통과 후 **merge commit으로** master에 머지 → 취합된 PR들이 "Merged"로 자동 종료
 9. 이후 아래 [배포 절차](#배포-절차)로 퍼블리시
 
+브랜치가 실제로 어떻게 만들어지고 합쳐지는지 → [실행 예시](#실행-예시)
+
 > **취합은 버전 결정·`release:prepare`보다 먼저 한다.** prepare는 실행 시점의 `git log {prevTag}..HEAD`로 CHANGELOG를 만든다. 그 뒤에 머지한 PR은 게시본에는 들어가지만 CHANGELOG에서는 에러 없이 빠진다. 버전도 취합 전 커밋만 보고 정하면 대기 PR의 feat가 빠져 bump가 낮게 잡힌다.
 
 > 취합한 PR을 **수동으로 close하지 않는다.** `Closes` + SHA 보존 머지(`--no-ff`)로 두면 master 머지 시 "Merged"로 자동 종료되어 이력이 깔끔하다. 수동 close는 "Closed"로 남아 병합 이력이 흐려진다.
@@ -151,12 +153,73 @@ flowchart TD
 
 - **③만 되돌릴 수 없다.** 그래서 사용자 승인 게이트도 ③ 바로 앞에 하나만 둔다.
 - 게이트는 둘이다 — 0단계 관측값으로 판단하는 프리플라이트, publish 직전 승인.
-- 그 밖에 멈추는 곳은 셋이다 — 1단계 취합 PR 선택, 2단계 취합 충돌, 3단계 플러그인 동반 배포 여부.
+- 그 밖에 멈추는 곳은 넷이다 — 1단계 취합 PR 선택, 2단계 취합 충돌, 3단계 플러그인 동반 배포 여부, 7단계 릴리즈 노트 초안 확인.
   - 충돌 해소는 코드 판단이라 스킬이 임의로 풀지 않는다.
 - 프리플라이트에서 막는 것: npm 미로그인 · gh 미인증 · 더티 트리 · 미푸시 커밋(새 릴리즈 시작 시) · 정본 remote 없음 · 정본 write 권한 없음.
 - ④는 게시 이후지만 태그·릴리즈·문서는 다시 만들 수 있어, 실패하면 같은 명령을 재실행하면 된다.
 
 시나리오별 명령어 → [배포 워크플로우](#배포-워크플로우)
+
+### 실행 예시
+
+master를 대상으로 PR 3개가 열려 있고, 그중 2개만 이번 릴리즈에 넣는 경우다.
+
+**시작 상태**
+
+- master는 4.17.0의 게시·태그·GitHub Release까지 끝난 상태다 (`release:status`의 `stage`가 `released`).
+- 열린 PR: #A(`fix/a`), #B(`chore/b`), #C(`feat/c`). #C는 아직 준비되지 않아 이번에는 넣지 않는다.
+- 세 PR 모두 4.17.0 시점에서 분기했고, 그 뒤 master에는 다른 PR(#D)이 먼저 들어갔다.
+- 스킬을 실행하는 현재 브랜치는 어디든 상관없다. clean이고 push돼 있기만 하면 된다.
+
+**실행**: `/release patch #A #B`. 인자를 생략하면 1단계에서 열린 PR 목록을 보여주고 묻고, 3단계에서 커밋을 보고 bump를 제안한다.
+
+```mermaid
+%%{init: {'gitGraph': {'mainBranchName': 'master'}}}%%
+gitGraph
+    commit id: "Release 4.17.0" tag: "4.17.0"
+    branch fix/a
+    commit id: "fix: A"
+    checkout master
+    branch chore/b
+    commit id: "chore: B"
+    checkout master
+    branch feat/c
+    commit id: "feat: C"
+    checkout master
+    commit id: "Merge #D"
+    branch release/core-4.17.1
+    merge fix/a id: "Merge #A"
+    merge chore/b id: "Merge #B"
+    commit id: "Release 4.17.1" type: HIGHLIGHT tag: "4.17.1"
+    checkout master
+    merge release/core-4.17.1 id: "Merge #R"
+```
+
+- 릴리즈 브랜치는 PR 브랜치가 아니라 **정본 master 최신**(`Merge #D` 이후)에서 분기한다.
+- 2~3단계 동안 이름은 `release/core-next`이고, 4단계에서 버전이 정해지면 `release/core-4.17.1`로 바뀐다. 그림은 최종 이름으로 표기했다.
+- `Merge #A`·`Merge #B`는 `--no-ff` 머지 커밋이다. PR 커밋 SHA가 그대로 남아 5단계 master 머지 때 원본 PR이 "Merged"로 닫힌다.
+- 태그 `4.17.1`은 릴리즈 커밋(`Release 4.17.1`)에 붙는다. 만들어지는 시점은 master 머지와 npm 게시가 끝난 7단계다.
+- #C는 건드리지 않는다. 열린 채로 남아 다음 릴리즈의 후보가 된다.
+
+단계별로 무엇이 어디에 생기는지:
+
+| 단계 | 작업 위치 | 로컬 | GitHub · npm |
+|------|-----------|------|--------------|
+| 0 상태 판별 | 현재 브랜치 | — | — |
+| 1 PR 선택 | — | 취합 대상 #A·#B 확정 | — |
+| 2 분기 · 취합 | `release/core-next` | 브랜치 생성, 머지 커밋 2개 | — |
+| 3 버전 결정 | `release/core-next` | `4.17.0..HEAD` 커밋으로 bump 판단 → 4.17.1 | — |
+| 4 범프 · prepare | `release/core-4.17.1` | 이름 변경, 릴리즈 커밋 1개 (package.json 3개 + CHANGELOG) | — |
+| 5 PR · 머지 | `release/core-4.17.1` → master | master 최신 pull | 릴리즈 PR #R, master의 `Merge #R`, #A·#B "Merged" |
+| 6 publish | master | — | npm `@egjs/flicking`·`react-flicking`·`vue3-flicking` 4.17.1 (`latest`) |
+| 7 finalize | master | 태그 4개 (`4.17.1` + 패키지 태그 3개) | 태그 push, GitHub Release `4.17.1 Release ({날짜})` |
+| 8 문서 | — | — | 문서 사이트 `/releases` 갱신 |
+
+끝난 뒤:
+
+- master에는 #A·#B의 변경과 릴리즈 커밋이 들어 있고, npm 게시본과 태그가 그 릴리즈 커밋을 가리킨다.
+- `release/core-4.17.1` 브랜치는 원격에 남는다. 스킬이 `--delete-branch`를 쓰지 않고 저장소의 머지 후 자동 삭제도 꺼져 있다.
+- #C는 열린 PR 그대로다. 다음 `/release`의 1단계 목록에 다시 나온다.
 
 ### 중단과 재개
 
