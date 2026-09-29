@@ -2,7 +2,7 @@
 name: release
 description: 정식 배포 파이프라인 전체 실행 — 취합 PR 선택 → 릴리즈 브랜치 취합 → 버전 결정 → 검증 → 릴리즈 PR → master 머지 → npm publish → 태그·GitHub Release → 문서 배포. 중단된 릴리즈는 재개 지점을 판별해 이어서 진행한다.
 disable-model-invocation: true
-argument-hint: "[patch|minor|major] [react|vue|plugins] [#PR ...]"
+argument-hint: "[patch|minor|major] [react|vue|plugins]"
 ---
 
 $ARGUMENTS 기준으로 정식 배포를 끝까지 진행한다.
@@ -61,10 +61,11 @@ gh pr list --repo naver/egjs-flicking --base master --state open \
   --json number,title,headRefName,headRepositoryOwner,isDraft,reviewDecision
 ```
 
-- 인자에 PR 번호(`#960`)가 있으면 그대로 쓰고 묻지 않는다.
-- 없으면 목록을 보여주고 한 번 묻는다. 복수 선택이며, "없음"(master에 이미 있는 것만 릴리즈)도 고를 수 있다.
+- 열린 PR이 있으면 목록을 보여주고 한 번 묻는다. 복수 선택이며, "없음"(master에 이미 있는 것만 릴리즈)도 고를 수 있다.
   - draft 여부와 리뷰 승인 상태(`reviewDecision`)를 함께 보여준다.
 - 열린 PR이 없으면 묻지 않고 2단계로 간다.
+- 이미 master에 머지된 PR은 목록에 나오지 않는다. 릴리즈 브랜치가 master에서 분기하므로 자동으로 포함된다.
+  - 머지된 PR을 다시 취합하지 않는다. squash·rebase로 머지된 PR은 원래 커밋이 이력에 다시 들어와 CHANGELOG에 같은 항목이 두 번 생긴다.
 - 고르지 않은 PR은 건드리지 않는다. 다음 릴리즈에서 다시 후보가 된다.
 
 ## 2. 릴리즈 브랜치 + 취합

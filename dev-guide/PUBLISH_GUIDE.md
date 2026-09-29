@@ -106,7 +106,7 @@ flowchart TD
     G1 -->|아니오| STOP([중단 · 사용자 조치 요청])
     G1 -->|예| S1
 
-    S1[/"1 · 취합할 PR 선택<br/>인자로 주지 않았으면 1회 질문"/] --> S2
+    S1[/"1 · 취합할 PR 선택<br/>열린 PR이 있으면 1회 질문"/] --> S2
 
     subgraph BR["① 릴리즈 브랜치 · 되돌릴 수 있음"]
         direction TB
@@ -142,7 +142,7 @@ flowchart TD
 | 단계 | 명령 | 하는 일 |
 |------|------|---------|
 | 0 | `release:status --fetch` | 저장소·레지스트리 상태 관측, 재개 지점 산출 |
-| 1 | `gh pr list --base master` | 이번 릴리즈에 넣을 PR 선택 (인자로 주거나 열린 PR이 없으면 생략) |
+| 1 | `gh pr list --base master` | 이번 릴리즈에 넣을 PR 선택 (열린 PR이 없으면 생략) |
 | 2 | `git checkout -b` → `git merge --no-ff` | 정본 master 최신에서 `release/{scope}-next` 분기, 고른 PR 취합 |
 | 3 | `git log {tag}..HEAD` | 취합된 커밋으로 bump 결정 (기준은 범프 전 현재 버전의 태그) |
 | 4 | `publish:version {bump}` → `release:prepare` | 브랜치 이름 확정, 버전 범프 (단독 배포는 해당 `package.json`만), CHANGELOG + 릴리즈 커밋 |
@@ -171,7 +171,9 @@ master를 대상으로 PR 3개가 열려 있고, 그중 2개만 이번 릴리즈
 - 세 PR 모두 4.17.0 시점에서 분기했고, 그 뒤 master에는 다른 PR(#D)이 먼저 들어갔다.
 - 스킬을 실행하는 현재 브랜치는 어디든 상관없다. clean이고 push돼 있기만 하면 된다.
 
-**실행**: `/release patch #A #B`. 인자를 생략하면 1단계에서 열린 PR 목록을 보여주고 묻고, 3단계에서 커밋을 보고 bump를 제안한다.
+**실행**: `/release patch`. 1단계에서 열린 PR #A·#B·#C가 목록으로 나오고, 그중 #A·#B를 고른다. bump 인자를 생략하면 3단계에서 커밋을 보고 제안한다.
+
+- #D는 이미 master에 있으므로 목록에 나오지 않는다. 릴리즈 브랜치가 master에서 분기하므로 자동으로 포함된다.
 
 ```mermaid
 %%{init: {'gitGraph': {'mainBranchName': 'master'}}}%%
