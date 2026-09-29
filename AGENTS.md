@@ -36,7 +36,7 @@ egjs-flicking은 Naver가 개발하는 JavaScript 캐러셀/슬라이더 라이�
 - CSS 레이아웃(`offsetWidth` 등)이 필요한 테스트는 unit(Vitest Browser Mode)에 작성한다. jsdom 환경(plugins, cfc)에서는 실제 크기 계산이 불가능하다.
 
 ### 배포
-- **배포는 `/release` 스킬로 실행한다.** 순서는 **master 머지 → npm publish → 태그·GitHub Release → 문서 배포**로 고정이다. 되돌릴 수 없는 publish를 뒤에 둔다.
+- **배포는 `/release` 스킬로 실행한다.** 머지 대기 PR은 master에 개별로 머지하지 않고 릴리즈 브랜치에 취합한다. 순서는 **PR 취합 → 버전 범프·prepare → 릴리즈 PR master 머지 → npm publish → 태그·GitHub Release → 문서 배포**로 고정이다. 되돌릴 수 없는 publish를 뒤에 둔다.
 - 릴리즈 PR은 merge commit으로 머지한다 (squash 금지 — 릴리즈 커밋 SHA 보존).
 - 상세 → `dev-guide/PUBLISH_GUIDE.md`
 
@@ -77,7 +77,7 @@ pnpm publish:stable:{pkg}     # 개별 빌드 + 정식 퍼블리시 (flicking|re
 pnpm publish:beta             # 전체 빌드 + 베타 퍼블리시
 pnpm publish:beta:{pkg}       # 개별 빌드 + 베타 퍼블리시
 
-# 릴리즈 (Release: changelog·커밋 → publish → 태그·GitHub Release)
+# 릴리즈 (Release: 릴리즈 브랜치 prepare → master 머지 → publish → finalize)
 pnpm release:status   # 진행 상태·재개 지점 확인 (--json)
 pnpm release:prepare  # 릴리즈 브랜치: pnpm install + changelog + 릴리즈 커밋
 pnpm release:finalize # master(publish 후): 게시 검증 + 태그 + push + GitHub Release
