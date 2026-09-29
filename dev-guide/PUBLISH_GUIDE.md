@@ -110,7 +110,7 @@ flowchart TD
 
     subgraph BR["① 릴리즈 브랜치 · 되돌릴 수 있음"]
         direction TB
-        S2["2 · 정본 master 최신에서 분기<br/>고른 PR을 --no-ff로 취합"] --> S3["3 · 버전 결정<br/>취합된 HEAD의 커밋 기준"] --> S4["4 · 이름 확정 · 버전 범프<br/>release:prepare"] --> S4V["검증<br/>lint · build · pack"]
+        S2["2 · 정본 master 최신에서 분기<br/>고른 PR을 --no-ff로 취합"] --> S3["3 · 버전 결정 · 1회 확인<br/>취합된 HEAD의 커밋 기준"] --> S4["4 · 이름 확정 · 버전 범프<br/>release:prepare"] --> S4V["검증<br/>lint · build · pack"]
     end
 
     S2 -.->|충돌| STOP
@@ -144,7 +144,7 @@ flowchart TD
 | 0 | `release:status --fetch` | 저장소·레지스트리 상태 관측, 재개 지점 산출 |
 | 1 | `gh pr list --base master` | 이번 릴리즈에 넣을 PR 선택 (열린 PR이 없으면 생략) |
 | 2 | `git checkout -b` → `git merge --no-ff` | 정본 master 최신에서 `release/{scope}-next` 분기, 고른 PR 취합 |
-| 3 | `git log {tag}..HEAD` | 취합된 커밋으로 bump 결정 (기준은 범프 전 현재 버전의 태그) |
+| 3 | `git log {tag}..HEAD` | 취합된 커밋으로 bump 제안 후 사용자 확인 (기준은 범프 전 현재 버전의 태그) |
 | 4 | `publish:version {bump}` → `release:prepare` | 브랜치 이름 확정, 버전 범프 (단독 배포는 해당 `package.json`만), CHANGELOG + 릴리즈 커밋 |
 | 5 | `gh pr create` → `gh pr merge --merge` | CI 통과 후 master 반영 |
 | 6 | `publish:stable` | 승인 1회 후 npm 게시 |
@@ -153,8 +153,10 @@ flowchart TD
 
 - **③만 되돌릴 수 없다.** 그래서 사용자 승인 게이트도 ③ 바로 앞에 하나만 둔다.
 - 게이트는 둘이다 — 0단계 관측값으로 판단하는 프리플라이트, publish 직전 승인.
-- 그 밖에 멈추는 곳은 넷이다 — 1단계 취합 PR 선택, 2단계 취합 충돌, 3단계 플러그인 동반 배포 여부, 7단계 릴리즈 노트 초안 확인.
+- 그 밖에 멈추는 곳은 넷이다 — 1단계 취합 PR 선택, 2단계 취합 충돌, 3단계 버전·플러그인 동반 배포 확인, 7단계 릴리즈 노트 초안 확인.
   - 충돌 해소는 코드 판단이라 스킬이 임의로 풀지 않는다.
+  - bump는 인자로 받지 않는다. 3단계에서 커밋 분류와 패키지별 변경 수를 보고 정한다.
+  - 코어 릴리즈인데 코어 변경이 0건이면 3단계에서 멈추고 단독 릴리즈(`/release {pkg}`)를 권한다.
 - 프리플라이트에서 막는 것: npm 미로그인 · gh 미인증 · 더티 트리 · 미푸시 커밋(새 릴리즈 시작 시) · 정본 remote 없음 · 정본 write 권한 없음.
 - ④는 게시 이후지만 태그·릴리즈·문서는 다시 만들 수 있어, 실패하면 같은 명령을 재실행하면 된다.
 
@@ -171,7 +173,7 @@ master를 대상으로 PR 3개가 열려 있고, 그중 2개만 이번 릴리즈
 - 세 PR 모두 4.17.0 시점에서 분기했고, 그 뒤 master에는 다른 PR(#D)이 먼저 들어갔다.
 - 스킬을 실행하는 현재 브랜치는 어디든 상관없다. clean이고 push돼 있기만 하면 된다.
 
-**실행**: `/release patch`. 1단계에서 열린 PR #A·#B·#C가 목록으로 나오고, 그중 #A·#B를 고른다. bump 인자를 생략하면 3단계에서 커밋을 보고 제안한다.
+**실행**: `/release`. 1단계에서 열린 PR #A·#B·#C가 목록으로 나오고, 그중 #A·#B를 고른다. 3단계에서 커밋 분류(fix·chore)와 제안 버전 4.17.1을 보고 확인한다.
 
 - #D는 이미 master에 있으므로 목록에 나오지 않는다. 릴리즈 브랜치가 master에서 분기하므로 자동으로 포함된다.
 
@@ -210,7 +212,7 @@ gitGraph
 | 0 상태 판별 | 현재 브랜치 | — | — |
 | 1 PR 선택 | — | 취합 대상 #A·#B 확정 | — |
 | 2 분기 · 취합 | `release/core-next` | 브랜치 생성, 머지 커밋 2개 | — |
-| 3 버전 결정 | `release/core-next` | `4.17.0..HEAD` 커밋으로 bump 판단 → 4.17.1 | — |
+| 3 버전 결정 | `release/core-next` | `4.17.0..HEAD` 커밋으로 patch 제안 → 확인 후 4.17.1 | — |
 | 4 범프 · prepare | `release/core-4.17.1` | 이름 변경, 릴리즈 커밋 1개 (package.json 3개 + CHANGELOG) | — |
 | 5 PR · 머지 | `release/core-4.17.1` → master | master 최신 pull | 릴리즈 PR #R, master의 `Merge #R`, #A·#B "Merged" |
 | 6 publish | master | — | npm `@egjs/flicking`·`react-flicking`·`vue3-flicking` 4.17.1 (`latest`) |
