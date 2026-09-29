@@ -2,7 +2,7 @@
 name: release
 description: 정식 배포 파이프라인 전체 실행 — 취합 PR 선택 → 릴리즈 브랜치 취합 → 버전 결정 → 검증 → 릴리즈 PR → master 머지 → npm publish → 태그·GitHub Release → 문서 배포. 중단된 릴리즈는 재개 지점을 판별해 이어서 진행한다.
 disable-model-invocation: true
-argument-hint: "[patch|minor|major] [react|vue|plugins]"
+argument-hint: "[react|vue|plugins]"
 ---
 
 $ARGUMENTS 기준으로 정식 배포를 끝까지 진행한다.
@@ -92,18 +92,29 @@ git merge --no-ff FETCH_HEAD -m "Merge pull request #{N} from {headRepositoryOwn
 - 취합을 모두 마친 뒤에 3단계로 간다.
   - `release:prepare`는 실행 시점의 `git log {prevTag}..HEAD`로 CHANGELOG를 만든다. prepare 뒤에 머지한 PR은 게시본에는 들어가지만 CHANGELOG에서는 에러 없이 빠진다.
 
-## 3. 버전 결정
+## 3. 버전 결정 (확인 1회)
 
 ```bash
 pnpm -s release:status --json              # 취합 후 HEAD 기준으로 다시 읽는다
 git log {tag}..HEAD --no-merges --pretty=format:"%s"
+
+# 패키지별 변경 파일 수 (dev/는 제외)
+git diff --name-only {tag}..HEAD -- packages/{pkg} ':(exclude)packages/{pkg}/dev' | wc -l
+#   {pkg}: flicking · react-flicking · vue3-flicking · flicking-plugins
 ```
 
 - 기준은 `tag`(현재 버전의 태그 = 직전 릴리즈)다. `prevTag`를 쓰지 않는다.
   - `prevTag`는 현재 버전보다 낮은 태그 중 최신이다. 범프 전에는 직전 릴리즈보다 한 단계 앞을 가리키므로, 이미 게시된 커밋까지 섞여 bump가 높게 잡힌다.
 - 범프 후 `release:prepare`는 이 `tag`를 prevTag로 삼는다. 따라서 이 범위가 CHANGELOG에 쓰이는 범위와 같고, 취합한 PR의 커밋도 여기 들어간다.
-- 인자에 bump 타입이 있으면 그대로 쓰고, 없으면 커밋으로 제안한다 (BREAKING → major / feat 포함 → minor / fix·chore만 → patch). 제안한 버전을 사용자에게 알린 뒤 진행한다.
-- 플러그인은 자동 동기화 대상이 아니다. 함께 배포할지 사용자에게 확인한다.
+- 커밋으로 bump를 제안한다 (BREAKING → major / feat 포함 → minor / fix·chore만 → patch).
+- **대상 패키지의 변경이 0건이면 확인 전에 멈춘다.**
+  - 코어 릴리즈인데 `flicking` 변경이 0건이면, 변경이 있는 패키지로 단독 릴리즈(`/release {pkg}`)를 다시 실행하도록 권한다. 코어 릴리즈는 래퍼까지 재배포하므로 코드가 안 바뀐 패키지가 게시된다.
+  - 단독 릴리즈인데 그 패키지 변경이 0건이거나, 어느 패키지도 변경이 없으면 배포할 것이 없다.
+- 그 밖에는 사용자에게 **한 번** 확인받는다. 아래를 함께 제시한다.
+  - 커밋 분류(타입·scope별 개수)와 제안 버전
+  - feat·BREAKING 커밋 목록. 릴리즈 도구·문서처럼 패키지 코드가 아닌 scope가 섞여 있으면 표시한다.
+  - 패키지별 변경 파일 수
+  - 플러그인 동반 배포 여부 (코어 릴리즈일 때. 플러그인은 자동 동기화 대상이 아니다)
 
 ## 4. 버전 범프 + prepare
 
