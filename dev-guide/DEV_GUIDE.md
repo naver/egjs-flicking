@@ -164,7 +164,7 @@ CSS도 `@dev/flicking-css`, `@dev/plugins-css` alias를 통해 import하면 HMR�
 
 ## 개발 모드 vs 빌드 검증 모드
 
-| 항목 | 개발 모드 (`pnpm dev`) | 빌드 모드 (`pnpm dev:prod`) |
+| 항목 | 개발 모드 (`pnpm dev:*`) | 빌드 모드 (`pnpm preview`) |
 |------|------------------------|------------------------------|
 | **용도** | 일상 개발 | 릴리즈 전 검증 |
 | **소스** | `src/index.ts` (소스 직접) | `dist/*.esm.js` (빌드 결과물) |
