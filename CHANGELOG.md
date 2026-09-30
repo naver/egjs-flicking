@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.17.1](https://github.com/naver/egjs-flicking/compare/4.17.0...4.17.1) (2026-09-30)
+### :sparkles: Packages
+* `@egjs/flicking` 4.17.1
+* `@egjs/react-flicking` 4.17.1
+* `@egjs/vue3-flicking` 4.17.1
+
+### :rocket: New Features
+* **release:** 릴리즈 노트 Highlights 작성을 절차에 포함 ([bb3e062](https://github.com/naver/egjs-flicking/commit/bb3e0628c51d6b72c625cff40afc65f5ad6fa379))
+* **release:** /release 파이프라인 스킬 추가 ([e9b295c](https://github.com/naver/egjs-flicking/commit/e9b295ce291cca33af887a232119e2c52c60b60a))
+* **release:** release 스크립트를 prepare/finalize로 분할 ([1123946](https://github.com/naver/egjs-flicking/commit/1123946930a780f3e2e5db8df23242c8eda54312))
+
+### :bug: Bug Fixes
+* use cloneNode instead of innerHTML (#960) ([54cbf99](https://github.com/naver/egjs-flicking/commit/54cbf992453d0c36e9c8506ddbc98b9b9c69e894))
+* **release:** bump 인자 제거, 3단계 버전 확인 상시화 ([4b4498b](https://github.com/naver/egjs-flicking/commit/4b4498b201fb6ffce195e2940d8828523340af6c))
+* **release:** 스킬의 취합 PR 번호 인자 제거 ([70b6f0b](https://github.com/naver/egjs-flicking/commit/70b6f0b885da450fc37d5e555acfe45a7146a73d))
+* **release:** PR 취합을 버전 결정·prepare 앞으로 이동 ([ebcf571](https://github.com/naver/egjs-flicking/commit/ebcf571202282874cc50a2ceb07e5d70b2d6fcea))
+
+### :memo: Documentation
+* **agents:** 명령어 목록에 release:notes 추가 ([1a28293](https://github.com/naver/egjs-flicking/commit/1a2829364d89e5345f82f17d39ff274840b1421e))
+* **agents:** 배포 순서에 PR 취합 단계 명시 ([c68ca12](https://github.com/naver/egjs-flicking/commit/c68ca12c61ff5261bc5e030911474870334981f9))
+* **publish:** 릴리즈 실행 예시 다이어그램 추가 ([a339ff4](https://github.com/naver/egjs-flicking/commit/a339ff4921a0ff467e3184986bc6438dc6c4f440))
+* **publish:** 향후 계획 섹션 제거 ([8294539](https://github.com/naver/egjs-flicking/commit/82945393315a00e78a3ddb932a5cef97ac3b515c))
+* **publish:** release-helper 대체 이력 제거 ([4cf00ee](https://github.com/naver/egjs-flicking/commit/4cf00ee8dcb565ddc8b7705eaf3b75ad0e972648))
+* **publish:** 배포 파이프라인 mermaid 다이어그램 추가 ([0a67006](https://github.com/naver/egjs-flicking/commit/0a67006a742c443ebd0decbaa126988ebab0c5bf))
+* **contributing:** pnpm·Biome 기준으로 갱신 ([bc4500b](https://github.com/naver/egjs-flicking/commit/bc4500b5ae2e34de4c086ec5ea42b1a313eba6d4))
+* **publish:** 머지 후 publish 순서 문서화 ([72488d6](https://github.com/naver/egjs-flicking/commit/72488d6a2054e2f522f9963174f7751284611ac3))
+
+### :mega: Other
+* node 삭제, react strict mode 대응한 모듈 업데이트 (#963) ([e4613d1](https://github.com/naver/egjs-flicking/commit/e4613d1291a0b080220b565f7e4c3ddf39a411a5))
+* **publish:** stable 퍼블리시에 pnpm git 검사 활성화 ([44b7f88](https://github.com/naver/egjs-flicking/commit/44b7f8877827d2d1e357c94b4699abbb09392186))
+
 ## [4.17.0](https://github.com/naver/egjs-flicking/compare/@egjs/vue3-flicking@4.16.4...4.17.0) (2026-09-01)
 ### :sparkles: Packages
 * `@egjs/flicking` 4.17.0
