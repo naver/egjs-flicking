@@ -4,10 +4,60 @@
         <title>Flicking Blog</title>
         <link>https://naver.github.io/egjs-flicking/releases</link>
         <description>Flicking Blog</description>
-        <lastBuildDate>Mon, 20 Jul 2026 08:18:08 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 30 Sep 2026 07:42:29 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
+        <item>
+            <title><![CDATA[4.17.1]]></title>
+            <link>https://naver.github.io/egjs-flicking/releases/2026/09/30/release-4.17.1</link>
+            <guid>https://naver.github.io/egjs-flicking/releases/2026/09/30/release-4.17.1</guid>
+            <pubDate>Wed, 30 Sep 2026 07:42:29 GMT</pubDate>
+            <description><![CDATA[Packages]]></description>
+            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="packages">Packages<a href="https://naver.github.io/egjs-flicking/releases/2026/09/30/release-4.17.1#packages" class="hash-link" aria-label="Direct link to Packages" title="Direct link to Packages" translate="no">​</a></h2>
+<table><thead><tr><th>Package</th><th>Version</th></tr></thead><tbody><tr><td><code>@egjs/flicking</code></td><td>4.17.1</td></tr><tr><td><code>@egjs/react-flicking</code></td><td>4.17.1</td></tr><tr><td><code>@egjs/vue3-flicking</code></td><td>4.17.1</td></tr></tbody></table>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="highlights">Highlights<a href="https://naver.github.io/egjs-flicking/releases/2026/09/30/release-4.17.1#highlights" class="hash-link" aria-label="Direct link to Highlights" title="Direct link to Highlights" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Fixed a mutation-XSS (mXSS) vulnerability in panel serialization</strong> — <code>CrossFlicking</code> and <code>Flicking#setStatus</code> used to round-trip panel content through <code>innerHTML</code>/<code>outerHTML</code> strings, which could revive a payload that was inert on first render. <code>CrossFlicking</code> now builds its structure only through <code>cloneNode</code>/<code>appendChild</code>, and <code>setStatus</code> parses the stored <code>html</code> inertly and strips script-capable content (<code>&lt;script&gt;</code>, <code>&lt;iframe&gt;</code>, <code>on*</code> handlers, <code>javascript:</code> URLs) before restoring panels. Upgrading is recommended for every app that calls <code>setStatus</code> with untrusted content or uses <code>CrossFlicking</code>. (#960)</li>
+<li class=""><strong>React Strict Mode compatibility via dependency updates</strong> — <code>@egjs/axes</code> is bumped to <code>^3.9.3</code> and <code>@egjs/react-flicking</code> now depends on <code>@cfcs/react</code> <code>^0.1.1</code>, picking up the fixes needed to run cleanly under React Strict Mode's double-invocation. (#963)</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> <code>setStatus</code> now sanitizes the <code>html</code> it restores. If you relied on restoring panels that contain inline event handlers or script-capable elements through <code>setStatus</code>, those attributes/elements are stripped as of this version.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="whats-changed">What's Changed<a href="https://naver.github.io/egjs-flicking/releases/2026/09/30/release-4.17.1#whats-changed" class="hash-link" aria-label="Direct link to What's Changed" title="Direct link to What's Changed" translate="no">​</a></h2>
+<ul>
+<li class="">chore: node 삭제, react strict mode 대응한 모듈 업데이트 by @daybrush in <a href="https://github.com/naver/egjs-flicking/pull/963" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/963</a></li>
+<li class="">feat(release): 머지 후 publish 순서 도입 &amp; /release 스킬 추가 by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/961" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/961</a></li>
+<li class="">fix(release): bump 인자 제거, 3단계 버전 확인 상시화 by @cjw783 in <a href="https://github.com/naver/egjs-flicking/pull/967" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/967</a></li>
+<li class="">fix: use cloneNode instead of innerHTML by @malangfox in <a href="https://github.com/naver/egjs-flicking/pull/960" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/pull/960</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a href="https://github.com/naver/egjs-flicking/compare/4.17.0...4.17.1" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-flicking/compare/4.17.0...4.17.1</a></p>]]></content:encoded>
+            <category>release</category>
+        </item>
+        <item>
+            <title><![CDATA[4.17.0]]></title>
+            <link>https://naver.github.io/egjs-flicking/releases/2026/09/08/release-4.17.0</link>
+            <guid>https://naver.github.io/egjs-flicking/releases/2026/09/08/release-4.17.0</guid>
+            <pubDate>Tue, 08 Sep 2026 02:19:04 GMT</pubDate>
+            <description><![CDATA[4.17.0 (2026-09-01)]]></description>
+            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="4170-2026-09-01"><a href="https://github.com/naver/egjs-flicking/compare/@egjs/vue3-flicking@4.16.4...4.17.0" target="_blank" rel="noopener noreferrer" class="">4.17.0</a> (2026-09-01)<a href="https://naver.github.io/egjs-flicking/releases/2026/09/08/release-4.17.0#4170-2026-09-01" class="hash-link" aria-label="Direct link to 4170-2026-09-01" title="Direct link to 4170-2026-09-01" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_ZFAD" id="sparkles-packages">✨<!-- --> Packages<a href="https://naver.github.io/egjs-flicking/releases/2026/09/08/release-4.17.0#sparkles-packages" class="hash-link" aria-label="Direct link to sparkles-packages" title="Direct link to sparkles-packages" translate="no">​</a></h3>
+<ul>
+<li class=""><code>@egjs/flicking</code> 4.17.0</li>
+<li class=""><code>@egjs/react-flicking</code> 4.17.0</li>
+<li class=""><code>@egjs/vue3-flicking</code> 4.17.0</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_ZFAD" id="rocket-new-features">🚀<!-- --> New Features<a href="https://naver.github.io/egjs-flicking/releases/2026/09/08/release-4.17.0#rocket-new-features" class="hash-link" aria-label="Direct link to rocket-new-features" title="Direct link to rocket-new-features" translate="no">​</a></h3>
+<ul>
+<li class="">usePercentagePos 옵션 추가 &amp; resize 비동기 사이에 사이즈가 갱신되는 문제 수정 (#957) (<a href="https://github.com/naver/egjs-flicking/commit/83fce74db4d465d8d771c272d0f703ce7f7b8ded" target="_blank" rel="noopener noreferrer" class="">83fce74</a>)</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_ZFAD" id="memo-documentation">📝<!-- --> Documentation<a href="https://naver.github.io/egjs-flicking/releases/2026/09/08/release-4.17.0#memo-documentation" class="hash-link" aria-label="Direct link to memo-documentation" title="Direct link to memo-documentation" translate="no">​</a></h3>
+<ul>
+<li class=""><strong>publish:</strong> generalize docs deploy remote note (<a href="https://github.com/naver/egjs-flicking/commit/a427f8cebff6dcd23c77bef42607d945c643a103" target="_blank" rel="noopener noreferrer" class="">a427f8c</a>)</li>
+<li class=""><strong>publish:</strong> add mandatory docs<!-- -->:deploy<!-- --> step after release (<a href="https://github.com/naver/egjs-flicking/commit/9541cdd08cf3a297ff5aebc17b240f13ce8f0005" target="_blank" rel="noopener noreferrer" class="">9541cdd</a>)</li>
+</ul>]]></content:encoded>
+            <category>release</category>
+        </item>
         <item>
             <title><![CDATA[4.16.4]]></title>
             <link>https://naver.github.io/egjs-flicking/releases/2026/07/20/release-4.16.4</link>
@@ -329,30 +379,6 @@
 <ul>
 <li class="">Fixed a bug that the <code>resize</code> event listener was not properly removed when the instance was destroyed. (#779)</li>
 <li class="">Fixed the issue that the panel moved to an inappropriate position when a panel is clicked during sliding. (#777)</li>
-</ul>]]></content:encoded>
-            <category>release</category>
-        </item>
-        <item>
-            <title><![CDATA[4.10.4]]></title>
-            <link>https://naver.github.io/egjs-flicking/releases/2022/12/02/release-4.10.4</link>
-            <guid>https://naver.github.io/egjs-flicking/releases/2022/12/02/release-4.10.4</guid>
-            <pubDate>Fri, 02 Dec 2022 08:01:40 GMT</pubDate>
-            <description><![CDATA[Bug Fix]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2022/12/02/release-4.10.4#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
-<ul>
-<li class="">Fixed a bug that <code>move</code> event can occur even after <code>holdEnd</code> event at Internet Explorer (<a href="https://github.com/naver/egjs-axes/issues/208" target="_blank" rel="noopener noreferrer" class="">https://github.com/naver/egjs-axes/issues/208</a>)</li>
-</ul>]]></content:encoded>
-            <category>release</category>
-        </item>
-        <item>
-            <title><![CDATA[4.10.3]]></title>
-            <link>https://naver.github.io/egjs-flicking/releases/2022/11/25/release-4.10.3</link>
-            <guid>https://naver.github.io/egjs-flicking/releases/2022/11/25/release-4.10.3</guid>
-            <pubDate>Fri, 25 Nov 2022 08:26:20 GMT</pubDate>
-            <description><![CDATA[Bug Fix]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_ZFAD" id="bug-fix">Bug Fix<a href="https://naver.github.io/egjs-flicking/releases/2022/11/25/release-4.10.3#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h2>
-<ul>
-<li class="">Fixed a bug that <code>resizeOnContentsReady</code> option cause error with lazy image loading inside panel (#745)</li>
 </ul>]]></content:encoded>
             <category>release</category>
         </item>
