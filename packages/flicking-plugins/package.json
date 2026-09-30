@@ -5,6 +5,12 @@
   "module": "./dist/plugins.esm.js",
   "main": "./dist/plugins.js",
   "types": "./declaration/index.d.ts",
+  "files": [
+    "dist",
+    "declaration",
+    "css",
+    "src"
+  ],
   "sideEffects": [
     "**/*.css"
   ],
