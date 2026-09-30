@@ -199,6 +199,51 @@ export const parseElement = (element: ElementLike | ElementLike[]): HTMLElement[
   return elements;
 };
 
+// Elements that can execute script or load remote content on their own
+const XSS_UNSAFE_TAGS = ["SCRIPT", "IFRAME", "OBJECT", "EMBED", "LINK", "META", "BASE"];
+
+// An attribute that can run script: an event handler (on*) or a `javascript:` URL
+const isUnsafeAttribute = (name: string, value: string): boolean => {
+  const lower = name.toLowerCase();
+  if (lower.indexOf("on") === 0) {
+    return true;
+  }
+  return (lower === "src" || lower === "href" || lower === "xlink:href") && /^\s*javascript:/i.test(value);
+};
+
+const sanitizeElementNode = (node: Element): void => {
+  toArray(node.attributes).forEach(attr => {
+    if (isUnsafeAttribute(attr.name, attr.value)) {
+      node.removeAttribute(attr.name);
+    }
+  });
+
+  toArray(node.children).forEach(child => {
+    if (includes(XSS_UNSAFE_TAGS, child.tagName.toUpperCase())) {
+      child.remove();
+    } else {
+      sanitizeElementNode(child);
+    }
+  });
+};
+
+/**
+ * Parse an HTML string into elements with sanitization, used by {@link Flicking.setStatus} to restore
+ * panels from a serialized `html` string. The string is parsed inside a `<template>` (an inert
+ * document, so no script runs and no resource loads), event-handler attributes and script-capable
+ * elements are stripped, and the result is imported — neutralizing a mutation-XSS payload revived by
+ * the `outerHTML`→`innerHTML` round-trip.
+ */
+export const parseSanitizedElement = (html: string): HTMLElement[] => {
+  const template = document.createElement("template");
+  template.innerHTML = html;
+
+  const children = toArray(template.content.children) as Element[];
+  children.forEach(child => sanitizeElementNode(child));
+
+  return children.map(child => document.importNode(child, true) as HTMLElement);
+};
+
 export const getMinusCompensatedIndex = (idx: number, max: number) =>
   idx < 0 ? clamp(idx + max, 0, max) : clamp(idx, 0, max);
 

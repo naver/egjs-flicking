@@ -40,7 +40,13 @@ export interface Status {
   panels: Array<{
     /** An index of the panel */
     index: number;
-    /** An `outerHTML` of the panel element */
+    /**
+     * An `outerHTML` of the panel element.
+     * @remarks
+     * {@link Flicking.setStatus} rebuilds panels by parsing this **with sanitization** — the string is
+     * parsed inertly and event-handler / script-capable content is stripped — so an
+     * `outerHTML`→`innerHTML` round-trip can't revive a mutation-XSS payload that was inert on first render.
+     */
     html?: string;
   }>;
 }

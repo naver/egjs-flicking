@@ -33,7 +33,7 @@ import {
 } from "./renderer";
 import { ElementLike, MoveTypeOptions, Plugin, Status } from "./types/external";
 import { LiteralUnion, ValueOf } from "./types/internal";
-import { findIndex, getElement, includes, parseElement } from "./utils";
+import { findIndex, getElement, includes, parseElement, parseSanitizedElement } from "./utils";
 
 /**
  * Options for the Flicking component
@@ -1888,16 +1888,27 @@ class Flicking extends Component<FlickingEvents> {
     const renderer = this._renderer;
     const control = this._control;
 
-    // Can't add/remove panels on external rendering
+    // Rebuild panels from the serialized `html` with sanitization. The string is parsed inertly and
+    // event-handler / script-capable content is stripped, so an `outerHTML`→`innerHTML` round-trip
+    // can't revive a mutation-XSS payload that was inert on first render.
+    // (Also can't add/remove panels on external rendering.)
     if (panels[0]?.html && !this._renderExternal) {
       renderer.batchRemove({
         index: 0,
         deleteCount: this.panels.length,
         hasDOMInElements: true
       });
+
+      const elements: HTMLElement[] = [];
+      panels.forEach(panel => {
+        if (panel.html) {
+          elements.push(...parseSanitizedElement(panel.html));
+        }
+      });
+
       renderer.batchInsert({
         index: 0,
-        elements: parseElement(panels.map(panel => panel.html!)),
+        elements,
         hasDOMInElements: true
       });
     }

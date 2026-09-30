@@ -18,11 +18,12 @@ import {
   parseBounce,
   parseCSSSizeValue,
   parseElement,
+  parseSanitizedElement,
   toArray
 } from "~/utils";
 
 import El from "./helper/El";
-import { cleanup, createFlicking, createSandbox, NullClass, range } from "./helper/test-util";
+import { cleanup, createFlicking, createSandbox, NullClass, range, waitTime } from "./helper/test-util";
 
 describe("Util Functions", () => {
   describe("merge", () => {
@@ -470,6 +471,53 @@ describe("Util Functions", () => {
         expect(err).toBeInstanceOf(FlickingError);
         expect(err.code).toBe(ERROR.CODE.WRONG_TYPE);
       });
+    });
+  });
+
+  describe("parseSanitizedElement", () => {
+    beforeEach(() => {
+      (window as any).__sanitizeXss = false;
+    });
+
+    it("should parse a plain HTML string into elements", () => {
+      const parsed = parseSanitizedElement('<div class="flicking-panel">Panel</div>');
+
+      expect(parsed).toBeInstanceOf(Array);
+      expect(parsed.length).toBe(1);
+      expect(parsed[0]).toBeInstanceOf(HTMLElement);
+      expect(parsed[0].classList.contains("flicking-panel")).toBe(true);
+      expect(parsed[0].innerHTML).toBe("Panel");
+    });
+
+    it("should strip event-handler attributes", () => {
+      const [el] = parseSanitizedElement('<div onclick="window.__sanitizeXss = true">x</div>');
+
+      expect(el.getAttribute("onclick")).toBeNull();
+    });
+
+    it("should remove script-capable elements", () => {
+      const [el] = parseSanitizedElement('<div><iframe src="x"></iframe><span>ok</span></div>');
+
+      expect(el.querySelector("iframe")).toBeNull();
+      expect(el.querySelector("span")).not.toBeNull();
+    });
+
+    it("should neutralize javascript: URLs", () => {
+      const [el] = parseSanitizedElement('<a href="javascript:window.__sanitizeXss = true">x</a>');
+
+      expect(el.getAttribute("href")).toBeNull();
+    });
+
+    it("should not execute a revived mutation-XSS payload", async () => {
+      const parsed = parseSanitizedElement(
+        '<div><math><mtext><table><mglyph><style><img src="x" onerror="window.__sanitizeXss = true"></style></mglyph></table></mtext></math></div>'
+      );
+      parsed.forEach(el => document.body.appendChild(el));
+      await waitTime(100);
+
+      expect(document.body.querySelector("img[onerror]")).toBeNull();
+      expect((window as any).__sanitizeXss).toBe(false);
+      parsed.forEach(el => el.remove());
     });
   });
 
