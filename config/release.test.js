@@ -4,15 +4,22 @@ import {
   compareVersion,
   decideNextStep,
   decideStage,
+  diffPackFiles,
   extractChangelogSection,
+  findForbiddenFiles,
   insertChangelogEntry,
+  isVersionOnlyChange,
   normalizeRepo,
   parseRemotes,
   pickCanonicalRemote,
   pickPushRemote,
   pickPrevTag,
+  releaseDiffBlockers,
   renderChangelog,
   renderNotesSkeleton,
+  summarizeCheckRuns,
+  summarizePaths,
+  workspaceDepMismatches,
 } from "./release.js";
 
 const REMOTES_ORIGIN_CANONICAL = `origin\thttps://github.com/naver/egjs-flicking.git (fetch)
@@ -326,6 +333,8 @@ describe("decideStage", () => {
 describe("decideNextStep", () => {
   const state = {
     npmUser: "someone",
+    ghInstalled: true,
+    ghAuth: true,
     changedPackages: [{ name: "@egjs/flicking", version: "4.18.0", published: false }],
     releaseCommit: null,
     tagExists: false,
@@ -336,7 +345,138 @@ describe("decideNextStep", () => {
     expect(decideNextStep({ ...state, npmUser: null })).toBe("npm-login");
   });
 
+  it("gh가 없으면 인증보다 설치가 먼저다", () => {
+    expect(decideNextStep({ ...state, ghInstalled: false, ghAuth: false })).toBe("gh-install");
+  });
+
+  it("gh가 설치됐지만 미인증이면 gh-login", () => {
+    expect(decideNextStep({ ...state, ghAuth: false })).toBe("gh-login");
+  });
+
+  it("npm 미로그인은 gh 상태보다 앞선다", () => {
+    expect(decideNextStep({ ...state, npmUser: null, ghInstalled: false })).toBe("npm-login");
+  });
+
   it("로그인되어 있으면 stage를 그대로 반환한다", () => {
     expect(decideNextStep(state)).toBe("prepare");
+  });
+});
+
+describe("isVersionOnlyChange", () => {
+  const pkg = obj => JSON.stringify(obj, null, 2);
+
+  it("version만 다르면 true", () => {
+    expect(isVersionOnlyChange(pkg({ name: "a", version: "1.0.0" }), pkg({ name: "a", version: "1.0.1" }))).toBe(true);
+  });
+
+  it("version 외 필드가 다르면 false", () => {
+    const before = pkg({ name: "a", version: "1.0.0", dependencies: { x: "^1.0.0" } });
+    const after = pkg({ name: "a", version: "1.0.1", dependencies: { x: "^2.0.0" } });
+    expect(isVersionOnlyChange(before, after)).toBe(false);
+  });
+
+  it("파싱할 수 없으면 false", () => {
+    expect(isVersionOnlyChange(null, pkg({ version: "1.0.0" }))).toBe(false);
+  });
+});
+
+describe("releaseDiffBlockers", () => {
+  const pkg = version => JSON.stringify({ name: "@egjs/flicking", version });
+
+  it("CHANGELOG와 공개 패키지 version 변경뿐이면 통과", () => {
+    const changes = [
+      { file: "CHANGELOG.md" },
+      { file: "packages/flicking/package.json", before: pkg("4.17.1"), after: pkg("4.17.2") },
+    ];
+    expect(releaseDiffBlockers(changes)).toEqual([]);
+  });
+
+  it("package.json의 version 외 변경은 막는다", () => {
+    const changes = [{
+      file: "packages/flicking/package.json",
+      before: JSON.stringify({ version: "4.17.1" }),
+      after: JSON.stringify({ version: "4.17.2", files: ["dist"] }),
+    }];
+    expect(releaseDiffBlockers(changes)).toHaveLength(1);
+  });
+
+  it("lockfile 변경은 막는다 (의존 해석이 바뀌었을 수 있다)", () => {
+    expect(releaseDiffBlockers([{ file: "pnpm-lock.yaml" }])).toHaveLength(1);
+  });
+
+  it("비공개 패키지의 package.json은 버전만 바뀌어도 막는다", () => {
+    const changes = [{ file: "packages/docs/package.json", before: pkg("1.0.0"), after: pkg("1.0.1") }];
+    expect(releaseDiffBlockers(changes)).toHaveLength(1);
+  });
+});
+
+describe("summarizeCheckRuns", () => {
+  it("미완료와 실패를 나눈다", () => {
+    const runs = [
+      { name: "unit", status: "completed", conclusion: "success" },
+      { name: "e2e", status: "in_progress", conclusion: null },
+      { name: "cfc", status: "completed", conclusion: "failure" },
+      { name: "lint", status: "completed", conclusion: "skipped" },
+    ];
+    expect(summarizeCheckRuns(runs)).toEqual({ total: 4, pending: ["e2e"], failed: ["cfc"] });
+  });
+
+  it("결과가 없으면 total 0", () => {
+    expect(summarizeCheckRuns([])).toEqual({ total: 0, pending: [], failed: [] });
+  });
+});
+
+describe("findForbiddenFiles", () => {
+  it("node_modules·.env·lockfile을 잡는다", () => {
+    const paths = ["dist/index.js", "node_modules/a/index.js", ".env", ".env.local", "yarn.lock", "src/.DS_Store"];
+    expect(findForbiddenFiles(paths).map(f => f.label)).toEqual(["node_modules", ".env", ".env", "lockfile", ".DS_Store"]);
+  });
+
+  it("최상위가 아닌 dev 디렉토리나 env 이름을 포함한 파일은 잡지 않는다", () => {
+    expect(findForbiddenFiles(["src/dev/index.ts", "dist/environment.js", "README.md"])).toEqual([]);
+  });
+
+  it("최상위 dev·coverage는 잡는다", () => {
+    expect(findForbiddenFiles(["dev/scratch/App.js", "coverage/index.html"])).toHaveLength(2);
+  });
+});
+
+describe("diffPackFiles", () => {
+  it("추가·제거된 경로를 정렬해 돌려준다", () => {
+    expect(diffPackFiles(["a", "c", "b"], ["b", "d", "a"])).toEqual({ added: ["d"], removed: ["c"] });
+  });
+});
+
+describe("summarizePaths", () => {
+  it("limit 이하면 그대로", () => {
+    expect(summarizePaths(["a.js", "b.js"], 10)).toEqual(["a.js", "b.js"]);
+  });
+
+  it("limit을 넘으면 최상위 디렉토리별로 묶는다", () => {
+    const paths = [...Array.from({ length: 13 }, (_, i) => `declaration/${i}.d.ts`), ".env"];
+    expect(summarizePaths(paths, 10)).toEqual(["declaration/ (13)", ".env"]);
+  });
+});
+
+describe("workspaceDepMismatches", () => {
+  const versions = { "@egjs/flicking": "4.17.2" };
+  const source = { dependencies: { "@egjs/flicking": "workspace:~", "@egjs/component": "^3.0.2" } };
+
+  it("workspace:~가 ~{로컬 버전}으로 치환되면 통과", () => {
+    const packed = { dependencies: { "@egjs/flicking": "~4.17.2", "@egjs/component": "^3.0.2" } };
+    expect(workspaceDepMismatches(source, packed, versions)).toEqual([]);
+  });
+
+  it("치환되지 않았거나 다른 버전이면 잡는다", () => {
+    expect(workspaceDepMismatches(source, { dependencies: { "@egjs/flicking": "workspace:~" } }, versions)).toHaveLength(1);
+    expect(workspaceDepMismatches(source, { dependencies: { "@egjs/flicking": "~4.17.1" } }, versions)).toEqual([
+      { field: "dependencies", name: "@egjs/flicking", expected: "~4.17.2", actual: "~4.17.1" },
+    ]);
+  });
+
+  it("workspace:*는 정확한 버전, 명시 범위는 그대로를 기대한다", () => {
+    const src = { peerDependencies: { "@egjs/flicking": "workspace:*" }, dependencies: { "@egjs/flicking": "workspace:^4.0.0" } };
+    const packed = { peerDependencies: { "@egjs/flicking": "4.17.2" }, dependencies: { "@egjs/flicking": "^4.0.0" } };
+    expect(workspaceDepMismatches(src, packed, versions)).toEqual([]);
   });
 });
