@@ -1104,17 +1104,147 @@ describe("Flicking", () => {
         expect(clickSpy).toHaveBeenCalledTimes(1);
       });
 
-      it("shouldn't trigger click event when Flicking's dragged a little", async () => {
+      // Dispatches mousedown → mousemove → mouseup like a real mouse drag (handled by TouchMouseEventInput)
+      const mouseDrag = (el: HTMLElement, deltaX: number) => {
+        const init = { buttons: 1, button: 0, clientX: 100, clientY: 100, bubbles: true, cancelable: true };
+
+        el.dispatchEvent(new MouseEvent("mousedown", init));
+        if (deltaX !== 0) {
+          window.dispatchEvent(new MouseEvent("mousemove", { ...init, clientX: 100 + deltaX / 2 }));
+          window.dispatchEvent(new MouseEvent("mousemove", { ...init, clientX: 100 + deltaX }));
+        }
+        window.dispatchEvent(new MouseEvent("mouseup", { ...init, buttons: 0, clientX: 100 + deltaX }));
+      };
+
+      // Dispatches pointerdown → pointermove → pointerup with the given pointerType (requires inputType: ["pointer"])
+      const pointerDrag = (el: HTMLElement, deltaX: number, pointerType: "mouse" | "touch") => {
+        const init = {
+          pointerId: 1,
+          pointerType,
+          isPrimary: true,
+          buttons: 1,
+          button: 0,
+          clientX: 100,
+          clientY: 100,
+          bubbles: true,
+          cancelable: true
+        };
+
+        el.dispatchEvent(new PointerEvent("pointerdown", init));
+        if (deltaX !== 0) {
+          window.dispatchEvent(new PointerEvent("pointermove", { ...init, clientX: 100 + deltaX / 2 }));
+          window.dispatchEvent(new PointerEvent("pointermove", { ...init, clientX: 100 + deltaX }));
+        }
+        window.dispatchEvent(new PointerEvent("pointerup", { ...init, buttons: 0, clientX: 100 + deltaX }));
+      };
+
+      it("shouldn't trigger click event when a mouse drag interrupts an animation", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventClickOnDrag: true });
         const clickSpy = vi.fn();
         const testPanel = flicking.panels[0];
 
         testPanel.element.addEventListener("click", clickSpy);
 
-        await simulate(flicking.element, { deltaX: -50, deltaY: 0 });
+        void flicking.moveTo(1, 1500);
+        tick(500);
+        mouseDrag(testPanel.element, -50);
         testPanel.element.click();
 
         expect(clickSpy).not.toHaveBeenCalled();
+      });
+
+      it("should trigger click event when tapped without movement during an animation", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          preventClickOnDrag: true,
+          inputType: ["pointer"]
+        });
+        const clickSpy = vi.fn();
+        const holdStartSpy = vi.fn();
+        const testPanel = flicking.panels[0];
+
+        flicking.on(EVENTS.HOLD_START, holdStartSpy);
+        testPanel.element.addEventListener("click", clickSpy);
+
+        // Releasing without movement restarts the animation, whose first "change" (holding: false)
+        // fires synchronously inside the pointerup handling, right before the click
+        void flicking.moveTo(1, 2000);
+        tick(500);
+        pointerDrag(testPanel.element, 0, "mouse");
+        testPanel.element.click();
+
+        expect(holdStartSpy).toHaveBeenCalledTimes(1);
+        expect(flicking.animating).toBe(true);
+        expect(clickSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("should trigger click event when tapped without movement during an animation with touch", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventClickOnDrag: true });
+        const clickSpy = vi.fn();
+        const testPanel = flicking.panels[0];
+
+        testPanel.element.addEventListener("click", clickSpy);
+
+        void flicking.moveTo(1, 2000);
+        tick(500);
+        // Fire-and-forget tap (touchstart → touchend) that completes within the manual tick, while the animation keeps playing
+        void simulate(flicking.element, { deltaX: 0, deltaY: 0, duration: 100 }, 0);
+        tick(150);
+        testPanel.element.click();
+
+        expect(flicking.animating).toBe(true);
+        expect(clickSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("shouldn't trigger click event when Flicking's dragged a little with mouse", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventClickOnDrag: true });
+        const clickSpy = vi.fn();
+        const moveSpy = vi.fn();
+        const testPanel = flicking.panels[0];
+
+        flicking.on(EVENTS.MOVE, moveSpy);
+        testPanel.element.addEventListener("click", clickSpy);
+
+        mouseDrag(testPanel.element, -50);
+        testPanel.element.click();
+
+        expect(moveSpy).toHaveBeenCalled();
+        expect(clickSpy).not.toHaveBeenCalled();
+      });
+
+      it("should trigger click event when a touch slipped a few pixels (browser's tap threshold)", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventClickOnDrag: true });
+        const clickSpy = vi.fn();
+        const moveSpy = vi.fn();
+        const testPanel = flicking.panels[0];
+
+        flicking.on(EVENTS.MOVE, moveSpy);
+        testPanel.element.addEventListener("click", clickSpy);
+
+        // Touch events: browsers fire click only when the touch stayed within their tap threshold
+        await simulate(flicking.element, { deltaX: -5, deltaY: 0 });
+        testPanel.element.click();
+
+        expect(moveSpy).toHaveBeenCalled();
+        expect(clickSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("should trigger click event when a touch slipped a few pixels with pointer events", async () => {
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          preventClickOnDrag: true,
+          inputType: ["pointer"]
+        });
+        const clickSpy = vi.fn();
+        const moveSpy = vi.fn();
+        const testPanel = flicking.panels[0];
+
+        flicking.on(EVENTS.MOVE, moveSpy);
+        testPanel.element.addEventListener("click", clickSpy);
+
+        pointerDrag(testPanel.element, -5, "touch");
+        testPanel.element.click();
+
+        expect(moveSpy).toHaveBeenCalled();
+        expect(clickSpy).toHaveBeenCalledTimes(1);
       });
 
       it("shouldn't bother click event on outside of camera element", async () => {
