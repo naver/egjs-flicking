@@ -2,7 +2,7 @@
  * Copyright (c) 2015 NAVER Corp.
  * egjs projects are licensed under the MIT license
  */
-import Axes, { AxesEvents, OnRelease, PanInput } from "@egjs/axes";
+import Axes, { AxesEvents, OnChange, OnHold, OnRelease, PanInput } from "@egjs/axes";
 import * as AXES from "../constants/internal";
 import { ORDER } from "../constants/values";
 import * as ERROR from "../error/codes";
@@ -13,6 +13,18 @@ import { getFlickingAttached, parseBounce } from "../utils";
 
 import StateMachine from "./StateMachine";
 import State from "./states/State";
+
+/**
+ * Whether the native event that started a gesture comes from a touch (TouchEvent, or PointerEvent with `pointerType: "touch"`)
+ * @internal
+ */
+const isTouchInput = (srcEvent: Event | undefined | null): boolean => {
+  if (!srcEvent) return false;
+
+  const pointerType = (srcEvent as PointerEvent).pointerType;
+
+  return pointerType ? pointerType === "touch" : srcEvent.type.indexOf("touch") === 0;
+};
 
 /**
  * A controller that handles the {@link https://naver.github.io/egjs-axes/ | @egjs/axes} events
@@ -26,6 +38,7 @@ class AxesController {
 
   private _animatingContext: { start: number; end: number; offset: number };
   private _dragged: boolean;
+  private _touchHolding: boolean;
 
   /**
    * An {@link https://naver.github.io/egjs-axes/docs/api/Axes | Axes} instance
@@ -415,6 +428,7 @@ class AxesController {
     this._panInput = null;
     this._animatingContext = { start: 0, end: 0, offset: 0 };
     this._dragged = false;
+    this._touchHolding = false;
   }
 
   /**
@@ -422,8 +436,9 @@ class AxesController {
    * @privateRemarks
    * Handles the Axes hold event to reset the dragged state.
    */
-  private _onAxesHold = () => {
+  private _onAxesHold = (e: OnHold) => {
     this._dragged = false;
+    this._touchHolding = isTouchInput(e.inputEvent?.srcEvent);
   };
 
   /**
@@ -432,7 +447,7 @@ class AxesController {
    * Handles the Axes change event to update the dragged state.
    */
   private _onAxesChange = (e: OnChange) => {
-    if (!e.holding) return;
+    if (!e.holding || this._touchHolding) return;
 
     this._dragged = !!this._panInput?.isEnabled();
   };
