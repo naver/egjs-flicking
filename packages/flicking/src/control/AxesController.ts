@@ -431,7 +431,9 @@ class AxesController {
    * @privateRemarks
    * Handles the Axes change event to update the dragged state.
    */
-  private _onAxesChange = () => {
+  private _onAxesChange = (e: OnChange) => {
+    if (!e.holding) return;
+
     this._dragged = !!this._panInput?.isEnabled();
   };
 
