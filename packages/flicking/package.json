@@ -6,6 +6,11 @@
   "module": "dist/flicking.esm.js",
   "es2015": "dist/flicking.esm.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "sass",
+    "src"
+  ],
   "dependencies": {
     "@cfcs/core": "^0.1.0",
     "@egjs/axes": "^3.9.3",

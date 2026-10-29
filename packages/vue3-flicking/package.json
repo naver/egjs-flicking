@@ -5,6 +5,11 @@
   "main": "dist/flicking.cjs.js",
   "module": "dist/flicking.esm.js",
   "types": "declaration/index.d.ts",
+  "files": [
+    "dist",
+    "declaration",
+    "src"
+  ],
   "sideEffects": [
     "**/*.css",
     "**/*.sass"
