@@ -52,7 +52,7 @@ echo $?  # → 0 (통과)
 | `/release` | 패키지 (선택, 단독 릴리즈 시) | inline | [PUBLISH_GUIDE.md](PUBLISH_GUIDE.md) |
 | `/release-check` | (없음) | fork | [PUBLISH_GUIDE.md](PUBLISH_GUIDE.md) |
 
-`/release`는 정식 배포 파이프라인 전체를 실행한다. 상태 판별(`pnpm -s release:status --json --fetch`)로 재개 지점을 찾으므로 중단된 릴리즈에 다시 실행해도 안전하다. 사용자 승인은 npm publish 직전 1회만 받는다. 열린 PR이 있으면 시작할 때 목록을 보여주고 취합할 PR을 한 번 묻는다. bump는 인자로 받지 않고, 커밋 분류와 패키지별 변경 수를 보여준 뒤 한 번 확인받는다. → [배포 진행 원칙](PUBLISH_GUIDE.md#배포-진행-원칙)
+`/release`는 정식 배포 파이프라인 전체를 실행한다. 상태 판별(`pnpm -s release:status --json --fetch`)로 재개 지점을 찾으므로 중단된 릴리즈에 다시 실행해도 안전하다. 사용자 승인은 npm publish 직전 1회만 받고, 그 전에 `release:pack-check`로 게시될 파일을 npm latest와 비교해 함께 보여준다. 취합한 PR 없이 릴리즈 커밋만 올리는 경우 `can-skip-ci` 판정으로 PR CI 대기를 생략한다. gh 미설치·미인증은 0단계에서 구분해 막는다. 열린 PR이 있으면 시작할 때 목록을 보여주고 취합할 PR을 한 번 묻는다. bump는 인자로 받지 않고, 커밋 분류와 패키지별 변경 수를 보여준 뒤 한 번 확인받는다. → [배포 진행 원칙](PUBLISH_GUIDE.md#배포-진행-원칙)
 
 ## Subagents 인벤토리
 

@@ -18,10 +18,11 @@ agent: general-purpose
 4. **E2E 테스트**: `pnpm test:e2e` — 전체 통과 여부
 5. **Lint**: `pnpm lint` — 오류 없는지
 6. **빌드**: `pnpm publish:build` — 배포 대상 패키지 전체 빌드 성공
-7. **문서 빌드**: `pnpm docs:build` — API 문서 + Docusaurus 빌드 성공
-8. **TSDoc 검증**: `pnpm api-docs:generate` 실행 후 에러/경고 확인. 새로 추가된 공개 API에 `@since` 태그가 있는지, 태그 순서가 가이드에 맞는지 검증 (dev-guide/TSDOC_FORMAT_GUIDE.md 기준)
-9. **설정 스크립트 테스트**: `pnpm test:config` — sync-version / release 스크립트 단위 테스트
-10. **릴리즈 상태**: `pnpm -s release:status --json --fetch` — 버전·태그·게시 상태, `clean`·`pushed`·`baseBehind`, `stage`가 예상과 맞는지 확인
+7. **게시 파일**: `pnpm release:pack-check` — 게시 금지 파일·workspace 의존 치환 오류가 없는지, npm latest 대비 추가·제거 파일과 크기 변화 (6번 빌드 뒤에 실행)
+8. **문서 빌드**: `pnpm docs:build` — API 문서 + Docusaurus 빌드 성공
+9. **TSDoc 검증**: `pnpm api-docs:generate` 실행 후 에러/경고 확인. 새로 추가된 공개 API에 `@since` 태그가 있는지, 태그 순서가 가이드에 맞는지 검증 (dev-guide/TSDOC_FORMAT_GUIDE.md 기준)
+10. **설정 스크립트 테스트**: `pnpm test:config` — sync-version / release 스크립트 단위 테스트
+11. **릴리즈 상태**: `pnpm -s release:status --json --fetch` — 버전·태그·게시 상태, `clean`·`pushed`·`baseBehind`, `stage`가 예상과 맞는지 확인
 
 ## 보고 형식
 

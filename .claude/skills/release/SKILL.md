@@ -29,7 +29,10 @@ pnpm -s release:status --json --fetch
 **게이트 (하나라도 걸리면 멈추고 사용자에게 알린다)**
 
 - `nextStep`이 `npm-login` → 별도 터미널에서 `npm login`을 요청하고 `npm whoami`가 통과한 뒤에만 재개한다.
-- `ghAuth`가 false → `gh auth login`을 요청한다. PR·CI 확인·릴리즈 생성에 모두 필요하다.
+- `nextStep`이 `gh-install` → gh CLI가 없다. 설치(`brew install gh`)와 `gh auth login`을 함께 요청한다.
+- `nextStep`이 `gh-login` → `gh auth login`을 요청한다.
+  - gh는 PR·CI 확인·릴리즈 생성·권한 판별(`canPushCanonical`)에 모두 필요하다.
+  - gh·npm 게이트에 걸리면 PUBLISH_GUIDE.md "사전 준비 (최초 1회)" 섹션을 안내한다. 처음 배포하는 사람이 준비 항목을 한 번에 확인할 수 있다.
 - `canonicalRemote`가 null → 정본을 가리키는 remote가 없다. `git remote add upstream https://github.com/naver/egjs-flicking.git`를 안내한다.
 - `clean`이 false → `dirtyFiles`를 보여주고 커밋·스태시를 요청한다. 릴리즈와 무관한 변경이 섞인 채로 진행하지 않는다.
 - 새 릴리즈를 시작하는데(`stage`가 `bump`·`released`이고 현재 브랜치가 `release/*`가 아님) `pushed`가 false → 현재 브랜치에 미푸시 커밋이 있다. 이번 릴리즈 대상인지 묻는다.
@@ -134,8 +137,11 @@ pnpm release:prepare                       # pnpm install → CHANGELOG → 릴�
 ```bash
 pnpm lint
 pnpm publish:build
-pnpm --filter {래퍼} pack --pack-destination /tmp    # 래퍼 tarball의 @egjs/flicking 의존이 ~{코어버전}인지 확인
+pnpm -s release:pack-check    # 게시될 tarball vs npm latest 게시본 (파일·크기·workspace 의존 치환)
 ```
+
+- `release:pack-check`가 실패하면(게시 금지 파일·의존 치환 오류) 멈추고 사용자에게 알린다. 원인 제거는 릴리즈 브랜치에서 한다.
+- 추가·제거 파일이 있으면 의도한 변경인지 커밋으로 설명할 수 있는지 본다. 설명할 수 없으면 사용자에게 묻는다.
 
 전체 스위트를 로컬에서 돌려야 하면 `/release-check`를 쓴다.
 
@@ -149,11 +155,17 @@ git push -u {status.pushRemote} release/{scope}-{version}
 PR=$(gh pr create --repo naver/egjs-flicking --base master --head {status.prHead} \
   --title "chore(release): Release {version}" --body "{변경 요약 + Closes #A #B}")
 
-gh pr checks "$PR" --watch
+node config/release.js can-skip-ci --json   # CI 대기를 생략해도 되는지 판정
+gh pr checks "$PR" --watch                  # skippable이 false일 때만
 gh pr merge "$PR" --merge     # squash 금지 — 릴리즈 커밋 SHA를 보존해야 태그가 정확해진다
 git checkout master && git pull $(node config/release.js remote) master
 ```
 
+- `can-skip-ci`의 `skippable`이 true면 `--watch` 없이 머지한다.
+  - true인 조건: 릴리즈 브랜치가 정본 master 최신 위의 릴리즈 커밋 1개뿐이다. 그 커밋은 공개 패키지 version과 CHANGELOG만 바꿨다. 그 master 커밋의 CI가 모두 통과했다.
+  - 이때 PR CI는 master에서 이미 통과한 코드를 다시 돌릴 뿐이다.
+  - 사용자에게는 `reasons`가 비었고 기준 커밋 CI가 통과했다는 사실만 한 줄로 알린다. 별도 확인은 받지 않는다.
+- false면 `reasons`를 보여주고 `--watch`로 기다린다. PR을 취합했으면 합친 코드를 처음 검증하는 곳이 이 CI라서 항상 false다.
 - `--body`는 필수다. 없으면 비대화형에서 실패한다.
 - 1단계에서 고른 PR을 본문에 `Closes #A #B`로 넣는다. 취합 PR을 수동으로 close하지 않는다.
 - CI 실패 시 릴리즈 브랜치에서 고치고 다시 PR CI를 통과시킨다. master 머지 전에는 아무것도 게시되지 않았으므로 안전하다.
@@ -163,11 +175,20 @@ git checkout master && git pull $(node config/release.js remote) master
 
 publish 전에 `pnpm -s release:status --json --fetch`를 다시 실행해 **`stage`가 `publish`이고 `pushed`가 true**인지 확인한다. `pushed`가 false면 릴리즈 커밋이 GitHub에 없는 상태이므로(로컬 머지 등) 게시하지 않고 5단계로 돌아간다.
 
+이어서 master 체크아웃에서 게시될 tarball을 다시 점검한다. 재개한 세션이면 4단계 점검을 거치지 않았을 수 있고, 게시본은 이 작업 디렉토리의 상태로 만들어진다.
+
+```bash
+pnpm publish:build && pnpm -s release:pack-check
+```
+
+실패하면 게시하지 않고 멈춘다. `--no-git-checks`처럼 검사를 우회하지 않는다.
+
 그 뒤 사용자에게 한 번 확인받는다. 확인 항목만 제시하고 질문은 1회로 끝낸다:
 
 - 게시 대상 패키지와 버전
 - npm 계정 (`npm whoami`)
 - dist-tag가 `latest`라는 점 (베타 아님)
+- `release:pack-check` 결과: 패키지별 파일 수·크기 변화, 추가·제거 파일 (출력 그대로 보여준다)
 
 확인 후 어시스턴트가 직접 실행한다:
 

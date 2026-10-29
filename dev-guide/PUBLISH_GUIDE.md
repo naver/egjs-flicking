@@ -68,17 +68,50 @@ PR 취합 → 버전 범프 → release:prepare → PR·CI → master 머지 →
    - 로그인이 안 되어 있으면(**401**) **다른 배포 작업을 일절 진행하지 않고**, 사용자에게 `npm login`(별도 터미널)을 요청한다. 인증은 `~/.npmrc`에 저장되어 현재 세션에도 반영된다.
    - `npm whoami`로 로그인이 확인된 뒤에만 다음 단계로 넘어간다.
 2. **사전 단계는 어시스턴트가 전부 완료한다.**
-   - 고른 PR 취합 → 버전 범프 → `release:prepare` → 빌드·`pnpm pack` 검증(래퍼가 올바른 코어 버전을 의존하는지) → PR 생성·CI 확인·master 머지까지 진행한다.
+   - 고른 PR 취합 → 버전 범프 → `release:prepare` → 빌드·`release:pack-check`(게시 파일·크기·workspace 의존 치환) → PR 생성·CI 확인·master 머지까지 진행한다.
 3. **publish는 사용자 확인 1회 후 어시스턴트가 실행한다.**
-   - 게시 대상 패키지·버전·npm 계정·dist-tag를 제시하고 승인을 받는다. 승인 없이 실행하지 않는다.
+   - 게시 대상 패키지·버전·npm 계정·dist-tag, `release:pack-check` 결과를 제시하고 승인을 받는다. 승인 없이 실행하지 않는다.
    - **OTP(`--otp`)는 다루지 않는다.** 2FA는 로그인 단계에서 처리되며 `publish` 시 OTP 입력을 요구하지 않는다.
 4. **태그·릴리즈·문서 배포는 승인 없이 이어서 진행한다.** 되돌릴 수 있는 단계다.
 
 > 전체 파이프라인은 `/release` 스킬이 수행한다. 상태 판별·재개 규칙 포함 → `.claude/skills/release/SKILL.md`, [HARNESS_GUIDE.md](HARNESS_GUIDE.md)
 
+### 게시 파일 점검
+
+publish 전에 `pnpm release:pack-check`로 **실제로 게시될 tarball**을 npm `latest` 게시본과 비교한다.
+
+- 파일 수·크기 변화와 추가·제거 파일 목록을 출력한다. 크기가 10% 이상 바뀌면 경고한다.
+  - 패키지별 최근 정식 게시본 6개의 연속 버전 간 최대 변화는 +7.0%(plugins 4.6.0 → 4.7.0)다.
+- 아래가 나오면 실패한다. publish하지 않고 원인을 없앤다.
+  - 게시 금지 파일: `node_modules/` · `.env*` · lockfile · `.DS_Store` · `*.tgz` · 최상위 `dev/`·`coverage/`
+  - `workspace:` 의존이 로컬 버전으로 치환되지 않은 경우 (예: 래퍼의 `@egjs/flicking`이 `~{코어 버전}`이 아님)
+- 게시본은 publish하는 **작업 디렉토리 상태**로 만들어진다. git 상태와는 별개다.
+  - `.gitignore`에 걸린 옛 빌드 산출물은 pnpm의 git clean 검사도, `release:status`의 `clean`도 잡지 못한다.
+  - 실제 사례: react-flicking 4.17.0·4.17.1에 현재 빌드가 만들지 않는 `declaration/` 13개가 게시됐다 (게시자 로컬의 옛 산출물). `.env`는 git 추적 파일이라 매 버전 게시되고 있었다.
+- `pnpm pack --dry-run`이 아니라 실제로 pack한다.
+  - dry-run 목록에는 pnpm이 루트에서 복사하는 LICENSE가 빠진다 (flicking·vue3-flicking).
+  - `workspace:` 치환 결과는 tarball 안의 `package.json`에서만 확인할 수 있다.
+- 빌드 산출물을 보므로 `pnpm publish:build` 뒤에 실행한다.
+
+### CI 대기 생략 (취합 0건)
+
+릴리즈 PR의 CI는 기다리는 것이 원칙이다. 다만 아래 조건을 모두 만족하면 `/release`는 `gh pr checks --watch` 없이 머지한다. 판정은 `node config/release.js can-skip-ci`가 한다.
+
+- 릴리즈 브랜치가 정본 master 최신 위의 릴리즈 커밋 1개뿐이다 (취합한 PR 없음, 베이스 최신).
+- 릴리즈 커밋은 공개 패키지 `package.json`의 `version`과 `CHANGELOG.md`만 바꿨다. `pnpm-lock.yaml`이 바뀌면 생략하지 않는다.
+- 그 master 커밋의 CI(check runs)가 모두 통과했다.
+
+이 조건이면 PR CI가 돌리는 코드는 master에서 이미 통과한 코드와 같다.
+
+- 4.17.1 사례: #960이 master에 먼저 머지된 뒤 릴리즈 브랜치에는 릴리즈 커밋만 있었다. PR CI 약 6분(e2e 363초)이 같은 코드를 한 번 더 검증했다.
+- PR을 취합했으면 합친 코드를 처음 검증하는 곳이 릴리즈 PR CI다. 그래서 이 경우는 생략하지 않는다.
+- 브랜치·PR·merge commit은 생략하지 않는다. 태그가 가리킬 릴리즈 커밋 SHA와 재개 판정(`stage`)이 이 구조에 의존한다.
+
 ## 빠른 시작
 
 ### 사전 준비 (최초 1회)
+
+`/release`는 0단계에서 아래 세 가지를 검사하고, 빠진 것이 있으면 이 섹션을 안내하며 멈춘다 (`release:status`의 `nextStep`이 `npm-login` · `gh-install` · `gh-login`).
 
 1. **npm 로그인** — `@egjs` scope에 publish 권한이 있는 계정으로 로그인
    ```bash
@@ -88,6 +121,7 @@ PR 취합 → 버전 범프 → release:prepare → PR·CI → master 머지 →
    ```bash
    brew install gh
    gh auth login
+   gh auth status     # "Logged in to github.com"이 나오면 완료
    ```
 3. **정본 remote 확인** — 아래가 remote 이름을 출력하지 못하면 정본을 가리키는 remote를 추가한다.
    ```bash
@@ -110,18 +144,19 @@ flowchart TD
 
     subgraph BR["① 릴리즈 브랜치 · 되돌릴 수 있음"]
         direction TB
-        S2["2 · 정본 master 최신에서 분기<br/>고른 PR을 --no-ff로 취합"] --> S3["3 · 버전 결정 · 1회 확인<br/>취합된 HEAD의 커밋 기준"] --> S4["4 · 이름 확정 · 버전 범프<br/>release:prepare"] --> S4V["검증<br/>lint · build · pack"]
+        S2["2 · 정본 master 최신에서 분기<br/>고른 PR을 --no-ff로 취합"] --> S3["3 · 버전 결정 · 1회 확인<br/>취합된 HEAD의 커밋 기준"] --> S4["4 · 이름 확정 · 버전 범프<br/>release:prepare"] --> S4V["검증<br/>lint · build · pack-check"]
     end
 
     S2 -.->|충돌| STOP
+    S4V -.->|게시 금지 파일| STOP
     S4V --> S5
 
     subgraph GH["② GitHub · 되돌릴 수 있음"]
         direction TB
-        S5["5 · push → PR → CI<br/>본문에 Closes #A #B"] --> S5M["merge commit으로 master 반영<br/>squash 금지"]
+        S5["5 · push → PR → CI<br/>본문에 Closes #A #B<br/>취합 0건이면 대기 생략 가능"] --> S5M["merge commit으로 master 반영<br/>squash 금지"]
     end
 
-    S5M --> G2{"승인 게이트 · 1회"}
+    S5M --> S6P["pack-check 재실행<br/>master 체크아웃 기준"] --> G2{"승인 게이트 · 1회"}
     G2 -->|거부| STOP
     G2 -->|승인| S6
 
@@ -145,19 +180,19 @@ flowchart TD
 | 1 | `gh pr list --base master` | 이번 릴리즈에 넣을 PR 선택 (열린 PR이 없으면 생략) |
 | 2 | `git checkout -b` → `git merge --no-ff` | 정본 master 최신에서 `release/{scope}-next` 분기, 고른 PR 취합 |
 | 3 | `git log {tag}..HEAD` | 취합된 커밋으로 bump 제안 후 사용자 확인 (기준은 범프 전 현재 버전의 태그) |
-| 4 | `publish:version {bump}` → `release:prepare` | 브랜치 이름 확정, 버전 범프 (단독 배포는 해당 `package.json`만), CHANGELOG + 릴리즈 커밋 |
-| 5 | `gh pr create` → `gh pr merge --merge` | CI 통과 후 master 반영 |
-| 6 | `publish:stable` | 승인 1회 후 npm 게시 |
+| 4 | `publish:version {bump}` → `release:prepare` → `release:pack-check` | 브랜치 이름 확정, 버전 범프 (단독 배포는 해당 `package.json`만), CHANGELOG + 릴리즈 커밋, 게시 파일 점검 |
+| 5 | `gh pr create` → `can-skip-ci` → `gh pr merge --merge` | CI 통과 후 master 반영 (취합 0건이면 대기 생략 가능) |
+| 6 | `release:pack-check` → `publish:stable` | 게시 파일 재점검, 승인 1회 후 npm 게시 |
 | 7 | `release:notes` → `release:finalize` | Highlights 작성 후 게시 검증 → 태그 → GitHub Release |
 | 8 | `docs:deploy:auto` | 문서 사이트 배포 |
 
 - **③만 되돌릴 수 없다.** 그래서 사용자 승인 게이트도 ③ 바로 앞에 하나만 둔다.
 - 게이트는 둘이다 — 0단계 관측값으로 판단하는 프리플라이트, publish 직전 승인.
-- 그 밖에 멈추는 곳은 넷이다 — 1단계 취합 PR 선택, 2단계 취합 충돌, 3단계 버전·플러그인 동반 배포 확인, 7단계 릴리즈 노트 초안 확인.
+- 그 밖에 멈추는 곳은 다섯이다 — 1단계 취합 PR 선택, 2단계 취합 충돌, 3단계 버전·플러그인 동반 배포 확인, 4·6단계 `pack-check` 실패, 7단계 릴리즈 노트 초안 확인.
   - 충돌 해소는 코드 판단이라 스킬이 임의로 풀지 않는다.
   - bump는 인자로 받지 않는다. 3단계에서 커밋 분류와 패키지별 변경 수를 보고 정한다.
   - 코어 릴리즈인데 코어 변경이 0건이면 3단계에서 멈추고 단독 릴리즈(`/release {pkg}`)를 권한다.
-- 프리플라이트에서 막는 것: npm 미로그인 · gh 미인증 · 더티 트리 · 미푸시 커밋(새 릴리즈 시작 시) · 정본 remote 없음 · 정본 write 권한 없음.
+- 프리플라이트에서 막는 것: npm 미로그인 · gh 미설치·미인증 · 더티 트리 · 미푸시 커밋(새 릴리즈 시작 시) · 정본 remote 없음 · 정본 write 권한 없음.
 - ④는 게시 이후지만 태그·릴리즈·문서는 다시 만들 수 있어, 실패하면 같은 명령을 재실행하면 된다.
 
 시나리오별 명령어 → [배포 워크플로우](#배포-워크플로우)
@@ -379,6 +414,8 @@ pnpm publish:beta:react
 | `pnpm release:status` | 어디서나 | 버전·태그·게시·릴리즈 상태와 재개 지점(`stage`)을 출력. `--json`으로 기계 판독 |
 | `pnpm release:prepare` | 릴리즈 브랜치 | `pnpm install` + changelog + 릴리즈 커밋 (태그·push 없음) |
 | `pnpm release:notes` | 어디서나 | 릴리즈 노트 초안 뼈대 생성 (`--out FILE`), CHANGELOG 섹션을 근거로 출력 |
+| `pnpm release:pack-check` | 빌드 후 | 게시될 tarball을 npm latest와 비교, 게시 금지 파일·`workspace:` 치환 오류면 실패 → [게시 파일 점검](#게시-파일-점검) |
+| `node config/release.js can-skip-ci` | 릴리즈 브랜치 | 릴리즈 PR의 CI 대기를 생략해도 되는지 판정 (`--json`) → [CI 대기 생략](#ci-대기-생략-취합-0건) |
 | `pnpm release:finalize` | master (publish 후) | npm 게시 검증 → 태그 → push → GitHub Release |
 | `node config/release.js remote` | 어디서나 | 정본(naver/egjs-flicking)을 가리키는 remote 이름 출력 |
 | `pnpm test:config` | 어디서나 | `sync-version.js` / `release.js` 단위 테스트 |
@@ -404,10 +441,12 @@ pnpm publish:beta:react
 | `clean` / `dirtyFiles` | 릴리즈와 무관한 미커밋 변경 |
 | `pushed` / `unpushedCommits` / `upstream` | 현재 브랜치가 원격에 올라가 있는지 |
 | `baseBehind` / `baseRef` | HEAD가 모르는 정본 master 커밋 수 (>0이면 브랜치 베이스가 낡음, `null`이면 fetch 전이라 판단 불가) |
+| `npmUser` | `npm whoami` 결과 (`null`이면 미로그인) |
+| `ghInstalled` / `ghAuth` | gh CLI 설치 여부, github.com 인증 여부 |
 | `canonicalRemote` / `canonicalPermission` | 정본을 가리키는 remote와 그 저장소에 대한 내 권한 |
 | `canPushCanonical` | 정본에 write 권한이 있는지 (false면 머지·배포 권한 없음) |
 | `isFork` / `pushRemote` / `prHead` | fork 클론인지, 브랜치를 push할 remote, PR head 표기(`{owner}:{branch}`) |
-| `stage` / `nextStep` | 재개 지점, 실제로 다음에 실행할 것 |
+| `stage` / `nextStep` | 재개 지점, 실제로 다음에 실행할 것 (`nextStep`은 `npm-login` → `gh-install` → `gh-login` 게이트를 먼저 본다) |
 
 > **fork 클론에서는** 브랜치를 `pushRemote`(fork)로 push하고 `gh pr create --repo naver/egjs-flicking --head {owner}:{branch}`로 PR을 만든다. `canPushCanonical`이 false면 머지·publish 권한이 없으므로 PR 생성까지만 진행하고 이후는 권한자가 이어받는다.
 
@@ -484,17 +523,19 @@ pnpm release:prepare                             # 내부에서 pnpm install 실
 
 #    배포 산출물 검증 (테스트는 PR CI가 담당)
 pnpm lint && pnpm publish:build
-pnpm --filter @egjs/react-flicking pack --pack-destination /tmp   # 코어 의존이 ~4.18.0인지 확인
+pnpm release:pack-check      # npm latest 대비 파일·크기, 래퍼의 코어 의존이 ~4.18.0인지
 
 # 5. PR → CI → master 머지 (squash 금지)
 git push -u $REMOTE release/core-4.18.0        # push 없이 gh pr create를 실행하면 비대화형에서 실패한다
 PR=$(gh pr create --repo naver/egjs-flicking --base master --head release/core-4.18.0 \
   --title "chore(release): Release 4.18.0" --body "취합한 PR: Closes #A #B")
-gh pr checks "$PR" --watch
+node config/release.js can-skip-ci   # 취합 0건 + 버전·CHANGELOG만 + master CI 통과면 대기 생략
+gh pr checks "$PR" --watch            # 생략 불가일 때만
 gh pr merge "$PR" --merge
 git checkout master && git pull $REMOTE master
 
-# 6. npm 게시 (사용자 확인 1회 후)
+# 6. 게시 파일 재점검 → npm 게시 (사용자 확인 1회 후)
+pnpm publish:build && pnpm release:pack-check
 pnpm publish:stable
 
 # 7. 태그 + push + GitHub Release

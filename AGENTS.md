@@ -81,6 +81,7 @@ pnpm publish:beta:{pkg}       # 개별 빌드 + 베타 퍼블리시
 pnpm release:status   # 진행 상태·재개 지점 확인 (--json)
 pnpm release:prepare  # 릴리즈 브랜치: pnpm install + changelog + 릴리즈 커밋
 pnpm release:notes    # 릴리즈 노트 초안 뼈대 생성 (--out FILE), CHANGELOG 섹션을 작성 근거로 출력
+pnpm release:pack-check # 빌드 후: 게시될 tarball을 npm latest와 비교, 게시 금지 파일·workspace 치환 오류면 실패
 pnpm release:finalize # master(publish 후): 게시 검증 + 태그 + push + GitHub Release
 
 # 문서 배포 (Deploy: 문서 사이트)

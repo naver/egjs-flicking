@@ -10,14 +10,18 @@
  *   3. finalize   master — 레지스트리 검증 → 태그 → push → GitHub Release
  *
  * 보조 커맨드:
- *   status   프리플라이트 + 재개 지점 판별 (--json)
- *   remote   정본(naver/egjs-flicking)을 가리키는 remote 이름 출력
+ *   status       프리플라이트 + 재개 지점 판별 (--json)
+ *   pack-check   게시될 tarball을 npm latest 게시본과 비교 (게시 금지 파일·workspace 의존 치환 검사)
+ *   can-skip-ci  릴리즈 PR의 CI 대기를 생략해도 되는지 판정 (--json)
+ *   remote       정본(naver/egjs-flicking)을 가리키는 remote 이름 출력
  *
  * Usage:
  *   node config/release.js status [--json] [--fetch] [--package react]
  *   node config/release.js prepare [--package react] [--dry-run] [--skip-install] [--allow-master]
  *   node config/release.js finalize [--package react] [--dry-run] [--notes-file FILE] [--remote NAME] [--branch NAME]
  *   node config/release.js notes [--package react] [--out FILE]
+ *   node config/release.js pack-check [--package react] [--json]
+ *   node config/release.js can-skip-ci [--package react] [--json] [--remote NAME] [--branch NAME]
  *   node config/release.js remote
  */
 const { execSync } = require("child_process");
@@ -273,11 +277,121 @@ function decideStage(state) {
 
 /**
  * 실제로 다음에 실행할 것. npm 로그인은 어떤 배포 작업보다 앞서는 게이트다.
- * → dev-guide/PUBLISH_GUIDE.md "배포 진행 원칙"
+ * gh는 PR·CI 확인·GitHub Release와 권한 판별(canPushCanonical)에 모두 쓰므로 그다음 게이트다.
+ * 미설치와 미인증을 나눠야 "gh auth login → command not found"로 막히지 않는다.
+ * → dev-guide/PUBLISH_GUIDE.md "배포 진행 원칙", "사전 준비"
  */
 function decideNextStep(state) {
   if (!state.npmUser) return "npm-login";
+  if (!state.ghInstalled) return "gh-install";
+  if (!state.ghAuth) return "gh-login";
   return decideStage(state);
+}
+
+/** package.json 두 원문이 version 필드만 다른지. */
+function isVersionOnlyChange(before, after) {
+  try {
+    const { version: _a, ...restBefore } = JSON.parse(before);
+    const { version: _b, ...restAfter } = JSON.parse(after);
+    return JSON.stringify(restBefore) === JSON.stringify(restAfter);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * 릴리즈 커밋 diff가 "공개 패키지 version + CHANGELOG"뿐인지 판정한다.
+ * changes: [{ file, before, after }] (원문). 막는 이유 목록을 돌려주고, 빈 배열이면 통과다.
+ * pnpm-lock.yaml 변경은 의존 해석이 바뀐 것일 수 있으므로 통과시키지 않는다.
+ */
+function releaseDiffBlockers(changes) {
+  const reasons = [];
+
+  for (const { file, before, after } of changes) {
+    if (file === "CHANGELOG.md") continue;
+    if (PUBLIC_PKGS.includes(file) && isVersionOnlyChange(before, after)) continue;
+    reasons.push(PUBLIC_PKGS.includes(file)
+      ? `${file}: version 외 필드가 바뀌었다`
+      : `${file}: 버전·CHANGELOG 외 파일이 바뀌었다`);
+  }
+
+  return reasons;
+}
+
+/** GitHub check-runs를 미완료·실패 이름 목록으로 요약한다. skipped·neutral은 통과로 본다. */
+function summarizeCheckRuns(runs = []) {
+  const passed = ["success", "skipped", "neutral"];
+  return {
+    total: runs.length,
+    pending: runs.filter(r => r.status !== "completed").map(r => r.name),
+    failed: runs.filter(r => r.status === "completed" && !passed.includes(r.conclusion)).map(r => r.name),
+  };
+}
+
+// 어떤 경우에도 게시하지 않는 파일. pack-check에서 하나라도 나오면 실패한다.
+const FORBIDDEN_PACK_FILES = [
+  { label: "node_modules", pattern: /(^|\/)node_modules\// },
+  { label: ".env", pattern: /(^|\/)\.env(\.[^/]*)?$/ },
+  { label: "lockfile", pattern: /(^|\/)(package-lock\.json|yarn\.lock|pnpm-lock\.yaml)$/ },
+  { label: ".DS_Store", pattern: /(^|\/)\.DS_Store$/ },
+  { label: "tarball", pattern: /\.tgz$/ },
+  { label: "dev/coverage", pattern: /^(dev|coverage)\// },
+];
+
+function findForbiddenFiles(paths) {
+  return paths.flatMap(p => {
+    const hit = FORBIDDEN_PACK_FILES.find(f => f.pattern.test(p));
+    return hit ? [{ path: p, label: hit.label }] : [];
+  });
+}
+
+function diffPackFiles(basePaths, nextPaths) {
+  const base = new Set(basePaths);
+  const next = new Set(nextPaths);
+  return {
+    added: nextPaths.filter(p => !base.has(p)).sort(),
+    removed: basePaths.filter(p => !next.has(p)).sort(),
+  };
+}
+
+/** 경로가 limit개를 넘으면 최상위 디렉토리별 개수로 묶는다 (`declaration/ (13)`). */
+function summarizePaths(paths, limit = 10) {
+  if (paths.length <= limit) return paths;
+
+  const groups = new Map();
+  for (const p of paths) {
+    const key = p.includes("/") ? `${p.split("/")[0]}/` : p;
+    groups.set(key, (groups.get(key) || 0) + 1);
+  }
+  return [...groups].map(([key, n]) => (n > 1 ? `${key} (${n})` : key));
+}
+
+/**
+ * `workspace:` 의존이 게시본에서 실제 버전으로 치환됐는지 확인한다.
+ * sourcePkg는 저장소의 package.json, packedPkg는 tarball 안의 package.json,
+ * versions는 { 패키지명: 로컬 버전 }. 어긋난 항목 목록을 돌려준다.
+ */
+function workspaceDepMismatches(sourcePkg, packedPkg, versions) {
+  const fields = ["dependencies", "peerDependencies", "optionalDependencies"];
+  const mismatches = [];
+
+  for (const field of fields) {
+    for (const [name, spec] of Object.entries(sourcePkg[field] || {})) {
+      if (!String(spec).startsWith("workspace:")) continue;
+
+      const rest = spec.slice("workspace:".length);
+      const version = versions[name];
+      const expected = rest === "*" ? version : rest === "~" || rest === "^" ? `${rest}${version}` : rest;
+      const actual = packedPkg[field]?.[name] ?? null;
+      if (actual !== expected) mismatches.push({ field, name, expected, actual });
+    }
+  }
+
+  return mismatches;
+}
+
+function formatBytes(n) {
+  return n >= 1024 * 1024 ? `${(n / 1024 / 1024).toFixed(2)}MB` : `${(n / 1024).toFixed(1)}KB`;
 }
 
 // ------------------------------------------------------------------ git/실행
@@ -491,6 +605,7 @@ function cmdStatus({ json, pkgArg, branchName, fetch: doFetch }) {
     prHead: pushRemote && pushRemote.isFork ? `${pushRemote.repo.split("/")[0]}:${branch}` : branch,
     prevTag,
     npmUser: tryOut("npm whoami"),
+    ghInstalled: tryOut("gh --version") !== null,
     ghAuth: tryOut("gh auth status --hostname github.com") !== null,
     changedPackages: pkgs,
     releaseCommit,
@@ -518,7 +633,7 @@ function cmdStatus({ json, pkgArg, branchName, fetch: doFetch }) {
   console.log(`  canonical remote  ${state.canonicalRemote || "(없음)"}  perm:${state.canonicalPermission || "unknown"}`);
   console.log(`  push remote       ${state.pushRemote || "(없음)"}${state.isFork ? "  (fork — PR head: " + state.prHead + ")" : ""}`);
   console.log(`  npm user          ${state.npmUser || "(로그인 안 됨)"}`);
-  console.log(`  gh auth           ${state.ghAuth ? "ok" : "(인증 안 됨)"}`);
+  console.log(`  gh auth           ${!state.ghInstalled ? "(gh 미설치)" : state.ghAuth ? "ok" : "(인증 안 됨)"}`);
   console.log(`  release commit    ${state.releaseCommit ? state.releaseCommit.sha.slice(0, 9) : "(없음)"}`);
   console.log(`  tag               ${state.tagExists ? "있음" : "없음"}`);
   console.log(`  GitHub Release    ${state.ghReleaseExists ? "있음" : "없음"}`);
@@ -728,6 +843,174 @@ function cmdFinalize({ dryRun, notesFile, remoteName, branchName, pkgArg }) {
   console.log(`✓ ${target.tag} 릴리즈 완료 — 마지막으로 문서 사이트를 배포한다: ${docsScript}\n`);
 }
 
+/**
+ * 게시될 tarball 하나를 만들어 npm latest 게시본과 비교한다.
+ * pnpm이 실제로 싸는 파일(루트 LICENSE 복사, workspace: 치환 포함)을 봐야 하므로 dry-run이 아니라 실제로 pack한다.
+ */
+function inspectPack(pkg, dir, versions) {
+  const packed = JSON.parse(execOut(`pnpm --filter ${pkg.name} pack --pack-destination "${dir}" --json`));
+  const local = JSON.parse(execOut(`npm pack "${packed.filename}" --dry-run --json`))[0];
+  const packedPkg = JSON.parse(execOut(`tar xzf "${packed.filename}" -O package/package.json`));
+  const localPaths = local.files.map(f => f.path);
+
+  const baseVersion = tryOut(`npm view ${pkg.name} dist-tags.latest`);
+  const baseRaw = baseVersion ? tryOut(`npm pack ${pkg.name}@${baseVersion} --dry-run --json`) : null;
+  const base = baseRaw ? JSON.parse(baseRaw)[0] : null;
+  const basePaths = base ? base.files.map(f => f.path) : [];
+
+  return {
+    name: pkg.name,
+    version: pkg.version,
+    files: local.entryCount,
+    unpackedSize: local.unpackedSize,
+    baseline: base ? { version: baseVersion, files: base.entryCount, unpackedSize: base.unpackedSize } : null,
+    // latest 버전은 알지만 tarball 정보를 못 받은 경우(네트워크 등). "게시본 없음"과 구분한다.
+    baselineError: Boolean(baseVersion && !base),
+    ...(base ? diffPackFiles(basePaths, localPaths) : { added: localPaths, removed: [] }),
+    forbidden: findForbiddenFiles(localPaths),
+    depMismatches: workspaceDepMismatches(readPkg(pkg.rel), packedPkg, versions),
+  };
+}
+
+// 직전 게시본 대비 크기 변화가 이 비율 이상이면 경고한다. 패키지별 최근 정식 게시본 6개의 최대 변화는 +7.0%(plugins 4.6.0 → 4.7.0).
+const PACK_SIZE_WARN_RATIO = 0.1;
+
+function cmdPackCheck({ json, pkgArg }) {
+  const target = resolveTarget(pkgArg);
+  const prevTag = pickPrevTag(tryOut("git tag --merged HEAD") || "", target.tagPrefix, target.version);
+  const pkgs = target.scope === "core"
+    ? changedPackages(prevTag)
+    : [{ rel: target.rel, name: target.name, version: target.version }];
+
+  if (!pkgs.length) fail("직전 태그 이후 버전이 바뀐 패키지가 없다.", "버전 범프 후 실행한다.");
+
+  const versions = Object.fromEntries(PUBLIC_PKGS.map(rel => readPkg(rel)).map(p => [p.name, p.version]));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "flicking-pack-"));
+  let results;
+  try {
+    results = pkgs.map(p => inspectPack(p, dir, versions));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+
+  const blocked = results.some(r => r.forbidden.length || r.depMismatches.length);
+
+  if (json) {
+    console.log(JSON.stringify({ ok: !blocked, packages: results }, null, 2));
+    if (blocked) process.exit(1);
+    return;
+  }
+
+  console.log("\n  Pack check — 게시될 tarball vs npm latest 게시본\n");
+  for (const r of results) {
+    const b = r.baseline;
+    const baseLabel = b ? `npm latest ${b.version}` : r.baselineError ? "npm latest 조회 실패 — 비교 없이 목록만" : "게시본 없음";
+    console.log(`  ${r.name}@${r.version}  (기준: ${baseLabel})`);
+
+    if (b) {
+      const ratio = (r.unpackedSize - b.unpackedSize) / b.unpackedSize;
+      const sign = n => (n > 0 ? `+${n}` : `${n}`);
+      console.log(`    파일        ${b.files} → ${r.files} (${sign(r.files - b.files)})`);
+      console.log(`    크기        ${formatBytes(b.unpackedSize)} → ${formatBytes(r.unpackedSize)} (${sign((ratio * 100).toFixed(1))}%)`
+        + (Math.abs(ratio) >= PACK_SIZE_WARN_RATIO ? `  ⚠ ${PACK_SIZE_WARN_RATIO * 100}% 이상 변함` : ""));
+    } else {
+      console.log(`    파일        ${r.files}`);
+      console.log(`    크기        ${formatBytes(r.unpackedSize)}`);
+    }
+
+    console.log(`    추가        ${r.added.length ? summarizePaths(r.added).join(", ") : "(없음)"}`);
+    console.log(`    제거        ${r.removed.length ? summarizePaths(r.removed).join(", ") : "(없음)"}`);
+    for (const f of r.forbidden) console.log(`    ✗ 게시 금지  ${f.path}  (${f.label})`);
+    for (const m of r.depMismatches) {
+      console.log(`    ✗ 의존 버전  ${m.field}.${m.name}: ${m.actual ?? "(없음)"} — 기대값 ${m.expected}`);
+    }
+    console.log("");
+  }
+
+  if (blocked) {
+    fail(
+      "게시하면 안 되는 파일이나 잘못 치환된 의존이 있다.",
+      "원인을 제거한 뒤 빌드와 pack-check를 다시 실행한다. publish하지 않는다."
+    );
+  }
+  console.log("  ✓ 게시 금지 파일 없음 · workspace 의존 치환 정상 — 추가·제거 파일이 의도한 것인지 확인한다.\n");
+}
+
+/**
+ * 릴리즈 PR의 CI 대기를 생략해도 되는지 판정한다.
+ * 릴리즈 브랜치가 "정본 master 최신 + 릴리즈 커밋 1개"이고 그 커밋이 version·CHANGELOG만 바꿨다면,
+ * PR CI가 돌리는 코드는 master와 같다. master의 그 커밋 CI가 이미 통과했으면 PR CI는 같은 코드를 다시 검증할 뿐이다.
+ */
+function cmdCanSkipCi({ json, pkgArg, remoteName, branchName }) {
+  const target = resolveTarget(pkgArg);
+  const remote = remoteName || canonicalRemote();
+  const reasons = [];
+  let baseSha = null;
+  let checks = null;
+
+  if (!remote) {
+    reasons.push(`정본(${CANONICAL_REPO})을 가리키는 remote가 없다`);
+  } else {
+    tryOut(`git fetch --quiet ${remote} ${branchName}`);
+    baseSha = tryOut(`git rev-parse --verify --quiet ${remote}/${branchName}`);
+    if (!baseSha) reasons.push(`${remote}/${branchName}를 찾을 수 없다`);
+  }
+
+  const head = tryOut("git rev-parse HEAD");
+  const commit = findReleaseCommit(target);
+
+  if (!commit) {
+    reasons.push(`${target.tag} 릴리즈 커밋이 없다`);
+  } else if (commit.sha !== head) {
+    reasons.push("릴리즈 커밋 뒤에 다른 커밋이 있다");
+  } else if (baseSha && tryOut(`git rev-parse ${head}^`) !== baseSha) {
+    reasons.push(`릴리즈 커밋의 부모가 ${remote}/${branchName} 최신이 아니다 — PR을 취합했거나 베이스가 낡았다`);
+  } else if (baseSha) {
+    const files = (tryOut(`git diff --name-only ${baseSha} ${head}`) || "").split("\n").filter(Boolean);
+    const changes = files.map(file => (PUBLIC_PKGS.includes(file)
+      ? { file, before: tryOut(`git show ${baseSha}:${file}`), after: tryOut(`git show ${head}:${file}`) }
+      : { file }));
+    reasons.push(...releaseDiffBlockers(changes));
+  }
+
+  if (baseSha) {
+    const raw = tryOut(`gh api "repos/${CANONICAL_REPO}/commits/${baseSha}/check-runs?per_page=100"`);
+    if (raw === null) {
+      reasons.push("기준 커밋의 CI 결과를 조회하지 못했다 (gh)");
+    } else {
+      checks = summarizeCheckRuns(JSON.parse(raw).check_runs);
+      if (!checks.total) reasons.push("기준 커밋에 CI 결과가 없다");
+      if (checks.pending.length) reasons.push(`기준 커밋 CI가 아직 끝나지 않았다 (${checks.pending.join(", ")})`);
+      if (checks.failed.length) reasons.push(`기준 커밋 CI가 실패했다 (${checks.failed.join(", ")})`);
+    }
+  }
+
+  const result = {
+    skippable: reasons.length === 0,
+    reasons,
+    base: { ref: remote ? `${remote}/${branchName}` : null, sha: baseSha, checks },
+    releaseCommit: commit ? commit.sha : null,
+  };
+
+  if (json) {
+    console.log(JSON.stringify(result, null, 2));
+    return;
+  }
+
+  console.log(`\n  CI 대기 생략 판정 — ${target.tag}\n`);
+  const checkLine = checks
+    ? `CI ${checks.total - checks.pending.length - checks.failed.length}/${checks.total} 통과`
+    : "CI 조회 불가";
+  console.log(`  base     ${result.base.ref || "(없음)"} ${baseSha ? baseSha.slice(0, 9) : ""} · ${checkLine}`);
+  if (result.skippable) {
+    console.log("  ✓ 생략 가능 — 릴리즈 커밋은 master 최신 위의 version·CHANGELOG 변경뿐이고, 같은 코드의 CI가 통과했다\n");
+  } else {
+    console.log("  ✗ PR CI를 기다린다");
+    for (const r of reasons) console.log(`    · ${r}`);
+    console.log("");
+  }
+}
+
 function usage() {
   console.log(`
   릴리즈는 두 단계로 실행한다 (머지 후 publish 순서 보장).
@@ -736,6 +1019,7 @@ function usage() {
     pnpm release:prepare               릴리즈 브랜치: changelog + 버전 커밋
     (PR → CI → master 머지 → pnpm publish:stable)
     pnpm release:notes --out FILE      릴리즈 노트 초안 뼈대 생성
+    pnpm release:pack-check            빌드 후: 게시될 tarball을 npm latest와 비교
     pnpm release:finalize              master: 태그 + push + GitHub Release
 
   옵션: --package {core|react|vue|plugins} --dry-run --skip-install --allow-master
@@ -781,6 +1065,12 @@ if (require.main === module) {
     case "notes":
       cmdNotes(options);
       break;
+    case "pack-check":
+      cmdPackCheck(options);
+      break;
+    case "can-skip-ci":
+      cmdCanSkipCi(options);
+      break;
     case "remote":
       cmdRemote();
       break;
@@ -804,4 +1094,11 @@ module.exports = {
   renderNotesSkeleton,
   decideStage,
   decideNextStep,
+  isVersionOnlyChange,
+  releaseDiffBlockers,
+  summarizeCheckRuns,
+  findForbiddenFiles,
+  diffPackFiles,
+  summarizePaths,
+  workspaceDepMismatches,
 };
