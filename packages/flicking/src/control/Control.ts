@@ -344,10 +344,11 @@ abstract class Control {
     axesEvent?: OnRelease;
   }) {
     const flicking = getFlickingAttached(this._flicking);
+    // 목표까지 남은 거리가 animationThreshold보다 짧으면 duration을 0으로 바꿔 즉시 이동
     // 거리(1px 미만)가 매우 짧은 경우 duration이 늘어지는걸 방지하기 위해 0으로 바꿔 즉시 변경
     let nextDuration = duration;
 
-    if (Math.abs(nextDuration - position) < flicking.animationThreshold) {
+    if (Math.abs(position - this._controller.position) < flicking.animationThreshold) {
       nextDuration = 0;
     }
     const animate = () => this._controller.animateTo(position, nextDuration, axesEvent);
