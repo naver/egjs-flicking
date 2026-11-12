@@ -1061,6 +1061,96 @@ describe("Flicking", () => {
         expect(clickSpy).toHaveBeenCalledTimes(1);
       });
 
+      describe("tapping while animating", () => {
+        const tap = (flicking: Flicking) => simulate(flicking.element, { deltaX: 0, deltaY: 0, duration: 100 }, 100);
+
+        it("should trigger click event when the remaining distance is under animationThreshold", async () => {
+          // Given
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+            preventClickOnDrag: true,
+            animationThreshold: 20
+          });
+          const clickSpy = vi.fn();
+          const testPanel = flicking.panels[1];
+          testPanel.element.addEventListener("click", clickSpy);
+
+          // When
+          void flicking.moveTo(1, 500);
+          // Default easing leaves 1000px * (1 - 0.8)^3 = 8px at 80% of the duration
+          tick(400);
+          expect(flicking.animating).toBe(true);
+          await tap(flicking);
+          testPanel.element.click();
+
+          // Then
+          expect(clickSpy).toHaveBeenCalledTimes(1);
+          expect(flicking.animating).toBe(false);
+          expect(flicking.index).toBe(1);
+          expect(flicking.camera.position).toBe(testPanel.position);
+        });
+
+        it("shouldn't trigger click event when the remaining distance is over animationThreshold", async () => {
+          // Given
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+            preventClickOnDrag: true,
+            animationThreshold: 20
+          });
+          const clickSpy = vi.fn();
+          const testPanel = flicking.panels[1];
+          testPanel.element.addEventListener("click", clickSpy);
+
+          // When
+          void flicking.moveTo(1, 500);
+          // 1000px * (1 - 0.4)^3 = 216px left
+          tick(200);
+          expect(flicking.animating).toBe(true);
+          await tap(flicking);
+          testPanel.element.click();
+
+          // Then
+          expect(clickSpy).not.toHaveBeenCalled();
+        });
+
+        it("shouldn't trigger click event with the default animationThreshold", async () => {
+          // Given
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, { preventClickOnDrag: true });
+          const clickSpy = vi.fn();
+          const testPanel = flicking.panels[1];
+          testPanel.element.addEventListener("click", clickSpy);
+
+          // When
+          void flicking.moveTo(1, 500);
+          tick(400);
+          expect(flicking.animating).toBe(true);
+          await tap(flicking);
+          testPanel.element.click();
+
+          // Then
+          expect(clickSpy).not.toHaveBeenCalled();
+        });
+
+        it("shouldn't trigger click event when dragged and moved instantly under animationThreshold", async () => {
+          // Given
+          const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+            preventClickOnDrag: true,
+            animationThreshold: 20
+          });
+          const clickSpy = vi.fn();
+          const moveEndSpy = vi.fn();
+          const testPanel = flicking.panels[0];
+          testPanel.element.addEventListener("click", clickSpy);
+          flicking.on(EVENTS.MOVE_END, moveEndSpy);
+
+          // When
+          await simulate(flicking.element, { deltaX: -5, deltaY: 0, duration: 100 }, 100);
+          testPanel.element.click();
+
+          // Then
+          expect(moveEndSpy).toHaveBeenCalledTimes(1);
+          expect(clickSpy).not.toHaveBeenCalled();
+        });
+      });
+
       it("should trigger click event when Flicking's dragged under 1px", async () => {
         const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
           preventClickOnDrag: true,
@@ -1228,6 +1318,42 @@ describe("Flicking", () => {
 
         // Then
         expect(moveEndSpy).toHaveBeenCalledTimes(1);
+      });
+      it("should compare the distance to the target position, not the duration", async () => {
+        // Given
+        // Target position of the panel 1 (1500) equals the duration
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          animationThreshold: 2,
+          duration: 1500
+        });
+
+        const moveEndSpy = vi.fn();
+        flicking.on("moveEnd", moveEndSpy);
+
+        // When
+        void flicking.moveTo(1);
+
+        // Then
+        expect(flicking.animating).toBe(true);
+        expect(moveEndSpy).not.toHaveBeenCalled();
+      });
+      it("should move instantly when the remaining distance of an interrupted animation is under animationThreshold", async () => {
+        // Given
+        const flicking = await createFlicking(El.DEFAULT_HORIZONTAL, {
+          animationThreshold: 20
+        });
+        const moveEndSpy = vi.fn();
+        flicking.on("moveEnd", moveEndSpy);
+
+        // When
+        void flicking.moveTo(1, 500);
+        tick(400);
+        await simulate(flicking.element, { deltaX: 0, deltaY: 0, duration: 100 }, 100);
+
+        // Then
+        expect(moveEndSpy).toHaveBeenCalledTimes(1);
+        expect(flicking.animating).toBe(false);
+        expect(flicking.camera.position).toBe(flicking.panels[1].position);
       });
     });
     describe("changeOnHold", () => {
