@@ -37,9 +37,6 @@ abstract class Renderer {
   }
 
   protected _addBulletEvents(bullet: HTMLElement, index: number) {
-    const anchorPoints = this._flicking.camera.anchorPoints;
-    const panelIndex = anchorPoints[index].panel.index;
-
     bullet.addEventListener(BROWSER.MOUSE_DOWN, e => {
       e.stopPropagation();
     });
@@ -53,7 +50,11 @@ abstract class Renderer {
     );
 
     bullet.addEventListener(BROWSER.CLICK, () => {
-      this._flicking.moveTo(panelIndex).catch(err => {
+      // Read the anchor on click, as anchors can change after the bullet is created
+      const anchorPoint = this._flicking.camera.anchorPoints[index];
+      if (!anchorPoint) return;
+
+      this._flicking.moveTo(anchorPoint.panel.index).catch(err => {
         if (err instanceof FlickingError) return;
         throw err;
       });

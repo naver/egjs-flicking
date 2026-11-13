@@ -34,6 +34,7 @@ class BulletRenderer extends Renderer {
     const anchorPoints = flicking.camera.anchorPoints;
 
     addClass(wrapper, bulletWrapperClass);
+    this._prevIndex = -1;
 
     wrapper.innerHTML = anchorPoints
       .map((anchorPoint, index) => {
@@ -65,20 +66,28 @@ class BulletRenderer extends Renderer {
     const flicking = this._flicking;
     const pagination = this._pagination;
     const wrapper = this._wrapper;
-    const bullets = this._bullets;
     const bulletClass = this._bulletClass;
     const activeClass = this._activeClass;
-    const prevIndex = this._prevIndex;
     const anchorPoints = flicking.camera.anchorPoints;
     const renderBullet = pagination.renderBullet;
     const renderActiveBullet = pagination.renderActiveBullet;
 
     if (anchorPoints.length <= 0) return;
 
+    // Anchors can change without panelChange (e.g. on resize), so redraw bullets to match them
+    if (this._bullets.length !== anchorPoints.length) {
+      this.render();
+    }
+
+    const bullets = this._bullets;
+    const prevIndex = this._prevIndex;
+
     const anchorOffset = anchorPoints[0].panel.index;
     const activeBulletIndex = index - anchorOffset;
 
-    if (prevIndex === activeBulletIndex) return;
+    const activeBullet = bullets[activeBulletIndex];
+
+    if (prevIndex === activeBulletIndex || !activeBullet) return;
 
     if (renderActiveBullet) {
       const prevBullet = bullets[prevIndex];
@@ -88,7 +97,6 @@ class BulletRenderer extends Renderer {
         bullets[prevIndex] = newBullet;
       }
 
-      const activeBullet = bullets[activeBulletIndex];
       const newActiveBullet = this._createBulletFromString(
         renderActiveBullet(`${bulletClass} ${activeClass}`, activeBulletIndex),
         activeBulletIndex
@@ -97,7 +105,6 @@ class BulletRenderer extends Renderer {
       wrapper.replaceChild(newActiveBullet, activeBullet);
       bullets[activeBulletIndex] = newActiveBullet;
     } else {
-      const activeBullet = bullets[activeBulletIndex];
       const prevBullet = bullets[prevIndex];
 
       if (prevBullet) {

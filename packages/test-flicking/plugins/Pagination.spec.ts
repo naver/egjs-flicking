@@ -101,6 +101,30 @@ describe("Pagination", () => {
       const bullets = [].slice.apply(document.querySelectorAll(".flicking-pagination-bullet-active"));
       expect(bullets.length).toBe(1);
     });
+
+    // #971: anchors can change without panelChange, leaving bullets out of sync
+    it("should not throw when anchor points change without panelChange and renderActiveBullet is given", async () => {
+      // Given
+      const flicking = await createFlicking(createFixture());
+      const pagination = new Pagination({
+        type: "bullet",
+        renderActiveBullet: className => `<span class="${className}">ACTIVE</span>`
+      });
+      pagination.init(flicking);
+      await flicking.moveTo(2, 0);
+      const anchorPoints = flicking.camera.anchorPoints;
+      vi.spyOn(flicking.camera, "anchorPoints", "get").mockReturnValue(anchorPoints.slice(0, 2));
+
+      // When
+      await flicking.moveTo(1, 0);
+
+      // Then
+      const bullets = document.querySelectorAll(".flicking-pagination-bullet");
+      const activeBullets = document.querySelectorAll(".flicking-pagination-bullet-active");
+      expect(bullets.length).toBe(2);
+      expect(activeBullets.length).toBe(1);
+      expect(activeBullets[0]).toBe(bullets[1]);
+    });
   });
 
   describe("Events", () => {
